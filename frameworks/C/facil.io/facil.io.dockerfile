@@ -15,5 +15,7 @@ RUN cp -f bench_app.c facil_app/src/app.c
 # Build the app
 RUN cd facil_app && make -j build
 
+EXPOSE 8080
+
 # Run the app
 CMD ./facil_app/tmp/fioapp -p 8080 -db "tfb-database" -w -2 -t 2

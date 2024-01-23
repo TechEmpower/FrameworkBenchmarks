@@ -2,7 +2,7 @@ name := """techempower-benchmarks-fintrospect"""
 
 version := "1.0"
 
-scalaVersion := "2.12.8"
+scalaVersion := "2.13.3"
 
 scalacOptions += "-deprecation"
 
@@ -13,10 +13,10 @@ resolvers += "JCenter" at "https://jcenter.bintray.com"
 resolvers += Resolver.sonatypeRepo("snapshots")
 
 libraryDependencies ++= Seq(
-  "io.fintrospect" %% "fintrospect-core" % "15.0.2",
-  "io.fintrospect" %% "fintrospect-jackson" % "15.0.2",
-  "io.fintrospect" %% "fintrospect-mustache" % "15.0.2",
-  "com.twitter" %% "finagle-mysql" % "19.5.1"
+  "io.fintrospect" %% "fintrospect-core" % "17.0.0",
+  "io.fintrospect" %% "fintrospect-jackson" % "17.0.0",
+  "io.fintrospect" %% "fintrospect-mustache" % "17.0.0",
+  "com.twitter" %% "finagle-mysql" % "20.8.0"
 )
 
 assemblyMergeStrategy in assembly := {

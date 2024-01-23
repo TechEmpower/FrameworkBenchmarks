@@ -1,0 +1,17 @@
+{
+  "name": "hyperexpress",
+  "version": "0.0.1",
+  "main": "app.js",
+  "scripts": {
+    "start": "node clustered.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "hyper-express": "^6.8.5",
+    "lru-cache": "^10.0.1",
+    "mariadb": "^3.2.0",
+    "postgres": "^3.3.5"
+  },
+  "type": "module"
+}

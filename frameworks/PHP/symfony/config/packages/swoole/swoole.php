@@ -17,9 +17,9 @@ $container->loadFromExtension('swoole', [
             'entity_manager_handler' => false,
         ],
         'settings' => [
-             'reactor_count' => swoole_cpu_num() * 2,
-             'worker_count' => swoole_cpu_num() * 2,
-             'task_worker_count' => swoole_cpu_num() * 2,
+            'reactor_count' => swoole_cpu_num() * 2,
+            'worker_count' => swoole_cpu_num() * 2,
+            'task_worker_count' => swoole_cpu_num() * 2,
 
             'log_file' => '/dev/null',
             'log_level' => 'error',

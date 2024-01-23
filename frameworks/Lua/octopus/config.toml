@@ -1,0 +1,19 @@
+[framework]
+name = "octopus"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+urls.db = "/db"
+urls.query = "/queries?queries="
+urls.update = "/update?queries="
+urls.fortune = "/fortunes"
+approach = "Realistic"
+classification = "Fullstack"
+database = "MySQL"
+database_os = "Linux"
+os = "Linux"
+orm = "Full"
+platform = "OpenResty"
+webserver = "nginx"
+versus = "openresty"

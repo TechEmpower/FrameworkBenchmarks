@@ -124,7 +124,7 @@ def get_random_world_raw():
     return json.dumps(worlds)
 
 
-@app.route("/fortune")
+@app.route("/fortunes")
 def fortune_orm(db):
   response.headers['Date'] = formatdate(timeval=None, localtime=False, usegmt=True)
   fortunes=db.query(Fortune).all()

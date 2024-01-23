@@ -1,5 +1,5 @@
 #pragma once
-#include "models/World.h"
+#include "World_raw.h"
 #include <drogon/HttpSimpleController.h>
 #include <drogon/IOThreadStorage.h>
 #include <map>
@@ -7,7 +7,6 @@
 #include <memory>
 
 using namespace drogon;
-using namespace drogon_model::hello_world;
 
 class UpdatesCtrlRaw : public drogon::HttpSimpleController<UpdatesCtrlRaw>
 {

@@ -1,0 +1,52 @@
+[framework]
+name = "oatpp"
+
+[main]
+urls.json = "/json"
+approach = "Realistic"
+classification = "Micro"
+database = "None"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "None"
+webserver = "None"
+versus = "None"
+
+[async]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+approach = "Realistic"
+classification = "Micro"
+database = "None"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "None"
+webserver = "None"
+versus = "None"
+
+[no-mp]
+urls.json = "/json"
+approach = "Realistic"
+classification = "Micro"
+database = "None"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "None"
+webserver = "None"
+versus = "None"
+
+[async-no-mp]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+approach = "Realistic"
+classification = "Micro"
+database = "None"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "None"
+webserver = "None"
+versus = "None"

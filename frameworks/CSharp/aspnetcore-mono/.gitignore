@@ -36,3 +36,5 @@ BenchmarkDotNet.Artifacts/
 BDN.Generated/
 binaries/
 global.json
+mono-rp/
+mono-rp.zip

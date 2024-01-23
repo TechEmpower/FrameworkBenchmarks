@@ -1,0 +1,28 @@
+[framework]
+name = "edap-http"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+approach = "Realistic"
+classification = "Platform"
+database = "Postgres"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "edap"
+webserver = "None"
+versus = "edap-http"
+
+[http-fast]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+approach = "Realistic"
+classification = "Platform"
+database = "Postgres"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "edap"
+webserver = "None"
+versus = "edap-http-fast"

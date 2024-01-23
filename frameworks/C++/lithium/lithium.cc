@@ -1,4 +1,4 @@
-#include "lithium_http_backend.hh"
+#include "lithium_http_server.hh"
 
 #if TFB_MYSQL
   #include "lithium_mysql.hh"
@@ -9,10 +9,28 @@
 #include "symbols.hh"
 using namespace li;
 
+
 template <typename B>
-void escape_html_entities(B& buffer, const std::string& data)
+void escape_html_entities(B& buffer, const std::string_view& data)
 {
-    for(size_t pos = 0; pos != data.size(); ++pos) {
+  size_t pos = 0;
+  auto search_for_special = [&] () {
+    size_t start = pos;
+    size_t end = pos;
+    for(;pos != data.size(); ++pos) {
+      char c = data[pos];
+      if (c > '>' || (c != '&' && c != '\"' && c != '\'' && c != '<' && c == '>'))
+        end = pos + 1;
+      else break;
+    }
+
+    if (start != end)
+      buffer << std::string_view(data.data() + start, end - start);
+  };
+  
+    for(; pos != data.size(); ++pos) {
+      search_for_special();
+      if (pos >= data.size()) return;
         switch(data[pos]) {
             case '&':  buffer << "&amp;";       break;
             case '\"': buffer << "&quot;";      break;
@@ -24,43 +42,42 @@ void escape_html_entities(B& buffer, const std::string& data)
     }
 }
 
-void set_max_sql_connections_per_thread(int max)
-{
-#if TFB_MYSQL
-  li::max_mysql_connections_per_thread = max;
-#elif TFB_PGSQL
-  li::max_pgsql_connections_per_thread = max;
-#endif
-}
+int g_seed = 0;
+inline int random_int() { 
+  g_seed = (214013*g_seed+2531011); 
+  return (g_seed>>16)&0x7FFF; 
+} 
 
-float tune_n_sql_connections(int& nc_to_tune, std::string http_req, int port, int min, int max) {
-
-  std::cout << std::endl << "Benchmark " << http_req << std::endl;
-
+#ifdef PROFILE_MODE
+void siege(int port) {
   auto sockets = http_benchmark_connect(512, port);
+  http_benchmark(sockets, 2, 1000, "GET /json HTTP/1.1\r\n\r\n");
+  http_benchmark(sockets, 2, 1000, "GET /plaintext HTTP/1.1\r\n\r\n");
+  http_benchmark(sockets, 2, 1000, "GET /db HTTP/1.1\r\n\r\n");
+  http_benchmark(sockets, 2, 1000, "GET /queries?N=20 HTTP/1.1\r\n\r\n");
+  http_benchmark(sockets, 2, 1000, "GET /fortunes HTTP/1.1\r\n\r\n");
+  http_benchmark(sockets, 2, 1000, "GET /updates?N=20 HTTP/1.1\r\n\r\n");
+  http_benchmark(sockets, 2, 1000, "GET /cached-world?N=100 HTTP/1.1\r\n\r\n");
+  http_benchmark_close(sockets);
+}
+#endif
 
-  float max_req_per_s = 0;
-  int best_nconn = 2;
-  for (int i = 0; i <= 7; i++)
-  {
-    int nc = min + (max - min) * i / 7;
-    nc_to_tune = nc;
+template <typename T>
+struct cache {
 
-    float req_per_s = http_benchmark(sockets, 1, 1000, http_req);
-    std::cout << nc << " -> " << req_per_s << " req/s." << std::endl;
-    if (req_per_s > max_req_per_s)
-    {
-      max_req_per_s = req_per_s;
-      best_nconn = nc;
-    }
+  void insert(T o) {
+    if (buffer.size() <= o.id) buffer.resize(o.id+1);
+    buffer[o.id] = o;
   }
 
-  http_benchmark_close(sockets);
+  const T& get(int id) const {
+    return buffer[id];
+  }
 
-  std::cout << "best: " << best_nconn << " (" << max_req_per_s << " req/s)."<< std::endl;
-  nc_to_tune = best_nconn;
-  return best_nconn;
-}
+  std::vector<T> buffer;
+};
+
+cache<decltype(mmm(s::id = int(), s::randomNumber = int()))> world_cache;
 
 int main(int argc, char* argv[]) {
 
@@ -71,18 +88,21 @@ int main(int argc, char* argv[]) {
   }
 
   int port = atoi(argv[2]);
+
   int nprocs = std::thread::hardware_concurrency();
 
+#if MONOTHREAD
+  int nthreads = 1;
+#else
+  int nthreads = nprocs;
+#endif
+
 #if TFB_MYSQL
-  auto sql_db =
-    mysql_database(s::host = argv[1], s::database = "hello_world", s::user = "benchmarkdbuser",
-                   s::password = "benchmarkdbpass", s::port = 3306, s::charset = "utf8");
-  int sql_max_connection = sql_db.connect()("SELECT @@GLOBAL.max_connections;").template read<int>() - 10;
+  auto sql_db = mysql_database(s::host = argv[1], s::database = "hello_world", s::user = "benchmarkdbuser",
+                s::password = "benchmarkdbpass", s::port = 3306, s::charset = "utf8");
 #elif TFB_PGSQL
-  auto sql_db =
-    pgsql_database(s::host = argv[1], s::database = "hello_world", s::user = "benchmarkdbuser",
-                   s::password = "benchmarkdbpass", s::port = 5432, s::charset = "utf8");
-  int sql_max_connection = atoi(sql_db.connect()("SHOW max_connections;").template read<std::string>().c_str()) - 10;
+  auto sql_db = pgsql_database(s::host = argv[1], s::database = "hello_world", s::user = "benchmarkdbuser",
+                               s::password = "benchmarkdbpass", s::port = 5432, s::charset = "utf8");
 #endif
 
   auto fortunes = sql_orm_schema(sql_db, "Fortune").fields(
@@ -93,11 +113,24 @@ int main(int argc, char* argv[]) {
     s::id(s::auto_increment, s::primary_key) = int(),
     s::randomNumber = int());
 
-
-  int db_nconn = 64;
-  int queries_nconn = 64;
-  int fortunes_nconn = 64;
-  int updates_nconn = 64;
+#ifndef N_SQL_CONNECTIONS
+  #if TFB_MYSQL
+    int db_nconn = 5;
+    int queries_nconn = 4;
+    int fortunes_nconn = 5;
+    int updates_nconn = 2;
+  #elif TFB_PGSQL
+    int db_nconn = 5;
+    int queries_nconn = 3;
+    int fortunes_nconn = 7;
+    int updates_nconn = 3;
+  #endif
+#else
+  int db_nconn = N_SQL_CONNECTIONS;
+  int queries_nconn = N_SQL_CONNECTIONS;
+  int fortunes_nconn = N_SQL_CONNECTIONS;
+  int updates_nconn = N_SQL_CONNECTIONS;
+#endif
 
   http_api my_api;
 
@@ -110,27 +143,35 @@ int main(int argc, char* argv[]) {
     response.write_json(s::message = "Hello, World!");
   };
   my_api.get("/db") = [&](http_request& request, http_response& response) {
-    set_max_sql_connections_per_thread(db_nconn);
-    response.write_json(random_numbers.connect(request.fiber).find_one(s::id = 1234).value());
+    sql_db.max_async_connections_per_thread_ = db_nconn;
+    response.write_json(*random_numbers.connect(request.fiber).find_one(s::id = 1 + random_int() % 10000));
   };
 
   my_api.get("/queries") = [&](http_request& request, http_response& response) {
-    set_max_sql_connections_per_thread(queries_nconn);
+    sql_db.max_async_connections_per_thread_ = queries_nconn;
     std::string N_str = request.get_parameters(s::N = std::optional<std::string>()).N.value_or("1");
     int N = atoi(N_str.c_str());
     
     N = std::max(1, std::min(N, 500));
     
     auto c = random_numbers.connect(request.fiber);
-    std::vector<decltype(random_numbers.all_fields())> numbers(N);
-    for (int i = 0; i < N; i++)
-      numbers[i] = c.find_one(s::id = 1 + rand() % 10000).value();
+    response.write_json_generator(N, [&] { return *c.find_one(s::id = 1 + random_int() % 10000); });
+  };
 
-    response.write_json(numbers);
+  random_numbers.connect().forall([&] (const auto& number) {
+    world_cache.insert(metamap_clone(number));
+  });
+
+  my_api.get("/cached-worlds") = [&](http_request& request, http_response& response) {
+    std::string N_str = request.get_parameters(s::N = std::optional<std::string>()).N.value_or("1");
+    int N = atoi(N_str.c_str());
+
+    response.write_json_generator(std::max(1, std::min(N, 500)), 
+      [&] { return world_cache.get(1 + random_int() % 10000); });
   };
 
   my_api.get("/updates") = [&](http_request& request, http_response& response) {
-    set_max_sql_connections_per_thread(updates_nconn);
+    sql_db.max_async_connections_per_thread_ = updates_nconn;
     std::string N_str = request.get_parameters(s::N = std::optional<std::string>()).N.value_or("1");
     int N = atoi(N_str.c_str());
     N = std::max(1, std::min(N, 500));
@@ -146,8 +187,8 @@ int main(int argc, char* argv[]) {
 #endif
       for (int i = 0; i < N; i++)
       {
-        numbers[i] = c.find_one(s::id = 1 + rand() % 10000).value();
-        numbers[i].randomNumber = 1 + rand() % 10000;
+        numbers[i] = *c.find_one(s::id = 1 + random_int() % 10000);
+        numbers[i].randomNumber = 1 + random_int() % 10000;
       }
 
       std::sort(numbers.begin(), numbers.end(), [] (auto a, auto b) { return a.id < b.id; });
@@ -163,20 +204,21 @@ int main(int argc, char* argv[]) {
   };
 
   my_api.get("/fortunes") = [&](http_request& request, http_response& response) {
-    set_max_sql_connections_per_thread(fortunes_nconn);
+    sql_db.max_async_connections_per_thread_ = fortunes_nconn;
 
     typedef decltype(fortunes.all_fields()) fortune;
     std::vector<fortune> table;
 
-    auto c = fortunes.connect(request.fiber);
-    c.forall([&] (auto f) { table.emplace_back(f); });
+    {
+      auto c = fortunes.connect(request.fiber);
+      c.forall([&] (const auto& f) { table.emplace_back(metamap_clone(f)); });
+    }
     table.emplace_back(0, "Additional fortune added at request time.");
 
     std::sort(table.begin(), table.end(),
               [] (const fortune& a, const fortune& b) { return a.message < b.message; });
 
-    char b[100000];
-    li::output_buffer ss(b, sizeof(b));
+    li::growing_output_buffer ss;
  
     ss << "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>";
     for(auto& f : table)
@@ -191,24 +233,18 @@ int main(int argc, char* argv[]) {
     response.write(ss.to_string_view());
   };
 
-  // Tune the number of sql connections.
-  int tunning_port = port+1;
+#ifndef PROFILE_MODE
+  // Start the server for the Techempower benchmark.
+  http_serve(my_api, port, s::nthreads = nthreads);
+#else
   std::thread server_thread([&] {
-    http_serve(my_api, tunning_port, s::nthreads = nprocs);
+    http_serve(my_api, port, s::nthreads = nprocs);
   });
-  usleep(3e5);
-
-  tune_n_sql_connections(db_nconn, "GET /db HTTP/1.1\r\n\r\n", tunning_port, 1, sql_max_connection/nprocs);
-  tune_n_sql_connections(queries_nconn, "GET /queries?N=20 HTTP/1.1\r\n\r\n", tunning_port, 1,  std::min(sql_max_connection/nprocs, 20));
-  tune_n_sql_connections(fortunes_nconn, "GET /fortunes HTTP/1.1\r\n\r\n", tunning_port, 1, sql_max_connection/nprocs);
-  tune_n_sql_connections(updates_nconn, "GET /updates?N=20 HTTP/1.1\r\n\r\n", tunning_port, 1, std::min(sql_max_connection/nprocs, 20));
-  
+  usleep(2e6);
+  siege(port);
   li::quit_signal_catched = true;
   server_thread.join();
-  li::quit_signal_catched = false;
 
-  // Start the server for the Techempower benchmark.
-  http_serve(my_api, port, s::nthreads = nprocs);
-
+#endif
   return 0;
 }

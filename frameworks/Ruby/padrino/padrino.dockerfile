@@ -1,4 +1,4 @@
-FROM ruby:2.4
+FROM ruby:3.0
 
 WORKDIR /padrino
 COPY app app
@@ -10,5 +10,7 @@ COPY Gemfile Gemfile
 COPY Rakefile Rakefile
 
 RUN bundle install --jobs=4 --gemfile=/padrino/Gemfile --path=/padrino/padrino/bundle
+
+EXPOSE 8080
 
 CMD ["bundle", "exec", "puma", "-C", "config/puma.rb", "-w", "8", "--preload"]

@@ -8,93 +8,74 @@
 
 package org.smartboot.http;
 
-import com.jsoniter.output.JsonStream;
-import com.jsoniter.output.JsonStreamPool;
-import com.jsoniter.spi.JsonException;
-import org.smartboot.http.server.Http11Request;
-import org.smartboot.http.server.HttpMessageProcessor;
-import org.smartboot.http.server.HttpRequestProtocol;
-import org.smartboot.http.server.handle.HttpHandle;
-import org.smartboot.http.server.handle.RouteHandle;
-import org.smartboot.socket.StateMachineEnum;
-import org.smartboot.socket.extension.plugins.MonitorPlugin;
-import org.smartboot.socket.extension.plugins.SocketOptionPlugin;
-import org.smartboot.socket.extension.processor.AbstractMessageProcessor;
-import org.smartboot.socket.transport.AioQuickServer;
-import org.smartboot.socket.transport.AioSession;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+import org.smartboot.Message;
+import org.smartboot.http.server.HttpBootstrap;
+import org.smartboot.http.server.HttpRequest;
+import org.smartboot.http.server.HttpResponse;
+import org.smartboot.http.server.HttpServerHandler;
+import org.smartboot.http.server.handler.HttpRouteHandler;
 
+import javax.sql.DataSource;
 import java.io.IOException;
 
 public class Bootstrap {
     static byte[] body = "Hello, World!".getBytes();
 
     public static void main(String[] args) {
-//        System.setProperty("sun.nio.ch.maxCompletionHandlersOnStack", "32");
-        RouteHandle routeHandle = new RouteHandle();
-        routeHandle.route("/plaintext", new HttpHandle() {
+        HttpRouteHandler routeHandle = new HttpRouteHandler();
+        routeHandle
+                .route("/plaintext", new HttpServerHandler() {
 
 
-            @Override
-            public void doHandle(HttpRequest request, HttpResponse response) throws IOException {
-                response.setContentLength(body.length);
-                response.setContentType("text/plain; charset=UTF-8");
-                response.write(body);
-            }
-        }).route("/json", new HttpHandle() {
+                    @Override
+                    public void handle(HttpRequest request, HttpResponse response) throws IOException {
+                        response.setContentLength(body.length);
+                        response.setContentType("text/plain; charset=UTF-8");
+                        response.write(body);
+                    }
+                })
+                .route("/json", new HttpServerHandler() {
 
-            @Override
-            public void doHandle(HttpRequest request, HttpResponse response) throws IOException {
+                    @Override
+                    public void handle(HttpRequest request, HttpResponse response) throws IOException {
 
-                response.setContentType("application/json");
-                JsonStream stream = JsonStreamPool.borrowJsonStream();
-                try {
-                    stream.reset(null);
-                    stream.writeVal(Message.class, new Message("Hello, World!"));
-                    response.setContentLength(stream.buffer().tail());
-                    response.getOutputStream().write(stream.buffer().data(), 0, stream.buffer().tail());
-                    response.getOutputStream().flush();
-                } catch (IOException e) {
-                    throw new JsonException(e);
-                } finally {
-                    JsonStreamPool.returnJsonStream(stream);
-                }
-            }
-        });
-        HttpMessageProcessor processor = new HttpMessageProcessor();
-        processor.pipeline(routeHandle);
-        http(processor);
-//        https(processor);
-    }
-
-    public static void http(final HttpMessageProcessor processor) {
-        AbstractMessageProcessor<Http11Request> messageProcessor = new AbstractMessageProcessor<Http11Request>() {
-            @Override
-            public void process0(AioSession session, Http11Request msg) {
-                processor.process(session, msg);
-            }
-
-            @Override
-            public void stateEvent0(AioSession session, StateMachineEnum stateMachineEnum, Throwable throwable) {
-                processor.stateEvent(session, stateMachineEnum, throwable);
-            }
-        };
-        messageProcessor.addPlugin(new MonitorPlugin(5));
-//        messageProcessor.addPlugin(new SocketOptionPlugin());
-
+                        response.setContentType("application/json");
+                        JsonUtil.writeJsonBytes(response, new Message("Hello, World!"));
+                    }
+                });
+        initDB(routeHandle);
         int cpuNum = Runtime.getRuntime().availableProcessors();
         // 定义服务器接受的消息类型以及各类消息对应的处理器
-        AioQuickServer<Http11Request> server = new AioQuickServer<>(8080, new HttpRequestProtocol(), messageProcessor);
-        server.setThreadNum(cpuNum + 2)
-                .setReadBufferSize(1024 * 4)
-                .setBufferPoolPageSize(10 * 1024 * 1024)
-                .setBufferPoolSharedPageSize(64 * 1024 * 1024)
-                .setBufferPoolChunkSize(1024 * 4);
+        HttpBootstrap bootstrap = new HttpBootstrap();
+        bootstrap.configuration()
+                .threadNum(cpuNum)
+                .readBufferSize(1024 * 4)
+                .writeBufferSize(1024 * 4)
+                .readMemoryPool(16384 * 1024 * 4)
+                .writeMemoryPool(10 * 1024 * 1024 * cpuNum, cpuNum);
+        bootstrap.httpHandler(routeHandle).setPort(8080).start();
+    }
 
-//        messageProcessor.addPlugin(new BufferPageMonitorPlugin(server, 6));
+    private static void initDB(HttpRouteHandler routeHandle) {
         try {
-            server.start();
-        } catch (IOException e) {
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+        HikariConfig config = new HikariConfig();
+        config.setJdbcUrl("jdbc:postgresql://tfb-database:5432/hello_world");
+        config.setUsername("benchmarkdbuser");
+        config.setPassword("benchmarkdbpass");
+        config.setMaximumPoolSize(64);
+        config.addDataSourceProperty("cachePrepStmts", "true");
+        config.addDataSourceProperty("prepStmtCacheSize", "250");
+        config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+        DataSource dataSource = new HikariDataSource(config);
+        routeHandle.route("/db", new SingleQueryHandler(dataSource))
+                .route("/queries", new MultipleQueriesHandler(dataSource))
+                .route("/updates", new UpdateHandler(dataSource));
+//                .route("/fortunes", new FortunesHandler(dataSource));
     }
 }

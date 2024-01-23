@@ -7,8 +7,8 @@ import (
 	"sort"
 	"strconv"
 
-	"go-std/src/storage"
-	"go-std/src/templates"
+	"go-std/app/storage"
+	"go-std/app/templates"
 )
 
 func queriesParam(r *http.Request) int {

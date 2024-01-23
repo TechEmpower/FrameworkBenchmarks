@@ -41,6 +41,10 @@ class HelloWorld < Sinatra::Base
     response['Server'] = SERVER_STRING
   end if SERVER_STRING
 
+  after do
+    ActiveRecord::Base.clear_active_connections!
+  end
+
   # Test type 1: JSON serialization
   get '/json' do
      json :message=>'Hello, World!'
@@ -88,7 +92,9 @@ class HelloWorld < Sinatra::Base
       ActiveRecord::Base.connection_pool.with_connection do
         Array.new(bounded_queries) do
           world = World.find(rand1)
-          world.update(:randomnumber=>rand1)
+          new_value = rand1
+          new_value = rand1 while new_value == world.randomnumber
+          world.update(randomnumber: new_value)
           world
         end
       end

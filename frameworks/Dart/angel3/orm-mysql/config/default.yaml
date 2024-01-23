@@ -1,0 +1,12 @@
+# Default server configuration.
+host: 127.0.0.1
+port: 8080
+mysql:
+  #host: localhost
+  host: tfb-database
+  port: 3306
+  database_name: hello_world
+  username: benchmarkdbuser
+  password: benchmarkdbpass
+  use_ssl: true
+jwt_secret: INSECURE_DEFAULT_SECRET

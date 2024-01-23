@@ -1,21 +1,22 @@
-FROM ubuntu:19.10
+FROM ubuntu:22.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update -yqq && apt-get install -yqq software-properties-common > /dev/null
-RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php
-RUN apt-get update -yqq > /dev/null && \
-    apt-get install -yqq nginx git unzip php7.4 php7.4-common php7.4-cli php7.4-fpm php7.4-mysql  > /dev/null
-RUN apt-get install -yqq php7.4-mbstring php7.4-xml  > /dev/null
+RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php > /dev/null && \
+    apt-get update -yqq > /dev/null && apt-get upgrade -yqq > /dev/null
 
-RUN apt-get install -yqq composer > /dev/null
+RUN apt-get install -yqq nginx git unzip \
+    php8.3-cli php8.3-fpm php8.3-mysql php8.3-mbstring php8.3-xml php8.3-dev > /dev/null
 
-COPY deploy/conf/* /etc/php/7.4/fpm/
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+
+COPY deploy/conf/* /etc/php/8.3/fpm/
 
 ADD ./ /lumen
 WORKDIR /lumen
 
-RUN if [ $(nproc) = 2 ]; then sed -i "s|pm.max_children = 1024|pm.max_children = 512|g" /etc/php/7.4/fpm/php-fpm.conf ; fi;
+RUN if [ $(nproc) = 2 ]; then sed -i "s|pm.max_children = 1024|pm.max_children = 512|g" /etc/php/8.3/fpm/php-fpm.conf ; fi;
 
 RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
 
@@ -26,5 +27,7 @@ RUN mkdir -p /lumen/storage/framework/cache
 
 RUN chmod -R 777 /lumen
 
-CMD service php7.4-fpm start && \
-    nginx -c /lumen/deploy/nginx.conf -g "daemon off;"
+EXPOSE 8080
+
+CMD service php8.3-fpm start && \
+    nginx -c /lumen/deploy/nginx.conf

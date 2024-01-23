@@ -1,0 +1,9 @@
+# Ignore everything
+**
+
+# Allow files and directories
+!/build.sbt
+!/config.sh
+!/project/build.properties
+!/project/plugins.sbt
+!/src

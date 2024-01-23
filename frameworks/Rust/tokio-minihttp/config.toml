@@ -1,0 +1,17 @@
+[framework]
+name = "tokio-minihttp"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+urls.db = "/db"
+urls.query = "/queries?queries="
+approach = "Realistic"
+classification = "Micro"
+database = "Postgres"
+database_os = "Linux"
+os = "Linux"
+orm = "raw"
+platform = "Rust"
+webserver = "tokio-minihttp"
+versus = "None"

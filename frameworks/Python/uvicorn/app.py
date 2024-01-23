@@ -1,11 +1,11 @@
-import asyncio
+import os
+from operator import itemgetter
+from random import randint, sample
+from urllib.parse import parse_qs
+
 import asyncpg
 import jinja2
-import os
 import ujson
-from random import randint
-from operator import itemgetter
-from urllib.parse import parse_qs
 
 
 async def setup():
@@ -19,7 +19,7 @@ async def setup():
     )
 
 
-READ_ROW_SQL = 'SELECT "randomnumber" FROM "world" WHERE id = $1'
+READ_ROW_SQL = 'SELECT "randomnumber", "id" FROM "world" WHERE id = $1'
 WRITE_ROW_SQL = 'UPDATE "world" SET "randomnumber"=$1 WHERE id=$2'
 ADDITIONAL_ROW = [0, 'Additional fortune added at request time.']
 
@@ -56,9 +56,6 @@ path = os.path.join('templates', 'fortune.html')
 with open(path, 'r') as template_file:
     template_text = template_file.read()
     template = jinja2.Template(template_text)
-
-loop = asyncio.get_event_loop()
-loop.run_until_complete(setup())
 
 
 def get_num_queries(scope):
@@ -114,7 +111,7 @@ async def multiple_database_queries(scope, receive, send):
     Test type 3: Multiple database queries
     """
     num_queries = get_num_queries(scope)
-    row_ids = [randint(1, 10000) for _ in range(num_queries)]
+    row_ids = sample(range(1, 10000), num_queries)
     worlds = []
 
     connection = await pool.acquire()
@@ -161,7 +158,7 @@ async def database_updates(scope, receive, send):
     Test type 5: Database updates
     """
     num_queries = get_num_queries(scope)
-    updates = [(randint(1, 10000), randint(1, 10000)) for _ in range(num_queries)]
+    updates = [(row_id, randint(1, 10000)) for row_id in sample(range(1, 10000), num_queries)]
     worlds = [{'id': row_id, 'randomNumber': number} for row_id, number in updates]
 
     connection = await pool.acquire()
@@ -216,6 +213,11 @@ routes = {
 
 
 async def main(scope, receive, send):
+    if scope['type'] == 'lifespan':
+        message = await receive()
+        if message['type'] == 'lifespan.startup':
+            await setup()
+            await send({'type': 'lifespan.startup.complete'})
     path = scope['path']
     handler = routes.get(path, handle_404)
     await handler(scope, receive, send)

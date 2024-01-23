@@ -1,0 +1,17 @@
+{
+  "name": "elysia",
+  "version": "0.0.1",
+  "module": "src/index.js",
+  "devDependencies": {
+    "bun-types": "latest"
+  },
+  "scripts": {
+    "dev": "bun run --watch src/index.ts",
+    "start": "bun run src/index.ts",
+    "build": "bun build --target=bun --minify src/index.ts --outdir=build"
+  },
+  "dependencies": {
+    "elysia": "^0.7.17",
+    "postgres": "^3.4.1"
+  }
+}

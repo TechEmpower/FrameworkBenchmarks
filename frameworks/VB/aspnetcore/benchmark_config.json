@@ -20,24 +20,6 @@
       "notes": "",
       "versus": "aspcore"
     },
-    "utf8json": {
-      "json_url": "/utf8json",
-      "port": 8080,
-      "approach": "Realistic",
-      "classification": "Micro",
-      "database": "None",
-      "framework": "ASP.NET Core",
-      "language": "VB",
-      "orm": "Raw",
-      "platform": ".NET",
-      "flavor": "CoreCLR",
-      "webserver": "Kestrel",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "ASP.NET Core, Middleware, Utf8Json",
-      "notes": "",
-      "versus": "aspcore"
-    },
     "ado-pg": {
       "db_url": "/db",
       "query_url": "/queries?queries=",

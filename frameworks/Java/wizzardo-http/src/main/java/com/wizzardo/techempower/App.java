@@ -40,6 +40,8 @@ public class App {
                             .append("/db", DBController.class, "world")
                             .append("/queries", DBController.class, "queries")
                             .append("/updates", DBController.class, "updates")
+                            .append("/fortunes", DBController.class, "fortunes")
+                            .append("/cached-worlds", DBController.class, "cachedWorlds")
                     ;
                 }
         );

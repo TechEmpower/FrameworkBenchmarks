@@ -1,27 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-using Newtonsoft.Json;
-
-using GenHTTP.Modules.Webservices;
+﻿using GenHTTP.Modules.Webservices;
 
 namespace Benchmarks.Tests
 {
 
-    public class JsonResult
+    public sealed class JsonResult
     {
 
-        [JsonProperty("message")]
-        public string? Message { get; set; }
+        public string Message { get; set; }
 
     }
 
-    public class JsonResource
+    public sealed class JsonResource
     {
 
-        [Method]
-        public JsonResult GetMessage() => new JsonResult() { Message = "Hello, World!" };
+        [ResourceMethod]
+        public JsonResult GetMessage() => new() { Message = "Hello, World!" };
 
     }
 

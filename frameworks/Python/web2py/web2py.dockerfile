@@ -24,4 +24,6 @@ RUN python compile_apps.py
 
 WORKDIR /web2py
 
+EXPOSE 8080
+
 CMD gunicorn web2py.wsgi:application -c gunicorn_conf.py

@@ -1,21 +1,19 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.0-alpine AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
+COPY Benchmarks .
+RUN dotnet publish -c Release -o out
 
-# copy csproj and restore as distinct layers
-COPY Benchmarks/*.csproj ./Benchmarks/
-WORKDIR /app/Benchmarks
-RUN dotnet restore
+FROM mcr.microsoft.com/dotnet/runtime:8.0 AS runtime
+ENV DOTNET_SYSTEM_NET_SOCKETS_INLINE_COMPLETIONS 1
 
-# copy and build app and libraries
-WORKDIR /app/
-COPY Benchmarks/. ./Benchmarks/
-WORKDIR /app/Benchmarks
-RUN dotnet publish -c Release -r linux-musl-x64 -o out --self-contained true /p:PublishTrimmed=true
+# Full PGO
+ENV DOTNET_TieredPGO 1 
+ENV DOTNET_TC_QuickJitForLoops 1 
+ENV DOTNET_ReadyToRun 0
 
-FROM mcr.microsoft.com/dotnet/core/runtime-deps:3.0-alpine AS runtime
-ENV DOCKER_FLAVOR=linux
 WORKDIR /app
-COPY --from=build /app/Benchmarks/out ./
-ENTRYPOINT ["./Benchmarks"]
+COPY --from=build /app/out ./
 
 EXPOSE 8080
+
+ENTRYPOINT ["dotnet", "Benchmarks.dll"]

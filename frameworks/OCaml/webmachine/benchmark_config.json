@@ -1,0 +1,26 @@
+{
+  "framework": "webmachine",
+  "tests": [{
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "db_url": "/db",
+        "query_url": "/queries/",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "postgres",
+        "framework": "webmachine",
+        "language": "OCaml",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "cohttp",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "webmachine",
+        "notes": "",
+        "versus": "None"
+      }
+  }]
+}

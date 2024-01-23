@@ -1,24 +1,33 @@
 package hello.model;
 
+import jakarta.persistence.Entity;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 @Document
+@Entity
 public final class Fortune {
-  @Id
-  public int id;
-  public String message;
+	@Id
+	@jakarta.persistence.Id
+	public int id;
+	@Field("message")
+	public String message;
 
-  public Fortune(int id, String message) {
-    this.id = id;
-    this.message = message;
-  }
+	protected Fortune() {
+	}
 
-  public int getId() {
-    return id;
-  }
+	public Fortune(int id, String message) {
+		this.id = id;
+		this.message = message;
+	}
 
-  public String getMessage() {
-    return message;
-  }
+	public int getId() {
+		return id;
+	}
+
+	public String getMessage() {
+		return message;
+	}
 }

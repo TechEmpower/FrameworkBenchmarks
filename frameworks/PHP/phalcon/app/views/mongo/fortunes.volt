@@ -1,0 +1,1 @@
+<table><tr><th>id</th><th>message</th></tr>{% for fortune in fortunes %}<tr><td>{{ fortune.getId() }}</td><td>{{ fortune.message | e }}</td></tr>{% endfor %}</table>

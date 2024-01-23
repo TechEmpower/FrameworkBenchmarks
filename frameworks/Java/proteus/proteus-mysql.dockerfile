@@ -9,4 +9,7 @@ WORKDIR /proteus
 COPY --from=maven /proteus/target/proteus-techempower-1.0.0.jar app.jar
 COPY --from=maven /proteus/target/lib lib
 COPY conf conf
+
+EXPOSE 8080
+
 CMD ["java", "-Dlogback.configurationFile=conf/logback.xml", "-Dconfig.file=conf/application.conf", "-Xms2g", "-Xmx2g", "-XX:+AggressiveOpts", "-server", "-XX:-UseBiasedLocking", "-XX:+UseStringDeduplication", "-Djava.net.preferIPv4Stack=true", "-classpath", "app.jar:lib/*", "io.sinistral.ExampleApplication"]

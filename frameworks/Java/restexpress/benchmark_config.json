@@ -20,7 +20,8 @@
       "database_os": "Linux",
       "display_name": "rest-express",
       "notes": "",
-      "versus": "netty"
+      "versus": "netty",
+      "tags": ["broken"]
     },
     "mysql-raw": {
       "db_url": "/db",
@@ -39,7 +40,8 @@
       "database_os": "Linux",
       "display_name": "rest-express",
       "notes": "",
-      "versus": "netty"
+      "versus": "netty",
+      "tags": ["broken"]
     }
   }]
 }

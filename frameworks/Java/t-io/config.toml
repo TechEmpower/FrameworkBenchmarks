@@ -1,0 +1,15 @@
+[framework]
+name = "t-io"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+approach = "Realistic"
+classification = "Micro"
+database = "None"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "t-io"
+webserver = "None"
+versus = "t-io"

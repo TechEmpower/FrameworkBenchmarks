@@ -1,0 +1,27 @@
+search:
+	default:
+		in: %appDir%
+		classes:
+			- *Factory
+			- *Facade
+
+services:
+	- App\Router\RouterFactory::createRouter
+
+application:
+	#errorPresenter: Error
+	mapping:
+		*: App\*Module\Presenters\*Presenter
+
+session:
+	expiration: 14 days
+
+di:
+	export:
+		parameters: no
+		tags: no
+
+database:
+	dsn: 'mysql:host=tfb-database;port=3306;dbname=hello_world'
+	user: 'benchmarkdbuser'
+	password: 'benchmarkdbpass'

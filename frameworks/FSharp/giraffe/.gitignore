@@ -36,3 +36,6 @@ BDN.Generated/
 binaries/
 global.json
 *.sln
+
+.fake
+.ionide

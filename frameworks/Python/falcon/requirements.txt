@@ -1,7 +1,2 @@
-Cython==0.27.3
-falcon==1.4.1
-greenlet==0.4.14
-gunicorn==19.9.0
-meinheld==0.6.1
-python-mimeparse==1.6.0
-six==1.11.0
+falcon==3.1.1
+jinja2==3.1.3

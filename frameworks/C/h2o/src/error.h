@@ -22,7 +22,7 @@
 #define ERROR_H_
 
 #include <errno.h>
-#include <stdarg.h>
+#include <stdlib.h>
 #include <yajl/yajl_gen.h>
 
 #define CHECK_ERRNO(function, ...) \

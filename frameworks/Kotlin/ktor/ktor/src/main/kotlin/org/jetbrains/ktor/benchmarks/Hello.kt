@@ -1,23 +1,25 @@
 package org.jetbrains.ktor.benchmarks
 
-import com.zaxxer.hikari.*
-import io.ktor.application.*
-import io.ktor.features.*
-import io.ktor.html.*
+import com.zaxxer.hikari.HikariConfig
+import com.zaxxer.hikari.HikariDataSource
 import io.ktor.http.*
 import io.ktor.http.content.*
-import io.ktor.response.*
-import io.ktor.routing.*
-import kotlinx.coroutines.*
-import kotlinx.coroutines.scheduling.*
+import io.ktor.server.application.*
+import io.ktor.server.html.*
+import io.ktor.server.plugins.defaultheaders.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.html.*
-import kotlinx.serialization.*
-import kotlinx.serialization.json.*
-import java.util.*
-import java.util.concurrent.*
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import java.sql.Connection
+import java.util.concurrent.ThreadLocalRandom
 
 @Serializable
-data class Message(val message: String = "Hello, World!")
+data class Message(val message: String)
 
 @Serializable
 data class World(val id: Int, var randomNumber: Int)
@@ -25,53 +27,69 @@ data class World(val id: Int, var randomNumber: Int)
 @Serializable
 data class Fortune(val id: Int, var message: String)
 
-@UseExperimental(ImplicitReflectionSerializer::class, InternalCoroutinesApi::class)
 fun Application.main() {
-    val worldSerializer = World.serializer()
-    val worldListSerializer = World.serializer().list
-
     val dbRows = 10000
     val poolSize = 48
     val pool by lazy { HikariDataSource(HikariConfig().apply { configurePostgres(poolSize) }) }
-    val databaseDispatcher by lazy { ExperimentalCoroutineDispatcher().blocking(poolSize) }
+    val databaseDispatcher = Dispatchers.IO
 
     install(DefaultHeaders)
 
-    val okContent = TextContent("Hello, World!", ContentType.Text.Plain, HttpStatusCode.OK).also { it.contentLength }
+    val helloWorldContent = TextContent("Hello, World!", ContentType.Text.Plain).also { it.contentLength }
 
     routing {
         get("/plaintext") {
-            call.respond(okContent)
+            call.respond(helloWorldContent)
         }
 
         get("/json") {
-            call.respondText(JSON.stringify(Message()), ContentType.Application.Json, HttpStatusCode.OK)
+            call.respondText(Json.encodeToString(Message("Hello, world!")), ContentType.Application.Json)
         }
 
         get("/db") {
             val random = ThreadLocalRandom.current()
-            val queries = call.queries()
-            val result = ArrayList<World>(queries ?: 1)
 
-            withContext(databaseDispatcher) {
+            val world = withContext(databaseDispatcher) {
                 pool.connection.use { connection ->
                     connection.prepareStatement("SELECT id, randomNumber FROM World WHERE id = ?").use { statement ->
-                        for (i in 1..(queries ?: 1)) {
-                            statement.setInt(1, random.nextInt(dbRows) + 1)
-                            statement.executeQuery().use { rs ->
-                                while (rs.next()) {
-                                    result += World(rs.getInt(1), rs.getInt(2))
-                                }
-                            }
+                        statement.setInt(1, random.nextInt(dbRows) + 1)
+
+                        statement.executeQuery().use { rs ->
+                            rs.next()
+                            World(rs.getInt(1), rs.getInt(2))
                         }
                     }
                 }
             }
 
-            call.respondText(when (queries) {
-                null -> JSON.stringify(worldSerializer, result.single())
-                else -> JSON.stringify(worldListSerializer, result)
-            }, ContentType.Application.Json, HttpStatusCode.OK)
+            call.respondText(Json.encodeToString(world), ContentType.Application.Json)
+        }
+
+        fun Connection.selectWorlds(queries: Int, random: ThreadLocalRandom): List<World> {
+            val result = ArrayList<World>(queries)
+            prepareStatement("SELECT id, randomNumber FROM World WHERE id = ?").use { statement ->
+                repeat(queries) {
+                    statement.setInt(1, random.nextInt(dbRows) + 1)
+
+                    statement.executeQuery().use { rs ->
+                        rs.next()
+                        result += World(rs.getInt(1), rs.getInt(2))
+                    }
+                }
+            }
+
+            return result
+        }
+
+        get("/queries") {
+            val queries = call.queries()
+            val random = ThreadLocalRandom.current()
+
+            val result = withContext(databaseDispatcher) {
+                pool.connection.use { it.selectWorlds(queries, random) }
+            }
+
+            call.respondText(Json.encodeToString(result), ContentType.Application.Json)
         }
 
         get("/fortunes") {
@@ -102,7 +120,6 @@ fun Application.main() {
                                 td { +fortune.id.toString() }
                                 td { +fortune.message }
                             }
-
                         }
                     }
                 }
@@ -112,41 +129,27 @@ fun Application.main() {
         get("/updates") {
             val queries = call.queries()
             val random = ThreadLocalRandom.current()
-            val result = ArrayList<World>(queries ?: 1)
+            val result: List<World>
 
             withContext(databaseDispatcher) {
                 pool.connection.use { connection ->
-                    connection.prepareStatement("SELECT id, randomNumber FROM World WHERE id = ?").use { statement ->
-                        for (i in 1..(queries ?: 1)) {
-                            statement.setInt(1, random.nextInt(dbRows) + 1)
-
-                            statement.executeQuery().use { rs ->
-                                while (rs.next()) {
-                                    result += World(rs.getInt(1), rs.getInt(2))
-                                }
-                            }
-                        }
-
-                    }
+                    result = connection.selectWorlds(queries, random)
 
                     result.forEach { it.randomNumber = random.nextInt(dbRows) + 1 }
 
-                    connection.prepareStatement("UPDATE World SET randomNumber = ? WHERE id = ?").use { updateStatement ->
-                        for ((id, randomNumber) in result) {
-                            updateStatement.setInt(1, randomNumber)
-                            updateStatement.setInt(2, id)
+                    connection.prepareStatement("UPDATE World SET randomNumber = ? WHERE id = ?")
+                        .use { updateStatement ->
+                            for ((id, randomNumber) in result) {
+                                updateStatement.setInt(1, randomNumber)
+                                updateStatement.setInt(2, id)
 
-                            updateStatement.executeUpdate()
+                                updateStatement.executeUpdate()
+                            }
                         }
-                    }
-
                 }
             }
 
-            call.respondText(when (queries) {
-                null -> JSON.stringify(worldSerializer, result.single())
-                else -> JSON.stringify(worldListSerializer, result)
-            }, ContentType.Application.Json, HttpStatusCode.OK)
+            call.respondText(Json.encodeToString(result), ContentType.Application.Json)
         }
     }
 }
@@ -177,9 +180,5 @@ fun HikariConfig.configureMySql(poolSize: Int) {
     configureCommon(poolSize)
 }
 
-fun ApplicationCall.queries() = try {
-    request.queryParameters["queries"]?.toInt()?.coerceIn(1, 500)
-} catch (nfe: NumberFormatException) {
-    1
-}
-
+fun ApplicationCall.queries() =
+    request.queryParameters["queries"]?.toIntOrNull()?.coerceIn(1, 500) ?: 1

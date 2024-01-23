@@ -1,5 +1,16 @@
 {
     "require": {
-        "codeigniter/framework": "3.1.11"
+        "php": "^7.4 || ^8",
+        "codeigniter4/framework": "^4.0"
+    },
+    "autoload": {
+        "exclude-from-classmap": [
+            "**/Database/Migrations/**"
+        ]
+    },
+    "support": {
+        "forum": "http://forum.codeigniter.com/",
+        "source": "https://github.com/codeigniter4/CodeIgniter4",
+        "slack": "https://codeigniterchat.slack.com"
     }
 }

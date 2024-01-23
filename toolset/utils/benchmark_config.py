@@ -1,5 +1,5 @@
-from toolset.benchmark.test_types import *
 from toolset.utils.output_helper import QuietOutputStream
+from toolset.test_types import test_types
 
 import os
 import time
@@ -12,14 +12,9 @@ class BenchmarkConfig:
         '''
 
         # Map type strings to their objects
-        types = dict()
-        types['json'] = JsonTestType(self)
-        types['db'] = DBTestType(self)
-        types['query'] = QueryTestType(self)
-        types['fortune'] = FortuneTestType(self)
-        types['update'] = UpdateTestType(self)
-        types['plaintext'] = PlaintextTestType(self)
-        types['cached_query'] = CachedQueryTestType(self)
+        types = {}
+        for type in test_types:
+            types[type] = test_types[type](self)
 
         # Turn type into a map instead of a list of strings
         if 'all' in args.type:
@@ -35,7 +30,6 @@ class BenchmarkConfig:
         self.client_host = args.client_host
         self.audit = args.audit
         self.new = args.new
-        self.clean = args.clean
         self.mode = args.mode
         self.list_tests = args.list_tests
         self.list_tag = args.list_tag
@@ -57,6 +51,8 @@ class BenchmarkConfig:
         self.database_docker_host = None
         self.client_docker_host = None
         self.network = None
+        self.test_container_memory = args.test_container_memory
+        self.extra_docker_runtime_args = args.extra_docker_runtime_args
 
         if self.network_mode is None:
             self.network = 'tfb'

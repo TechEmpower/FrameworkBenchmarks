@@ -21,6 +21,7 @@
 #include <h2o.h>
 #include <pthread.h>
 #include <signal.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -29,33 +30,42 @@
 #include <sys/resource.h>
 #include <sys/signalfd.h>
 #include <sys/time.h>
+#include <sys/utsname.h>
 
+#include "database.h"
 #include "error.h"
 #include "event_loop.h"
 #include "global_data.h"
+#include "list.h"
 #include "request_handler.h"
 #include "thread.h"
 #include "tls.h"
 #include "utility.h"
 
+#define HOST_NAME "default"
+#define SERVER_NAME "h2o"
 #define USAGE_MESSAGE \
-	"Usage:\n%s [-a <max connections accepted simultaneously>] [-b <bind address>] " \
-	"[-c <certificate file>] [-d <database connection string>] [-f template file path] " \
-	"[-j <max reused JSON generators>] [-k <private key file>] [-l <log path>] " \
-	"[-m <max database connections per thread>] [-p <port>] " \
-	"[-q <max enqueued database queries per thread>] [-r <root directory>] " \
-	"[-s <HTTPS port>] [-t <thread number>]\n"
-
-typedef struct {
-	list_t l;
-	void *arg;
-	void (*task)(thread_context_t *, void *);
-} task_t;
+	"Usage:\n%s " \
+	"[-a <max connections accepted simultaneously>] " \
+	"[-b <bind address>] " \
+	"[-c <certificate file>] " \
+	"[-d <database connection string>] " \
+	"[-e <max pipelined database queries per database connection>] " \
+	"[-f <template file path>] " \
+	"[-j <max reused JSON generators>] " \
+	"[-k <private key file>] " \
+	"[-l <log path>] " \
+	"[-m <max database connections per thread>] " \
+	"[-o <database query timeout in seconds>] " \
+	"[-p <port>] " \
+	"[-q <max enqueued database queries per thread>] " \
+	"[-r <root directory>] " \
+	"[-s <HTTPS port>] " \
+	"[-t <thread number>]\n"
 
 static void free_global_data(global_data_t *global_data);
 static int initialize_global_data(const config_t *config, global_data_t *global_data);
 static int parse_options(int argc, char *argv[], config_t *config);
-static void run_postinitialization_tasks(list_t **tasks, thread_context_t *ctx);
 static void set_default_options(config_t *config);
 static void setup_process(void);
 
@@ -71,8 +81,7 @@ static void free_global_data(global_data_t *global_data)
 	if (global_data->file_logger)
 		global_data->file_logger->dispose(global_data->file_logger);
 
-	cleanup_request_handlers(global_data);
-	remove_prepared_statements(global_data->prepared_statements);
+	cleanup_request_handlers(&global_data->request_handler_data);
 	h2o_config_dispose(&global_data->h2o_config);
 
 	if (global_data->ssl_ctx)
@@ -84,6 +93,7 @@ static int initialize_global_data(const config_t *config, global_data_t *global_
 	sigset_t signals;
 
 	memset(global_data, 0, sizeof(*global_data));
+	global_data->buffer_prototype._initial_buf.capacity = H2O_SOCKET_INITIAL_INPUT_BUFFER_SIZE;
 	global_data->memory_alignment = get_maximum_cache_line_size();
 	CHECK_ERRNO(sigemptyset, &signals);
 #ifdef NDEBUG
@@ -92,11 +102,12 @@ static int initialize_global_data(const config_t *config, global_data_t *global_
 	CHECK_ERRNO(sigaddset, &signals, SIGTERM);
 	CHECK_ERRNO_RETURN(global_data->signal_fd, signalfd, -1, &signals, SFD_NONBLOCK | SFD_CLOEXEC);
 	h2o_config_init(&global_data->h2o_config);
+	global_data->h2o_config.server_name = h2o_iovec_init(H2O_STRLIT(SERVER_NAME));
 
 	if (config->cert && config->key)
 		initialize_openssl(config, global_data);
 
-	const h2o_iovec_t host = h2o_iovec_init(H2O_STRLIT("default"));
+	const h2o_iovec_t host = h2o_iovec_init(H2O_STRLIT(HOST_NAME));
 	h2o_hostconf_t * const hostconf = h2o_config_register_host(&global_data->h2o_config,
 	                                                           host,
 	                                                           config->port);
@@ -109,7 +120,10 @@ static int initialize_global_data(const config_t *config, global_data_t *global_
 			goto error;
 	}
 
-	initialize_request_handlers(config, global_data, hostconf, log_handle);
+	initialize_request_handlers(config,
+	                            hostconf,
+	                            log_handle,
+	                            &global_data->request_handler_data);
 
 	// Must be registered after the rest of the request handlers.
 	if (config->root) {
@@ -123,7 +137,15 @@ static int initialize_global_data(const config_t *config, global_data_t *global_
 	global_data->global_thread_data = initialize_global_thread_data(config, global_data);
 
 	if (global_data->global_thread_data) {
-		printf("Number of processors: %zu\nMaximum cache line size: %zu\n",
+		struct utsname name = {.sysname = {'\0'}};
+
+		uname(&name);
+		printf("Operating system: %s %s %s\n"
+		       "Number of processors: %zu\n"
+		       "Maximum cache line size: %zu\n",
+		       name.sysname,
+		       name.release,
+		       name.version,
 		       h2o_numproc(),
 		       global_data->memory_alignment);
 		return 0;
@@ -143,7 +165,7 @@ static int parse_options(int argc, char *argv[], config_t *config)
 	opterr = 0;
 
 	while (1) {
-		const int opt = getopt(argc, argv, "?a:b:c:d:f:j:k:l:m:p:q:r:s:t:");
+		const int opt = getopt(argc, argv, "?a:b:c:d:e:f:j:k:l:m:o:p:q:r:s:t:");
 
 		if (opt == -1)
 			break;
@@ -176,6 +198,9 @@ static int parse_options(int argc, char *argv[], config_t *config)
 			case 'd':
 				config->db_host = optarg;
 				break;
+			case 'e':
+				PARSE_NUMBER(config->max_pipeline_query_num);
+				break;
 			case 'f':
 				config->template_path = optarg;
 				break;
@@ -190,6 +215,9 @@ static int parse_options(int argc, char *argv[], config_t *config)
 				break;
 			case 'm':
 				PARSE_NUMBER(config->max_db_conn_num);
+				break;
+			case 'o':
+				PARSE_NUMBER(config->db_timeout);
 				break;
 			case 'p':
 				PARSE_NUMBER(config->port);
@@ -218,25 +246,22 @@ static int parse_options(int argc, char *argv[], config_t *config)
 	return 0;
 }
 
-static void run_postinitialization_tasks(list_t **tasks, thread_context_t *ctx)
-{
-	if (*tasks)
-		do {
-			task_t * const t = H2O_STRUCT_FROM_MEMBER(task_t, l, *tasks);
-
-			*tasks = (*tasks)->next;
-			t->task(ctx, t->arg);
-			free(t);
-		} while (*tasks);
-}
-
 static void set_default_options(config_t *config)
 {
+	if (!config->db_timeout)
+		config->db_timeout = 10;
+
+	if (!config->https_port)
+		config->https_port = 4443;
+
 	if (!config->max_accept)
 		config->max_accept = 10;
 
 	if (!config->max_db_conn_num)
-		config->max_db_conn_num = 10;
+		config->max_db_conn_num = 1;
+
+	if (!config->max_pipeline_query_num)
+		config->max_pipeline_query_num = SIZE_MAX;
 
 	if (!config->max_query_num)
 		config->max_query_num = 10000;
@@ -246,9 +271,6 @@ static void set_default_options(config_t *config)
 
 	if (!config->thread_num)
 		config->thread_num = h2o_numproc();
-
-	if (!config->https_port)
-		config->https_port = 4443;
 }
 
 static void setup_process(void)
@@ -272,19 +294,6 @@ static void setup_process(void)
 	CHECK_ERRNO(setrlimit, RLIMIT_NOFILE, &rlim);
 }
 
-void add_postinitialization_task(void (*task)(struct thread_context_t *, void *),
-                                 void *arg,
-                                 list_t **postinitialization_tasks)
-{
-	task_t * const t = h2o_mem_alloc(sizeof(*t));
-
-	memset(t, 0, sizeof(*t));
-	t->l.next = *postinitialization_tasks;
-	t->arg = arg;
-	t->task = task;
-	*postinitialization_tasks = &t->l;
-}
-
 int main(int argc, char *argv[])
 {
 	config_t config;
@@ -299,7 +308,6 @@ int main(int argc, char *argv[])
 			setup_process();
 			start_threads(global_data.global_thread_data);
 			initialize_thread_context(global_data.global_thread_data, true, &ctx);
-			run_postinitialization_tasks(&global_data.postinitialization_tasks, &ctx);
 			event_loop(&ctx);
 			// Even though this is global data, we need to close
 			// it before the associated event loop is cleaned up.

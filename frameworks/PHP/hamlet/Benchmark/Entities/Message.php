@@ -7,17 +7,7 @@ use JsonSerializable;
 
 class Message implements Entity, JsonSerializable
 {
-    /** @var int */
-    private $id;
-
-    /** @var string */
-    private $message;
-
-    public function __construct(int $id, string $message)
-    {
-        $this->id = $id;
-        $this->message = $message;
-    }
+    public function __construct(private int $id, private string $message) {}
 
     public function id(): int
     {
@@ -29,7 +19,7 @@ class Message implements Entity, JsonSerializable
         return $this->message;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return [
             'id' => $this->id,

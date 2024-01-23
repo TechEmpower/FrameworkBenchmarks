@@ -1,33 +1,47 @@
 let config = {
-    "synchronize":false,
-    "logging": false,
-    "entities": process.env.NODE_ENV === 'production' ? ["./dist/**/*.entity.js"] : ["./dist/**/*.entity.js", "./src/**/*.entity.ts"]
+  synchronize: false,
+  logging: false,
+  host: 'tfb-database',
+  database: 'hello_world',
+};
+
+switch (process.env.DATABASE_CONFIGURATION_PROFILE) {
+  case 'mongodb':
+    config = {
+      ...config,
+      type: 'mongodb',
+      port: 27017,
+      entities: ['./dist/mongo/*.entity.js'],
+      useUnifiedTopology: true,
+    };
+    break;
+  case 'mysql':
+    config = {
+      ...config,
+      type: 'mysql',
+      port: 3306,
+      username: 'benchmarkdbuser',
+      password: 'benchmarkdbpass',
+      entities: ['./dist/sql/*.entity.js'],
+      extra: {
+        connectionLimit: 30,
+      }
+    };
+    break;
+  case 'postgres':
+  default:
+    config = {
+      ...config,
+      type: 'postgres',
+      port: 5432,
+      username: 'benchmarkdbuser',
+      password: 'benchmarkdbpass',
+      entities: ['./dist/sql/*.entity.js'],
+      extra: {
+        max: 30
+      }
+    };
+    break;
 }
 
-switch(process.env.DATABASE_CONFIGURATION_PROFILE) {
-    case 'mysql':
-        config = {
-            ...config,
-            "type": "mysql",
-            "host": "tfb-database",
-            "port": 3306,
-            "username": "benchmarkdbuser",
-            "password": "benchmarkdbpass",
-            "database": "hello_world",
-        }
-        break;
-    case 'postgres':
-    default:
-        config = {
-            ...config,
-            "type": "postgres",
-            "host": "tfb-database",
-            "port": 5432,
-            "username": "benchmarkdbuser",
-            "password": "benchmarkdbpass",
-            "database": "hello_world",
-        }
-        break;
-}
-
-module.exports = config
+module.exports = config;

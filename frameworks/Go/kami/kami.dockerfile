@@ -1,13 +1,10 @@
-FROM golang:1.10.1
+FROM docker.io/golang:1.19
 
-ADD ./ /kami
+COPY ./src /kami
 WORKDIR /kami
 
-RUN mkdir bin
-ENV GOPATH /kami
-ENV PATH ${GOPATH}/bin:${PATH}
+RUN go mod download
 
-RUN go get github.com/go-sql-driver/mysql
-RUN go get github.com/guregu/kami
+EXPOSE 8080
 
-CMD go run src/kami/server.go
+CMD GOAMD64=v3 go run ./kami/server.go

@@ -12,7 +12,7 @@
       "approach": "Realistic",
       "classification": "Micro",
       "database": "Postgres",
-      "framework": "None",
+      "framework": "echo",
       "language": "Go",
       "flavor": "None",
       "orm": "Raw",

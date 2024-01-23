@@ -1,0 +1,22 @@
+{
+  "framework": "embedio",
+  "tests": [{
+    "default": {
+      "plaintext_url": "/plaintext",
+      "json_url": "/json",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "None",
+      "framework": "EmbedIO",
+      "language": "C#",
+      "orm": "Raw",
+      "platform": ".NET",
+      "webserver": "EmbedIO",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "EmbedIO",
+      "notes": ""
+    }
+  }]
+}

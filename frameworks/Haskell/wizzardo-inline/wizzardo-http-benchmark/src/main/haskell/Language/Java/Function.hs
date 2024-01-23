@@ -4,9 +4,9 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE LinearTypes #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE QualifiedDo #-}
 {-# LANGUAGE QuasiQuotes #-}
 {-# LANGUAGE RankNTypes #-}
-{-# LANGUAGE RebindableSyntax #-}
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TemplateHaskell #-}
@@ -21,11 +21,9 @@ module Language.Java.Function
 import Control.Exception (SomeException, catch)
 import qualified Control.Monad
 import qualified Control.Monad.IO.Class.Linear as Linear
-import qualified Control.Monad.Linear.Builder as Linear
-import qualified Control.Monad.Linear as Linear
+import qualified Control.Functor.Linear as Linear
 import Data.Int
 import Data.Singletons
-import Data.String (fromString)
 import qualified Data.Text as Text
 import qualified Foreign.JNI as JNI
 import Foreign.JNI.Safe
@@ -35,7 +33,7 @@ import GHC.Stable
 import Language.Java.Inline.Safe
 import Language.Java.Safe
 import Prelude
-import Prelude.Linear (Unrestricted(..))
+import Prelude.Linear (Ur(..))
 import System.IO.Unsafe (unsafePerformIO)
 
 imports "io.tweag.inline_java.wizzardo_http_benchmark.*"
@@ -81,14 +79,7 @@ freeCallbackHandle _ _ = freeStablePtr . handleToStablePtr
 --
 -- TODO Maybe move this to a package to deal with function callbacks.
 createBiFunction
-  :: ( IsReferenceType a
-     , IsReferenceType b
-     , IsReferenceType c
-     , SingI a
-     , SingI b
-     , SingI c
-     , Linear.MonadIO m
-     )
+  :: Linear.MonadIO m
   => (NonLinear.J a -> NonLinear.J b -> IO (NonLinear.J c))
   -> m (J ('Class "java.util.function.BiFunction" <> [a, b, c]))
 createBiFunction f =
@@ -139,10 +130,7 @@ registerNativesForBiFunction = do
 -- The Haskell callback must return jnull or a local reference.
 --
 createIntIntToObjFunction
-  :: ( IsReferenceType a
-     , SingI a
-     , Linear.MonadIO m
-     )
+  :: Linear.MonadIO m
   => (Int32 -> Int32 -> IO (NonLinear.J a))
   -> m (J ('Iface "io.tweag.inline_java.wizzardo_http_benchmark.IntIntToObjFunction" <> '[a]))
 createIntIntToObjFunction f =
@@ -192,14 +180,13 @@ createCallback
   -> (StablePtrHandle f -> m (J ty))  -- ^ Instantiates the java callback which
                                       -- may have unregistered native methods
   -> m (J ty)
-createCallback f registerNativesForCallback createJFunction =
-    let Linear.Builder{..} = Linear.monadBuilder in do
-    Unrestricted longFunctionPtr <- Linear.liftIOU (createStablePtrHandle f)
+createCallback f registerNativesForCallback createJFunction = Linear.do
+    Ur longFunctionPtr <- Linear.liftSystemIOU (createStablePtrHandle f)
     jFunction <- createJFunction longFunctionPtr
-    (jFunction, Unrestricted klass) <- getObjectClass jFunction
-    Linear.liftIO (registerNativesForCallback klass)
-    Linear.liftIO (JNI.deleteLocalRef klass)
-    return jFunction
+    (jFunction, UnsafeUnrestrictedReference klass) <- getObjectClass jFunction
+    Linear.liftSystemIO (registerNativesForCallback klass)
+    Linear.liftSystemIO (JNI.deleteLocalRef klass)
+    Linear.return jFunction
 
 -- | Runs the Haskell callback referred by a 'StablePtrHandle' in the
 -- context of a Java function.
@@ -208,8 +195,7 @@ createCallback f registerNativesForCallback createJFunction =
 withJNICallbackHandle :: StablePtrHandle f -> a -> (f -> IO a) -> IO a
 withJNICallbackHandle h valueOnException m =
     (derefStablePtrHandle h >>= m) `catch` \(e :: SomeException) ->
-    fmap (const valueOnException) $ withLocalFrame_ $
-    let Linear.Builder{..} = Linear.monadBuilder in do
+    fmap (const valueOnException) $ withLocalFrame_ $ Linear.do
     jmsg <- reflect (Text.pack $ show e)
     e <- [java| new RuntimeException($jmsg) |]
     throw_ (e :: J ('Class "java.lang.RuntimeException"))

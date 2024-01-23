@@ -1,0 +1,15 @@
+[framework]
+name = "simple-server"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+approach = "Realistic"
+classification = "Micro"
+database = "postgres"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "Netty"
+webserver = "None"
+versus = "None"

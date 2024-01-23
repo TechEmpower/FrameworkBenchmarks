@@ -4,6 +4,8 @@ COPY pom.xml pom.xml
 COPY src src
 RUN mvn compile assembly:single -q
 
+EXPOSE 8080
+
 CMD java                       \
     -server                    \
     -XX:+UseNUMA               \
@@ -14,8 +16,6 @@ CMD java                       \
     -Dframe=16                 \
     -DreadBuf=512              \
     -Dpool=true                \
-    -Ddirect=true              \
-    -Dinline=true              \
     -Dlevel=1                  \
     -Dread=false               \
     -Depoll=true               \

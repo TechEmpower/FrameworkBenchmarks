@@ -1,6 +1,17 @@
 <?php
 
+use Monolog\Handler\StreamHandler;
+use Monolog\Handler\SyslogUdpHandler;
+
 return [
+    /*
+     * Benchmark note:
+     *
+     * If Laravel does not have a log defined it will open an emergency log file and log
+     * errors to the filesystem.   This configuration sends logs to stdout instead.
+     * php-fpm directs these to /dev/null unless "catch_workers_output = yes" is set in php-fpm.conf
+     *
+     */
 
     /*
     |--------------------------------------------------------------------------
@@ -13,7 +24,7 @@ return [
     |
     */
 
-    'default' => env('LOG_CHANNEL', 'stack'),
+    'default' => env('LOG_CHANNEL', 'stdout'),
 
     /*
     |--------------------------------------------------------------------------
@@ -25,45 +36,19 @@ return [
     | you a variety of powerful log handlers / formatters to utilize.
     |
     | Available Drivers: "single", "daily", "slack", "syslog",
-    |                    "errorlog", "custom", "stack"
+    |                    "errorlog", "monolog",
+    |                    "custom", "stack"
     |
     */
 
     'channels' => [
-        'stack' => [
-            'driver' => 'stack',
-            'channels' => ['single'],
-        ],
-
-        'single' => [
-            'driver' => 'single',
-            'path' => storage_path('logs/laravel.log'),
-            'level' => 'debug',
-        ],
-
-        'daily' => [
-            'driver' => 'daily',
-            'path' => storage_path('logs/laravel.log'),
-            'level' => 'debug',
-            'days' => 7,
-        ],
-
-        'slack' => [
-            'driver' => 'slack',
-            'url' => env('LOG_SLACK_WEBHOOK_URL'),
-            'username' => 'Laravel Log',
-            'emoji' => ':boom:',
-            'level' => 'critical',
-        ],
-
-        'syslog' => [
-            'driver' => 'syslog',
-            'level' => 'debug',
-        ],
-
-        'errorlog' => [
-            'driver' => 'errorlog',
-            'level' => 'debug',
+        'stdout' => [
+            'driver' => 'monolog',
+            'handler' => StreamHandler::class,
+            'formatter' => env('LOG_STDERR_FORMATTER'),
+            'with' => [
+                'stream' => 'php://stdout',
+            ],
         ],
     ],
 

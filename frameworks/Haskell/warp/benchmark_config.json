@@ -5,7 +5,7 @@
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries?queries=",
-      "fortune_url": "/fortune",
+      "fortune_url": "/fortunes",
       "update_url": "/updates?queries=",
       "plaintext_url": "/plaintext",
       "port": 7041,
@@ -22,13 +22,14 @@
       "database_os": "Linux",
       "display_name": "Warp+Postgres-wire",
       "notes": "Pure haskell.",
-      "dockerfile": "warp-shared.dockerfile"
+      "dockerfile": "warp-shared.dockerfile",
+      "tags": ["broken"]
     },
     "hasql": {
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries?queries=",
-      "fortune_url": "/fortune",
+      "fortune_url": "/fortunes",
       "update_url": "/updates?queries=",
       "plaintext_url": "/plaintext",
       "port": 7041,
@@ -45,13 +46,14 @@
       "database_os": "Linux",
       "display_name": "Warp+Hasql",
       "notes": "Uses libpq system dependency.",
-      "dockerfile": "warp-shared.dockerfile"
+      "dockerfile": "warp-shared.dockerfile",
+      "tags": ["broken"]
     },
     "mysql-haskell": {
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries?queries=",
-      "fortune_url": "/fortune",
+      "fortune_url": "/fortunes",
       "update_url": "/updates?queries=",
       "plaintext_url": "/plaintext",
       "port": 7041,
@@ -68,7 +70,8 @@
       "database_os": "Linux",
       "display_name": "Warp+mysql-haskell",
       "notes": "Pure Haskell.",
-      "dockerfile": "warp-shared.dockerfile"
+      "dockerfile": "warp-shared.dockerfile",
+      "tags": ["broken"]
     }
   }]
 }

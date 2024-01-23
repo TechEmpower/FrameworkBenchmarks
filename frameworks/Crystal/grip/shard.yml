@@ -1,0 +1,14 @@
+name: grip
+version: 0.2.0
+
+dependencies:
+  grip:
+    github: grip-framework/grip
+    version: 2.0.0
+
+  pg:
+    github: will/crystal-pg
+    version: 0.26.0
+targets:
+  grip:
+    main: grip.cr

@@ -1,11 +1,21 @@
-FROM ruby:2.4
+FROM ruby:3.3
 
-RUN apt update -yqq && apt install -yqq nginx
+#RUN apt-get update -yqq && apt-get install -yqq nginx
 
-ADD ./ /rack
+ENV BUNDLE_FORCE_RUBY_PLATFORM=true
+ENV RUBY_YJIT_ENABLE=1
 
 WORKDIR /rack
 
-RUN bundle install --jobs=4 --gemfile=/rack/Gemfile --path=/rack/rack/bundle
+COPY Gemfile ./
 
-CMD nginx -c /rack/config/nginx.conf && bundle exec unicorn -E production -c config/unicorn.rb
+RUN bundle config set without 'development test'
+RUN bundle install --jobs=8
+
+COPY . .
+
+EXPOSE 8080
+
+#CMD nginx -c /rack/config/nginx.conf && bundle exec unicorn -E production -c config/unicorn.rb
+
+CMD bundle exec unicorn -c config/unicorn.rb -o 0.0.0.0 -p 8080 -E production

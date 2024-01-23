@@ -1,160 +1,119 @@
 package com.techempower;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.typesafe.config.Config;
-import io.jooby.Jooby;
-import io.jooby.json.JacksonModule;
-import io.jooby.rocker.RockerModule;
-import io.reactiverse.pgclient.PgClient;
-import io.reactiverse.pgclient.PgConnection;
-import io.reactiverse.pgclient.PgIterator;
-import io.reactiverse.pgclient.PgPoolOptions;
-import io.reactiverse.pgclient.Row;
-import io.reactiverse.pgclient.Tuple;
-import io.vertx.core.Vertx;
-import io.vertx.core.VertxOptions;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import static com.techempower.Util.randomWorld;
 import static io.jooby.ExecutionMode.EVENT_LOOP;
 import static io.jooby.MediaType.JSON;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import com.fizzed.rocker.RockerOutputFactory;
+import io.jooby.Context;
+import io.jooby.Jooby;
+import io.jooby.MediaType;
+import io.jooby.ServerOptions;
+import io.jooby.rocker.ByteBufferOutput;
+import io.jooby.rocker.RockerModule;
+import io.vertx.sqlclient.Row;
+import io.vertx.sqlclient.RowIterator;
+import io.vertx.sqlclient.Tuple;
+
 public class ReactivePg extends Jooby {
 
-  private static final String UPDATE_WORLD = "UPDATE world SET randomnumber=$1 WHERE id=$2";
-  private static final String SELECT_WORLD = "SELECT id, randomnumber from WORLD where id=$1";
-  private static final String SELECT_FORTUNE = "SELECT id, message from FORTUNE";
-
   {
+    /** Reduce the number of resources due we do reactive processing. */
+    setServerOptions(
+        new ServerOptions()
+            .setIoThreads(Runtime.getRuntime().availableProcessors() + 1)
+            .setWorkerThreads(Runtime.getRuntime().availableProcessors() + 1)
+    );
+
     /** PG client: */
-    Vertx vertx = Vertx.vertx(new VertxOptions().setPreferNativeTransport(true));
-    PgPoolOptions options = pgPoolOptions(getConfig().getConfig("db"));
-    PgClients clients = PgClients.create(vertx, new PgPoolOptions(options).setMaxSize(1));
+    PgClient client = new PgClient(getConfig().getConfig("db"));
 
     /** Template engine: */
-    install(new RockerModule());
-
-    /** JSON: */
-    install(new JacksonModule());
-    ObjectMapper mapper = require(ObjectMapper.class);
+    install(new RockerModule().reuseBuffer(true));
 
     /** Single query: */
     get("/db", ctx -> {
-      clients.next().preparedQuery(SELECT_WORLD, Tuple.of(randomWorld()), rsp -> {
-        try {
-          if (rsp.succeeded()) {
-            PgIterator rs = rsp.result().iterator();
-            Row row = rs.next();
-            ctx.setResponseType(JSON)
-                .send(mapper.writeValueAsBytes(new World(row.getInteger(0), row.getInteger(1))));
-          } else {
-            ctx.sendError(rsp.cause());
-          }
-        } catch (IOException x) {
-          ctx.sendError(x);
+      client.selectWorld(Tuple.of(randomWorld()), rsp -> {
+        if (rsp.succeeded()) {
+          RowIterator<Row> rs = rsp.result().iterator();
+          Row row = rs.next();
+          ctx.setResponseType(JSON)
+              .send(Json.encode(new World(row.getInteger(0), row.getInteger(1))));
+        } else {
+          ctx.sendError(rsp.cause());
         }
       });
       return ctx;
-    });
+    }).setNonBlocking(true);
 
     /** Multiple queries: */
     get("/queries", ctx -> {
       int queries = Util.queries(ctx);
-      AtomicInteger counter = new AtomicInteger();
-      AtomicBoolean failed = new AtomicBoolean(false);
-      World[] result = new World[queries];
-      PgClient client = clients.next();
-      for (int i = 0; i < result.length; i++) {
-        client.preparedQuery(SELECT_WORLD, Tuple.of(randomWorld()), rsp -> {
-          if (rsp.succeeded()) {
-            PgIterator rs = rsp.result().iterator();
-            Row row = rs.next();
-            result[counter.get()] = new World(row.getInteger(0), row.getInteger(1));
-          } else {
-            if (failed.compareAndSet(false, true)) {
-              ctx.sendError(rsp.cause());
-            }
-          }
-          // ready?
-          if (counter.incrementAndGet() == queries && !failed.get()) {
-            try {
-              ctx.setResponseType(JSON)
-                  .send(mapper.writeValueAsBytes(result));
-            } catch (IOException x) {
-              ctx.sendError(x);
-            }
-          }
-        });
-      }
+      var result = new ArrayList<World>(queries);
+      client.selectWorlds(queries, rsp -> {
+        if (rsp.succeeded()) {
+          RowIterator<Row> rs = rsp.result().iterator();
+          Row row = rs.next();
+          result.add(new World(row.getInteger(0), row.getInteger(1)));
+        } else {
+          sendError(ctx, rsp.cause());
+        }
+        // ready?
+        if (result.size() == queries) {
+          ctx.setResponseType(JSON)
+              .send(Json.encode(result));
+        }
+      });
       return ctx;
-    });
+    }).setNonBlocking(true);
 
     /** Update queries: */
     get("/updates", ctx -> {
       int queries = Util.queries(ctx);
       World[] result = new World[queries];
-      AtomicInteger counter = new AtomicInteger(0);
-      AtomicBoolean failed = new AtomicBoolean(false);
-      clients.next().getConnection(ar -> {
-        if (ar.failed()) {
-          if (failed.compareAndSet(false, true)) {
-            ctx.sendError(ar.cause());
+      client.selectWorldForUpdate(queries, (index, statement) -> {
+        int id = randomWorld();
+        statement.execute(Tuple.of(id), selectCallback -> {
+          if (selectCallback.failed()) {
+            sendError(ctx, selectCallback.cause());
+            return;
           }
-          return;
-        }
-        PgConnection conn = ar.result();
-        for (int i = 0; i < queries; i++) {
-          conn.preparedQuery(SELECT_WORLD, Tuple.of(randomWorld()), query -> {
-            if (query.succeeded()) {
-              PgIterator rs = query.result().iterator();
-              Tuple row = rs.next();
-              World world = new World(row.getInteger(0), randomWorld());
-              result[counter.get()] = world;
-            } else {
-              conn.close();
-              if (failed.compareAndSet(false, true)) {
-                ctx.sendError(query.cause());
-                return;
-              }
+          result[index] = new World(
+              selectCallback.result().iterator().next().getInteger(0),
+              randomWorld());
+          if (index == queries - 1) {
+            // Sort results... avoid dead locks
+            Arrays.sort(result);
+            List<Tuple> batch = new ArrayList<>(queries);
+            for (World world : result) {
+              batch.add(Tuple.of(world.getRandomNumber(), world.getId()));
             }
 
-            if (counter.incrementAndGet() == queries && !failed.get()) {
-              List<Tuple> batch = new ArrayList<>(queries);
-              for (World world : result) {
-                batch.add(Tuple.of(world.getRandomNumber(), world.getId()));
+            client.updateWorld(batch, updateCallback -> {
+              if (updateCallback.failed()) {
+                sendError(ctx, updateCallback.cause());
+              } else {
+                ctx.setResponseType(JSON)
+                    .send(Json.encode(result));
               }
-
-              conn.preparedBatch(UPDATE_WORLD, batch, update -> {
-                conn.close();
-                if (update.failed()) {
-                  ctx.sendError(update.cause());
-                } else {
-                  try {
-                    ctx.setResponseType(JSON)
-                        .send(mapper.writeValueAsBytes(result));
-                  } catch (IOException x) {
-                    ctx.sendError(x);
-                  }
-                }
-              });
-            }
-          });
-        }
+            });
+          }
+        });
       });
       return ctx;
-    });
+    }).setNonBlocking(true);
 
     /** Fortunes: */
+    RockerOutputFactory<ByteBufferOutput> factory = require(RockerOutputFactory.class);
     get("/fortunes", ctx -> {
-      clients.next().preparedQuery(SELECT_FORTUNE, rsp -> {
+      client.fortunes(rsp -> {
         if (rsp.succeeded()) {
-          PgIterator rs = rsp.result().iterator();
+          RowIterator<Row> rs = rsp.result().iterator();
           List<Fortune> fortunes = new ArrayList<>();
 
           while (rs.hasNext()) {
@@ -167,24 +126,20 @@ public class ReactivePg extends Jooby {
 
           /** render view: */
           views.fortunes template = views.fortunes.template(fortunes);
-          ctx.render(template);
+          ctx.setResponseType(MediaType.html)
+              .send(template.render(factory).toBuffer());
         } else {
-          ctx.sendError(rsp.cause());
+          sendError(ctx, rsp.cause());
         }
       });
       return ctx;
-    });
+    }).setNonBlocking(true);
   }
 
-  private PgPoolOptions pgPoolOptions(Config config) {
-    PgPoolOptions options = new PgPoolOptions();
-    options.setDatabase(config.getString("databaseName"));
-    options.setHost(config.getString("serverName"));
-    options.setPort(config.getInt("portNumber"));
-    options.setUser(config.getString("user"));
-    options.setPassword(config.getString("password"));
-    options.setCachePreparedStatements(true);
-    return options;
+  private void sendError(Context ctx, Throwable cause) {
+    if (!ctx.isResponseStarted()) {
+      ctx.sendError(cause);
+    }
   }
 
   public static void main(String[] args) {

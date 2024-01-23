@@ -1,11 +1,10 @@
 package com.techempower;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jooby.Jooby;
-import io.jooby.hikari.HikariModule;
-import io.jooby.json.JacksonModule;
-import io.jooby.rocker.RockerModule;
+import static com.techempower.Util.randomWorld;
+import static io.jooby.ExecutionMode.EVENT_LOOP;
+import static io.jooby.MediaType.JSON;
 
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,9 +16,9 @@ import java.util.StringJoiner;
 
 import javax.sql.DataSource;
 
-import static com.techempower.Util.randomWorld;
-import static io.jooby.ExecutionMode.EVENT_LOOP;
-import static io.jooby.MediaType.JSON;
+import io.jooby.Jooby;
+import io.jooby.hikari.HikariModule;
+import io.jooby.rocker.RockerModule;
 
 public class App extends Jooby {
 
@@ -27,27 +26,29 @@ public class App extends Jooby {
 
   private static final String MESSAGE = "Hello, World!";
 
-  private static final byte[] MESSAGE_BYTES = MESSAGE.getBytes(StandardCharsets.UTF_8);
+  private static final byte[] MESSAGE_BYTES = MESSAGE.getBytes(StandardCharsets.US_ASCII);
+
+  private static final ByteBuffer MESSAGE_BUFFER = (ByteBuffer) ByteBuffer
+      .allocateDirect(MESSAGE_BYTES.length)
+      .put(MESSAGE_BYTES)
+      .flip();
 
   {
-    /** JSON: */
-    install(new JacksonModule());
-    ObjectMapper mapper = require(ObjectMapper.class);
 
     /** Database: */
     install(new HikariModule());
     DataSource ds = require(DataSource.class);
 
     /** Template engine: */
-    install(new RockerModule());
+    install(new RockerModule().reuseBuffer(true));
 
     get("/plaintext", ctx ->
-        ctx.send(MESSAGE_BYTES)
+        ctx.send(MESSAGE_BUFFER.duplicate())
     );
 
     get("/json", ctx -> ctx
         .setResponseType(JSON)
-        .send(mapper.writeValueAsBytes(new Message(MESSAGE)))
+        .send(Json.encode(new Message(MESSAGE)))
     );
 
     /** Go blocking: */
@@ -67,7 +68,7 @@ public class App extends Jooby {
         }
         return ctx
             .setResponseType(JSON)
-            .send(mapper.writeValueAsBytes(result));
+            .send(Json.encode(result));
       });
 
       /** Multiple queries: */
@@ -86,7 +87,7 @@ public class App extends Jooby {
         }
         return ctx
             .setResponseType(JSON)
-            .send(mapper.writeValueAsBytes(result));
+            .send(Json.encode(result));
       });
 
       /** Updates: */
@@ -119,8 +120,8 @@ public class App extends Jooby {
             statement.executeUpdate();
           }
         }
-        ctx.setResponseType(JSON);
-        return ctx.send(mapper.writeValueAsBytes(result));
+        return ctx.setResponseType(JSON)
+            .send(Json.encode(result));
       });
 
       /** Fortunes: */

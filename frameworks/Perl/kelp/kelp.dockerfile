@@ -1,6 +1,6 @@
 FROM perl:5.26
 
-RUN apt update -yqq && apt install -yqq nginx
+RUN apt-get update -yqq && apt-get install -yqq nginx
 
 WORKDIR /kelp
 
@@ -18,6 +18,8 @@ RUN cpanm --notest --no-man-page \
 ADD ./app.ini /kelp/
 ADD ./app.pl /kelp/
 ADD ./nginx.conf /kelp/
+
+EXPOSE 8080
 
 CMD nginx -c /kelp/nginx.conf && \
     plackup -E production -s Starman --workers=$(nproc) -l /tmp/perl-kelp.sock -a ./app.pl

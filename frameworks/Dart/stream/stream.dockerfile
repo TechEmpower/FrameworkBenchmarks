@@ -1,6 +1,6 @@
 FROM google/dart:1.24
 
-RUN apt update -yqq && apt install -yqq nginx
+RUN apt-get update -yqq && apt-get install -yqq nginx
 
 ADD ./ /stream
 WORKDIR /stream
@@ -8,6 +8,8 @@ WORKDIR /stream
 RUN pub upgrade
 
 RUN chmod -R 777 /stream
+
+EXPOSE 8080
 
 CMD ./nginx-conf.sh && \
     ./start-servers.sh && \

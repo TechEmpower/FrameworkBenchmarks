@@ -2,12 +2,13 @@
   "framework": "beetlex",
   "tests": [
     {
-      "default": {      
+      "default": {
         "fortune_url": "/fortunes",
         "plaintext_url": "/plaintext",
         "json_url": "/json",
         "db_url": "/db",
-        "query_url": "/queries?queries=",   
+        "query_url": "/queries?queries=",
+        "update_url": "/updates?queries=",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Fullstack",
@@ -30,6 +31,8 @@
         "json_url": "/json",
         "db_url": "/db",
         "query_url": "/queries?queries=",
+        "update_url": "/updates?queries=",
+        "cached_query_url": "/cached-worlds?queries=",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Platform",
@@ -46,9 +49,9 @@
         "notes": "",
         "versus": "aspcore"
       },
-      "debug": {
-        "plaintext_url": "/plaintext",
-        "json_url": "/json",
+      "core-updb": {
+        "update_url": "/updates?queries=",
+        "fortune_url": "/fortunes",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Platform",
@@ -61,7 +64,7 @@
         "webserver": "beetlex",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "beetlex-core",
+        "display_name": "beetlex-core-updb",
         "notes": "",
         "versus": "aspcore"
       }

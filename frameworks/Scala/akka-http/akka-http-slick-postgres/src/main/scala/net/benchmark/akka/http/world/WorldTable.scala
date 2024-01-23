@@ -14,5 +14,5 @@ class WorldTable(tag: Tag) extends Table[World](tag, "World") {
 
   def randomNumber = column[Int]("randomnumber")
 
-  def * = (id, randomNumber) <> (World.tupled, World.unapply)
+  def * = (id, randomNumber).<>(World.tupled, World.unapply)
 }

@@ -97,7 +97,7 @@ local Benchmark
 do
   local _parent_0 = lapis.Application
   local _base_0 = {
-    ["/"] = function(self)
+    ["/json"] = function(self)
       return {
         json = {
           message = "Hello, World!"

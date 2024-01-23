@@ -1,0 +1,28 @@
+{
+  "framework": "flight",
+  "tests": [{
+    "default": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "db_url": "/db",
+      "fortune_url": "/fortunes",
+      "query_url": "/db-multiple?queries=",
+      "update_url": "/updates?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "Flight",
+      "language": "PHP",
+      "flavor": "PHP8",
+      "orm": "Raw",
+      "platform": "FPM/FastCGI",
+      "webserver": "nginx",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "flight",
+      "notes": "",
+      "versus": "php"
+    } 
+  }]
+}

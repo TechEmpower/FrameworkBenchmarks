@@ -1,0 +1,20 @@
+[framework]
+name = "genhttp"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+urls.db = "/db"
+urls.query = "/queries/"
+urls.update = "/updates/"
+urls.fortune = "/fortunes"
+urls.cached_query = "/cached-worlds/"
+approach = "Realistic"
+classification = "Fullstack"
+database = "Postgres"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = ".NET"
+webserver = "GenHTTP"
+versus = "None"

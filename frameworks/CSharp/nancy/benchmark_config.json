@@ -5,7 +5,7 @@
       "plaintext_url":"/plaintext",
       "json_url": "/json",
       "db_url": "/db",
-      "query_url": "/query/",
+      "query_url": "/queries/",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Micro",
@@ -18,7 +18,7 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "Nancy on ASP.NET Core on Mono",
+      "display_name": "Nancy [ASP.NET Core, Mono, My]",
       "notes": "",
       "versus": "aspcore-mono"
     },
@@ -26,7 +26,7 @@
       "plaintext_url":"/plaintext",
       "json_url": "/json",
       "db_url": "/db",
-      "query_url": "/query/",
+      "query_url": "/queries/",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Micro",
@@ -39,7 +39,7 @@
       "webserver": "Kestrel",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "Nancy on ASP.NET Core on .NET Core",
+      "display_name": "Nancy [ASP.NET Core, My]",
       "notes": "",
       "versus": "aspcore"
     }

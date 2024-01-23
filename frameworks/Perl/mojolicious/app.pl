@@ -80,23 +80,23 @@ helper 'render_query' => sub {
   foreach (1 .. $q) {
     my $id = 1 + int rand 10_000;
 
-    push @queries, $self->helpers->pg->db->query_p('SELECT randomnumber FROM World WHERE id=?', $id)
+    push @queries, $self->helpers->pg->db->query_p('SELECT id,randomnumber FROM World WHERE id=?', $id)
     ->then(sub{
 	my $randomNumber = $_[0]->array->[0];
-		
+
 	return Mojo::Promise->new->resolve($id, $randomNumber)
         ->then(sub{
 	   if($update) {
 		$randomNumber = 1 + int rand 10_000;
 		return Mojo::Promise->all(
-		    Mojo::Promise->new->resolve($_[0], $randomNumber), 
+		    Mojo::Promise->new->resolve($_[0], $randomNumber),
 		    $self->helpers->pg->db->query_p('UPDATE World SET randomnumber=? WHERE id=?', $randomNumber, $id)
 		)
 		->then(sub {
 	            return $_[0];
 	        })
 	    }
-            return [shift, shift];   
+            return [shift, shift];
         })
     });
   }

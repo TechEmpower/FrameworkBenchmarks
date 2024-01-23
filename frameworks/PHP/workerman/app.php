@@ -1,105 +1,106 @@
 <?php
-use Workerman\Protocols\Http;
+use Workerman\Protocols\Http\Response;
+use Workerman\Protocols\Http\Request;
 
 function init()
 {
-    global $statement, $fortune, $random, $update;
-    $pdo = new PDO('mysql:host=tfb-database;dbname=hello_world',
-        'benchmarkdbuser', 'benchmarkdbpass',
-        [PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        PDO::ATTR_EMULATE_PREPARES    => false]
+    global $world, $fortune, $update;
+    $pdo = new PDO(
+        'mysql:host=tfb-database;dbname=hello_world',
+        'benchmarkdbuser',
+        'benchmarkdbpass',
+        [
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            PDO::ATTR_EMULATE_PREPARES    => false
+        ]
     );
-    $statement = $pdo->prepare('SELECT id,randomNumber FROM World WHERE id=?');
-    $fortune   = $pdo->prepare('SELECT id,message FROM Fortune');
-    $random    = $pdo->prepare('SELECT randomNumber FROM World WHERE id=?');
-    $update    = $pdo->prepare('UPDATE World SET randomNumber=? WHERE id=?');
+    $world   = $pdo->prepare('SELECT id,randomNumber FROM World WHERE id=?');
+    $fortune = $pdo->prepare('SELECT id,message FROM Fortune');
+    $update  = $pdo->prepare('UPDATE World SET randomNumber=? WHERE id=?');
 }
 
-function router()
+function router(Request $request)
 {
-    switch (parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)) {
-        case '/plaintext':
-            Http::header('Content-Type: text/plain');
+    return match($request->path()) {
+        '/plaintext' => text(),
+        '/json'      => json(), 
+        '/db'        => db(),
+        '/fortunes'  => fortune(),
+        '/query'     => query($request),
+        '/update'    => updateraw($request),
+        // '/info'      => info(),
+        default      => new Response(404, [], 'Error 404'),
+    };
+}
 
-            return 'Hello, World!';
+function text()
+{
+    return new Response(200, [
+        'Content-Type' => 'text/plain',
+        'Date'         => Header::$date
+    ], 'Hello, World!');
+}
 
-        case '/json':
-            Http::header('Content-Type: application/json');
-
-            return json_encode(['message' => 'Hello, World!']);
-
-        case '/db':
-            return db();
-
-        case '/fortune':
-            // By default use 'Content-Type: text/html; charset=utf-8';
-            return fortune();
-
-        case '/query':
-            return query();
-
-        case '/update':
-            return updateraw();
-
-/*       case '/info':
-            Http::header('Content-Type: text/plain');
-            ob_start();
-            phpinfo();
-            return ob_get_clean();
- */ 
-        default:
-            Http::responseCode(404);
-            return 'Error 404';
-    }
+function json()
+{
+    return new Response(200, [
+        'Content-Type' => 'application/json',
+        'Date'         => Header::$date
+    ], json_encode(['message' => 'Hello, World!']));
 }
 
 function db()
 {
-    global $statement;
-    Http::header('Content-Type: application/json');
+    global $world;
 
-    $statement->execute([mt_rand(1, 10000)]);
+    $world->execute([mt_rand(1, 10000)]);
 
-    return json_encode($statement->fetch());
+    return new Response(200, [
+        'Content-Type' => 'application/json',
+        'Date'         => Header::$date
+    ], json_encode($world->fetch()));
 }
 
-function query()
+function query($request)
 {
-    global $statement;
-    Http::header('Content-Type: application/json');
+    global $world;
 
     $query_count = 1;
-    if ($_GET['q'] > 1) {
-        $query_count = min($_GET['q'], 500);
+    $q = (int) $request->get('q');
+    if ($q > 1) {
+        $query_count = min($q, 500);
     }
 
     while ($query_count--) {
-        $statement->execute([mt_rand(1, 10000)]);
-        $arr[] = $statement->fetch();
+        $world->execute([mt_rand(1, 10000)]);
+        $arr[] = $world->fetch();
     }
 
-    return json_encode($arr);
+    return new Response(200, [
+        'Content-Type' => 'application/json',
+        'Date'         => Header::$date
+    ], json_encode($arr));
 }
 
-function updateraw()
+function updateraw($request)
 {
-    global $random, $update;
-    Http::header('Content-Type: application/json');
+    global $world, $update;
 
     $query_count = 1;
-    if ($_GET['q'] > 1) {
-        $query_count = min($_GET['q'], 500);
+    $q = (int) $request->get('q');
+    if ($q > 1) {
+        $query_count = min($q, 500);
     }
 
     while ($query_count--) {
         $id = mt_rand(1, 10000);
-        $random->execute([$id]);
-        $world = ['id' => $id, 'randomNumber' => $random->fetchColumn()];
+        $world->execute([$id]);
+        $item = $world->fetch();
         $update->execute(
-            [$world['randomNumber'] = mt_rand(1, 10000), $id]
+            [$item['randomNumber'] = mt_rand(1, 10000), $id]
         );
 
-        $arr[] = $world;
+        $arr[] = $item;
     }
 
     // $pdo->beginTransaction();
@@ -107,8 +108,10 @@ function updateraw()
     //     $update->execute([$world['randomNumber'], $world['id']]);
     // }
     // $pdo->commit();
-
-    return json_encode($arr);
+    return new Response(200, [
+        'Content-Type' => 'application/json',
+        'Date'         => Header::$date
+    ], json_encode($arr));
 }
 
 function fortune()
@@ -127,7 +130,16 @@ function fortune()
         $html .= "<tr><td>$id</td><td>$message</td></tr>";
     }
 
-    return '<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>'
-            .$html.
-            '</table></body></html>';
+    return new Response(200, [
+        'Date'         => Header::$date
+    ], "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>$html</table></body></html>"
+    );
 }
+
+/* function info()
+{
+    ob_start();
+    phpinfo();
+    return new Response(200, ['Content-Type' => 'text/plain'], ob_get_clean());
+}
+ */

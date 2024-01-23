@@ -1,12 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <OutputType>Exe</OutputType>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Peachpie.AspNetCore.Web" Version="1.0.0-appv3144" />
+    <PackageReference Include="Peachpie.AspNetCore.Web" Version="$(PeachpieVersion)" />
   </ItemGroup>
 
   <ItemGroup>

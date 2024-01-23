@@ -6,7 +6,6 @@ import traceback
 from toolset.benchmark.benchmarker import Benchmarker
 from toolset.utils.scaffolding import Scaffolding
 from toolset.utils.audit import Audit
-from toolset.utils import cleaner
 from toolset.utils.benchmark_config import BenchmarkConfig
 from toolset.utils.output_helper import log
 
@@ -74,11 +73,6 @@ def main(argv=None):
         default=False,
         help='Audits framework tests for inconsistencies')
     parser.add_argument(
-        '--clean',
-        action='store_true',
-        default=False,
-        help='Removes the results directory')
-    parser.add_argument(
         '--new',
         action='store_true',
         default=False,
@@ -133,7 +127,7 @@ def main(argv=None):
     parser.add_argument(
         '--type',
         choices=[
-            'all', 'json', 'db', 'query', 'cached_query', 'fortune', 'update',
+            'all', 'json', 'db', 'query', 'cached-query', 'fortune', 'update',
             'plaintext'
         ],
         nargs='+',
@@ -193,6 +187,15 @@ def main(argv=None):
         nargs='+',
         default=[1, 10, 20, 50, 100],
         help='List of cached query levels to benchmark')
+    parser.add_argument(
+        '--test-container-memory',
+        default=None,
+        help='Amount of memory to be given to the test container')
+    parser.add_argument(
+        '--extra-docker-runtime-args',
+        nargs='*',
+        default=None,
+        help='Extra docker arguments to be passed to the test container')
 
     # Network options
     parser.add_argument(
@@ -214,10 +217,6 @@ def main(argv=None):
 
         elif config.audit:
             Audit(benchmarker).start_audit()
-
-        elif config.clean:
-            cleaner.clean(benchmarker.results)
-            benchmarker.docker_helper.clean()
 
         elif config.list_tests:
             all_tests = benchmarker.metadata.gather_tests()

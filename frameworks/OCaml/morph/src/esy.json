@@ -1,0 +1,49 @@
+{
+  "name": "morph-tfb",
+  "version": "0.0.0",
+  "description": "Benchmarks for morph",
+  "esy": {
+    "build": ["dune build -p #{self.name}"],
+    "buildDev": "dune build --root=. --promote-install-file"
+  },
+  "scripts": {
+    "start": "redemon -p ./src dune exec src/tfb.exe",
+    "test": "dune runtest --no-buffer",
+    "watch:test": "redemon -p ./oidc -p ./oidc-client -p ./test esy x RunTests.exe",
+    "docs": "dune build @doc --root .",
+    "fmt": "dune build @fmt --auto-promote --root .",
+    "docs-path": "esy echo #{self.target_dir / 'default' / '_doc' / '_html' / 'index.html'}"
+  },
+  "dependencies": {
+    "@esy-ocaml/reason": "^3.6.2",
+    "@opam/archi": "*",
+    "@opam/archi-lwt": "*",
+    "@opam/caqti": "^1.2.0",
+    "@opam/caqti-lwt": "^1.2.0",
+    "@opam/caqti-driver-postgresql": "^1.2.0",
+    "@opam/dune": "^2.5.0",
+    "@opam/fmt": "*",
+    "@opam/logs": "*",
+    "@opam/lwt": "^5.0.0",
+    "@opam/routes": "*",
+    "@opam/uri": "*",
+    "@opam/yojson": "*",
+    "@reason-native-web/morph": "^0.6.1",
+    "@reason-native-web/piaf": "^1.4.0",
+    "@reason-native-web/esy-openssl": "^1.1.1006",
+    "@opam/conf-libev": "esy-packages/libev:package.json#0b5eb6685b688649045aceac55dc559f6f21b829",
+    "ocaml": "~4.10.0"
+  },
+  "devDependencies": {
+    "@opam/merlin": "*",
+    "@opam/ocaml-lsp-server": "ocaml/ocaml-lsp:ocaml-lsp-server.opam",
+    "@opam/ocamlformat": "*"
+  },
+  "resolutions": {
+    "@reason-native-web/morph": "reason-native-web/morph:morph.json#c7bdd60dbfb99eccd4ce27559117919455061e0e",
+    "@opam/caqti": "paurkedal/ocaml-caqti:caqti.opam#4a09a3f5fab4f15c90f1cf1790688f6e6bb94185",
+    "@opam/conf-postgresql": "ulrikstrid/postgresql:package.json#193d72af7f2132e30ad429401232da6359b248a2",
+    "@opam/conf-pkg-config": "esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79",
+    "@opam/session": "inhabitedtype/ocaml-session:session.opam#6180413"
+  }
+}

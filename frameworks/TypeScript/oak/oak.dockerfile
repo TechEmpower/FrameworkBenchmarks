@@ -1,6 +1,12 @@
-FROM maxmcd/deno
+FROM denoland/deno
 
-WORKDIR /home
-COPY src src
+EXPOSE 8080
 
-CMD ["deno", "--allow-net", "./src/index.ts"]
+WORKDIR /app
+
+USER deno
+
+COPY ./src/deps.ts .
+RUN deno cache deps.ts
+ADD ./src .
+CMD [ "run", "--allow-all", "main.ts" ]

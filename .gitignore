@@ -1,6 +1,4 @@
-.DS_Store
 installs
-*.log
 node_modules/
 .travis.bak
 
@@ -24,12 +22,17 @@ mods/
 *.versionsBackup
 bin/
 
+# gradle
+build/
+.gradle/
+
 # common junk
 *.log
 *.swp
 *.diff
 *.patch
 */bin/
+
 
 # intellij
 *.iml
@@ -55,6 +58,8 @@ benchmark.cfg
 
 # Visual Studio Code
 .vscode
+.history/
+.devcontainer
 
 # vim
 .*.sw[a-p]
@@ -62,54 +67,5 @@ benchmark.cfg
 # merge tooling
 *.orig
 
-# maven
-*.versionsBackup
-*.releaseBackup
-
-# python-isms
-*.pyc
-
-# java / ruby stuff
-*.lock
-*.war
-
-# go
-go/pkg/*
-beego/pkg/*
-
-# urweb
-frameworks/Ur/urweb/*.exe
-
-# nim
-nimcache
-
-# crystal
-.crystal
-*.out
-
-#don't ignore merge request templates
-!.github/
-dependency-reduced-pom.xml
-
-# dart
-.dart_tool/
-*.packages
-pubspec.lock
-
-# Gradle
-.gradle/
-build/
-
-# haskell
-.stack-work
-
-# Elixir
-_build/
-deps/
-frameworks/PHP/ubiquity/.buildpath
-
-# swift
-Package.resolved
-.swiftpm
-DerivedData
-.build
+# python
+.venv/

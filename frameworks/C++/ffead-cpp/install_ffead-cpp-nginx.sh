@@ -2,18 +2,7 @@
 
 cd $IROOT
 
-#wget -q http://nginx.org/download/nginx-1.13.1.tar.gz
-#tar xf nginx-1.13.1.tar.gz
-
-#cd $IROOT/nginx-1.13.1
-
-#./configure \
-#    --prefix=${IROOT}/nginxfc \
-#    --with-ld-opt="-lstdc++ -L/usr/local/lib -L${IROOT}/ffead-cpp-3.0/lib -L${IROOT} -L${IROOT}/lib" \
-#    --add-module="${IROOT}/ffead-cpp-src/modules/nginx_mod_ffeadcpp" \
-#    --with-cc-opt="-I${IROOT}/ffead-cpp-3.0/include -I${IROOT}/include -I${IROOT}/#include/libmongoc-1.0 -I${IROOT}/include/libbson-1.0 -w -fpermissive -std=gnu++11"
-#make
-#make install
-
-cp ${IROOT}/ffead-cpp-src/modules/nginx_mod_ffeadcpp/nginx.conf ${IROOT}/nginxfc/conf/
-sed -i 's|FFEAD_PATH|'${IROOT}/ffead-cpp-3.0'|g' ${IROOT}/nginxfc/conf/nginx.conf
+cp ${IROOT}/ffead-cpp-src/modules/nginx_mod_ffeadcpp/nginx.conf ${IROOT}/nginx-ffead-mongo/conf/
+sed -i 's|FFEAD_PATH|'${IROOT}/ffead-cpp-6.0'|g' ${IROOT}/nginx-ffead-mongo/conf/nginx.conf
+cp ${IROOT}/ffead-cpp-src/modules/nginx_mod_ffeadcpp/nginx.conf ${IROOT}/nginx-ffead-sql/conf/
+sed -i 's|FFEAD_PATH|'${IROOT}/ffead-cpp-6.0-sql'|g' ${IROOT}/nginx-ffead-sql/conf/nginx.conf

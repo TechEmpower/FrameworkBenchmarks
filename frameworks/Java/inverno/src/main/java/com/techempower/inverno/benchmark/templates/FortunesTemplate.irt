@@ -1,0 +1,30 @@
+package com.techempower.inverno.benchmark.templates;
+
+import com.techempower.inverno.benchmark.model.Fortune;
+
+import java.util.List;
+import org.unbescape.html.HtmlEscape;
+
+option modes = {"STRING", "BYTEBUF", "STREAM", "PUBLISHER_STRING", "PUBLISHER_BYTEBUF"};
+option charset = "utf-8";
+
+(List<Fortune> fortunes) -> {
+<!DOCTYPE html>
+<html>
+<head><title>Fortunes</title></head>
+<body>
+<table>
+	<tr>
+		<th>id</th>
+		<th>message</th>
+	</tr>{fortunes}
+</table>
+</body>
+</html>
+}
+
+(Fortune fortune) -> {
+	<tr>
+		<td>{@fortune.id}</td>
+		<td>{@fortune.message|((String s) -> HtmlEscape.escapeHtml5Xml(s))}</td>
+	</tr>}

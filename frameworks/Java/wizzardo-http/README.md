@@ -12,9 +12,10 @@ This is the wizzardo-http portion of a [benchmarking test suite](../) comparing 
 - [x] JSON serialization
 - [x] Single query
 - [x] Multiple queries
-- [ ] Fortunes
+- [x] Cached queries
+- [x] Fortunes
 - [x] Data updates
 - [x] Plaintext
 
 ## Versions
-wizzardo-http 0.2 (https://github.com/wizzardo/http)
+wizzardo-http 0.4 (https://github.com/wizzardo/webery)

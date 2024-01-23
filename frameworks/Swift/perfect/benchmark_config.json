@@ -16,7 +16,8 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "Perfect",
-      "notes": ""
+      "notes": "",
+      "tags": ["broken"]
     },
     "mysql": {
       "update_url": "/updates?queries=",
@@ -34,7 +35,8 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "Perfect",
-      "notes": ""
+      "notes": "",
+      "tags": ["broken"]
     },
     "postgresql": {
       "update_url": "/updates?queries=",
@@ -52,7 +54,8 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "Perfect",
-      "notes": ""
+      "notes": "",
+      "tags": ["broken"]
     },
     "mongodb": {
       "update_url": "/updates?queries=",
@@ -70,7 +73,8 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "Perfect",
-      "notes": ""
+      "notes": "",
+      "tags": ["broken"]
     }
   }]
 }

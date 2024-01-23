@@ -20,7 +20,6 @@
 #include <assert.h>
 #include <h2o.h>
 #include <errno.h>
-#include <inttypes.h>
 #include <limits.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -33,7 +32,7 @@
 #include "list.h"
 #include "utility.h"
 
-#define DEFAULT_CACHE_LINE_SIZE 128
+#define DEFAULT_CACHE_LINE_SIZE 256
 
 static list_t *get_sorted_sublist(list_t *head, int (*compare)(const list_t *, const list_t *));
 static list_t *merge_lists(list_t *head1,
@@ -221,11 +220,6 @@ uint32_t get_random_number(uint32_t max_rand, unsigned int *seed)
 	return ret / bucket_size;
 }
 
-bool is_power_of_2(size_t x)
-{
-	return !!x & !(x & (x - 1));
-}
-
 // merge sort
 list_t *sort_list(list_t *head, int (*compare)(const list_t *, const list_t *))
 {
@@ -255,17 +249,4 @@ list_t *sort_list(list_t *head, int (*compare)(const list_t *, const list_t *))
 	} while (new_head != &head);
 
 	return head;
-}
-
-size_t round_up_to_power_of_2(size_t x)
-{
-	static_assert(sizeof(size_t) == sizeof(unsigned long),
-	              "The size_t type must have the same size as unsigned long.");
-
-	size_t ret = (SIZE_MAX ^ SIZE_MAX >> 1) >> __builtin_clzl(x);
-
-	if (x - ret)
-		ret <<= 1;
-
-	return ret;
 }

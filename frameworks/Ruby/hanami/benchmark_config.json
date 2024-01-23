@@ -2,16 +2,13 @@
   "framework": "hanami",
   "tests": [{
     "default": {
-      "json_url": "/hello_world/json",
-      "db_url": "/hello_world/db",
-      "query_url": "/hello_world/query?queries=",
-      "fortune_url": "/fortune",
-      "update_url": "/update?queries=",
+      "db_url": "/db",
+      "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
-      "database": "MySQL",
+      "database": "Postgres",
       "framework": "hanami",
       "language": "Ruby",
       "orm": "Full",
@@ -19,31 +16,9 @@
       "webserver": "Puma",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "hanami-puma-mri",
+      "display_name": "hanami",
       "notes": "",
-      "versus": "rack-puma-mri"
-    },
-    "unicorn": {
-      "json_url": "/hello_world/json",
-      "db_url": "/hello_world/db",
-      "query_url": "/hello_world/query?queries=",
-      "fortune_url": "/fortune",
-      "update_url": "/update?queries=",
-      "plaintext_url": "/plaintext",
-      "port": 8080,
-      "approach": "Realistic",
-      "classification": "Fullstack",
-      "database": "MySQL",
-      "framework": "hanami",
-      "language": "Ruby",
-      "orm": "Full",
-      "platform": "Rack",
-      "webserver": "Unicorn",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "hanami-unicorn-mri",
-      "notes": "",
-      "versus": "rack-unicorn-mri"
+      "versus": ""
     }
   }]
 }

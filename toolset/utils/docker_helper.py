@@ -13,8 +13,6 @@ from toolset.databases import databases
 
 from psutil import virtual_memory
 
-# total memory limit allocated for the test container
-mem_limit = int(round(virtual_memory().total * .95))
 
 class DockerHelper:
     def __init__(self, benchmarker=None):
@@ -44,16 +42,14 @@ class DockerHelper:
                     forcerm=True,
                     timeout=3600,
                     pull=True,
-                    buildargs=buildargs
+                    buildargs=buildargs,
+                    decode=True
                 )
                 buffer = ""
                 for token in output:
-                    if token.startswith('{"stream":'):
-                        token = json.loads(token)
-                        token = token[token.keys()[0]].encode('utf-8')
-                        buffer += token
-                    elif token.startswith('{"errorDetail":'):
-                        token = json.loads(token)
+                    if 'stream' in token:
+                        buffer += token[list(token.keys())[0]]
+                    elif 'errorDetail' in token:
                         raise Exception(token['errorDetail']['message'])
                     while "\n" in buffer:
                         index = buffer.index("\n")
@@ -95,25 +91,16 @@ class DockerHelper:
 
     def clean(self):
         '''
-        Cleans all the docker images from the system
+        Cleans all the docker test images from the system and prunes
         '''
-
-        self.server.images.prune()
         for image in self.server.images.list():
             if len(image.tags) > 0:
-                # 'techempower/tfb.test.gemini:0.1' -> 'techempower/tfb.test.gemini'
-                image_tag = image.tags[0].split(':')[0]
-                if image_tag != 'techempower/tfb' and 'techempower' in image_tag:
-                    self.server.images.remove(image.id, force=True)
+                if 'tfb.test.'  in image.tags[0]:
+                    try:
+                        self.server.images.remove(image.id, force=True)
+                    except Exception:
+                        pass
         self.server.images.prune()
-
-        self.database.images.prune()
-        for image in self.database.images.list():
-            if len(image.tags) > 0:
-                # 'techempower/tfb.test.gemini:0.1' -> 'techempower/tfb.test.gemini'
-                image_tag = image.tags[0].split(':')[0]
-                if image_tag != 'techempower/tfb' and 'techempower' in image_tag:
-                    self.database.images.remove(image.id, force=True)
         self.database.images.prune()
 
     def build(self, test, build_log_dir=os.devnull):
@@ -170,7 +157,7 @@ class DockerHelper:
                             run_log_dir, "%s.log" % docker_file.replace(
                                 ".dockerfile", "").lower()), 'w') as run_log:
                     for line in docker_container.logs(stream=True):
-                        log(line, prefix=log_prefix, file=run_log)
+                        log(line.decode(), prefix=log_prefix, file=run_log)
 
             extra_hosts = None
             name = "tfb-server"
@@ -186,7 +173,11 @@ class DockerHelper:
                 }
                 name = None
 
-            sysctl = {'net.core.somaxconn': 65535}
+            if self.benchmarker.config.network_mode is None:
+                sysctl = {'net.core.somaxconn': 65535}
+            else:
+                # Do not pass `net.*` kernel params when using host network mode
+                sysctl = None
 
             ulimit = [{
                 'name': 'nofile',
@@ -204,8 +195,27 @@ class DockerHelper:
 
             # Expose ports in debugging mode
             ports = {}
+            environment = {}
+
             if self.benchmarker.config.mode == "debug":
+                environment['DEBUG'] = 'true'
                 ports = {test.port: test.port}
+
+                # This allows to expose a debugger port to attach
+                # to the webserver from IDE
+                if hasattr(test, 'debug_port'):
+                    ports[test.debug_port] = test.debug_port
+                    
+            # Total memory limit allocated for the test container
+            if self.benchmarker.config.test_container_memory is not None:
+                mem_limit = self.benchmarker.config.test_container_memory
+            else:
+                mem_limit = int(round(virtual_memory().total * .95))
+
+            # Convert extra docker runtime args to a dictionary
+            extra_docker_args = {}
+            if self.benchmarker.config.extra_docker_runtime_args is not None:
+                extra_docker_args = {key: int(value) if value.isdigit() else value for key, value in (pair.split(":", 1) for pair in self.benchmarker.config.extra_docker_runtime_args)}
 
             container = self.server.containers.run(
                 "techempower/tfb.test.%s" % test.name,
@@ -214,6 +224,7 @@ class DockerHelper:
                 network=self.benchmarker.config.network,
                 network_mode=self.benchmarker.config.network_mode,
                 ports=ports,
+                environment=environment,
                 stderr=True,
                 detach=True,
                 init=True,
@@ -223,7 +234,9 @@ class DockerHelper:
                 mem_limit=mem_limit,
                 sysctls=sysctl,
                 remove=True,
-                log_config={'type': None})
+                log_config={'type': None},
+                **extra_docker_args
+                )
 
             watch_thread = Thread(
                 target=watch_container,
@@ -321,10 +334,16 @@ class DockerHelper:
         image_name = "techempower/%s:latest" % database
         log_prefix = image_name + ": "
 
-        sysctl = {
-            'net.core.somaxconn': 65535,
-            'kernel.sem': "250 32000 256 512"
-        }
+        if self.benchmarker.config.network_mode is None:
+            sysctl = {
+                'net.core.somaxconn': 65535,
+                'kernel.sem': "250 32000 256 512"
+            }
+        else:
+            # Do not pass `net.*` kernel params when using host network mode
+            sysctl = {
+                'kernel.sem': "250 32000 256 512"
+            }
 
         ulimit = [{'name': 'nofile', 'hard': 65535, 'soft': 65535}]
 
@@ -401,9 +420,13 @@ class DockerHelper:
         def watch_container(container):
             with open(raw_file, 'w') as benchmark_file:
                 for line in container.logs(stream=True):
-                    log(line, file=benchmark_file)
+                    log(line.decode(), file=benchmark_file)
 
-        sysctl = {'net.core.somaxconn': 65535}
+        if self.benchmarker.config.network_mode is None:
+            sysctl = {'net.core.somaxconn': 65535}
+        else:
+            # Do not pass `net.*` kernel params when using host network mode
+            sysctl = None
 
         ulimit = [{'name': 'nofile', 'hard': 65535, 'soft': 65535}]
 

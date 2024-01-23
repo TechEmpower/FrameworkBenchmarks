@@ -1,9 +1,13 @@
-FROM python:3.6.6-stretch
+FROM python:3.9-bullseye
 
-ADD ./ /flask
+
+RUN apt-get update
+RUN apt-get install libpq-dev python3-dev -y
 
 WORKDIR /flask
+COPY ./ /flask
+RUN pip3 install -U pip; pip3 install -r /flask/requirements-gunicorn.txt 
 
-RUN pip3 install -r /flask/requirements.txt
+EXPOSE 8080
 
 CMD gunicorn app:app -c gunicorn_conf.py

@@ -1,0 +1,11 @@
+[package]
+name = "ohkami"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+ohkami = { version = "0.3.3", features = ["sqlx", "postgres"] }
+serde = { version = "1.0", features = ["derive"] }
+sqlx = "0.6"
+rand = "0.8.5"
+yarte = "0.15"

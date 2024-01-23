@@ -29,7 +29,7 @@ object ApiRoutes {
       handleExceptions(eh) {
         get {
           worldRoutes.routes() ~
-            fortuneRoutes.route()
+          fortuneRoutes.route()
         }
       }
     }

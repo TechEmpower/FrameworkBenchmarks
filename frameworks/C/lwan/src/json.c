@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2017 Intel Corporation
- * Copyright (c) 2020 Leandro A. F. Pereira <leandro@hardinfo.org>
+ * Copyright (c) 2022 L. A. F. Pereira <l@tia.mat.br>
  *
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -80,6 +80,18 @@ static void emit(struct lexer *lexer, enum json_tokens token)
     lexer->start = lexer->pos;
 }
 
+static void* emit_cont(struct lexer *lexer, enum json_tokens token)
+{
+    emit(lexer, token);
+    return lexer_json;
+}
+
+static void* emit_end(struct lexer *lexer, enum json_tokens token)
+{
+    emit(lexer, token);
+    return NULL;
+}
+
 static int next(struct lexer *lexer)
 {
     if (lexer->pos >= lexer->end) {
@@ -112,8 +124,7 @@ static void *lexer_string(struct lexer *lexer)
         int chr = next(lexer);
 
         if (UNLIKELY(chr == '\0')) {
-            emit(lexer, JSON_TOK_ERROR);
-            return NULL;
+            return emit_end(lexer, JSON_TOK_ERROR);
         }
 
         if (chr == '\\') {
@@ -162,8 +173,7 @@ static void *lexer_string(struct lexer *lexer)
     }
 
 error:
-    emit(lexer, JSON_TOK_ERROR);
-    return NULL;
+    return emit_end(lexer, JSON_TOK_ERROR);
 }
 
 static int accept_run(struct lexer *lexer, const char *run)
@@ -184,31 +194,26 @@ static void *lexer_boolean(struct lexer *lexer)
     switch (next(lexer)) {
     case 'r':
         if (LIKELY(!accept_run(lexer, "ue"))) {
-            emit(lexer, JSON_TOK_TRUE);
-            return lexer_json;
+            return emit_cont(lexer, JSON_TOK_TRUE);
         }
         break;
     case 'a':
         if (LIKELY(!accept_run(lexer, "lse"))) {
-            emit(lexer, JSON_TOK_FALSE);
-            return lexer_json;
+            return emit_cont(lexer, JSON_TOK_FALSE);
         }
         break;
     }
 
-    emit(lexer, JSON_TOK_ERROR);
-    return NULL;
+    return emit_end(lexer, JSON_TOK_ERROR);
 }
 
 static void *lexer_null(struct lexer *lexer)
 {
     if (UNLIKELY(accept_run(lexer, "ull") < 0)) {
-        emit(lexer, JSON_TOK_ERROR);
-        return NULL;
+        return emit_end(lexer, JSON_TOK_ERROR);
     }
 
-    emit(lexer, JSON_TOK_NULL);
-    return lexer_json;
+    return emit_cont(lexer, JSON_TOK_NULL);
 }
 
 static void *lexer_number(struct lexer *lexer)
@@ -221,9 +226,7 @@ static void *lexer_number(struct lexer *lexer)
         }
 
         backup(lexer);
-        emit(lexer, JSON_TOK_NUMBER);
-
-        return lexer_json;
+        return emit_cont(lexer, JSON_TOK_NUMBER);
     }
 }
 
@@ -234,23 +237,26 @@ static void *lexer_json(struct lexer *lexer)
 
         switch (chr) {
         case '\0':
-            emit(lexer, JSON_TOK_EOF);
-            return NULL;
+            return emit_end(lexer, JSON_TOK_EOF);
+
         case '}':
         case '{':
         case '[':
         case ']':
         case ',':
         case ':':
-            emit(lexer, (enum json_tokens)chr);
-            return lexer_json;
+            return emit_cont(lexer, (enum json_tokens)chr);
+
         case '"':
             return lexer_string;
+
         case 'n':
             return lexer_null;
+
         case 't':
         case 'f':
             return lexer_boolean;
+
         case '-':
             if (LIKELY(isdigit(peek(lexer)))) {
                 return lexer_number;
@@ -267,8 +273,7 @@ static void *lexer_json(struct lexer *lexer)
                 return lexer_number;
             }
 
-            emit(lexer, JSON_TOK_ERROR);
-            return NULL;
+            return emit_end(lexer, JSON_TOK_ERROR);
         }
     }
 }
@@ -609,26 +614,25 @@ int json_obj_parse(char *payload,
     return obj_parse(&obj, descr, descr_len, val);
 }
 
+/*
+ * Routines has_zero() and has_value() are from
+ * https://graphics.stanford.edu/~seander/bithacks.html#ZeroInWord
+ */
+static ALWAYS_INLINE uint64_t has_zero(uint64_t v)
+{
+    return (v - 0x0101010101010101UL) & ~v & 0x8080808080808080UL;
+}
+
+static ALWAYS_INLINE uint64_t has_value(uint64_t x, char n)
+{
+    return has_zero(x ^ (~0UL / 255 * (uint64_t)n));
+}
+
 static char escape_as(char chr)
 {
-    switch (chr) {
-    case '"':
-        return '"';
-    case '\\':
-        return '\\';
-    case '\b':
-        return 'b';
-    case '\f':
-        return 'f';
-    case '\n':
-        return 'n';
-    case '\r':
-        return 'r';
-    case '\t':
-        return 't';
-    }
-
-    return 0;
+    static const char escaped[] = {'"', '\\', 'b', 'f', 'n', 'r', 't', 't'};
+    uint64_t mask = has_value(0x225c080c0a0d0909UL, chr);
+    return mask == 0 ? 0 : escaped[__builtin_clzl(mask) / 8];
 }
 
 static int json_escape_internal(const char *str,
@@ -645,7 +649,7 @@ static int json_escape_internal(const char *str,
         if (escaped) {
             char bytes[2] = {'\\', escaped};
 
-            if (unescaped - cur) {
+            if (cur - unescaped) {
                 ret |= append_bytes(unescaped, (size_t)(cur - unescaped), data);
                 unescaped = cur + 1;
             }
@@ -654,8 +658,8 @@ static int json_escape_internal(const char *str,
         }
     }
 
-    if (unescaped - cur)
-        return ret | append_bytes(unescaped, (size_t)(cur - unescaped), data);
+    if (cur - unescaped)
+        ret |= append_bytes(unescaped, (size_t)(cur - unescaped), data);
 
     return ret;
 }
@@ -839,15 +843,18 @@ static int encode(const struct json_obj_descr *descr,
     }
 }
 
-static int encode_key_value(const struct json_obj_descr *descr,
-                            const void *val,
-                            json_append_bytes_t append_bytes,
-                            void *data,
-                            bool escape_key)
+static inline int encode_key(const struct json_obj_descr *descr,
+                             json_append_bytes_t append_bytes,
+                             void *data,
+                             bool escape_key)
 {
     int ret;
 
     if (!escape_key) {
+        /* Keys are encoded twice in the descriptor; once without quotes and
+         * the trailing comma, and one with.  Doing it like so cuts some
+         * indirect calls to append_bytes(), which in turn also potentially
+         * cuts some branches in most implementations of it.  */
         ret = append_bytes(descr->field_name + descr->field_name_len,
                            descr->field_name_len + 3 /* 3=len('"":') */, data);
     } else {
@@ -855,7 +862,7 @@ static int encode_key_value(const struct json_obj_descr *descr,
         ret |= append_bytes(":", 1, data);
     }
 
-    return ret | encode(descr, val, append_bytes, data, escape_key);
+    return ret;
 }
 
 int json_obj_encode_full(const struct json_obj_descr *descr,
@@ -876,12 +883,13 @@ int json_obj_encode_full(const struct json_obj_descr *descr,
          * branches.  */
 
         for (size_t i = 1; i < descr_len; i++) {
-            ret |= encode_key_value(&descr[i], val, append_bytes, data,
-                                    escape_key);
+            ret |= encode_key(&descr[i], append_bytes, data, escape_key);
+            ret |= encode(&descr[i], val, append_bytes, data, escape_key);
             ret |= append_bytes(",", 1, data);
         }
 
-        ret |= encode_key_value(&descr[0], val, append_bytes, data, escape_key);
+        ret |= encode_key(&descr[0], append_bytes, data, escape_key);
+        ret |= encode(&descr[0], val, append_bytes, data, escape_key);
     }
 
     return ret | append_bytes("}", 1, data);

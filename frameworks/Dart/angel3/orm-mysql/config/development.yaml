@@ -1,0 +1,2 @@
+# Development-only server configuration.
+debug: true

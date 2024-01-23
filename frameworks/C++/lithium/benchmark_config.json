@@ -2,13 +2,14 @@
   "framework": "lithium",
   "tests": [
     {
-      "mysql": {
+      "default": {
         "json_url"       : "/json",
         "db_url"         : "/db",
         "query_url"      : "/queries?N=",
         "fortune_url"    : "/fortunes",
         "update_url"     : "/updates?N=",
         "plaintext_url"  : "/plaintext",
+        "cached_query_url": "/cached-worlds?N=",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Micro",
@@ -26,12 +27,11 @@
         "versus": "None"
       },
       "postgres": {
-        "json_url"       : "/json",
         "db_url"         : "/db",
         "query_url"      : "/queries?N=",
         "fortune_url"    : "/fortunes",
         "update_url"     : "/updates?N=",
-        "plaintext_url"  : "/plaintext",
+        "cached_query_url": "/cached-worlds?N=",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Micro",
@@ -48,12 +48,16 @@
         "notes": "",
         "versus": "None"
       },
-      "plaintext-g": {
-        "plaintext_url"  : "/plaintext",
+      "postgres-beta": {
+        "db_url"         : "/db",
+        "query_url"      : "/queries?N=",
+        "fortune_url"    : "/fortunes",
+        "update_url"     : "/updates?N=",
+        "cached_query_url": "/cached-worlds?N=",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Micro",
-        "database": "mysql",
+        "database": "Postgres",
         "framework": "Lithium",
         "language": "C++",
         "flavor": "None",
@@ -62,12 +66,10 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "Lithium-plaintext-g",
+        "display_name": "Lithium-postgres-beta",
         "notes": "",
         "versus": "None"
       }
-
-      
     }
   ]
 }

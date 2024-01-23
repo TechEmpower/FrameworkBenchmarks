@@ -1,0 +1,16 @@
+name: toro
+version: 0.1.0
+
+dependencies:
+  toro:
+    github: soveran/toro
+    version: 0.4.1
+  pg:
+    github: will/crystal-pg
+    version: 0.20.0
+
+targets:
+  toro:
+    main: toro.cr
+
+crystal: 0.34.0

@@ -16,4 +16,6 @@ ENV LIBEV_FLAGS=7
 
 ADD ./app.pl ./
 
+EXPOSE 8080
+
 CMD hypnotoad -f /mojo/app.pl

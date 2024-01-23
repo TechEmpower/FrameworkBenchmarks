@@ -1,10 +1,15 @@
-FROM python:2.7.15-stretch
+FROM python:3.9-bullseye
 
+RUN apt-get update; apt-get install libpq-dev python3-dev -y
 WORKDIR /falcon
-COPY app.py app.py
-COPY gunicorn_conf.py gunicorn_conf.py
-COPY requirements.txt requirements.txt
+COPY ./ /falcon
+RUN pip3 install -U pip
+RUN pip3 install cython==0.29.26
+#RUN pip3 install falcon==3.1.1 --no-binary :all:
+RUN pip3 install -r /falcon/requirements.txt
+RUN pip3 install -r /falcon/requirements-meinheld.txt
+RUN pip3 install -r /falcon/requirements-db-pony.txt
 
-RUN pip install -r requirements.txt
+EXPOSE 8080
 
-CMD ["gunicorn", "app:app", "-c", "gunicorn_conf.py"]
+CMD ["gunicorn", "app:wsgi", "-c", "gunicorn_conf.py"]

@@ -6,52 +6,44 @@
 
   <artifactId>jooby</artifactId>
   <groupId>com.techempower</groupId>
-  <version>2.0</version>
+  <version>3.0</version>
 
-  <name>jooby 2.x</name>
+  <name>jooby</name>
 
   <properties>
-    <jooby.version>2.6.0</jooby.version>
-    <!-- downgrade netty and make pg-client happy -->
-    <netty.version>4.1.34.Final</netty.version>
-    <postgresql.version>42.2.5</postgresql.version>
+    <jooby.version>3.0.5</jooby.version>
+    <dsl-json.version>1.10.0</dsl-json.version>
+    <postgresql.version>42.6.0</postgresql.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
 
     <!-- Startup class -->
     <application.class>com.techempower.App</application.class>
   </properties>
 
   <dependencies>
-    <dependency>
-      <groupId>jakarta.ws.rs</groupId>
-      <artifactId>jakarta.ws.rs-api</artifactId>
-    </dependency>
-
-    <!-- jackson -->
-    <dependency>
-      <groupId>io.jooby</groupId>
-      <artifactId>jooby-jackson</artifactId>
-    </dependency>
-
     <!-- jdbc -->
     <dependency>
       <groupId>io.jooby</groupId>
       <artifactId>jooby-hikari</artifactId>
+      <version>${jooby.version}</version>
     </dependency>
 
     <!-- rocker -->
     <dependency>
       <groupId>io.jooby</groupId>
       <artifactId>jooby-rocker</artifactId>
+      <version>${jooby.version}</version>
     </dependency>
 
     <!-- mySQL -->
     <dependency>
-      <groupId>mysql</groupId>
-      <artifactId>mysql-connector-java</artifactId>
+      <groupId>com.mysql</groupId>
+      <artifactId>mysql-connector-j</artifactId>
+      <version>8.0.33</version>
     </dependency>
+
 
     <!-- postgresql -->
     <dependency>
@@ -60,16 +52,17 @@
       <version>${postgresql.version}</version>
     </dependency>
 
-    <!-- logging -->
     <dependency>
-      <groupId>ch.qos.logback</groupId>
-      <artifactId>logback-classic</artifactId>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-pg-client</artifactId>
+      <version>4.4.4</version>
     </dependency>
 
+    <!-- json -->
     <dependency>
-      <groupId>io.reactiverse</groupId>
-      <artifactId>reactive-pg-client</artifactId>
-      <version>0.11.4</version>
+      <groupId>com.dslplatform</groupId>
+      <artifactId>dsl-json-java8</artifactId>
+      <version>${dsl-json.version}</version>
     </dependency>
   </dependencies>
 
@@ -77,9 +70,28 @@
     <finalName>jooby</finalName>
     <plugins>
       <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>3.3.0</version>
+        <executions>
+          <execution>
+            <id>add-source</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>add-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>${project.build.outputDirectory}${file.separator}generated-sources${file.separator}annotations</source>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <groupId>com.fizzed</groupId>
         <artifactId>rocker-maven-plugin</artifactId>
-        <version>1.2.3</version>
+        <version>1.3.0</version>
         <executions>
           <execution>
             <id>generate-rocker-templates</id>
@@ -98,13 +110,18 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.8.1</version>
+        <version>3.11.0</version>
         <configuration>
           <annotationProcessorPaths>
             <path>
               <groupId>io.jooby</groupId>
               <artifactId>jooby-apt</artifactId>
               <version>${jooby.version}</version>
+            </path>
+            <path>
+              <groupId>com.dslplatform</groupId>
+              <artifactId>dsl-json-java8</artifactId>
+              <version>${dsl-json.version}</version>
             </path>
           </annotationProcessorPaths>
         </configuration>
@@ -113,6 +130,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
+        <version>3.4.1</version>
         <executions>
           <execution>
             <id>uber-jar</id>
@@ -130,6 +148,16 @@
                   <mainClass>${application.class}</mainClass>
                 </transformer>
               </transformers>
+              <filters>
+                <filter>
+                  <artifact>*:*</artifact>
+                  <excludes>
+                    <exclude>META-INF/*.SF</exclude>
+                    <exclude>META-INF/*.DSA</exclude>
+                    <exclude>META-INF/*.RSA</exclude>
+                  </excludes>
+                </filter>
+              </filters>
             </configuration>
           </execution>
         </executions>
@@ -143,7 +171,7 @@
       <dependencies>
         <dependency>
           <groupId>io.jooby</groupId>
-          <artifactId>jooby-utow</artifactId>
+          <artifactId>jooby-undertow</artifactId>
           <version>${jooby.version}</version>
         </dependency>
       </dependencies>
@@ -163,42 +191,6 @@
     <profile>
       <id>netty</id>
       <dependencies>
-        <dependency>
-          <groupId>io.netty</groupId>
-          <artifactId>netty-buffer</artifactId>
-          <version>${netty.version}</version>
-        </dependency>
-
-        <dependency>
-          <groupId>io.netty</groupId>
-          <artifactId>netty-handler</artifactId>
-          <version>${netty.version}</version>
-        </dependency>
-
-        <dependency>
-          <groupId>io.netty</groupId>
-          <artifactId>netty-codec-http</artifactId>
-          <version>${netty.version}</version>
-        </dependency>
-
-        <dependency>
-          <groupId>io.netty</groupId>
-          <artifactId>netty-transport-native-epoll</artifactId>
-          <version>${netty.version}</version>
-        </dependency>
-
-        <dependency>
-          <groupId>io.netty</groupId>
-          <artifactId>netty-transport-native-kqueue</artifactId>
-          <version>${netty.version}</version>
-          <classifier>osx-x86_64</classifier>
-        </dependency>
-        <dependency>
-          <groupId>io.netty</groupId>
-          <artifactId>netty-transport-native-epoll</artifactId>
-          <version>${netty.version}</version>
-          <classifier>linux-x86_64</classifier>
-        </dependency>
         <dependency>
           <groupId>io.jooby</groupId>
           <artifactId>jooby-netty</artifactId>

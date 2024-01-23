@@ -1,0 +1,7 @@
+﻿<table>
+    <tr><th>id</th><th>message</th></tr>
+    @foreach (var cookie in Model.Cookies)
+    {
+    <tr><td>@cookie.ID</td><td>@HttpUtility.HtmlEncode(cookie.Message)</td></tr>
+    }
+</table>

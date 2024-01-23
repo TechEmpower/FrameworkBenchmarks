@@ -5,19 +5,31 @@
  */
 package org.redkalex.benchmark;
 
-import javax.persistence.Id;
+import java.util.*;
 import org.redkale.convert.json.JsonConvert;
+import org.redkale.persistence.*;
 
 /**
  *
  * @author zhangjx
  */
-public class World implements Comparable<World> {
+@Entity
+public final class World implements Comparable<World> {
 
     @Id
     private int id;
 
     private int randomNumber;
+
+    public static World[] updateNewNumbers(List<World> list, int[] newNumbers) {
+        World[] worlds = new World[list.size()];
+        for (int i = 0; i < worlds.length; i++) {
+            worlds[i] = list.get(i);
+            worlds[i].randomNumber = newNumbers[i];
+        }
+        Arrays.sort(worlds);
+        return worlds;
+    }
 
     public int getId() {
         return id;

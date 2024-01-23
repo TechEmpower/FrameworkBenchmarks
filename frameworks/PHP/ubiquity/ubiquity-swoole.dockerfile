@@ -1,16 +1,15 @@
-FROM php:7.4
+FROM php:8.3-cli
 
 RUN apt-get update > /dev/null
 
-RUN pecl install swoole-4.4.14 > /dev/null && \
+RUN pecl install swoole > /dev/null && \
     docker-php-ext-enable swoole
 
 RUN apt-get install -y libpq-dev \
     && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
-    && docker-php-ext-install pdo pdo_pgsql pgsql > /dev/null
+    && docker-php-ext-install pdo_pgsql pgsql opcache pcntl > /dev/null
 
 COPY deploy/conf/php-async.ini /usr/local/etc/php/php.ini
-RUN echo "zend_extension=opcache.so" >> /usr/local/etc/php/php.ini
 
 ADD ./ /ubiquity
 WORKDIR /ubiquity
@@ -31,9 +30,12 @@ RUN php composer.phar install --optimize-autoloader --classmap-authoritative --n
 RUN chmod 777 -R /ubiquity/.ubiquity/*
 
 RUN echo "opcache.preload=/ubiquity/app/config/preloader.script.php" >> /usr/local/etc/php/php.ini
+RUN echo "opcache.jit_buffer_size=128M\nopcache.jit=function\n" >> /usr/local/etc/php/php.ini
 
 USER www-data
 
-COPY deploy/swoole/swoolePgsqlServices.php app/config/swooleServices.php
+COPY deploy/conf/swoole/pgsql/swooleServices.php app/config/swooleServices.php
+
+EXPOSE 8080
 
 CMD /ubiquity/vendor/bin/Ubiquity serve -t=swoole -p=8080 -h=0.0.0.0

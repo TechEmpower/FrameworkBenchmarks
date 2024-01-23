@@ -1,0 +1,16 @@
+name: bench
+version: 0.1.0
+
+authors:
+  - your-name-here <your-email-here>
+
+targets:
+  bench:
+    main: src/bench.cr
+
+crystal: ">= 1.0.0"
+
+dependencies:
+  lucky:
+    github: luckyframework/lucky
+    version: ~> 0.28.0

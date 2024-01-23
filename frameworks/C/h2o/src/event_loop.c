@@ -22,7 +22,6 @@
 #include <inttypes.h>
 #include <limits.h>
 #include <netdb.h>
-#include <stdarg.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -39,7 +38,6 @@
 #include "event_loop.h"
 #include "global_data.h"
 #include "thread.h"
-#include "utility.h"
 
 #define DEFAULT_TCP_FASTOPEN_QUEUE_LEN 4096
 
@@ -64,7 +62,9 @@ static void accept_connection(h2o_socket_t *listener, const char *err)
 		                                                      listener->data);
 
 		if (!ctx->shutdown) {
-			size_t accepted = ctx->config->max_accept;
+			size_t accepted = ctx->global_thread_data->config->max_accept;
+
+			assert(accepted);
 
 			do {
 				h2o_socket_t * const sock = h2o_evloop_socket_accept(listener);
@@ -198,6 +198,13 @@ static void process_messages(h2o_multithread_receiver_t *receiver, h2o_linklist_
 
 				global_thread_data->ctx->shutdown = true;
 				break;
+			case TASK:
+			{
+				task_message_t * const task = H2O_STRUCT_FROM_MEMBER(task_message_t, super, msg);
+
+				task->task(task->arg);
+				break;
+			}
 			default:
 				break;
 		}
@@ -232,12 +239,15 @@ static void shutdown_server(h2o_socket_t *listener, const char *err)
 			ctx->event_loop.h2o_socket = NULL;
 		}
 
-		for (size_t i = ctx->config->thread_num - 1; i > 0; i--) {
+		global_thread_data_t * const global_thread_data =
+			ctx->global_thread_data->global_data->global_thread_data;
+
+		for (size_t i = ctx->global_thread_data->config->thread_num - 1; i > 0; i--) {
 			message_t * const msg = h2o_mem_alloc(sizeof(*msg));
 
 			memset(msg, 0, sizeof(*msg));
 			msg->type = SHUTDOWN;
-			h2o_multithread_send_message(&ctx->global_thread_data[i].h2o_receiver, &msg->super);
+			send_message(msg, &global_thread_data[i].h2o_receiver);
 		}
 	}
 }
@@ -265,10 +275,13 @@ static void start_accept_polling(const config_t *config,
 	h2o_socket_read_start(h2o_socket, accept_cb);
 }
 
-void event_loop(thread_context_t *ctx)
+void event_loop(struct thread_context_t *ctx)
 {
-	while (!ctx->shutdown || ctx->event_loop.conn_num)
+	while (!ctx->shutdown || ctx->event_loop.conn_num) {
 		h2o_evloop_run(ctx->event_loop.h2o_ctx.loop, INT32_MAX);
+		process_messages(&ctx->global_thread_data->h2o_receiver,
+		                 &ctx->event_loop.local_messages);
+	}
 }
 
 void free_event_loop(event_loop_t *event_loop, h2o_multithread_receiver_t *h2o_receiver)
@@ -299,6 +312,7 @@ void initialize_event_loop(bool is_main_thread,
 	h2o_context_init(&loop->h2o_ctx, h2o_evloop_create(), &global_data->h2o_config);
 	loop->h2o_accept_ctx.ctx = &loop->h2o_ctx;
 	loop->h2o_accept_ctx.hosts = global_data->h2o_config.hosts;
+	h2o_linklist_init_anchor(&loop->local_messages);
 
 	if (global_data->ssl_ctx) {
 		loop->h2o_accept_ctx.ssl_ctx = global_data->ssl_ctx;
@@ -320,4 +334,14 @@ void initialize_event_loop(bool is_main_thread,
 		global_data->signals->data = loop;
 		h2o_socket_read_start(global_data->signals, shutdown_server);
 	}
+}
+
+void send_local_message(message_t *msg, h2o_linklist_t *local_messages)
+{
+	h2o_linklist_insert(local_messages, &msg->super.link);
+}
+
+void send_message(message_t *msg, h2o_multithread_receiver_t *h2o_receiver)
+{
+	h2o_multithread_send_message(h2o_receiver, &msg->super);
 }

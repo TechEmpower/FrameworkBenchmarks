@@ -1,12 +1,3 @@
-require 'rake'
-require 'hanami/rake_tasks'
-require 'rake/testtask'
+# frozen_string_literal: true
 
-Rake::TestTask.new do |t|
-  t.pattern = 'spec/**/*_spec.rb'
-  t.libs    << 'spec'
-  t.warning = false
-end
-
-task default: :test
-task spec: :test
+require "hanami/rake_tasks"

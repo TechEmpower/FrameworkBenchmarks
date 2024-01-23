@@ -1,0 +1,11 @@
+{
+    "name":"My CFML App",
+    "version":"1.0.0",
+    "installPaths":{
+        "cachebox":"cachebox/"
+    },
+    "dependencies":{
+        "cachebox":"^6.0.0",
+        "commandbox-cfconfig":"^1.2.1"
+    }
+}

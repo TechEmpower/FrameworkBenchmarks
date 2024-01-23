@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+echo never > /sys/kernel/mm/transparent_hugepage/enabled
+redis-server /racket/config/redis.conf &
+/racket/bin/app --host 0.0.0.0 --port 8080

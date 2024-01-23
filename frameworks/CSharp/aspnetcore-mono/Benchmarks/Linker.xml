@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- See: https://github.com/mono/linker/blob/master/docs/data-formats.md -->
+<linker>
+	<assembly fullname="Microsoft.AspNetCore.Server.Kestrel.Core">
+		<type fullname="Microsoft.AspNetCore.Server.Kestrel.Core.Internal.CertificateConfig" />
+	</assembly>
+  <assembly fullname="Microsoft.AspNetCore.Hosting.Abstractions" />
+  <assembly fullname="System.Threading.Channels" />
+</linker>

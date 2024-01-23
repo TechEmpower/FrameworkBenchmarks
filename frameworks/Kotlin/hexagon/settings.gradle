@@ -1,2 +1,15 @@
 
-rootProject.name = name
+include(
+    "model",
+    "core",
+    "store_pgclient",
+    "store_sql",
+
+    "hexagon_jetty_pgclient",
+    "hexagon_jetty_postgresql",
+    "hexagon_helidon_pgclient",
+    "hexagon_helidon_postgresql",
+    "hexagon_nettyepoll_pgclient",
+    "hexagon_nettyepoll_postgresql",
+    "hexagon_tomcat_postgresql",
+)

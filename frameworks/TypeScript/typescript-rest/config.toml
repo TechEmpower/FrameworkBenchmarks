@@ -1,0 +1,18 @@
+[framework]
+name = "typescript-rest"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+urls.db = "/db"
+urls.query = "/queries?queries="
+urls.update = "/updates?queries="
+approach = "Realistic"
+classification = "Micro"
+database = "Postgres"
+database_os = "Linux"
+os = "Linux"
+orm = "Full"
+platform = "NodeJS"
+versus = "nodejs"
+webserver = "None"

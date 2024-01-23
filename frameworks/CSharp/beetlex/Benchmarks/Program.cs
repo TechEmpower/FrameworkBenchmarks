@@ -60,12 +60,18 @@ namespace Benchmarks
         }
 
 
-      
+        public async Task<object> updates(int queries, IHttpContext context)
+        {
+            queries = queries < 1 ? 1 : queries > 500 ? 500 : queries;
+            var result = await GetDB(context).LoadMultipleUpdatesRows(queries);
+            return new SpanJsonResult(result);
+        }
+
 
         [NotAction]
         public void Init(HttpApiServer server, string path)
         {
-           
+
         }
     }
 
@@ -78,29 +84,34 @@ namespace Benchmarks
 
         private HttpApiServer mApiServer;
 
+        private System.Threading.Tasks.TaskCompletionSource<object> mComplete = new TaskCompletionSource<object>();
+
         public async virtual Task StartAsync(CancellationToken cancellationToken)
         {
+
+
             plaintextResult = new StringBytes(_helloWorldPayload);
             mApiServer = new HttpApiServer();
             mApiServer.Options.Port = 8080;
             mApiServer.Options.BufferPoolMaxMemory = 500;
             mApiServer.Options.MaxConnections = 100000;
             mApiServer.Options.Statistical = false;
-            mApiServer.Options.UrlIgnoreCase = false;
             mApiServer.Options.LogLevel = BeetleX.EventArgs.LogType.Error;
             mApiServer.Options.LogToConsole = true;
-            mApiServer.Options.PrivateBufferPool = true;
             mApiServer.Register(typeof(Program).Assembly);
-            mApiServer.HttpConnected += (o, e) => {
+            HeaderTypeFactory.SERVAR_HEADER_BYTES = Encoding.ASCII.GetBytes("Server: TFB\r\n");
+            mApiServer.HttpConnected += (o, e) =>
+            {
                 e.Session["DB"] = new RawDb(new ConcurrentRandom(), Npgsql.NpgsqlFactory.Instance);
             };
+            mApiServer.Started += (o, e) =>
+            {
+                mComplete.TrySetResult(new object());
+            };
             mApiServer.Open();
-            System.Net.Http.HttpClient client = new System.Net.Http.HttpClient();
-            var response = await client.GetAsync("http://localhost:8080/json");
-            mApiServer.BaseServer.Log(LogType.Info, null, $"Get josn {response.StatusCode}");
-            response = await client.GetAsync("http://localhost:8080/plaintext");
-            mApiServer.BaseServer.Log(LogType.Info, null, $"Get plaintext {response.StatusCode}");
-          
+            RawDb._connectionString = "Server=tfb-database;Database=hello_world;User Id=benchmarkdbuser;Password=benchmarkdbpass;Maximum Pool Size=256;NoResetOnClose=true;Enlist=false;Max Auto Prepare=4;Multiplexing=true;Write Coalescing Delay Us=500;Write Coalescing Buffer Threshold Bytes=1000";
+            //RawDb._connectionString = "Server=192.168.2.19;Database=hello_world;User Id=benchmarkdbuser;Password=benchmarkdbpass;Maximum Pool Size=256;NoResetOnClose=true;Enlist=false;Max Auto Prepare=3";
+            await mComplete.Task;
         }
 
         public virtual Task StopAsync(CancellationToken cancellationToken)
@@ -131,5 +142,7 @@ namespace Benchmarks
         {
             JsonSerializer.NonGeneric.Utf8.SerializeAsync(Data, stream);
         }
+
+
     }
 }
