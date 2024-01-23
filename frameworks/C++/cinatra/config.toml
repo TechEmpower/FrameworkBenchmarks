@@ -2,7 +2,7 @@
 name = "cinatra"
 
 [main]
-urls.plaintext = "/plaintext"
+urls.plaintext = "/"
 approach = "Realistic"
 classification = "Fullstack"
 database = "None"
