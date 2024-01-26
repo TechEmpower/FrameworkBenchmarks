@@ -2,7 +2,7 @@
 
 This is the [Paozhu](https://github.com/hggq/paozhu) 
 
-This Benchmarking Test code from https://github.com/hggq/paozhu/releases/tag/v1.5.7
+This Benchmarking Test code from https://github.com/hggq/paozhu/releases/tag/v1.5.8
 
 ### Test Type Implementation Source Code
 
