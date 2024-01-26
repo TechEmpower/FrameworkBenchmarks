@@ -14,7 +14,7 @@ ENV LC_ALL en_US.UTF-8
 
 WORKDIR /
 
-RUN wget https://github.com/hggq/paozhu/releases/download/v1.5.7/benchmark.zip
+RUN wget https://github.com/hggq/paozhu/releases/download/v1.5.8/benchmark.zip
 RUN unzip benchmark.zip
 RUN mv ./benchmark/* ./
 
