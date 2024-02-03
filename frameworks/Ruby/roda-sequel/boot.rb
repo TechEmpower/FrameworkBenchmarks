@@ -29,11 +29,9 @@ def connect(dbtype)
 
   adapters = {
     mysql: {
-      jruby: "jdbc:mysql",
       mri: "mysql2"
     },
     postgresql: {
-      jruby: "jdbc:postgresql",
       mri: "postgres"
     }
   }
@@ -41,12 +39,7 @@ def connect(dbtype)
   opts = {}
 
   # Determine threading/thread pool size and timeout
-  if defined?(JRUBY_VERSION)
-    opts[:max_connections] = (
-      2 * Math.log(Integer(ENV.fetch("MAX_CONCURRENCY")))
-    ).floor
-    opts[:pool_timeout] = 10
-  elsif defined?(Puma) &&
+  if defined?(Puma) &&
         (threads = Puma.cli_config.options.fetch(:max_threads)) > 1
     opts[:max_connections] = (2 * Math.log(threads)).floor
     opts[:pool_timeout] = 10
@@ -57,9 +50,7 @@ def connect(dbtype)
   Sequel.connect "%{adapter}://%{host}/%{database}?user=%{user}&password=%{password}" %
                    {
                      adapter:
-                       adapters.fetch(dbtype).fetch(
-                         defined?(JRUBY_VERSION) ? :jruby : :mri
-                       ),
+                       adapters.fetch(dbtype).fetch(:mri),
                      host: "tfb-database",
                      database: "hello_world",
                      user: "benchmarkdbuser",

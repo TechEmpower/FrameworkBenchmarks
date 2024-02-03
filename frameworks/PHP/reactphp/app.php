@@ -134,7 +134,7 @@ function fortune(Closure $fortune): PromiseInterface
         foreach ($rows as $row) {
             $message = htmlspecialchars($row['message'], ENT_QUOTES, 'UTF-8');
 
-            $html .= "<tr><td>${row['id']}</td><td>${message}</td></tr>";
+            $html .= "<tr><td>{$row['id']}</td><td>{$message}</td></tr>";
         }
 
         return "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>$html</table></body></html>";

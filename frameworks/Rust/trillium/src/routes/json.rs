@@ -1,8 +1,7 @@
-use serde_json::{json, to_string};
-use trillium::{conn_try, Conn, KnownHeaderName};
+use serde_json::json;
+use trillium::Conn;
+use trillium_api::ApiConnExt;
 
 pub async fn handler(conn: Conn) -> Conn {
-    let body = conn_try!(to_string(&json!({"message": "Hello, World!"})), conn);
-    conn.ok(body)
-        .with_header(KnownHeaderName::ContentType, "application/json")
+    conn.with_json(&json!({"message": "Hello, World!"}))
 }

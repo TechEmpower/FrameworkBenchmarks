@@ -1,6 +1,3 @@
-#[global_allocator]
-static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
-
 mod db;
 mod ser;
 mod util;
@@ -20,14 +17,12 @@ use xitca_http::{
 };
 use xitca_service::{fn_service, Service, ServiceExt};
 
-use self::{
-    ser::{json_response, Message},
-    util::{context_mw, HandleResult, QueryParse, SERVER_HEADER_VALUE},
-};
+use ser::{json_response, Message};
+use util::{context_mw, HandleResult, QueryParse, SERVER_HEADER_VALUE};
 
-type Response = http::Response<Once<Bytes>>;
 type Request = http::Request<RequestExt<RequestBody>>;
-type Ctx<'a> = self::util::Ctx<'a, Request>;
+type Response = http::Response<Once<Bytes>>;
+type Ctx<'a> = util::Ctx<'a, Request>;
 
 fn main() -> std::io::Result<()> {
     let service = Router::new()
@@ -40,7 +35,6 @@ fn main() -> std::io::Result<()> {
         .enclosed_fn(middleware_fn)
         .enclosed(context_mw())
         .enclosed(HttpServiceBuilder::h1().io_uring());
-
     xitca_server::Builder::new()
         .bind("xitca-web", "0.0.0.0:8080", service)?
         .build()
