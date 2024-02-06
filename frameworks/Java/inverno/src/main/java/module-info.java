@@ -16,9 +16,9 @@ module com.techempower.inverno.benchmark {
 	requires io.vertx.core;
 	requires java.sql;
 	
-	requires transitive io.netty.transport;
-	requires static io.netty.transport.unix.common;
-	requires static io.netty.transport.epoll;
+	//requires transitive io.netty.transport;
+	//requires static io.netty.transport.unix.common;
+	//requires static io.netty.transport.epoll;
 	
 	exports com.techempower.inverno.benchmark;
 	exports com.techempower.inverno.benchmark.model;
