@@ -147,7 +147,7 @@ std::string Handler::HandleRequestThrow(
 std::string Handler::GetResponse() const {
   const auto pg_result = [this] {
     const auto lock = semaphore_.Acquire();
-    return pg_->Execute(db_helpers::kClusterHostType,
+    return pg_->Execute(db_helpers::kClusterHostType, db_helpers::kDefaultPgCC,
                         select_all_fortunes_query_);
   }();
 
