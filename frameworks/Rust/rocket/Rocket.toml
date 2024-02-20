@@ -1,0 +1,9 @@
+[default]
+address = "0.0.0.0"
+port = 8000
+keep_alive = 0
+log_level = "off"
+
+[default.databases.hello_world]
+url = "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world"
+connect_timeout = 5

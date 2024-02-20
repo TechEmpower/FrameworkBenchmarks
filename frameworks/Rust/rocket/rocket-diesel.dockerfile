@@ -1,4 +1,4 @@
-FROM rust:1.63
+FROM rust:1.76-slim
 
 ENV ROCKET_BENCHMARK_DATABASE_URL=postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world
 
