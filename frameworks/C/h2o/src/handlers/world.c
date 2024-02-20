@@ -238,7 +238,7 @@ static int do_multiple_queries(bool do_update, bool use_cache, h2o_req_t *req)
 
 	// MAX_QUERIES is a relatively small number, so assume no overflow in the following
 	// arithmetic operations.
-	assert(num_query <= MAX_QUERIES);
+	assert(num_query && num_query <= MAX_QUERIES);
 
 	size_t base_size = offsetof(multiple_query_ctx_t, res) + num_query * sizeof(query_result_t);
 
@@ -246,8 +246,16 @@ static int do_multiple_queries(bool do_update, bool use_cache, h2o_req_t *req)
 	base_size = base_size * _Alignof(query_param_t);
 
 	const config_t * const config = ctx->global_thread_data->config;
-	const size_t num_query_in_progress =
-		MIN(num_query, config->max_db_conn_num * config->max_pipeline_query_num);
+	size_t num_query_in_progress = config->max_db_conn_num * config->max_pipeline_query_num;
+
+	if (num_query_in_progress < config->max_db_conn_num ||
+	    num_query_in_progress < config->max_pipeline_query_num)
+		num_query_in_progress = num_query;
+	else
+		num_query_in_progress = MIN(num_query, num_query_in_progress);
+
+	assert(num_query_in_progress);
+
 	size_t sz = base_size + num_query_in_progress * sizeof(query_param_t);
 
 	if (do_update) {

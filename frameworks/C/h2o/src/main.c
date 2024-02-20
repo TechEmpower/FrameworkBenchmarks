@@ -176,10 +176,10 @@ static int parse_options(int argc, char *argv[], config_t *config)
 	do { \
 		errno = 0; \
 		\
-		const long long n = strtoll(optarg, NULL, 10); \
+		const long n = strtol(optarg, NULL, 10); \
 		\
 		if (errno) { \
-			print_library_error(__FILE__, __LINE__, "strtoll", errno); \
+			print_library_error(__FILE__, __LINE__, "strtol", errno); \
 			return 1; \
 		} \
 		\
