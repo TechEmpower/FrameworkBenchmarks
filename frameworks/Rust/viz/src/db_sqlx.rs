@@ -6,10 +6,7 @@ pub use sqlx::{
     Arguments, PgPool, Postgres, Row,
 };
 
-use viz::{
-    async_trait, Error, FromRequest, IntoResponse, Request, RequestExt, Response,
-    StatusCode,
-};
+use viz::{Error, FromRequest, IntoResponse, Request, RequestExt, Response, StatusCode};
 
 use crate::models_sqlx::*;
 use crate::utils::get_query_param;
@@ -17,7 +14,6 @@ use crate::RANGE;
 
 pub struct DatabaseConnection(pub PoolConnection<Postgres>);
 
-#[async_trait]
 impl FromRequest for DatabaseConnection {
     type Error = PgError;
 
@@ -51,7 +47,6 @@ impl IntoResponse for PgError {
 
 pub struct Counter(pub u16);
 
-#[async_trait]
 impl FromRequest for Counter {
     type Error = Error;
 

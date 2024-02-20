@@ -11,7 +11,7 @@ use nanorand::{Rng, WyRand};
 use viz::{
     header::{HeaderValue, SERVER},
     types::State,
-    Request, RequestExt, Response, ResponseExt, Result, Router, Tree,
+    Request, RequestExt, Response, ResponseExt, Result, Router,
 };
 
 mod db_diesel;
@@ -89,15 +89,13 @@ async fn main() {
 
     let rng = WyRand::new();
 
-    let tree = Tree::from(
-        Router::new()
-            .get("/db", db)
-            .get("/fortunes", fortunes)
-            .get("/queries", queries)
-            .get("/updates", updates)
-            .with(State::new(pool))
-            .with(State::new(rng)),
-    );
+    let app = Router::new()
+        .get("/db", db)
+        .get("/fortunes", fortunes)
+        .get("/queries", queries)
+        .get("/updates", updates)
+        .with(State::new(pool))
+        .with(State::new(rng));
 
-    server::serve(tree).await.unwrap()
+    server::serve(app).await.unwrap()
 }
