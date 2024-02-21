@@ -24,7 +24,7 @@ path = "src/main_diesel.rs"
 required-features = ["diesel", "diesel-async", "sailfish"]
 
 [dependencies]
-viz = "0.7"
+viz = "0.8"
 hyper = "1.0"
 hyper-util = "0.1"
 atoi = "2.0"

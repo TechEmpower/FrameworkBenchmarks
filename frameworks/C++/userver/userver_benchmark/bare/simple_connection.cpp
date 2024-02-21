@@ -79,19 +79,18 @@ class ResponseBuffers final {
       return;
     }
 
-    boost::container::small_vector<userver::engine::io::IoData,
-                                   kMaxResponses * 2>
-        iovec(Size() * 2);
+    boost::container::small_vector<struct ::iovec, kMaxResponses * 2> io_vector(
+        Size() * 2);
 
     std::size_t index = 0;
     std::size_t total_size = 0;
-    for (const auto& response : responses_) {
-      iovec[index++] = {response.headers.data(), response.headers.size()};
-      iovec[index++] = {response.body.data(), response.body.size()};
+    for (auto& response : responses_) {
+      io_vector[index++] = {response.headers.data(), response.headers.size()};
+      io_vector[index++] = {response.body.data(), response.body.size()};
       total_size += response.headers.size() + response.body.size();
     }
 
-    if (socket.SendAll(iovec.data(), iovec.size(), {}) != total_size) {
+    if (socket.SendAll(io_vector.data(), io_vector.size(), {}) != total_size) {
       throw std::runtime_error{"Socket closed by remote"};
     }
 

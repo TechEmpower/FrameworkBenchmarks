@@ -16,7 +16,8 @@ use ser::Num;
 use util::{HandleResult, SERVER_HEADER_VALUE};
 
 fn main() -> std::io::Result<()> {
-    App::with_state(db_diesel::create()?)
+    App::new()
+        .with_state(db_diesel::create()?)
         .at_typed(plaintext)
         .at_typed(json)
         .at_typed(db)
