@@ -2,18 +2,18 @@
     "type": "project",
     "license": "proprietary",
     "require": {
-        "php": ">=8.1",
+        "php": ">=8.2",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-mbstring": "*",
-        "symfony/console": "^6",
-        "symfony/dotenv": "^6",
+        "symfony/console": "^7",
+        "symfony/dotenv": "^7",
         "symfony/flex": "^2",
-        "symfony/framework-bundle": "^6",
+        "symfony/framework-bundle": "^7",
         "symfony/orm-pack": "^2",
-        "symfony/twig-bundle": "^6",
-        "symfony/yaml": "^6.0",
-        "joanhey/adapterman": "^0.5"
+        "symfony/twig-bundle": "^7",
+        "symfony/yaml": "^7",
+        "joanhey/adapterman": "^0.6"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
@@ -65,7 +65,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "^6",
+            "require": "^7",
             "docker": true
         }
     }
