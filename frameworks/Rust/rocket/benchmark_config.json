@@ -7,6 +7,7 @@
       "db_url": "/db",
       "fortune_url": "/fortunes",
       "query_url": "/queries?q=",
+      "update_url": "/updates?q=",
       "port": 8000,
       "approach": "Realistic",
       "classification": "Fullstack",
