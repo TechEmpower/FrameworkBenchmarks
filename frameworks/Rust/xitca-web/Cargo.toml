@@ -51,7 +51,7 @@ io-uring = ["xitca-http/io-uring", "xitca-server/io-uring"]
 axum = ["dep:axum", "http-body", "tower", "tower-http", "xitca-web/tower-http-compat" ]
 
 [dependencies]
-xitca-http = "0.1"
+xitca-http = "0.2"
 xitca-io = "0.1"
 xitca-server = "0.1"
 xitca-service = "0.1"
@@ -62,7 +62,7 @@ serde = { version = "1" }
 serde_json = { version = "1" }
 
 # web optional
-xitca-web = { version = "0.1", features = ["json"], optional = true }
+xitca-web = { version = "0.2", features = ["json"], optional = true }
 
 # raw-pg optional
 xitca-postgres = { version = "0.1", optional = true }
@@ -74,7 +74,7 @@ diesel = { version = "2", features = ["postgres", "r2d2"], optional = true }
 sailfish = { version = "0.8", default-features = false, features = ["derive", "perf-inline"], optional = true }
 
 # axum optional
-axum = { version = "0.7", optional = true }
+axum = { version = "0.7", optional = true, default-features = false, features = ["json", "query"] }
 http-body = { version = "1", optional = true }
 tower = { version = "0.4", optional = true }
 tower-http = { version = "0.5", features = ["set-header"], optional = true }

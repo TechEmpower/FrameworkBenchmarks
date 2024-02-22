@@ -9,13 +9,13 @@ RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php > /dev/null && \
 
 RUN apt-get update -yqq > /dev/null && \
     apt-get install -yqq wget git libxml2-dev systemtap-sdt-dev \
-                    zlib1g-dev libpcre3-dev libargon2-0-dev libsodium-dev \
+                    zlib1g-dev libpcre3-dev libargon2-0-dev libsodium-dev libkrb5-dev \
                     php8.3-cli php8.3-dev libphp8.3-embed php8.3-pgsql > /dev/null
 ADD . .
 
-ENV NGINX_VERSION 1.25.3
+ENV NGINX_VERSION 1.25.4
 
-RUN git clone -b v0.0.28 --single-branch --depth 1 https://github.com/rryqszq4/ngx-php.git > /dev/null
+RUN git clone -b v0.0.29 --single-branch --depth 1 https://github.com/rryqszq4/ngx-php.git > /dev/null
 
 RUN wget -q http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && \
     tar -zxf nginx-${NGINX_VERSION}.tar.gz && \

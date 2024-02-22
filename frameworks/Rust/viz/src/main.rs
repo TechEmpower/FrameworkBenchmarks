@@ -3,7 +3,7 @@
 use serde::Serialize;
 use viz::{
     header::{HeaderValue, SERVER},
-    Error, Request, Response, ResponseExt, Result, Router, Tree,
+    Error, Request, Response, ResponseExt, Result, Router,
 };
 
 mod server;
@@ -36,7 +36,5 @@ async fn main() -> Result<()> {
         .get("/plaintext", plaintext)
         .get("/json", json);
 
-    let tree = Tree::from(app);
-
-    server::serve(tree).await.map_err(Error::Boxed)
+    server::serve(app).await.map_err(Error::Boxed)
 }

@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: 'Download maintainers artifact'
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           script: |
             let artifacts = await github.rest.actions.listWorkflowRunArtifacts({
@@ -32,7 +32,7 @@ jobs:
             fs.writeFileSync('${{github.workspace}}/maintainers.zip', Buffer.from(download.data));
       - run: unzip maintainers.zip
       - name: Ping maintainers
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
