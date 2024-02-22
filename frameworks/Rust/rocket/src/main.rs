@@ -1,11 +1,13 @@
 mod database;
 mod models;
 
+use std::fmt::Write;
+
 use rand::{self, Rng};
 use rocket::{launch, get, routes};
 use rocket::serde::json::Json;
 use rocket_db_pools::{Connection, Database};
-use rocket_db_pools::sqlx::{self, Acquire};
+use rocket_db_pools::sqlx;
 use rocket_dyn_templates::{Template, context};
 
 use database::HelloWorld;
@@ -82,7 +84,6 @@ async fn fortunes(mut db: Connection<HelloWorld>) -> Template {
     })
 }
 
-// The update endpoint doesn't work, the database deadlocks because of the amount of requests
 #[get("/updates")]
 async fn updates_empty(db: Connection<HelloWorld>) -> Json<Vec<World>> {
     updates(db, 1).await
@@ -105,21 +106,44 @@ async fn updates(mut db: Connection<HelloWorld>, q: u16) -> Json<Vec<World>> {
         results.push(result);
     }
 
-    let mut tx = db
-        .begin()
-        .await
-        .expect("could not start transaction");
+    let query_string = {
+        let mut query = String::new();
+
+        query.push_str("UPDATE World SET randomnumber = CASE id ");
+
+        let mut pl = 1;
+
+        for _ in 1..=q {
+            let _ = write!(query, "when ${pl} then ${} ", pl + 1);
+            pl += 2;
+        }
+
+        query.push_str("ELSE randomnumber END WHERE id IN (");
+
+        for _ in 1..=q {
+            let _ = write!(query, "${pl},");
+            pl += 1;
+        }
+
+        query.pop();
+        query.push(')');
+
+        query
+    };
+
+    let mut query = sqlx::query(&query_string);
 
     for w in &results {
-        sqlx::query("UPDATE World SET randomnumber = $1 WHERE id = $2")
-            .bind(w.random_number)
-            .bind(w.id)
-            .execute(tx.as_mut())
-            .await
-            .expect("Could not update World");
+        query = query.bind(w.id).bind(w.random_number);
     }
 
-    tx.commit().await.expect("could not update worlds");
+    for w in &results {
+        query = query.bind(w.id);
+    }
+
+    query.execute(db.as_mut())
+        .await
+        .expect("Could not update worlds");
 
     Json(results)
 }
