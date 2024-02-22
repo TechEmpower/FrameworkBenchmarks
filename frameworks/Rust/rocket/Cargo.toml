@@ -23,10 +23,9 @@ path = "src/main.rs"
 #path = "rocket-diesel/main.rs"
 
 [dependencies]
-rocket_sync_db_pools = { version = "0.1.0", default-features = false, features = ["diesel_postgres_pool"] }
-rocket_dyn_templates = { version = "0.1.0", features = ["handlebars"] }
-dotenv = "0.15.0"
+#rocket_sync_db_pools = { version = "0.1.0", default-features = false, features = ["diesel_postgres_pool"] }
 rand = { version = "0.8", features = ["small_rng"] }
 rocket = { version = "0.5.0", features = [ "json" ] }
 rocket_db_pools = { version = "0.1.0", features = [ "sqlx_postgres" ] }
+rocket_dyn_templates = { version = "0.1.0", features = ["handlebars"] }
 sqlx = { version = "0.7", features = ["macros"] }
