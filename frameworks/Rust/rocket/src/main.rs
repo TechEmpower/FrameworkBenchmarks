@@ -31,15 +31,18 @@ fn random_id() -> i32 {
     rng.gen_range(1..=10_000)
 }
 
-#[get("/db")]
-async fn db(mut db: Connection<HelloWorld>) -> Json<World> {
-    let number = random_id();
-    let result: World = sqlx::query_as("SELECT id, randomnumber FROM World WHERE id = $1")
-        .bind(number)
+async fn query_random_world(db: &mut Connection<HelloWorld>) -> World {
+    let world_id = random_id();
+    sqlx::query_as("SELECT id, randomnumber FROM World WHERE id = $1")
+        .bind(world_id)
         .fetch_one(db.as_mut())
         .await
-        .expect("error loading world");
-    Json(result)
+        .expect("Error querying world")
+}
+
+#[get("/db")]
+async fn db(mut db: Connection<HelloWorld>) -> Json<World> {
+    Json(query_random_world(&mut db).await)
 }
 
 #[get("/queries")]
@@ -53,13 +56,9 @@ async fn queries(mut db: Connection<HelloWorld>, q: u16) -> Json<Vec<World>> {
     let mut results = Vec::with_capacity(q.into());
 
     for _ in 0..q {
-        let query_id = random_id();
-        let result: World = sqlx::query_as("SELECT * FROM World WHERE id = $1")
-            .bind(query_id)
-            .fetch_one(db.as_mut())
-            .await
-            .expect("error loading world");
-        results.push(result);
+        let world = query_random_world(&mut db).await;
+
+        results.push(world);
     }
 
     Json(results)
@@ -95,15 +94,10 @@ async fn updates(mut db: Connection<HelloWorld>, q: u16) -> Json<Vec<World>> {
     let mut results = Vec::with_capacity(q.into());
 
     for _ in 0..q {
-        let query_id = random_id();
-        let mut result: World = sqlx::query_as("SELECT * FROM World WHERE id = $1")
-            .bind(query_id)
-            .fetch_one(db.as_mut())
-            .await
-            .expect("World was not found");
+        let mut world = query_random_world(&mut db).await;
 
-        result.random_number = random_id();
-        results.push(result);
+        world.random_number = random_id();
+        results.push(world);
     }
 
     let query_string = {
