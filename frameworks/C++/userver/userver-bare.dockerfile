@@ -6,7 +6,7 @@ RUN apt update && \
 
 WORKDIR /src
 RUN git clone https://github.com/userver-framework/userver.git && \
-    cd userver && git checkout fcf0514be560f46740f8a654f2fdce5dc1cd450c
+    cd userver && git checkout 793ae95dd7ba1fa4993ef685a43078fd49c37754
 
 COPY userver_benchmark/ ./
 RUN mkdir build && cd build && \
