@@ -37,24 +37,23 @@ std::string Handler::HandleRequestThrow(
 }
 
 std::string Handler::GetResponse(int queries) const {
-  boost::container::small_vector<db_helpers::WorldTableRow, 20> result(queries);
-  for (auto& value : result) {
-    value.id = db_helpers::GenerateRandomId();
-  }
-
-  {
+  const auto db_result = [this, queries] {
     const auto lock = semaphore_.Acquire();
 
-    auto trx =
-        pg_->Begin(db_helpers::kClusterHostType, {}, db_helpers::kDefaultPgCC);
-    for (auto& value : result) {
-      value.random_number = trx.Execute(db_helpers::kDefaultPgCC,
-                                        db_helpers::kSelectRowQuery, value.id)
-                                .AsSingleRow<db_helpers::WorldTableRow>(
-                                    userver::storages::postgres::kRowTag)
-                                .random_number;
+    auto query_queue = pg_->CreateQueryQueue(db_helpers::kClusterHostType,
+                                             db_helpers::kDefaultPgCC.execute);
+    for (std::size_t i = 0; i < static_cast<std::size_t>(queries); ++i) {
+      query_queue.Push(db_helpers::kDefaultPgCC, db_helpers::kSelectRowQuery,
+                       db_helpers::GenerateRandomId());
     }
-    trx.Commit();
+
+    return query_queue.Collect(db_helpers::kDefaultPgCC.execute);
+  }();
+
+  boost::container::small_vector<db_helpers::WorldTableRow, 20> result(queries);
+  for (std::size_t i = 0; i < static_cast<std::size_t>(queries); ++i) {
+    result[i] = db_result[i].AsSingleRow<db_helpers::WorldTableRow>(
+        userver::storages::postgres::kRowTag);
   }
 
   userver::formats::json::StringBuilder sb{};
