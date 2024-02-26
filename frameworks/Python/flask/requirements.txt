@@ -9,4 +9,4 @@ itsdangerous==2.1.2
 Jinja2==3.1.3
 MarkupSafe==2.1.2
 ujson==5.4.0
-orjson==3.8.7; implementation_name=='cpython' 
+orjson==3.9.15; implementation_name=='cpython' 
