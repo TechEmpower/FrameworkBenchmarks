@@ -2,6 +2,14 @@
 spring:
   config:
     activate:
+      on-profile: jdbc
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration,org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration,org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration,org.springframework.boot.autoconfigure.data.mongo.MongoRepositoriesAutoConfiguration
+
+---
+spring:
+  config:
+    activate:
       on-profile: jdbc,jpa
   datasource:
     url: jdbc:postgresql://${database.host}:${database.port}/${database.name}
@@ -20,6 +28,8 @@ spring:
   config:
     activate:
       on-profile: jpa
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration,org.springframework.boot.autoconfigure.data.mongo.MongoRepositoriesAutoConfiguration
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     open-in-view: false
@@ -29,6 +39,8 @@ spring:
   config:
     activate:
       on-profile: mongo
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration,org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration,org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
 
 spring.data.mongodb:
   host: tfb-database
@@ -42,3 +54,4 @@ spring:
 
 server.server-header: Spring
 server.servlet.encoding.force: true
+
