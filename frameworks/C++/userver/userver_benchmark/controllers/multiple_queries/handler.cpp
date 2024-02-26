@@ -2,6 +2,7 @@
 
 #include <userver/components/component_context.hpp>
 #include <userver/formats/serialize/common_containers.hpp>
+#include <userver/http/common_headers.hpp>
 #include <userver/storages/postgres/postgres.hpp>
 
 #include <boost/container/small_vector.hpp>
@@ -16,7 +17,7 @@ constexpr std::size_t kBestConcurrencyWildGuess = 256;
 
 Handler::Handler(const userver::components::ComponentConfig& config,
                  const userver::components::ComponentContext& context)
-    : userver::server::handlers::HttpHandlerJsonBase{config, context},
+    : userver::server::handlers::HttpHandlerBase{config, context},
       pg_{context
               .FindComponent<userver::components::Postgres>(
                   db_helpers::kDbComponentName)
@@ -24,17 +25,18 @@ Handler::Handler(const userver::components::ComponentConfig& config,
       query_arg_name_{"queries"},
       semaphore_{kBestConcurrencyWildGuess} {}
 
-userver::formats::json::Value Handler::HandleRequestJsonThrow(
+std::string Handler::HandleRequestThrow(
     const userver::server::http::HttpRequest& request,
-    const userver::formats::json::Value&,
     userver::server::request::RequestContext&) const {
   const auto queries =
       db_helpers::ParseParamFromQuery(request, query_arg_name_);
 
+  request.GetHttpResponse().SetHeader(userver::http::headers::kContentType,
+                                      "application/json");
   return GetResponse(queries);
 }
 
-userver::formats::json::Value Handler::GetResponse(int queries) const {
+std::string Handler::GetResponse(int queries) const {
   boost::container::small_vector<db_helpers::WorldTableRow, 20> result(queries);
   for (auto& value : result) {
     value.id = db_helpers::GenerateRandomId();
@@ -43,9 +45,11 @@ userver::formats::json::Value Handler::GetResponse(int queries) const {
   {
     const auto lock = semaphore_.Acquire();
 
-    auto trx = pg_->Begin(db_helpers::kClusterHostType, {});
+    auto trx =
+        pg_->Begin(db_helpers::kClusterHostType, {}, db_helpers::kDefaultPgCC);
     for (auto& value : result) {
-      value.random_number = trx.Execute(db_helpers::kSelectRowQuery, value.id)
+      value.random_number = trx.Execute(db_helpers::kDefaultPgCC,
+                                        db_helpers::kSelectRowQuery, value.id)
                                 .AsSingleRow<db_helpers::WorldTableRow>(
                                     userver::storages::postgres::kRowTag)
                                 .random_number;
@@ -53,7 +57,9 @@ userver::formats::json::Value Handler::GetResponse(int queries) const {
     trx.Commit();
   }
 
-  return userver::formats::json::ValueBuilder{result}.ExtractValue();
+  userver::formats::json::StringBuilder sb{};
+  WriteToStream(result, sb);
+  return sb.GetString();
 }
 
 }  // namespace userver_techempower::multiple_queries

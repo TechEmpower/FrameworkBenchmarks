@@ -23,13 +23,14 @@ import io.inverno.mod.base.Charsets;
 import io.inverno.mod.base.concurrent.Reactor;
 import io.inverno.mod.base.concurrent.ReactorScope;
 import io.inverno.mod.base.converter.ConverterException;
+import io.inverno.mod.http.base.ExchangeContext;
 import io.inverno.mod.http.base.HttpException;
 import io.inverno.mod.http.base.InternalServerErrorException;
 import io.inverno.mod.http.base.Parameter;
 import io.inverno.mod.http.base.Status;
 import io.inverno.mod.http.server.Exchange;
-import io.inverno.mod.http.server.ExchangeContext;
-import io.inverno.mod.http.server.RootExchangeHandler;
+import io.inverno.mod.http.server.ErrorExchange;
+import io.inverno.mod.http.server.ServerController;
 import io.inverno.mod.sql.SqlClient;
 import io.inverno.mod.sql.UnsafeSqlOperations;
 import io.netty.buffer.ByteBuf;
@@ -42,7 +43,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Bean( visibility = Visibility.PRIVATE )
-public class Handler implements RootExchangeHandler<ExchangeContext, Exchange<ExchangeContext>> {
+public class Controller implements ServerController<ExchangeContext, Exchange<ExchangeContext>, ErrorExchange<ExchangeContext>> {
 
 	private static final String PATH_PLAINTEXT = "/plaintext";
 	private static final String PATH_JSON = "/json";
@@ -65,7 +66,7 @@ public class Handler implements RootExchangeHandler<ExchangeContext, Exchange<Ex
 	
 	private CharSequence date;
 	
-	public Handler(Reactor reactor, 
+	public Controller(Reactor reactor, 
 			ObjectMapper mapper,
 			ReactorScope<Mono<SqlClient>> sqlClient
 		) {

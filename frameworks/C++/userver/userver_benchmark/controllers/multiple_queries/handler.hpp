@@ -2,24 +2,23 @@
 
 #include "../../common/db_helpers.hpp"
 
-#include <userver/server/handlers/http_handler_json_base.hpp>
+#include <userver/server/handlers/http_handler_base.hpp>
 #include <userver/storages/postgres/postgres_fwd.hpp>
 
 namespace userver_techempower::multiple_queries {
 
-class Handler final : public userver::server::handlers::HttpHandlerJsonBase {
+class Handler final : public userver::server::handlers::HttpHandlerBase {
  public:
   static constexpr std::string_view kName = "multiple-queries-handler";
 
   Handler(const userver::components::ComponentConfig& config,
           const userver::components::ComponentContext& context);
 
-  userver::formats::json::Value HandleRequestJsonThrow(
+  std::string HandleRequestThrow(
       const userver::server::http::HttpRequest& request,
-      const userver::formats::json::Value&,
       userver::server::request::RequestContext&) const final;
 
-  userver::formats::json::Value GetResponse(int queries) const;
+  std::string GetResponse(int queries) const;
 
  private:
   const userver::storages::postgres::ClusterPtr pg_;

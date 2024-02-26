@@ -1,4 +1,4 @@
-FROM ghcr.io/userver-framework/ubuntu-userver-build-base:v1 AS builder
+FROM ghcr.io/userver-framework/ubuntu-userver-build-base:v2 AS builder
 
 RUN apt update && \
     apt install -y lsb-release wget software-properties-common gnupg && \
@@ -6,7 +6,8 @@ RUN apt update && \
 
 WORKDIR /src
 RUN git clone https://github.com/userver-framework/userver.git && \
-    cd userver && git checkout b85d540d7022e344f6fcf9fd467c67b046c961fe
+    cd userver && git checkout fcf0514be560f46740f8a654f2fdce5dc1cd450c
+
 COPY userver_benchmark/ ./
 RUN mkdir build && cd build && \
     cmake -DUSERVER_IS_THE_ROOT_PROJECT=0 -DUSERVER_FEATURE_CRYPTOPP_BLAKE2=0 \

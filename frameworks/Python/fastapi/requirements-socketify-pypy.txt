@@ -1,2 +1,2 @@
-fastapi==0.92.0
+fastapi==0.109.1
 git+https://github.com/cirospaciari/socketify.py.git@main#socketify

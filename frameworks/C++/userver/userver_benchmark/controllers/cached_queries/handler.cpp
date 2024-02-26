@@ -1,28 +1,30 @@
 #include "handler.hpp"
 
-#include <userver/formats/serialize/common_containers.hpp>
-
 #include <boost/container/small_vector.hpp>
+
+#include <userver/formats/serialize/common_containers.hpp>
+#include <userver/http/common_headers.hpp>
 
 namespace userver_techempower::cached_queries {
 
 Handler::Handler(const userver::components::ComponentConfig& config,
                  const userver::components::ComponentContext& context)
-    : userver::server::handlers::HttpHandlerJsonBase{config, context},
+    : userver::server::handlers::HttpHandlerBase{config, context},
       cache_{context.FindComponent<WorldCacheComponent>()},
       query_arg_name_{"count"} {}
 
-userver::formats::json::Value Handler::HandleRequestJsonThrow(
+std::string Handler::HandleRequestThrow(
     const userver::server::http::HttpRequest& request,
-    const userver::formats::json::Value&,
     userver::server::request::RequestContext&) const {
   const auto queries =
       db_helpers::ParseParamFromQuery(request, query_arg_name_);
 
+  request.GetHttpResponse().SetHeader(userver::http::headers::kContentType,
+                                      "application/json");
   return GetResponse(queries);
 }
 
-userver::formats::json::Value Handler::GetResponse(int queries) const {
+std::string Handler::GetResponse(int queries) const {
   boost::container::small_vector<db_helpers::WorldTableRow, 500> result(
       queries);
 
@@ -31,7 +33,9 @@ userver::formats::json::Value Handler::GetResponse(int queries) const {
   std::generate(result.begin(), result.end(),
                 [&cache] { return cache.at(db_helpers::GenerateRandomId()); });
 
-  return userver::formats::json::ValueBuilder{result}.ExtractValue();
+  userver::formats::json::StringBuilder sb{};
+  WriteToStream(result, sb);
+  return sb.GetString();
 }
 
 }  // namespace userver_techempower::cached_queries
