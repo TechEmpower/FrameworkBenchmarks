@@ -1,0 +1,24 @@
+{
+  "framework": "zap",
+  "tests": [{
+    "default": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 3000,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "None",
+      "framework": "Zap",
+      "language": "Zig",
+      "flavor": "None",
+      "orm": "Full",
+      "platform": "None",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Zap (Zig)",
+      "notes": "",
+      "versus": ""
+    }
+  }]
+}
