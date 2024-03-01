@@ -9,7 +9,7 @@ description = "TFB benchmark"
 group = "com.hexagonkt"
 
 ext {
-    hexagonVersion = "3.4.7"
+    hexagonVersion = "3.5.0"
     jettyVersion = "12.0.5"
     nettyVersion = "4.1.107.Final"
 
