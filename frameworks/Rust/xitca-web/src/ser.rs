@@ -11,6 +11,7 @@ use xitca_http::{
 
 use crate::util::Error;
 
+#[derive(Clone)]
 pub struct Message {
     message: &'static str,
 }
