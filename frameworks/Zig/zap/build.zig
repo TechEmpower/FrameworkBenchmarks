@@ -24,22 +24,34 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
     });
 
+    //exe.addPackagePath("random", "src/random.zig");
+
     const zap = b.dependency("zap", .{
         .target = target,
         .optimize = optimize,
         .openssl = false, // set to true to enable TLS support
-        });
+    });
     exe.addModule("zap", zap.module("zap"));
 
     const pg = b.dependency("pg", .{
         .target = target,
         .optimize = optimize,
-        });
+    });
     exe.addModule("pg", pg.module("pg"));
 
+    const dig = b.dependency("dig", .{
+    .target = target,
+    .optimize = optimize,
+    });
+    exe.addModule("dns", dig.module("dns"));
+
+    // const mustache = b.dependency("mustache", .{
+    //     .target = target,
+    //     .optimize = optimize,
+    // });
+    // exe.addModule("mustache", mustache.module("mustache"));
+
     exe.linkLibrary(zap.artifact("facil.io"));
-
-
 
     // This declares intent for the executable to be installed into the
     // standard location when the user invokes the "install" step (the default

@@ -1,88 +1,95 @@
 const std = @import("std");
 const zap = @import("zap");
+const pg = @import("pg");
+const regex = @import("regex");
+const dns = @import("dns");
+const pool = @import("pool.zig");
+
+const endpoints = @import("endpoints.zig");
+const middleware = @import("middleware.zig");
+
+const RndGen = std.rand.DefaultPrng;
 const Allocator = std.mem.Allocator;
-
-const Message = struct {
-    message: []const u8,
-};
-
-pub const Benchmark = struct {
-    const Self = @This();
-
-    allocator: Allocator,
-
-    pub fn init(allocator: Allocator) Self {
-        return .{ .allocator = allocator };
-    }
-
-    pub fn plaintext(self: *Self, req: zap.Request) void {
-        _ = self;
-
-        req.setHeader("Server", "Zap") catch return;
-        req.setContentType(.TEXT) catch return;
-
-        req.sendBody("Hello, World!") catch return;
-    }
-
-    pub fn json(self: *Self, req: zap.Request) void {
-        _ = self;
-
-        req.setHeader("Server", "Zap") catch return;
-        req.setContentType(.JSON) catch return;
-
-        var message = Message{ .message = "Hello, World!" };
-
-        var buf: [100]u8 = undefined;
-        var json_to_send: []const u8 = undefined;
-        if (zap.stringifyBuf(&buf, message, .{})) |json_message| {
-            json_to_send = json_message;
-        } else {
-            json_to_send = "null";
-        }
-
-        req.sendBody(json_to_send) catch return;
-    }
-};
-
-fn not_found(req: zap.Request) void {
-    std.debug.print("not found handler", .{});
-
-    req.setStatus(.not_found);
-    req.sendBody("<html><body><h1>404 - File not found</h1></body></html>") catch return;
-}
+const Pool = pg.Pool;
 
 pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{
         .thread_safe = true,
     }){};
-    var allocator = gpa.allocator();
 
-    var simpleRouter = zap.Router.init(allocator, .{
-        .not_found = not_found,
+    var tsa = std.heap.ThreadSafeAllocator{
+        .child_allocator = gpa.allocator(),
+    };
+
+    var allocator = tsa.allocator();
+
+    var pg_pool = try pool.initPool(allocator);
+    defer pg_pool.deinit();
+
+    var rnd = std.rand.DefaultPrng.init(blk: {
+        var seed: u64 = undefined;
+        try std.os.getrandom(std.mem.asBytes(&seed));
+        break :blk seed;
     });
-    defer simpleRouter.deinit();
 
-    var benchmark = Benchmark.init(allocator);
+    middleware.SharedAllocator.init(allocator);
 
-    var listener = zap.HttpListener.init(.{
-        .port = 3000,
-        .on_request = zap.RequestHandler(&simpleRouter, &zap.Router.serve),
-        .log = false,
-    });
+    // create the endpoint
+    var dbEndpoint = endpoints.DbEndpoint.init();
+    var plaintextEndpoint = endpoints.PlaintextEndpoint.init();
+    var jsonEndpoint = endpoints.JsonEndpoint.init();
+    var fortunesEndpoint = endpoints.FortunesEndpoint.init();
+
+    // we wrap the endpoint with a middleware handler
+    var jsonEndpointHandler = zap.Middleware.EndpointHandler(middleware.Handler, middleware.Context).init(
+        jsonEndpoint.endpoint(), // the endpoint
+        null, // no other handler (we are the last in the chain)
+        false, // break on finish. See EndpointHandler for this. Not applicable here.
+    );
+
+    var plaintextEndpointHandler = zap.Middleware.EndpointHandler(middleware.Handler, middleware.Context).init(
+        plaintextEndpoint.endpoint(),
+        jsonEndpointHandler.getHandler(),
+        false,
+    );
+
+    var fortunesEndpointHandler = zap.Middleware.EndpointHandler(middleware.Handler, middleware.Context).init(
+        fortunesEndpoint.endpoint(), // the endpoint
+        plaintextEndpointHandler.getHandler(), // no other handler (we are the last in the chain)
+        false,
+    );
+
+    var dbEndpointHandler = zap.Middleware.EndpointHandler(middleware.Handler, middleware.Context).init(
+        dbEndpoint.endpoint(), // the endpoint
+        fortunesEndpointHandler.getHandler(), // no other handler (we are the last in the chain)
+        false,
+    );
+
+    var headerHandler = middleware.HeaderMiddleWare.init(dbEndpointHandler.getHandler());
+    var prngHandler = middleware.PrngMiddleWare.init(headerHandler.getHandler(), &rnd);
+    var pgHandler = middleware.PgMiddleWare.init(prngHandler.getHandler(), pg_pool);
+
+    var listener = try zap.Middleware.Listener(middleware.Context).init(
+        .{
+            .on_request = null, // must be null
+            .port = 3000,
+            .log = false,
+            .max_clients = 100000,
+        },
+        pgHandler.getHandler(),
+
+        middleware.SharedAllocator.getAllocator,
+    );
     try listener.listen();
 
-    try simpleRouter.handle_func("/plaintext", zap.RequestHandler(&benchmark, Benchmark.plaintext));
-    try simpleRouter.handle_func("/json", zap.RequestHandler(&benchmark, Benchmark.json));
+    const cpuCount = @as(i16, @intCast(std.Thread.getCpuCount() catch 1));
 
-    const threads = @as(i16, @intCast(std.Thread.getCpuCount() catch 1));
-
-    std.debug.print("Listening on 0.0.0.0:3000 on {d} threads\n", .{threads});
+    std.debug.print("Listening on 0.0.0.0:3000 on {d} threads\n", .{cpuCount});
 
     // start worker threads
     zap.start(.{
-        .threads = threads,
-        .workers = threads,
+        .threads = 32 * cpuCount,
+        .workers = 1,
     });
 }
-
 
