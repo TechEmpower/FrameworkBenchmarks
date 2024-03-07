@@ -73,6 +73,7 @@ std::string Handler::GetResponse(int queries) const {
 
     auto query_queue = pg_->CreateQueryQueue(db_helpers::kClusterHostType,
                                              db_helpers::kDefaultPgCC.execute);
+    query_queue.Reserve(ids.size() + 1 /* for the update query */);
     for (const auto id : ids) {
       query_queue.Push(db_helpers::kDefaultPgCC, db_helpers::kSelectRowQuery,
                        id);
