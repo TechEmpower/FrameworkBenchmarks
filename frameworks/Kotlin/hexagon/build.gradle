@@ -14,8 +14,8 @@ ext {
     nettyVersion = "4.1.107.Final"
 
     hikariVersion = "5.1.0"
-    postgresqlVersion = "42.7.2"
-    vertxVersion = "4.5.4"
+    postgresqlVersion = "42.7.3"
+    vertxVersion = "4.5.5"
     cache2kVersion = "2.6.1.Final"
 
     applicationClass = "com.hexagonkt.BenchmarkKt"
