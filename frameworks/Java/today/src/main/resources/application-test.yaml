@@ -1,0 +1,8 @@
+datasource:
+  url: jdbc:mysql://tfb-database:3306/hello_world?useUnicode=true&characterEncoding=utf8&useSSL=false&autoReconnect=true&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
+  username: benchmarkdbuser
+  password: benchmarkdbpass
+
+logging:
+  level:
+    root: OFF
