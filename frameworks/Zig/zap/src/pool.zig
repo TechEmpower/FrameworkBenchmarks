@@ -71,7 +71,7 @@ fn parsePostgresConnStr() !ConnectionInfo {
     return ConnectionInfo{
         .username = std.os.getenv("PG_USER") orelse "benchmarkdbuser",
         .password = std.os.getenv("PG_PASS") orelse "benchmarkdbpass",
-        .hostname = std.os.getenv("PG_HOST") orelse "localhost", // "tfb-database",
+        .hostname = std.os.getenv("PG_HOST") orelse "localhost", // ,
         .port = try std.fmt.parseInt(u16, std.os.getenv("PG_PORT") orelse "5432", 0),
         .database = std.os.getenv("PG_DB") orelse "hello_world",
     };

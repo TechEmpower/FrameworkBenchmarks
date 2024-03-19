@@ -2,6 +2,7 @@ const std = @import("std");
 const zap = @import("zap");
 const pg = @import("pg");
 
+const Mustache = @import("zap").Mustache;
 const Thread = std.Thread;
 const Mutex = Thread.Mutex;
 
@@ -21,35 +22,29 @@ const Fortune = struct {
     message: []const u8,
 };
 
-fn escapeHtml(input: []const u8) ![]const u8 {
-    var output = std.ArrayList(u8).init(std.heap.page_allocator);
-    defer output.deinit();
-
-    for (input) |c| {
-        switch (c) {
-            '&' => try output.appendSlice("&amp;"),
-            '<' => try output.appendSlice("&lt;"),
-            '>' => try output.appendSlice("&gt;"),
-            '"' => try output.appendSlice("&quot;"),
-            '\'' => try output.appendSlice("&apos;"),
-            else => try output.append(c),
-        }
-    }
-
-    return output.toOwnedSlice();
-}
-
 pub const FortunesEndpoint = struct {
     ep: zap.Endpoint = undefined,
+    mustache: Mustache,
+    mutex: Mutex,
+
     const Self = @This();
 
     pub fn init() Self {
+        const template = "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>{{#fortunes}}<tr><td>{{id}}</td><td>{{message}}</td></tr>{{/fortunes}}</table></body></html>";
+        const mustache = Mustache.fromData(template) catch unreachable;
+
         return .{
             .ep = zap.Endpoint.init(.{
                 .path = "/fortunes",
                 .get = get,
             }),
+            .mustache = mustache,
+            .mutex = Mutex{},
         };
+    }
+
+    pub fn deinit(self: *Self) void {
+        self.mustache.deinit();
     }
 
     pub fn endpoint(self: *Self) *zap.Endpoint {
@@ -88,31 +83,27 @@ pub const FortunesEndpoint = struct {
         return fortunes_slice;
     }
 
-    fn getFortunesHtml(pool: *pg.Pool) ![]const u8 {
-        const template_start = "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>";
-
-        const template_end = "</table></body></html>";
-
-        const allocator = middleware.SharedAllocator.getAllocator();
-
+    fn getFortunesHtml(self: *Self, pool: *pg.Pool) ![]const u8 {
         var fortunes = try getFortunes(pool);
 
-        var template = std.ArrayList(u8).init(allocator);
+        self.mutex.lock();
+        const ret = self.mustache.build(.{ .fortunes = fortunes });
+        defer ret.deinit();
+        self.mutex.unlock();
 
-        try template.appendSlice(template_start);
-        for (fortunes) |fortune| {
-            const message = try escapeHtml(fortune.message);
-            const fortune_html = try std.fmt.allocPrint(allocator, "<tr><td>{d}</td><td>{s}</td></tr>", .{ fortune.id, message });
-            try template.appendSlice(fortune_html);
-        }
-        try template.appendSlice(template_end);
+        const raw = ret.str().?;
 
-        return template.toOwnedSlice();
+        // std.debug.print("mustache output {s}\n", .{raw});
+
+        var html = try deescapeHtml(raw);
+
+        // std.debug.print("html output {s}\n", .{html});
+
+        return html;
     }
 
     pub fn get(ep: *zap.Endpoint, req: zap.Request) void {
         const self = @fieldParentPtr(Self, "ep", ep);
-        _ = self;
 
         if (!checkPath(ep, req)) return;
 
@@ -127,7 +118,7 @@ pub const FortunesEndpoint = struct {
             }
         }
 
-        var fortunes_html = getFortunesHtml(pool) catch return;
+        var fortunes_html = getFortunesHtml(self, pool) catch return;
 
         req.sendBody(fortunes_html) catch return;
 
@@ -195,18 +186,15 @@ pub const DbEndpoint = struct {
 
         var world = World{ .id = row.get(i32, 0), .randomNumber = row.get(i32, 1) };
 
-        var json_to_send = std.ArrayList(u8).init(middleware.SharedAllocator.getAllocator());
-        std.json.stringify(world, .{}, json_to_send.writer()) catch |err| {
-            std.debug.print("Error generating json: {}\n", .{err});
-            return;
-        };
+        var buf: [100]u8 = undefined;
+        var json_to_send: []const u8 = undefined;
+        if (zap.stringifyBuf(&buf, world, .{})) |json_message| {
+            json_to_send = json_message;
+        } else {
+            json_to_send = "null";
+        }
 
-        var json_slice = json_to_send.toOwnedSlice() catch |err| {
-            std.debug.print("Error generating json: {}\n", .{err});
-            return;
-        };
-
-        req.sendBody(json_slice) catch return;
+        req.sendBody(json_to_send) catch return;
 
         return;
     }
@@ -292,4 +280,55 @@ fn checkPath(ep: *zap.Endpoint, req: zap.Request) bool {
     // std.debug.print("Path match: {s} == {s}\n", .{ ep.settings.path, req.path.? });
 
     return true;
+}
+
+fn deescapeHtml(input: []const u8) ![]const u8 {
+    var output = std.ArrayList(u8).init(middleware.SharedAllocator.getAllocator());
+    defer output.deinit();
+
+    var i: usize = 0;
+    while (i < input.len) {
+        if (std.mem.startsWith(u8, input[i..], "&#32;")) {
+            try output.append(' ');
+            i += 5;
+        } else if (std.mem.startsWith(u8, input[i..], "&#34;")) {
+            try output.append('"');
+            i += 5;
+        } else if (std.mem.startsWith(u8, input[i..], "&#38;")) {
+            try output.append('&');
+            i += 5;
+        } else if (std.mem.startsWith(u8, input[i..], "&#39;")) {
+            try output.append('\'');
+            i += 5;
+        } else if (std.mem.startsWith(u8, input[i..], "&#40;")) {
+            try output.append('(');
+            i += 5;
+        } else if (std.mem.startsWith(u8, input[i..], "&#41;")) {
+            try output.append(')');
+            i += 5;
+        } else if (std.mem.startsWith(u8, input[i..], "&#43;")) {
+            try output.append('+');
+            i += 5;
+        } else if (std.mem.startsWith(u8, input[i..], "&#44;")) {
+            try output.append(',');
+            i += 5;
+        } else if (std.mem.startsWith(u8, input[i..], "&#46;")) {
+            try output.append('.');
+            i += 5;
+        } else if (std.mem.startsWith(u8, input[i..], "&#47;")) {
+            try output.append('/');
+            i += 5;
+        } else if (std.mem.startsWith(u8, input[i..], "&#58;")) {
+            try output.append(':');
+            i += 5;
+        } else if (std.mem.startsWith(u8, input[i..], "&#59;")) {
+            try output.append(';');
+            i += 5;
+        } else {
+            try output.append(input[i]);
+            i += 1;
+        }
+    }
+
+    return output.toOwnedSlice();
 }

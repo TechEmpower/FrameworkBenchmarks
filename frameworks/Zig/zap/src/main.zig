@@ -88,7 +88,7 @@ pub fn main() !void {
 
     // start worker threads
     zap.start(.{
-        .threads = 32 * cpuCount,
+        .threads = 16 * cpuCount,
         .workers = 1,
     });
 }
