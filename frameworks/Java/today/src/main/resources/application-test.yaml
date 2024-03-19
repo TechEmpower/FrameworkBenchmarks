@@ -5,4 +5,4 @@ datasource:
 
 logging:
   level:
-    root: OFF
+    root: info
