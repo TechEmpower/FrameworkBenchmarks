@@ -3,7 +3,6 @@ package cn.taketoday.benchmark.http;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
 
@@ -24,6 +23,9 @@ import cn.taketoday.web.view.ViewRef;
  */
 @RestController
 final class BenchmarkHttpHandler {
+
+  private static final int MIN_WORLD_NUMBER = 1;
+  private static final int MAX_WORLD_NUMBER = 10_000;
 
   private final EntityManager entityManager;
 
@@ -51,7 +53,7 @@ final class BenchmarkHttpHandler {
   @GET("/queries")
   public List<World> queries(@Nullable String queries) {
     return randomNumbers()
-            .parallel()
+            //.parallel()
             .mapToObj(this::findWorldById)
             .limit(parseQueryCount(queries))
             .toList();
@@ -60,12 +62,14 @@ final class BenchmarkHttpHandler {
   @GET("/updates")
   public List<World> updates(@Nullable String queries) {
     return randomNumbers()
-            .parallel()
+            //.parallel()
             .mapToObj(this::findWorldById)
-            .filter(Objects::nonNull)
+            //.filter(Objects::nonNull)
             .peek(world -> {
-              world.setRandomNumber(nextInt());
-              entityManager.updateById(world);
+              if (world != null) {
+                world.setRandomNumber(nextInt());
+                entityManager.updateById(world);
+              }
             })
             .limit(parseQueryCount(queries))
             .toList();
@@ -87,9 +91,6 @@ final class BenchmarkHttpHandler {
   }
 
   //
-
-  private static final int MIN_WORLD_NUMBER = 1;
-  private static final int MAX_WORLD_NUMBER = 10_000;
 
   private static IntStream randomNumbers() {
     return ThreadLocalRandom.current()
