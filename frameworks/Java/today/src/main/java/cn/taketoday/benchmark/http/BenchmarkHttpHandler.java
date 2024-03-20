@@ -3,6 +3,7 @@ package cn.taketoday.benchmark.http;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
 
@@ -47,13 +48,12 @@ final class BenchmarkHttpHandler {
 
   @GET("/db")
   public World db() {
-    return entityManager.findById(World.class, nextInt());
+    return findWorldById(nextInt());
   }
 
   @GET("/queries")
   public List<World> queries(@Nullable String queries) {
     return randomNumbers()
-            //.parallel()
             .mapToObj(this::findWorldById)
             .limit(parseQueryCount(queries))
             .toList();
@@ -62,14 +62,11 @@ final class BenchmarkHttpHandler {
   @GET("/updates")
   public List<World> updates(@Nullable String queries) {
     return randomNumbers()
-            //.parallel()
             .mapToObj(this::findWorldById)
-            //.filter(Objects::nonNull)
+            .filter(Objects::nonNull)
             .peek(world -> {
-              if (world != null) {
-                world.setRandomNumber(nextInt());
-                entityManager.updateById(world);
-              }
+              world.setRandomNumber(nextInt());
+              entityManager.updateById(world);
             })
             .limit(parseQueryCount(queries))
             .toList();
@@ -98,7 +95,7 @@ final class BenchmarkHttpHandler {
             .distinct();
   }
 
-  private static final Integer[] boxed = IntStream.range(MIN_WORLD_NUMBER, MAX_WORLD_NUMBER)
+  private static final Integer[] boxed = IntStream.range(MIN_WORLD_NUMBER, MAX_WORLD_NUMBER + 1)
           .boxed()
           .toArray(Integer[]::new);
 
