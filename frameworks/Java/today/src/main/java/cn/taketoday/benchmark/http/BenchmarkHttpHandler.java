@@ -48,7 +48,7 @@ final class BenchmarkHttpHandler {
 
   @GET("/db")
   public World db() {
-    return findWorldById(nextInt());
+    return entityManager.findById(World.class, nextInt());
   }
 
   @GET("/queries")
@@ -84,7 +84,7 @@ final class BenchmarkHttpHandler {
 
   @Nullable
   private World findWorldById(int id) {
-    return entityManager.findById(World.class, id);
+    return entityManager.findById(World.class, boxed[id]);
   }
 
   //

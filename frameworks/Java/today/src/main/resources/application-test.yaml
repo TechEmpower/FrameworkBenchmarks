@@ -6,3 +6,9 @@ datasource:
 logging:
   level:
     root: info
+
+server:
+  netty:
+    acceptor-threads: 4
+    worker-threads: 8
+    max-connection: 65535
