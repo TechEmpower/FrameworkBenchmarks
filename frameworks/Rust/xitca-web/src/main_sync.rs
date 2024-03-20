@@ -6,8 +6,9 @@ mod util;
 use serde::Serialize;
 use xitca_web::{
     codegen::route,
-    handler::{html::Html, json::Json, query::Query, state::StateOwn},
+    handler::{html::Html, json::Json, query::Query, state::StateOwn, text::Text},
     http::{header::SERVER, WebResponse},
+    route::get,
     App,
 };
 
@@ -18,8 +19,8 @@ use util::{HandleResult, SERVER_HEADER_VALUE};
 fn main() -> std::io::Result<()> {
     App::new()
         .with_state(db_diesel::create()?)
-        .at_typed(plaintext)
-        .at_typed(json)
+        .at("/plaintext", get(Text("Hello, World!")))
+        .at("/json", get(Json(ser::Message::new())))
         .at_typed(db)
         .at_typed(fortunes)
         .at_typed(queries)
@@ -34,16 +35,6 @@ fn main() -> std::io::Result<()> {
 fn header(mut res: WebResponse) -> WebResponse {
     res.headers_mut().insert(SERVER, SERVER_HEADER_VALUE);
     res
-}
-
-#[route("/plaintext", method = get)]
-fn plaintext() -> &'static str {
-    "Hello, World!"
-}
-
-#[route("/json", method = get)]
-fn json() -> Json<ser::Message> {
-    Json(ser::Message::new())
 }
 
 #[route("/db", method = get)]
