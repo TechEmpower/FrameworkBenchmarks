@@ -7,6 +7,15 @@
 
 #include <boost/container/small_vector.hpp>
 
+namespace userver::storages::postgres::io::traits {
+
+// Hijack userver's whitelist of allowed containers
+template <typename T, std::size_t Size>
+struct IsCompatibleContainer<boost::container::small_vector<T, Size>>
+    : std::true_type {};
+
+}  // namespace userver::storages::postgres::io::traits
+
 namespace userver_techempower::updates {
 
 namespace {
@@ -46,41 +55,39 @@ std::string Handler::HandleRequestThrow(
 }
 
 std::string Handler::GetResponse(int queries) const {
-  // userver's PG doesn't accept boost::small_vector as an input, sadly
-  std::vector<db_helpers::WorldTableRow> values(queries);
-  for (auto& value : values) {
-    value.id = db_helpers::GenerateRandomId();
+  boost::container::small_vector<int, 20> ids(queries);
+  for (auto& id : ids) {
+    id = db_helpers::GenerateRandomId();
   }
   // we have to sort ids to not deadlock in update
-  std::sort(values.begin(), values.end(),
-            [](const auto& lhs, const auto& rhs) { return lhs.id < rhs.id; });
+  std::sort(ids.begin(), ids.end(),
+            [](const auto& lhs, const auto& rhs) { return lhs < rhs; });
 
-  boost::container::small_vector<db_helpers::WorldTableRow, 20> result;
+  boost::container::small_vector<int, 20> values(queries);
+  for (auto& value : values) {
+    value = db_helpers::GenerateRandomValue();
+  }
 
-  {
+  const auto db_results = [this, &ids, &values] {
     const auto lock = semaphore_.Acquire();
 
-    auto trx =
-        pg_->Begin(db_helpers::kClusterHostType, {}, db_helpers::kDefaultPgCC);
-    for (auto& value : values) {
-      value.random_number = trx.Execute(db_helpers::kDefaultPgCC,
-                                        db_helpers::kSelectRowQuery, value.id)
-                                .AsSingleRow<db_helpers::WorldTableRow>(
-                                    userver::storages::postgres::kRowTag)
-                                .random_number;
+    auto query_queue = pg_->CreateQueryQueue(db_helpers::kClusterHostType,
+                                             db_helpers::kDefaultPgCC.execute);
+    query_queue.Reserve(ids.size() + 1 /* for the update query */);
+    for (const auto id : ids) {
+      query_queue.Push(db_helpers::kDefaultPgCC, db_helpers::kSelectRowQuery,
+                       id);
     }
 
-    // We copy values here (and hope compiler optimizes it into one memcpy call)
-    // to not serialize into json within transaction
-    result.assign(values.begin(), values.end());
+    query_queue.Push(db_helpers::kDefaultPgCC, update_query_, ids, values);
 
-    for (auto& value : values) {
-      value.random_number = db_helpers::GenerateRandomValue();
-    }
+    return query_queue.Collect(db_helpers::kDefaultPgCC.execute);
+  }();
 
-    trx.ExecuteDecomposeBulk(db_helpers::kDefaultPgCC, update_query_, values,
-                             values.size());
-    trx.Commit();
+  boost::container::small_vector<db_helpers::WorldTableRow, 20> result(queries);
+  for (std::size_t i = 0; i < result.size(); ++i) {
+    result[i] = db_results[i].AsSingleRow<db_helpers::WorldTableRow>(
+        userver::storages::postgres::kRowTag);
   }
 
   userver::formats::json::StringBuilder sb{};
