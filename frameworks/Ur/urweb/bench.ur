@@ -133,3 +133,9 @@ fun updates s =
 
 fun plaintext () =
   returnText "Hello, World!"
+
+(** * Test type 7: Cached queries *)
+
+val cached_queries = queries
+(* It's really the same code as the uncached queries test!
+ * We just compile with a different flag to enable caching. *)
