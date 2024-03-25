@@ -2,5 +2,5 @@ package benchmark.data
 
 interface FortuneDAO {
 
-    suspend fun fetchFortunes(): List<Fortune>
+    fun fetchFortunes(): List<Fortune>
 }
