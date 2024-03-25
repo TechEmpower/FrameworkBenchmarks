@@ -2,6 +2,8 @@ const db = process.env.DATABASE;
 
 const { App } = require('@ionited/mesh');
 
+const addHeaders = (res, contentType) => res.header('Content-Type', contentType).header('Server', 'Mesh');
+
 const escapeHTMLRules = {
   "&": "&#38;",
   "<": "&#60;",
@@ -24,16 +26,28 @@ const app = new App();
 
 app
 
-.get('/json', (_, res) => res.header('Content-Type', 'application/json').json({ message: 'Hello, World!' }))
+.get('/json', (_, res) => {
+  addHeaders(res, 'application/json');
 
-.get('/plaintext', (_, res) => res.send('Hello, World!'));
+  res.json({ message: 'Hello, World!' });
+})
+
+.get('/plaintext', (_, res) => {
+  addHeaders(res, 'text/plain');
+
+  res.send('Hello, World!');
+});
 
 if (db) {
   const DRIVER = require(`./drivers/${db}`);
 
   app
   
-  .get('/db', async (_, res) => res.json(await DRIVER.find(random())))
+  .get('/db', async (_, res) => {
+    addHeaders(res, 'application/json');
+
+    res.json(await DRIVER.find(random()));
+  })
   
   .get('/queries', async (req, res) => {
     const { queries } = req.query();
@@ -44,7 +58,9 @@ if (db) {
 
     for (let i = 0; i < count; i++) arr.push(await DRIVER.find(random()));
 
-    res.header('Content-Type', 'application/json').json(arr);
+    addHeaders(res, 'application/json');
+
+    res.json(arr);
   })
   
   .get('/fortunes', async (_, res) => {
@@ -59,7 +75,9 @@ if (db) {
 
     html += '</table></body></html>';
 
-    res.header('Content-Type', 'text/html; charset=utf-8').send(html);
+    addHeaders(res, 'text/html; charset=utf-8');
+
+    res.send(html);
   })
   
   .get('/updates', async (req, res) => {
@@ -77,7 +95,9 @@ if (db) {
       await DRIVER.update(arr[i]);
     }
 
-    res.header('Content-Type', 'application/json').json(arr);
+    addHeaders(res, 'application/json');
+
+    res.json(arr);
   });
 }
 
