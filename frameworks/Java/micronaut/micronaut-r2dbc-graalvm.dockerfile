@@ -1,4 +1,4 @@
-FROM ghcr.io/graalvm/graalvm-community:latest as build
+FROM ghcr.io/graalvm/graalvm-community:21 as build
 COPY . /home/gradle/src
 WORKDIR /home/gradle/src
 RUN ./gradlew  --no-daemon
