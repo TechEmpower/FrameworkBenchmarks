@@ -7,9 +7,9 @@ import java.util.List;
 import com.fizzed.rocker.runtime.ArrayOfByteArraysOutput;
 import io.helidon.benchmark.nima.models.DbRepository;
 import io.helidon.benchmark.nima.models.Fortune;
-import io.helidon.nima.webserver.http.Handler;
-import io.helidon.nima.webserver.http.ServerRequest;
-import io.helidon.nima.webserver.http.ServerResponse;
+import io.helidon.webserver.http.Handler;
+import io.helidon.webserver.http.ServerRequest;
+import io.helidon.webserver.http.ServerResponse;
 import views.fortunes;
 
 import static io.helidon.benchmark.nima.Main.CONTENT_TYPE_HTML;
