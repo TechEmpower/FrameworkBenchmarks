@@ -1,10 +1,4 @@
-FROM rust:1.60-slim
-
-ENV ROCKET_BENCHMARK_DATABASE_URL=postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world
-
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    libpq-dev \
-&& rm -rf /var/lib/apt/lists/*
+FROM rust:1.76
 
 ADD ./ /rocket
 WORKDIR /rocket
