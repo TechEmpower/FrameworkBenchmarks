@@ -1,0 +1,15 @@
+buildscript {
+  repositories {
+    mavenLocal()
+    maven {
+      url "https://oss.sonatype.org/content/repositories/snapshots/"
+    }
+    mavenCentral()
+  }
+
+  dependencies {
+    classpath "cn.taketoday:infra-gradle-plugin:$infraVersion"
+  }
+}
+
+rootProject.name = 'today'

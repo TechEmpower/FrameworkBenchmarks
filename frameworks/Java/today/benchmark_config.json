@@ -1,0 +1,30 @@
+{
+  "framework": "today",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
+        "fortune_url": "/fortunes",
+        "update_url": "/updates?queries=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "mysql",
+        "framework": "Today",
+        "language": "Java",
+        "flavor": "None",
+        "orm": "micro",
+        "platform": "Netty",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Today",
+        "notes": "",
+        "versus": "None"
+      }
+    }
+  ]
+}
