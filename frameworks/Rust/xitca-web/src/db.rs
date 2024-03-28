@@ -1,6 +1,8 @@
-use std::{collections::HashMap, fmt::Write, future::IntoFuture};
+use std::{collections::HashMap, fmt::Write};
 
-use xitca_postgres::{statement::Statement, AsyncLendingIterator, Postgres};
+use xitca_postgres::{
+    pipeline::Pipeline, statement::Statement, AsyncLendingIterator, SharedClient,
+};
 use xitca_unsafe_collection::no_hash::NoHashBuilder;
 
 use super::{
@@ -9,7 +11,7 @@ use super::{
 };
 
 pub struct Client {
-    client: xitca_postgres::Client,
+    client: SharedClient,
     #[cfg(not(feature = "pg-sync"))]
     rng: std::cell::RefCell<Rand>,
     #[cfg(feature = "pg-sync")]
@@ -19,27 +21,14 @@ pub struct Client {
     updates: HashMap<u16, Statement, NoHashBuilder>,
 }
 
-impl Drop for Client {
-    fn drop(&mut self) {
-        drop(self.fortune.clone().into_guarded(&self.client));
-        drop(self.world.clone().into_guarded(&self.client));
-        for (_, stmt) in std::mem::take(&mut self.updates) {
-            drop(stmt.into_guarded(&self.client))
-        }
-    }
-}
-
 pub async fn create() -> HandleResult<Client> {
-    let (client, driver) = Postgres::new(DB_URL.to_string()).connect().await?;
+    let mut client = SharedClient::new(DB_URL.to_string()).await?;
 
-    tokio::spawn(tokio::task::unconstrained(driver.into_future()));
-
-    let fortune = client.prepare("SELECT * FROM fortune", &[]).await?.leak();
+    let fortune = client.prepare_cached("SELECT * FROM fortune", &[]).await?;
 
     let world = client
-        .prepare("SELECT * FROM world WHERE id=$1", &[])
-        .await?
-        .leak();
+        .prepare_cached("SELECT * FROM world WHERE id=$1", &[])
+        .await?;
 
     let mut updates = HashMap::default();
 
@@ -59,7 +48,7 @@ pub async fn create() -> HandleResult<Client> {
         q.pop();
         q.push(')');
 
-        let st = client.prepare(&q, &[]).await?.leak();
+        let st = client.prepare_cached(&q, &[]).await?;
         updates.insert(num, st);
     }
 
@@ -94,11 +83,11 @@ impl Client {
             .try_next()
             .await?
             .map(|row| World::new(row.get_raw(0), row.get_raw(1)))
-            .ok_or_else(|| format!("World does not exist").into())
+            .ok_or_else(|| "World does not exist".into())
     }
 
     pub async fn get_worlds(&self, num: u16) -> HandleResult<Vec<World>> {
-        let mut pipe = self.client.pipeline();
+        let mut pipe = Pipeline::new();
 
         {
             let mut rng = self.borrow_rng_mut();
@@ -108,7 +97,7 @@ impl Client {
         let mut worlds = Vec::new();
         worlds.reserve(num as usize);
 
-        let mut res = pipe.run().await?;
+        let mut res = self.client.pipeline(pipe).await?;
         while let Some(mut item) = res.try_next().await? {
             while let Some(row) = item.try_next().await? {
                 worlds.push(World::new(row.get_raw(0), row.get_raw(1)))
@@ -124,7 +113,7 @@ impl Client {
         let mut params = Vec::new();
         params.reserve(len * 3);
 
-        let mut pipe = self.client.pipeline();
+        let mut pipe = Pipeline::new();
 
         {
             let mut rng = self.borrow_rng_mut();
@@ -144,7 +133,7 @@ impl Client {
         worlds.reserve(len);
         let mut r_ids = params.into_iter().skip(1).step_by(2);
 
-        let mut res = pipe.run().await?;
+        let mut res = self.client.pipeline(pipe).await?;
         while let Some(mut item) = res.try_next().await? {
             while let Some(row) = item.try_next().await? {
                 let r_id = r_ids.next().unwrap();
