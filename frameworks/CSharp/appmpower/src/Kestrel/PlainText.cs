@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO.Pipelines;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace appMpower.Kestrel
 {
@@ -22,6 +23,15 @@ namespace appMpower.Kestrel
 
          await pipeWriter.WriteAsync(utf8String);
          pipeWriter.Complete();
+      }
+
+      public static void Render(IHeaderDictionary headerDictionary, IHttpResponseBodyFeature httpResponseBodyFeature, ReadOnlySpan<byte> utf8String)
+      {
+         headerDictionary.Add(_headerServer);
+         headerDictionary.Add(_headerContentType);
+         headerDictionary.Add(new KeyValuePair<string, StringValues>("Content-Length", utf8String.Length.ToString()));
+
+         httpResponseBodyFeature.Stream.Write(utf8String);
       }
    }
 }
