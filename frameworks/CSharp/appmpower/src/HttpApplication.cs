@@ -35,7 +35,8 @@ namespace appMpower
 
             if (pathStringLength == 10 && pathStringStart == "p")
             {
-               await PlainText.RenderAsync(httpResponse.Headers, httpResponseBody.Writer, _plainText);
+               //await PlainText.RenderAsync(httpResponse.Headers, httpResponseBody.Writer, _plainText);
+               httpResponseBody.Stream.Write(_plainText);
                return;
             }
             else if (pathStringLength == 5 && pathStringStart == "j")
