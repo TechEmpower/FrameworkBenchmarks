@@ -3,24 +3,26 @@
     "tests": [
         {
             "default": {
-                "json_url": "/json",
-                "plaintext_url": "/plaintext",
-                "fortune_url": "/fortunes",
-                "db_url": "/db",
-                "query_url": "/queries?q=",
-                "update_url": "/updates?q=",
-                "port": 8080,
-                "approach": "Realistic",
+                "json_url":       "/json",
+                "db_url":         "/db",
+                "query_url":      "/queries?q=",
+                "fortune_url":    "/fortunes",
+                "update_url":     "/updates?q=",
+                "plaintext_url":  "/plaintext",
+                "port":           8000,
+                "approach":       "Realistic",
                 "classification": "Micro",
-                "database": "Postgres",
-                "framework": "ohkami",
-                "language": "Rust",
-                "orm": "Raw",
-                "platform": "Rust",
-                "webserver": "ohkami",
-                "os": "Linux",
-                "database_os": "Linux",
-                "display_name": "ohkami"
+                "database":       "Postgres",
+                "framework":      "ohkami",
+                "language":       "Rust",
+                "orm":            "Raw",
+                "platform":       "None",
+                "webserver":      "ohkami",
+                "os":             "Linux",
+                "database_os":    "Linux",
+                "display_name":   "ohkami",
+                "notes":          "",
+                "versus":         "None"
             }
         }
     ]

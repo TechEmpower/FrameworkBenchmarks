@@ -3,7 +3,7 @@
 #include <array>
 
 #include <cctz/time_zone.h>
-#include <http_parser.h>
+#include <llhttp.h>
 #include <boost/container/small_vector.hpp>
 
 #include "simple_server.hpp"
@@ -18,8 +18,8 @@ namespace userver_techempower::bare {
 namespace {
 
 struct HttpParser final {
-  http_parser parser{};
-  http_parser_settings parser_settings{};
+  llhttp_t parser{};
+  llhttp_settings_t parser_settings{};
 
   std::function<void(std::string_view)> on_request_cb{};
 
@@ -27,33 +27,32 @@ struct HttpParser final {
 
   explicit HttpParser(std::function<void(std::string_view)> on_request_cb)
       : on_request_cb{std::move(on_request_cb)} {
-    http_parser_init(&parser, HTTP_REQUEST);
-    parser.data = this;
-
-    http_parser_settings_init(&parser_settings);
+    llhttp_settings_init(&parser_settings);
     parser_settings.on_url = HttpOnUrl;
     parser_settings.on_message_begin = HttpOnMessageBegin;
     parser_settings.on_message_complete = HttpOnMessageComplete;
+
+    llhttp_init(&parser, HTTP_REQUEST, &parser_settings);
+    parser.data = this;
   }
 
-  void Execute(const char* data, std::size_t length) {
-    http_parser_execute(&parser, &parser_settings, data, length);
+  auto Execute(const char* data, std::size_t length) {
+    return llhttp_execute(&parser, data, length);
   }
 
-  static int HttpOnUrl(http_parser* parser, const char* data,
-                       std::size_t length) {
+  static int HttpOnUrl(llhttp_t* parser, const char* data, std::size_t length) {
     auto* self = static_cast<HttpParser*>(parser->data);
     self->url.append(std::string_view{data, length});
     return 0;
   }
 
-  static int HttpOnMessageBegin(http_parser* parser) {
+  static int HttpOnMessageBegin(llhttp_t* parser) {
     auto* self = static_cast<HttpParser*>(parser->data);
     self->url.clear();
     return 0;
   }
 
-  static int HttpOnMessageComplete(http_parser* parser) {
+  static int HttpOnMessageComplete(llhttp_t* parser) {
     auto* self = static_cast<HttpParser*>(parser->data);
     self->on_request_cb(static_cast<std::string_view>(self->url));
     return 0;
@@ -192,8 +191,7 @@ void SimpleConnection::Process() {
       break;
     }
 
-    parser.Execute(buffer.data(), last_bytes_read);
-    if (parser.parser.http_errno != 0) {
+    if (parser.Execute(buffer.data(), last_bytes_read) != HPE_OK) {
       break;
     }
 

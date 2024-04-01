@@ -2,6 +2,6 @@ package benchmark.data
 
 interface WorldDAO {
 
-    suspend fun fetchWorld(): WorldDTO
-    suspend fun updateWorlds(worlds: List<WorldDTO>)
+    fun fetchWorld(): WorldDTO
+    fun updateWorlds(worlds: List<WorldDTO>)
 }
