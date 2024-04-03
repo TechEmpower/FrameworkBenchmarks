@@ -25,10 +25,11 @@ namespace appMpower.Kestrel
          pipeWriter.Complete();
       }
 
-      public static void Render(IHeaderDictionary headerDictionary, IHttpResponseBodyFeature httpResponseBodyFeature, byte[] utf8String, int length)
+      public static void Render(IHeaderDictionary headerDictionary, IHttpResponseBodyFeature httpResponseBodyFeature, byte[] utf8String)
       {
          headerDictionary.Add(_headerServer);
          headerDictionary.Add(_headerContentType);
+         int length = utf8String.Length;
          headerDictionary.Add(new KeyValuePair<string, StringValues>("Content-Length", length.ToString()));
 
          httpResponseBodyFeature.Stream.Write(utf8String, 0, length);

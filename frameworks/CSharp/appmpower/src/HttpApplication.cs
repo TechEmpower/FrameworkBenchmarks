@@ -11,7 +11,6 @@ namespace appMpower
    public class HttpApplication : IHttpApplication<IFeatureCollection>
    {
       public static readonly byte[] _plainText = Encoding.UTF8.GetBytes("Hello, World!");
-      public static readonly int _plainTextLength = _plainText.Length; 
       private readonly static JsonMessageSerializer _jsonMessageSerializer = new JsonMessageSerializer();
       private readonly static WorldSerializer _worldSerializer = new WorldSerializer();
       private readonly static CachedWorldSerializer _cachedWorldSerializer = new CachedWorldSerializer();
@@ -37,7 +36,7 @@ namespace appMpower
             if (pathStringLength == 10 && pathStringStart == "p")
             {
                //await PlainText.RenderAsync(httpResponse.Headers, httpResponseBody.Writer, _plainText);
-               PlainText.Render(httpResponse.Headers, httpResponseBody, _plainText, _plainTextLength);
+               PlainText.Render(httpResponse.Headers, httpResponseBody, _plainText);
                return;
             }
             else if (pathStringLength == 5 && pathStringStart == "j")
