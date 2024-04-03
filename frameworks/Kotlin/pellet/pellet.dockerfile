@@ -1,10 +1,10 @@
-FROM gradle:jdk18 as gradle
+FROM gradle:jdk21 as gradle
 WORKDIR /sample
 COPY sample/build.gradle.kts build.gradle.kts
 COPY sample/src src
 RUN gradle clean shadowJar --no-daemon
 
-FROM openjdk:18-jdk-buster
+FROM openjdk:21-jdk-buster
 WORKDIR /sample
 COPY --from=gradle /sample/build/libs/sample-1.0.0-all.jar app.jar
 

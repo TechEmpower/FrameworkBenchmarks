@@ -10,7 +10,9 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http;
 using Microsoft.Extensions.ObjectPool;
+#if !AOT
 using RazorSlices;
+#endif
 
 namespace PlatformBenchmarks
 {
@@ -54,10 +56,12 @@ namespace PlatformBenchmarks
             }
         }
 
+#if !AOT
 #if NPGSQL
         private readonly static SliceFactory<List<FortuneUtf8>> FortunesTemplateFactory = RazorSlice.ResolveSliceFactory<List<FortuneUtf8>>("/Templates/FortunesUtf8.cshtml");
 #else
         private readonly static SliceFactory<List<FortuneUtf16>> FortunesTemplateFactory = RazorSlice.ResolveSliceFactory<List<FortuneUtf16>>("/Templates/FortunesUtf16.cshtml");
+#endif
 #endif
 
         [ThreadStatic]
@@ -163,7 +167,9 @@ namespace PlatformBenchmarks
 
         private Task ProcessRequestAsync() => _requestType switch
         {
+#if !AOT
             RequestType.FortunesRaw => FortunesRaw(Writer),
+#endif
             RequestType.SingleQuery => SingleQuery(Writer),
             RequestType.Caching => Caching(Writer, _queries),
             RequestType.Updates => Updates(Writer, _queries),

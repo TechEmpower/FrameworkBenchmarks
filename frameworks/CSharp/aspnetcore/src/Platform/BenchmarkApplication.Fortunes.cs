@@ -1,6 +1,7 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+#if !AOT
 using System.IO.Pipelines;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -64,3 +65,4 @@ public partial class BenchmarkApplication
         template.Dispose();
     }
 }
+#endif

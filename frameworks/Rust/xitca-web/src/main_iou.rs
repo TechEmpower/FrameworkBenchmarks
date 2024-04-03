@@ -1,9 +1,6 @@
 // used as reference of if/how moving from epoll to io-uring(or mixture of the two) make sense for
 // network io.
 
-#[global_allocator]
-static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
-
 mod db;
 mod ser;
 mod util;
@@ -40,8 +37,8 @@ type Response = http::Response<Once<Bytes>>;
 fn main() -> io::Result<()> {
     let service = fn_service(handler)
         .enclosed(context_mw())
-        .enclosed(fn_build(|service| async {
-            Ok::<_, Infallible>(Http1IOU {
+        .enclosed(fn_build(|res: Result<_, _>| async {
+            res.map(|service| Http1IOU {
                 service,
                 date: DateTimeService::new(),
             })

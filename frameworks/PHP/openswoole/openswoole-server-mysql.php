@@ -111,7 +111,7 @@ $fortunes_mysql = function ($pool): string {
  *
  * @return string
  */
-$updates_mysql = function (int $queries = 0, $pool): string {
+$updates_mysql = function (int $queries, $pool): string {
     $db = $pool->get();
 
     $query_count = 1;

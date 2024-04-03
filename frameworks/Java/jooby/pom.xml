@@ -11,12 +11,12 @@
   <name>jooby</name>
 
   <properties>
-    <jooby.version>3.0.5</jooby.version>
-    <dsl-json.version>1.10.0</dsl-json.version>
-    <postgresql.version>42.6.0</postgresql.version>
+    <jooby.version>3.0.8</jooby.version>
+    <dsl-json.version>2.0.2</dsl-json.version>
+    <postgresql.version>42.7.2</postgresql.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>17</maven.compiler.source>
-    <maven.compiler.target>17</maven.compiler.target>
+    <maven.compiler.source>21</maven.compiler.source>
+    <maven.compiler.target>21</maven.compiler.target>
 
     <!-- Startup class -->
     <application.class>com.techempower.App</application.class>
@@ -41,7 +41,7 @@
     <dependency>
       <groupId>com.mysql</groupId>
       <artifactId>mysql-connector-j</artifactId>
-      <version>8.0.33</version>
+      <version>8.3.0</version>
     </dependency>
 
 
@@ -55,13 +55,13 @@
     <dependency>
       <groupId>io.vertx</groupId>
       <artifactId>vertx-pg-client</artifactId>
-      <version>4.4.4</version>
+      <version>4.5.4</version>
     </dependency>
 
     <!-- json -->
     <dependency>
       <groupId>com.dslplatform</groupId>
-      <artifactId>dsl-json-java8</artifactId>
+      <artifactId>dsl-json</artifactId>
       <version>${dsl-json.version}</version>
     </dependency>
   </dependencies>
@@ -72,7 +72,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
-        <version>3.3.0</version>
+        <version>3.5.0</version>
         <executions>
           <execution>
             <id>add-source</id>
@@ -91,7 +91,7 @@
       <plugin>
         <groupId>com.fizzed</groupId>
         <artifactId>rocker-maven-plugin</artifactId>
-        <version>1.3.0</version>
+        <version>1.4.0</version>
         <executions>
           <execution>
             <id>generate-rocker-templates</id>
@@ -110,7 +110,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.11.0</version>
+        <version>3.12.1</version>
         <configuration>
           <annotationProcessorPaths>
             <path>
@@ -120,7 +120,7 @@
             </path>
             <path>
               <groupId>com.dslplatform</groupId>
-              <artifactId>dsl-json-java8</artifactId>
+              <artifactId>dsl-json</artifactId>
               <version>${dsl-json.version}</version>
             </path>
           </annotationProcessorPaths>
@@ -130,7 +130,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>3.4.1</version>
+        <version>3.5.2</version>
         <executions>
           <execution>
             <id>uber-jar</id>

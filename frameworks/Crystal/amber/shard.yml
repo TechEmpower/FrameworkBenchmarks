@@ -1,5 +1,5 @@
 name: amber
-version: 0.1.0
+version: 0.2.0
 
 authors:
   - Amber Team and Contributors <amberframework.org>
@@ -13,8 +13,28 @@ targets:
 dependencies:
   amber:
     github: amberframework/amber
-    version: 0.9.0
+    version: 1.4.1
+
+  jennifer:
+    github: imdrasil/jennifer.cr
+    version: "~> 0.13.0"
+
+  sam:
+    github: imdrasil/sam.cr
+    version: 0.5.0
+
+  pg:
+    github: will/crystal-pg
+    version: "= 0.26.0"
+
+  mysql:
+    github: crystal-lang/crystal-mysql
+    version: 0.14.0
+
+  dotenv:
+    github: gdotdesign/cr-dotenv
+    version: 1.0.0
 
   granite:
     github: amberframework/granite
-    version: 0.13.1
+    version: 0.23.3

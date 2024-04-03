@@ -1,6 +1,7 @@
 require 'erb'
 require 'active_record'
 require 'yaml'
+require_relative 'config/auto_tune'
 
 MAX_PK = 10_000
 QUERIES_MIN = 1

@@ -1,21 +1,20 @@
 #pragma once
 
-#include <userver/server/handlers/http_handler_json_base.hpp>
+#include <userver/server/handlers/http_handler_base.hpp>
 
 namespace userver_techempower::json {
 
-class Handler final : public userver::server::handlers::HttpHandlerJsonBase {
+class Handler final : public userver::server::handlers::HttpHandlerBase {
  public:
   static constexpr std::string_view kName = "json-handler";
 
-  using HttpHandlerJsonBase::HttpHandlerJsonBase;
+  using HttpHandlerBase::HttpHandlerBase;
 
-  userver::formats::json::Value HandleRequestJsonThrow(
+  std::string HandleRequestThrow(
       const userver::server::http::HttpRequest&,
-      const userver::formats::json::Value&,
       userver::server::request::RequestContext&) const final;
 
-  static userver::formats::json::Value GetResponse();
+  static std::string GetResponse();
 };
 
 }  // namespace userver_techempower::json

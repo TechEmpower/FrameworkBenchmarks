@@ -29,6 +29,7 @@ components_manager:
                 handler-defaults:
                     set_tracing_headers: false
             server-name: us
+            middleware-pipeline-builder: minimal-middleware-pipeline-builder
         simple-router:
         simple-server:
             port: 8081
@@ -62,6 +63,7 @@ components_manager:
         noop-tracing-manager:
         tracing-manager-locator:
             component-name: noop-tracing-manager
+        minimal-middleware-pipeline-builder:
 
         plaintext-handler:
             path: /plaintext
@@ -83,6 +85,7 @@ components_manager:
             max_queue_size: 512
             connecting_limit: 15
             ignore_unused_query_params: true
+            connlimit_mode: manual
 
         single-query-handler:
             path: /db

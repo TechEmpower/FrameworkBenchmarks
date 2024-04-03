@@ -7,8 +7,8 @@
         "plaintext_url": "/plaintext",
         "db_url": "/db",
         "query_url": "/queries?queries=",
-        "fortune_url": "/fortunes",
         "update_url": "/updates?queries=",
+        "fortune_url": "/fortunes",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Fullstack",
@@ -17,14 +17,13 @@
         "language": "Nim",
         "flavor": "None",
         "orm": "Full",
-        "platform": "httpbeast",
+        "platform": "asynchttpserver",
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
         "display_name": "Basolato",
         "notes": "",
-        "versus": "jester",
-        "tags": ["broken"]
+        "versus": "httpbeast, prologue"
       }
     }
   ]

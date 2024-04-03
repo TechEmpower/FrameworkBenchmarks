@@ -117,8 +117,6 @@ handle_target(
 	http::request<Body, http::basic_fields<Allocator>>&& req,
 	PGconn* conn = nullptr)
 {
-	static std::string msg = "Hello, World!";
-
 	//std::cout << "handle_target: " << req.target() << std::endl;
 	http::response<http::string_body> res{http::status::ok, req.version()};
 	res.set(http::field::server, BOOST_BEAST_VERSION_STRING);
@@ -130,13 +128,13 @@ handle_target(
 	{
 		// {"message":"Hello, World!"}
 		json::object obj;
-		obj["message"] = msg;
+		obj["message"] = "Hello, World!";
 		res.body() = json::serialize(obj);
 	}
 	else if (req.target() == "/plaintext")
 	{
 		res.set(http::field::content_type, "text/plain");
-		res.body() = msg;
+		res.body() = "Hello, World!";
 	}
 	else if (req.target() == "/db" || req.target().starts_with("/queries/"))
 	{
@@ -328,9 +326,10 @@ do_listen(tcp::endpoint endpoint)
 						{
 							std::rethrow_exception(e);
 						}
-						catch (std::exception &e) {
-							std::cerr << "Error in session: " << e.what() << "\n";
-						}
+						catch (std::exception&){}
+//						catch (std::exception &e) {
+//							std::cerr << "Error in session: " << e.what() << "\n";
+//						}
 				});
 
 }
@@ -339,7 +338,13 @@ int main(int argc, char* argv[])
 {
 	auto const address = net::ip::make_address(becpp::env("BCPP_ADDRESS", "0.0.0.0"));
 	auto const port = static_cast<unsigned short>(std::atoi(becpp::env("BCPP_PORT", "8000")));
-	auto const threads = std::max<int>(1, std::atoi(becpp::env("BCPP_N_THREADS", "3")));
+	auto env_threads = std::atoi(becpp::env("BCPP_N_THREADS", "0"));
+	if (env_threads == 0)
+	{
+		env_threads = std::thread::hardware_concurrency();
+		std::cout << "Using number of cores: " << env_threads << '\n';
+	}
+	auto const threads = std::max<int>(1, env_threads);
 
 	std::cout << "__GNUG__=" << __GNUG__ << '\n';
 	std::cout << "__cplusplus=" << __cplusplus << '\n';

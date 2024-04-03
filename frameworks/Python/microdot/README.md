@@ -8,20 +8,13 @@ Also note that there is additional information provided in the [Python README](.
 
 ### Test Source Code
 
-* [JSON](app_sync.py#L60)
-* [JSON-async](app_async.py#L60)
-* [PLAINTEXT](app_sync.py#L102)
-* [PLAINTEXT-async](app_async.py#L102)
-* [DB](app_sync.py#L65)
-* [DB-async](app_async.py#L65)
-* [QUERY](app_sync.py#L73)
-* [QUERY-async](app_async.py#L83)
-* [CACHED QUERY](app_sync.py#L112)
-* [CACHED_QUERY-async](app_async.py#L112)
-* [UPDATE](app_sync.py#L89)
-* [UPDATE-async](app_async.py#L89)
-* [FORTUNES](app_sync.py#L80)
-* [FORTUNES-async](app_async.py#L80)
+* [JSON](app.py#L60)
+* [PLAINTEXT](app.py#L102)
+* [DB](app.py#L65)
+* [QUERY](app.py#L73)
+* [CACHED QUERY](app.py#L112)
+* [UPDATE](app.py#L89)
+* [FORTUNES](app.py#L80)
 
 ## Resources
 

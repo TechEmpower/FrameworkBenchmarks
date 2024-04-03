@@ -1,4 +1,4 @@
-FROM python:3.11-buster
+FROM python:3.12-slim
 
 RUN apt-get update
 RUN apt-get install libpq-dev python3-dev -y
@@ -12,4 +12,4 @@ ENV DATABASE_URL postgresql://benchmarkdbuser:benchmarkdbpass@tfb-database:5432/
 
 EXPOSE 8080
 
-CMD gunicorn app_sync:app -c gunicorn_conf.py
+CMD gunicorn app:app -c uvicorn_conf.py
