@@ -92,5 +92,5 @@ codegen-units = 1
 panic = "abort"
 
 [patch.crates-io]
-xitca-postgres = { git = "https://github.com/HFQR/xitca-web.git", rev = "13a28c51a2f6e23e4e6b96e508a8af1e5e79d0b6" }
-mio = { git = "https://github.com/fakeshadow/mio.git", rev = "52b72d372bfe5807755b7f5e3e1edf282954d6ba" }
+xitca-postgres = { git = "https://github.com/HFQR/xitca-web.git", rev = "d76b2e188edcbdd801ecb4a7359b4d56070d6dc4" }
+mio = { git = "https://github.com/fakeshadow/mio.git", rev = "dcc85ea7a3af3159efdf7e3a17b3a8b58131a15f" }
