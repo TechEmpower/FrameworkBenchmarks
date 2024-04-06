@@ -8,7 +8,7 @@ class Scaffolding:
     def __init__(self, benchmarker):
         print("""
 -------------------------------------------------------------------------------
-    This wizard is intended to help build the scaffolding required for a new 
+    This wizard is intended to help build the scaffolding required for a new
     test to be benchmarked.
 
     From here, you will be prompted for values related to the test you
@@ -87,12 +87,12 @@ class Scaffolding:
 
             print("""
   That language is not currently in our list of known languages.
-  
+
   Here is a list of similar languages present in our benchmark suite that you
   may have meant:
 
   %s
-      
+
   Did you mean to add the new language, '%s', to the benchmark suite?
       """ % (similar, self.language))
             valid = self.__prompt_confirm_new_language()
@@ -115,8 +115,8 @@ class Scaffolding:
         print("""
   The approach of your test implementation.
 
-  1) Realistic: Uses the framework with most out-of-the-box functionality 
-                enabled. We consider this realistic because most applications 
+  1) Realistic: Uses the framework with most out-of-the-box functionality
+                enabled. We consider this realistic because most applications
                 built with the framework will leave these features enabled.
   2) Stripped:  Removes or outright avoids implementing features that are
                 unnecessary for the particulars of the benchmark exercise. This
@@ -143,14 +143,14 @@ class Scaffolding:
         print("""
   The classification of your test implementation.
 
-  1) Fullstack: Robust framework expected to provide high-level functionality 
-                for serving as a web application; for example, ability to 
-                compose views, provide functions for responding with several 
-                data types (json, html, etc), connecting to a database, form 
+  1) Fullstack: Robust framework expected to provide high-level functionality
+                for serving as a web application; for example, ability to
+                compose views, provide functions for responding with several
+                data types (json, html, etc), connecting to a database, form
                 processing, etc.
   2) Micro:     Simple framework expected to provide enough middleware to build
-                a robust web application such as request routing and some 
-                simple plumbing, but may not include built-in functionality 
+                a robust web application such as request routing and some
+                simple plumbing, but may not include built-in functionality
                 such as, for example, server-composed views.
   3) Platform:  Barebones infrastructure for servicing HTTP requests, but does
                 not include a framework at all.
@@ -181,7 +181,7 @@ class Scaffolding:
         print("""
   The platform of your test implementation.
 
-  The platform is the low-level software or API used to host web applications 
+  The platform is the low-level software or API used to host web applications
   for the framework; the platform provides an implementation of the HTTP
   fundamentals.
 
@@ -233,11 +233,11 @@ class Scaffolding:
         print("""
   How you would classify the ORM (object relational mapper) of your test?
 
-  1) Full:  A feature-rich ORM which provides functionality for interacting 
-            with a database without writing a query in all but the most edge 
+  1) Full:  A feature-rich ORM which provides functionality for interacting
+            with a database without writing a query in all but the most edge
             cases.
   2) Micro: An ORM which provides functionality for interacting with a database
-            for many trivial operations (querying, updating), but not more 
+            for many trivial operations (querying, updating), but not more
             robust cases (for example, gathering relations).
   3) Raw:   No ORM; raw database access.
     """)
@@ -277,9 +277,9 @@ class Scaffolding:
         print("""
   The name of another test (elsewhere in this project) that is a subset of this
   framework.
-  This allows for the generation of the framework efficiency chart in the 
+  This allows for the generation of the framework efficiency chart in the
   results web site.
-  For example, Compojure is compared to "servlet" since Compojure is built on 
+  For example, Compojure is compared to "servlet" since Compojure is built on
   the Servlet platform.
 
   Example: Servlet, Wai, Undertow
@@ -344,31 +344,31 @@ class Scaffolding:
     def __edit_scaffold_files(self):
         for file in os.listdir(os.path.join(self.test_dir)):
             self.__replace_text(
-                os.path.join(self.test_dir, file), "\$NAME", self.name)
+                os.path.join(self.test_dir, file), r'\$NAME', self.name)
             self.__replace_text(
-                os.path.join(self.test_dir, file), "\$DISPLAY_NAME",
+                os.path.join(self.test_dir, file), r'\$DISPLAY_NAME',
                 self.display_name)
             self.__replace_text(
-                os.path.join(self.test_dir, file), "\$APPROACH", self.approach)
+                os.path.join(self.test_dir, file), r'\$APPROACH', self.approach)
             self.__replace_text(
-                os.path.join(self.test_dir, file), "\$CLASSIFICATION",
+                os.path.join(self.test_dir, file), r'\$CLASSIFICATION',
                 self.classification)
             self.__replace_text(
-                os.path.join(self.test_dir, file), "\$FRAMEWORK",
+                os.path.join(self.test_dir, file), r'\$FRAMEWORK',
                 self.framework)
             self.__replace_text(
-                os.path.join(self.test_dir, file), "\$LANGUAGE", self.language)
+                os.path.join(self.test_dir, file), r'\$LANGUAGE', self.language)
             self.__replace_text(
-                os.path.join(self.test_dir, file), "\$DATABASE", self.database)
+                os.path.join(self.test_dir, file), r'\$DATABASE', self.database)
             self.__replace_text(
-                os.path.join(self.test_dir, file), "\$ORM", self.orm)
+                os.path.join(self.test_dir, file), r'\$ORM', self.orm)
             self.__replace_text(
-                os.path.join(self.test_dir, file), "\$PLATFORM", self.platform)
+                os.path.join(self.test_dir, file), r'\$PLATFORM', self.platform)
             self.__replace_text(
-                os.path.join(self.test_dir, file), "\$WEBSERVER",
+                os.path.join(self.test_dir, file), r'\$WEBSERVER',
                 self.webserver)
             self.__replace_text(
-                os.path.join(self.test_dir, file), "\$VERSUS", self.versus)
+                os.path.join(self.test_dir, file), r'\$VERSUS', self.versus)
 
     def __print_success(self):
         print("""
