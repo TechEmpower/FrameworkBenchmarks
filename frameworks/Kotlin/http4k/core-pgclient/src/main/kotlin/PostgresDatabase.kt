@@ -9,7 +9,7 @@ import java.util.Random
 
 
 class PostgresDatabase : Database {
-    private val dbPool: SqlClient = run {
+    private val dbPool = run {
         val connectOptions = PgConnectOptions().apply {
             port = 5432
             cachePreparedStatements = true
