@@ -18,9 +18,7 @@ class PostgresDatabase : Database {
             user = "benchmarkdbuser"
             password = "benchmarkdbpass"
         }
-        client(connectOptions, PoolOptions().apply {
-            maxSize = 8 + Runtime.getRuntime().availableProcessors()
-        })
+        client(connectOptions, PoolOptions().apply { maxSize = 64 })
     }
 
     private val random = Random()
