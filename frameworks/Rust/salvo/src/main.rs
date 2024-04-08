@@ -50,7 +50,8 @@ fn main() {
 }
 
 async fn serve(router: Arc<Router>) {
-    let acceptor: TcpAcceptor = utils::reuse_listener().unwrap().try_into().unwrap();
+    // let acceptor: TcpAcceptor = utils::reuse_listener().unwrap().try_into().unwrap();
+    let acceptor = TcpListener::new("0.0.0.0:8080").bind().await;
     let mut server = Server::new(acceptor);
     let http1 = server.http1_mut();
     http1.pipeline_flush(true);
