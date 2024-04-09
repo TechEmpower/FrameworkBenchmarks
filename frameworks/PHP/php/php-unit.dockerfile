@@ -1,4 +1,4 @@
-FROM unit:1.30.0-php8.2
+FROM unit:php8.3
 
 ADD . /php
 WORKDIR /php
