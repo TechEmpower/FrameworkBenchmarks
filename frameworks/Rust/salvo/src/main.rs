@@ -4,7 +4,6 @@
 use std::sync::Arc;
 
 use bytes::Bytes;
-use salvo::conn::tcp::TcpAcceptor;
 use salvo::http::body::ResBody;
 use salvo::http::header::{self, HeaderValue};
 use salvo::prelude::*;
