@@ -48,10 +48,7 @@ class HelloWorldController < ApplicationController
 
   def query_count
     queries = params[:queries].to_i
-    return MIN_QUERIES if queries < MIN_QUERIES
-    return MAX_QUERIES if queries > MAX_QUERIES
-
-    queries
+    queries.clamp(MIN_QUERIES, MAX_QUERIES)
   end
 
   def random_id

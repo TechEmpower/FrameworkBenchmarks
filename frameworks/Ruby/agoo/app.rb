@@ -15,18 +15,19 @@ $pool = ConnectionPool.new(size: 256, timeout: 5) do
                              })
         end
 
+MAX_PK = 10_000
+QUERIES_MIN = 1
+QUERIES_MAX = 500
+
 class BaseHandler
   def self.extract_queries_param(request = nil)
     queries = Rack::Utils.parse_query(request['QUERY_STRING'])['queries'].to_i rescue 1
 
-    return   1 if queries <   1
-    return 500 if queries > 500
-
-    queries
+    queries.clamp(QUERIES_MIN, QUERIES_MAX)
   end
 
   def self.get_one_random_number
-    1 + Random.rand(10000)
+    1 + Random.rand(MAX_PK)
   end
 
   def self.get_one_record(id = get_one_random_number)
