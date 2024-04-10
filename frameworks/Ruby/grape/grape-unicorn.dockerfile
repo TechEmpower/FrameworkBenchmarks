@@ -8,7 +8,7 @@ ADD ./ /grape
 
 WORKDIR /grape
 
-RUN bundle install --jobs=4 --gemfile=/grape/Gemfile --path=/grape/grape/bundle
+RUN bundle install --jobs=4 --gemfile=/grape/Gemfile
 
 EXPOSE 8080
 
