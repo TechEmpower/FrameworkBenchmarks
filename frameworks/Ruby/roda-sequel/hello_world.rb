@@ -37,7 +37,9 @@ class HelloWorld < Roda
     r.is "queries" do
       worlds =
         DB.synchronize do
-          Array.new(bounded_queries) { World.with_pk(rand1).values }
+          ALL_IDS.sample(bounded_queries).map do |id|
+            World.with_pk(id).values
+          end
         end
       worlds.to_json
     end
@@ -58,8 +60,8 @@ class HelloWorld < Roda
     r.is "updates" do
       worlds =
         DB.synchronize do
-          Array.new(bounded_queries) do
-            world = World.with_pk(rand1)
+          ALL_IDS.sample(bounded_queries).map do |id|
+            world = World.with_pk(id)
             new_value = rand1
             new_value = rand1 while new_value == world.randomnumber
             world.update(randomnumber: new_value)
