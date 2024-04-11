@@ -33,8 +33,8 @@ class HelloWorldController < ApplicationController
   end
 
   def update
-    worlds = Array.new(query_count) do
-      world = World.find(random_id)
+    worlds = ALL_IDS.sample(query_count).map do |id|
+      world = World.find(id)
       new_value = random_id
       new_value = random_id until new_value != world.randomNumber
       world.update_columns(randomNumber: new_value)
