@@ -7,7 +7,7 @@ use std::sync::Arc;
 
 use bytes::BytesMut;
 use may_minihttp::{HttpService, HttpServiceFactory, Request, Response};
-use may_postgres::{self, types::ToSql, Client, Statement};
+use may_postgres::{types::ToSql, Client, Statement};
 use nanorand::{Rng, WyRand};
 use smallvec::SmallVec;
 use yarte::{ywrite_html, Serialize};
