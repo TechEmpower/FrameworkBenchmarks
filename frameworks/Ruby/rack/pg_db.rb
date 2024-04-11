@@ -46,13 +46,7 @@ class PgDb
 
   def validate_count(count)
     count = count.to_i
-    if count < MIN_QUERIES
-      MIN_QUERIES
-    elsif count > MAX_QUERIES
-      MAX_QUERIES
-    else
-      count
-    end
+    count.clamp(MIN_QUERIES, MAX_QUERIES)
   end
 
   def select_promises(count)
