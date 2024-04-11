@@ -15,7 +15,8 @@ $pool = ConnectionPool.new(size: 256, timeout: 5) do
                              })
         end
 
-MAX_PK = 10_000
+QUERY_RANGE = (1..10_000).freeze
+ALL_IDS = QUERY_RANGE.to_a
 QUERIES_MIN = 1
 QUERIES_MAX = 500
 
@@ -27,7 +28,7 @@ class BaseHandler
   end
 
   def self.get_one_random_number
-    1 + Random.rand(MAX_PK)
+    Random.rand(QUERY_RANGE)
   end
 
   def self.get_one_record(id = get_one_random_number)
@@ -141,12 +142,10 @@ end
 
 class QueriesHandler < BaseHandler
   def self.call(req)
-    records =
-        [].tap do|r|
-          (extract_queries_param req).times do
-            r << get_one_record()
-          end
-        end
+    queries = extract_queries_param req
+    records = ALL_IDS.sample(queries).map do |id|
+      get_one_record(id)
+    end
 
     json_response(records)
   end
@@ -154,20 +153,18 @@ end
 
 class UpdatesHandler < BaseHandler
   def self.call(req)
-    records =
-        [].tap do|r|
-          (extract_queries_param req).times do
-            r << get_one_record()
-          end
-        end
-
-    updated_records =
-        records.map { |r| r['randomnumber'] = get_one_random_number; r }
+    queries = extract_queries_param req
+    records = ALL_IDS.sample(queries).map do |id|
+      world = get_one_record(id)
+      world['randomnumber'] = get_one_random_number
+      world
+    end
 
     sql_values =
-        updated_records.
-          map { |r| "(#{ r['id'] }, #{ r['randomnumber'] })"}.
-            join(', ')
+        records.
+          map { |r|
+            "(#{ r['id'] }, #{ r['randomnumber'] })"
+          }.join(', ')
 
     $pool.with do |conn|
       conn.exec(<<-SQL)
@@ -180,7 +177,7 @@ class UpdatesHandler < BaseHandler
       SQL
     end
 
-    json_response(updated_records)
+    json_response(records)
   end
 end
 
