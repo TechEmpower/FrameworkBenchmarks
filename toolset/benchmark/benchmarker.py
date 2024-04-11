@@ -29,7 +29,8 @@ class Benchmarker:
 
         # a list of all tests for this run
         self.tests = self.metadata.tests_to_run()
-
+        if self.config.reverse_order:
+            self.tests.reverse()
         self.results = Results(self)
         self.docker_helper = DockerHelper(self)
 
