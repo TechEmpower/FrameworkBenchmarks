@@ -21,9 +21,9 @@ RUN git clone https://github.com/hggq/paozhu
 # RUN unzip benchmark.zip
 RUN ls -l
 # RUN mv ./benchmark/* ./
-COPY ./conf/server.conf ./paozhu/conf/server.conf
-COPY ./conf/orm.conf ./paozhu/conf/orm.conf
-
+COPY ./paozhu_benchmark/conf/server.conf ./paozhu/conf/server.conf
+COPY ./paozhu_benchmark/conf/orm.conf ./paozhu/conf/orm.conf
+COPY ./paozhu_benchmark/CMakeLists.txt ./paozhu/CMakeLists.txt
 
 WORKDIR /paozhu
 RUN unzip asio.zip
