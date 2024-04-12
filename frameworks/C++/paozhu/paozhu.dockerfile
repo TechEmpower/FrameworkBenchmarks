@@ -20,9 +20,12 @@ RUN git clone https://github.com/hggq/paozhu
 WORKDIR /paozhu
 RUN unzip asio.zip
 # RUN mv ./benchmark/* ./
-COPY ./ ./
+COPY ./ /
 run cat ./conf/server.conf
 run cat ./conf/orm.conf
+
+RUN cmake . -B build -DCMAKE_BUILD_TYPE=Release 
+RUN cmake --build build
 
 RUN cmake . -B build -DCMAKE_BUILD_TYPE=Release 
 RUN cmake --build build
