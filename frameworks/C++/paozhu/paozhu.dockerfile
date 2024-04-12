@@ -13,28 +13,25 @@ ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
 
 COPY ./ ./
-RUN ls -l
 WORKDIR /
 
 # RUN wget https://github.com/hggq/paozhu/releases/download/v1.5.8/benchmark.zip
 RUN git clone https://github.com/hggq/paozhu
 # RUN unzip benchmark.zip
-RUN ls -l
-# RUN mv ./benchmark/* ./
+RUN rm -Rf ./paozhu/controller
+RUN copy ./paozhu_benchmark/controller ./paozhu/
+RUN copy ./paozhu_benchmark/common ./paozhu/
+
 COPY ./paozhu_benchmark/conf/server.conf ./paozhu/conf/server.conf
 COPY ./paozhu_benchmark/conf/orm.conf ./paozhu/conf/orm.conf
 COPY ./paozhu_benchmark/CMakeLists.txt ./paozhu/CMakeLists.txt
 
 WORKDIR /paozhu
 RUN unzip asio.zip
-run cat ./conf/server.conf
-run cat ./conf/orm.conf
 
 RUN cmake . -B build -DCMAKE_BUILD_TYPE=Release 
 RUN cmake --build build
 
-RUN cmake . -B build -DCMAKE_BUILD_TYPE=Release 
-RUN cmake --build build
 
 EXPOSE 8888
 
