@@ -19,9 +19,11 @@ WORKDIR /
 RUN git clone https://github.com/hggq/paozhu
 # RUN unzip benchmark.zip
 RUN rm -Rf ./paozhu/controller
-RUN rm -Rf ./paozhu/common
+ 
 COPY ./paozhu_benchmark/controller ./paozhu/
-COPY ./paozhu_benchmark/common ./paozhu/
+COPY ./paozhu_benchmark/common/autocontrolmethod.hpp ./paozhu/common/
+COPY ./paozhu_benchmark/common/reghttpmethod_pre.hpp ./paozhu/common/
+COPY ./paozhu_benchmark/common/reghttpmethod.hpp ./paozhu/common/
 
 COPY ./paozhu_benchmark/conf/server.conf ./paozhu/conf/server.conf
 COPY ./paozhu_benchmark/conf/orm.conf ./paozhu/conf/orm.conf
