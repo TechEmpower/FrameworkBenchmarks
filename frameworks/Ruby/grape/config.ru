@@ -36,9 +36,7 @@ module Acme
     helpers do
       def bounded_queries
         queries = params[:queries].to_i
-        return QUERIES_MIN if queries < QUERIES_MIN
-        return QUERIES_MAX if queries > QUERIES_MAX
-        queries
+        queries.clamp(QUERIES_MIN, QUERIES_MAX)
       end
 
       # Return a random number between 1 and MAX_PK

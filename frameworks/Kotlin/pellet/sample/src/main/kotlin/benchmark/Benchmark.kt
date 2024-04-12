@@ -10,7 +10,6 @@ import dev.pellet.server.PelletConnector
 import dev.pellet.server.codec.mime.MediaType
 import dev.pellet.server.responder.http.PelletHTTPRouteContext
 import dev.pellet.server.routing.http.HTTPRouteResponse
-import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import java.time.Instant
 import java.time.ZoneId
@@ -25,7 +24,7 @@ val jsonEncoder = Json {
     prettyPrint = false
 }
 
-fun main() = runBlocking {
+fun main() {
     val sharedRouter = httpRouter {
         get("/plaintext", ::handlePlain)
         get("/json", ::handleJson)
@@ -44,14 +43,14 @@ fun main() = runBlocking {
             router = sharedRouter
         }
     }
-    pellet.start().join()
+    pellet.start()
 }
 
 val dateFormatter = DateTimeFormatter
     .ofPattern("EEE, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH)
     .withZone(ZoneId.of("GMT"))
 
-private suspend fun handlePlain(
+private fun handlePlain(
     context: PelletHTTPRouteContext
 ): HTTPRouteResponse {
     return HTTPRouteResponse.Builder()
@@ -67,7 +66,7 @@ data class ResponseBody(
     val message: String
 )
 
-private suspend fun handleJson(
+private fun handleJson(
     context: PelletHTTPRouteContext
 ): HTTPRouteResponse {
     val responseBody = ResponseBody(message = "Hello, World!")
@@ -81,7 +80,7 @@ private suspend fun handleJson(
 
 private val repository = TFBRepository()
 
-private suspend fun handleDb(
+private fun handleDb(
     context: PelletHTTPRouteContext
 ): HTTPRouteResponse {
     val result = repository.fetchWorld()
@@ -93,7 +92,7 @@ private suspend fun handleDb(
         .build()
 }
 
-private suspend fun handleQuery(
+private fun handleQuery(
     context: PelletHTTPRouteContext
 ): HTTPRouteResponse {
     val rawQueries = context.firstQueryParameter("queries").getOrNull()
@@ -110,7 +109,7 @@ private suspend fun handleQuery(
         .build()
 }
 
-private suspend fun handleUpdates(
+private fun handleUpdates(
     context: PelletHTTPRouteContext
 ): HTTPRouteResponse {
     val rawQueries = context.firstQueryParameter("queries").getOrNull()
@@ -133,7 +132,7 @@ private suspend fun handleUpdates(
         .build()
 }
 
-private suspend fun handleFortunes(
+private fun handleFortunes(
     context: PelletHTTPRouteContext
 ): HTTPRouteResponse {
     val newFortune = Fortune(0, "Additional fortune added at request time.")

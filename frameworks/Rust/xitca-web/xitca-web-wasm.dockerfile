@@ -1,7 +1,7 @@
 ARG WASMTIME_VERSION=15.0.0
-ARG WASM_TARGET=wasm32-wasi-preview1-threads
+ARG WASM_TARGET=wasm32-wasip1-threads
 
-FROM rust:1.75 AS compile
+FROM rust:1.77 AS compile
 
 ARG WASMTIME_VERSION
 ARG WASM_TARGET

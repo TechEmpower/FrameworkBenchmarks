@@ -8,23 +8,23 @@ jemallocator = ["dep:jemallocator"]
 
 [dependencies]
 askama = "0.12.1"
-fastrand = "2.0.1"
-futures-lite = "2.2.0"
-serde = { version = "1.0.196", features = ["derive"] }
-serde_json = "1.0.113"
-trillium = "0.2.16"
+fastrand = "2.0.2"
+futures-lite = "2.3.0"
+serde = { version = "1.0.197", features = ["derive"] }
+serde_json = "1.0.115"
+trillium = "0.2.19"
 trillium-api = "0.1.0"
 trillium-askama = "0.3.2"
-trillium-smol = "0.3.3"
-trillium-logger = "0.4.4"
-trillium-router = "0.3.6"
-unicycle = "0.9.4"
-env_logger = "0.11.2"
+trillium-smol = "0.4.0"
+trillium-logger = "0.4.5"
+trillium-router = "0.4.1"
+unicycle = "0.10.1"
+env_logger = "0.11.3"
 moka = { version = "0.12.5", features = ["future"] }
 jemallocator = {version="0.5.4", optional = true}
 
 [dependencies.sea-orm]
-version = "0.12.14"
+version = "0.12.15"
 default-features = false
 features = ["runtime-async-std-native-tls", "sqlx-postgres", "macros"]
 
