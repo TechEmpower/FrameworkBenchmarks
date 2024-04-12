@@ -12,15 +12,21 @@ ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
 
+COPY ./ ./
+RUN ls -l
 WORKDIR /
 
 # RUN wget https://github.com/hggq/paozhu/releases/download/v1.5.8/benchmark.zip
 RUN git clone https://github.com/hggq/paozhu
 # RUN unzip benchmark.zip
+RUN ls -l
+# RUN mv ./benchmark/* ./
+COPY ./conf/server.conf ./paozhu/conf/server.conf
+COPY ./conf/orm.conf ./paozhu/conf/orm.conf
+
+
 WORKDIR /paozhu
 RUN unzip asio.zip
-# RUN mv ./benchmark/* ./
-COPY ./ /
 run cat ./conf/server.conf
 run cat ./conf/orm.conf
 
