@@ -16,7 +16,10 @@ WORKDIR /
 
 RUN wget https://github.com/hggq/paozhu/releases/download/v1.5.8/benchmark.zip
 RUN unzip benchmark.zip
-RUN mv ./benchmark/* ./
+# RUN mv ./benchmark/* ./
+
+WORKDIR /benchmark
+COPY ./ ./
 
 RUN cmake . -B build -DCMAKE_BUILD_TYPE=Release 
 RUN cmake --build build
