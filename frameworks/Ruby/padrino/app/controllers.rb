@@ -1,3 +1,7 @@
+MAX_PK = 10_000
+QUERIES_MIN = 1
+QUERIES_MAX = 500
+
 HelloWorld::App.controllers  do
   get '/json', :provides => [:json] do
     response.headers['Server'] = 'padrino'
@@ -8,19 +12,17 @@ HelloWorld::App.controllers  do
   get '/db', :provides => [:json] do
     response.headers['Server'] = 'padrino'
     response.headers['Date'] = Time.now.httpdate
-    id = Random.rand(10000) + 1
+    id = Random.rand(MAX_PK) + 1
     World.get(id).attributes.to_json
   end
 
   get '/queries', :provides => [:json] do
     response.headers['Server'] = 'padrino'
     response.headers['Date'] = Time.now.httpdate
-    queries = params['queries'].to_i
-    queries = 1 if queries < 1
-    queries = 500 if queries > 500
+    queries = params['queries'].to_i.clamp(QUERIES_MIN, QUERIES_MAX)
 
     results = (1..queries).map do
-      World.get(Random.rand(10000) + 1).attributes
+      World.get(Random.rand(MAX_PK) + 1).attributes
     end.to_json
   end
 
@@ -37,15 +39,13 @@ HelloWorld::App.controllers  do
   get '/updates', :provides => [:json] do
     response.headers['Server'] = 'padrino'
     response.headers['Date'] = Time.now.httpdate
-    queries = params['queries'].to_i
-    queries = 1 if queries < 1
-    queries = 500 if queries > 500
+    queries = params['queries'].to_i.clamp(QUERIES_MIN, QUERIES_MAX)
 
     worlds = (1..queries).map do
       # get a random row from the database, which we know has 10000
       # rows with ids 1 - 10000
-      world = World.get(Random.rand(10000) + 1)
-      world.update(:randomNumber => Random.rand(10000) + 1)
+      world = World.get(Random.rand(MAX_PK) + 1)
+      world.update(randomNumber: Random.rand(MAX_PK) + 1)
       world.attributes
     end
 
@@ -60,4 +60,3 @@ HelloWorld::App.controllers  do
   end
 
 end
-

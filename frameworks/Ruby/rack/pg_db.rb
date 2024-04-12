@@ -37,60 +37,44 @@ class PgDb
   end
 
   def select_random_world
-    @world_select.call(id: random_id)[0]
+    select_world(random_id)
   end
 
   def select_world(id)
-    @world_select.call(id: id)[0]
+    @world_select.call(id: id).first
   end
 
   def validate_count(count)
     count = count.to_i
-    if count < MIN_QUERIES
-      MIN_QUERIES
-    elsif count > MAX_QUERIES
-      MAX_QUERIES
-    else
-      count
-    end
+    count.clamp(MIN_QUERIES, MAX_QUERIES)
   end
 
   def select_promises(count)
     count = validate_count(count)
-    promises = []
-    count.times do
+    ALL_IDS.sample(count).map do |id|
       @connection.synchronize do
-        promises << @connection['SELECT id, randomNumber FROM World WHERE id = ?', random_id].async.first
+        @connection['SELECT id, randomNumber FROM World WHERE id = ?', id].async.first
       end
     end
-    promises
   end
 
   def select_random_numbers(count)
     count = validate_count(count)
-    results = []
-    count.times do
-      results << @world_random_select.call(randomvalue: random_id, id: random_id)[0]
+    ALL_IDS.sample(count).map do |id|
+      @world_random_select.call(randomvalue: random_id, id: id).first
     end
-    results
   end
 
   def select_worlds(count)
     count = validate_count(count)
-    results = []
-    count.times do
-      results << @world_select.call(id: random_id)[0]
+    ALL_IDS.sample(count).map do |id|
+      @world_select.call(id: id).first
     end
-    results
   end
 
   def select_worlds_async(count)
     promises = select_promises(count)
-    results = []
-    promises.each do |p|
-      results << p.to_hash
-    end
-    results
+    promises.map(&:to_hash)
   end
 
   def update_worlds(count, async = false)
@@ -111,6 +95,7 @@ class PgDb
     @connection[sql].update
     results
   end
+
   def select_fortunes
     @fortune_select.call
   end

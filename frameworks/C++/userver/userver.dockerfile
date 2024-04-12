@@ -6,7 +6,7 @@ RUN apt update && \
 
 WORKDIR /src
 RUN git clone https://github.com/userver-framework/userver.git && \
-    cd userver && git checkout fcf0514be560f46740f8a654f2fdce5dc1cd450c
+    cd userver && git checkout c2ca5454f0b0e93dd0a2e082904dedda5cda3052
 
 COPY userver_benchmark/ ./
 RUN mkdir build && cd build && \
@@ -14,8 +14,9 @@ RUN mkdir build && cd build && \
           -DUSERVER_FEATURE_UTEST=0 \
           -DUSERVER_FEATURE_POSTGRESQL=1 \
           -DUSERVER_FEATURE_ERASE_LOG_WITH_LEVEL=warning \
-          -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-march=native" -DCMAKE_C_FLAGS="-march=native" \
-          -DCMAKE_CXX_COMPILER=clang++-16 -DCMAKE_C_COMPILER=clang-16 -DUSERVER_USE_LD=lld-16 -DUSERVER_LTO_CACHE=0 .. && \
+          -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-march=native -flto=thin" -DCMAKE_C_FLAGS="-march=native -flto=thin" \
+          -DCMAKE_CXX_COMPILER=clang++-16 -DCMAKE_C_COMPILER=clang-16 -DUSERVER_USE_LD=lld-16 \
+          -DUSERVER_LTO=0 .. && \
     make -j $(nproc)
 
 FROM builder AS runner

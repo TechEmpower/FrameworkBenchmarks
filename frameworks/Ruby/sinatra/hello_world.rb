@@ -17,9 +17,7 @@ class HelloWorld < Sinatra::Base
   helpers do
     def bounded_queries
       queries = params[:queries].to_i
-      return QUERIES_MIN if queries < QUERIES_MIN
-      return QUERIES_MAX if queries > QUERIES_MAX
-      queries
+      queries.clamp(QUERIES_MIN, QUERIES_MAX)
     end
 
     def json(data)

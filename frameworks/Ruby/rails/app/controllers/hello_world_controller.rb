@@ -33,8 +33,8 @@ class HelloWorldController < ApplicationController
   end
 
   def update
-    worlds = Array.new(query_count) do
-      world = World.find(random_id)
+    worlds = ALL_IDS.sample(query_count).map do |id|
+      world = World.find(id)
       new_value = random_id
       new_value = random_id until new_value != world.randomNumber
       world.update_columns(randomNumber: new_value)
@@ -48,10 +48,7 @@ class HelloWorldController < ApplicationController
 
   def query_count
     queries = params[:queries].to_i
-    return MIN_QUERIES if queries < MIN_QUERIES
-    return MAX_QUERIES if queries > MAX_QUERIES
-
-    queries
+    queries.clamp(MIN_QUERIES, MAX_QUERIES)
   end
 
   def random_id

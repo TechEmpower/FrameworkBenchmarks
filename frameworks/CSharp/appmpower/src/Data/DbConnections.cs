@@ -7,7 +7,7 @@ namespace appMpower.Data
    {
       private static bool _connectionsCreated = false;
       private static short _createdConnections = 0;
-      private static short _maxConnections = 250;
+      private static short _maxConnections = 500;
 
       private static ConcurrentStack<InternalConnection> _stack = new();
       private static ConcurrentQueue<TaskCompletionSource<InternalConnection>> _waitingQueue = new();

@@ -11,7 +11,7 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <log4j.version>2.17.1</log4j.version>
-        <smartservlet.version>0.6-SNAPSHOT</smartservlet.version>
+        <smartservlet.version>1.0-SNAPSHOT</smartservlet.version>
         <hikaricp.version>5.0.0</hikaricp.version>
         <jsoniter.version>0.9.23</jsoniter.version>
     </properties>
