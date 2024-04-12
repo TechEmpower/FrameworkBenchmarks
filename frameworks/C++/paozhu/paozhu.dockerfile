@@ -14,11 +14,12 @@ ENV LC_ALL en_US.UTF-8
 
 WORKDIR /
 
-RUN wget https://github.com/hggq/paozhu/releases/download/v1.5.8/benchmark.zip
-RUN unzip benchmark.zip
+# RUN wget https://github.com/hggq/paozhu/releases/download/v1.5.8/benchmark.zip
+RUN git clone https://github.com/hggq/paozhu
+# RUN unzip benchmark.zip
+WORKDIR /paozhu
+RUN unzip asio.zip
 # RUN mv ./benchmark/* ./
-
-WORKDIR /benchmark
 COPY ./ ./
 
 RUN cmake . -B build -DCMAKE_BUILD_TYPE=Release 
