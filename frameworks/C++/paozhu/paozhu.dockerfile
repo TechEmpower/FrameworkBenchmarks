@@ -19,6 +19,7 @@ WORKDIR /
 RUN git clone https://github.com/hggq/paozhu
 # RUN unzip benchmark.zip
 RUN rm -Rf ./paozhu/controller
+RUN rm -Rf ./paozhu/common
 COPY ./paozhu_benchmark/controller ./paozhu/
 COPY ./paozhu_benchmark/common ./paozhu/
 
