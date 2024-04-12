@@ -21,6 +21,8 @@ WORKDIR /paozhu
 RUN unzip asio.zip
 # RUN mv ./benchmark/* ./
 COPY ./ ./
+run cat ./conf/server.conf
+run cat ./conf/orm.conf
 
 RUN cmake . -B build -DCMAKE_BUILD_TYPE=Release 
 RUN cmake --build build
