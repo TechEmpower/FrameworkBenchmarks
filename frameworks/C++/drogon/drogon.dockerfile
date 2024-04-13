@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
 COPY ./ ./
 
@@ -11,7 +11,7 @@ RUN  apt-get update -yqq && \
      zlib1g-dev && \
      add-apt-repository ppa:ubuntu-toolchain-r/test -y && \
 	 apt-get update -yqq && \
-	 apt-get install -yqq gcc-10 g++-10
+	 apt-get install -yqq gcc g++
 
 RUN locale-gen en_US.UTF-8
 
@@ -19,10 +19,10 @@ ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
 
-ENV CC=gcc-10
-ENV CXX=g++-10
-ENV AR=gcc-ar-10
-ENV RANLIB=gcc-ranlib-10
+ENV CC=gcc
+ENV CXX=g++
+ENV AR=gcc-ar
+ENV RANLIB=gcc-ranlib
 
 ENV IROOT=/install
 ENV DROGON_ROOT=$IROOT/drogon
