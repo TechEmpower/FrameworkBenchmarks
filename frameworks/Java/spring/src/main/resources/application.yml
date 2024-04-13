@@ -1,5 +1,7 @@
 ---
 spring:
+  jpa:
+    open-in-view: false
   config:
     activate:
       on-profile: jdbc,jpa
@@ -22,7 +24,6 @@ spring:
       on-profile: jpa
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-    open-in-view: false
 
 ---
 spring:
