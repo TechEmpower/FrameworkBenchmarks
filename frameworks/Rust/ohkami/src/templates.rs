@@ -1,18 +1,21 @@
-use ohkami::{Response, IntoResponse};
+use ohkami::{IntoResponse, Response};
+use yarte::Template;
 use crate::models::Fortune;
 
 
-#[derive(yarte::Template)]
+#[derive(Template)]
 #[template(path="fortunes")]
 pub struct FortunesTemplate {
     pub fortunes: Vec<Fortune>,
 }
 impl IntoResponse for FortunesTemplate {
-    #[inline(always)]
     fn into_response(self) -> Response {
-        ohkami::utils::HTML(
-            <Self as yarte::Template>::call(&self)
-                .expect("Failed to render fortunes template")
-        ).into_response()
+        match self.call() {
+            Ok(template) => Response::OK().html(template),
+            Err(error)   => {
+                eprintln!("Failed to render template: {error}");
+                Response::InternalServerError()
+            }
+        }
     }
 }
