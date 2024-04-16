@@ -1,6 +1,6 @@
 dectate==0.13
 greenlet==0.4.14
-gunicorn==19.9.0
+gunicorn==22.0.0
 importscan==0.1
 Jinja2==2.11.3
 MarkupSafe==1.0
