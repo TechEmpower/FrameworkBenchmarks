@@ -46,7 +46,7 @@ uses
 type
   // data structures
   TMessageRec = packed record
-    message: RawUtf8;
+    message: PUtf8Char;
   end;
   TWorldRec = packed record
     id: integer;
@@ -55,7 +55,7 @@ type
   TWorlds = array of TWorldRec;
   TFortune = packed record
     id: integer;
-    message: RawUtf8;
+    message: PUtf8Char;
   end;
   TFortunes = array of TFortune;
 
@@ -277,6 +277,7 @@ var
   arr: TDynArray;
   n: integer;
   f: ^TFortune;
+  mus: TSynMustacheContextData;
 begin
   result := HTTP_BADREQUEST;
   if stmt = nil then
@@ -286,13 +287,16 @@ begin
   begin
     f := arr.NewPtr;
     f.id := stmt.ColumnInt(0);
-    f.message := stmt.ColumnUtf8(1);
+    f.message := stmt.ColumnPUtf8(1);
   end;
   f := arr.NewPtr;
   f.id := 0;
   f.message := FORTUNES_MESSAGE;
   arr.Sort(FortuneCompareByMessage);
-  ctxt.OutContent := fTemplate.RenderDataArray(arr);
+  mus := stmt.Connection.GetThreadOwned(TSynMustacheContextData);
+  if mus = nil then
+    mus := stmt.Connection.SetThreadOwned(fTemplate.NewMustacheContextData);
+  ctxt.OutContent := mus.RenderArray(arr);
   ctxt.OutContentType := HTML_CONTENT_TYPE;
   result := HTTP_SUCCESS;
 end;
@@ -310,7 +314,7 @@ function TRawAsyncServer.json(ctxt: THttpServerRequest): cardinal;
 var
   msgRec: TMessageRec;
 begin
-  msgRec.message := HELLO_WORLD;
+  msgRec.message := pointer(HELLO_WORLD);
   ctxt.SetOutJson(@msgRec, TypeInfo(TMessageRec));
   result := HTTP_SUCCESS;
 end;
@@ -471,7 +475,8 @@ begin
     W := TTextWriter.CreateOwnedStream(tmp{%H-});
     try
       W.AddShort('UPDATE world SET randomNumber = v.randomNumber FROM (VALUES');
-      for i := 1 to cnt do begin
+      for i := 1 to cnt do
+      begin
         W.AddShort('(?::integer, ?::integer)');
         W.Add(',');
       end;
@@ -702,9 +707,9 @@ begin
 
   // register some RTTI for records JSON serialization
   Rtti.RegisterFromText([
-    TypeInfo(TMessageRec), 'message:RawUtf8',
+    TypeInfo(TMessageRec), 'message:PUtf8Char',
     TypeInfo(TWorldRec),   'id,randomNumber:integer',
-    TypeInfo(TFortune),    'id:integer message:RawUtf8']);
+    TypeInfo(TFortune),    'id:integer message:PUtf8Char']);
 
   // compute default execution context from HW information
   cpuCount := CurrentCpuSet(cpuMask); // may run from a "taskset" command
