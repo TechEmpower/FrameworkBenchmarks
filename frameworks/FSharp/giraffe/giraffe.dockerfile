@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.0.100 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0.204 AS build
 WORKDIR /app
 COPY src/App .
 RUN dotnet publish -c Release -o out

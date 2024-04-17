@@ -1,5 +1,5 @@
 anyio==3.6.1
-gunicorn==20.1.0
+gunicorn==22.0.0
 httptools==0.4.0
 idna==3.7
 python-dotenv==0.20.0

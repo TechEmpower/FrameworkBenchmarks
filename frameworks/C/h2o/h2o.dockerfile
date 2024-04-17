@@ -1,4 +1,4 @@
-ARG UBUNTU_VERSION=22.04
+ARG UBUNTU_VERSION=24.04
 
 ARG H2O_APP_PREFIX=/opt/h2o_app
 
@@ -25,6 +25,7 @@ RUN apt-get -yqq update && \
       libwslay-dev \
       libyajl-dev \
       libz-dev \
+      llvm-dev \
       make \
       ninja-build \
       pkg-config \
@@ -46,8 +47,7 @@ RUN curl -LSs "https://github.com/h2o/h2o/archive/${H2O_VERSION}.tar.gz" | \
       -G Ninja \
       -S . && \
     cmake --build build -j && \
-    cmake --install build && \
-    cp -a deps/picotls/include/picotls* deps/quicly/include/quicly* /usr/local/include
+    cmake --install build
 
 ARG MUSTACHE_C_REVISION=7fe52392879d0188c172d94bb4fde7c513d6b929
 

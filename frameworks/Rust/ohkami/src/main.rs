@@ -7,18 +7,18 @@ pub use postgres::Postgres;
 mod templates;
 pub use templates::FortunesTemplate;
 
-use ohkami::{Ohkami, Route, Memory};
+use ohkami::prelude::*;
+use ohkami::Memory;
 
 
 #[tokio::main]
 async fn main() {
+    #[derive(Clone)]
     struct SetServer;
-    impl ohkami::BackFang for SetServer {
-        type Error = std::convert::Infallible;
+    impl FangAction for SetServer {
         #[inline(always)]
-        async fn bite(&self, res: &mut ohkami::Response, _req: &ohkami::Request) -> Result<(), Self::Error> {
+        async fn back<'a>(&'a self, res: &'a mut ohkami::Response) {
             res.headers.set().Server("ohkami");
-            Ok(())
         }
     }
 
