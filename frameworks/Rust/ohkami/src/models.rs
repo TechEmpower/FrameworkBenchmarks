@@ -1,7 +1,8 @@
-use ohkami::typed::{ResponseBody, Query};
+use ohkami::typed::{Payload, Query};
+use ohkami::builtin::payload::JSON;
 
 
-#[ResponseBody(JSONS)]
+#[Payload(JSON/S)]
 pub struct Message {
     pub message: &'static str,
 }
@@ -13,7 +14,7 @@ pub struct Fortune {
 }
 
 #[derive(sqlx::FromRow)]
-#[ResponseBody(JSONS)]
+#[Payload(JSON/S)]
 pub struct World {
     pub id:           i32,
     #[serde(rename="randomNumber")]
