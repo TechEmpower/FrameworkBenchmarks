@@ -1,5 +1,6 @@
 use futures_util::{stream::FuturesUnordered, TryStreamExt};
 use rand::{rngs::SmallRng, SeedableRng, Rng, thread_rng};
+use ohkami::{utils::FangAction, Request, Response};
 use crate::models::{World, Fortune};
 
 
@@ -7,13 +8,13 @@ use crate::models::{World, Fortune};
 pub struct Postgres(sqlx::PgPool);
 
 impl Postgres {
-    pub async fn init() -> impl ohkami::FrontFang {
+    pub async fn init() -> impl FangAction {
+        #[derive(Clone)]
         pub struct UsePostgres(Postgres);
 
-        impl ohkami::FrontFang for UsePostgres {
-            type Error = std::convert::Infallible;
+        impl FangAction for UsePostgres {
             #[inline(always)]
-            async fn bite(&self, req: &mut ohkami::Request) -> Result<(), Self::Error> {
+            async fn fore<'a>(&'a self, req: &'a mut Request) -> Result<(), Response> {
                 req.memorize(self.0.clone());
                 Ok(())
             }

@@ -5,9 +5,9 @@ edition = "2021"
 authors = ["kanarus <kanarus786@gmail.com>"]
 
 [dependencies]
-ohkami       = { version = "=0.15.0", features = ["rt_tokio"] }
-tokio        = { version = "1.36.0" , features = ["full"] }
+ohkami       = { version = "=0.16.0", features = ["rt_tokio"] }
+tokio        = { version = "1.37.0" , features = ["full"] }
 rand         = { version = "0.8.5"  , features = ["small_rng"] }
-sqlx         = { version = "0.7.3"  , features = ["postgres", "macros", "runtime-tokio-native-tls"] }
+sqlx         = { version = "0.7.4"  , features = ["postgres", "macros", "runtime-tokio-native-tls"] }
 yarte        = { version = "0.15.7" }
 futures-util = { version = "0.3.30" }
