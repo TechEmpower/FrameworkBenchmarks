@@ -10,4 +10,4 @@ COPY --from=maven /spring/target/spring-webflux-benchmark.jar app.jar
 
 EXPOSE 8080
 
-CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-Dlogging.level.root=OFF", "-jar", "app.jar", "--spring.profiles.active=pgclient,postgres"]
+CMD ["java", "-server", "-XX:+UseNUMA", "-Dlogging.level.root=OFF", "-jar", "app.jar", "--spring.profiles.active=pgclient,postgres"]
