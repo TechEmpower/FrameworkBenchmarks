@@ -26,7 +26,7 @@
     "handlebars": "4.7.3",
     "hbs": "4.1.0",
     "mongodb": "3.5.4",
-    "mysql2": "2.1.0",
+    "mysql2": "3.9.7",
     "pg": "8.5.1",
     "point-of-view": "3.7.2",
     "reflect-metadata": "0.1.13",
