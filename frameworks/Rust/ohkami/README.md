@@ -4,7 +4,7 @@
 
 > Build web app in intuitive and declarative code
 > - *macro-less and type-safe* APIs for intuitive and declarative code
-> - *multi runtime* support：`tokio`, `async-std`
+> - *multi runtime* support：`tokio`, `async-std`, `worker` (Cloudflare Workers)
 
 - [User Guide](https://docs.rs/ohkami/latest/ohkami/)
 - [API Documentation](https://docs.rs/ohkami/latest/ohkami/)
