@@ -6,7 +6,6 @@ ENV MAX_CONNECTIONS=56
 ENV MIN_CONNECTIONS=56
 
 COPY ./src        ./src
-COPY ./templates  ./templates
 COPY ./Cargo.toml ./Cargo.toml
 COPY ./Cargo.lock ./Cargo.lock
 
