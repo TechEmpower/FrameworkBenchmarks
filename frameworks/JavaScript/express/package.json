@@ -8,7 +8,7 @@
     "escape-html": "1.0.3",
     "express": "4.18.2",
     "mongoose": "5.13.20",
-    "mysql2": "3.9.4",
+    "mysql2": "3.9.7",
     "pg": "8.5.0",
     "pg-promise": "10.7.3",
     "pug": "2.0.1",
