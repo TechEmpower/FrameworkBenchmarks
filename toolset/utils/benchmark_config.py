@@ -25,6 +25,7 @@ class BenchmarkConfig:
         self.duration = args.duration
         self.exclude = args.exclude
         self.quiet = args.quiet
+        self.reverse_order = args.reverse_order
         self.server_host = args.server_host
         self.database_host = args.database_host
         self.client_host = args.client_host

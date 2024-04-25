@@ -1,10 +1,10 @@
-ARG UBUNTU_VERSION=22.04
+ARG UBUNTU_VERSION=24.04
 
 ARG H2O_PREFIX=/opt/h2o
 
 FROM "ubuntu:${UBUNTU_VERSION}" AS compile
 
-ARG H2O_VERSION=13ba727ad12dfb2338165d2bcfb2136457e33c8a
+ARG H2O_VERSION=18b175f71ede08b50d3e5ae8303dacef3ea510fc
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG H2O_PREFIX
@@ -14,6 +14,7 @@ RUN apt-get -yqq update && \
       cmake \
       curl \
       g++ \
+      libbpfcc-dev \
       libbrotli-dev \
       libcap-dev \
       libssl-dev \
@@ -21,8 +22,10 @@ RUN apt-get -yqq update && \
       libuv1-dev \
       libwslay-dev \
       libz-dev \
+      llvm-dev \
       ninja-build \
       pkg-config \
+      rsync \
       ruby \
       systemtap-sdt-dev && \
     curl -LSs "https://github.com/h2o/h2o/archive/${H2O_VERSION}.tar.gz" | \

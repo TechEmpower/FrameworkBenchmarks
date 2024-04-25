@@ -142,10 +142,7 @@ namespace appMpower.Data
 
       public async Task OpenAsync()
       {
-#if ADO && SQLSERVER
-         _internalConnection = new();
-         _internalConnection.DbConnection = new System.Data.SqlClient.SqlConnection(_connectionString);
-#elif ADO && POSTGRESQL
+#if ADO && POSTGRESQL
          _internalConnection = new(); 
          _internalConnection.DbConnection = new Npgsql.NpgsqlConnection(_connectionString);
 #else

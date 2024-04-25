@@ -1,4 +1,4 @@
-FROM rust:1.74
+FROM rust:1.77
 
 ADD ./ /salvo
 WORKDIR /salvo

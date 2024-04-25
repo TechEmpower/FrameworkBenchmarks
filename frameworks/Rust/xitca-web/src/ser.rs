@@ -11,6 +11,7 @@ use xitca_http::{
 
 use crate::util::Error;
 
+#[derive(Clone)]
 pub struct Message {
     message: &'static str,
 }
@@ -172,6 +173,6 @@ where
 {
     serde_json::to_writer(BufMutWriter(buf), value)?;
     let mut res = req.into_response(buf.split().freeze());
-    res.headers_mut().append(CONTENT_TYPE, JSON);
+    res.headers_mut().insert(CONTENT_TYPE, JSON);
     Ok(res)
 }

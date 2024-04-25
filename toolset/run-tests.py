@@ -85,6 +85,13 @@ def main(argv=None):
         'Only print a limited set of messages to stdout, keep the bulk of messages in log files only'
     )
     parser.add_argument(
+        '--reverse-order',
+        action='store_true',
+        default=False,
+        help=
+        'Run the tests in reverse order, starting with the last test in the list'
+    )
+    parser.add_argument(
         '--results-name',
         help='Gives a name to this set of results, formatted as a date',
         default='(unspecified, datetime = %Y-%m-%d %H:%M:%S)')

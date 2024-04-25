@@ -1,0 +1,63 @@
+description = "benchmark"
+
+apply plugin: "java"
+apply plugin: "application"
+apply plugin: 'cn.taketoday.application'
+apply plugin: 'io.spring.dependency-management'
+
+configure(allprojects) {
+  group = "cn.taketoday.benchmark"
+
+  repositories {
+    mavenCentral()
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+  }
+}
+
+dependencies {
+  implementation 'cn.taketoday:today-starter-netty'
+  implementation 'cn.taketoday:today-starter-json'
+  implementation 'cn.taketoday:today-starter-jdbc'
+  implementation 'cn.taketoday:today-starter-web'
+  implementation 'cn.taketoday:today-starter-freemarker'
+
+  implementation 'mysql:mysql-connector-java'
+
+  implementation 'ch.qos.logback:logback-classic'
+
+  implementation('io.netty:netty-transport-native-epoll') {
+    artifact {
+      classifier = 'linux-x86_64'
+    }
+  }
+
+//  implementation('io.netty:netty-transport-native-kqueue') {
+//    artifact {
+//      classifier = 'osx-aarch_64'
+//    }
+//  }
+
+}
+
+java {
+  sourceCompatibility = JavaVersion.VERSION_17
+  targetCompatibility = JavaVersion.VERSION_17
+}
+
+application {
+  mainClass = 'cn.taketoday.benchmark.BenchmarkApplication'
+  applicationDefaultJvmArgs = [
+      "-server",
+      "-XX:+UseNUMA",
+      "-XX:+UseG1GC",
+      "-XX:+DisableExplicitGC",
+      "-XX:-StackTraceInThrowable",
+      "-XX:+UseStringDeduplication",
+      "-Dinfra.profiles.active=test",
+      "-Dio.netty.buffer.checkBounds=false",
+      "-Dio.netty.buffer.checkAccessible=false",
+      "-Dio.netty.leakDetection.level=disabled",
+      "--add-opens=java.base/java.nio=ALL-UNNAMED",
+      "--add-opens=java.base/sun.nio.ch=ALL-UNNAMED"
+  ]
+}

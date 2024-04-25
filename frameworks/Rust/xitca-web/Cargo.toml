@@ -51,18 +51,18 @@ io-uring = ["xitca-http/io-uring", "xitca-server/io-uring"]
 axum = ["dep:axum", "http-body", "tower", "tower-http", "xitca-web/tower-http-compat" ]
 
 [dependencies]
-xitca-http = "0.2"
-xitca-io = "0.1"
-xitca-server = "0.1"
+xitca-http = "0.4"
+xitca-io = "0.2"
+xitca-server = "0.2"
 xitca-service = "0.1"
-xitca-unsafe-collection = "0.1"
+xitca-unsafe-collection = "0.1.1"
 
 atoi = "2"
 serde = { version = "1" }
 serde_json = { version = "1" }
 
 # web optional
-xitca-web = { version = "0.2", features = ["json"], optional = true }
+xitca-web = { version = "0.4", features = ["json"], optional = true }
 
 # raw-pg optional
 xitca-postgres = { version = "0.1", optional = true }
@@ -92,5 +92,5 @@ codegen-units = 1
 panic = "abort"
 
 [patch.crates-io]
-xitca-postgres = { git = "https://github.com/HFQR/xitca-web.git", rev = "d79f510197e0f36534fe22b7a467c55dbd683681" }
-mio = { git = "https://github.com/fakeshadow/mio.git", rev = "52b72d372bfe5807755b7f5e3e1edf282954d6ba" }
+xitca-postgres = { git = "https://github.com/HFQR/xitca-web.git", rev = "d76b2e188edcbdd801ecb4a7359b4d56070d6dc4" }
+mio = { git = "https://github.com/fakeshadow/mio.git", rev = "dcc85ea7a3af3159efdf7e3a17b3a8b58131a15f" }

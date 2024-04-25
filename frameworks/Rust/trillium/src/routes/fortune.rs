@@ -34,5 +34,5 @@ pub async fn handler(conn: Conn) -> Conn {
     conn.render(FortuneTemplate {
         fortunes: &fortunes,
     })
-    .with_header(ContentType, "text/html; charset=utf-8")
+    .with_response_header(ContentType, "text/html; charset=utf-8")
 }
