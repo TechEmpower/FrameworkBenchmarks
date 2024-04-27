@@ -5,7 +5,7 @@ RUN install-php-extensions \
     pdo_mysql \
 	intl \
 	zip \
-	opcache
+	opcache > /dev/null
  
 COPY . /app
 
