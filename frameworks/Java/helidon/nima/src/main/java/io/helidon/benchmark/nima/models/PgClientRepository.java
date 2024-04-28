@@ -110,29 +110,34 @@ public class PgClientRepository implements DbRepository {
 
     @Override
     public World updateWorld(World world) {
-        try {
-            updateWorlds(List.of(world), 0, updatePool);
-            return world;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        return Single.create(queryPool.preparedQuery("UPDATE world SET randomnumber = $1 WHERE id = $2")
+                .execute(Tuple.of(world.id, world.id))
+                .toCompletionStage()
+                .thenApply(rows -> world)).await();
     }
 
     @Override
     public List<World> updateWorlds(int count) {
         List<World> worlds = getWorlds(count);
-        for (World w : worlds) {
-            w.randomNumber = randomWorldNumber();
-        }
-        if (count <= batchSize) {
-            LOGGER.finest(() -> "Updating single batch of size " + count);
-            updateWorldsRetry(worlds, 0, 0);
-        } else {
-            int batches = count / batchSize + (count % batchSize == 0 ? 0 : 1);
-            for (int i = 0; i < batches; i++) {
-                final int from = i * batchSize;
-                LOGGER.finest(() -> "Updating batch from " + from + " to " + (from + batchSize));
-                updateWorldsRetry(worlds, from, 0);
+        if (batchSize > 1) {        // batching updates
+            for (World w : worlds) {
+                w.randomNumber = randomWorldNumber();
+            }
+            if (count <= batchSize) {
+                LOGGER.finest(() -> "Updating single batch of size " + count);
+                updateWorldsRetry(worlds, 0, 0);
+            } else {
+                int batches = count / batchSize + (count % batchSize == 0 ? 0 : 1);
+                for (int i = 0; i < batches; i++) {
+                    final int from = i * batchSize;
+                    LOGGER.finest(() -> "Updating batch from " + from + " to " + (from + batchSize));
+                    updateWorldsRetry(worlds, from, 0);
+                }
+            }
+        } else {                    // no batching for size 1
+            for (World w : worlds) {
+                w.randomNumber = randomWorldNumber();
+                updateWorld(w);
             }
         }
         return worlds;
