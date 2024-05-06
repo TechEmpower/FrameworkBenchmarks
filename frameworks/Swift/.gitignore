@@ -5,3 +5,4 @@ xcuserdata/
 .swiftpm/
 DerivedData/
 Package.resolved
+.vscode/
