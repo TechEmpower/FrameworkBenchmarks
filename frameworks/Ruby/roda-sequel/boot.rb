@@ -26,6 +26,13 @@ SERVER_STRING =
 
 Bundler.require(:default) # Load core modules
 
+CONTENT_TYPE = 'Content-Type'
+JSON_TYPE = 'application/json'
+HTML_TYPE = 'text/html; charset=utf-8'
+PLAINTEXT_TYPE = 'text/plain'
+DATE_HEADER = 'Date'
+SERVER_HEADER = 'Server'
+
 def connect(dbtype)
   Bundler.require(dbtype) # Load database-specific modules
 

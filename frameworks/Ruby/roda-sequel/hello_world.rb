@@ -16,23 +16,24 @@ class HelloWorld < Roda
   end
 
   route do |r|
-    response["Date"] = Time.now.httpdate
-    response["Server"] = SERVER_STRING if SERVER_STRING
-    #default content type
-    response["Content-Type"] = "application/json"
+    response[DATE_HEADER] = Time.now.httpdate
+    response[SERVER_HEADER] = SERVER_STRING if SERVER_STRING
 
     # Test type 1: JSON serialization
     r.is "json" do
+      response[CONTENT_TYPE] = JSON_TYPE
       { message: "Hello, World!" }.to_json
     end
 
     # Test type 2: Single database query
     r.is "db" do
+      response[CONTENT_TYPE] = JSON_TYPE
       World.with_pk(rand1).values.to_json
     end
 
     # Test type 3: Multiple database queries
     r.is "queries" do
+      response[CONTENT_TYPE] = JSON_TYPE
       worlds =
         DB.synchronize do
           ALL_IDS.sample(bounded_queries).map do |id|
@@ -44,7 +45,7 @@ class HelloWorld < Roda
 
     # Test type 4: Fortunes
     r.is "fortunes" do
-      response["Content-Type"] = "text/html; charset=utf-8"
+      response[CONTENT_TYPE] = HTML_TYPE
       @fortunes = Fortune.all
       @fortunes << Fortune.new(
         id: 0,
@@ -56,6 +57,7 @@ class HelloWorld < Roda
 
     # Test type 5: Database updates
     r.is "updates" do
+      response[CONTENT_TYPE] = JSON_TYPE
       worlds =
         DB.synchronize do
           ALL_IDS.sample(bounded_queries).map do |id|
@@ -71,7 +73,7 @@ class HelloWorld < Roda
 
     # Test type 6: Plaintext
     r.is "plaintext" do
-      response["Content-Type"] = "text/plain"
+      response[CONTENT_TYPE] = PLAINTEXT_TYPE
       "Hello, World!"
     end
   end
