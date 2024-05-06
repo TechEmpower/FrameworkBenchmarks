@@ -115,6 +115,29 @@
 			"display_name": "laravel-workerman",
 			"notes": "",
 			"versus": "php"
+		},
+		"octane-frankenphp": {
+			"json_url": "/json",
+			"db_url": "/db",
+			"query_url": "/queries/",
+			"fortune_url": "/fortunes",
+			"update_url": "/updates/",
+			"plaintext_url": "/plaintext",
+			"port": 8080,
+			"approach": "Realistic",
+			"classification": "Fullstack",
+			"database": "MySQL",
+			"framework": "laravel",
+			"language": "PHP",
+			"flavor": "None",
+			"orm": "Full",
+			"platform": "Frankenphp",
+			"webserver": "caddy",
+			"os": "Linux",
+			"database_os": "Linux",
+			"display_name": "laravel-octane [frankenphp]",
+			"notes": "",
+			"versus": "php"
 		}
 	}]
 }
