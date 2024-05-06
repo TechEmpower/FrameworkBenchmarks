@@ -1,8 +1,9 @@
 {
   "dependencies": {
-    "postgres": "^3.4.0",
-    "uWebSockets.js": "uNetworking/uWebSockets.js#v20.32.0",
-    "slow-json-stringify": "^2.0.1"
+    "mariadb": "^3.3.0",
+    "postgres": "^3.4.4",
+    "slow-json-stringify": "^2.0.1",
+    "uWebSockets.js": "uNetworking/uWebSockets.js#v20.43.0"
   },
   "license": "MIT",
   "main": "src/server.js",
