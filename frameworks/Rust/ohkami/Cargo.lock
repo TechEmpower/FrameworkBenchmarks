@@ -770,9 +770,9 @@ dependencies = [
 
 [[package]]
 name = "ohkami"
-version = "0.17.1"
+version = "0.18.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ffca2ddf66df3484fd9dfa7f88f923e2082b9934dc7e247616002f8bf71ec81c"
+checksum = "d810447a32af4750a45183a4915db5ca4183bb6d44b8e7731e63f627c581d93e"
 dependencies = [
  "byte_reader",
  "hmac",
@@ -787,7 +787,7 @@ dependencies = [
 
 [[package]]
 name = "ohkami_framework_benchmarks"
-version = "0.17.1"
+version = "0.18.2"
 dependencies = [
  "futures-util",
  "ohkami",
@@ -799,9 +799,9 @@ dependencies = [
 
 [[package]]
 name = "ohkami_lib"
-version = "0.2.1"
+version = "0.2.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a306cca964938b3e37157c716b4423f09026ceb4439ec5f9353265d03d217b72"
+checksum = "4433e6c4c6c67a72afc306783ca8c641e69c9d171279fcab51f1f0c2d875e121"
 dependencies = [
  "byte_reader",
  "percent-encoding",
@@ -810,9 +810,9 @@ dependencies = [
 
 [[package]]
 name = "ohkami_macros"
-version = "0.7.1"
+version = "0.7.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1cdb435788e84e7262f0ee3fb1d206a4c1830ec17856eb0924b9d8c5f75c7519"
+checksum = "ffed4cd7e8c12a62c077273cb0f0fedf67ca3912488e5de1b325be85ca86bb06"
 dependencies = [
  "proc-macro2",
  "quote",

@@ -1,4 +1,4 @@
-FROM rust:1.77-slim-buster
+FROM rust:1.78-slim-buster
 WORKDIR /ohkami_framework_benchmarks
 
 ENV DATABASE_URL=postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world
