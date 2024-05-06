@@ -6,6 +6,12 @@ MAX_PK = 10_000
 QUERIES_MIN = 1
 QUERIES_MAX = 500
 SEQUEL_NO_ASSOCIATIONS = true
+CONTENT_TYPE = 'Content-Type'
+JSON_TYPE = 'application/json'
+HTML_TYPE = 'text/html; charset=utf-8'
+PLAINTEXT_TYPE = 'text/plain'
+DATE_HEADER = 'Date'
+SERVER_HEADER = 'Server'
 
 SERVER_STRING =
   if defined?(PhusionPassenger)
