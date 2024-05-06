@@ -6,7 +6,7 @@ require 'oj'
 require 'pg'
 require 'rack'
 
-$pool = ConnectionPool.new(size: 256, timeout: 5) do
+$pool = ConnectionPool.new(size: 1, timeout: 5) do
           PG::Connection.new({
                                  dbname:   'hello_world',
                                  host:     'tfb-database',
