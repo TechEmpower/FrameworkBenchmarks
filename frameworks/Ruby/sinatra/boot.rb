@@ -61,4 +61,4 @@ class Fortune < ActiveRecord::Base
   self.table_name = name
 end
 
-ActiveRecord::Base.clear_active_connections!
+ActiveRecord::Base.connection_handler.clear_active_connections!

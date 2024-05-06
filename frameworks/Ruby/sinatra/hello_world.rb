@@ -40,7 +40,7 @@ class HelloWorld < Sinatra::Base
   end if SERVER_STRING
 
   after do
-    ActiveRecord::Base.clear_active_connections!
+    ActiveRecord::Base.connection_handler.clear_active_connections!
   end
 
   # Test type 1: JSON serialization
