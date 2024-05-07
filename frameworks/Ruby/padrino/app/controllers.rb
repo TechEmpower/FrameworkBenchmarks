@@ -45,7 +45,7 @@ HelloWorld::App.controllers  do
       # get a random row from the database, which we know has 10000
       # rows with ids 1 - 10000
       world = World.get(Random.rand(MAX_PK) + 1)
-      world.update(randomNumber: Random.rand(MAX_PK) + 1)
+      world.update_columns(randomNumber: Random.rand(MAX_PK) + 1)
       world.attributes
     end
 
