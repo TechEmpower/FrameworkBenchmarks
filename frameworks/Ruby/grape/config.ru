@@ -66,7 +66,7 @@ module Acme
             world = World.find(rand1)
             new_value = rand1
             new_value = rand1 while new_value == world.randomNumber
-            world.update(randomNumber: new_value)
+            world.update_columns(randomNumber: new_value)
             world
           end
         end
