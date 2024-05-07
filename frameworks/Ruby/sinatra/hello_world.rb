@@ -92,7 +92,7 @@ class HelloWorld < Sinatra::Base
           world = World.find(rand1)
           new_value = rand1
           new_value = rand1 while new_value == world.randomnumber
-          world.update(randomnumber: new_value)
+          world.update_columns(randomnumber: new_value)
           world
         end
       end
