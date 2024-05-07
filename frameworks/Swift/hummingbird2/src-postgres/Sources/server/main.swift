@@ -1,14 +1,9 @@
 import Hummingbird
 import PostgresNIO
 
-// tfb-server (aka, citrine) uses 28 hyper-threaded cores
 // postgresql.conf specifies max_connections = 2000
-//
-// 2000 / (28 * 2) = 35.7 (theoretical max)
-//
 // https://github.com/TechEmpower/FrameworkBenchmarks/wiki/Project-Information-Environment#citrine-self-hosted
 // https://github.com/TechEmpower/FrameworkBenchmarks/blob/master/toolset/databases/postgres/postgresql.conf#L64
-//let maxConnectionsPerEventLoop = 32
 
 extension Int {
     func bound(_ minValue: Int, _ maxValue: Int) -> Int {
@@ -44,7 +39,7 @@ func runApp() async throws {
         database: "hello_world", 
         tls: .disable
     )
-    postgresConfiguration.options.maximumConnections = 1800
+    postgresConfiguration.options.maximumConnections = 1900
     let postgresClient = PostgresClient(
         configuration: postgresConfiguration, 
         eventLoopGroup: MultiThreadedEventLoopGroup.singleton
