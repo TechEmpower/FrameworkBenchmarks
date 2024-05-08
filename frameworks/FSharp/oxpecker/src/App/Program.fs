@@ -21,11 +21,14 @@ module Common =
 module HtmlViews =
     open Oxpecker.ViewEngine
 
+    let private fortunesHead =
+        head() {
+            title() { raw "Fortunes" }
+        }
+
     let private layout (content: HtmlElement) =
         html() {
-            head() {
-                title() { raw "Fortunes" }
-            }
+            fortunesHead
             body() { content }
         }
 
@@ -37,8 +40,8 @@ module HtmlViews =
 
     let fortunes (fortunes: Fortune[]) =
         table() {
-            yield fortunesTableHeader
-            for f in fortunes ->
+            fortunesTableHeader
+            for f in fortunes do
                 tr() {
                     td() { raw <| string f.id }
                     td() { f.message }
@@ -74,7 +77,7 @@ module HttpHandlers =
     let endpoints : Endpoint[] =
         [|
             route "/plaintext" <| text "Hello, World!"
-            route "/json"<| json {| message = "Hello, World!" |}
+            route "/json"<| jsonChunked {| message = "Hello, World!" |}
             route "/fortunes" fortunes
         |]
 
