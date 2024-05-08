@@ -12,8 +12,7 @@
   <ItemGroup>
     <PackageReference Update="FSharp.Core" Version="8.0.200" />
     <PackageReference Include="Dapper" Version="2.1.44" />
-    <PackageReference Include="Oxpecker" Version="0.10.0" />
-    <PackageReference Include="Oxpecker.ViewEngine" Version="0.7.1" />
+    <PackageReference Include="Oxpecker" Version="0.10.1" />
     <PackageReference Include="Npgsql" Version="8.0.2" />
   </ItemGroup>
 
