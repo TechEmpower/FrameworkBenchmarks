@@ -1,4 +1,4 @@
-FROM gradle:8.1.0-jdk17 as build
+FROM gradle:8.7.0-jdk17 as build
 COPY --chown=gradle:gradle . /home/gradle/src
 WORKDIR /home/gradle/src
 RUN gradle micronaut-data-r2dbc:build -x test --no-daemon

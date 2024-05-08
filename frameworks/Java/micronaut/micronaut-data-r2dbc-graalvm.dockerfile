@@ -1,11 +1,10 @@
-FROM ghcr.io/graalvm/graalvm-community:latest as build
+FROM ghcr.io/graalvm/native-image-community:21-ol9 as build
+RUN microdnf install findutils # Gradle 8.7 requires xargs
 COPY . /home/gradle/src
 WORKDIR /home/gradle/src
-RUN ./gradlew  --no-daemon
-RUN ./gradlew micronaut-data-r2dbc:nativeBuild -x test --no-daemon
+RUN ./gradlew micronaut-data-r2dbc:nativeCompile -x test --no-daemon
 
-FROM frolvlad/alpine-glibc:glibc-2.34
-RUN apk --no-cache update && apk add libstdc++
+FROM cgr.dev/chainguard/wolfi-base:latest
 WORKDIR /micronaut
 COPY --from=build /home/gradle/src/micronaut-data-r2dbc/build/native/nativeCompile/micronaut-data-r2dbc micronaut
 
