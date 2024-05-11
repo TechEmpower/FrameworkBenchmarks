@@ -4,6 +4,8 @@ require 'yaml'
 require_relative 'config/auto_tune'
 
 MAX_PK = 10_000
+ID_RANGE = (1..MAX_PK).freeze
+ALL_IDS = ID_RANGE.to_a
 QUERIES_MIN = 1
 QUERIES_MAX = 500
 
@@ -53,8 +55,8 @@ module Acme
 
     get '/query' do
       ActiveRecord::Base.connection_pool.with_connection do
-        Array.new(bounded_queries) do
-          World.find(rand1)
+        ALL_IDS.sample(bounded_queries).map do |id|
+          World.find(id)
         end
       end
     end
@@ -62,8 +64,8 @@ module Acme
     get '/updates' do
       worlds =
         ActiveRecord::Base.connection_pool.with_connection do
-          Array.new(bounded_queries) do
-            world = World.find(rand1)
+          ALL_IDS.sample(bounded_queries).map do |id|
+            world = World.find(id)
             new_value = rand1
             new_value = rand1 while new_value == world.randomNumber
             world.update_columns(randomNumber: new_value)

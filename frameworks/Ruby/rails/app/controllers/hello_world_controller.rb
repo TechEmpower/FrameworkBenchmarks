@@ -7,7 +7,7 @@ class HelloWorldController < ApplicationController
   MAX_QUERIES = 500          # max number of records that can be retrieved
 
   def db
-    render json: World.find(random_id)
+    render json: World.find(random_id).attributes
   end
 
   def query
