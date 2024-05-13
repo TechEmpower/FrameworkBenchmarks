@@ -44,7 +44,7 @@ class Database(AbstractDatabase):
             connection = cls.get_connection(config)
             db = connection.hello_world
             db.world.find()
-            db.close()
+            connection.close()
             return True
         except:
             return False

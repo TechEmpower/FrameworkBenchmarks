@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Npgsql" Version="8.0.1" />
+    <PackageReference Include="Npgsql" Version="8.0.3" />
     <PackageReference Include="MySqlConnector" Version="2.3.1" />
     <PackageReference Include="Dapper" Version="2.1.21" />
     <PackageReference Include="RazorSlices" Version="0.7.0" Condition="$(PublishAot) != 'true'" />

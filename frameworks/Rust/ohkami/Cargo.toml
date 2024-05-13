@@ -1,11 +1,11 @@
 [package]
 name    = "ohkami_framework_benchmarks"
-version = "0.17.1"
+version = "0.18.2"
 edition = "2021"
 authors = ["kanarus <kanarus786@gmail.com>"]
 
 [dependencies]
-ohkami       = { version = "=0.17.1", features = ["rt_tokio"] }
+ohkami       = { version = "=0.18.2", features = ["rt_tokio"] }
 tokio        = { version = "1.37.0" , features = ["full"] }
 rand         = { version = "0.8.5"  , features = ["small_rng"] }
 sqlx         = { version = "0.7.4"  , features = ["postgres", "macros", "runtime-tokio-native-tls"] }

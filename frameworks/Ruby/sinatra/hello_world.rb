@@ -40,7 +40,7 @@ class HelloWorld < Sinatra::Base
   end if SERVER_STRING
 
   after do
-    ActiveRecord::Base.clear_active_connections!
+    ActiveRecord::Base.connection_handler.clear_active_connections!
   end
 
   # Test type 1: JSON serialization
@@ -92,7 +92,7 @@ class HelloWorld < Sinatra::Base
           world = World.find(rand1)
           new_value = rand1
           new_value = rand1 while new_value == world.randomnumber
-          world.update(randomnumber: new_value)
+          world.update_columns(randomnumber: new_value)
           world
         end
       end

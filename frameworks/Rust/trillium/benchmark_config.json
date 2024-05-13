@@ -27,9 +27,7 @@
         "notes": "",
         "versus": "None",
         "tags": ["verified"]
-      }
-    },
-    {
+      },
       "async-std": {
         "db_url": "/db",
         "json_url": "/json",
@@ -54,9 +52,7 @@
         "notes": "",
         "versus": "None",
         "tags": ["verified"]
-      }
-    },
-    {
+      },
       "tokio": {
         "db_url": "/db",
         "json_url": "/json",

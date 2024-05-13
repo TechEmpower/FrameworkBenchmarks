@@ -10,12 +10,14 @@ The tests were run with:
 
 - [uWebSockets.js](https://github.com/uNetworking/uWebSockets.js/)
 - [postgres](https://github.com/porsager/postgres/)
+- [mariadb](https://github.com/mariadb-corporation/mariadb-connector-nodejs/)
 
 ## Database
 
 There are individual handlers for each DB approach. The logic for each of them are found here:
 
-- [PostgreSQL](database/postgres.js)
+- [PostgreSQL](src/database/postgres.js)
+- [MySQL](src/database/mysql.js)
 
 There are **no database endpoints** or drivers attached by default.
 
@@ -23,6 +25,7 @@ To initialize the application with one of these, run any _one_ of the following 
 
 ```sh
 $ DATABASE=postgres npm start
+$ DATABASE=mysql npm start
 ```
 
 ## Test Endpoints

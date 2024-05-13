@@ -1,7 +1,7 @@
 # ================================
 # Build image
 # ================================
-FROM swift:5.9 as build
+FROM swift:5.10 as build
 WORKDIR /build
 
 # Copy entire repo into container
@@ -18,7 +18,7 @@ RUN swift build \
 # ================================
 # Run image
 # ================================
-FROM swift:5.9-slim
+FROM swift:5.10-slim
 WORKDIR /run
 
 RUN apt update
