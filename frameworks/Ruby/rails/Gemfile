@@ -2,7 +2,7 @@ ruby '~> 3.2'
 
 source 'https://rubygems.org'
 
-gem 'trilogy', group: :mysql
+gem 'mysql2', '0.5.6', group: :mysql
 gem 'oj', '~> 3.16'
 gem 'pg', '1.5.4', group: :postgresql
 gem 'puma', '~> 6.4'
