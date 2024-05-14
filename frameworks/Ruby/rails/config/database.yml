@@ -16,6 +16,7 @@ test:
 production_mysql:
   <<: *default
   adapter: trilogy
+  ssl: true
 
 production_postgresql:
   <<: *default
