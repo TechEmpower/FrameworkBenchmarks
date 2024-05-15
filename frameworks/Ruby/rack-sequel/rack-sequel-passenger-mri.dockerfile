@@ -11,7 +11,7 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends libjemalloc2
 ENV LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libjemalloc.so.2
 
-RUN bundle install --jobs=4 --gemfile=/rack-sequel/Gemfile --path=/rack-sequel/rack-sequel/bundle
+RUN bundle install --jobs=4 --gemfile=/rack-sequel/Gemfile
 
 # TODO: https://github.com/phusion/passenger/issues/1916
 ENV _PASSENGER_FORCE_HTTP_SESSION=true
