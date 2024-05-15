@@ -6,6 +6,7 @@
 #include "json_reflect_headers.h"
 #include "unicode.h"
 #include "func.h"
+//This file is automatically created, do not edit it
 
 namespace http
 {
