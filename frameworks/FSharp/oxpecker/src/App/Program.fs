@@ -78,8 +78,11 @@ module HttpHandlers =
                 return! ctx.WriteHtmlView view
             }
 
-    let utf8Const (s: string) =
-        s |> System.Text.Encoding.UTF8.GetBytes |> bytes
+    let utf8Const (s: string): EndpointHandler =
+        let result = s |> System.Text.Encoding.UTF8.GetBytes
+        fun ctx ->
+            ctx.SetContentType("text/plain")
+            bytes result ctx
 
     let endpoints : Endpoint[] =
         [|
