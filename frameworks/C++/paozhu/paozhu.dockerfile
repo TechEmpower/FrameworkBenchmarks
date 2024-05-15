@@ -23,7 +23,13 @@ RUN rm -Rf ./paozhu/libs
 RUN mkdir ./paozhu/libs
 RUN mkdir ./paozhu/libs/types
 
-COPY ./paozhu_benchmark/controller ./paozhu/
+RUN mkdir ./paozhu/controller
+RUN mkdir ./paozhu/controller/include
+RUN mkdir ./paozhu/controller/src
+
+COPY ./paozhu_benchmark/controller/include/techempower.h ./paozhu/controller/include/
+COPY ./paozhu_benchmark/controller/src/techempower.cpp ./paozhu/controller/src/
+
 COPY ./paozhu_benchmark/libs/types/techempower_json.h ./paozhu/libs/types/
 COPY ./paozhu_benchmark/libs/types/techempower_json_jsonreflect.cpp ./paozhu/libs/types/
 
