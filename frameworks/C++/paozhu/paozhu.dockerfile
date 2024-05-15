@@ -20,9 +20,13 @@ RUN git clone https://github.com/hggq/paozhu
 # RUN unzip benchmark.zip
 RUN rm -Rf ./paozhu/controller
 RUN rm -Rf ./paozhu/libs
+RUN mkdir ./paozhu/libs
+RUN mkdir ./paozhu/libs/types
 
 COPY ./paozhu_benchmark/controller ./paozhu/
- 
+COPY ./paozhu_benchmark/libs/types/techempower_json.h ./paozhu/libs/types/
+COPY ./paozhu_benchmark/libs/types/techempower_json_jsonreflect.cpp ./paozhu/libs/types/
+
 COPY ./paozhu_benchmark/common/autocontrolmethod.hpp ./paozhu/common/
 COPY ./paozhu_benchmark/common/reghttpmethod_pre.hpp ./paozhu/common/
 COPY ./paozhu_benchmark/common/reghttpmethod.hpp ./paozhu/common/
