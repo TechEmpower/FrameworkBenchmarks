@@ -27,20 +27,20 @@ RUN mkdir ./paozhu/controller
 RUN mkdir ./paozhu/controller/include
 RUN mkdir ./paozhu/controller/src
 
-COPY /controller/include/techempower.h ./paozhu/controller/include/
-COPY /controller/src/techempower.cpp ./paozhu/controller/src/
+COPY ./controller/include/techempower.h ./paozhu/controller/include/
+COPY ./controller/src/techempower.cpp ./paozhu/controller/src/
 
-COPY /libs/types/techempower_json.h ./paozhu/libs/types/
-COPY /libs/types/techempower_json_jsonreflect.cpp ./paozhu/libs/types/
+COPY ./libs/types/techempower_json.h ./paozhu/libs/types/
+COPY ./libs/types/techempower_json_jsonreflect.cpp ./paozhu/libs/types/
 
-COPY /common/autocontrolmethod.hpp ./paozhu/common/
-COPY /common/reghttpmethod_pre.hpp ./paozhu/common/
-COPY /common/reghttpmethod.hpp ./paozhu/common/
-COPY /common/json_reflect_headers.h ./paozhu/common/
+COPY ./common/autocontrolmethod.hpp ./paozhu/common/
+COPY ./common/reghttpmethod_pre.hpp ./paozhu/common/
+COPY ./common/reghttpmethod.hpp ./paozhu/common/
+COPY ./common/json_reflect_headers.h ./paozhu/common/
 
-COPY /conf/server.conf ./paozhu/conf/server.conf
-COPY /conf/orm.conf ./paozhu/conf/orm.conf
-COPY /CMakeLists.txt ./paozhu/CMakeLists.txt
+COPY ./conf/server.conf ./paozhu/conf/server.conf
+COPY ./conf/orm.conf ./paozhu/conf/orm.conf
+COPY ./CMakeLists.txt ./paozhu/CMakeLists.txt
 
 WORKDIR /paozhu
 RUN unzip asio.zip
