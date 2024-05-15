@@ -2,10 +2,10 @@ FROM dunglas/frankenphp
 
 # add additional extensions here:
 RUN install-php-extensions \
-    pdo_pgsql \
     intl \
-    zip \
-    opcache > /dev/null
+    opcache \
+    pdo_pgsql \
+    zip > /dev/null
 
 COPY --from=composer --link /usr/bin/composer /usr/local/bin/composer
 

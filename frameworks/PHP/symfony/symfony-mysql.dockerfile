@@ -1,4 +1,3 @@
-FROM composer/composer:2-bin AS composer
 FROM ubuntu:22.04
 
 ARG DEBIAN_FRONTEND=noninteractive
@@ -11,11 +10,11 @@ RUN apt-get install -yqq nginx git unzip curl \
     php8.3-cli php8.3-fpm php8.3-mysql  \
     php8.3-mbstring php8.3-xml php8.3-curl php8.3-dev > /dev/null
 
-COPY --from=composer /usr/bin/composer /usr/local/bin/composer
+COPY --from=composer --link /usr/bin/composer /usr/local/bin/composer
 
-COPY deploy/conf/* /etc/php/8.3/fpm/
+COPY --link deploy/conf/* /etc/php/8.3/fpm/
 WORKDIR /symfony
-COPY . .
+COPY --link . .
 
 RUN if [ $(nproc) = 2 ]; then sed -i "s|pm.max_children = 1024|pm.max_children = 512|g" /etc/php/8.3/fpm/php-fpm.conf ; fi;
 
