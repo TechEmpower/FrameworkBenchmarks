@@ -23,6 +23,7 @@ RUN rm -Rf ./paozhu/libs
 
 COPY ./paozhu_benchmark/controller ./paozhu/
 COPY ./paozhu_benchmark/libs ./paozhu/
+RUN ls -l ./paozhu/libs
 COPY ./paozhu_benchmark/common/autocontrolmethod.hpp ./paozhu/common/
 COPY ./paozhu_benchmark/common/reghttpmethod_pre.hpp ./paozhu/common/
 COPY ./paozhu_benchmark/common/reghttpmethod.hpp ./paozhu/common/
