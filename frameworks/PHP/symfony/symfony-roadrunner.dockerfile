@@ -1,6 +1,6 @@
 FROM php:8.3-cli
 
-COPY --from=ghcr.io/roadrunner-server/roadrunner:2024.1 --link /usr/bin/rr /usr/local/bin/rr
+COPY --from=ghcr.io/roadrunner-server/roadrunner:2023.3 --link /usr/bin/rr /usr/local/bin/rr
 COPY --from=mlocati/php-extension-installer --link /usr/bin/install-php-extensions /usr/local/bin/
 COPY --from=composer --link /usr/bin/composer /usr/local/bin/composer
 
