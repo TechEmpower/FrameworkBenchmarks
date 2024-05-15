@@ -26,7 +26,6 @@ RUN mkdir ./paozhu/libs/types
 RUN mkdir ./paozhu/controller
 RUN mkdir ./paozhu/controller/include
 RUN mkdir ./paozhu/controller/src
-RUN ls -l
 
 COPY ./paozhu_benchmark/controller/include/techempower.h ./paozhu/controller/include/
 COPY ./paozhu_benchmark/controller/src/techempower.cpp ./paozhu/controller/src/
