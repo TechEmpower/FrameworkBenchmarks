@@ -1,5 +1,10 @@
 namespace App
 
+open System.Buffers
+open System.Threading.Tasks
+open Microsoft.AspNetCore.Http
+open Oxpecker
+
 [<AutoOpen>]
 module Common =
     open System
@@ -50,7 +55,6 @@ module HtmlViews =
 
 [<RequireQualifiedAccess>]
 module HttpHandlers =
-    open Oxpecker
     open Dapper
     open Npgsql
 
@@ -74,21 +78,46 @@ module HttpHandlers =
                 return! ctx.WriteHtmlView view
             }
 
+    let utf8Const (s: string) =
+        s |> System.Text.Encoding.UTF8.GetBytes |> bytes
+
     let endpoints : Endpoint[] =
         [|
-            route "/plaintext" <| text "Hello, World!"
+            route "/plaintext" <| utf8Const "Hello, World!"
             route "/json"<| jsonChunked {| message = "Hello, World!" |}
             route "/fortunes" fortunes
         |]
 
 
 module Main =
+    open SpanJson
     open Microsoft.AspNetCore.Builder
     open Microsoft.AspNetCore.Hosting
     open Microsoft.Extensions.DependencyInjection
-    open Oxpecker
     open Microsoft.Extensions.Hosting
     open Microsoft.Extensions.Logging
+
+    type SpanJsonSerializer() =
+        interface Serializers.IJsonSerializer with
+            member this.Serialize(value, ctx, chunked) =
+                ctx.Response.ContentType <- "application/json; charset=utf-8"
+                if chunked then
+                    if ctx.Request.Method <> HttpMethods.Head then
+                        JsonSerializer.Generic.Utf8.SerializeAsync<_>(value, stream = ctx.Response.Body).AsTask()
+                    else
+                        Task.CompletedTask
+                else
+                    task {
+                        let buffer = JsonSerializer.Generic.Utf8.SerializeToArrayPool<_>(value)
+                        ctx.Response.Headers.ContentLength <- buffer.Count
+                        if ctx.Request.Method <> HttpMethods.Head then
+                            do! ctx.Response.Body.WriteAsync(buffer)
+                            ArrayPool<byte>.Shared.Return(buffer.Array)
+                        else
+                            return ()
+                    }
+            member this.Deserialize _ =
+                failwith "Not implemented"
 
     [<EntryPoint>]
     let main args =
@@ -97,7 +126,9 @@ module Main =
 
         builder.Services
             .AddRouting()
-            .AddOxpecker() |> ignore
+            .AddOxpecker()
+            .AddSingleton<Serializers.IJsonSerializer>(SpanJsonSerializer())
+        |> ignore
 
         builder.Logging.ClearProviders() |> ignore
         builder.WebHost.ConfigureKestrel(fun options -> options.AllowSynchronousIO <- true) |> ignore
