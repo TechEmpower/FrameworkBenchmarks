@@ -10,7 +10,7 @@ RUN apt-get install -yqq nginx git unzip curl \
     php8.3-cli php8.3-fpm php8.3-pgsql  \
     php8.3-mbstring php8.3-xml php8.3-curl php8.3-dev > /dev/null
 
-COPY --from=composer --link /usr/bin/composer /usr/local/bin/composer
+COPY --from=composer/composer:latest-bin --link /composer /usr/local/bin/composer
 
 COPY --link deploy/conf/* /etc/php/8.3/fpm/
 

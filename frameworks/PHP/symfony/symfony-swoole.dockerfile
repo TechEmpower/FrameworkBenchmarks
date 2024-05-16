@@ -10,7 +10,7 @@ RUN apt-get update -yqq && \
     apt-get install -yqq libpq-dev libicu-dev git unzip > /dev/null && \ 
     docker-php-ext-install pdo_pgsql opcache intl > /dev/null
 
-COPY --from=composer --link /usr/bin/composer /usr/local/bin/composer
+COPY --from=composer/composer:latest-bin --link /composer /usr/local/bin/composer
 
 COPY --link deploy/swoole/php.ini /usr/local/etc/php/
 WORKDIR /symfony

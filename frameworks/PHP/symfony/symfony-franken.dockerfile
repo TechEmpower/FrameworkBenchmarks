@@ -7,7 +7,7 @@ RUN install-php-extensions \
     pdo_pgsql \
     zip > /dev/null
 
-COPY --from=composer --link /usr/bin/composer /usr/local/bin/composer
+COPY --from=composer/composer:latest-bin --link /composer /usr/local/bin/composer
 
 COPY --link deploy/Caddyfile /etc/caddy/Caddyfile
 COPY --link deploy/conf/php.ini /usr/local/etc/php/
