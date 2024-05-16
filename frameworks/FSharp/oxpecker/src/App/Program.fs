@@ -165,7 +165,7 @@ module HttpHandlers =
         let result = s |> Encoding.UTF8.GetBytes
         fun ctx ->
             ctx.SetContentType("text/plain")
-            bytes result ctx
+            ctx.WriteBytes(result)
 
     let endpoints =
         [|
@@ -221,7 +221,7 @@ module Main =
             .AddSingleton<Serializers.IJsonSerializer>(SpanJsonSerializer())
         |> ignore
 
-        //builder.Logging.ClearProviders() |> ignore
+        builder.Logging.ClearProviders() |> ignore
         builder.WebHost.ConfigureKestrel(fun options -> options.AllowSynchronousIO <- true) |> ignore
 
         let app = builder.Build()
