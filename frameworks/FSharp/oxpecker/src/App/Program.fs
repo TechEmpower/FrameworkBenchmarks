@@ -1,13 +1,11 @@
 namespace App
 
-open System.Buffers
+open System
 open System.Threading.Tasks
-open Microsoft.AspNetCore.Http
 open Oxpecker
 
 [<AutoOpen>]
 module Common =
-    open System
 
     [<CLIMutable>]
     type Fortune =
@@ -78,6 +76,22 @@ module HttpHandlers =
                 return! ctx.WriteHtmlView view
             }
 
+    type World =
+        {
+            id: int
+            randomNumber: int
+        }
+
+    let private singleRow : EndpointHandler =
+        fun ctx ->
+            task {
+                use conn = new NpgsqlConnection(ConnectionString)
+                let! result = conn.QueryFirstOrDefaultAsync<World>(
+                    "SELECT id, randomnumber FROM world WHERE id = @Id",
+                    {| Id = Random.Shared.Next(1, 10001) |})
+                return! ctx.WriteJsonChunked result
+            }
+
     let utf8Const (s: string): EndpointHandler =
         let result = s |> System.Text.Encoding.UTF8.GetBytes
         fun ctx ->
@@ -89,16 +103,19 @@ module HttpHandlers =
             route "/plaintext" <| utf8Const "Hello, World!"
             route "/json"<| jsonChunked {| message = "Hello, World!" |}
             route "/fortunes" fortunes
+            route "/db" singleRow
         |]
 
 
 module Main =
     open SpanJson
+    open Microsoft.AspNetCore.Http
     open Microsoft.AspNetCore.Builder
     open Microsoft.AspNetCore.Hosting
     open Microsoft.Extensions.DependencyInjection
     open Microsoft.Extensions.Hosting
     open Microsoft.Extensions.Logging
+    open System.Buffers
 
     type SpanJsonSerializer() =
         interface Serializers.IJsonSerializer with
