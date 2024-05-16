@@ -79,19 +79,20 @@ module HttpHandlers =
                 return! ctx.WriteHtmlView view
             }
 
+    [<Struct>]
     type World =
         {
             id: int
             mutable randomNumber: int
         }
 
-    let readSingleRow (conn: NpgsqlConnection) =
+    let private readSingleRow (conn: NpgsqlConnection) =
         conn.QueryFirstOrDefaultAsync<World>(
             "SELECT id, randomnumber FROM world WHERE id = @Id",
             {| Id = Random.Shared.Next(1, 10001) |}
         )
 
-    let parseQueries (ctx: HttpContext) =
+    let private parseQueries (ctx: HttpContext) =
         match ctx.TryGetRouteValue<string>("count") with
         | Some q ->
             match Int32.TryParse q with
@@ -123,7 +124,7 @@ module HttpHandlers =
     let private maxBatch = 500
     let mutable private queries = Array.zeroCreate (maxBatch + 1)
 
-    let batchUpdateString batchSize =
+    let private batchUpdateString batchSize =
         match queries[batchSize] with
         | null ->
             let lastIndex = batchSize - 1
@@ -217,7 +218,7 @@ module Main =
             .AddSingleton<Serializers.IJsonSerializer>(SpanJsonSerializer())
         |> ignore
 
-        builder.Logging.ClearProviders() |> ignore
+        //builder.Logging.ClearProviders() |> ignore
         builder.WebHost.ConfigureKestrel(fun options -> options.AllowSynchronousIO <- true) |> ignore
 
         let app = builder.Build()
