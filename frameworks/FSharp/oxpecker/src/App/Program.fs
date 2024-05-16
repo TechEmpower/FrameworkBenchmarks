@@ -87,7 +87,7 @@ module HttpHandlers =
         }
 
     let private readSingleRow (conn: NpgsqlConnection) =
-        conn.QuerySingle<World>(
+        conn.QuerySingleAsync<World>(
             "SELECT id, randomnumber FROM world WHERE id = @Id",
             {| Id = Random.Shared.Next(1, 10001) |}
         )
