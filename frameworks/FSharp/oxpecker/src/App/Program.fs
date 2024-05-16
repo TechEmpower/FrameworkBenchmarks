@@ -87,7 +87,7 @@ module HttpHandlers =
         }
 
     let private readSingleRow (conn: NpgsqlConnection) =
-        conn.QueryFirstOrDefaultAsync<World>(
+        conn.QuerySingle<World>(
             "SELECT id, randomnumber FROM world WHERE id = @Id",
             {| Id = Random.Shared.Next(1, 10001) |}
         )
@@ -188,7 +188,7 @@ module Main =
     type SpanJsonSerializer() =
         interface Serializers.IJsonSerializer with
             member this.Serialize(value, ctx, chunked) =
-                ctx.Response.ContentType <- "application/json; charset=utf-8"
+                ctx.Response.ContentType <- "application/json"
                 if chunked then
                     if ctx.Request.Method <> HttpMethods.Head then
                         JsonSerializer.Generic.Utf8.SerializeAsync<_>(value, stream = ctx.Response.Body).AsTask()
