@@ -19,7 +19,7 @@ buf-min = { version = "0.7", features = ["bytes"] }
 
 may = { version = "0.3", default-features = false }
 may_minihttp = { version = "0.1", default-features = false }
-may_postgres = { git = "https://github.com/Xudong-Huang/may_postgres.git", rev = "4c18791", default-features = false }
+may_postgres = { git = "https://github.com/Xudong-Huang/may_postgres.git", rev = "5ea3fb9", default-features = false }
 
 [profile.release]
 opt-level = 3

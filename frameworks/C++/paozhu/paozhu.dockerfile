@@ -19,11 +19,24 @@ WORKDIR /
 RUN git clone https://github.com/hggq/paozhu
 # RUN unzip benchmark.zip
 RUN rm -Rf ./paozhu/controller
- 
-COPY ./paozhu_benchmark/controller ./paozhu/
+RUN rm -Rf ./paozhu/libs
+RUN mkdir ./paozhu/libs
+RUN mkdir ./paozhu/libs/types
+
+RUN mkdir ./paozhu/controller
+RUN mkdir ./paozhu/controller/include
+RUN mkdir ./paozhu/controller/src
+
+COPY ./paozhu_benchmark/controller/include/techempower.h ./paozhu/controller/include/
+COPY ./paozhu_benchmark/controller/src/techempower.cpp ./paozhu/controller/src/
+
+COPY ./paozhu_benchmark/libs/types/techempower_json.h ./paozhu/libs/types/
+COPY ./paozhu_benchmark/libs/types/techempower_json_jsonreflect.cpp ./paozhu/libs/types/
+
 COPY ./paozhu_benchmark/common/autocontrolmethod.hpp ./paozhu/common/
 COPY ./paozhu_benchmark/common/reghttpmethod_pre.hpp ./paozhu/common/
 COPY ./paozhu_benchmark/common/reghttpmethod.hpp ./paozhu/common/
+COPY ./paozhu_benchmark/common/json_reflect_headers.h ./paozhu/common/
 
 COPY ./paozhu_benchmark/conf/server.conf ./paozhu/conf/server.conf
 COPY ./paozhu_benchmark/conf/orm.conf ./paozhu/conf/orm.conf

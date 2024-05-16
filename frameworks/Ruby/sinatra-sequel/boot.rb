@@ -3,6 +3,8 @@ require 'bundler/setup'
 require 'time'
 
 MAX_PK = 10_000
+ID_RANGE = (1..MAX_PK).freeze
+ALL_IDS = ID_RANGE.to_a
 QUERIES_MIN = 1
 QUERIES_MAX = 500
 SEQUEL_NO_ASSOCIATIONS = true
