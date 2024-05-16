@@ -83,7 +83,7 @@ module HttpHandlers =
     type World =
         {
             id: int
-            mutable randomNumber: int
+            randomnumber: int
         }
 
     let private readSingleRow (conn: NpgsqlConnection) =
@@ -153,7 +153,7 @@ module HttpHandlers =
                     let randomNumber = Random.Shared.Next(1, 10001)
                     parameters[$"@Rn_{i}"] <- randomNumber
                     parameters[$"@Id_{i}"] <- results[i].id
-                    results[i].randomNumber <- randomNumber
+                    results[i] <- { results[i] with randomnumber = randomNumber }
                 let! _ = conn.ExecuteAsync(batchUpdateString count, parameters)
                 return! ctx.WriteJsonChunked results
             }
