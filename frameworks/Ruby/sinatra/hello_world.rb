@@ -62,12 +62,12 @@ class HelloWorld < Sinatra::Base
   get '/queries' do
     worlds =
       ActiveRecord::Base.connection_pool.with_connection do
-        Array.new(bounded_queries) do
-          World.find(rand1)
+        ALL_IDS.sample(bounded_queries).map do |id|
+          World.find(id).attributes
         end
       end
 
-    json worlds.map!(&:attributes)
+    json worlds
   end
 
   # Test type 4: Fortunes
@@ -88,16 +88,16 @@ class HelloWorld < Sinatra::Base
   get '/updates' do
     worlds =
       ActiveRecord::Base.connection_pool.with_connection do
-        Array.new(bounded_queries) do
-          world = World.find(rand1)
+        ALL_IDS.sample(bounded_queries).map do |id|
+          world = World.find(id)
           new_value = rand1
           new_value = rand1 while new_value == world.randomnumber
           world.update_columns(randomnumber: new_value)
-          world
+          world.attributes
         end
       end
 
-    json worlds.map!(&:attributes)
+    json worlds
   end
 
   # Test type 6: Plaintext
