@@ -18,8 +18,10 @@ module Common =
     [<Literal>]
     let ConnectionString = "Server=tfb-database;Database=hello_world;User Id=benchmarkdbuser;Password=benchmarkdbpass;SSL Mode=Disable;Maximum Pool Size=1024;NoResetOnClose=true;Enlist=false;Max Auto Prepare=4;Multiplexing=true;Write Coalescing Buffer Threshold Bytes=1000"
 
-    let fortuneComparer a b =
-        String.CompareOrdinal(a.message, b.message)
+    let FortuneComparer = {
+        new IComparer<Fortune> with
+            member self.Compare(a,b) = String.CompareOrdinal(a.message, b.message)
+    }
 
 [<RequireQualifiedAccess>]
 module HtmlViews =
@@ -74,7 +76,7 @@ module HttpHandlers =
                     yield! data
                     extra
                 |]
-                augmentedData |> Array.sortInPlaceWith fortuneComparer
+                Array.Sort(augmentedData, FortuneComparer)
                 let view = HtmlViews.fortunes augmentedData
                 return! ctx.WriteHtmlView view
             }
@@ -105,6 +107,8 @@ module HttpHandlers =
             task {
                 use conn = new NpgsqlConnection(ConnectionString)
                 let! result = readSingleRow conn
+                if result.id = 0 then
+                    failwith "zero!"
                 return! ctx.WriteJsonChunked result
             }
 
@@ -118,7 +122,7 @@ module HttpHandlers =
                 for i in 0..results.Length-1 do
                     let! result = readSingleRow conn
                     results[i] <- result
-                return! ctx.WriteJsonChunked results
+                return! ctx.WriteJson results
             }
 
     let private maxBatch = 500
