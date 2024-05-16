@@ -163,7 +163,7 @@ module HttpHandlers =
             ctx.SetContentType("text/plain")
             bytes result ctx
 
-    let endpoints : Endpoint[] =
+    let endpoints =
         [|
             route "/plaintext" <| utf8Const "Hello, World!"
             route "/json"<| jsonChunked {| message = "Hello, World!" |}
