@@ -82,14 +82,37 @@ module HttpHandlers =
             randomNumber: int
         }
 
-    let private singleRow : EndpointHandler =
+    let readSingleRow (conn: NpgsqlConnection) =
+        conn.QueryFirstOrDefaultAsync<World>(
+            "SELECT id, randomnumber FROM world WHERE id = @Id",
+            {| Id = Random.Shared.Next(1, 10001) |}
+        )
+
+    let private singleQuery : EndpointHandler =
         fun ctx ->
             task {
                 use conn = new NpgsqlConnection(ConnectionString)
-                let! result = conn.QueryFirstOrDefaultAsync<World>(
-                    "SELECT id, randomnumber FROM world WHERE id = @Id",
-                    {| Id = Random.Shared.Next(1, 10001) |})
+                let! result = readSingleRow conn
                 return! ctx.WriteJsonChunked result
+            }
+
+    let private multipleQueries : EndpointHandler =
+        fun ctx ->
+            let queries =
+                match ctx.TryGetQueryValue("queries") with
+                | Some q ->
+                    match Int32.TryParse q with
+                    | true, q when q > 1 -> if q < 500 then q else 500
+                    | _, _ -> 1
+                | _ -> 1
+            let results = Array.zeroCreate<World> queries
+            task {
+                use conn = new NpgsqlConnection(ConnectionString)
+                do! conn.OpenAsync()
+                for i in 0..results.Length-1 do
+                    let! result = readSingleRow conn
+                    results[i] <- result
+                return! ctx.WriteJsonChunked results
             }
 
     let utf8Const (s: string): EndpointHandler =
@@ -103,7 +126,8 @@ module HttpHandlers =
             route "/plaintext" <| utf8Const "Hello, World!"
             route "/json"<| jsonChunked {| message = "Hello, World!" |}
             route "/fortunes" fortunes
-            route "/db" singleRow
+            route "/db" singleQuery
+            route "/queries" multipleQueries
         |]
 
 

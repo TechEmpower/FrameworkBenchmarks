@@ -7,6 +7,7 @@
         "json_url": "/json",
         "fortune_url": "/fortunes",
         "db_url": "/db",
+        "query_url": "/queries",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Micro",
