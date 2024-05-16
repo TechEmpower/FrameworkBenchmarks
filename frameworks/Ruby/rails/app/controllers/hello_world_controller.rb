@@ -37,9 +37,9 @@ class HelloWorldController < ApplicationController
       world = World.find(id)
       new_value = random_id
       new_value = random_id until new_value != world.randomNumber
-      world.update_columns(randomNumber: new_value)
-      world
+      { id: id, randomNumber: new_value }
     end
+    World.upsert_all(worlds.sort_by!{_1[:id]})
 
     render json: worlds
   end
