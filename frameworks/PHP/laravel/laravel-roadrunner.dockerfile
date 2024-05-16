@@ -14,7 +14,7 @@ RUN mkdir -p /laravel/bootstrap/cache /laravel/storage/logs /laravel/storage/fra
 RUN apt-get update > /dev/null && \
     apt-get install -yqq curl unzip > /dev/null
 
-COPY --from=composer --link /usr/bin/composer /usr/local/bin/composer
+COPY --from=composer/composer:latest-bin --link /composer /usr/local/bin/composer
 
 COPY --link deploy/roadrunner/composer.json .
 COPY --link deploy/roadrunner/.rr.yaml .
