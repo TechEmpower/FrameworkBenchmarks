@@ -1,6 +1,7 @@
 namespace App
 
 open System
+open System.Collections.Generic
 open System.Threading.Tasks
 open Oxpecker
 
@@ -55,6 +56,8 @@ module HtmlViews =
 module HttpHandlers =
     open Dapper
     open Npgsql
+    open System.Text
+    open Microsoft.AspNetCore.Http
 
     let private extra =
         {
@@ -79,7 +82,7 @@ module HttpHandlers =
     type World =
         {
             id: int
-            randomNumber: int
+            mutable randomNumber: int
         }
 
     let readSingleRow (conn: NpgsqlConnection) =
@@ -87,6 +90,14 @@ module HttpHandlers =
             "SELECT id, randomnumber FROM world WHERE id = @Id",
             {| Id = Random.Shared.Next(1, 10001) |}
         )
+
+    let parseQueries (ctx: HttpContext) =
+        match ctx.TryGetRouteValue<string>("count") with
+        | Some q ->
+            match Int32.TryParse q with
+            | true, q when q > 1 -> if q < 500 then q else 500
+            | _, _ -> 1
+        | _ -> 1
 
     let private singleQuery : EndpointHandler =
         fun ctx ->
@@ -98,14 +109,8 @@ module HttpHandlers =
 
     let private multipleQueries : EndpointHandler =
         fun ctx ->
-            let queries =
-                match ctx.TryGetRouteValue<string>("count") with
-                | Some q ->
-                    match Int32.TryParse q with
-                    | true, q when q > 1 -> if q < 500 then q else 500
-                    | _, _ -> 1
-                | _ -> 1
-            let results = Array.zeroCreate<World> queries
+            let count = parseQueries ctx
+            let results = Array.zeroCreate<World> count
             task {
                 use conn = new NpgsqlConnection(ConnectionString)
                 do! conn.OpenAsync()
@@ -115,8 +120,45 @@ module HttpHandlers =
                 return! ctx.WriteJsonChunked results
             }
 
+    let private maxBatch = 500
+    let mutable private queries = Array.zeroCreate (maxBatch + 1)
+
+    let batchUpdateString batchSize =
+        match queries[batchSize] with
+        | null ->
+            let lastIndex = batchSize - 1
+            let sb = StringBuilder()
+            sb.Append("UPDATE world SET randomNumber = temp.randomNumber FROM (VALUES ") |> ignore
+            for i in 0..lastIndex-1 do
+                sb.AppendFormat("(@Id_{0}, @Rn_{0}), ", i) |> ignore
+            sb.AppendFormat("(@Id_{0}, @Rn_{0}) ORDER BY 1) AS temp(id, randomNumber) WHERE temp.id = world.id", lastIndex) |> ignore
+            let result = sb.ToString()
+            queries[batchSize] <- result
+            result
+        | q -> q
+
+    let private multipleUpdates : EndpointHandler =
+        fun ctx ->
+            let count = parseQueries ctx
+            let results = Array.zeroCreate<World> count
+            task {
+                use conn = new NpgsqlConnection(ConnectionString)
+                do! conn.OpenAsync()
+                for i in 0..results.Length-1 do
+                    let! result = readSingleRow conn
+                    results[i] <- result
+                let parameters = Dictionary<_,_>()
+                for i in 0..results.Length-1 do
+                    let randomNumber = Random.Shared.Next(1, 10001)
+                    parameters[$"@Rn_{i}"] <- randomNumber
+                    parameters[$"@Id_{i}"] <- results[i].id
+                    results[i].randomNumber <- randomNumber
+                let! _ = conn.ExecuteAsync(batchUpdateString count, parameters)
+                return! ctx.WriteJsonChunked results
+            }
+
     let utf8Const (s: string): EndpointHandler =
-        let result = s |> System.Text.Encoding.UTF8.GetBytes
+        let result = s |> Encoding.UTF8.GetBytes
         fun ctx ->
             ctx.SetContentType("text/plain")
             bytes result ctx
@@ -128,6 +170,7 @@ module HttpHandlers =
             route "/fortunes" fortunes
             route "/db" singleQuery
             route "/queries/{count?}" multipleQueries
+            route "/updates/{count?}" multipleUpdates
         |]
 
 
