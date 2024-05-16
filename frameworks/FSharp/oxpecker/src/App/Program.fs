@@ -99,7 +99,7 @@ module HttpHandlers =
     let private multipleQueries : EndpointHandler =
         fun ctx ->
             let queries =
-                match ctx.TryGetQueryValue("queries") with
+                match ctx.TryGetRouteValue<string>("count") with
                 | Some q ->
                     match Int32.TryParse q with
                     | true, q when q > 1 -> if q < 500 then q else 500
@@ -127,7 +127,7 @@ module HttpHandlers =
             route "/json"<| jsonChunked {| message = "Hello, World!" |}
             route "/fortunes" fortunes
             route "/db" singleQuery
-            route "/queries" multipleQueries
+            route "/queries/{count?}" multipleQueries
         |]
 
 
