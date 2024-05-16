@@ -108,8 +108,6 @@ module HttpHandlers =
             task {
                 use conn = new NpgsqlConnection(ConnectionString)
                 let! result = readSingleRow conn
-                if result.id = 0 then
-                    failwith "zero!"
                 return! ctx.WriteJsonChunked result
             }
 
@@ -123,7 +121,7 @@ module HttpHandlers =
                 for i in 0..results.Length-1 do
                     let! result = readSingleRow conn
                     results[i] <- result
-                return! ctx.WriteJson results
+                return! ctx.WriteJsonChunked results
             }
 
     let private maxBatch = 500
