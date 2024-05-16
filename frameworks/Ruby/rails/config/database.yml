@@ -16,6 +16,9 @@ test:
 production_mysql:
   <<: *default
   adapter: trilogy
+  ssl: true
+  ssl_mode: 4 <%# Trilogy::SSL_PREFERRED_NOVERIFY %>
+  tls_min_version: 3 <%# Trilogy::TLS_VERSION_12 %>
 
 production_postgresql:
   <<: *default
