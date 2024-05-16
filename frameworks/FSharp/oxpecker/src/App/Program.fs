@@ -151,7 +151,7 @@ module HttpHandlers =
                 for i in 0..results.Length-1 do
                     let! result = readSingleRow conn
                     results[i] <- result
-                let parameters = Dictionary<_,_>()
+                let parameters = Dictionary<string,obj>()
                 for i in 0..results.Length-1 do
                     let randomNumber = Random.Shared.Next(1, 10001)
                     parameters[$"@Rn_{i}"] <- randomNumber
