@@ -14,13 +14,13 @@ COPY php/* /usr/local/etc/php/
 RUN chmod +x /usr/local/etc/php/install-composer.sh && /usr/local/etc/php/install-composer.sh
 
 # install dependencies
-RUN apt-get update -yqq > /dev/null && apt-get install -yqq git unzip > /dev/null
-RUN php composer.phar install --optimize-autoloader --classmap-authoritative --no-dev
+RUN apt-get update -yqq > /dev/null && apt-get install -yqq git unzip zlib1g-dev > /dev/null
+RUN php composer.phar install --optimize-autoloader --classmap-authoritative --no-dev --quiet
 
 # RoadRunner >= 2024.x.x requires protobuf and grpc extensions to be installed
 ARG PROTOBUF_VERSION="4.26.1"
 RUN pecl channel-update pecl.php.net
-RUN MAKEFLAGS="-j $(nproc)" pecl install protobuf-${PROTOBUF_VERSION} grpc
+RUN MAKEFLAGS="-j $(nproc)" pecl install protobuf-${PROTOBUF_VERSION} grpc > /dev/null
 
 # pre-configure
 RUN ./vendor/bin/rr get-binary > /dev/null 2>&1
