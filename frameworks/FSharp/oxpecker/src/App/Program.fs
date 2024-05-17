@@ -67,18 +67,20 @@ module HttpHandlers =
             message = "Additional fortune added at request time."
         }
 
+    let private renderFortunes (ctx: HttpContext) (dbFortunes: Fortune seq) =
+        let augmentedData = [|
+            yield! dbFortunes
+            extra
+        |]
+        Array.Sort(augmentedData, FortuneComparer)
+        augmentedData |> HtmlViews.fortunes |> ctx.WriteHtmlView
+
     let private fortunes : EndpointHandler =
         fun ctx ->
             task {
                 use conn = new NpgsqlConnection(ConnectionString)
-                let! data = conn.QueryAsync<Fortune>("SELECT id, message FROM fortune")
-                let augmentedData = [|
-                    yield! data
-                    extra
-                |]
-                Array.Sort(augmentedData, FortuneComparer)
-                let view = HtmlViews.fortunes augmentedData
-                return! ctx.WriteHtmlView view
+                let! dbFortunes = conn.QueryAsync<Fortune>("SELECT id, message FROM fortune")
+                return! renderFortunes ctx dbFortunes
             }
 
     [<Struct>]
