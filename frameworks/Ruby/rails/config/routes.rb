@@ -6,6 +6,14 @@ Rails.application.routes.draw do
   get "queries", to: "hello_world#query"
   get "fortunes", to: "hello_world#fortune"
   get "updates", to: "hello_world#update"
-  get "plaintext", to: PlaintextController.action(:index)
+  get "plaintext", to: ->(env) do
+    [200,
+     {
+       'Content-Type' => 'text/plain',
+       'Date' => Time.now.httpdate,
+       'Server' => 'Rails'
+     },
+     ['Hello, World!']]
+  end
   get "cached", to: "hello_world#cached_query"
 end
