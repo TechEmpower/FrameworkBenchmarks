@@ -1,3 +1,4 @@
+import bson
 import pymongo
 import traceback
 
@@ -52,19 +53,19 @@ class Database(AbstractDatabase):
     @classmethod
     def get_queries(cls, config):
         co = cls.get_connection(config)
-        status = co.admin.command(pymongo.son_manipulator.SON([('serverStatus', 1)]))
+        status = co.admin.command(bson.son.SON([('serverStatus', 1)]))
         return int(status["opcounters"]["query"]) + int(status["opcounters"]["update"]) #get_queries returns all the queries
 
     @classmethod
     def get_rows(cls, config):
         co = cls.get_connection(config)
-        status = co.admin.command(pymongo.son_manipulator.SON([('serverStatus', 1)]))
+        status = co.admin.command(bson.son.SON([('serverStatus', 1)]))
         return int(status["opcounters"]["query"]) * cls.get_rows_per_query(co)
 
     @classmethod
     def get_rows_updated(cls, config):
         co = cls.get_connection(config)
-        status = co.admin.command(pymongo.son_manipulator.SON([('serverStatus', 1)]))
+        status = co.admin.command(bson.son.SON([('serverStatus', 1)]))
         return int(status["opcounters"]["update"]) * cls.get_rows_per_query(co)
 
     @classmethod
