@@ -18,7 +18,7 @@ COPY --from=builder /build/bin/fpc-x86_64-linux/raw /usr/local/bin/raw
 COPY --from=builder /build/libpq.so.5.16 /usr/lib/x86_64-linux-gnu/libpq.so.5
 
 ENV TFB_TEST_NAME=$TFB_TEST_NAME
-ENV LD_PRELOAD=/usr/local/lib/libmimalloc.so
+ENV LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libmimalloc.so.2.0
 
 EXPOSE 8080
 CMD ["raw"]
