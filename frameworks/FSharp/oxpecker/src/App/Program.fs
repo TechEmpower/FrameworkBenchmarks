@@ -67,7 +67,7 @@ module HttpHandlers =
             message = "Additional fortune added at request time."
         }
 
-    let private renderFortunes (ctx: HttpContext) (dbFortunes: Fortune seq) =
+    let private renderFortunes (ctx: HttpContext) dbFortunes =
         let augmentedData = [|
             yield! dbFortunes
             extra
@@ -214,23 +214,15 @@ module Main =
 
     [<EntryPoint>]
     let main args =
-
         let builder = WebApplication.CreateBuilder(args)
-
         builder.Services
             .AddRouting()
             .AddOxpecker()
             .AddSingleton<Serializers.IJsonSerializer>(SpanJsonSerializer())
         |> ignore
-
         builder.Logging.ClearProviders() |> ignore
-        builder.WebHost.ConfigureKestrel(fun options -> options.AllowSynchronousIO <- true) |> ignore
-
         let app = builder.Build()
-
         app.UseRouting()
            .UseOxpecker HttpHandlers.endpoints |> ignore
-
         app.Run()
-
         0
