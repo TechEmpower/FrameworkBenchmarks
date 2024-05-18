@@ -60,7 +60,7 @@ typedef struct db_query_param_t {
 
 typedef struct {
 	const struct config_t *config;
-	list_t *conn;
+	queue_t conn;
 	const char *conninfo;
 	h2o_linklist_t *local_messages;
 	h2o_loop_t *loop;
