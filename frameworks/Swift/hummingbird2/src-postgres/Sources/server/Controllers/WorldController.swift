@@ -16,11 +16,11 @@ struct WorldController {
     /// simple database table. That row is then serialized as a JSON response.
     @Sendable func single(request: Request, context: Context) async throws -> World {
         let id = Int32.random(in: 1...10_000)
-        let rows = try await self.postgresClient.query("SELECT id, randomnumber FROM World WHERE id = \(id)")
-        for try await (id, randomNumber) in rows.decode((Int32, Int32).self, context: .default) {
-            return World(id: id, randomNumber: randomNumber)
+        let rows = try await self.postgresClient.execute(SelectWorldStatement(id: id))
+        guard let row = try await rows.first(where: {_ in true }) else {
+            throw HTTPError(.notFound)
         }
-        throw HTTPError(.notFound)
+        return World(id: row.0, randomNumber: row.1)
     }
 
     /// In this test, each request is processed by fetching multiple rows from a 
@@ -34,11 +34,11 @@ struct WorldController {
             result.reserveCapacity(queries)
             for _ in 0..<queries {
                 let id = Int32.random(in: 1...10_000)
-                let rows = try await conn.query("SELECT id, randomnumber FROM World WHERE id = \(id)", logger: context.logger)
-                guard let first = try await rows.decode((Int32, Int32).self, context: .default).first(where: { _ in true}) else {
+                let rows = try await conn.execute(SelectWorldStatement(id: id), logger: context.logger)
+                guard let row = try await rows.first(where: {_ in true }) else {
                     throw HTTPError(.notFound)
                 }
-                result.append(World(id: first.0, randomNumber: first.1)) 
+                result.append( World(id: row.0, randomNumber: row.1))
             }
             return result
         }
@@ -59,15 +59,49 @@ struct WorldController {
             result.reserveCapacity(queries)
             for _ in 0..<queries {
                 let id = Int32.random(in: 1...10_000)
-                let rows = try await conn.query("SELECT id, randomnumber FROM World WHERE id = \(id)", logger: context.logger)
-                guard let first = try await rows.decode((Int32, Int32).self, context: .default).first(where: { _ in true}) else {
+                let rows = try await conn.execute(SelectWorldStatement(id: id), logger: context.logger)
+                guard let row = try await rows.first(where: {_ in true }) else {
                     throw HTTPError(.notFound)
                 }
                 let randomNumber = Int32.random(in: 1...10_000)
-                try await conn.query("UPDATE World SET randomnumber = \(randomNumber) WHERE id = \(id)", logger: context.logger)
-                result.append(World(id: first.0, randomNumber: randomNumber))
+                _ = try await conn.execute(UpdateWorldStatement(id: id, randomNumber: randomNumber), logger: context.logger)
+                result.append(World(id: row.0, randomNumber: randomNumber))
             }
             return result
         }
+    }
+
+    struct SelectWorldStatement: PostgresPreparedStatement {
+        typealias Row = (Int32, Int32)
+
+        let id: Int32
+
+        static var sql = "SELECT id, randomnumber FROM World WHERE id = $1"
+
+        func makeBindings() throws -> PostgresNIO.PostgresBindings {
+            var bindings = PostgresNIO.PostgresBindings(capacity: 1)
+            bindings.append(.init(int32: self.id))
+            return bindings
+        }
+
+        func decodeRow(_ row: PostgresNIO.PostgresRow) throws -> Row { try row.decode(Row.self) }
+    }
+
+    struct UpdateWorldStatement: PostgresPreparedStatement {
+        typealias Row = Int32
+
+        let id: Int32
+        let randomNumber: Int32
+
+        static var sql = "UPDATE World SET randomnumber = $2 WHERE id = $1"
+
+        func makeBindings() throws -> PostgresNIO.PostgresBindings {
+            var bindings = PostgresNIO.PostgresBindings(capacity: 2)
+            bindings.append(.init(int32: self.id))
+            bindings.append(.init(int32: self.randomNumber))
+            return bindings
+        }
+
+        func decodeRow(_ row: PostgresNIO.PostgresRow) throws -> Row { try row.decode(Row.self) }
     }
 }
