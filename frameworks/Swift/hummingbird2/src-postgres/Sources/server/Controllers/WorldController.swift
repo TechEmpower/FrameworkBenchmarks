@@ -29,21 +29,16 @@ struct WorldController {
     /// All tests are run at 512 concurrency.
     @Sendable func multiple(request: Request, context: Context) async throws -> [World] {
         let queries = (request.uri.queryParameters.get("queries", as: Int.self) ?? 1).bound(1, 500)
-        return try await withThrowingTaskGroup(of: World.self) { group in
-            for _ in 0..<queries {
-                group.addTask {
-                    let id = Int32.random(in: 1...10_000)
-                    let rows = try await self.postgresClient.query("SELECT id, randomnumber FROM World WHERE id = \(id)")
-                    for try await (id, randomNumber) in rows.decode((Int32, Int32).self, context: .default) {
-                        return World(id: id, randomNumber: randomNumber)
-                    }
-                    throw HTTPError(.notFound)
-                }
-            }
+        return try await self.postgresClient.withConnection { conn in
             var result: [World] = .init()
             result.reserveCapacity(queries)
-            for try await world in group {
-                result.append(world)
+            for _ in 0..<queries {
+                let id = Int32.random(in: 1...10_000)
+                let rows = try await conn.query("SELECT id, randomnumber FROM World WHERE id = \(id)", logger: context.logger)
+                guard let first = try await rows.decode((Int32, Int32).self, context: .default).first(where: { _ in true}) else {
+                    throw HTTPError(.notFound)
+                }
+                result.append(World(id: first.0, randomNumber: first.1)) 
             }
             return result
         }
@@ -59,23 +54,18 @@ struct WorldController {
     /// query to fetch the object. All tests are run at 512 concurrency.
     @Sendable func updates(request: Request, context: Context) async throws -> [World] {
         let queries = (request.uri.queryParameters.get("queries", as: Int.self) ?? 1).bound(1, 500)
-        return try await withThrowingTaskGroup(of: World.self) { group in
-            for _ in 0..<queries {
-                group.addTask {
-                    let id = Int32.random(in: 1...10_000)
-                    let rows = try await self.postgresClient.query("SELECT id FROM World WHERE id = \(id)")
-                    for try await (id) in rows.decode((Int32).self, context: .default) {
-                        let randomNumber = Int32.random(in: 1...10_000)
-                        try await self.postgresClient.query("UPDATE World SET randomnumber = \(randomNumber) WHERE id = \(id)")
-                        return World(id: id, randomNumber: randomNumber)
-                    }
-                    throw HTTPError(.notFound)
-                }
-            }
+        return try await self.postgresClient.withConnection { conn in
             var result: [World] = .init()
             result.reserveCapacity(queries)
-            for try await world in group {
-                result.append(world)
+            for _ in 0..<queries {
+                let id = Int32.random(in: 1...10_000)
+                let rows = try await conn.query("SELECT id, randomnumber FROM World WHERE id = \(id)", logger: context.logger)
+                guard let first = try await rows.decode((Int32, Int32).self, context: .default).first(where: { _ in true}) else {
+                    throw HTTPError(.notFound)
+                }
+                let randomNumber = Int32.random(in: 1...10_000)
+                try await conn.query("UPDATE World SET randomnumber = \(randomNumber) WHERE id = \(id)", logger: context.logger)
+                result.append(World(id: first.0, randomNumber: randomNumber))
             }
             return result
         }
