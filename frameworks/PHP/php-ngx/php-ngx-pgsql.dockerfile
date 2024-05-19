@@ -27,13 +27,14 @@ RUN wget -q http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && \
             --add-module=/ngx-php > /dev/null && \
     make > /dev/null && make install > /dev/null
 
+RUN sed -i "s|opcache.jit=off|;opcache.jit=off|g" /etc/php/8.3/embed/conf.d/10-opcache.ini
+
+COPY --link . .
+
 RUN sed -i "s|app.php|app-pg.php|g" /deploy/nginx.conf
 
 RUN export WORKERS=$(( 4 * $(nproc) )) && \
     sed -i "s|worker_processes  auto|worker_processes $WORKERS|g" /deploy/nginx.conf
-RUN sed -i "s|opcache.jit=off|opcache.jit=function|g" /etc/php/8.3/embed/conf.d/10-opcache.ini
-
-COPY --link . .
 
 EXPOSE 8080
 

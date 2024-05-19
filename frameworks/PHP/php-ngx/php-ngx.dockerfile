@@ -26,6 +26,7 @@ RUN wget -q http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && \
             --add-module=/ngx-php/third_party/ngx_devel_kit \
             --add-module=/ngx-php > /dev/null && \
     make > /dev/null && make install > /dev/null
+
 RUN sed -i "s|opcache.jit=off|;opcache.jit=off|g" /etc/php/8.3/embed/conf.d/10-opcache.ini
 
 COPY --link . .
