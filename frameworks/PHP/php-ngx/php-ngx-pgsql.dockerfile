@@ -11,7 +11,6 @@ RUN apt-get update -yqq > /dev/null && \
     apt-get install -yqq wget git libxml2-dev systemtap-sdt-dev \
                     zlib1g-dev libpcre3-dev libargon2-dev libsodium-dev libkrb5-dev \
                     php8.3-cli php8.3-dev libphp8.3-embed php8.3-pgsql > /dev/null
-COPY --link . .
 
 ENV NGINX_VERSION 1.26.0
 
@@ -33,6 +32,9 @@ RUN sed -i "s|app.php|app-pg.php|g" /deploy/nginx.conf
 RUN export WORKERS=$(( 4 * $(nproc) )) && \
     sed -i "s|worker_processes  auto|worker_processes $WORKERS|g" /deploy/nginx.conf
 RUN sed -i "s|opcache.jit=off|opcache.jit=function|g" /etc/php/8.3/embed/conf.d/10-opcache.ini
+
+COPY --link . .
+
 EXPOSE 8080
 
 CMD /nginx/sbin/nginx -c /deploy/nginx.conf

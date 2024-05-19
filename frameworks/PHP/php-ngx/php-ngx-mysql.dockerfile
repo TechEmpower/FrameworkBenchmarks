@@ -11,7 +11,6 @@ RUN apt-get update -yqq > /dev/null && \
     apt-get install -yqq wget git libxml2-dev systemtap-sdt-dev \
                     zlib1g-dev libpcre3-dev libargon2-dev libsodium-dev libkrb5-dev \
                     php8.3-cli php8.3-dev libphp8.3-embed php8.3-mysql > /dev/null
-COPY --link . .
 
 ENV NGINX_VERSION 1.26.0
 
@@ -30,6 +29,8 @@ RUN wget -q http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && \
 
 RUN export WORKERS=$(( 4 * $(nproc) )) && \
     sed -i "s/worker_processes  auto/worker_processes $WORKERS/g" /deploy/nginx.conf
+
+COPY --link . .
 
 EXPOSE 8080
 
