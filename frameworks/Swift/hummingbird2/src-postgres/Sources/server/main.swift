@@ -39,7 +39,7 @@ func runApp() async throws {
         database: "hello_world", 
         tls: .disable
     )
-    postgresConfiguration.options.maximumConnections = 1900
+    postgresConfiguration.options.maximumConnections = 100
     let postgresClient = PostgresClient(
         configuration: postgresConfiguration, 
         eventLoopGroup: MultiThreadedEventLoopGroup.singleton
