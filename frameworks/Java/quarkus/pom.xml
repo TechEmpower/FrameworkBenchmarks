@@ -14,7 +14,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
         <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
-        <quarkus.platform.version>3.9.4</quarkus.platform.version>
+        <quarkus.platform.version>3.10.2</quarkus.platform.version>
         <skipITs>true</skipITs>
         <surefire-plugin.version>3.0.0</surefire-plugin.version>
         <netty.io_uring.version>0.0.25.Final</netty.io_uring.version>

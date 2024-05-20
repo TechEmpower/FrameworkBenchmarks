@@ -10,6 +10,8 @@
 # Consider using -Dquarkus.http.io-threads=$((`grep --count ^processor /proc/cpuinfo`)) \
 
 JAVA_OPTIONS="-server \
+  -XX:+UnlockDiagnosticVMOptions \
+  -XX:+DebugNonSafepoints \
   -Dquarkus.http.limits.max-body-size= \
   -Dquarkus.vertx.prefer-native-transport=true  \
   -XX:-StackTraceInThrowable \
