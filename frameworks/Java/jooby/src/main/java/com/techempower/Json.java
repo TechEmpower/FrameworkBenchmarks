@@ -19,8 +19,7 @@ public class Json {
   public static ByteBuffer encode(Message data) {
     JsonWriter writer = pool.get();
     writer.reset();
-    _Message_DslJsonConverter.ObjectFormatConverter converter = new _Message_DslJsonConverter.ObjectFormatConverter(
-        dslJson);
+    var converter = new _Message_DslJsonConverter.ObjectFormatConverter(dslJson);
     converter.write(writer, data);
     return ByteBuffer.wrap(writer.getByteBuffer(), 0, writer.size());
   }
@@ -28,8 +27,7 @@ public class Json {
   public static ByteBuffer encode(World data) {
     JsonWriter writer = pool.get();
     writer.reset();
-    _World_DslJsonConverter.ObjectFormatConverter converter = new _World_DslJsonConverter.ObjectFormatConverter(
-        dslJson);
+    var converter = new _World_DslJsonConverter.ObjectFormatConverter(dslJson);
     converter.write(writer, data);
     return ByteBuffer.wrap(writer.getByteBuffer(), 0, writer.size());
   }
@@ -37,8 +35,7 @@ public class Json {
   public static ByteBuffer encode(World[] data) {
     JsonWriter writer = pool.get();
     writer.reset();
-    _World_DslJsonConverter.ObjectFormatConverter converter = new _World_DslJsonConverter.ObjectFormatConverter(
-        dslJson);
+    var converter = new _World_DslJsonConverter.ObjectFormatConverter(dslJson);
     writer.serialize(data, converter);
     return ByteBuffer.wrap(writer.getByteBuffer(), 0, writer.size());
   }
@@ -46,8 +43,7 @@ public class Json {
   public static ByteBuffer encode(List<World> data) {
     JsonWriter writer = pool.get();
     writer.reset();
-    _World_DslJsonConverter.ObjectFormatConverter converter = new _World_DslJsonConverter.ObjectFormatConverter(
-        dslJson);
+    var converter = new _World_DslJsonConverter.ObjectFormatConverter(dslJson);
     writer.serialize(data, converter);
     return ByteBuffer.wrap(writer.getByteBuffer(), 0, writer.size());
   }
