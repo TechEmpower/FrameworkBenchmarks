@@ -27,14 +27,11 @@ public class AsyncBenchmarkController extends AbstractBenchmarkController {
 
     private final AsyncWorldRepository worldRepository;
     private final AsyncFortuneRepository fortuneRepository;
-    private final Executor executor;
 
     public AsyncBenchmarkController(AsyncWorldRepository worldRepository,
-                                    AsyncFortuneRepository fortuneRepository,
-                                    @Named(TaskExecutors.BLOCKING) Executor executor) {
+                                    AsyncFortuneRepository fortuneRepository) {
         this.worldRepository = worldRepository;
         this.fortuneRepository = fortuneRepository;
-        this.executor = executor;
     }
 
     @Get("/prepare-data-for-test")
@@ -45,7 +42,7 @@ public class AsyncBenchmarkController extends AbstractBenchmarkController {
     // https://github.com/TechEmpower/FrameworkBenchmarks/wiki/Project-Information-Framework-Tests-Overview#single-database-query
     @Get("/db")
     public CompletionStage<World> db() {
-        return worldRepository.findById(randomId()).thenApplyAsync(world -> world, executor);
+        return worldRepository.findById(randomId());
     }
 
     // https://github.com/TechEmpower/FrameworkBenchmarks/wiki/Project-Information-Framework-Tests-Overview#multiple-database-queries
@@ -56,20 +53,20 @@ public class AsyncBenchmarkController extends AbstractBenchmarkController {
         for (int i = 0; i < count; i++) {
             ids.add(randomId());
         }
-        return worldRepository.findByIds(ids).thenApplyAsync(worlds -> worlds, executor);
+        return worldRepository.findByIds(ids);
     }
 
     // https://github.com/TechEmpower/FrameworkBenchmarks/wiki/Project-Information-Framework-Tests-Overview#fortunes
     @Get(value = "/fortunes", produces = "text/html;charset=utf-8")
     public CompletionStage<HttpResponse<String>> fortune() {
-        return fortuneRepository.findAll().thenApplyAsync(fortuneList -> {
+        return fortuneRepository.findAll().thenApply(fortuneList -> {
             List<Fortune> all = new ArrayList<>(fortuneList.size() + 1);
             all.add(new Fortune(0, "Additional fortune added at request time."));
             all.addAll(fortuneList);
             all.sort(comparing(Fortune::message));
             String body = fortunes.template(all).render().toString();
             return HttpResponse.ok(body).contentType("text/html;charset=utf-8");
-        }, executor);
+        });
     }
 
     // https://github.com/TechEmpower/FrameworkBenchmarks/wiki/Project-Information-Framework-Tests-Overview#database-updates
@@ -80,7 +77,7 @@ public class AsyncBenchmarkController extends AbstractBenchmarkController {
                 world.setRandomNumber(randomWorldNumber());
             }
             worlds.sort(Comparator.comparingInt(World::getId)); // Avoid deadlock
-            return worldRepository.updateAll(worlds).thenApplyAsync(ignore -> worlds, executor);
+            return worldRepository.updateAll(worlds).thenApply(ignore -> worlds);
         });
     }
 
