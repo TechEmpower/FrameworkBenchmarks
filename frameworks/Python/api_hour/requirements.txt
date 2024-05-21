@@ -16,4 +16,4 @@ requests-futures==0.9.5
 setproctitle==1.1.8
 ujson==1.33
 aiomysql==0.0.7
-PyMySQL==0.6.7
+PyMySQL==1.1.1
