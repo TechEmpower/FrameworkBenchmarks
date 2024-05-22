@@ -1,8 +1,6 @@
 package benchmark;
 
 import io.micronaut.context.annotation.Property;
-import io.micronaut.http.context.ServerRequestContext;
-import io.micronaut.http.server.netty.NettyHttpRequest;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
@@ -13,6 +11,7 @@ import io.netty.channel.ServerChannel;
 import io.netty.channel.socket.DatagramChannel;
 import io.netty.channel.socket.InternetProtocolFamily;
 import io.netty.util.concurrent.FastThreadLocal;
+import io.netty.util.internal.ThreadExecutorMap;
 import io.vertx.core.Future;
 import io.vertx.core.Vertx;
 import io.vertx.core.datagram.DatagramSocketOptions;
@@ -40,7 +39,6 @@ public class ConnectionHolder {
     public Future<PgConnection> get() {
         Future<PgConnection> c = conn.get();
         if (c == null) {
-            NettyHttpRequest<?> req = (NettyHttpRequest<?>) ServerRequestContext.currentRequest().get();
 
             PgConnectOptions connectOptions = PgConnectOptions.fromUri(url.substring(5))
                     .setUser(user)
@@ -55,8 +53,10 @@ public class ConnectionHolder {
             VertxBuilder builder = new VertxBuilder()
                     .init();
 
+            EventLoop loop = (EventLoop) ThreadExecutorMap.currentExecutor();
+
             Vertx vertx = builder
-                    .findTransport(new ExistingTransport(builder.findTransport(), req.getChannelHandlerContext().channel().eventLoop()))
+                    .findTransport(new ExistingTransport(builder.findTransport(), loop))
                     .vertx();
 
             c = PgConnection.connect(vertx, connectOptions);
