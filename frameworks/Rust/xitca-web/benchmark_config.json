@@ -62,7 +62,8 @@
         "database_os": "linux",
         "display_name": "xitca-web [wasm]",
         "notes": "",
-        "versus": ""
+        "versus": "",
+        "tags": ["broken"]
       },
       "axum": {
         "json_url": "/json",
