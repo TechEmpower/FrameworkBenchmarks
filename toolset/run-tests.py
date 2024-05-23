@@ -67,6 +67,11 @@ def main(argv=None):
         ''')
 
     # Suite options
+    # CPU set  options
+    parser.add_argument(
+        '--cpuset-cpus',
+        default=None,
+        help='The cpu set to run framework container on')
     parser.add_argument(
         '--audit',
         action='store_true',
