@@ -10,7 +10,7 @@ ENV LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libjemalloc.so.2
 ADD ./ /sinatra
 WORKDIR /sinatra
 
-RUN bundle install --jobs=4 --gemfile=/sinatra/Gemfile --path=/sinatra/sinatra/bundle
+RUN bundle install --jobs=4 --gemfile=/sinatra/Gemfile
 
 ENV DBTYPE=postgresql
 
