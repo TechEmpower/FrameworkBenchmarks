@@ -47,6 +47,8 @@ function db()
 
 function query($request)
 {
+    $random = DbRaw::$random;
+
     $query_count = 1;
     $q = (int) $request->get('q');
     if ($q > 1) {
@@ -54,8 +56,8 @@ function query($request)
     }
 
     while ($query_count--) {
-        DbRaw::$random->execute([mt_rand(1, 10000)]);
-        $arr[] = DbRaw::$random->fetch();
+        $random->execute([mt_rand(1, 10000)]);
+        $arr[] = $random->fetch();
     }
 
     return new Response(200, [
@@ -66,6 +68,8 @@ function query($request)
 
 function updateraw($request)
 {
+    $random = DbRaw::$random;
+
     $query_count = 1;
     $q = (int) $request->get('q');
     if ($q > 1) {
@@ -74,8 +78,8 @@ function updateraw($request)
 
     while ($query_count--) {
 
-        DbRaw::$random->execute([mt_rand(1, 10000)]);
-        $row = DbRaw::$random->fetch();
+        $random->execute([mt_rand(1, 10000)]);
+        $row = $random->fetch();
         $row['randomNumber'] = mt_rand(1, 10000);
 
         $worlds[] = $row;
