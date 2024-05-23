@@ -6,6 +6,9 @@
         "plaintext_url": "/plaintext",
         "json_url": "/json",
         "fortune_url": "/fortunes",
+        "db_url": "/db",
+        "query_url": "/queries/",
+        "update_url": "/updates/",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Micro",
@@ -18,7 +21,7 @@
         "webserver": "Kestrel",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "Oxpecker, Dapper",
+        "display_name": "Oxpecker",
         "notes": "",
         "versus": "aspcore"
       }
