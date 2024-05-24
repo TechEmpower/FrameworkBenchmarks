@@ -20,6 +20,7 @@
         "database": "Postgres",
         "database_os": "Linux",
         "display_name": "nestjs",
+        "platform": "nodejs",
         "versus": "nodejs"
       },
       "mysql": {
@@ -38,6 +39,7 @@
         "database": "MySQL",
         "database_os": "Linux",
         "display_name": "nestjs mysql",
+        "platform": "nodejs",
         "versus": "nodejs"
       },
       "mongo": {
@@ -56,6 +58,7 @@
         "database": "MongoDB",
         "database_os": "Linux",
         "display_name": "nestjs",
+        "platform": "nodejs",
         "versus": "nodejs"
       },
       "fastify": {
@@ -76,6 +79,7 @@
         "os": "Linux",
         "database_os": "Linux",
         "display_name": "nestjs fastify",
+        "platform": "nodejs",
         "versus": "nodejs"
       },
       "fastify-mysql": {
@@ -94,6 +98,7 @@
         "os": "Linux",
         "database_os": "Linux",
         "display_name": "nestjs fastify mysql",
+        "platform": "nodejs",
         "versus": "nodejs"
       },
       "fastify-mongo": {
@@ -112,6 +117,7 @@
         "os": "Linux",
         "database_os": "Linux",
         "display_name": "nestjs fastify mongo",
+        "platform": "nodejs",
         "versus": "nodejs"
       }
     }

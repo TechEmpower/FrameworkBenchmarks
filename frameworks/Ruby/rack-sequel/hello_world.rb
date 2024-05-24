@@ -29,8 +29,8 @@ class HelloWorld
 
   def queries(env)
     DB.synchronize do
-      Array.new(bounded_queries(env)) do
-        WORLD_BY_ID.(:id=>rand1)
+      ALL_IDS.sample(bounded_queries(env)).map do |id|
+        WORLD_BY_ID.(id: id)
       end
     end
   end
@@ -78,9 +78,9 @@ class HelloWorld
 
   def updates(env)
     DB.synchronize do
-      Array.new(bounded_queries(env)) do
-        world = WORLD_BY_ID.(:id=>rand1)
-        WORLD_UPDATE.(:id=>world[:id], :randomnumber=>(world[:randomnumber] = rand1))
+      ALL_IDS.sample(bounded_queries(env)).map do |id|
+        world = WORLD_BY_ID.(id: id)
+        WORLD_UPDATE.(id: world[:id], randomnumber: (world[:randomnumber] = rand1))
         world
       end
     end

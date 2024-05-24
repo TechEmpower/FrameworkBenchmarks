@@ -11,7 +11,8 @@
   <name>jooby</name>
 
   <properties>
-    <jooby.version>3.0.8</jooby.version>
+    <jooby.version>3.1.1</jooby.version>
+    <netty.version>4.1.109.Final</netty.version>
     <dsl-json.version>2.0.2</dsl-json.version>
     <postgresql.version>42.7.2</postgresql.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -43,7 +44,6 @@
       <artifactId>mysql-connector-j</artifactId>
       <version>8.3.0</version>
     </dependency>
-
 
     <!-- postgresql -->
     <dependency>
@@ -167,6 +167,25 @@
 
   <profiles>
     <profile>
+      <id>mac</id>
+      <activation>
+        <os>
+          <family>mac</family>
+        </os>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>com.ongres.scram</groupId>
+          <artifactId>client</artifactId>
+          <version>2.1</version>
+        </dependency>
+        <dependency>
+          <groupId>io.netty</groupId>
+          <artifactId>netty-resolver-dns-native-macos</artifactId>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
       <id>undertow</id>
       <dependencies>
         <dependency>
@@ -202,6 +221,14 @@
 
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-bom</artifactId>
+        <version>${netty.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
       <dependency>
         <groupId>io.jooby</groupId>
         <artifactId>jooby-bom</artifactId>

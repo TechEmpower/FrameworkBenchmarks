@@ -11,9 +11,9 @@ MarkupSafe==0.23
 piprot==0.9.1
 psycopg2==2.7.5
 PyYAML==5.4
-requests==2.31.0
+requests==2.32.0
 requests-futures==0.9.5
 setproctitle==1.1.8
 ujson==1.33
 aiomysql==0.0.7
-PyMySQL==0.6.7
+PyMySQL==1.1.1

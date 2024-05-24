@@ -40,7 +40,7 @@ public class App extends Jooby {
     DataSource ds = require(DataSource.class);
 
     /** Template engine: */
-    install(new RockerModule().reuseBuffer(true));
+    install(new RockerModule());
 
     get("/plaintext", ctx ->
         ctx.send(MESSAGE_BUFFER.duplicate())

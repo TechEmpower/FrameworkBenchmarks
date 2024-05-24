@@ -31,7 +31,7 @@ RUN apt-get -yqq update && \
       colorama==0.3.1 \
       docker==7.0.0 \
       mysqlclient==2.2.4 \
-      pymongo==3.13.0
+      pymongo==4.7.2
 
 # Collect resource usage statistics
 ARG DOOL_VERSION=v1.3.1

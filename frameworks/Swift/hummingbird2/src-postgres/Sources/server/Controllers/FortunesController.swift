@@ -35,15 +35,27 @@ final class FortunesController: Sendable {
     /// is delivered to the client using a server-side HTML template. The message 
     /// text must be considered untrusted and properly escaped and the UTF-8 fortune messages must be rendered properly.
     @Sendable func fortunes(request: Request, context: Context) async throws -> HTML {
-        let rows = try await self.postgresClient.query("SELECT id, message FROM Fortune")
+        let rows = try await self.postgresClient.execute(SelectFortuneStatement())
         var fortunes: [Fortune] = []
-        for try await (id, message) in rows.decode((Int32, String).self, context: .default) {
-            fortunes.append(.init(id: id, message: message))
+        for try await fortune in rows {
+            fortunes.append(.init(id: fortune.0, message: fortune.1))
         }
 
         fortunes.append(.init(id: 0, message: "Additional fortune added at request time."))
         let sortedFortunes = fortunes.sorted { $0.message < $1.message }
         return HTML(html: self.template.render(sortedFortunes) )
         
+    }
+
+    struct SelectFortuneStatement: PostgresPreparedStatement {
+        typealias Row = (Int32, String)
+
+        static var sql = "SELECT id, message FROM Fortune"
+
+        func makeBindings() throws -> PostgresNIO.PostgresBindings {
+            return .init()
+        }
+
+        func decodeRow(_ row: PostgresNIO.PostgresRow) throws -> Row { try row.decode(Row.self) }
     }
 }

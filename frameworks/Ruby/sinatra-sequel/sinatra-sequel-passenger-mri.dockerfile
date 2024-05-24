@@ -5,7 +5,7 @@ ENV RUBY_YJIT_ENABLE=1
 ADD ./ /sinatra-sequel
 WORKDIR /sinatra-sequel
 
-RUN bundle install --jobs=4 --gemfile=/sinatra-sequel/Gemfile --path=/sinatra-sequel/sinatra-sequel/bundle
+RUN bundle install --jobs=4 --gemfile=/sinatra-sequel/Gemfile
 
 # TODO: https://github.com/phusion/passenger/issues/1916
 ENV _PASSENGER_FORCE_HTTP_SESSION=true
