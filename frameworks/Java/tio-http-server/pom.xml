@@ -2,7 +2,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.litongjava</groupId>
-  <artifactId>tio-server-benchmark</artifactId>
+  <artifactId>tio-http-server-benchmark</artifactId>
   <version>1.0</version>
   <name>${project.artifactId}</name>
   <properties>
@@ -21,7 +21,6 @@
       <version>3.7.3.v20231224-RELEASE</version>
     </dependency>
 
-
     <!-- https://mvnrepository.com/artifact/com.jfinal/activerecord -->
     <dependency>
       <groupId>com.jfinal</groupId>
@@ -34,7 +33,6 @@
       <artifactId>ehcache-core</artifactId>
       <version>2.6.11</version>
     </dependency>
-
 
     <dependency>
       <groupId>mysql</groupId>
@@ -160,7 +158,7 @@
         </dependency>
       </dependencies>
       <build>
-        <finalName>${final.name}</finalName>
+        <finalName>${project.artifactId}</finalName>
         <plugins>
           <plugin>
             <groupId>org.graalvm.nativeimage</groupId>
@@ -176,7 +174,7 @@
             </executions>
             <configuration>
               <skip>false</skip>
-              <imageName>${project.build.finalName}</imageName>
+              <imageName>${project.artifactId}</imageName>
               <mainClass>${main.class}</mainClass>
               <buildArgs>
                 -H:+RemoveSaturatedTypeFlows
