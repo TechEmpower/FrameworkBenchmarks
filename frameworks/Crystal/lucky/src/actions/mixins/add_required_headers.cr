@@ -5,7 +5,6 @@ module AddRequiredHeaders
 
   def add_required_headers
     response.headers["Server"] = "Lucky"
-    response.headers["Date"] = HTTP.format_time(Time.local)
     continue
   end
 end
