@@ -173,6 +173,7 @@ class UpdatesHandler < BaseHandler
 
     sql_values =
         records.
+          sort_by { _1['id'] }.
           map { |r|
             "(#{ r['id'] }, #{ r['randomnumber'] })"
           }.join(', ')
