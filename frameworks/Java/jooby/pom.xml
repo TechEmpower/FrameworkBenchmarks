@@ -11,10 +11,10 @@
   <name>jooby</name>
 
   <properties>
-    <jooby.version>3.1.1</jooby.version>
-    <netty.version>4.1.109.Final</netty.version>
+    <jooby.version>3.1.2</jooby.version>
+    <netty.version>4.1.110.Final</netty.version>
     <dsl-json.version>2.0.2</dsl-json.version>
-    <postgresql.version>42.7.2</postgresql.version>
+    <postgresql.version>42.7.3</postgresql.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>21</maven.compiler.source>
     <maven.compiler.target>21</maven.compiler.target>
@@ -42,7 +42,7 @@
     <dependency>
       <groupId>com.mysql</groupId>
       <artifactId>mysql-connector-j</artifactId>
-      <version>8.3.0</version>
+      <version>8.4.0</version>
     </dependency>
 
     <!-- postgresql -->
@@ -55,7 +55,7 @@
     <dependency>
       <groupId>io.vertx</groupId>
       <artifactId>vertx-pg-client</artifactId>
-      <version>4.5.4</version>
+      <version>4.5.7</version>
     </dependency>
 
     <!-- json -->
