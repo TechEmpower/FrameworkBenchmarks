@@ -31,6 +31,7 @@
         "dockerfile": "mormot.dockerfile",
         "db_url": "/rawdb",
         "query_url": "/rawqueries?queries=",
+        "cached_query_url": "/rawcached?count=",
         "fortune_url": "/rawfortunes",
         "update_url": "/rawupdates?queries=",
         "port": 8080,

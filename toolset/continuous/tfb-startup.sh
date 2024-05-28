@@ -38,6 +38,7 @@ docker run \
   --results-name "$TFB_RUN_NAME" \
   --results-environment "$TFB_ENVIRONMENT" \
   --results-upload-uri "$TFB_UPLOAD_URI" \
+  $(if [ "$TFB_RUN_ORDER" = "reverse" ]; then echo "--reverse-order"; fi) \
   --quiet
 
 echo "zipping the results"

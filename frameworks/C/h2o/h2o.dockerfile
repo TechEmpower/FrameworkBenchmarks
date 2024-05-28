@@ -1,4 +1,4 @@
-ARG UBUNTU_VERSION=22.04
+ARG UBUNTU_VERSION=24.04
 
 ARG H2O_APP_PREFIX=/opt/h2o_app
 
@@ -13,6 +13,7 @@ RUN apt-get -yqq update && \
       curl \
       flex \
       g++ \
+      libbpfcc-dev \
       libbrotli-dev \
       libcap-dev \
       libicu-dev \
@@ -24,12 +25,15 @@ RUN apt-get -yqq update && \
       libwslay-dev \
       libyajl-dev \
       libz-dev \
+      llvm-dev \
       make \
       ninja-build \
       pkg-config \
+      rsync \
+      ruby \
       systemtap-sdt-dev
 
-ARG H2O_VERSION=13ba727ad12dfb2338165d2bcfb2136457e33c8a
+ARG H2O_VERSION=18b175f71ede08b50d3e5ae8303dacef3ea510fc
 
 WORKDIR /tmp/h2o-build
 RUN curl -LSs "https://github.com/h2o/h2o/archive/${H2O_VERSION}.tar.gz" | \
@@ -39,11 +43,11 @@ RUN curl -LSs "https://github.com/h2o/h2o/archive/${H2O_VERSION}.tar.gz" | \
       -DCMAKE_AR=/usr/bin/gcc-ar \
       -DCMAKE_C_FLAGS="-flto -march=native -mtune=native" \
       -DCMAKE_RANLIB=/usr/bin/gcc-ranlib \
+      -DWITH_MRUBY=on \
       -G Ninja \
       -S . && \
     cmake --build build -j && \
-    cmake --install build && \
-    cp -a deps/picotls/include/picotls* deps/quicly/include/quicly* /usr/local/include
+    cmake --install build
 
 ARG MUSTACHE_C_REVISION=7fe52392879d0188c172d94bb4fde7c513d6b929
 

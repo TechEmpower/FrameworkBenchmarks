@@ -1,24 +1,14 @@
-#[macro_use]
-extern crate rocket;
-extern crate dotenv;
-extern crate serde_derive;
-
 mod database;
 mod models;
 
-use std::env;
-use std::net::{IpAddr, Ipv4Addr};
+use std::fmt::Write;
 
-use dotenv::dotenv;
-use figment::Figment;
 use rand::{self, Rng};
-use rocket::{Build, Rocket};
-use rocket::config::{Config, LogLevel};
-use rocket::response::content::RawHtml;
+use rocket::{launch, get, routes};
 use rocket::serde::json::Json;
-use rocket_db_pools::{sqlx, Connection, Database};
-use sqlx::Acquire;
-use yarte::Template;
+use rocket_db_pools::{Connection, Database};
+use rocket_db_pools::sqlx;
+use rocket_dyn_templates::{Template, context};
 
 use database::HelloWorld;
 use models::{Fortune, Message, World};
@@ -28,12 +18,11 @@ fn plaintext() -> &'static str {
     "Hello, World!"
 }
 
+const MESSAGE: Message = Message { message: "Hello, World!" };
+
 #[get("/json")]
 fn json() -> Json<models::Message> {
-    let message = Message {
-        message: "Hello, World!".into(),
-    };
-    Json(message)
+    Json(MESSAGE)
 }
 
 fn random_id() -> i32 {
@@ -42,16 +31,18 @@ fn random_id() -> i32 {
     rng.gen_range(1..=10_000)
 }
 
+async fn query_random_world(db: &mut Connection<HelloWorld>) -> World {
+    let world_id = random_id();
+    sqlx::query_as("SELECT id, randomnumber FROM World WHERE id = $1")
+        .bind(world_id)
+        .fetch_one(db.as_mut())
+        .await
+        .expect("Error querying world")
+}
+
 #[get("/db")]
 async fn db(mut db: Connection<HelloWorld>) -> Json<World> {
-    let number = random_id();
-    let result: World = sqlx::query_as("SELECT id, randomnumber FROM World WHERE id = $1")
-        .bind(number)
-        .fetch_one(&mut *db)
-        .await
-        .ok()
-        .expect("error loading world");
-    Json(result)
+    Json(query_random_world(&mut db).await)
 }
 
 #[get("/queries")]
@@ -65,31 +56,19 @@ async fn queries(mut db: Connection<HelloWorld>, q: u16) -> Json<Vec<World>> {
     let mut results = Vec::with_capacity(q.into());
 
     for _ in 0..q {
-        let query_id = random_id();
-        let result: World = sqlx::query_as("SELECT * FROM World WHERE id = $1")
-            .bind(query_id)
-            .fetch_one(&mut *db)
-            .await
-            .ok()
-            .expect("error loading world");
-        results.push(result);
+        let world = query_random_world(&mut db).await;
+
+        results.push(world);
     }
 
     Json(results)
 }
 
-#[derive(Template)]
-#[template(path = "fortunes.html.hbs")]
-pub struct FortunesTemplate<'a> {
-    pub fortunes: &'a Vec<Fortune>,
-}
-
 #[get("/fortunes")]
-async fn fortunes(mut db: Connection<HelloWorld>) -> RawHtml<String> {
+async fn fortunes(mut db: Connection<HelloWorld>) -> Template {
     let mut fortunes: Vec<Fortune> = sqlx::query_as("SELECT * FROM Fortune")
-        .fetch_all(&mut *db)
+        .fetch_all(db.as_mut())
         .await
-        .ok()
         .expect("Could not load Fortunes");
 
     fortunes.push(Fortune {
@@ -99,13 +78,9 @@ async fn fortunes(mut db: Connection<HelloWorld>) -> RawHtml<String> {
 
     fortunes.sort_by(|a, b| a.message.cmp(&b.message));
 
-    RawHtml(
-        FortunesTemplate {
-            fortunes: &fortunes,
-        }
-        .call()
-        .expect("error rendering template"),
-    )
+    Template::render("fortunes", context! {
+        fortunes: fortunes
+    })
 }
 
 #[get("/updates")]
@@ -119,70 +94,57 @@ async fn updates(mut db: Connection<HelloWorld>, q: u16) -> Json<Vec<World>> {
     let mut results = Vec::with_capacity(q.into());
 
     for _ in 0..q {
-        let query_id = random_id();
-        let mut result: World = sqlx::query_as("SELECT * FROM World WHERE id = $1")
-            .bind(query_id)
-            .fetch_one(&mut *db)
-            .await
-            .ok()
-            .expect("World was not found");
+        let mut world = query_random_world(&mut db).await;
 
-        result.random_number = random_id();
-        results.push(result);
+        world.random_number = random_id();
+        results.push(world);
     }
 
-    let mut pool = db.into_inner();
-    let mut tx = pool
-        .begin()
-        .await
-        .ok()
-        .expect("could not start transaction");
+    let query_string = {
+        let mut query = String::new();
+
+        query.push_str("UPDATE World SET randomnumber = CASE id ");
+
+        let mut pl = 1;
+
+        for _ in 1..=q {
+            let _ = write!(query, "when ${pl} then ${} ", pl + 1);
+            pl += 2;
+        }
+
+        query.push_str("ELSE randomnumber END WHERE id IN (");
+
+        for _ in 1..=q {
+            let _ = write!(query, "${pl},");
+            pl += 1;
+        }
+
+        query.pop();
+        query.push(')');
+
+        query
+    };
+
+    let mut query = sqlx::query(&query_string);
 
     for w in &results {
-        sqlx::query("UPDATE World SET randomnumber = $1 WHERE id = $2")
-            .bind(w.random_number)
-            .bind(w.id)
-            .execute(&mut tx)
-            .await
-            .ok()
-            .expect("Could not update World");
+        query = query.bind(w.id).bind(w.random_number);
     }
 
-    tx.commit().await.ok().expect("could not update worlds");
+    for w in &results {
+        query = query.bind(w.id);
+    }
+
+    query.execute(db.as_mut())
+        .await
+        .expect("Could not update worlds");
 
     Json(results)
 }
 
 #[launch]
-pub fn launch() -> Rocket<Build> {
-    if cfg!(not(test)) {
-        dotenv().ok();
-    }
-
-    let config = Config {
-        address: IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)),
-        port: 8000,
-        keep_alive: 0,
-        log_level: LogLevel::Off,
-        ..Default::default()
-    };
-
-    let database_url = env::var("ROCKET_BENCHMARK_DATABASE_URL")
-        .ok()
-        .expect("ROCKET_BENCHMARK_DATABASE_URL environment variable was not set");
-
-    let figment = Figment::from(config).merge((
-        "databases.hello_world",
-        rocket_db_pools::Config {
-            url: database_url,
-            min_connections: None,
-            max_connections: 100,
-            connect_timeout: 3,
-            idle_timeout: None,
-        },
-    ));
-
-    rocket::custom(figment)
+pub fn launch() -> _ {
+    rocket::build()
         .mount(
             "/",
             routes![
@@ -197,4 +159,5 @@ pub fn launch() -> Rocket<Build> {
             ],
         )
         .attach(HelloWorld::init())
+        .attach(Template::fairing())
 }

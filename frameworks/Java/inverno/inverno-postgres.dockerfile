@@ -7,6 +7,7 @@ RUN mvn package -q -Pio.inverno.io_uring
 
 EXPOSE 8080
 
-# CMD [ "target/inverno-benchmark-1.0.0-SNAPSHOT-application_linux_amd64/bin/inverno-benchmark" ]
 CMD export DBIP=`getent hosts tfb-database | awk '{ print $1 }'` && \
-    target/inverno-benchmark-1.0.0-SNAPSHOT-application_linux_amd64/bin/inverno-benchmark --com.techempower.inverno.benchmark.appConfiguration.db_host=\"$DBIP\"
+    target/inverno-benchmark-1.0.0-SNAPSHOT-application_linux_amd64/bin/inverno-benchmark \
+    --com.techempower.inverno.benchmark.appConfiguration.db_host=\"$DBIP\" \
+    --com.techempower.inverno.benchmark.appConfiguration.boot.reactor_event_loop_group_size=$((`grep --count ^processor /proc/cpuinfo`))

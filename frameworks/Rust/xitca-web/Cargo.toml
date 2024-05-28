@@ -11,7 +11,7 @@ required-features = ["io-uring", "pg", "router", "template"]
 [[bin]]
 name = "xitca-web-iou"
 path = "./src/main_iou.rs"
-required-features = ["io-uring", "pg-iou", "template"]
+required-features = ["io-uring", "perf", "pg-iou", "template"]
 
 [[bin]]
 name = "xitca-web-wasm"
@@ -21,7 +21,7 @@ required-features = ["web"]
 [[bin]]
 name = "xitca-web-axum"
 path = "./src/main_axum.rs"
-required-features = ["axum", "io-uring", "pg-sync", "template"]
+required-features = ["axum", "io-uring", "perf", "pg-sync", "template"]
 
 [[bin]]
 name = "xitca-web-sync"
@@ -49,20 +49,22 @@ template = ["sailfish"]
 io-uring = ["xitca-http/io-uring", "xitca-server/io-uring"]
 # axum optional
 axum = ["dep:axum", "http-body", "tower", "tower-http", "xitca-web/tower-http-compat" ]
+# unrealistic performance optimization
+perf = ["mimalloc", "tokio/parking_lot"]
 
 [dependencies]
-xitca-http = "0.2"
-xitca-io = "0.1"
-xitca-server = "0.1"
+xitca-http = "0.5"
+xitca-io = "0.3"
+xitca-server = "0.3"
 xitca-service = "0.1"
-xitca-unsafe-collection = "0.1"
+xitca-unsafe-collection = "0.1.1"
 
 atoi = "2"
 serde = { version = "1" }
 serde_json = { version = "1" }
 
 # web optional
-xitca-web = { version = "0.2", features = ["json"], optional = true }
+xitca-web = { version = "0.5", features = ["json"], optional = true }
 
 # raw-pg optional
 xitca-postgres = { version = "0.1", optional = true }
@@ -79,6 +81,9 @@ http-body = { version = "1", optional = true }
 tower = { version = "0.4", optional = true }
 tower-http = { version = "0.5", features = ["set-header"], optional = true }
 
+# perf optional
+mimalloc = { version = "0.1", default-features = false, optional = true }
+
 # stuff can not be used or not needed in wasi target
 [target.'cfg(not(target_family = "wasm"))'.dependencies]
 futures-core = { version = "0.3", default-features = false }
@@ -92,5 +97,4 @@ codegen-units = 1
 panic = "abort"
 
 [patch.crates-io]
-xitca-postgres = { git = "https://github.com/HFQR/xitca-web.git", rev = "d79f510197e0f36534fe22b7a467c55dbd683681" }
-mio = { git = "https://github.com/fakeshadow/mio.git", rev = "52b72d372bfe5807755b7f5e3e1edf282954d6ba" }
+xitca-postgres = { git = "https://github.com/HFQR/xitca-web.git", rev = "ea1f5a2447e0969a6dff84eac9ff9ff90dbc7ed1" }
