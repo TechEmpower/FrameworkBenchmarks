@@ -7,7 +7,7 @@
 # MAX_THREADS, add threads per process to reach MAX_THREADS.
 require 'etc'
 
-KB_PER_WORKER = 128 * 1_024 # average of peak PSS of single-threaded processes (watch smem -k)
+KB_PER_WORKER = 64 * 1_024 # average of peak PSS of single-threaded processes (watch smem -k)
 MIN_WORKERS = 2
 MAX_WORKERS_PER_VCPU = 1.25 # virtual/logical
 MIN_THREADS_PER_WORKER = 1
