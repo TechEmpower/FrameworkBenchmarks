@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>io.inverno.dist</groupId>
 		<artifactId>inverno-parent</artifactId>
-		<version>1.9.0</version>
+		<version>1.10.0</version>
 	</parent>
 	<groupId>com.techempower</groupId>
 	<artifactId>inverno-benchmark</artifactId>
@@ -47,7 +47,7 @@
 			<groupId>io.inverno.mod</groupId>
 			<artifactId>inverno-sql-vertx</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.unbescape</groupId>
 			<artifactId>unbescape</artifactId>
@@ -110,7 +110,7 @@
 									<launchers>
 										<launcher>
 											<name>inverno-benchmark</name>
-											<vmOptions>-Xms2g -Xmx2g -server -XX:+UseNUMA -XX:+UseParallelGC -Dio.netty.leakDetection.level=disabled -Dio.netty.buffer.checkBounds=false -Dio.netty.buffer.checkBounds=false -Dvertx.disableHttpHeadersValidation=true -Dvertx.disableMetrics=true -Dvertx.disableH2c=true -Dvertx.disableWebsockets=true -Dvertx.flashPolicyHandler=false -Dvertx.threadChecks=false -Dvertx.disableContextTimings=true -Dvertx.disableTCCL=true --add-modules io.netty.transport.unix.common,io.netty.transport.classes.epoll,io.netty.transport.epoll.linux.x86_64</vmOptions>
+											<vmOptions>-Xms2g -Xmx2g -server -XX:+UseNUMA -XX:+UseParallelGC -Dlog4j2.level=OFF -Dio.netty.leakDetection.level=disabled -Dio.netty.buffer.checkBounds=false -Dio.netty.buffer.checkAccessible=false -Dvertx.disableHttpHeadersValidation=true -Dvertx.disableMetrics=true -Dvertx.disableH2c=true -Dvertx.disableWebsockets=true -Dvertx.flashPolicyHandler=false -Dvertx.threadChecks=false -Dvertx.disableContextTimings=true -Dvertx.disableTCCL=true --add-modules io.netty.transport.unix.common,io.netty.transport.classes.epoll,io.netty.transport.epoll.linux.x86_64</vmOptions>
 										</launcher>
 									</launchers>
 									<archiveFormats>
@@ -157,7 +157,7 @@
 									<launchers>
 										<launcher>
 											<name>inverno-benchmark</name>
-											<vmOptions>-Xms2g -Xmx2g -server -XX:+UseNUMA -XX:+UseParallelGC -Dio.netty.leakDetection.level=disabled -Dio.netty.buffer.checkBounds=false -Dio.netty.buffer.checkBounds=false -Dvertx.disableHttpHeadersValidation=true -Dvertx.disableMetrics=true -Dvertx.disableH2c=true -Dvertx.disableWebsockets=true -Dvertx.flashPolicyHandler=false -Dvertx.threadChecks=false -Dvertx.disableContextTimings=true -Dvertx.disableTCCL=true --add-modules io.netty.transport.unix.common,io.netty.incubator.transport.classes.io_uring,io.netty.incubator.transport.io_uring.linux.x86_64</vmOptions>
+											<vmOptions>-Xms2g -Xmx2g -server -XX:+UseNUMA -XX:+UseParallelGC -Dlog4j2.level=OFF -Dio.netty.leakDetection.level=disabled -Dio.netty.buffer.checkBounds=false -Dio.netty.buffer.checkAccessible=false -Dvertx.disableHttpHeadersValidation=true -Dvertx.disableMetrics=true -Dvertx.disableH2c=true -Dvertx.disableWebsockets=true -Dvertx.flashPolicyHandler=false -Dvertx.threadChecks=false -Dvertx.disableContextTimings=true -Dvertx.disableTCCL=true --add-modules io.netty.transport.unix.common,io.netty.incubator.transport.classes.io_uring,io.netty.incubator.transport.io_uring.linux.x86_64</vmOptions>
 										</launcher>
 									</launchers>
 									<archiveFormats>

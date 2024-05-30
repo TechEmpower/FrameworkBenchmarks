@@ -8,7 +8,11 @@
     "applications": {
         "benchmark": {
             "type": "php",
-            "processes": 84,
+            "processes": {
+                "max": 224,
+                "spare": 168,
+                "idle_timeout": 20
+              },
             "user": "www-data",
             "group": "www-data",
             "root": "/php/",
@@ -18,6 +22,11 @@
             "limits": {
                 "requests": 10000000
             }
+        }
+    },
+    "settings": {
+        "http": {
+          "server_version": false
         }
     }
 }

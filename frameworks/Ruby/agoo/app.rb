@@ -6,7 +6,7 @@ require 'oj'
 require 'pg'
 require 'rack'
 
-$pool = ConnectionPool.new(size: 256, timeout: 5) do
+$pool = ConnectionPool.new(size: 1, timeout: 5) do
           PG::Connection.new({
                                  dbname:   'hello_world',
                                  host:     'tfb-database',
@@ -19,6 +19,17 @@ QUERY_RANGE = (1..10_000).freeze
 ALL_IDS = QUERY_RANGE.to_a
 QUERIES_MIN = 1
 QUERIES_MAX = 500
+
+CONTENT_TYPE = 'Content-Type'
+CONTENT_LENGTH = 'Content-Length'
+DATE = 'Date'
+SERVER = 'Server'
+SERVER_STRING = 'Agoo'
+
+JSON_TYPE = 'application/json'
+HTML_TYPE = 'text/html; charset=utf-8'
+PLAINTEXT_TYPE = 'text/plain'
+
 
 class BaseHandler
   def self.extract_queries_param(request = nil)
@@ -45,9 +56,9 @@ class BaseHandler
     [
         200,
         {
-            'Content-Type' => 'text/html; charset=utf-8',
-            'Date'         => Time.now.utc.httpdate,
-            'Server'       => 'Agoo'
+            CONTENT_TYPE => HTML_TYPE,
+            DATE         => Time.now.httpdate,
+            SERVER       => SERVER_STRING
         },
         [str]
     ]
@@ -57,9 +68,9 @@ class BaseHandler
     [
         200,
         {
-            'Content-Type' => 'application/json',
-            'Date'         => Time.now.utc.httpdate,
-            'Server'       => 'Agoo'
+            CONTENT_TYPE => JSON_TYPE,
+            DATE         => Time.now.httpdate,
+            SERVER       => SERVER_STRING
         },
         [Oj.dump(obj, { :mode => :strict })]
     ]
@@ -69,9 +80,9 @@ class BaseHandler
     [
         200,
         {
-            'Content-Type' => 'text/plain',
-            'Date'         => Time.now.utc.httpdate,
-            'Server'       => 'Agoo'
+            CONTENT_TYPE => PLAINTEXT_TYPE,
+            DATE         => Time.now.httpdate,
+            SERVER       => SERVER_STRING
         },
         [str]
     ]

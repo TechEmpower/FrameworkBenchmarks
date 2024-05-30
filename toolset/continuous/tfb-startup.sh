@@ -25,6 +25,12 @@ docker build -t techempower/tfb \
   --build-arg USER_ID=$(id -u) \
   --build-arg GROUP_ID=$(id -g) .
 
+if [ -z "$TFB_RUN_ORDER" ]; then
+  export TFB_RUN_ORDER="reverse"
+else
+  unset TFB_RUN_ORDER
+fi
+
 echo "running tfb docker image"
 docker run \
   -e USER_ID=$(id -u) \

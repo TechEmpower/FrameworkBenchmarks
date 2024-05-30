@@ -5,7 +5,7 @@ ENV RUBY_YJIT_ENABLE=1
 ADD ./ /sinatra-sequel
 WORKDIR /sinatra-sequel
 
-RUN bundle install --jobs=4 --gemfile=/sinatra-sequel/Gemfile --path=/sinatra-sequel/sinatra-sequel/bundle
+RUN bundle install --jobs=4 --gemfile=/sinatra-sequel/Gemfile
 
 ENV DBTYPE=postgresql
 

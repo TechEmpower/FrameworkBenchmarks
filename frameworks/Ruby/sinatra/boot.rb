@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 require 'bundler/setup'
 require 'time'
+require 'oj'
 
 MAX_PK = 10_000
+ID_RANGE = (1..MAX_PK).freeze
+ALL_IDS = ID_RANGE.to_a
 QUERIES_MIN = 1
 QUERIES_MAX = 500
 
@@ -19,6 +22,8 @@ SERVER_STRING =
   end
 
 Bundler.require(:default) # Load core modules
+
+Oj.mimic_JSON
 
 def connect(dbtype)
   Bundler.require(dbtype) # Load database-specific modules
@@ -61,4 +66,4 @@ class Fortune < ActiveRecord::Base
   self.table_name = name
 end
 
-ActiveRecord::Base.clear_active_connections!
+ActiveRecord::Base.connection_handler.clear_active_connections!

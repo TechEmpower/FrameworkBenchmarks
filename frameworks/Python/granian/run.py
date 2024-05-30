@@ -8,7 +8,9 @@ if __name__ == '__main__':
     interface = sys.argv[1]
     threading_mode = sys.argv[2]
     workers = multiprocessing.cpu_count()
-    threads = 2 if threading_mode == "runtime" else 1
+    if threading_mode == "workers":
+        workers = round(workers / 2)
+    threads = 1
 
     Granian(
         f"app_{interface}:main",

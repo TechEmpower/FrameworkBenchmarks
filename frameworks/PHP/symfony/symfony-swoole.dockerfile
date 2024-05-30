@@ -10,25 +10,17 @@ RUN apt-get update -yqq && \
     apt-get install -yqq libpq-dev libicu-dev git unzip > /dev/null && \ 
     docker-php-ext-install pdo_pgsql opcache intl > /dev/null
 
-COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+COPY --from=composer/composer:latest-bin --link /composer /usr/local/bin/composer
 
-COPY deploy/swoole/php.ini /usr/local/etc/php/
-
-ADD . /symfony
+COPY --link deploy/swoole/php.ini /usr/local/etc/php/
 WORKDIR /symfony
-RUN mkdir -m 777 -p /symfony/var/cache/{dev,prod} /symfony/var/log
-#RUN mkdir -m 777 -p /symfony/var/cache/swoole /symfony/var/log
-RUN COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev --no-scripts --quiet
-RUN cp deploy/postgresql/.env . && composer dump-env prod && bin/console cache:clear
-
-ENV APP_RUNTIME=Runtime\\Swoole\\Runtime
-RUN composer require runtime/swoole
-
-RUN COMPOSER_ALLOW_SUPERUSER=1 composer dump-autoload --no-dev --classmap-authoritative
-RUN COMPOSER_ALLOW_SUPERUSER=1 composer dump-env prod
+COPY --link . .
 
 #ENV APP_DEBUG=1
+ENV APP_RUNTIME="Runtime\Swoole\Runtime"
+RUN composer require runtime/swoole --update-no-dev --no-scripts --quiet
+RUN cp deploy/postgresql/.env . && composer dump-env prod && bin/console cache:clear
 
 EXPOSE 8080
 
-CMD php /symfony/public/swoole.php
+ENTRYPOINT [ "php", "/symfony/public/swoole.php" ]

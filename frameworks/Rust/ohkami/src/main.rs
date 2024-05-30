@@ -1,11 +1,14 @@
+mod fangs;
+use fangs::SetServer;
+
 mod models;
-pub use models::{Fortune, Message, World, WorldsQuery};
+use models::{Fortune, Message, World, WorldsQuery};
 
 mod postgres;
-pub use postgres::Postgres;
+use postgres::Postgres;
 
 mod templates;
-pub use templates::FortunesTemplate;
+use templates::FortunesTemplate;
 
 use ohkami::prelude::*;
 use ohkami::Memory;
@@ -13,15 +16,6 @@ use ohkami::Memory;
 
 #[tokio::main]
 async fn main() {
-    #[derive(Clone)]
-    struct SetServer;
-    impl FangAction for SetServer {
-        #[inline(always)]
-        async fn back<'a>(&'a self, res: &'a mut ohkami::Response) {
-            res.headers.set().Server("ohkami");
-        }
-    }
-
     Ohkami::with((SetServer, Postgres::init().await), (
         "/json"     .GET(json_serialization),
         "/db"       .GET(single_database_query),
@@ -54,7 +48,6 @@ async fn fortunes(p: Memory<'_, Postgres>) -> FortunesTemplate {
         id:      0,
         message: String::from("Additional fortune added at request time."),
     });
-
     fortunes.sort_unstable_by(|a, b| str::cmp(&a.message, &b.message));
 
     FortunesTemplate { fortunes }

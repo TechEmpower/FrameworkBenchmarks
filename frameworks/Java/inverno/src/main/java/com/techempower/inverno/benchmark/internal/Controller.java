@@ -1,20 +1,11 @@
 package com.techempower.inverno.benchmark.internal;
 
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Collections;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Supplier;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.techempower.inverno.benchmark.model.Fortune;
 import com.techempower.inverno.benchmark.model.Message;
 import com.techempower.inverno.benchmark.model.World;
 import com.techempower.inverno.benchmark.templates.FortunesTemplate;
-
 import io.inverno.core.annotation.Bean;
 import io.inverno.core.annotation.Bean.Visibility;
 import io.inverno.core.annotation.Destroy;
@@ -39,6 +30,13 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpHeaderValues;
 import io.netty.util.AsciiString;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Collections;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -81,6 +79,8 @@ public class Controller implements ServerController<ExchangeContext, Exchange<Ex
 		this.dateEventLoopGroup.scheduleAtFixedRate(() -> {
 			this.date = new AsciiString(DateTimeFormatter.RFC_1123_DATE_TIME.format(ZonedDateTime.now()));
 		}, 0, 1000, TimeUnit.MILLISECONDS);
+		
+		
 	}
 	
 	@Destroy
@@ -133,7 +133,7 @@ public class Controller implements ServerController<ExchangeContext, Exchange<Ex
 
 	private static final ByteBuf STATIC_PLAINTEXT_BYTEBUF;
 	static {
-		ByteBuf tmpBuf = Unpooled.directBuffer(STATIC_PLAINTEXT_LEN);
+		ByteBuf tmpBuf = Unpooled.buffer(STATIC_PLAINTEXT_LEN);
 		tmpBuf.writeBytes(STATIC_PLAINTEXT);
 		STATIC_PLAINTEXT_BYTEBUF = Unpooled.unreleasableBuffer(tmpBuf);
 	}
@@ -172,7 +172,7 @@ public class Controller implements ServerController<ExchangeContext, Exchange<Ex
 				)
 				.body()
 					.raw()
-						.value(Unpooled.unreleasableBuffer(Unpooled.wrappedBuffer(this.mapper.writeValueAsBytes(new Message("Hello, World!")))));
+						.value(Unpooled.wrappedBuffer(this.mapper.writeValueAsBytes(new Message("Hello, World!"))));
 		} 
 		catch (JsonProcessingException | IllegalStateException e) {
 			throw new InternalServerErrorException("Error serializing message as JSON", e);
@@ -196,7 +196,7 @@ public class Controller implements ServerController<ExchangeContext, Exchange<Ex
 						DB_SELECT_WORLD, 
 						row -> {
 							try {
-								return Unpooled.unreleasableBuffer(Unpooled.wrappedBuffer(this.mapper.writeValueAsBytes(new World(row.getInteger(0), row.getInteger(1)))));
+								return Unpooled.wrappedBuffer(this.mapper.writeValueAsBytes(new World(row.getInteger(0), row.getInteger(1))));
 							} 
 							catch (JsonProcessingException e) {
 								throw new InternalServerErrorException(e);
@@ -241,7 +241,7 @@ public class Controller implements ServerController<ExchangeContext, Exchange<Ex
 					.collectList()
 					.map(worlds -> {
 						try {
-							return Unpooled.unreleasableBuffer(Unpooled.wrappedBuffer(this.mapper.writeValueAsBytes(worlds)));
+							return Unpooled.wrappedBuffer(this.mapper.writeValueAsBytes(worlds));
 						} 
 						catch (JsonProcessingException e) {
 							throw new InternalServerErrorException(e);
@@ -278,7 +278,7 @@ public class Controller implements ServerController<ExchangeContext, Exchange<Ex
 					)
 					.map(worlds -> {
 						try {
-							return Unpooled.unreleasableBuffer(Unpooled.wrappedBuffer(this.mapper.writeValueAsBytes(worlds)));
+							return Unpooled.wrappedBuffer(this.mapper.writeValueAsBytes(worlds));
 						} 
 						catch (JsonProcessingException e) {
 							throw new InternalServerErrorException(e);
@@ -290,7 +290,7 @@ public class Controller implements ServerController<ExchangeContext, Exchange<Ex
 	
 	private static final CharSequence MEDIA_TEXT_HTML_UTF8 = AsciiString.cached("text/html; charset=utf-8");
 	
-	private static final FortunesTemplate.Renderer<CompletableFuture<ByteBuf>> FORTUNES_RENDERER = FortunesTemplate.bytebuf(() -> Unpooled.unreleasableBuffer(Unpooled.buffer()));
+	private static final FortunesTemplate.Renderer<CompletableFuture<ByteBuf>> FORTUNES_RENDERER = FortunesTemplate.bytebuf(() -> Unpooled.buffer());
 	
 	public void handle_fortunes(Exchange<ExchangeContext> exchange) throws HttpException {
 		exchange.response()

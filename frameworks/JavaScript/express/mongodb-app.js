@@ -6,11 +6,7 @@ const cluster = require('cluster');
 const numCPUs = require('os').cpus().length;
 const express = require('express');
 const mongoose = require('mongoose');
-const connection = mongoose.createConnection('mongodb://tfb-database/hello_world',{
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useFindAndModify: false,
-});
+const connection = mongoose.createConnection('mongodb://tfb-database/hello_world');
 
 // Middleware
 const bodyParser = require('body-parser');
