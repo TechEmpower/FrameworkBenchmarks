@@ -121,7 +121,7 @@ end
 
 class Application < Grip::Application
   def initialize
-    super(environment: "production", serve_static: false)
+    super(environment: "production")
 
     get "/json", Json
     get "/plaintext", Plaintext
