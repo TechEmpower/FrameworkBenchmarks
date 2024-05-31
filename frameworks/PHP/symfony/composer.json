@@ -6,6 +6,7 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-mbstring": "*",
+        "runtime/frankenphp-symfony": "*",
         "symfony/console": "^7",
         "symfony/dotenv": "^7",
         "symfony/flex": "^2",
