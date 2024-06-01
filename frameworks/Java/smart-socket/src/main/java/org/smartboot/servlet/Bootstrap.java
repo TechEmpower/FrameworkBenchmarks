@@ -17,7 +17,7 @@ public class Bootstrap {
     public static void main(String[] args) throws Throwable {
         ContainerRuntime containerRuntime = new ContainerRuntime();
         // plaintext
-        ServletContextRuntime applicationRuntime = new ServletContextRuntime("/");
+        ServletContextRuntime applicationRuntime = new ServletContextRuntime(null, Thread.currentThread().getContextClassLoader(), "/");
         ServletInfo plainTextServletInfo = new ServletInfo();
         plainTextServletInfo.setServletName("plaintext");
         plainTextServletInfo.setServletClass(HelloWorldServlet.class.getName());
@@ -38,6 +38,7 @@ public class Bootstrap {
         bootstrap.configuration()
                 .threadNum(cpuNum)
                 .bannerEnabled(false)
+                .headerLimiter(0)
                 .readBufferSize(1024 * 4)
                 .writeBufferSize(1024 * 4)
                 .readMemoryPool(16384 * 1024 * 4)
