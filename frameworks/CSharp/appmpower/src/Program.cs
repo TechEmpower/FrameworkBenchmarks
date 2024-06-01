@@ -19,6 +19,7 @@ namespace appMpower
          var kestrelServerOptions = new KestrelServerOptions();
 
          kestrelServerOptions.Listen(IPAddress.Any, 8080);
+         kestrelServerOptions.AllowSynchronousIO = true; 
          kestrelServerOptions.AddServerHeader = false;
 
          using var kestrelServer = new KestrelServer(Options.Create(kestrelServerOptions), socketTransportFactory, NullLoggerFactory.Instance);

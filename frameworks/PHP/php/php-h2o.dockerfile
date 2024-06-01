@@ -1,4 +1,4 @@
-ARG UBUNTU_VERSION=22.04
+ARG UBUNTU_VERSION=24.04
 
 ARG H2O_PREFIX=/opt/h2o
 
@@ -22,6 +22,7 @@ RUN apt-get -yqq update && \
       libuv1-dev \
       libwslay-dev \
       libz-dev \
+      llvm-dev \
       ninja-build \
       pkg-config \
       rsync \

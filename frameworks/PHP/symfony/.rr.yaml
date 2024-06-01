@@ -1,0 +1,25 @@
+version: "3"
+#https://github.com/roadrunner-server/roadrunner/blob/master/.rr.yaml
+
+server:
+  command: "php /symfony/public/runtime.php"
+  env:
+    - APP_RUNTIME: Runtime\RoadRunnerSymfonyNyholm\Runtime
+
+http:
+  address: "0.0.0.0:8080"
+
+  middleware: ["headers"]
+  headers:
+    response:
+      Server: "RoadRunner"
+  #pool:
+    #num_workers: 0
+    #max_jobs: 500
+  
+logs:
+  mode: production
+  level: error
+#rpc:
+#  listen: tcp://127.0.0.1:6001
+

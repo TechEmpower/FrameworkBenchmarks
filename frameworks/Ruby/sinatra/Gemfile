@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'activerecord', '~> 7.0', :require=>'active_record'
-gem 'json', '~> 2.0'
+gem 'oj'
 gem 'passenger', '~> 6.0', :platforms=>[:ruby, :mswin], :require=>false
 gem 'puma', '~> 6.4', :require=>false
 gem 'sinatra', '~> 3.0', :require=>'sinatra/base'

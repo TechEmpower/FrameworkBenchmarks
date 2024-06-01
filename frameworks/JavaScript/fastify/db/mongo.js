@@ -7,13 +7,7 @@ let client;
 
 async function getCollection(name) {
   if (!client) {
-    client = await new MongoClient(
-      mongoUrl,
-      {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-      }
-    ).connect();
+    client = await new MongoClient(mongoUrl).connect();
   }
 
   const db = client.db(dbName);
