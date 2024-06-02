@@ -1,4 +1,4 @@
-FROM maven:3.8.6-openjdk-18-slim as maven
+FROM maven:3.9.7-amazoncorretto-21 as maven
 WORKDIR /smart-socket
 COPY pom.xml pom.xml
 COPY src src
