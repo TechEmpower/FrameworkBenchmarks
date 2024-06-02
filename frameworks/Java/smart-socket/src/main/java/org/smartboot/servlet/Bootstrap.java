@@ -18,6 +18,9 @@ public class Bootstrap {
         ContainerRuntime containerRuntime = new ContainerRuntime();
         // plaintext
         ServletContextRuntime applicationRuntime = new ServletContextRuntime(null, Thread.currentThread().getContextClassLoader(), "/");
+        applicationRuntime.setVendorProvider(response -> {
+
+        });
         ServletInfo plainTextServletInfo = new ServletInfo();
         plainTextServletInfo.setServletName("plaintext");
         plainTextServletInfo.setServletClass(HelloWorldServlet.class.getName());
