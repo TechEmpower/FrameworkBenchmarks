@@ -1,10 +1,10 @@
-FROM maven:3.8.5-openjdk-17-slim as maven
+FROM maven:3.9.6-eclipse-temurin-21 as maven
 WORKDIR /spring
 COPY src src
 COPY pom.xml pom.xml
 RUN mvn package -q
 
-FROM openjdk:17.0-jdk-slim
+FROM eclipse-temurin:21.0.3_9-jre-jammy
 WORKDIR /spring
 COPY --from=maven /spring/target/spring-webflux-benchmark.jar app.jar
 
