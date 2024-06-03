@@ -14,8 +14,8 @@ chdir(FCPATH);
  * and fires up an environment-specific bootstrapping.
  */
 
-// const CI_ENVIRONMENT = "development";
-// const CI_DEBUG = true;
+ define('ENVIRONMENT', "production");
+
 
 // Load our paths config file
 // This is the line that might need to be changed, depending on your folder structure.
