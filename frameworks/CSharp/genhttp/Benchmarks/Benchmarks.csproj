@@ -28,7 +28,7 @@
     
   <ItemGroup>
 	  
-    <PackageReference Include="GenHTTP.Core" Version="8.5.0" />
+    <PackageReference Include="GenHTTP.Core" Version="8.5.2" />
     <PackageReference Include="GenHTTP.Modules.Razor" Version="8.5.0" />
     <PackageReference Include="GenHTTP.Modules.Webservices" Version="8.5.0" />
 	  
