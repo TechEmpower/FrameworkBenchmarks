@@ -13,21 +13,20 @@ namespace PlatformBenchmarks
     public partial class HttpHandler
     {
 
+        static readonly HtmlEncoder htmlEncoder = CreateHtmlEncoder();
+        static HtmlEncoder CreateHtmlEncoder()
+        {
+            var settings = new TextEncoderSettings(UnicodeRanges.BasicLatin, UnicodeRanges.Katakana, UnicodeRanges.Hiragana);
+            settings.AllowCharacter('\u2014'); // allow EM DASH through
+            return HtmlEncoder.Create(settings);
+        }
+
         private readonly static AsciiString _fortunesTableStart = "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>";
         private readonly static AsciiString _fortunesRowStart = "<tr><td>";
         private readonly static AsciiString _fortunesColumn = "</td><td>";
         private readonly static AsciiString _fortunesRowEnd = "</td></tr>";
         private readonly static AsciiString _fortunesTableEnd = "</table></body></html>";
 
-        //protected HtmlEncoder HtmlEncoder { get; } = CreateHtmlEncoder();
-
-        //private static HtmlEncoder CreateHtmlEncoder()
-        //{
-        //    HtmlEncode
-        //    var settings = new TextEncoderSettings(UnicodeRanges.BasicLatin, UnicodeRanges.Katakana, UnicodeRanges.Hiragana);
-        //    settings.AllowCharacter('\u2014');  // allow EM DASH through
-        //    return HtmlEncoder.Create(settings);
-        //}
 
         public async Task fortunes(IStreamWriter stream)
         {
@@ -46,9 +45,9 @@ namespace PlatformBenchmarks
                 foreach (var item in data)
                 {
                     stream.Write(_fortunesRowStart.Data, 0, _fortunesRowStart.Length);
-                    WriteNumeric(stream, (uint)item.Id);
+                    stream.WriteString(item.Id.ToString(CultureInfo.InvariantCulture));
                     stream.Write(_fortunesColumn.Data, 0, _fortunesColumn.Length);
-                    stream.WriteString(HtmlEncoder.Default.Encode(item.Message));
+                    stream.WriteString(htmlEncoder.Encode(item.Message));
                     stream.Write(_fortunesRowEnd.Data, 0, _fortunesRowEnd.Length);
                 }
                 stream.Write(_fortunesTableEnd.Data, 0, _fortunesTableEnd.Length);
