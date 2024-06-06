@@ -15,6 +15,7 @@ namespace PlatformBenchmarks
 
         public virtual Task StartAsync(CancellationToken cancellationToken)
         {
+            ThreadPool.SetMinThreads(Environment.ProcessorCount * 2, Environment.ProcessorCount * 2);
             Constants.MemorySegmentMinSize = 1024 * 8;
             Constants.MemorySegmentMaxSize = 1024 * 8;
             Constants.InitMemoryBlock();
