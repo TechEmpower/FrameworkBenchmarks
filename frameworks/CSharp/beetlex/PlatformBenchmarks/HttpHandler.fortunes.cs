@@ -1,5 +1,5 @@
-﻿using BeetleX;
-using BeetleX.Buffers;
+﻿
+using BeetleX.Light.Memory;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -28,39 +28,40 @@ namespace PlatformBenchmarks
             return HtmlEncoder.Create(settings);
         }
 
-        public async Task fortunes(PipeStream stream, HttpToken token, ISession session)
+        public async Task fortunes(IStreamWriter writer)
         {
-            try
-            {
+            //try
+            //{
 
-                var data = await token.Db.LoadFortunesRows();
+            var data = await this._db.LoadFortunesRows();
 
-                stream.Write(_HtmlResultPreamble.Data, 0, _HtmlResultPreamble.Length);
-                token.ContentLength = stream.Allocate(HttpHandler._LengthSize);
-                GMTDate.Default.Write(stream);
-                token.ContentPostion = stream.CacheLength;
+            //    stream.Write(_HtmlResultPreamble.Data, 0, _HtmlResultPreamble.Length);
+            //    token.ContentLength = stream.Allocate(HttpHandler._LengthSize);
+            //    GMTDate.Default.Write(stream);
+            //    token.ContentPostion = stream.CacheLength;
 
-                var html = token.GetHtmlBufferWriter();
-                html.Reset();
-                html.Write(_fortunesTableStart.Data, 0, _fortunesTableStart.Length);
-                foreach (var item in data)
-                {
-                    html.Write(_fortunesRowStart.Data, 0, _fortunesRowStart.Length);
-                    WriteNumeric(html, (uint)item.Id);
-                    html.Write(_fortunesColumn.Data, 0, _fortunesColumn.Length);
-                    html.Write(HtmlEncoder.Encode(item.Message));
-                    html.Write(_fortunesRowEnd.Data, 0, _fortunesRowEnd.Length);
-                }
-                html.Write(_fortunesTableEnd.Data, 0, _fortunesTableEnd.Length);
-                stream.Write(html.Data, 0, html.Length);
+            //    var html = token.GetHtmlBufferWriter();
+            //    html.Reset();
+            //    html.Write(_fortunesTableStart.Data, 0, _fortunesTableStart.Length);
+            //    foreach (var item in data)
+            //    {
+            //        html.Write(_fortunesRowStart.Data, 0, _fortunesRowStart.Length);
+            //        WriteNumeric(html, (uint)item.Id);
+            //        html.Write(_fortunesColumn.Data, 0, _fortunesColumn.Length);
+            //        html.Write(HtmlEncoder.Encode(item.Message));
+            //        html.Write(_fortunesRowEnd.Data, 0, _fortunesRowEnd.Length);
+            //    }
+            //    html.Write(_fortunesTableEnd.Data, 0, _fortunesTableEnd.Length);
+            //    stream.Write(html.Data, 0, html.Length);
 
-            }
-            catch (Exception e_)
-            {
-                HttpServer.ApiServer.Log(BeetleX.EventArgs.LogType.Error, null, $"fortunes error {e_.Message}@{e_.StackTrace}");
-                stream.Write(e_.Message);
-            }
-            OnCompleted(stream, session, token);
+            //}
+            //catch (Exception e_)
+            //{
+            //    HttpServer.ApiServer.Log(BeetleX.EventArgs.LogType.Error, null, $"fortunes error {e_.Message}@{e_.StackTrace}");
+            //    stream.Write(e_.Message);
+            //}
+            //OnCompleted(stream, session, token);
+
         }
 
         internal void WriteNumeric(HtmlBufferWriter writer, uint number)
@@ -93,7 +94,7 @@ namespace PlatformBenchmarks
             }
         }
 
-        internal void WriteNumeric(PipeStream stream, uint number)
+        internal void WriteNumeric(IStreamWriter stream, uint number)
         {
             const byte AsciiDigitStart = (byte)'0';
 

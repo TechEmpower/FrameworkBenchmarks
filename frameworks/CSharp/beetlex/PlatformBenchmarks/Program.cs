@@ -15,6 +15,7 @@ namespace PlatformBenchmarks
         {
             //Debug = (args != null && args.Length > 0 && args[0] == "debug");
             UpDB = (args != null && args.Length > 0 && args[0] == "updb");
+            UpdateCommandsCached.Init();
             new HostBuilder().ConfigureServices(delegate (HostBuilderContext hostContext, IServiceCollection services)
             {
                 services.AddHostedService<HttpServer>();
