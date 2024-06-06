@@ -68,14 +68,12 @@ namespace PlatformBenchmarks
         private readonly static AsciiString _jsonResultPreamble =
         _httpsuccess
         + _headerContentTypeJson
-        + _headerServer
-       + _headerContentLength;
+        + _headerServer;
 
         private readonly static AsciiString _HtmlResultPreamble =
       _httpsuccess
       + _headerContentTypeHtml
-      + _headerServer
-     + _headerContentLength;
+      + _headerServer;
 
 
 
@@ -105,6 +103,15 @@ namespace PlatformBenchmarks
         }
 
 
+        protected Memory<byte> GetContentLengthMemory(IStreamWriter writer)
+        {
+            var result = writer.WriteSequenceNetStream.GetWriteMemory(28);
+            writer.WriteSequenceNetStream.WriteAdvance(28);
+            return result;
+        }
+
+        public NetContext Context { get; set; }
+
         public HttpHandler()
         {
 
@@ -118,6 +125,7 @@ namespace PlatformBenchmarks
         public override void Connected(NetContext context)
         {
             base.Connected(context);
+            this.Context = context;
             _db = new RawDb(new ConcurrentRandom(), Npgsql.NpgsqlFactory.Instance); ;
         }
 
@@ -290,11 +298,11 @@ namespace PlatformBenchmarks
                 ActionType type = data.Action.Value;
                 if (type == ActionType.Plaintext)
                 {
-                    await Plaintext(stream);
+                    Plaintext(stream);
                 }
                 else if (type == ActionType.Json)
                 {
-                    await Json(stream);
+                    Json(stream);
                 }
                 else if (type == ActionType.Db)
                 {

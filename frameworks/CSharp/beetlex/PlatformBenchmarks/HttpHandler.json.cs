@@ -15,13 +15,13 @@ namespace PlatformBenchmarks
     {
 
 
-        public ValueTask Json(IStreamWriter stream)
+        public void Json(IStreamWriter stream)
         {
             stream.Write(_jsonPreamble.Data, 0, _jsonPreamble.Length);
             GMTDate.Default.Write(stream);
             System.Text.Json.JsonSerializer.Serialize<JsonMessage>((Stream)stream.WriteSequenceNetStream, new JsonMessage { message = "Hello, World!" });
 
-            return ValueTask.CompletedTask;
+            
         }
     }
 }

@@ -21,8 +21,7 @@ namespace PlatformBenchmarks
             
             stream.Write(_defaultPreamble.Data, 0, _defaultPreamble.Length);
             ContentLengthMemory contentLength = new ContentLengthMemory();
-            contentLength.Data = stream.WriteSequenceNetStream.GetWriteMemory(28);
-            stream.WriteSequenceNetStream.WriteAdvance(28);
+            contentLength.Data = GetContentLengthMemory(stream);
             GMTDate.Default.Write(stream);
             stream.WriteSequenceNetStream.StartWriteLength();
             stream.WriteString("<b> beetlex server</b><hr/>");

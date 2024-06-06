@@ -1,6 +1,7 @@
 ﻿using BeetleX.Light.Memory;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,23 +11,29 @@ namespace PlatformBenchmarks
     {
 
 
-        public async ValueTask db(IStreamWriter stream)
+        public async Task db(IStreamWriter stream)
         {
-            //try
-            //{
-            //    var data = await token.Db.LoadSingleQueryRow();
-            //    stream.Write(_jsonResultPreamble.Data, 0, _jsonResultPreamble.Length);
-            //    token.ContentLength = stream.Allocate(HttpHandler._LengthSize);
-            //    GMTDate.Default.Write(stream);
-            //    token.ContentPostion = stream.CacheLength;
-            //    System.Text.Json.JsonSerializer.Serialize<World>(GetUtf8JsonWriter(stream, token), data, SerializerOptions);
-            //}
-            //catch (Exception e_)
-            //{
-            //    HttpServer.ApiServer.Log(BeetleX.EventArgs.LogType.Error, null, $"db error {e_.Message}@{e_.StackTrace}");
-            //    stream.Write(e_.Message);
-            //}
-            //OnCompleted(stream, session, token);
+            ContentLengthMemory content = new ContentLengthMemory();
+          
+            try
+            {
+                var data = await _db.LoadSingleQueryRow();
+                stream.Write(_jsonResultPreamble.Data, 0, _jsonResultPreamble.Length);
+                content.Data = GetContentLengthMemory(stream);
+                GMTDate.Default.Write(stream);
+              
+
+                stream.WriteSequenceNetStream.StartWriteLength();
+                System.Text.Json.JsonSerializer.Serialize<World>((Stream)stream.WriteSequenceNetStream, data);
+            }
+            catch (Exception e_)
+            {
+                Context.GetLoger(BeetleX.Light.Logs.LogLevel.Error)?.WriteException(Context, "PlatformBenchmarks", "db", e_);
+                stream.WriteString(e_.Message);
+            }
+            var len = stream.WriteSequenceNetStream.EndWriteLength();
+            content.Full(len);
+
         }
     }
 }
