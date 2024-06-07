@@ -14,6 +14,5 @@
     <PackageReference Include="Dapper" Version="2.1.44" />
     <PackageReference Include="Oxpecker" Version="0.10.1" />
     <PackageReference Include="Npgsql" Version="8.0.3" />
-    <PackageReference Include="SpanJson" Version="4.0.1" />
   </ItemGroup>
 </Project>
