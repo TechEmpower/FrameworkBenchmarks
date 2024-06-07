@@ -30,10 +30,4 @@ ssh techempower@$TFB_DATABASE_HOST "$(typeset -f docker_clean); docker_clean"
 echo "running docker_clean on client host"
 ssh techempower@$TFB_CLIENT_HOST "$(typeset -f docker_clean); docker_clean"
 
-if [ -z "$TFB_RUN_ORDER" ]; then
-  export TFB_RUN_ORDER="reverse"
-else
-  unset TFB_RUN_ORDER
-fi
-
 echo "done with tfb-shutdown script"
