@@ -165,7 +165,7 @@ end
 class UpdatesHandler < BaseHandler
   def self.call(req)
     queries = extract_queries_param req
-    records = ALL_IDS.sample(queries).map do |id|
+    records = ALL_IDS.sample(queries).sort.map do |id|
       world = get_one_record(id)
       world['randomnumber'] = get_one_random_number
       world
