@@ -6,7 +6,7 @@ psycopg2-binary==2.9.3; implementation_name=='cpython'
 psycopg2-pool==1.1; implementation_name=='cpython'
 psycopg2cffi==2.9.0; implementation_name=='pypy'
 itsdangerous==2.1.2
-Jinja2==3.1.3
+Jinja2==3.1.4
 MarkupSafe==2.1.2
 ujson==5.4.0
 orjson==3.8.7; implementation_name=='cpython' 

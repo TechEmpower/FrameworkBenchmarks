@@ -3,6 +3,8 @@ require "bundler/setup"
 require "time"
 require "oj"
 MAX_PK = 10_000
+QUERY_RANGE = (1..MAX_PK).freeze
+ALL_IDS = QUERY_RANGE.to_a
 QUERIES_MIN = 1
 QUERIES_MAX = 500
 SEQUEL_NO_ASSOCIATIONS = true
@@ -23,6 +25,13 @@ SERVER_STRING =
   end
 
 Bundler.require(:default) # Load core modules
+
+CONTENT_TYPE = 'Content-Type'
+JSON_TYPE = 'application/json'
+HTML_TYPE = 'text/html; charset=utf-8'
+PLAINTEXT_TYPE = 'text/plain'
+DATE_HEADER = 'Date'
+SERVER_HEADER = 'Server'
 
 def connect(dbtype)
   Bundler.require(dbtype) # Load database-specific modules

@@ -1,4 +1,4 @@
-FROM rust:1.76-slim-buster
+FROM rust:1.78-slim-buster
 WORKDIR /ohkami_framework_benchmarks
 
 ENV DATABASE_URL=postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world
@@ -6,7 +6,6 @@ ENV MAX_CONNECTIONS=56
 ENV MIN_CONNECTIONS=56
 
 COPY ./src        ./src
-COPY ./templates  ./templates
 COPY ./Cargo.toml ./Cargo.toml
 COPY ./Cargo.lock ./Cargo.lock
 

@@ -7,6 +7,7 @@ import io.vertx.sqlclient.Row;
 import io.vertx.sqlclient.RowSet;
 import io.vertx.sqlclient.SqlClient;
 import io.vertx.sqlclient.Tuple;
+import jakarta.inject.Inject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,23 +16,20 @@ import java.util.function.Function;
 
 public class AbstractVertxSqlClientRepository {
 
-    protected final Pool client;
-
-    public AbstractVertxSqlClientRepository(Pool client) {
-        this.client = client;
-    }
+    @Inject
+    protected ConnectionHolder holder;
 
     protected CompletionStage<?> execute(String sql) {
-        return client.preparedQuery(sql).execute().toCompletionStage();
+        return holder.get().flatMap(conn->conn.preparedQuery(sql).execute()).toCompletionStage();
     }
 
     protected <T> CompletionStage<T> executeAndCollectOne(String sql, Tuple tuple, Function<Row, T> mapper) {
-        return client.preparedQuery(sql).execute(tuple).map(rows -> mapper.apply(rows.iterator().next()))
+        return holder.get().flatMap(conn->conn.preparedQuery(sql).execute(tuple).map(rows -> mapper.apply(rows.iterator().next())))
                 .toCompletionStage();
     }
 
     protected <T> CompletionStage<List<T>> executeAndCollectList(String sql, Function<Row, T> mapper) {
-        return client.preparedQuery(sql).execute().map(rows -> {
+        return holder.get().flatMap(conn->conn.preparedQuery(sql).execute()).map(rows -> {
             List<T> result = new ArrayList<>(rows.size());
             for (Row row : rows) {
                 result.add(mapper.apply(row));
@@ -52,7 +50,7 @@ public class AbstractVertxSqlClientRepository {
     }
 
     protected CompletionStage<?> executeBatch(String sql, List<Tuple> data) {
-        return client.preparedQuery(sql).executeBatch(data).toCompletionStage();
+        return holder.get().flatMap(conn->conn.preparedQuery(sql).executeBatch(data)).toCompletionStage();
     }
 
 }
