@@ -14,17 +14,24 @@ namespace PlatformBenchmarks
         public async Task db(IStreamWriter stream)
         {
             ContentLengthMemory content = new ContentLengthMemory();
-          
+
             try
             {
                 var data = await _db.LoadSingleQueryRow();
                 stream.Write(_jsonResultPreamble.Data, 0, _jsonResultPreamble.Length);
                 content.Data = GetContentLengthMemory(stream);
                 GMTDate.Default.Write(stream);
-              
-
                 stream.WriteSequenceNetStream.StartWriteLength();
-                System.Text.Json.JsonSerializer.Serialize<World>((Stream)stream.WriteSequenceNetStream, data);
+                var jsonWriter = GetJsonWriter(stream);
+                using (var unflush = stream.UnFlush())
+                {
+                    jsonWriter.WriteStartObject();
+                    jsonWriter.WriteNumber("Id", data.Id);
+                    jsonWriter.WriteNumber("RandomNumber", data.RandomNumber);
+                    jsonWriter.WriteEndObject();
+                    System.Text.Json.JsonSerializer.Serialize<World>((Stream)stream.WriteSequenceNetStream, data);
+                }
+
             }
             catch (Exception e_)
             {

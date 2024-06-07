@@ -3,7 +3,10 @@ using BeetleX.Light.Memory;
 using System;
 using System.Buffers;
 using System.Collections.Generic;
+using System.IO;
+using System.IO.Pipelines;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace PlatformBenchmarks
@@ -338,17 +341,18 @@ namespace PlatformBenchmarks
 
 
 
-        //private void OnCompleted(PipeStream stream, ISession session, HttpToken token)
-        //{
-        //    var type = token.CurrentRequest.Action;
-        //    if (type != ActionType.Plaintext && type != ActionType.Json)
-        //    {
-        //        token.FullLength((stream.CacheLength - token.ContentPostion).ToString());
-        //    }
-        //    if (token.Requests.IsEmpty && stream.Length == 0)
-        //        session.Stream.Flush();
-        //    token.CurrentRequest = null;
-        //}
+        private Utf8JsonWriter GetJsonWriter(IStreamWriter stream)
+        {
+            Utf8JsonWriter utf8JsonWriter = _utf8JsonWriter ??= new Utf8JsonWriter((Stream)stream.WriteSequenceNetStream, new JsonWriterOptions { SkipValidation = true });
+            utf8JsonWriter.Reset((Stream)stream.WriteSequenceNetStream);
+            return utf8JsonWriter;
+        }
+        [ThreadStatic]
+        private static Utf8JsonWriter _utf8JsonWriter;
 
+        public static JsonWriterOptions _jsonWriterOptions = new JsonWriterOptions
+        {
+            SkipValidation = true
+        };
     }
 }

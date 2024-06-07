@@ -19,8 +19,14 @@ namespace PlatformBenchmarks
         {
             stream.Write(_jsonPreamble.Data, 0, _jsonPreamble.Length);
             GMTDate.Default.Write(stream);
-            System.Text.Json.JsonSerializer.Serialize<JsonMessage>((Stream)stream.WriteSequenceNetStream, new JsonMessage { message = "Hello, World!" });
-
+            var jsonWriter = GetJsonWriter(stream);
+            using (var unflush = stream.UnFlush())
+            {
+                jsonWriter.WriteStartObject();
+                jsonWriter.WriteString("message", "Hello, World!");
+                jsonWriter.WriteEndObject();
+                jsonWriter.Flush();
+            }
             
         }
     }

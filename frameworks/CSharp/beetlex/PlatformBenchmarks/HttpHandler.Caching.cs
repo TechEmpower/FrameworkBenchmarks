@@ -38,8 +38,22 @@ namespace PlatformBenchmarks
                 content.Data = GetContentLengthMemory(stream);
                 GMTDate.Default.Write(stream);
                 stream.WriteSequenceNetStream.StartWriteLength();
-                JsonSerializer.Serialize((Stream)stream.WriteSequenceNetStream, data);
 
+                var jsonWriter = GetJsonWriter(stream);
+                using (var unflush = stream.UnFlush())
+                {
+                    jsonWriter.WriteStartArray();
+                    foreach (var item in data)
+                    {
+                        jsonWriter.WriteStartObject();
+                        jsonWriter.WriteNumber("Id", item.Id);
+                        jsonWriter.WriteNumber("RandomNumber", item.RandomNumber);
+                        jsonWriter.WriteEndObject();
+                    }
+                    jsonWriter.WriteEndArray();
+                    jsonWriter.Flush();
+
+                }
             }
             catch (Exception e_)
             {
