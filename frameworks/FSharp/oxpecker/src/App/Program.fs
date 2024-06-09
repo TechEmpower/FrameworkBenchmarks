@@ -2,7 +2,6 @@ namespace App
 
 open System
 open System.Collections.Generic
-open System.Threading.Tasks
 open Oxpecker
 
 [<AutoOpen>]
@@ -60,6 +59,7 @@ module HttpHandlers =
     open Npgsql
     open System.Text
     open Microsoft.AspNetCore.Http
+    open System.Text.Json
 
     let private extra =
         {
@@ -169,48 +169,26 @@ module HttpHandlers =
             ctx.SetContentType("text/plain")
             ctx.WriteBytes(result)
 
+    let jsonSimple value : EndpointHandler =
+        let options = JsonSerializerOptions(JsonSerializerDefaults.Web)
+        fun ctx ->
+            ctx.Response.WriteAsJsonAsync(value, options)
+
     let endpoints =
         [|
             route "/plaintext" <| utf8Const "Hello, World!"
-            route "/json"<| jsonChunked {| message = "Hello, World!" |}
+            route "/json"<| jsonSimple {| message = "Hello, World!" |}
             route "/fortunes" fortunes
             route "/db" singleQuery
             route "/queries/{count?}" multipleQueries
             route "/updates/{count?}" multipleUpdates
         |]
 
-
 module Main =
-    open SpanJson
-    open Microsoft.AspNetCore.Http
     open Microsoft.AspNetCore.Builder
-    open Microsoft.AspNetCore.Hosting
     open Microsoft.Extensions.DependencyInjection
     open Microsoft.Extensions.Hosting
     open Microsoft.Extensions.Logging
-    open System.Buffers
-
-    type SpanJsonSerializer() =
-        interface Serializers.IJsonSerializer with
-            member this.Serialize(value, ctx, chunked) =
-                ctx.Response.ContentType <- "application/json"
-                if chunked then
-                    if ctx.Request.Method <> HttpMethods.Head then
-                        JsonSerializer.Generic.Utf8.SerializeAsync<_>(value, stream = ctx.Response.Body).AsTask()
-                    else
-                        Task.CompletedTask
-                else
-                    task {
-                        let buffer = JsonSerializer.Generic.Utf8.SerializeToArrayPool<_>(value)
-                        ctx.Response.Headers.ContentLength <- buffer.Count
-                        if ctx.Request.Method <> HttpMethods.Head then
-                            do! ctx.Response.Body.WriteAsync(buffer)
-                            ArrayPool<byte>.Shared.Return(buffer.Array)
-                        else
-                            return ()
-                    }
-            member this.Deserialize _ =
-                failwith "Not implemented"
 
     [<EntryPoint>]
     let main args =
@@ -218,7 +196,6 @@ module Main =
         builder.Services
             .AddRouting()
             .AddOxpecker()
-            .AddSingleton<Serializers.IJsonSerializer>(SpanJsonSerializer())
         |> ignore
         builder.Logging.ClearProviders() |> ignore
         let app = builder.Build()

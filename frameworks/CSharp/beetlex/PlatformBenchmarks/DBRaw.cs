@@ -7,10 +7,10 @@ using System.Linq;
 using System.Runtime.Versioning;
 using System.Text;
 using System.Threading.Tasks;
-using System.Runtime.InteropServices.ComTypes;
-using BeetleX.EventArgs;
+
 using Microsoft.Extensions.Caching.Memory;
 using Npgsql;
+
 
 namespace PlatformBenchmarks
 {
@@ -342,7 +342,6 @@ namespace PlatformBenchmarks
                     }
                 }
                 mInited = true;
-                HttpServer.ApiServer.Log(LogType.Info, null, $"Init update commands cached");
                 return;
             }
         }

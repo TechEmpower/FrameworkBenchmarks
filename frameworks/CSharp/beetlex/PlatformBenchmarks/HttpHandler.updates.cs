@@ -1,16 +1,17 @@
-﻿using BeetleX;
-using BeetleX.Buffers;
-using SpanJson;
+﻿
+using BeetleX.Light.Memory;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace PlatformBenchmarks
 {
     public partial class HttpHandler
     {
-        public async ValueTask updates(string queryString, PipeStream stream, HttpToken token, ISession session)
+        public async ValueTask updates(string queryString, IStreamWriter stream)
         {
             int count = 1;
             if (!string.IsNullOrEmpty(queryString))
@@ -28,22 +29,24 @@ namespace PlatformBenchmarks
                 count = 500;
             if (count < 1)
                 count = 1;
+            ContentLengthMemory content = new ContentLengthMemory();
             try
             {
-                var data = await token.Db.LoadMultipleUpdatesRows(count);
+                var data = await _db.LoadMultipleUpdatesRows(count);
 
                 stream.Write(_jsonResultPreamble.Data, 0, _jsonResultPreamble.Length);
-                token.ContentLength = stream.Allocate(HttpHandler._LengthSize);
+                content.Data = GetContentLengthMemory(stream);
                 GMTDate.Default.Write(stream);
-                token.ContentPostion = stream.CacheLength;
-                System.Text.Json.JsonSerializer.Serialize<World[]>(GetUtf8JsonWriter(stream, token), data, SerializerOptions);
+                stream.WriteSequenceNetStream.StartWriteLength();
+                JsonSerializer.Serialize((Stream)stream.WriteSequenceNetStream, data);
             }
             catch (Exception e_)
             {
-                HttpServer.ApiServer.Log(BeetleX.EventArgs.LogType.Error, null, $"updates error {e_.Message}@{e_.StackTrace}");
-                stream.Write(e_.Message);
+                Context.GetLoger(BeetleX.Light.Logs.LogLevel.Error)?.WriteException(Context, "PlatformBenchmarks", "updates", e_);
+                stream.WriteString(e_.Message);
             }
-            OnCompleted(stream, session, token);
+            var len = stream.WriteSequenceNetStream.EndWriteLength();
+            content.Full(len);
         }
     }
 }

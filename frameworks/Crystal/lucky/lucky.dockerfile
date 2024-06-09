@@ -1,4 +1,4 @@
-FROM crystallang/crystal:1.1.0
+FROM crystallang/crystal:1.12.1
 
 WORKDIR /lucky
 COPY shard.lock shard.lock
