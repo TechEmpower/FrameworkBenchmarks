@@ -45,7 +45,7 @@ deadpool-postgres = "0.14"
 futures-util = "0.3"
 lru = "0.12.0"
 markup = "0.15"
-mimalloc = { version = "0.1", default-features = false }
+# mimalloc = { version = "0.1", default-features = false }
 mongodb = { version = "2.4.0", features = ["zstd-compression", "snappy-compression", "zlib-compression"] }
 once_cell = "1"
 rand = { version = "0.8", features = ["min_const_gen", "small_rng"] }
@@ -64,7 +64,4 @@ dotenv = "0.15.0"
 
 [profile.release]
 lto = true
-opt-level = 3
 codegen-units = 1
-panic = "abort"
-

@@ -1,5 +1,5 @@
-#[global_allocator]
-static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
+// #[global_allocator]
+// static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
 use std::sync::Arc;
 use std::thread::available_parallelism;
@@ -13,9 +13,6 @@ use serde::Serialize;
 
 mod utils;
 
-pub const HEADER_SERVER: HeaderValue = HeaderValue::from_static("salvo");
-pub const HEADER_JSON: HeaderValue = HeaderValue::from_static("application/json");
-pub const HEADER_TEXT: HeaderValue = HeaderValue::from_static("text/plain");
 
 #[derive(Serialize)]
 pub struct Message {
@@ -25,8 +22,8 @@ pub struct Message {
 #[handler]
 fn json(res: &mut Response) {
     let headers = res.headers_mut();
-    headers.insert(header::SERVER, HEADER_SERVER.clone());
-    headers.insert(header::CONTENT_TYPE,HEADER_JSON.clone());
+    headers.insert(header::SERVER, HeaderValue::from_static("salvo"));
+    headers.insert(header::CONTENT_TYPE, HeaderValue::from_static("application/json"));
     let data = serde_json::to_vec(&Message {
         message: "Hello, World!",
     })
@@ -37,8 +34,8 @@ fn json(res: &mut Response) {
 #[handler]
 fn plaintext(res: &mut Response) {
     let headers = res.headers_mut();
-    headers.insert(header::SERVER, HEADER_SERVER.clone());
-    headers.insert(header::CONTENT_TYPE,HEADER_TEXT.clone());
+    headers.insert(header::SERVER, HeaderValue::from_static("salvo"));
+    headers.insert(header::CONTENT_TYPE, HeaderValue::from_static("text/plain"));
     res.body(ResBody::Once(Bytes::from_static(b"Hello, world!")));
 }
 
