@@ -2,7 +2,6 @@ namespace App
 
 open System
 open System.Collections.Generic
-open Microsoft.AspNetCore.Hosting
 open Oxpecker
 
 [<AutoOpen>]
@@ -146,6 +145,15 @@ module HttpHandlers =
             result
         | q -> q
 
+    let private generateParameters (results: World[]) =
+        let parameters = Dictionary<string,obj>()
+        for i in 0..results.Length-1 do
+            let randomNumber = Random.Shared.Next(1, 10001)
+            parameters[$"@Rn_{i}"] <- randomNumber
+            parameters[$"@Id_{i}"] <- results[i].id
+            results[i] <- { results[i] with randomnumber = randomNumber }
+        parameters
+
     let private multipleUpdates : EndpointHandler =
         fun ctx ->
             let count = parseQueries ctx
@@ -156,12 +164,7 @@ module HttpHandlers =
                 for i in 0..results.Length-1 do
                     let! result = readSingleRow conn
                     results[i] <- result
-                let parameters = Dictionary<string,obj>()
-                for i in 0..results.Length-1 do
-                    let randomNumber = Random.Shared.Next(1, 10001)
-                    parameters[$"@Rn_{i}"] <- randomNumber
-                    parameters[$"@Id_{i}"] <- results[i].id
-                    results[i] <- { results[i] with randomnumber = randomNumber }
+                let parameters = generateParameters results
                 let! _ = conn.ExecuteAsync(batchUpdateString count, parameters)
                 return! ctx.WriteJsonChunked results
             }
