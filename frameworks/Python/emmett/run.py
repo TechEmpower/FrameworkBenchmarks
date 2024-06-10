@@ -12,8 +12,7 @@ if __name__ == "__main__":
         host="0.0.0.0",
         port=8080,
         workers=cpus,
-        threads=2,
-        backlog=2048,
+        backlog=16384,
         threading_mode='runtime',
         enable_websockets=False,
         log_level="warn"
