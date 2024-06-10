@@ -2,17 +2,23 @@ namespace App
 
 open System
 open System.Collections.Generic
+open Microsoft.AspNetCore.Hosting
 open Oxpecker
 
 [<AutoOpen>]
 module Common =
 
+    [<Struct>]
     [<CLIMutable>]
-    type Fortune =
-        {
-            id      : int
-            message : string
-        }
+    type JsonMessage = {
+        message : string
+    }
+
+    [<CLIMutable>]
+    type Fortune = {
+        id: int
+        message: string
+    }
 
     [<Literal>]
     let ConnectionString = "Server=tfb-database;Database=hello_world;User Id=benchmarkdbuser;Password=benchmarkdbpass;SSL Mode=Disable;Maximum Pool Size=1024;NoResetOnClose=true;Enlist=false;Max Auto Prepare=4;Multiplexing=true;Write Coalescing Buffer Threshold Bytes=1000"
@@ -43,7 +49,7 @@ module HtmlViews =
             th() { raw "message" }
         }
 
-    let fortunes (fortunes: Fortune[]) =
+    let fortunes fortunes =
         table() {
             fortunesTableHeader
             for f in fortunes do
@@ -67,13 +73,11 @@ module HttpHandlers =
             message = "Additional fortune added at request time."
         }
 
-    let private renderFortunes (ctx: HttpContext) dbFortunes =
-        let augmentedData = [|
-            yield! dbFortunes
-            extra
-        |]
-        Array.Sort(augmentedData, FortuneComparer)
-        augmentedData |> HtmlViews.fortunes |> ctx.WriteHtmlView
+    let rec private renderFortunes (ctx: HttpContext) (dbFortunes: Fortune seq) =
+        let data = dbFortunes.AsList()
+        data.Add extra
+        data.Sort FortuneComparer
+        data |> HtmlViews.fortunes |> ctx.WriteHtmlView
 
     let private fortunes : EndpointHandler =
         fun ctx ->
@@ -85,11 +89,10 @@ module HttpHandlers =
 
     [<Struct>]
     [<CLIMutable>]
-    type World =
-        {
-            id: int
-            randomnumber: int
-        }
+    type World = {
+        id: int
+        randomnumber: int
+    }
 
     let private readSingleRow (conn: NpgsqlConnection) =
         conn.QueryFirstOrDefaultAsync<World>(
@@ -177,7 +180,7 @@ module HttpHandlers =
     let endpoints =
         [|
             route "/plaintext" <| utf8Const "Hello, World!"
-            route "/json"<| jsonSimple {| message = "Hello, World!" |}
+            route "/json" <| jsonSimple { message = "Hello, World!" }
             route "/fortunes" fortunes
             route "/db" singleQuery
             route "/queries/{count?}" multipleQueries
