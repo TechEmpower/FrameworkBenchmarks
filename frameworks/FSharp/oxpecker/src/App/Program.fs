@@ -48,13 +48,13 @@ module HtmlViews =
             th() { raw "message" }
         }
 
-    let fortunes fortunes =
+    let fortunes fortunesData =
         table() {
             fortunesTableHeader
-            for f in fortunes do
+            for fortune in fortunesData do
                 tr() {
-                    td() { raw <| string f.id }
-                    td() { f.message }
+                    td() { raw <| string fortune.id }
+                    td() { fortune.message }
                 }
         } |> layout
 
@@ -129,7 +129,7 @@ module HttpHandlers =
             }
 
     let private maxBatch = 500
-    let mutable private queries = Array.zeroCreate (maxBatch + 1)
+    let private queries = Array.zeroCreate (maxBatch + 1)
 
     let private batchUpdateString batchSize =
         match queries[batchSize] with
@@ -143,7 +143,8 @@ module HttpHandlers =
             let result = sb.ToString()
             queries[batchSize] <- result
             result
-        | q -> q
+        | q ->
+            q
 
     let private generateParameters (results: World[]) =
         let parameters = Dictionary<string,obj>()
@@ -201,11 +202,12 @@ module Main =
         let builder = WebApplication.CreateBuilder(args)
         builder.Services
             .AddRouting()
-            .AddOxpecker()
-        |> ignore
-        builder.Logging.ClearProviders() |> ignore
+            .AddOxpecker() |> ignore
+        builder.Logging
+            .ClearProviders() |> ignore
         let app = builder.Build()
-        app.UseRouting()
-           .UseOxpecker HttpHandlers.endpoints |> ignore
+        app
+            .UseRouting()
+            .UseOxpecker(HttpHandlers.endpoints) |> ignore
         app.Run()
         0
