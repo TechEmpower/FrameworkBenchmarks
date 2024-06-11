@@ -102,7 +102,10 @@ async fn fortunes(res: &mut Response, depot: &mut Depot) -> Result<(), Error> {
 
     let headers = res.headers_mut();
     headers.insert(header::SERVER, HeaderValue::from_static("salvo"));
-    headers.insert(header::CONTENT_TYPE, HeaderValue::from_static("text/html; charset=utf-8"));
+    headers.insert(
+        header::CONTENT_TYPE,
+        HeaderValue::from_static("text/html; charset=utf-8"),
+    );
     res.body(ResBody::Once(Bytes::from(data)));
     Ok(())
 }

@@ -36,13 +36,7 @@ impl WorldHandler {
 }
 #[async_trait]
 impl Handler for WorldHandler {
-    async fn handle(
-        &self,
-        _req: &mut Request,
-        _depot: &mut Depot,
-        res: &mut Response,
-        _ctrl: &mut FlowCtrl,
-    ) {
+    async fn handle(&self, _req: &mut Request, _depot: &mut Depot, res: &mut Response, _ctrl: &mut FlowCtrl) {
         let world = self.conn.get_world().await.unwrap();
         let data = serde_json::to_vec(&world).unwrap();
         let headers = res.headers_mut();
@@ -66,13 +60,7 @@ impl WorldsHandler {
 }
 #[async_trait]
 impl Handler for WorldsHandler {
-    async fn handle(
-        &self,
-        req: &mut Request,
-        _depot: &mut Depot,
-        res: &mut Response,
-        _ctrl: &mut FlowCtrl,
-    ) {
+    async fn handle(&self, req: &mut Request, _depot: &mut Depot, res: &mut Response, _ctrl: &mut FlowCtrl) {
         let count = req.query::<u16>("q").unwrap_or(1);
         let count = cmp::min(500, cmp::max(1, count));
         let worlds = self.conn.get_worlds(count).await.unwrap();
@@ -99,13 +87,7 @@ impl UpdatesHandler {
 }
 #[async_trait]
 impl Handler for UpdatesHandler {
-    async fn handle(
-        &self,
-        req: &mut Request,
-        _depot: &mut Depot,
-        res: &mut Response,
-        _ctrl: &mut FlowCtrl,
-    ) {
+    async fn handle(&self, req: &mut Request, _depot: &mut Depot, res: &mut Response, _ctrl: &mut FlowCtrl) {
         let count = req.query::<u16>("q").unwrap_or(1);
         let count = cmp::min(500, cmp::max(1, count));
         let worlds = self.conn.update(count).await.unwrap();
@@ -132,19 +114,16 @@ impl FortunesHandler {
 }
 #[async_trait]
 impl Handler for FortunesHandler {
-    async fn handle(
-        &self,
-        _req: &mut Request,
-        _depot: &mut Depot,
-        res: &mut Response,
-        _ctrl: &mut FlowCtrl,
-    ) {
+    async fn handle(&self, _req: &mut Request, _depot: &mut Depot, res: &mut Response, _ctrl: &mut FlowCtrl) {
         let mut data = String::new();
         write!(&mut data, "{}", self.conn.tell_fortune().await.unwrap()).unwrap();
 
         let headers = res.headers_mut();
         headers.insert(header::SERVER, HeaderValue::from_static("salvo"));
-        headers.insert(header::CONTENT_TYPE, HeaderValue::from_static("text/html; charset=utf-8"));
+        headers.insert(
+            header::CONTENT_TYPE,
+            HeaderValue::from_static("text/html; charset=utf-8"),
+        );
         res.body(ResBody::Once(Bytes::from(data)));
     }
 }

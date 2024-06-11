@@ -11,6 +11,7 @@ use std::thread::available_parallelism;
 use anyhow::Error;
 use bytes::Bytes;
 use deadpool_postgres::Pool;
+use dotenv::dotenv;
 use futures_util::{stream::FuturesUnordered, TryStreamExt};
 use once_cell::sync::OnceCell;
 use rand::rngs::SmallRng;
@@ -19,7 +20,6 @@ use salvo::conn::tcp::TcpAcceptor;
 use salvo::http::header::{self, HeaderValue};
 use salvo::http::ResBody;
 use salvo::prelude::*;
-use dotenv::dotenv;
 
 mod db_pg_pool;
 mod models_pg_pool;
@@ -129,7 +129,10 @@ async fn fortunes(res: &mut Response) -> Result<(), Error> {
 
     let headers = res.headers_mut();
     headers.insert(header::SERVER, HeaderValue::from_static("salvo"));
-    headers.insert(header::CONTENT_TYPE, HeaderValue::from_static("text/html; charset=utf-8"));
+    headers.insert(
+        header::CONTENT_TYPE,
+        HeaderValue::from_static("text/html; charset=utf-8"),
+    );
     res.body(ResBody::Once(Bytes::from(data)));
     Ok(())
 }
@@ -158,7 +161,7 @@ markup::define! {
 
 fn main() {
     dotenv().ok();
-    
+
     let db_url: String = utils::get_env_var("TECHEMPOWER_POSTGRES_URL");
     let max_pool_size: u32 = utils::get_env_var("TECHEMPOWER_MAX_POOL_SIZE");
     let rt = tokio::runtime::Builder::new_current_thread()
