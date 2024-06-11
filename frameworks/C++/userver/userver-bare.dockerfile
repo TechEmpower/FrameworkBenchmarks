@@ -1,4 +1,4 @@
-FROM ghcr.io/userver-framework/ubuntu-userver-build-base:v2 AS builder
+FROM ghcr.io/userver-framework/ubuntu-22.04-userver-pg AS builder
 
 RUN apt update && \
     apt install -y lsb-release wget software-properties-common gnupg && \
