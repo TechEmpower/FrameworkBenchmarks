@@ -19,7 +19,6 @@ This includes tests for plaintext, json, and fortunes HTML serialization.
 
 * [Oxpecker](https://github.com/Lanayx/Oxpecker)
 * [Dapper](https://github.com/DapperLib/Dapper)
-* [SpanJson](https://github.com/Tornhoof/SpanJson)
 * ASP.NET Core
 
 ## Paths & Source for Tests

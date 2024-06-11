@@ -20,16 +20,16 @@ git clone \
 echo "moving to tfb directory"
 cd $TFB_REPOPARENT/$TFB_REPONAME
 
-echo "building tfb docker image"
-docker build -t techempower/tfb \
-  --build-arg USER_ID=$(id -u) \
-  --build-arg GROUP_ID=$(id -g) .
-
 if [ -z "$TFB_RUN_ORDER" ]; then
   export TFB_RUN_ORDER="reverse"
 else
   unset TFB_RUN_ORDER
 fi
+
+echo "building tfb docker image"
+docker build -t techempower/tfb \
+  --build-arg USER_ID=$(id -u) \
+  --build-arg GROUP_ID=$(id -g) .
 
 echo "running tfb docker image"
 docker run \
