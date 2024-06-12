@@ -1,18 +1,14 @@
 # Setup
 
-* Perl 5.10+
-* MySQL 5.5
-* MongoDB
-* Wrk 2.0
+* Perl 5.36+
+* MariaDB or MongoDB
 
 # Requirements
 
 * Kelp (install from CPAN)
-* Kelp::Module::JSON::XS (install from CPAN)
 * Kelp::Module::Template::Toolkit (install from CPAN)
-* DBD::mysql (install from CPAN)
-* Starman (install from CPAN)
-* MongoDB (install from CPAN)
+* DBI + DBD::mysql or MongoDB (install from CPAN)
+* Gazelle (install from CPAN)
 * nginx (if you want to front with nginx, nginx.conf provided)
 
 # Deployment
@@ -24,16 +20,36 @@
 
     ./uwsgi --plugins psgi --init app.ini
 
-## Plack + Starman
+## Plack + Gazelle
 
-1. Deploy via plackup
+1. Deploy via `start_server`, if you want to front it with nginx, otherwise
 
-    plackup -E deployment -s Starman --workers=25 -l /tmp/frameworks-benchmark.sock -a ./app.pl
+    start_server --path /tmp/perl-kelp.sock --backlog 16384 -- plackup -E production -s Gazelle --max-workers=25 --max-reqs-per-child=10000 -a ./app.psgi
 
-2. If you want to front it with nginx, otherwise
+2. Otherwise
 
-    plackup -E deployment -s Starman --port=8080 --workers=25 -a ./app.pl
+    plackup -E deployment -s Gazelle --port=8080 --max-workers=25 -a ./app.psgi
+
+# Code information
+
+`lib/KelpBench.pm` contains all action-handling and helper code. It is a full
+Kelp app with `Template::Toolkit` module and standard Kelp configuration files.
+While it could've been coded as a one-file Kelp app, full app style gives us
+more control on the behavior of the app.  It lazy-loads `DBI.pm` or `Mongo.pm`
+from `lib/KelpBench/` directory based on environmental variable `MONGO`, so it
+only needs one database driver at a time.
+
+The app is written in a relaxed style, not trying very hard to achieve the best
+possible result. It very much resembles production code. For example, a proper
+templating engine is used to produce the HTML document instead of inline HTML
+(which is obviously much faster).
+
+App can be tested using mock database by running `prove -l`. In this case, it
+only requires `Kelp` and `Kelp::Module::Template::Toolkit` from CPAN to be
+installed.
 
 # Expert contact
 
+@bbrtj (contact@bbrtj.eu)
 @naturalist (minimal@cpan.org)
+

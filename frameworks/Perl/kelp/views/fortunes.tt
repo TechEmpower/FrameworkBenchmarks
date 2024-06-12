@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Fortunes</title>
+	</head>
+	<body>
+		<table>
+			<tr>
+			<th>id</th>
+			<th>message</th>
+			</tr>
+
+			%% FOREACH row IN rows
+			<tr>
+			<td>[% row.id %]</td>
+			<td>[% row.message | html %]</td>
+			</tr>
+			%% END
+		</table>
+	</body>
+</html>
+

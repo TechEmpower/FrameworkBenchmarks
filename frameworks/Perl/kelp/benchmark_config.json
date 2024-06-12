@@ -2,10 +2,12 @@
   "framework": "kelp",
   "tests": [{
     "default": {
-      "db_url": "/db/mysql",
-      "query_url": "/queries/mysql?queries=",
-      "fortune_url": "/fortunes/mysql",
       "plaintext_url": "/plaintext",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "update_url": "/updates?queries=",
+      "fortune_url": "/fortunes",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
@@ -14,19 +16,21 @@
       "language": "Perl",
       "orm": "Raw",
       "platform": "Plack",
-      "webserver": "Starman",
+      "webserver": "Gazelle",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "kelp",
       "notes": "",
       "versus": "",
-      "tags": ["broken"]
+      "tags": []
     },
     "mongodb": {
-      "db_url": "/db/mongo",
-      "query_url": "/queries/mongo?queries=",
-      "fortune_url": "/fortunes/mongo",
       "plaintext_url": "/plaintext",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "update_url": "/updates?queries=",
+      "fortune_url": "/fortunes",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
@@ -35,13 +39,14 @@
       "language": "Perl",
       "orm": "Raw",
       "platform": "Plack",
-      "webserver": "Starman",
+      "webserver": "Gazelle",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "kelp",
       "notes": "",
       "versus": "",
-      "tags": ["broken"]
+      "tags": []
     }
   }]
 }
+

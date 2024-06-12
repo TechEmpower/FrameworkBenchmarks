@@ -1,27 +1,22 @@
-FROM perl:5.26
+FROM perl:5.40
 
 RUN apt-get update -yqq && apt-get install -yqq nginx
 
 WORKDIR /kelp
 
 RUN cpanm --notest --no-man-page \
-        JSON JSON::XS IO::Socket::IP IO::Socket::SSL \
-        Kelp@0.9071 \
-        DBI@1.636 \
-        DBD::mysql@4.033 \
-        MongoDB@1.8.1 \
-        Kelp::Module::JSON::XS@0.502 \
-        HTML::Escape@1.10 \
-        HTTP::Parser::XS@0.17 \
-        Starman@0.4014
+        Kelp::Module::Template::Toolkit@0.301 \
+        Kelp@2.00 \
+        MongoDB@2.2.2 \
+        Cpanel::JSON::XS@4.38 \
+        Gazelle@0.49
 
-ADD ./app.ini /kelp/
-ADD ./app.pl /kelp/
-ADD ./nginx.conf /kelp/
+ADD ./ /kelp/
 
 ENV MONGO=1
 
 EXPOSE 8080
 
 CMD nginx -c /kelp/nginx.conf && \
-    plackup -E production -s Starman --workers=$(nproc) -l /tmp/perl-kelp.sock -a ./app.pl
+    start_server --path /tmp/perl-kelp.sock --backlog 16384 -- plackup -E production -s Gazelle --max-workers=$(nproc) --max-reqs-per-child=10000 -a ./app.psgi
+
