@@ -6,13 +6,16 @@ use Kelp::Base 'Kelp';
 ## Attributes
 
 attr database => sub {
-	if ($ENV{MONGO}) {
+	if (lc $ENV{DATABASE} eq 'mongodb') {
 		require KelpBench::Mongo;
 		return KelpBench::Mongo->new;
 	}
-	else {
+	elsif (lc $ENV{DATABASE} eq 'mysql') {
 		require KelpBench::DBI;
 		return KelpBench::DBI->new;
+	}
+	else {
+		die "unknown database chosen: $ENV{DATABASE}";
 	}
 };
 

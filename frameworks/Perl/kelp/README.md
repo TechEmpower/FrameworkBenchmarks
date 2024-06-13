@@ -9,6 +9,9 @@
 * Kelp::Module::Template::Toolkit (install from CPAN)
 * DBI + DBD::mysql or MongoDB (install from CPAN)
 * Gazelle (install from CPAN)
+* Starman (install from CPAN)
+* Starlet (install from CPAN)
+* Twiggy::Prefork (install from CPAN)
 * nginx (if you want to front with nginx, nginx.conf provided)
 
 # Deployment
@@ -20,9 +23,11 @@
 
     ./uwsgi --plugins psgi --init app.ini
 
-## Plack + Gazelle
+## Plack + plack handler
 
-1. Deploy via `start_server`, if you want to front it with nginx, otherwise
+Recommended handler is `Gazelle`.
+
+1. Deploy via `start_server`, if you want to front it with nginx.
 
     start_server --path /tmp/perl-kelp.sock --backlog 16384 -- plackup -E production -s Gazelle --max-workers=25 --max-reqs-per-child=10000 -a ./app.psgi
 
