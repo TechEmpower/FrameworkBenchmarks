@@ -34,7 +34,7 @@ namespace PlatformBenchmarks
             try
             {
 
-                var data = await this._db.LoadFortunesRows();
+                var data = await DB.LoadFortunesRows();
 
                 stream.Write(_HtmlResultPreamble);
                 content.Data = GetContentLengthMemory(stream);

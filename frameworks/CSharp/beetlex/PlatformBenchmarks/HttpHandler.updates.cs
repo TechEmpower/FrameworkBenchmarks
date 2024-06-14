@@ -32,7 +32,7 @@ namespace PlatformBenchmarks
             ContentLengthMemory content = new ContentLengthMemory();
             try
             {
-                var data = await _db.LoadMultipleUpdatesRows(count);
+                var data = await DB.LoadMultipleUpdatesRows(count);
 
                 stream.Write(_jsonResultPreamble.Data, 0, _jsonResultPreamble.Length);
                 content.Data = GetContentLengthMemory(stream);

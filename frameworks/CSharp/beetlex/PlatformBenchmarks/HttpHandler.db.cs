@@ -17,7 +17,7 @@ namespace PlatformBenchmarks
 
             try
             {
-                var data = await _db.LoadSingleQueryRow();
+                var data = await DB.LoadSingleQueryRow();
                 stream.Write(_jsonResultPreamble.AsSpan());
                 content.Data = GetContentLengthMemory(stream);
                 GMTDate.Default.Write(stream);

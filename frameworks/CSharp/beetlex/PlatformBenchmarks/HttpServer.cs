@@ -15,7 +15,7 @@ namespace PlatformBenchmarks
 
         public static string _connectionString;
 
-        public virtual Task StartAsync(CancellationToken cancellationToken)
+        public virtual async Task StartAsync(CancellationToken cancellationToken)
         {
             _connectionString = "Server=tfb-database;Database=hello_world;User Id=benchmarkdbuser;Password=benchmarkdbpass;SSL Mode=Disable;Maximum Pool Size=16;NoResetOnClose=true;Enlist=false;Max Auto Prepare=4;Multiplexing=true;Write Coalescing Buffer Threshold Bytes=1000";
             //_connectionString = "Server=localhost;Database=hello_world;User Id=benchmarkdbuser;Password=benchmarkdbpass;SSL Mode=Disable;Maximum Pool Size=16;NoResetOnClose=true;Enlist=false;Max Auto Prepare=4;Multiplexing=true;Write Coalescing Buffer Threshold Bytes=1000";
@@ -24,6 +24,8 @@ namespace PlatformBenchmarks
             Constants.MemorySegmentMaxSize = 1024 * 16;
             Constants.InitMemoryBlock();
             var date = GMTDate.Default.DATE;
+            HttpHandler.DB = new RawDb(new ConcurrentRandom(), HttpServer._connectionString);
+            await HttpHandler.DB.PopulateCache();
             _apiServer = new NetServer<HttpNetApplication, HttpHandler>();
             _apiServer.Options.LogLevel = BeetleX.Light.Logs.LogLevel.Error;
             _apiServer.Options.AddLogOutputHandler<LogOutputToConsole>();
@@ -33,7 +35,6 @@ namespace PlatformBenchmarks
             });
             _apiServer.Start();
 
-            return Task.CompletedTask;
 
         }
 

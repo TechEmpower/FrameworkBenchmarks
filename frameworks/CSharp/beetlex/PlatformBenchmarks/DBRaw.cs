@@ -21,19 +21,21 @@ namespace PlatformBenchmarks
         private readonly MemoryCache _cache
             = new(new MemoryCacheOptions { ExpirationScanFrequency = TimeSpan.FromMinutes(60) });
 
-        private readonly NpgsqlDataSource _dataSource;
+        private static DbProviderFactory _dbProviderFactory => Npgsql.NpgsqlFactory.Instance;
+        private readonly string _connectionString;
 
         public RawDb(ConcurrentRandom random, string connectionString)
         {
             _random = random;
-            _dataSource = NpgsqlDataSource.Create(connectionString);
+            _connectionString = connectionString;
         }
 
         public async Task<World> LoadSingleQueryRow()
         {
-            using (var connection = await _dataSource.OpenConnectionAsync())
+            using (var connection = (NpgsqlConnection)_dbProviderFactory.CreateConnection())
             {
-
+                connection.ConnectionString = _connectionString;
+                await connection.OpenAsync();
                 var (cmd, _) = CreateReadCommand(connection);
                 using (var command = cmd)
                 {
@@ -59,51 +61,57 @@ namespace PlatformBenchmarks
                 }
                 else
                 {
-                    return LoadUncachedQueries(id, i, count, this, result);
+                    return LoadUncachedQueries(_connectionString, id, i, count, this, result);
                 }
             }
 
             return Task.FromResult(result);
 
-            static async Task<CachedWorld[]> LoadUncachedQueries(int id, int i, int count, RawDb rawdb, CachedWorld[] result)
+            static async Task<CachedWorld[]> LoadUncachedQueries(string conn, int id, int i, int count, RawDb rawdb, CachedWorld[] result)
             {
-                using var connection = await rawdb._dataSource.OpenConnectionAsync();
-
-                var (cmd, idParameter) = rawdb.CreateReadCommand(connection);
-                using var command = cmd;
-                async Task<CachedWorld> create(ICacheEntry _) => await ReadSingleRow(cmd);
-
-                var cacheKeys = _cacheKeys;
-                var key = cacheKeys[id];
-
-                idParameter.TypedValue = id;
-
-                for (; i < result.Length; i++)
+                using (var connection = (NpgsqlConnection)_dbProviderFactory.CreateConnection())
                 {
-                    result[i] = await rawdb._cache.GetOrCreateAsync(key, create);
+                    connection.ConnectionString = conn;
+                    await connection.OpenAsync();
+                    var (cmd, idParameter) = rawdb.CreateReadCommand(connection);
+                    using var command = cmd;
+                    async Task<CachedWorld> create(ICacheEntry _) => await ReadSingleRow(cmd);
 
-                    id = rawdb._random.Next(1, 10001);
+
+                    var cacheKeys = _cacheKeys;
+                    var key = cacheKeys[id];
+
                     idParameter.TypedValue = id;
-                    key = cacheKeys[id];
-                }
 
+                    for (; i < result.Length; i++)
+                    {
+                        result[i] = await rawdb._cache.GetOrCreateAsync(key, create);
+
+                        id = rawdb._random.Next(1, 10001);
+                        idParameter.TypedValue = id;
+                        key = cacheKeys[id];
+                    }
+                }
                 return result;
             }
         }
 
         public async Task PopulateCache()
         {
-            using var connection = await _dataSource.OpenConnectionAsync();
-
-            var (cmd, idParameter) = CreateReadCommand(connection);
-            using var command = cmd;
-
-            var cacheKeys = _cacheKeys;
-            var cache = _cache;
-            for (var i = 1; i < 10001; i++)
+            using (var connection = (NpgsqlConnection)_dbProviderFactory.CreateConnection())
             {
-                idParameter.TypedValue = i;
-                cache.Set<CachedWorld>(cacheKeys[i], await ReadSingleRow(cmd));
+                connection.ConnectionString = _connectionString;
+                await connection.OpenAsync();
+                var (cmd, idParameter) = CreateReadCommand(connection);
+                using var command = cmd;
+
+                var cacheKeys = _cacheKeys;
+                var cache = _cache;
+                for (var i = 1; i < 10001; i++)
+                {
+                    idParameter.TypedValue = i;
+                    cache.Set<CachedWorld>(cacheKeys[i], await ReadSingleRow(cmd));
+                }
             }
 
             Console.WriteLine("Caching Populated");
@@ -113,34 +121,37 @@ namespace PlatformBenchmarks
         {
             var results = new World[count];
 
-            using var connection = await _dataSource.OpenConnectionAsync();
-
-            using var batch = new NpgsqlBatch(connection)
+            using (var connection = (NpgsqlConnection)_dbProviderFactory.CreateConnection())
             {
-                // Inserts a PG Sync message between each statement in the batch, required for compliance with
-                // TechEmpower general test requirement 7
-                // https://github.com/TechEmpower/FrameworkBenchmarks/wiki/Project-Information-Framework-Tests-Overview
-                EnableErrorBarriers = true
-            };
+                connection.ConnectionString = _connectionString;
+                await connection.OpenAsync();
 
-            for (var i = 0; i < count; i++)
-            {
-                batch.BatchCommands.Add(new()
+                using var batch = new NpgsqlBatch(connection)
                 {
-                    CommandText = "SELECT id, randomnumber FROM world WHERE id = $1",
-                    Parameters = { new NpgsqlParameter<int> { TypedValue = _random.Next(1, 10001) } }
-                });
+                    // Inserts a PG Sync message between each statement in the batch, required for compliance with
+                    // TechEmpower general test requirement 7
+                    // https://github.com/TechEmpower/FrameworkBenchmarks/wiki/Project-Information-Framework-Tests-Overview
+                    EnableErrorBarriers = true
+                };
+
+                for (var i = 0; i < count; i++)
+                {
+                    batch.BatchCommands.Add(new()
+                    {
+                        CommandText = "SELECT id, randomnumber FROM world WHERE id = $1",
+                        Parameters = { new NpgsqlParameter<int> { TypedValue = _random.Next(1, 10001) } }
+                    });
+                }
+
+                using var reader = await batch.ExecuteReaderAsync();
+
+                for (var i = 0; i < count; i++)
+                {
+                    await reader.ReadAsync();
+                    results[i] = new World { Id = reader.GetInt32(0), RandomNumber = reader.GetInt32(1) };
+                    await reader.NextResultAsync();
+                }
             }
-
-            using var reader = await batch.ExecuteReaderAsync();
-
-            for (var i = 0; i < count; i++)
-            {
-                await reader.ReadAsync();
-                results[i] = new World { Id = reader.GetInt32(0), RandomNumber = reader.GetInt32(1) };
-                await reader.NextResultAsync();
-            }
-
             return results;
         }
 
@@ -148,8 +159,9 @@ namespace PlatformBenchmarks
         {
             var results = new World[count];
 
-            using (var connection = CreateConnection())
+            using (var connection = (NpgsqlConnection)_dbProviderFactory.CreateConnection())
             {
+                connection.ConnectionString = _connectionString;
                 await connection.OpenAsync();
                 var (queryCmd, queryParameter) = CreateReadCommand(connection);
                 using (queryCmd)
@@ -185,8 +197,10 @@ namespace PlatformBenchmarks
             // Benchmark requirements explicitly prohibit pre-initializing the list size
             var result = new List<Fortune>();
 
-            using (var connection = await _dataSource.OpenConnectionAsync())
+            using (var connection = (NpgsqlConnection)_dbProviderFactory.CreateConnection())
             {
+                connection.ConnectionString = _connectionString;
+                await connection.OpenAsync();
 
                 using (var cmd = new NpgsqlCommand("SELECT id, message FROM fortune", connection))
                 {
@@ -234,8 +248,6 @@ namespace PlatformBenchmarks
                 RandomNumber = rdr.GetInt32(1)
             };
         }
-
-        private NpgsqlConnection CreateConnection() => _dataSource.CreateConnection();
 
         private static readonly object[] _cacheKeys = Enumerable.Range(0, 10001).Select((i) => new CacheKey(i)).ToArray();
 

@@ -108,14 +108,14 @@ namespace PlatformBenchmarks
 
         private Queue<RequestData> _Requests = new Queue<RequestData>();
 
-        private RawDb _db;
+        public static RawDb DB;
 
         private RequestData _ReadRequest = null;
         public override void Connected(NetContext context)
         {
             base.Connected(context);
             this.Context = context;
-            _db = new RawDb(new ConcurrentRandom(), HttpServer._connectionString); ;
+
         }
 
         private int AnalysisUrl(ReadOnlySpan<byte> url)
