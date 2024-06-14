@@ -47,25 +47,11 @@ namespace PlatformBenchmarks
 
         private static readonly AsciiString _path_Fortunes = "/fortunes";
 
-        private static readonly AsciiString _result_plaintext = "Hello, World!";
 
         private static readonly AsciiString _cached_worlds = "/cached-worlds";
 
         private readonly static uint _jsonPayloadSize = (uint)System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(new JsonMessage { message = "Hello, World!" }).Length;
 
-
-
-        private readonly static AsciiString _jsonPreamble =
-            _httpsuccess
-            + _headerContentTypeJson
-            + _headerServer
-            + _headerContentLength + _jsonPayloadSize.ToString() + _line;
-
-        private readonly static AsciiString _plaintextPreamble =
-              _httpsuccess
-              + _headerContentTypeText
-              + _headerServer
-              + _headerContentLength + _result_plaintext.Length.ToString() + _line;
 
 
         private readonly static AsciiString _jsonResultPreamble =
@@ -129,7 +115,7 @@ namespace PlatformBenchmarks
         {
             base.Connected(context);
             this.Context = context;
-            _db = new RawDb(new ConcurrentRandom(), Npgsql.NpgsqlFactory.Instance); ;
+            _db = new RawDb(new ConcurrentRandom(), HttpServer._connectionString); ;
         }
 
         private int AnalysisUrl(ReadOnlySpan<byte> url)
@@ -255,11 +241,11 @@ namespace PlatformBenchmarks
             Span<byte> baseUrl = stackalloc byte[baseurlLen];
             url.Slice(0, baseurlLen).CopyTo(baseUrl);
 
-            if (baseUrl.Length == _path_Plaintext.Length && baseUrl.StartsWith(_path_Plaintext))
+            if (baseUrl.Length == _path_Plaintext.Length && baseUrl[1] == 'p')
             {
                 type = ActionType.Plaintext;
             }
-            else if (baseUrl.Length == _path_Json.Length && baseUrl.StartsWith(_path_Json))
+            else if (baseUrl.Length == _path_Json.Length && baseUrl[1] == 'j')
             {
                 type = ActionType.Json;
             }
