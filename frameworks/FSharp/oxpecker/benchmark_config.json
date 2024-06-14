@@ -15,7 +15,7 @@
         "database": "Postgres",
         "framework": "Oxpecker",
         "language": "F#",
-        "orm": "Micro",
+        "orm": "Raw",
         "platform": ".NET",
         "flavor": "CoreCLR",
         "webserver": "Kestrel",
