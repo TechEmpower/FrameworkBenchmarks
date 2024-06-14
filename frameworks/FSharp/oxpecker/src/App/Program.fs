@@ -36,7 +36,6 @@ module HtmlViews =
 
 [<RequireQualifiedAccess>]
 module HttpHandlers =
-    open Npgsql
     open System.Text
     open Microsoft.AspNetCore.Http
     open System.Text.Json

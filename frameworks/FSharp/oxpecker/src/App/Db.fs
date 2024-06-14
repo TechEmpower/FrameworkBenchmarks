@@ -21,14 +21,15 @@ module Db =
             return result
         }
 
-
     let private createReadCommand (connection: DbConnection) : DbCommand =
-        let cmd = connection.CreateCommand()
-        cmd.CommandText <- "SELECT id, randomnumber FROM world WHERE id = @Id"
-        let id = cmd.CreateParameter()
-        id.ParameterName <- "@Id"
-        id.DbType <- DbType.Int32
-        id.Value <- Random.Shared.Next(1, 10001)
+        let cmd = connection.CreateCommand(
+            CommandText = "SELECT id, randomnumber FROM world WHERE id = @Id"
+        )
+        let id = cmd.CreateParameter(
+            ParameterName = "@Id",
+            DbType = DbType.Int32,
+            Value = Random.Shared.Next(1, 10001)
+        )
         cmd.Parameters.Add(id) |> ignore
         cmd
 
@@ -67,7 +68,6 @@ module Db =
 
     let private maxBatch = 500
     let private queries = Array.zeroCreate (maxBatch + 1)
-
     let private batchUpdateString batchSize =
         match queries[batchSize] with
         | null ->
@@ -86,15 +86,9 @@ module Db =
     let private generateParameters (results: World[]) (command: DbCommand) =
         for i in 0..results.Length-1 do
             let randomNumber = Random.Shared.Next(1, 10001)
-            let random = command.CreateParameter()
-            random.ParameterName <- $"@Rn_%i{i}"
-            random.DbType <- DbType.Int32
-            random.Value <- randomNumber
+            let random = command.CreateParameter(ParameterName = $"@Rn_{i}", DbType = DbType.Int32, Value = randomNumber)
             command.Parameters.Add(random) |> ignore
-            let id = command.CreateParameter()
-            id.ParameterName <- $"@Id_%i{i}"
-            id.DbType <- DbType.Int32
-            id.Value <- results[i].id
+            let id = command.CreateParameter(ParameterName = $"@Id_{i}", DbType = DbType.Int32, Value = results[i].id)
             command.Parameters.Add(id) |> ignore
             results[i] <- { results[i] with randomnumber = randomNumber }
 
