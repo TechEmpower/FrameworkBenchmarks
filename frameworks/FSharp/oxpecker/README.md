@@ -18,9 +18,5 @@ This includes tests for plaintext, json, and fortunes HTML serialization.
 **Web Stack**
 
 * [Oxpecker](https://github.com/Lanayx/Oxpecker)
-* [Dapper](https://github.com/DapperLib/Dapper)
+* [Npgsql](https://github.com/npgsql/npgsql)
 * ASP.NET Core
-
-## Paths & Source for Tests
-
-All source code is inside `Program.fs`.
