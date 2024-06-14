@@ -25,7 +25,7 @@ namespace PlatformBenchmarks
             Constants.InitMemoryBlock();
             var date = GMTDate.Default.DATE;
             _apiServer = new NetServer<HttpNetApplication, HttpHandler>();
-            _apiServer.Options.LogLevel = BeetleX.Light.Logs.LogLevel.Trace;
+            _apiServer.Options.LogLevel = BeetleX.Light.Logs.LogLevel.Error;
             _apiServer.Options.AddLogOutputHandler<LogOutputToConsole>();
             _apiServer.Options.SetDefaultListen(o =>
             {
