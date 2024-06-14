@@ -1,9 +1,8 @@
 use deadpool_postgres::{Client, Manager, ManagerConfig, RecyclingMethod};
 use tokio_pg_mapper::FromTokioPostgresRow;
-use tokio_postgres::{NoTls, Row, Error, Statement};
+use tokio_postgres::{Error, NoTls, Row, Statement};
 
 use crate::{Fortune, World};
-
 
 pub async fn create_pool(database_url: String, max_pool_size: u32) -> deadpool_postgres::Pool {
     let pg_config: tokio_postgres::Config = database_url.parse().expect("invalid database url");
