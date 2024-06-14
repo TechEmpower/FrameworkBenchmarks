@@ -250,24 +250,35 @@ namespace PlatformBenchmarks
     }
 
 
-    internal class BatchUpdateString
+    internal sealed class BatchUpdateString
     {
         private const int MaxBatch = 500;
+
+        internal static readonly string[] ParamNames = Enumerable.Range(0, MaxBatch * 2).Select(i => $"@p{i}").ToArray();
 
         private static string[] _queries = new string[MaxBatch + 1];
 
         public static string Query(int batchSize)
-        {
-            if (_queries[batchSize] != null)
-            {
-                return _queries[batchSize];
-            }
+            => _queries[batchSize] is null
+                ? CreateBatch(batchSize)
+                : _queries[batchSize];
 
-            var lastIndex = batchSize - 1;
+        private static string CreateBatch(int batchSize)
+        {
             var sb = StringBuilderCache.Acquire();
+
+
             sb.Append("UPDATE world SET randomNumber = temp.randomNumber FROM (VALUES ");
-            Enumerable.Range(0, lastIndex).ToList().ForEach(i => sb.Append($"(@Id_{i}, @Random_{i}), "));
-            sb.Append($"(@Id_{lastIndex}, @Random_{lastIndex}) ORDER BY 1) AS temp(id, randomNumber) WHERE temp.id = world.id");
+            var c = 1;
+            for (var i = 0; i < batchSize; i++)
+            {
+                if (i > 0)
+                    sb.Append(", ");
+                sb.Append($"(${c++}, ${c++})");
+            }
+            sb.Append(" ORDER BY 1) AS temp(id, randomNumber) WHERE temp.id = world.id");
+
+
             return _queries[batchSize] = StringBuilderCache.GetStringAndRelease(sb);
         }
     }
