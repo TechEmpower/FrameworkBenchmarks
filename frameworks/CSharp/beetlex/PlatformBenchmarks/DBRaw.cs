@@ -31,12 +31,16 @@ namespace PlatformBenchmarks
 
         public async Task<World> LoadSingleQueryRow()
         {
-            using var connection = await _dataSource.OpenConnectionAsync();
+            using (var connection = await _dataSource.OpenConnectionAsync())
+            {
 
-            var (cmd, _) = CreateReadCommand(connection);
-            using var command = cmd;
+                var (cmd, _) = CreateReadCommand(connection);
+                using (var command = cmd)
+                {
 
-            return await ReadSingleRow(cmd);
+                    return await ReadSingleRow(cmd);
+                }
+            }
         }
 
         public Task<CachedWorld[]> LoadCachedQueries(int count)
