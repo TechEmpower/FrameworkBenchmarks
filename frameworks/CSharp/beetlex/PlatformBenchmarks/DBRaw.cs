@@ -144,32 +144,33 @@ namespace PlatformBenchmarks
         {
             var results = new World[count];
 
-            using var connection = CreateConnection();
-            await connection.OpenAsync();
-
-            var (queryCmd, queryParameter) = CreateReadCommand(connection);
-            using (queryCmd)
+            using (var connection = CreateConnection())
             {
-                for (var i = 0; i < results.Length; i++)
+                await connection.OpenAsync();
+                var (queryCmd, queryParameter) = CreateReadCommand(connection);
+                using (queryCmd)
                 {
-                    results[i] = await ReadSingleRow(queryCmd);
-                    queryParameter.TypedValue = _random.Next(1, 10001);
-                }
-            }
-
-            using (var updateCmd = new NpgsqlCommand(BatchUpdateString.Query(count), connection))
-            {
-                for (var i = 0; i < results.Length; i++)
-                {
-                    var randomNumber = _random.Next(1, 10001);
-
-                    updateCmd.Parameters.Add(new NpgsqlParameter<int> { TypedValue = results[i].Id });
-                    updateCmd.Parameters.Add(new NpgsqlParameter<int> { TypedValue = randomNumber });
-
-                    results[i].RandomNumber = randomNumber;
+                    for (var i = 0; i < results.Length; i++)
+                    {
+                        results[i] = await ReadSingleRow(queryCmd);
+                        queryParameter.TypedValue = _random.Next(1, 10001);
+                    }
                 }
 
-                await updateCmd.ExecuteNonQueryAsync();
+                using (var updateCmd = new NpgsqlCommand(BatchUpdateString.Query(count), connection))
+                {
+                    for (var i = 0; i < results.Length; i++)
+                    {
+                        var randomNumber = _random.Next(1, 10001);
+
+                        updateCmd.Parameters.Add(new NpgsqlParameter<int> { TypedValue = results[i].Id });
+                        updateCmd.Parameters.Add(new NpgsqlParameter<int> { TypedValue = randomNumber });
+
+                        results[i].RandomNumber = randomNumber;
+                    }
+
+                    await updateCmd.ExecuteNonQueryAsync();
+                }
             }
 
             return results;
@@ -180,20 +181,26 @@ namespace PlatformBenchmarks
             // Benchmark requirements explicitly prohibit pre-initializing the list size
             var result = new List<Fortune>();
 
-            using var connection = await _dataSource.OpenConnectionAsync();
-
-            using var cmd = new NpgsqlCommand("SELECT id, message FROM fortune", connection);
-            using var rdr = await cmd.ExecuteReaderAsync();
-
-            while (await rdr.ReadAsync())
+            using (var connection = await _dataSource.OpenConnectionAsync())
             {
-                result.Add(new Fortune
-                {
-                    Id = rdr.GetInt32(0),
-                    Message = rdr.GetString(1)
-                });
-            }
 
+                using (var cmd = new NpgsqlCommand("SELECT id, message FROM fortune", connection))
+                {
+
+                    using (var rdr = await cmd.ExecuteReaderAsync())
+                    {
+
+                        while (await rdr.ReadAsync())
+                        {
+                            result.Add(new Fortune
+                            {
+                                Id = rdr.GetInt32(0),
+                                Message = rdr.GetString(1)
+                            });
+                        }
+                    }
+                }
+            }
             result.Add(new Fortune { Message = "Additional fortune added at request time." });
             result.Sort();
 
