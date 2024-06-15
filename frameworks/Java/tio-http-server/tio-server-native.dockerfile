@@ -6,4 +6,4 @@ RUN mvn package -Pnative -q
 
 EXPOSE 8080
 
-CMD ["/t-io/target/tio-server-benchmark", " --native=true"]
+CMD ["/t-io/target/tio-http-server-benchmark", " --native=true"]
