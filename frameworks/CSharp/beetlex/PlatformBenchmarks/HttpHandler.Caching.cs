@@ -1,18 +1,18 @@
-﻿using BeetleX;
-using BeetleX.Buffers;
-using SpanJson;
+﻿using BeetleX.Light.Memory;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace PlatformBenchmarks
 {
     public partial class HttpHandler
     {
-       
 
-        public async Task caching(string queryString, PipeStream stream, HttpToken token, ISession session)
+
+        public async Task caching(string queryString, IStreamWriter stream)
         {
             int count = 1;
             if (!string.IsNullOrEmpty(queryString))
@@ -30,20 +30,39 @@ namespace PlatformBenchmarks
                 count = 500;
             if (count < 1)
                 count = 1;
+            ContentLengthMemory content = new ContentLengthMemory();
             try
             {
-                var data = await token.Db.LoadCachedQueries(count);
+                var data = await _db.LoadCachedQueries(count);
                 stream.Write(_jsonResultPreamble.Data, 0, _jsonResultPreamble.Length);
-                token.ContentLength = stream.Allocate(HttpHandler._LengthSize);
+                content.Data = GetContentLengthMemory(stream);
                 GMTDate.Default.Write(stream);
-                token.ContentPostion = stream.CacheLength;
-                await JsonSerializer.NonGeneric.Utf8.SerializeAsync(data, stream);
+                stream.WriteSequenceNetStream.StartWriteLength();
+
+                var jsonWriter = GetJsonWriter(stream);
+                using (var unflush = stream.UnFlush())
+                {
+                    jsonWriter.WriteStartArray();
+                    foreach (var item in data)
+                    {
+                        jsonWriter.WriteStartObject();
+                        jsonWriter.WriteNumber("Id", item.Id);
+                        jsonWriter.WriteNumber("RandomNumber", item.RandomNumber);
+                        jsonWriter.WriteEndObject();
+                    }
+                    jsonWriter.WriteEndArray();
+                    jsonWriter.Flush();
+
+                }
             }
             catch (Exception e_)
             {
-                stream.Write(e_.Message);
+                Context.GetLoger(BeetleX.Light.Logs.LogLevel.Error)?.WriteException(Context, "PlatformBenchmarks", "caching", e_);
+                stream.WriteString(e_.Message);
             }
-            OnCompleted(stream, session, token);
+            var len = stream.WriteSequenceNetStream.EndWriteLength();
+            content.Full(len);
+
         }
     }
 }

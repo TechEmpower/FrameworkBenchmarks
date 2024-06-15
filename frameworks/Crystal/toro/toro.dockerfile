@@ -1,4 +1,4 @@
-FROM crystallang/crystal:0.34.0
+FROM crystallang/crystal:1.12.1
 
 WORKDIR /toro
 COPY views views

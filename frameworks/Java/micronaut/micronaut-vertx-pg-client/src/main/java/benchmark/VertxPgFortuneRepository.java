@@ -2,7 +2,6 @@ package benchmark;
 
 import benchmark.model.Fortune;
 import benchmark.repository.AsyncFortuneRepository;
-import io.vertx.sqlclient.Pool;
 import io.vertx.sqlclient.Tuple;
 import jakarta.inject.Singleton;
 
@@ -13,10 +12,6 @@ import java.util.stream.Collectors;
 
 @Singleton
 public class VertxPgFortuneRepository extends AbstractVertxSqlClientRepository implements AsyncFortuneRepository {
-
-    public VertxPgFortuneRepository(Pool client) {
-        super(client);
-    }
 
     private CompletionStage<?> createTable() {
         return execute("DROP TABLE IF EXISTS Fortune;")

@@ -1,4 +1,4 @@
-use std::{borrow::Cow, collections::HashMap, fmt::Write, io, sync::Arc};
+use std::{collections::HashMap, fmt::Write, io, sync::Arc};
 
 use futures_util::{stream::FuturesUnordered, StreamExt, TryFutureExt, TryStreamExt};
 use rand::{rngs::SmallRng, thread_rng, Rng, SeedableRng};
@@ -162,7 +162,7 @@ impl PgConnection {
     pub async fn tell_fortune(&self) -> Result<Vec<Fortune>, PgError> {
         let mut items = vec![Fortune {
             id: 0,
-            message: Cow::Borrowed("Additional fortune added at request time."),
+            message: "Additional fortune added at request time.".to_string(),
         }];
 
         let stream = self
@@ -176,7 +176,7 @@ impl PgConnection {
 
             items.push(Fortune {
                 id: row.get(0),
-                message: Cow::Owned(row.get(1)),
+                message: row.get(1),
             });
         }
 

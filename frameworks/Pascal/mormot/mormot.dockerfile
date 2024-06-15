@@ -9,7 +9,7 @@ COPY setup_and_build.sh .
 
 RUN /bin/bash -c ./setup_and_build.sh
 
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 
 ARG TFB_TEST_NAME
 

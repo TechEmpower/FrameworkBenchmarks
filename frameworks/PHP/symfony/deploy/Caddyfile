@@ -3,7 +3,7 @@
     {$CADDY_DEBUG}
 
 	frankenphp {
-		#worker /path/to/your/worker.php
+		#worker /path/to/your/runtime.php
 		{$FRANKENPHP_CONFIG}
 	}
 }
@@ -15,7 +15,7 @@ route {
 
     # If the requested file does not exist, try index files
     @indexFiles file {
-        try_files {path} {path}/worker.php worker.php
+        try_files {path} {path}/runtime.php runtime.php
         split_path .php
     }
     rewrite @indexFiles {http.matchers.file.relative}

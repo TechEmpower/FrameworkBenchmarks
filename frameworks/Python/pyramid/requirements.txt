@@ -8,12 +8,14 @@ chameleon==3.9.1
     # via pyramid-chameleon
 greenlet==1.1.2
     # via sqlalchemy
-gunicorn==20.1.0
+gunicorn==22.0.0
     # via -r requirements.in
 hupper==1.10.3
     # via pyramid
-orjson==3.6.5
+orjson==3.9.15
     # via -r requirements.in
+packaging==24.0
+    # via gunicorn
 pastedeploy==2.1.1
     # via plaster-pastedeploy
 plaster==1.0
@@ -38,9 +40,9 @@ venusian==3.0.0
     # via pyramid
 webob==1.8.7
     # via pyramid
-zope.deprecation==4.4.0
+zope-deprecation==4.4.0
     # via pyramid
-zope.interface==5.4.0
+zope-interface==5.4.0
     # via pyramid
 
 # The following packages are considered to be unsafe in a requirements file:

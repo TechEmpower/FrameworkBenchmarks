@@ -1,5 +1,3 @@
-use std::borrow::Cow;
-
 use diesel::Queryable;
 use sailfish::TemplateOnce;
 use serde::Serialize;
@@ -13,7 +11,7 @@ pub struct World {
 #[derive(Serialize, Queryable, Debug)]
 pub struct Fortune {
     pub id: i32,
-    pub message: Cow<'static, str>,
+    pub message: String,
 }
 
 #[derive(TemplateOnce)]

@@ -2,7 +2,7 @@
 
 use std::borrow::Cow;
 
-use serde::{ser::SerializeStruct, Serialize, Serializer};
+use serde::{ser::SerializeStruct, Deserialize, Deserializer, Serialize, Serializer};
 use xitca_http::{
     body::Once,
     bytes::{BufMutWriter, Bytes, BytesMut},
@@ -11,6 +11,7 @@ use xitca_http::{
 
 use crate::util::Error;
 
+#[derive(Clone)]
 pub struct Message {
     message: &'static str,
 }
@@ -24,6 +25,9 @@ impl Message {
     }
 }
 
+pub struct Num(pub u16);
+
+#[cfg_attr(feature = "pg-orm", derive(diesel::Queryable))]
 pub struct World {
     pub id: i32,
     pub randomnumber: i32,
@@ -36,6 +40,7 @@ impl World {
     }
 }
 
+#[cfg_attr(feature = "pg-orm", derive(diesel::Queryable))]
 pub struct Fortune {
     pub id: i32,
     pub message: Cow<'static, str>,
@@ -65,6 +70,73 @@ impl Fortunes {
     #[inline]
     pub const fn new(items: Vec<Fortune>) -> Self {
         Self { items }
+    }
+}
+
+impl<'de> Deserialize<'de> for Num {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        use core::{cmp, fmt};
+
+        use serde::de::{Error, MapAccess, Visitor};
+
+        const FIELDS: &'static [&'static str] = &["q"];
+
+        struct Field;
+
+        impl<'de> Deserialize<'de> for Field {
+            fn deserialize<D>(deserializer: D) -> Result<Field, D::Error>
+            where
+                D: Deserializer<'de>,
+            {
+                struct FieldVisitor;
+
+                impl<'de> Visitor<'de> for FieldVisitor {
+                    type Value = Field;
+
+                    fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+                        formatter.write_str("`q`")
+                    }
+
+                    fn visit_str<E>(self, value: &str) -> Result<Field, E>
+                    where
+                        E: Error,
+                    {
+                        match value {
+                            "q" => Ok(Field),
+                            _ => Err(Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+
+                deserializer.deserialize_identifier(FieldVisitor)
+            }
+        }
+
+        struct NumVisitor;
+
+        impl<'de> Visitor<'de> for NumVisitor {
+            type Value = Num;
+
+            fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+                formatter.write_str("struct Num")
+            }
+
+            fn visit_map<V>(self, mut map: V) -> Result<Num, V::Error>
+            where
+                V: MapAccess<'de>,
+            {
+                map.next_key::<Field>()?
+                    .ok_or_else(|| Error::missing_field("q"))?;
+                let q = map.next_value::<u16>().unwrap_or(1);
+                let q = cmp::min(500, cmp::max(1, q));
+                Ok(Num(q))
+            }
+        }
+
+        deserializer.deserialize_struct("Num", FIELDS, NumVisitor)
     }
 }
 
@@ -101,6 +173,6 @@ where
 {
     serde_json::to_writer(BufMutWriter(buf), value)?;
     let mut res = req.into_response(buf.split().freeze());
-    res.headers_mut().append(CONTENT_TYPE, JSON);
+    res.headers_mut().insert(CONTENT_TYPE, JSON);
     Ok(res)
 }

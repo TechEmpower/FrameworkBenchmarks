@@ -238,7 +238,7 @@ static int do_multiple_queries(bool do_update, bool use_cache, h2o_req_t *req)
 
 	// MAX_QUERIES is a relatively small number, so assume no overflow in the following
 	// arithmetic operations.
-	assert(num_query <= MAX_QUERIES);
+	assert(num_query && num_query <= MAX_QUERIES);
 
 	size_t base_size = offsetof(multiple_query_ctx_t, res) + num_query * sizeof(query_result_t);
 
@@ -246,8 +246,16 @@ static int do_multiple_queries(bool do_update, bool use_cache, h2o_req_t *req)
 	base_size = base_size * _Alignof(query_param_t);
 
 	const config_t * const config = ctx->global_thread_data->config;
-	const size_t num_query_in_progress =
-		MIN(num_query, config->max_db_conn_num * config->max_pipeline_query_num);
+	size_t num_query_in_progress = config->max_db_conn_num * config->max_pipeline_query_num;
+
+	if (num_query_in_progress < config->max_db_conn_num ||
+	    num_query_in_progress < config->max_pipeline_query_num)
+		num_query_in_progress = num_query;
+	else
+		num_query_in_progress = MIN(num_query, num_query_in_progress);
+
+	assert(num_query_in_progress);
+
 	size_t sz = base_size + num_query_in_progress * sizeof(query_param_t);
 
 	if (do_update) {
@@ -408,7 +416,7 @@ static void fetch_from_cache(uint64_t now,
 		h2o_cache_ref_t * const r = h2o_cache_fetch(data->world_cache, now, key, 0);
 
 		if (r) {
-			const uint32_t * const table = (const uint32_t *) r->value.base;
+			const uint16_t * const table = (const uint16_t *) r->value.base;
 
 			for (size_t i = 0; i < query_ctx->num_query; i++) {
 				const uint32_t id = query_ctx->res[i].id;
@@ -432,7 +440,7 @@ static void fetch_from_cache(uint64_t now,
 			memset(ctx, 0, sizeof(*ctx));
 			ctx->data = data;
 			ctx->loop = query_ctx->ctx->event_loop.h2o_ctx.loop;
-			ctx->table.len = (MAX_ID + 1) * sizeof(uint32_t);
+			ctx->table.len = (MAX_ID + 1) * sizeof(uint16_t);
 			ctx->table.base = h2o_mem_alloc(ctx->table.len);
 			memset(ctx->table.base, 0, ctx->table.len);
 			ctx->param.command = POPULATE_CACHE_QUERY;
@@ -597,10 +605,11 @@ static result_return_t on_populate_cache_result(db_query_param_t *param, PGresul
 		                                                                param,
 		                                                                param);
 		query_result_t r = {.id = 0};
-		uint32_t * const table = (uint32_t *) query_ctx->table.base;
+		uint16_t * const table = (uint16_t *) query_ctx->table.base;
 
 		for (size_t i = 0; i < num_rows; i++) {
 			process_result(result, i, &r);
+			assert(r.random_number <= UINT16_MAX);
 			table[r.id] = r.random_number;
 		}
 

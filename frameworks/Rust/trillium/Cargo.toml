@@ -3,25 +3,46 @@ name = "trillium-techempower"
 version = "0.1.0"
 edition = "2021"
 
+[features]
+jemallocator = ["dep:jemallocator"]
+tokio = ["dep:trillium-tokio", "sea-orm/runtime-tokio", "sqlx/runtime-tokio"]
+smol = [
+        "dep:trillium-smol",
+        "sea-orm/runtime-async-std",
+        "sqlx/runtime-async-std",
+]
+async-std = [
+        "dep:trillium-async-std",
+        "sea-orm/runtime-async-std",
+        "sqlx/runtime-async-std",
+]
+
 [dependencies]
-askama = "0.11.1"
-fastrand = "1.7.0"
-futures-lite = "1.12.0"
-futures-util = "0.3.21"
-serde = { version = "1.0.136", features = ["derive"] }
-serde_json = "1.0.79"
-trillium = "0.2.2"
+askama = "0.12.1"
+env_logger = "0.11.3"
+fastrand = "2.0.2"
+futures-lite = "2.3.0"
+jemallocator = { version = "0.5.4", optional = true }
+moka = { version = "0.12.5", features = ["future"] }
+serde = { version = "1.0.197", features = ["derive"] }
+serde_json = "1.0.115"
+sqlx = "0.7.4"
+trillium = "0.2.19"
 trillium-api = "0.1.0"
-trillium-askama = "0.3.0"
-trillium-async-std = "0.2.0"
-trillium-logger = "0.4.0"
-trillium-router = "0.3.2"
+trillium-askama = "0.3.2"
+trillium-async-std = { version = "0.4.0", optional = true }
+trillium-logger = "0.4.5"
+trillium-router = "0.4.1"
+trillium-smol = { version = "0.4.0", optional = true }
+trillium-tokio = { version = "0.4.0", optional = true }
+unicycle = "0.10.1"
 
 [dependencies.sea-orm]
-version = "0.6.0"
+version = "0.12.15"
 default-features = false
-features = ["runtime-async-std-native-tls", "sqlx-postgres", "macros"]
+features = ["sqlx-postgres", "macros"]
 
 [profile.release]
 panic = "abort"
 lto = "fat"
+codegen-units = 1

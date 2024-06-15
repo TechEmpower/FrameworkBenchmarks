@@ -19,6 +19,23 @@ platform = ".NET"
 webserver = "Kestrel"
 versus = "None"
 
+[aot]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+urls.db = "/db"
+urls.query = "/queries/"
+urls.update = "/updates/"
+urls.cached_query = "/cached-worlds/"
+approach = "Realistic"
+classification = "Platform"
+database = "Postgres"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = ".NET"
+webserver = "Kestrel"
+versus = "None"
+
 [minimal]
 urls.plaintext = "/plaintext"
 urls.json = "/json"

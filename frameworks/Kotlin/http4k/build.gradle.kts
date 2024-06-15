@@ -1,9 +1,10 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.gradle.api.JavaVersion.*
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.js.translate.context.Namer.kotlin
 
 plugins {
-    kotlin("jvm") version "1.9.20"
+    kotlin("jvm") version "1.9.23"
     application
 }
 
@@ -34,14 +35,14 @@ allprojects {
     }
 
     java {
-        sourceCompatibility = VERSION_20
-        targetCompatibility = VERSION_20
+        sourceCompatibility = VERSION_21
+        targetCompatibility = VERSION_21
     }
 
     tasks {
         withType<KotlinCompile> {
             kotlinOptions {
-                jvmTarget = "20"
+                jvmTarget = "21"
                 allWarningsAsErrors = true
             }
         }

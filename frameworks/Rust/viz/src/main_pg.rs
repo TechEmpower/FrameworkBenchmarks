@@ -6,7 +6,7 @@ use std::{
 use viz::{
     header::{HeaderValue, SERVER},
     types::State,
-    Request, RequestExt, Response, ResponseExt, Result, Router, ServiceMaker,
+    Request, RequestExt, Response, ResponseExt, Result, Router,
 };
 use yarte::Template;
 
@@ -19,8 +19,8 @@ use db_pg::{get_conn, PgConnection};
 
 #[derive(Template)]
 #[template(path = "fortune.hbs")]
-pub struct FortunesTemplate<'a> {
-    pub fortunes: &'a Vec<models::Fortune>,
+pub struct FortunesTemplate {
+    pub fortunes: Vec<models::Fortune>,
 }
 
 const DB_URL: &str =
@@ -42,11 +42,9 @@ async fn fortunes(req: Request) -> Result<Response> {
 
     let fortunes = conn.tell_fortune().await?;
 
-    let buf = FortunesTemplate {
-        fortunes: &fortunes,
-    }
-    .call()
-    .expect("error rendering template");
+    let buf = FortunesTemplate { fortunes }
+        .call()
+        .expect("error rendering template");
 
     let mut res = Response::html(buf);
     res.headers_mut()
@@ -107,8 +105,5 @@ async fn serve() {
         .get("/updates", updates)
         .with(State::new(conn));
 
-    server::builder()
-        .serve(ServiceMaker::from(app))
-        .await
-        .unwrap()
+    server::serve(app).await.unwrap()
 }

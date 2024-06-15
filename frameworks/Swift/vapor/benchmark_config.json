@@ -16,7 +16,7 @@
       "database_os": "Linux",
       "display_name": "Vapor",
       "notes": "",
-      "versus": "None"
+      "versus": "swift-nio"
     },
     "fluent": {
       "db_url": "/db",

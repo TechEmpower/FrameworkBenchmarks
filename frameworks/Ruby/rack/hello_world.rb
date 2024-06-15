@@ -54,20 +54,26 @@ class HelloWorld
   </html>'
 
   def initialize
-    # auto_tune
-    max_connections = 512
+    if defined?(Puma)
+      num_workers, num_threads = auto_tune
+      num_threads = [num_threads, 32].min
+      max_connections = num_workers * num_threads
+    else
+      max_connections = 512
+    end
     @db = PgDb.new(DEFAULT_DATABASE_URL, max_connections)
   end
 
   def respond(content_type, body = '')
+    headers = {
+      CONTENT_TYPE => content_type,
+      DATE => Time.now.utc.httpdate,
+      SERVER => SERVER_STRING
+    }
+    headers[CONTENT_LENGTH] = body.bytesize.to_s if defined?(Unicorn)
     [
       200,
-      {
-        CONTENT_TYPE => content_type,
-        DATE => Time.now.utc.httpdate,
-        SERVER => SERVER_STRING,
-        CONTENT_LENGTH => body.bytesize.to_s
-      },
+      headers,
       [body]
     ]
   end

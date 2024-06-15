@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2022, 2023 Oracle and/or its affiliates.
+# Copyright (c) 2022, 2024 Oracle and/or its affiliates.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,33 +15,27 @@
 #
 
 server:
+  host: 0.0.0.0
   port: 8080
-  sockets:
-    - name: "@default"
-      host: 0.0.0.0
-      port: 8080
-      backlog: 8192
-      receive-buffer-size: 64000
-      # set write-queue-length to 0 or not setting it will disable async writes
-      # write-queue-length: 1024
-      connection-options:
-        read-timeout-seconds: 0
-        connect-timeout-seconds: 0
-        send-buffer-size: 64000
-        receive-buffer-size: 64000
-  connection-providers:
+  backlog: 8192
+  write-queue-length: 8192
+  connection-options:
+    read-timeout: PT0S
+    connect-timeout: PT0S
+    tcp-no-delay: true
+  protocols:
     "http_1_1":
-      validate-headers: false
+      validate-request-headers: false
+      validate-response-headers: false
       validate-path: false
       recv-log: false
       send-log: false
 
 host: "tfb-database"
-#host: "localhost"
 db: "hello_world"
 username: benchmarkdbuser
 password: benchmarkdbpass
-sql-pool-size: 200
+sql-pool-size: 300
 db-repository: "pgclient"     # "pgclient" (default) or "hikari"
 
 # The following for pgclient only

@@ -11,7 +11,7 @@ use nanorand::{Rng, WyRand};
 use viz::{
     header::{HeaderValue, SERVER},
     types::State,
-    Request, RequestExt, Response, ResponseExt, Result, Router, ServiceMaker,
+    Request, RequestExt, Response, ResponseExt, Result, Router,
 };
 
 mod db_diesel;
@@ -89,19 +89,13 @@ async fn main() {
 
     let rng = WyRand::new();
 
-    let service = ServiceMaker::from(
-        Router::new()
-            .get("/db", db)
-            .get("/fortunes", fortunes)
-            .get("/queries", queries)
-            .get("/updates", updates)
-            .with(State::new(pool))
-            .with(State::new(rng)),
-    );
+    let app = Router::new()
+        .get("/db", db)
+        .get("/fortunes", fortunes)
+        .get("/queries", queries)
+        .get("/updates", updates)
+        .with(State::new(pool))
+        .with(State::new(rng));
 
-    serve(service).await;
-}
-
-async fn serve(service: ServiceMaker) {
-    server::builder().serve(service).await.unwrap()
+    server::serve(app).await.unwrap()
 }
