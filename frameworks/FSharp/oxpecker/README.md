@@ -1,5 +1,5 @@
 # Oxpecker Tests on Linux
-This includes tests for plaintext, json, and fortunes HTML serialization.
+This includes tests for plaintext, json, fortunes, single query, mutliple queries and data updates.
 
 ## Infrastructure Software Versions
 
@@ -19,4 +19,5 @@ This includes tests for plaintext, json, and fortunes HTML serialization.
 
 * [Oxpecker](https://github.com/Lanayx/Oxpecker)
 * [Npgsql](https://github.com/npgsql/npgsql)
+* [System.Text.Json](https://github.com/dotnet/runtime/tree/main/src/libraries/System.Text.Json)
 * ASP.NET Core

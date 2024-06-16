@@ -21,7 +21,7 @@ module Db =
             return result
         }
 
-    let private createReadCommand (connection: DbConnection) : DbCommand =
+    let private createReadCommand (connection: DbConnection) =
         let cmd = connection.CreateCommand(
             CommandText = "SELECT id, randomnumber FROM world WHERE id = @Id"
         )
@@ -40,7 +40,7 @@ module Db =
             return { id = rdr.GetInt32(0); randomnumber = rdr.GetInt32(1) }
         }
 
-    let loadSingleRow() =
+    let loadSingleRow () =
         task {
             use db = new NpgsqlConnection(ConnectionString)
             do! db.OpenAsync()
@@ -49,9 +49,9 @@ module Db =
         }
 
     let private readMultipleRows (count: int) (conn: NpgsqlConnection) =
+        let result = Array.zeroCreate count
         task {
             use cmd = createReadCommand conn
-            let result = Array.zeroCreate count
             for i in 0..result.Length-1 do
                 cmd.Parameters["@Id"].Value <- Random.Shared.Next(1, 10001)
                 let! row = readSingleRow cmd
