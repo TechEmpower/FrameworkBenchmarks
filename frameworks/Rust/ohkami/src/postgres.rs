@@ -6,45 +6,9 @@ use crate::models::{World, Fortune};
 #[derive(Clone)]
 pub struct Postgres(sqlx::PgPool);
 
-impl Postgres {
-    pub async fn init() -> impl ohkami::FrontFang {
-        pub struct UsePostgres(Postgres);
-
-        impl ohkami::FrontFang for UsePostgres {
-            type Error = std::convert::Infallible;
-            #[inline(always)]
-            async fn bite(&self, req: &mut ohkami::Request) -> Result<(), Self::Error> {
-                req.memorize(self.0.clone());
-                Ok(())
-            }
-        }
-
-        macro_rules! load_env {
-            ($($name:ident as $t:ty)*) => {
-                $(
-                    #[allow(non_snake_case)]
-                    let $name = ::std::env::var(stringify!($name))
-                        .expect(concat!(
-                            "Failed to load environment variable ",
-                            "`", stringify!($name), "`"
-                        ))
-                        .parse::<$t>()
-                        .unwrap();
-                )*
-            };
-        } load_env! {
-            MAX_CONNECTIONS as u32
-            MIN_CONNECTIONS as u32
-            DATABASE_URL    as String
-        }
-
-        UsePostgres(Self(
-            sqlx::postgres::PgPoolOptions::new()
-                .max_connections(MAX_CONNECTIONS)
-                .min_connections(MIN_CONNECTIONS)
-                .connect(&DATABASE_URL).await
-                .unwrap()
-        ))
+impl From<sqlx::PgPool> for Postgres {
+    fn from(pgpool: sqlx::PgPool) -> Self {
+        Self(pgpool)
     }
 }
 

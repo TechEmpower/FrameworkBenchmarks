@@ -1,5 +1,8 @@
 //! show case of axum running on proper thread per core server with io-uring enabled.
 
+#[global_allocator]
+static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
+
 mod db;
 mod ser;
 mod util;

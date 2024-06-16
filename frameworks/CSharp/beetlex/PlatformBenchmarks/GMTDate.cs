@@ -1,4 +1,5 @@
-﻿using BeetleX.Buffers;
+﻿
+using BeetleX.Light.Memory;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -99,7 +100,7 @@ namespace PlatformBenchmarks
             return GetData(DateTime.Now);
         }
 
-        public void Write(PipeStream stream)
+        public void Write(IStreamWriter stream)
         {
             var data = DATE;
             stream.Write(data.Array, 0, data.Count);

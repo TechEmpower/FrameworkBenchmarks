@@ -3,7 +3,7 @@
 # Our Rack application to be executed by rackup
 class HelloWorld
   DEFAULT_HEADERS = {}.tap do |h|
-    h['Server'] = SERVER_STRING if SERVER_STRING
+    h[SERVER_HEADER] = SERVER_STRING if SERVER_STRING
 
     h.freeze
   end
@@ -12,9 +12,7 @@ class HelloWorld
     params = Rack::Utils.parse_query(env['QUERY_STRING'])
 
     queries = params['queries'].to_i
-    return QUERIES_MIN if queries < QUERIES_MIN
-    return QUERIES_MAX if queries > QUERIES_MAX
-    queries
+    queries.clamp(QUERIES_MIN, QUERIES_MAX)
   end
 
   # Return a random number between 1 and MAX_PK
@@ -31,8 +29,8 @@ class HelloWorld
 
   def queries(env)
     DB.synchronize do
-      Array.new(bounded_queries(env)) do
-        WORLD_BY_ID.(:id=>rand1)
+      ALL_IDS.sample(bounded_queries(env)).map do |id|
+        WORLD_BY_ID.(id: id)
       end
     end
   end
@@ -80,9 +78,9 @@ class HelloWorld
 
   def updates(env)
     DB.synchronize do
-      Array.new(bounded_queries(env)) do
-        world = WORLD_BY_ID.(:id=>rand1)
-        WORLD_UPDATE.(:id=>world[:id], :randomnumber=>(world[:randomnumber] = rand1))
+      ALL_IDS.sample(bounded_queries(env)).map do |id|
+        world = WORLD_BY_ID.(id: id)
+        WORLD_UPDATE.(id: world[:id], randomnumber: (world[:randomnumber] = rand1))
         world
       end
     end
@@ -93,29 +91,29 @@ class HelloWorld
       case env['PATH_INFO']
       when '/json'
         # Test type 1: JSON serialization
-        ['application/json', JSON.fast_generate(:message=>'Hello, World!')]
+        [JSON_TYPE, JSON.fast_generate(:message=>'Hello, World!')]
       when '/db'
         # Test type 2: Single database query
-        ['application/json', JSON.fast_generate(db)]
+        [JSON_TYPE, JSON.fast_generate(db)]
       when '/queries'
         # Test type 3: Multiple database queries
-        ['application/json', JSON.fast_generate(queries(env))]
+        [JSON_TYPE, JSON.fast_generate(queries(env))]
       when '/fortunes'
         # Test type 4: Fortunes
-        ['text/html; charset=utf-8', fortunes]
+        [HTML_TYPE, fortunes]
       when '/updates'
         # Test type 5: Database updates
-        ['application/json', JSON.fast_generate(updates(env))]
+        [JSON_TYPE, JSON.fast_generate(updates(env))]
       when '/plaintext'
         # Test type 6: Plaintext
-        ['text/plain', 'Hello, World!']
+        [PLAINTEXT_TYPE, 'Hello, World!']
       end
 
     [
       200,
       DEFAULT_HEADERS.merge(
-        'Content-Type'=>content_type,
-        'Date'=>Time.now.httpdate
+        CONTENT_TYPE => content_type,
+        DATE_HEADER => Time.now.httpdate
       ),
       body
     ]

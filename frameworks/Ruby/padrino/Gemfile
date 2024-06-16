@@ -1,4 +1,4 @@
-source 'http://rubygems.org'
+source 'https://rubygems.org'
 
 gem 'mysql2', '~> 0.4'
 gem "unicorn", '~> 6.1'
@@ -8,3 +8,4 @@ gem 'slim', '2.0.3'
 gem 'dm-mysql-adapter', '1.2.0'
 gem 'dm-core', '1.2.1'
 gem 'padrino', '0.15.3'
+gem 'rack', '~> 2.2'

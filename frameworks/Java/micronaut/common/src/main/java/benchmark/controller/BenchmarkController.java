@@ -9,8 +9,6 @@ import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.QueryValue;
-import io.micronaut.scheduling.TaskExecutors;
-import io.micronaut.scheduling.annotation.ExecuteOn;
 import views.fortunes;
 
 import java.util.ArrayList;
@@ -20,7 +18,6 @@ import java.util.List;
 
 import static java.util.Comparator.comparing;
 
-@ExecuteOn(TaskExecutors.IO)
 @Requires(beans = {WorldRepository.class, FortuneRepository.class})
 @Controller
 public class BenchmarkController extends AbstractBenchmarkController {

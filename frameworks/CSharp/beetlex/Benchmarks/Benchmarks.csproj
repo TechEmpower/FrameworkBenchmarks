@@ -2,13 +2,12 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ServerGarbageCollection>true</ServerGarbageCollection>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="BeetleX.FastHttpApi" Version="1.9.6" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
-    <PackageReference Include="Npgsql" Version="5.0.0-alpha1" />
-    <PackageReference Include="SpanJson" Version="3.0.1" />
+    <PackageReference Include="Npgsql" Version="8.0.3" />
   </ItemGroup>
 </Project>

@@ -81,7 +81,8 @@
       "database_os": "Linux",
       "display_name": "ngx-php async",
       "notes": "ngx_php async",
-      "versus": "php"
+      "versus": "php",
+      "tags": ["broken"]
     }
   }]
 }

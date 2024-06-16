@@ -1,0 +1,9 @@
+datasource:
+  url: jdbc:mysql://localhost:3306/hello_world?useUnicode=true&characterEncoding=utf8&useSSL=false&autoReconnect=true&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
+  username: root
+  password: 88888888
+
+logging:
+  level:
+    root: info
+    sql: debug
