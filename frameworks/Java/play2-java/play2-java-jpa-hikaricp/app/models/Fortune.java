@@ -2,9 +2,9 @@ package models;
 
 import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.criteria.CriteriaQuery;
 
 import play.db.jpa.JPAApi;
 
