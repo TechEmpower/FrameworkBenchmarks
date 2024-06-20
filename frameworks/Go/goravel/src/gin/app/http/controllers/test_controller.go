@@ -32,10 +32,10 @@ func (r *TestController) JSON(ctx http.Context) http.Response {
 }
 
 func (r *TestController) DB(ctx http.Context) http.Response {
-	randID := r.getRand()
 	world := acquireWorld()
 
-	_ = facades.Orm().Query().Where("id", randID).First(&world)
+	world.ID = r.getRand()
+	_ = facades.Orm().Query().Find(&world)
 
 	JSON(ctx, &world)
 	releaseWorld(world)
@@ -47,8 +47,8 @@ func (r *TestController) Queries(ctx http.Context) http.Response {
 	worlds := acquireWorlds()[:n]
 
 	for i := 0; i < n; i++ {
-		randID := r.getRand()
-		_ = facades.Orm().Query().Where("id", randID).Get(&worlds[i])
+		worlds[i].ID = r.getRand()
+		_ = facades.Orm().Query().Find(&worlds[i])
 	}
 
 	JSON(ctx, &worlds)
@@ -61,8 +61,8 @@ func (r *TestController) Update(ctx http.Context) http.Response {
 	worlds := acquireWorlds()[:n]
 
 	for i := 0; i < n; i++ {
-		randID := r.getRand()
-		_ = facades.Orm().Query().Where("id", randID).Get(&worlds[i])
+		worlds[i].ID = r.getRand()
+		_ = facades.Orm().Query().Find(&worlds[i])
 	}
 
 	// sorting is required for insert deadlock prevention.
