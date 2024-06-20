@@ -105,10 +105,3 @@ func HTML(ctx http.Context) {
 	ctx.Response().Header("Server", "Goravel")
 	ctx.Response().Header("Content-Type", contentTypeHtml)
 }
-
-func Error(ctx http.Context, err error) {
-	ctx.Response().Header("Server", "Goravel")
-	ctx.Response().Header("Content-Type", contentTypePlain)
-	ctx.Response().Status(http.StatusInternalServerError)
-	_, _ = ctx.Response().Writer().Write(str2bytes(err.Error()))
-}

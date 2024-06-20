@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"math/rand/v2"
 	"sort"
 
@@ -36,10 +35,7 @@ func (r *TestController) DB(ctx http.Context) http.Response {
 	randID := r.getRand()
 	world := acquireWorld()
 
-	if err := facades.Orm().Query().Where("id", randID).First(&world); err != nil {
-		Error(ctx, err)
-		return nil
-	}
+	_ = facades.Orm().Query().Where("id", randID).First(&world)
 
 	JSON(ctx, &world)
 	releaseWorld(world)
@@ -52,10 +48,7 @@ func (r *TestController) Queries(ctx http.Context) http.Response {
 
 	for i := 0; i < n; i++ {
 		randID := r.getRand()
-		if err := facades.Orm().Query().Where("id", randID).Get(&worlds[i]); err != nil {
-			Error(ctx, err)
-			return nil
-		}
+		_ = facades.Orm().Query().Where("id", randID).Get(&worlds[i])
 	}
 
 	JSON(ctx, &worlds)
@@ -69,10 +62,7 @@ func (r *TestController) Update(ctx http.Context) http.Response {
 
 	for i := 0; i < n; i++ {
 		randID := r.getRand()
-		if err := facades.Orm().Query().Where("id", randID).Get(&worlds[i]); err != nil {
-			Error(ctx, err)
-			return nil
-		}
+		_ = facades.Orm().Query().Where("id", randID).Get(&worlds[i])
 	}
 
 	// sorting is required for insert deadlock prevention.
@@ -80,20 +70,12 @@ func (r *TestController) Update(ctx http.Context) http.Response {
 		return worlds[i].ID < worlds[j].ID
 	})
 
-	tx, err := facades.Orm().Query().Begin()
-
+	tx, _ := facades.Orm().Query().Begin()
 	for i := 0; i < n; i++ {
 		worlds[i].RandomNumber = r.getRand()
-		if err = tx.Save(&worlds[i]); err != nil {
-			Error(ctx, err)
-			return nil
-		}
+		_ = tx.Save(&worlds[i])
 	}
-
-	if err = tx.Commit(); err != nil {
-		Error(ctx, err)
-		return nil
-	}
+	_ = tx.Commit()
 
 	JSON(ctx, &worlds)
 	releaseWorlds(worlds)
@@ -102,15 +84,7 @@ func (r *TestController) Update(ctx http.Context) http.Response {
 
 func (r *TestController) Fortunes(ctx http.Context) http.Response {
 	fortunes := make([]models.Fortune, 0)
-	if err := facades.Orm().Query().Get(&fortunes); err != nil {
-		return ctx.Response().
-			Header("Server", "Goravel").
-			Status(http.StatusInternalServerError).
-			Json(http.Json{
-				"error": err.Error(),
-			})
-	}
-
+	_ = facades.Orm().Query().Get(&fortunes)
 	fortunes = append(fortunes, models.Fortune{Message: "Additional fortune added at request time."})
 
 	sort.Slice(fortunes, func(i, j int) bool {
@@ -128,16 +102,6 @@ func (r *TestController) Fortunes(ctx http.Context) http.Response {
 func (r *TestController) CacheQueries(ctx http.Context) http.Response {
 	n := r.getN(ctx)
 	worlds := acquireWorlds()[:n]
-
-	if !facades.Cache().Has("worlds") {
-
-		if err := facades.Orm().Query().Get(&worlds); err != nil {
-			panic(fmt.Sprintf("Failed to init cached Worlds: %v", err))
-		}
-
-		facades.Cache().Forever("worlds", worlds)
-	}
-
 	cached := facades.Cache().Get("worlds").(Worlds)
 
 	for i := 0; i < n; i++ {

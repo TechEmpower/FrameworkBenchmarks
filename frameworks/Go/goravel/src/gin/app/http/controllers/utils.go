@@ -99,10 +99,3 @@ func Plaintext(ctx http.Context, data string) {
 	ctx.Response().Header("Content-Type", contentTypePlain)
 	_, _ = ctx.Response().Writer().Write(str2bytes(data))
 }
-
-func Error(ctx http.Context, err error) {
-	ctx.Response().Header("Server", "Goravel")
-	ctx.Response().Header("Content-Type", contentTypePlain)
-	ctx.Response().Status(http.StatusInternalServerError)
-	_, _ = ctx.Response().Writer().Write(str2bytes(err.Error()))
-}
