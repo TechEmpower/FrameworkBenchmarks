@@ -56,8 +56,8 @@ typedef struct {
 
 typedef struct {
 	list_t l;
-	const char *name;
-	const char *query;
+	char *name;
+	char *query;
 } prepared_statement_t;
 
 static h2o_socket_t *create_socket(int sd, h2o_loop_t *loop);
@@ -713,8 +713,8 @@ void add_prepared_statement(const char *name, const char *query, list_t **prepar
 
 	memset(p, 0, sizeof(*p));
 	p->l.next = *prepared_statements;
-	p->name = name;
-	p->query = query;
+	p->name = h2o_strdup(NULL, name, SIZE_MAX).base;
+	p->query = h2o_strdup(NULL, query, SIZE_MAX).base;
 	*prepared_statements = &p->l;
 }
 
@@ -791,6 +791,8 @@ void remove_prepared_statements(list_t *prepared_statements)
 			                                                        prepared_statements);
 
 			prepared_statements = prepared_statements->next;
+			free(p->name);
+			free(p->query);
 			free(p);
 		} while (prepared_statements);
 }
