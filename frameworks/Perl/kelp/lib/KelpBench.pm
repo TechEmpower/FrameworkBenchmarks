@@ -99,7 +99,7 @@ sub action_db ($self)
 
 sub action_queries ($self)
 {
-	return $self->get_random_entries($self->param('queries'));
+	return $self->get_random_entries($self->req->query_param('queries'));
 }
 
 sub action_fortunes ($self) {
@@ -116,7 +116,7 @@ sub action_fortunes ($self) {
 
 sub action_updates ($self)
 {
-	my $arr = $self->get_random_entries($self->param('queries'));
+	my $arr = $self->get_random_entries($self->req->query_param('queries'));
 
 	foreach my $row ($arr->@*) {
 		$row->{randomNumber} = $self->random_number;

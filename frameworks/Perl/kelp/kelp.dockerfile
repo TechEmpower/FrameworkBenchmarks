@@ -9,7 +9,7 @@ WORKDIR /kelp
 
 RUN cpanm --notest --no-man-page \
 	Kelp::Module::Template::Toolkit@0.301 \
-	Kelp@2.00 \
+	Kelp \
 	DBI@1.643 \
 	DBD::MariaDB@1.23 \
 	MongoDB@2.2.2 \
