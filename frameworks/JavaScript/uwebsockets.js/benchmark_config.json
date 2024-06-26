@@ -4,7 +4,7 @@
     {
       "default": {
         "approach": "Realistic",
-        "classification": "Micro",
+        "classification": "Platform",
         "database": "None",
         "database_os": "Linux",
         "display_name": "uWebSockets.js",
