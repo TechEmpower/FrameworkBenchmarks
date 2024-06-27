@@ -35,7 +35,7 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
-            <version>1.8.0-beta4</version>
+            <version>1.7.25</version>
         </dependency>
         <dependency>
             <groupId>io.github.robaho</groupId>
@@ -75,29 +75,6 @@
                         <goals>
                             <goal>single</goal>
                         </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-install-plugin</artifactId>
-                <version>3.1.1</version>
-                <configuration>
-                    <groupId>io.github.robaho</groupId>
-                    <artifactId>httpserver</artifactId>
-                    <version>1.0.5</version>
-                    <packaging>jar</packaging>
-                    <file>libs/httpserver.jar</file>
-                    <sources>libs/httpserver-sources.jar</sources>
-                    <generatePom>true</generatePom>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>install-jar-lib</id>
-                        <goals>
-                            <goal>install-file</goal>
-                        </goals>
-                        <phase>validate</phase>
                     </execution>
                 </executions>
             </plugin>

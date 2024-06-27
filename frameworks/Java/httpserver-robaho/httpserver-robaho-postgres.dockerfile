@@ -6,7 +6,7 @@ RUN mvn compile assembly:single -q
 
 FROM openjdk:21-jdk-slim
 WORKDIR /httpserver-robaho
-COPY --from=maven /httpserver/target/httpserver-1.0-jar-with-dependencies.jar app.jar
+COPY --from=maven /httpserver-robaho/target/httpserver-robaho-1.0-jar-with-dependencies.jar app.jar
 
 EXPOSE 8080
 
