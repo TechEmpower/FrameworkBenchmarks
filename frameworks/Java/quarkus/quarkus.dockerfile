@@ -12,6 +12,7 @@ COPY --chown=185 vertx vertx/
 COPY --chown=185 reactive-routes-pgclient reactive-routes-pgclient/
 
 # Uncomment to test pre-release quarkus
+USER 0
 #RUN mkdir -p /root/.m2/repository/io
 #COPY m2-quarkus /root/.m2/repository/io/quarkus
 
