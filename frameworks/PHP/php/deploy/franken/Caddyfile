@@ -13,9 +13,5 @@
 route {
     root * /php
 
-    # FrankenPHP!
-    @phpFiles path *.php
-    php @phpFiles
-
-    respond 404
+    php_server
 }
