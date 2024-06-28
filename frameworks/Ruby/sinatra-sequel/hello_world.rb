@@ -78,16 +78,18 @@ class HelloWorld < Sinatra::Base
 
   # Test type 5: Database updates
   get '/updates' do
-    worlds =
-      DB.synchronize do
+    worlds = nil
+    DB.synchronize do
+      worlds =
         ALL_IDS.sample(bounded_queries).map do |id|
           world = World.with_pk(id)
           new_value = rand1
           new_value = rand1 while new_value == world.randomnumber
-          world.update(randomnumber: new_value)
+          world.randomnumber = new_value
           world
         end
-      end
+      World.batch_update(worlds)
+    end
 
     json worlds.map!(&:values)
   end
