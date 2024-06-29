@@ -3,7 +3,7 @@
     "mariadb": "^3.3.0",
     "postgres": "^3.4.4",
     "slow-json-stringify": "^2.0.1",
-    "uWebSockets.js": "uNetworking/uWebSockets.js#752c52d8936accad23f38707bd9a07c338f609f8"
+    "uWebSockets.js": "uNetworking/uWebSockets.js#v20.44.0"
   },
   "license": "MIT",
   "main": "src/server.js",
