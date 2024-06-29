@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+  <head><title>Fortunes</title></head>
+  <body>
+    <table>
+    <tr><th>id</th><th>message</th></tr>
+    <% records.each do |record| %>
+      <tr><td><%= record[:id] %></td><td><%= CGI.escape_html(record[:message]) %></td></tr>
+    <% end %>
+    </table>
+  </body>
+</html>
