@@ -10,9 +10,9 @@ let package = Package(
         .executable(name: "app", targets: ["App"])
     ],
     dependencies: [
-        .package(url: "https://github.com/vapor/vapor.git", from: "4.52.2"),
-        .package(url: "https://github.com/mongodb/mongodb-vapor", from: "1.0.0"),
-        .package(url: "https://github.com/mongodb/mongo-swift-driver", from: "1.1.0")
+        .package(url: "https://github.com/vapor/vapor.git", from: "4.101.4"),
+        .package(url: "https://github.com/mongodb/mongodb-vapor", from: "1.1.0"),
+        .package(url: "https://github.com/mongodb/mongo-swift-driver", from: "1.3.1")
     ],
     targets: [
         .executableTarget(

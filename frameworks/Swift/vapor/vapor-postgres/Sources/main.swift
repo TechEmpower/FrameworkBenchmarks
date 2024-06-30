@@ -30,6 +30,24 @@ extension Request {
     }
 }
 
+// Plaintext
+app.get("plaintext") { req async in 
+    return "Hello, World!"
+}
+
+// JSON
+app.get("json") { req async in
+    return ["messgage": "Hello, World!"]
+}
+
+// Fortunes
+app.get("fortunes") { req async throws -> Fortune in 
+    let rows = try await req.db(pools).query("SELECT id, message FROM Fortune")
+    rows.append(["id": 0, "message": "Additional fortune added at request time."])
+}
+
+
+// Single query
 app.get("db") { req async throws -> World in
     let rows = try await req.db(pools).query("SELECT id, randomnumber FROM World WHERE id = $1", [
         PostgresData(int32: .random(in: 1...10_000))]).get()
@@ -46,6 +64,7 @@ app.get("db") { req async throws -> World in
     return world
 }
 
+// Multiple queries
 app.get("queries") { req async throws -> [World] in
     let queries = (req.query["queries"] ?? 1).bounded(to: 1...500)
 
