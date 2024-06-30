@@ -2,18 +2,22 @@ namespace App
 
 open System
 open System.Collections.Generic
-open System.Threading.Tasks
 open Oxpecker
 
 [<AutoOpen>]
 module Common =
 
+    [<Struct>]
     [<CLIMutable>]
-    type Fortune =
-        {
-            id      : int
-            message : string
-        }
+    type JsonMessage = {
+        message : string
+    }
+
+    [<CLIMutable>]
+    type Fortune = {
+        id: int
+        message: string
+    }
 
     [<Literal>]
     let ConnectionString = "Server=tfb-database;Database=hello_world;User Id=benchmarkdbuser;Password=benchmarkdbpass;SSL Mode=Disable;Maximum Pool Size=1024;NoResetOnClose=true;Enlist=false;Max Auto Prepare=4;Multiplexing=true;Write Coalescing Buffer Threshold Bytes=1000"
@@ -44,13 +48,13 @@ module HtmlViews =
             th() { raw "message" }
         }
 
-    let fortunes (fortunes: Fortune[]) =
+    let fortunes fortunesData =
         table() {
             fortunesTableHeader
-            for f in fortunes do
+            for fortune in fortunesData do
                 tr() {
-                    td() { raw <| string f.id }
-                    td() { f.message }
+                    td() { raw <| string fortune.id }
+                    td() { fortune.message }
                 }
         } |> layout
 
@@ -60,6 +64,7 @@ module HttpHandlers =
     open Npgsql
     open System.Text
     open Microsoft.AspNetCore.Http
+    open System.Text.Json
 
     let private extra =
         {
@@ -67,13 +72,11 @@ module HttpHandlers =
             message = "Additional fortune added at request time."
         }
 
-    let private renderFortunes (ctx: HttpContext) dbFortunes =
-        let augmentedData = [|
-            yield! dbFortunes
-            extra
-        |]
-        Array.Sort(augmentedData, FortuneComparer)
-        augmentedData |> HtmlViews.fortunes |> ctx.WriteHtmlView
+    let rec private renderFortunes (ctx: HttpContext) (dbFortunes: Fortune seq) =
+        let data = dbFortunes.AsList()
+        data.Add extra
+        data.Sort FortuneComparer
+        data |> HtmlViews.fortunes |> ctx.WriteHtmlView
 
     let private fortunes : EndpointHandler =
         fun ctx ->
@@ -85,11 +88,10 @@ module HttpHandlers =
 
     [<Struct>]
     [<CLIMutable>]
-    type World =
-        {
-            id: int
-            randomnumber: int
-        }
+    type World = {
+        id: int
+        randomnumber: int
+    }
 
     let private readSingleRow (conn: NpgsqlConnection) =
         conn.QueryFirstOrDefaultAsync<World>(
@@ -127,7 +129,7 @@ module HttpHandlers =
             }
 
     let private maxBatch = 500
-    let mutable private queries = Array.zeroCreate (maxBatch + 1)
+    let private queries = Array.zeroCreate (maxBatch + 1)
 
     let private batchUpdateString batchSize =
         match queries[batchSize] with
@@ -141,7 +143,17 @@ module HttpHandlers =
             let result = sb.ToString()
             queries[batchSize] <- result
             result
-        | q -> q
+        | q ->
+            q
+
+    let private generateParameters (results: World[]) =
+        let parameters = Dictionary<string,obj>()
+        for i in 0..results.Length-1 do
+            let randomNumber = Random.Shared.Next(1, 10001)
+            parameters[$"@Rn_{i}"] <- randomNumber
+            parameters[$"@Id_{i}"] <- results[i].id
+            results[i] <- { results[i] with randomnumber = randomNumber }
+        parameters
 
     let private multipleUpdates : EndpointHandler =
         fun ctx ->
@@ -153,12 +165,7 @@ module HttpHandlers =
                 for i in 0..results.Length-1 do
                     let! result = readSingleRow conn
                     results[i] <- result
-                let parameters = Dictionary<string,obj>()
-                for i in 0..results.Length-1 do
-                    let randomNumber = Random.Shared.Next(1, 10001)
-                    parameters[$"@Rn_{i}"] <- randomNumber
-                    parameters[$"@Id_{i}"] <- results[i].id
-                    results[i] <- { results[i] with randomnumber = randomNumber }
+                let parameters = generateParameters results
                 let! _ = conn.ExecuteAsync(batchUpdateString count, parameters)
                 return! ctx.WriteJsonChunked results
             }
@@ -169,60 +176,38 @@ module HttpHandlers =
             ctx.SetContentType("text/plain")
             ctx.WriteBytes(result)
 
+    let jsonSimple value : EndpointHandler =
+        let options = JsonSerializerOptions(JsonSerializerDefaults.Web)
+        fun ctx ->
+            ctx.Response.WriteAsJsonAsync(value, options)
+
     let endpoints =
         [|
             route "/plaintext" <| utf8Const "Hello, World!"
-            route "/json"<| jsonChunked {| message = "Hello, World!" |}
+            route "/json" <| jsonSimple { message = "Hello, World!" }
             route "/fortunes" fortunes
             route "/db" singleQuery
             route "/queries/{count?}" multipleQueries
             route "/updates/{count?}" multipleUpdates
         |]
 
-
 module Main =
-    open SpanJson
-    open Microsoft.AspNetCore.Http
     open Microsoft.AspNetCore.Builder
-    open Microsoft.AspNetCore.Hosting
     open Microsoft.Extensions.DependencyInjection
     open Microsoft.Extensions.Hosting
     open Microsoft.Extensions.Logging
-    open System.Buffers
-
-    type SpanJsonSerializer() =
-        interface Serializers.IJsonSerializer with
-            member this.Serialize(value, ctx, chunked) =
-                ctx.Response.ContentType <- "application/json"
-                if chunked then
-                    if ctx.Request.Method <> HttpMethods.Head then
-                        JsonSerializer.Generic.Utf8.SerializeAsync<_>(value, stream = ctx.Response.Body).AsTask()
-                    else
-                        Task.CompletedTask
-                else
-                    task {
-                        let buffer = JsonSerializer.Generic.Utf8.SerializeToArrayPool<_>(value)
-                        ctx.Response.Headers.ContentLength <- buffer.Count
-                        if ctx.Request.Method <> HttpMethods.Head then
-                            do! ctx.Response.Body.WriteAsync(buffer)
-                            ArrayPool<byte>.Shared.Return(buffer.Array)
-                        else
-                            return ()
-                    }
-            member this.Deserialize _ =
-                failwith "Not implemented"
 
     [<EntryPoint>]
     let main args =
         let builder = WebApplication.CreateBuilder(args)
         builder.Services
             .AddRouting()
-            .AddOxpecker()
-            .AddSingleton<Serializers.IJsonSerializer>(SpanJsonSerializer())
-        |> ignore
-        builder.Logging.ClearProviders() |> ignore
+            .AddOxpecker() |> ignore
+        builder.Logging
+            .ClearProviders() |> ignore
         let app = builder.Build()
-        app.UseRouting()
-           .UseOxpecker HttpHandlers.endpoints |> ignore
+        app
+            .UseRouting()
+            .UseOxpecker(HttpHandlers.endpoints) |> ignore
         app.Run()
         0

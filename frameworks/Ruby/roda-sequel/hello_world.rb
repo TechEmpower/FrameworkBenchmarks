@@ -58,17 +58,19 @@ class HelloWorld < Roda
     # Test type 5: Database updates
     r.is "updates" do
       response[CONTENT_TYPE] = JSON_TYPE
-      worlds =
-        DB.synchronize do
+      worlds = []
+      DB.synchronize do
+        worlds =
           ALL_IDS.sample(bounded_queries).map do |id|
             world = World.with_pk(id)
             new_value = rand1
             new_value = rand1 while new_value == world.randomnumber
-            world.update(randomnumber: new_value)
-            world.values
+            world.randomnumber = new_value
+            world
           end
-        end
-      worlds.to_json
+        World.batch_update(worlds)
+      end
+      worlds.map(&:values).to_json
     end
 
     # Test type 6: Plaintext

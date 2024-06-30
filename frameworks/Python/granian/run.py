@@ -10,7 +10,6 @@ if __name__ == '__main__':
     workers = multiprocessing.cpu_count()
     if threading_mode == "workers":
         workers = round(workers / 2)
-    threads = 1
 
     Granian(
         f"app_{interface}:main",
@@ -18,8 +17,8 @@ if __name__ == '__main__':
         port=8080,
         workers=workers,
         threading_mode=threading_mode,
-        threads=threads,
-        backlog=2048,
+        blocking_threads=1,
+        backlog=16384,
         interface=interface,
         http="1",
         websockets=False
