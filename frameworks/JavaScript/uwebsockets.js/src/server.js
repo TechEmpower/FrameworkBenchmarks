@@ -16,11 +16,11 @@ if (DATABASE) db = await import(`./database/${DATABASE}.js`);
 
 const webserver = uWebSockets.App();
 
-webserver.get("/plaintext", (response) => {
-  addBenchmarkHeaders(response);
-  response.writeHeader("Content-Type", "text/plain");
-  response.end("Hello, World!");
-});
+webserver.get("/plaintext", new uWebSockets.DeclarativeResponse()
+              .writeHeader("Server", "uWebSockets.js")
+              .writeHeader("Content-Type", "text/plain")
+              .end("Hello, World!")
+);
 
 webserver.get("/json", (response) => {
   addBenchmarkHeaders(response);
