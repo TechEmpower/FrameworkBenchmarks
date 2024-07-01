@@ -1,7 +1,7 @@
-FROM openjdk:11.0.3-jdk-stretch
+FROM maven:3.9.7-amazoncorretto-17-debian
 WORKDIR /app
 COPY ktor-asyncdb/gradle gradle
-COPY ktor-asyncdb/build.gradle build.gradle
+COPY ktor-asyncdb/build.gradle.kts build.gradle.kts
 COPY ktor-asyncdb/gradle.properties gradle.properties
 COPY ktor-asyncdb/gradlew gradlew
 COPY ktor-asyncdb/settings.gradle settings.gradle
