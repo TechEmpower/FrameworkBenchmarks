@@ -9,7 +9,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.data.r2dbc.core.DatabaseClient;
+import org.springframework.r2dbc.core.DatabaseClient;
 
 import static io.r2dbc.spi.ConnectionFactoryOptions.*;
 
@@ -44,7 +44,7 @@ public class R2dbcConfig {
     }
 
     @Bean
-    public ConnectionFactory connectionFactory() {
+    ConnectionFactory connectionFactory() {
         return ConnectionFactories.get(ConnectionFactoryOptions.builder()
                 .option(DRIVER,"pool")
                 .option(PROTOCOL,"postgresql")
@@ -57,7 +57,7 @@ public class R2dbcConfig {
     }
 
     @Bean
-    public DatabaseClient databaseClient(ConnectionFactory connectionFactory) {
+    DatabaseClient databaseClient(ConnectionFactory connectionFactory) {
         return DatabaseClient.create(connectionFactory);
     }
 }

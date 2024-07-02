@@ -13,7 +13,7 @@ import javax.sql.DataSource;
 public class JdbcConfig {
 
     @Bean
-    public DataSource datasource(DataSourceProperties dataSourceProperties) {
+    DataSource datasource(DataSourceProperties dataSourceProperties) {
         HikariDataSource dataSource = dataSourceProperties.initializeDataSourceBuilder().type(HikariDataSource.class).build();
         dataSource.setMaximumPoolSize(Runtime.getRuntime().availableProcessors() * 2);
 

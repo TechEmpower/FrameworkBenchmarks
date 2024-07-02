@@ -12,7 +12,7 @@ import static org.springframework.web.reactive.function.server.RequestPredicates
 public class WebfluxRouter {
 
     @Bean
-    public RouterFunction<ServerResponse> route(WebfluxHandler handler) {
+    RouterFunction<ServerResponse> route(WebfluxHandler handler) {
         return RouterFunctions
                 .route(
                         GET("/plaintext"),

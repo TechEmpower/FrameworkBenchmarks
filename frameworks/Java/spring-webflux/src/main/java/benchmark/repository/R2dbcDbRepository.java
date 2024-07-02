@@ -3,7 +3,7 @@ package benchmark.repository;
 import benchmark.model.Fortune;
 import benchmark.model.World;
 import org.springframework.context.annotation.Profile;
-import org.springframework.data.r2dbc.core.DatabaseClient;
+import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -19,17 +19,16 @@ public class R2dbcDbRepository implements DbRepository {
 
     @Override
     public Mono<World> getWorld(int id) {
-        return databaseClient.execute()
+        return databaseClient
                 .sql("SELECT id, randomnumber FROM world WHERE id = $1")
                 .bind("$1", id)
-                .as(World.class)
-                .fetch()
+                .map((row, rowMetaData) -> new World(row.get("id", Integer.class), row.get("randomnumber", Integer.class)))
                 .first();
 
     }
 
     public Mono<World> updateWorld(World world) {
-        return databaseClient.execute()
+        return databaseClient
                 .sql("UPDATE world SET randomnumber=$2 WHERE id = $1")
                 .bind("$1", world.id)
                 .bind("$2", world.randomnumber)
@@ -47,10 +46,9 @@ public class R2dbcDbRepository implements DbRepository {
 
     @Override
     public Flux<Fortune> fortunes() {
-        return databaseClient.execute()
+        return databaseClient
                 .sql("SELECT id, message FROM fortune")
-                .as(Fortune.class)
-                .fetch()
+                .map((row, rowMetaData) -> new Fortune(row.get("id", Integer.class), row.get("message", String.class)))
                 .all();
     }
 }

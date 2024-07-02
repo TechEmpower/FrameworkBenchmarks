@@ -19,6 +19,7 @@ public class ReactiveMongoConfig extends AbstractReactiveMongoConfiguration {
     private String url;
     private String name;
 
+    @Override
     @Bean
     public MongoClient reactiveMongoClient() {
         LoggerFactory.getLogger(getClass()).info("Connecting to mongo url: {}/{}", url, name);
@@ -31,7 +32,7 @@ public class ReactiveMongoConfig extends AbstractReactiveMongoConfiguration {
     }
 
     @Bean
-    public ReactiveMongoTemplate reactiveMongoTemplate() {
+    ReactiveMongoTemplate reactiveMongoTemplate() {
         return new ReactiveMongoTemplate(reactiveMongoClient(), getDatabaseName());
     }
 
