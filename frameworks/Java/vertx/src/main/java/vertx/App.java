@@ -41,7 +41,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
@@ -112,6 +111,8 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
   private PreparedQuery<RowSet<Row>> SELECT_WORLD_QUERY;
   private PreparedQuery<RowSet<Row>> SELECT_FORTUNE_QUERY;
   private PreparedQuery<RowSet<Row>> UPDATE_WORLD_QUERY;
+  @SuppressWarnings("unchecked")
+  private PreparedQuery<RowSet<Row>>[] AGGREGATED_UPDATE_WORLD_QUERY = new PreparedQuery[128];
   private WorldCache WORLD_CACHE;
 
   public static CharSequence createDateHeader() {
@@ -142,18 +143,30 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
     PgConnection.connect(vertx, options)
             .flatMap(conn -> {
               client = (SqlClientInternal) conn;
+              List<Future<?>> list = new ArrayList<>();
               Future<PreparedStatement> f1 = conn.prepare(SELECT_WORLD)
                       .andThen(onSuccess(ps -> SELECT_WORLD_QUERY = ps.query()));
+              list.add(f1);
               Future<PreparedStatement> f2 = conn.prepare(SELECT_FORTUNE)
                       .andThen(onSuccess(ps -> SELECT_FORTUNE_QUERY = ps.query()));
+              list.add(f2);
               Future<PreparedStatement> f3 = conn.prepare(UPDATE_WORLD)
                       .andThen(onSuccess(ps -> UPDATE_WORLD_QUERY = ps.query()));
+              list.add(f3);
               Future<WorldCache> f4 = conn.preparedQuery(SELECT_WORLDS)
                       .collecting(Collectors.mapping(row -> new CachedWorld(row.getInteger(0), row.getInteger(1)), Collectors.toList()))
                       .execute()
                       .map(worlds -> new WorldCache(worlds.value()))
                       .andThen(onSuccess(wc -> WORLD_CACHE = wc));
-              return CompositeFuture.join(f1, f2, f3, f4);
+              list.add(f4);
+              for (int i = 0;i < AGGREGATED_UPDATE_WORLD_QUERY.length;i++) {
+                int idx = i;
+                Future<PreparedStatement> fut = conn
+                        .prepare(buildAggregatedUpdateQuery(1 + idx))
+                        .andThen(onSuccess(ps -> AGGREGATED_UPDATE_WORLD_QUERY[idx] = ps.query()));
+                list.add(fut);
+              }
+              return Future.join(list);
             })
             .transform(ar -> {
               databaseErr = ar.cause();
@@ -161,6 +174,18 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
             })
             .<Void>mapEmpty()
             .onComplete(startPromise);
+  }
+
+  private static String buildAggregatedUpdateQuery(int len) {
+    StringBuilder sb = new StringBuilder();
+    sb.append("UPDATE world SET randomNumber = update_data.randomNumber FROM (VALUES");
+    char sep = ' ';
+    for (int i = 1;i <= len;i++) {
+      sb.append(sep).append("($").append(2 * i - 1).append("::int,$").append(2 * i).append("::int)");
+      sep = ',';
+    }
+    sb.append(") AS update_data (id, randomNumber) WHERE  world.id = update_data.id");
+    return sb.toString();
   }
 
   private static <T> Handler<AsyncResult<T>> onSuccess(Handler<T> handler) {
@@ -352,26 +377,41 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
 
     void handleUpdates() {
       Arrays.sort(worlds);
-      List<Tuple> batch = new ArrayList<>();
-      for (World world : worlds) {
-        batch.add(Tuple.of(world.getRandomNumber(), world.getId()));
-      }
-      UPDATE_WORLD_QUERY.executeBatch(batch, ar2 -> {
-        if (ar2.failed()) {
-          sendError(req, ar2.cause());
-          return;
-        }
-        JsonArray json = new JsonArray();
+      int len = worlds.length;
+      if (0 < len && len <= AGGREGATED_UPDATE_WORLD_QUERY.length) {
+        List<Object> arguments = new ArrayList<>();
         for (World world : worlds) {
-          json.add(new JsonObject().put("id", "" + world.getId()).put("randomNumber", "" + world.getRandomNumber()));
+            arguments.add(world.getId());
+            arguments.add(world.getRandomNumber());
         }
-        req.response()
-            .putHeader(HttpHeaders.SERVER, SERVER)
-            .putHeader(HttpHeaders.DATE, dateString)
-            .putHeader(HttpHeaders.CONTENT_TYPE, RESPONSE_TYPE_JSON)
-            .end(json.toBuffer(), NULL_HANDLER);
-      });
+        Tuple tuple = Tuple.tuple(arguments);
+        PreparedQuery<RowSet<Row>> query = AGGREGATED_UPDATE_WORLD_QUERY[len - 1];
+        query.execute(tuple, this::sendResponse);
+      } else {
+        List<Tuple> batch = new ArrayList<>();
+        for (World world : worlds) {
+          batch.add(Tuple.of(world.getRandomNumber(), world.getId()));
+        }
+        UPDATE_WORLD_QUERY.executeBatch(batch, this::sendResponse);
+      }
     }
+
+    private void sendResponse(AsyncResult<?> res) {
+      if (res.failed()) {
+        sendError(req, res.cause());
+        return;
+      }
+      JsonArray json = new JsonArray();
+      for (World world : worlds) {
+        json.add(new JsonObject().put("id", "" + world.getId()).put("randomNumber", "" + world.getRandomNumber()));
+      }
+      req.response()
+              .putHeader(HttpHeaders.SERVER, SERVER)
+              .putHeader(HttpHeaders.DATE, dateString)
+              .putHeader(HttpHeaders.CONTENT_TYPE, RESPONSE_TYPE_JSON)
+              .end(json.toBuffer(), NULL_HANDLER);
+    }
+
   }
 
   private void handleFortunes(HttpServerRequest req) {
