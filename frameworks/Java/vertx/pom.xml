@@ -91,7 +91,7 @@
 							<javaVersion>17</javaVersion>
 							<templateDirectory>${basedir}/src/main/templates</templateDirectory>
 							<outputDirectory>${basedir}/target/generated-sources/rocker</outputDirectory>
-							<discardLogicWhitespace>false</discardLogicWhitespace>
+							<discardLogicWhitespace>true</discardLogicWhitespace>
 							<addAsSources>true</addAsSources>
 							<optimize>true</optimize>
 							<failOnError>true</failOnError>
