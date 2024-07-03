@@ -12,7 +12,6 @@ import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
-import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
@@ -96,7 +95,8 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
   private static final String SELECT_WORLDS = "SELECT id, randomnumber from WORLD";
 
   private HttpServer server;
-  private SqlClientInternal client;
+  private SqlClientInternal client1;
+  private SqlClientInternal client2;
   private CharSequence dateString;
   private CharSequence[] plaintextHeaders;
 
@@ -135,9 +135,20 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
     options.setPassword(config.getString("password", "benchmarkdbpass"));
     options.setCachePreparedStatements(true);
     options.setPipeliningLimit(100_000); // Large pipelining means less flushing and we use a single connection anyway
-    PgConnection.connect(vertx, options)
+    Future<?> clientsInit = initClients(options);
+    clientsInit
+            .transform(ar -> {
+              databaseErr = ar.cause();
+              return server.listen(port);
+            })
+            .<Void>mapEmpty()
+            .onComplete(startPromise);
+  }
+
+  private Future<?> initClients(PgConnectOptions options) {
+    Future<?> cf1 = PgConnection.connect(vertx, options)
             .flatMap(conn -> {
-              client = (SqlClientInternal) conn;
+              client1 = (SqlClientInternal) conn;
               List<Future<?>> list = new ArrayList<>();
               Future<PreparedStatement> f1 = conn.prepare(SELECT_WORLD)
                       .andThen(onSuccess(ps -> SELECT_WORLD_QUERY = ps.query()));
@@ -148,16 +159,22 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
                                 collecting(Collectors.mapping(row -> new Fortune(row.getInteger(0), row.getString(1)), Collectors.toList()));
                       }));
               list.add(f2);
-              Future<PreparedStatement> f3 = conn.prepare(UPDATE_WORLD)
-                      .andThen(onSuccess(ps -> UPDATE_WORLD_QUERY = ps.query()));
-              list.add(f3);
-              Future<WorldCache> f4 = conn.preparedQuery(SELECT_WORLDS)
+              Future<WorldCache> f3 = conn.preparedQuery(SELECT_WORLDS)
                       .collecting(Collectors.mapping(row -> new CachedWorld(row.getInteger(0), row.getInteger(1)), Collectors.toList()))
                       .execute()
                       .map(worlds -> new WorldCache(worlds.value()))
                       .andThen(onSuccess(wc -> WORLD_CACHE = wc));
-              list.add(f4);
-              for (int i = 0;i < AGGREGATED_UPDATE_WORLD_QUERY.length;i++) {
+              list.add(f3);
+              return Future.join(list);
+            });
+    Future<?> cf2 = PgConnection.connect(vertx, options)
+            .flatMap(conn -> {
+              client2 = (SqlClientInternal) conn;
+              List<Future<?>> list = new ArrayList<>();
+              Future<PreparedStatement> f1 = conn.prepare(UPDATE_WORLD)
+                      .andThen(onSuccess(ps -> UPDATE_WORLD_QUERY = ps.query()));
+              list.add(f1);
+              for (int i = 0; i < AGGREGATED_UPDATE_WORLD_QUERY.length; i++) {
                 int idx = i;
                 Future<PreparedStatement> fut = conn
                         .prepare(buildAggregatedUpdateQuery(1 + idx))
@@ -165,13 +182,8 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
                 list.add(fut);
               }
               return Future.join(list);
-            })
-            .transform(ar -> {
-              databaseErr = ar.cause();
-              return server.listen(port);
-            })
-            .<Void>mapEmpty()
-            .onComplete(startPromise);
+            });
+    return Future.join(cf1, cf2);
   }
 
   private static String buildAggregatedUpdateQuery(int len) {
@@ -307,7 +319,7 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
     }
 
     private void handle() {
-      client.group(c -> {
+      client1.group(c -> {
         for (int i = 0; i < queries; i++) {
           c.preparedQuery(SELECT_WORLD).execute(Tuple.of(randomWorld()), this);
         }
@@ -354,7 +366,7 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
 
     private void handle() {
 
-      client.group(c -> {
+      client1.group(c -> {
         PreparedQuery<RowSet<Row>> preparedQuery = c.preparedQuery(SELECT_WORLD);
         for (int i = 0; i < worlds.length; i++) {
           int id = randomWorld();
