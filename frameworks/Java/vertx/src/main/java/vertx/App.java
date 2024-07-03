@@ -282,7 +282,7 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
             .putHeader(HttpHeaders.SERVER, SERVER)
             .putHeader(HttpHeaders.DATE, dateString)
             .putHeader(HttpHeaders.CONTENT_TYPE, RESPONSE_TYPE_JSON)
-            .end(Json.encode(new World(row.getInteger(0), row.getInteger(1))), NULL_HANDLER);
+            .end(new World(row.getInteger(0), row.getInteger(1)).toBuffer(), NULL_HANDLER);
       } else {
         sendError(req, res.cause());
       }
@@ -404,7 +404,7 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
       }
       JsonArray json = new JsonArray();
       for (World world : worlds) {
-        json.add(new JsonObject().put("id", "" + world.getId()).put("randomNumber", "" + world.getRandomNumber()));
+        json.add(world);
       }
       req.response()
               .putHeader(HttpHeaders.SERVER, SERVER)
@@ -449,12 +449,8 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
     }
     count = Math.max(1, count);
     count = Math.min(500, count);
-    CachedWorld[] worlds = WORLD_CACHE.getCachedWorld(count);
-    JsonArray json = new JsonArray(new ArrayList<>(count));
-    for (int i = 0;i < count;i++) {
-      CachedWorld world = worlds[i];
-      json.add(JsonObject.of("id", world.getId(), "randomNumber", world.getRandomNumber()));
-    }
+    List<CachedWorld> worlds = WORLD_CACHE.getCachedWorld(count);
+    JsonArray json = new JsonArray(worlds);
     HttpServerResponse response = req.response();
     MultiMap headers = response.headers();
     headers

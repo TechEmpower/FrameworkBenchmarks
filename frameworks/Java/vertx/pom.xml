@@ -33,11 +33,6 @@
 			<version>${jackson.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
-			<version>${jackson.version}</version>
-		</dependency>
-		<dependency>
 			<groupId>io.netty</groupId>
 			<artifactId>netty-transport-native-kqueue</artifactId>
 			<version>${netty.version}</version>
