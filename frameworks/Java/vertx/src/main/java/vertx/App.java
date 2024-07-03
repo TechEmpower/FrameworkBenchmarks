@@ -17,12 +17,7 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
-import io.vertx.sqlclient.PreparedQuery;
-import io.vertx.sqlclient.PreparedStatement;
-import io.vertx.sqlclient.Row;
-import io.vertx.sqlclient.RowIterator;
-import io.vertx.sqlclient.RowSet;
-import io.vertx.sqlclient.Tuple;
+import io.vertx.sqlclient.*;
 import io.vertx.sqlclient.impl.SqlClientInternal;
 import vertx.model.CachedWorld;
 import vertx.model.Fortune;
@@ -109,7 +104,7 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
 
   private Throwable databaseErr;
   private PreparedQuery<RowSet<Row>> SELECT_WORLD_QUERY;
-  private PreparedQuery<RowSet<Row>> SELECT_FORTUNE_QUERY;
+  private PreparedQuery<SqlResult<List<Fortune>>> SELECT_FORTUNE_QUERY;
   private PreparedQuery<RowSet<Row>> UPDATE_WORLD_QUERY;
   @SuppressWarnings("unchecked")
   private PreparedQuery<RowSet<Row>>[] AGGREGATED_UPDATE_WORLD_QUERY = new PreparedQuery[128];
@@ -148,7 +143,10 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
                       .andThen(onSuccess(ps -> SELECT_WORLD_QUERY = ps.query()));
               list.add(f1);
               Future<PreparedStatement> f2 = conn.prepare(SELECT_FORTUNE)
-                      .andThen(onSuccess(ps -> SELECT_FORTUNE_QUERY = ps.query()));
+                      .andThen(onSuccess(ps -> {
+                        SELECT_FORTUNE_QUERY = ps.query().
+                                collecting(Collectors.mapping(row -> new Fortune(row.getInteger(0), row.getString(1)), Collectors.toList()));
+                      }));
               list.add(f2);
               Future<PreparedStatement> f3 = conn.prepare(UPDATE_WORLD)
                       .andThen(onSuccess(ps -> UPDATE_WORLD_QUERY = ps.query()));
@@ -418,16 +416,12 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
     SELECT_FORTUNE_QUERY.execute(ar -> {
       HttpServerResponse response = req.response();
       if (ar.succeeded()) {
-        List<Fortune> fortunes = new ArrayList<>();
-        RowIterator<Row> resultSet = ar.result().iterator();
-        if (!resultSet.hasNext()) {
+        SqlResult<List<Fortune>> result = ar.result();
+        if (result.size() == 0) {
           response.setStatusCode(404).end("No results");
           return;
         }
-        while (resultSet.hasNext()) {
-          Row row = resultSet.next();
-          fortunes.add(new Fortune(row.getInteger(0), row.getString(1)));
-        }
+        List<Fortune> fortunes = result.value();
         fortunes.add(new Fortune(0, "Additional fortune added at request time."));
         Collections.sort(fortunes);
         response
