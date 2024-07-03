@@ -292,15 +292,18 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
   class Queries implements Handler<AsyncResult<RowSet<Row>>> {
 
     boolean failed;
-    JsonArray worlds = new JsonArray();
+    final JsonArray worlds;
     final HttpServerRequest req;
     final HttpServerResponse resp;
     final int queries;
 
     public Queries(HttpServerRequest req) {
+      int queries = getQueries(req);
+
       this.req = req;
       this.resp = req.response();
-      this.queries = getQueries(req);
+      this.queries = queries;
+      this.worlds = new JsonArray(new ArrayList<>(queries));
     }
 
     private void handle() {
@@ -322,7 +325,7 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
 
         // we need a final reference
         final Tuple row = ar.result().iterator().next();
-        worlds.add(new JsonObject().put("id", "" + row.getInteger(0)).put("randomNumber", "" + row.getInteger(1)));
+        worlds.add(new JsonObject().put("id", row.getInteger(0)).put("randomNumber", row.getInteger(1)));
 
         // stop condition
         if (worlds.size() == queries) {
@@ -330,7 +333,7 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
               .putHeader(HttpHeaders.SERVER, SERVER)
               .putHeader(HttpHeaders.DATE, dateString)
               .putHeader(HttpHeaders.CONTENT_TYPE, RESPONSE_TYPE_JSON)
-              .end(worlds.encode(), NULL_HANDLER);
+              .end(worlds.toBuffer(), NULL_HANDLER);
         }
       }
     }
