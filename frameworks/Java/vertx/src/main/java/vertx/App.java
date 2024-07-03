@@ -469,7 +469,7 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
 
   public static void main(String[] args) throws Exception {
 
-    int eventLoopPoolSize = VertxOptions.DEFAULT_EVENT_LOOP_POOL_SIZE;
+    int eventLoopPoolSize = Runtime.getRuntime().availableProcessors();
     String sizeProp = System.getProperty("vertx.eventLoopPoolSize");
     if (sizeProp != null) {
       try {
