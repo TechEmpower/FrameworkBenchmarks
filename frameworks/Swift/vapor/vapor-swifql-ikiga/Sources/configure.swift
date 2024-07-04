@@ -24,7 +24,7 @@ extension DatabaseIdentifier {
 
 
 public func configure(_ app: Application) throws {
-    var decoder = IkigaJSONDecoder()
+    let decoder = IkigaJSONDecoder()
     decoder.settings.dateDecodingStrategy = .iso8601
     ContentConfiguration.global.use(decoder: decoder as ContentDecoder, for: .json)
 
@@ -51,19 +51,16 @@ public func routes(_ app: Application) throws {
         ["message": "Hello, world!"]
     }
 
-    app.get("db") { req throws -> EventLoopFuture<World> in
-        req.postgres.connection(to: DbHost) { conn throws -> _ in
-            guard let world = try World
-                .select
+    app.get("db") { req async throws -> World in
+        guard let world = try await req.postgres.connection(to: .Db, { conn in
+            World.select
                 .where(\World.$id == Int.random(in: 1...10_000))
                 .execute(on: conn)
                 .first(decoding: World.self) 
-            else {
-                throw Abort(.notFound)
-            }
-            
-            return world
+        }).get() else {
+            throw Abort(.notFound)
         }
+        return world
     }
 
 }

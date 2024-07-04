@@ -4,7 +4,7 @@ import IkigaJSON
 import Vapor
 
 
-extension IkigaJSONEncoder: ContentEncoder {
+extension IkigaJSONEncoder: @retroactive ContentEncoder {
     public func encode<E: Encodable>(
         _ encodable: E,
         to body: inout ByteBuffer,
@@ -29,7 +29,7 @@ extension IkigaJSONEncoder: ContentEncoder {
     }
 }
 
-extension IkigaJSONDecoder: ContentDecoder {
+extension IkigaJSONDecoder: @retroactive ContentDecoder {
     public func decode<D: Decodable>(
         _ decodable: D.Type,
         from body: ByteBuffer,

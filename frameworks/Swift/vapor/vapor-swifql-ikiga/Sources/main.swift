@@ -3,10 +3,15 @@ import PostgresBridge
 import IkigaJSON
 import Logging
 
-var env = try Environment.detect()
-try LoggingSystem.bootstrap(from: &env)
+@main
+enum App {
+    static func main() throws {
+        var env = try Environment.detect()
+        try LoggingSystem.bootstrap(from: &env)
 
-let app = Application(env)
-defer { app.shutdown() }
+        let app = Application(env)
+        defer { app.shutdown() }
 
-try configure(app)
+        try configure(app)
+    }
+}
