@@ -1,8 +1,12 @@
-// Setup custom JSONEncoder/Decoder
+//
+//  IkigaJSONCoders+ContentCoders.swift
+//  
+//
+//  Created by Yakov Shapovalov on 04.07.2024.
+//
 
 import IkigaJSON
 import Vapor
-
 
 extension IkigaJSONEncoder: ContentEncoder {
     public func encode<E: Encodable>(
@@ -37,7 +41,7 @@ extension IkigaJSONDecoder: ContentDecoder {
     ) throws -> D {
         return try self.decode(D.self, from: body)
     }
-    
+
     public func decode<D>(_ decodable: D.Type, from body: ByteBuffer, headers: HTTPHeaders, userInfo: [CodingUserInfoKey : Sendable]) throws -> D where D : Decodable {
         let decoder = IkigaJSONDecoder(settings: settings)
         decoder.settings.userInfo = userInfo

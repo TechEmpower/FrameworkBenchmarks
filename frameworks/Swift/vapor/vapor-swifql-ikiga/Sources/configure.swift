@@ -1,4 +1,5 @@
-import IkigaJSON
+//import IkigaJSON
+import FoundationPreview
 import PostgresBridge
 import Vapor
 import VaporBridges
@@ -24,12 +25,12 @@ extension DatabaseIdentifier {
 
 
 public func configure(_ app: Application) throws {
-    let decoder = IkigaJSONDecoder()
-    decoder.settings.dateDecodingStrategy = .iso8601
+    let decoder = FoundationEssentials.JSONDecoder()
+    decoder.dateDecodingStrategy = .iso8601
     ContentConfiguration.global.use(decoder: decoder as ContentDecoder, for: .json)
 
-    var encoder = IkigaJSONEncoder()
-    encoder.settings.dateEncodingStrategy = .iso8601
+    let encoder = FoundationEssentials.JSONEncoder()
+    encoder.dateEncodingStrategy = .iso8601
     ContentConfiguration.global.use(encoder: encoder as ContentEncoder, for: .json)
 
     app.http.server.configuration.serverName = "Vapor"
