@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require 'oj'
+Oj.mimic_JSON
+
 # Our Rack application to be executed by rackup
 class HelloWorld
   DEFAULT_HEADERS = {}.tap do |h|
@@ -91,19 +94,19 @@ class HelloWorld
       case env['PATH_INFO']
       when '/json'
         # Test type 1: JSON serialization
-        [JSON_TYPE, JSON.fast_generate(message: 'Hello, World!')]
+        [JSON_TYPE, { message: 'Hello, World!' }.to_json]
       when '/db'
         # Test type 2: Single database query
-        [JSON_TYPE, JSON.fast_generate(db)]
+        [JSON_TYPE, db.to_json]
       when '/queries'
         # Test type 3: Multiple database queries
-        [JSON_TYPE, JSON.fast_generate(queries(env))]
+        [JSON_TYPE, queries(env).to_json]
       when '/fortunes'
         # Test type 4: Fortunes
         [HTML_TYPE, fortunes]
       when '/updates'
         # Test type 5: Database updates
-        [JSON_TYPE, JSON.fast_generate(updates(env))]
+        [JSON_TYPE, updates(env).to_json]
       when '/plaintext'
         # Test type 6: Plaintext
         [PLAINTEXT_TYPE, 'Hello, World!']
