@@ -41,4 +41,5 @@ let package = Package(
 var swiftSettings: [SwiftSetting] { [
     .enableUpcomingFeature("DisableOutwardActorInference"),
     .enableExperimentalFeature("StrictConcurrency"),
+    .unsafeFlags(["-parse-as-library"]),
 ] }
