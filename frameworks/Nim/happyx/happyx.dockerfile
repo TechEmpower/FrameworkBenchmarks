@@ -9,7 +9,7 @@ ENV PATH $PATH:/root/.nimble/bin
 
 ADD ./ /happyx
 WORKDIR /happyx
-RUN nimble c -d:danger --threads:on -y -d:disableApiDoc techempower.nim
+RUN nimble c -d:danger -d:httpbeast --threads:on -y -d:disableApiDoc techempower.nim
 
 EXPOSE 5000
 
