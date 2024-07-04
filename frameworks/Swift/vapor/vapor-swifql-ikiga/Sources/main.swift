@@ -1,6 +1,5 @@
 import Vapor
 import PostgresBridge
-import IkigaJSON
 import Logging
 
 @main

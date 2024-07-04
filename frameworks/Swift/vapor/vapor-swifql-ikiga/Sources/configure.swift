@@ -1,5 +1,6 @@
-//import IkigaJSON
+
 import FoundationPreview
+import Leaf
 import PostgresBridge
 import Vapor
 import VaporBridges
@@ -8,7 +9,7 @@ import VaporBridges
 extension DatabaseHost {
     public static var DbHost: DatabaseHost {
         return .init(
-            hostname: "tfb-database",
+            hostname: "localhost",
             port: 5432,
             username: "benchmarkdbuser",
             password: "benchmarkdbpassword",
@@ -37,6 +38,8 @@ public func configure(_ app: Application) throws {
     app.logger.logLevel = .notice
     app.logger.notice("💧 VAPOR")
     app.logger.notice("System.coreCount: \(System.coreCount)")
+
+    app.views.use(.leaf)
     
     try routes(app)
     
@@ -65,12 +68,53 @@ public func routes(_ app: Application) throws {
     }
     
     app.get("queries") { req async throws -> [World] in
+        let queries: Int = (req.query["queries"] ?? 1).bounded(to: 1...500)
+
+        var worlds: [World] = []
+
+        for _ in queries {
+            guard let world: World = try await req.postgres.connection(to: .Db, { conn in
+                World.select
+                    .where(\World.$id == Int.random(in: 1...10_000))
+                    .execute(on: conn)
+                    .first(decoding: World.self) 
+            }).get() else {
+                throw Abort(.notFound)
+            }
+
+        worlds.append(world)
+        }
+        return worlds
+    }
+
+    app.get("updates") { req async throws -> [World] in
         let queries = (req.query["queries"] ?? 1).bounded(to: 1...500)
 
         var worlds: [World] = []
 
         for _ in queries {
-            
+            let world = try await req.postgres.connection(to: .Db, { conn in
+                    World.select.where(\World.$id == Int.random(in: 1...10_000)).execute(on: conn).first(decoding: World.self).flatMap { world in
+                        world!.randomnumber = .random(in: 1...10_000)
+                        return world!.update(on: \.$id, on: conn)
+                }
+            }).get()
+
+            worlds.append(world)
         }
+
+        return worlds
+        
+    }
+
+    app.get("fortunes") { req async throws -> View in 
+        var fortunes: [Fortune] = try await req.postgres.connection(to: .Db, {conn in 
+            Fortune.select.execute(on: conn).all(decoding: Fortune.self)
+        }).get()
+
+        fortunes.append(Fortune(id: 0, message: "Additional fortune added at request time."))
+
+        return try await req.view.render("fortune", fortunes)
     }
 }
+

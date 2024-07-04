@@ -1,6 +1,7 @@
 import Bridges
+import SwifQL
 
-final class Fortune: Table {
+final class Fortune: Table, Schemable {
     @Column("id")
     var id: Int32?
     
@@ -8,5 +9,9 @@ final class Fortune: Table {
     var message: String
     
     init() {}
+    init(id: Int32, message: String) {
+        self.id = id
+        self.message = message
+    }
 }
 

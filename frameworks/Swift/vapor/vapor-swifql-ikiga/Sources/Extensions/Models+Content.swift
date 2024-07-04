@@ -8,3 +8,4 @@
 import Vapor
 
 extension World: Content {}
+extension Fortune: Content {}
