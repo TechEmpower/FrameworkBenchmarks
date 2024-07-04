@@ -4,8 +4,8 @@ ARG DEBIAN_FRONTEND=noninteractive
 # WARNING: DON'T PUT A SPACE AFTER ANY BACKSLASH OR APT WILL BREAK
 # One -q produces output suitable for logging (mostly hides
 # progress indicators)
-RUN apt-get -yqq update && \
-    apt-get -yqq install \
+RUN apt-get -y update && \
+    apt-get -y install \
       -o Dpkg::Options::="--force-confdef" \
       -o Dpkg::Options::="--force-confold" \
       cloc \
