@@ -52,7 +52,7 @@ public func routes(_ app: Application) throws {
     }
 
     app.get("db") { req async throws -> World in
-        guard let world = try await req.postgres.connection(to: .Db, { conn in
+        guard let world: World = try await req.postgres.connection(to: .Db, { conn in
             World.select
                 .where(\World.$id == Int.random(in: 1...10_000))
                 .execute(on: conn)
@@ -62,5 +62,14 @@ public func routes(_ app: Application) throws {
         }
         return world
     }
+    
+    app.get("queries") { req async throws -> [World] in
+        let queries = (req.query["queries"] ?? 1).bounded(to: 1...500)
 
+        var worlds: [World] = []
+
+        for _ in queries {
+            
+        }
+    }
 }

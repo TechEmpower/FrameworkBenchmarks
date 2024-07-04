@@ -55,6 +55,7 @@ versus = "None"
 [swifql]
 urls.plaintext = "/plaintext"
 urls.json = "/json"
+urls.db = "/db"
 approach = "Realistic"
 classification = "Fullstack"
 database = "Postgres"
