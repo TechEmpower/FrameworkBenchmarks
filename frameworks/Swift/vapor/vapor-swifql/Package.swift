@@ -34,8 +34,6 @@ let package = Package(
                 .product(name: "PostgresBridge", package: "PostgresBridge"),
                 .product(name: "IkigaJSON", package: "IkigaJSON"),
             ],
-            path: "Sources",
-            resources: [.process("Resources/Views/fortune.leaf")],
             swiftSettings: swiftSettings
         )
     ]

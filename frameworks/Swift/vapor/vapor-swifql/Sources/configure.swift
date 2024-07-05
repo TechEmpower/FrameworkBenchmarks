@@ -113,7 +113,7 @@ public func routes(_ app: Application) throws {
 
         fortunes.append(Fortune(id: 0, message: "Additional fortune added at request time."))
 
-        return try await req.view.render("fortune", fortunes)
+        return try await req.view.render("fortune", Fortunes(fortunes))
     }
 }
 

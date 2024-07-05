@@ -9,3 +9,11 @@ import Vapor
 
 extension World: Content {}
 extension Fortune: Content {}
+
+struct Fortunes: Codable {
+    var fortunes: [Fortune]
+
+    init(_ fortunes: [Fortune]) {
+        self.fortunes = fortunes
+    }
+}
