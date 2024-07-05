@@ -20,6 +20,7 @@ WORKDIR /run
 
 # Copy build artifacts
 COPY --from=build /build/.build/release /run
+COPY ./vapor-swifql/Resources/Views/fortune.leaf /run/Resources/Views/fortune.leaf
 
 # Copy Swift runtime libraries
 COPY --from=build /usr/lib/swift/ /usr/lib/swift/

@@ -10,3 +10,5 @@ db.sqlite
 .env.*
 ! .env.example
 .vscode
+docker-compose.yml
+Dockerfile

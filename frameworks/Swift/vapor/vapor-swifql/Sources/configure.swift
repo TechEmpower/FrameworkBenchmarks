@@ -113,9 +113,14 @@ public func routes(_ app: Application) throws {
     app.get("fortunes") { req async throws -> View in 
         var fortunes: [Fortune] = try await req.postgres.connection(to: .Db, {conn in 
             Fortune.select.execute(on: conn).all(decoding: Fortune.self)
-        }).get()
+        })
+        .get()
 
         fortunes.append(Fortune(id: 0, message: "Additional fortune added at request time."))
+
+        fortunes.sort(by: {
+            $0.message < $1.message
+        })
 
         return try await req.view.render("fortune", ["fortunes": fortunes])
     }
