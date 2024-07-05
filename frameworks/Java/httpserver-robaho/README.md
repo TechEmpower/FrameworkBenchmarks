@@ -1,14 +1,10 @@
 # httpserver Benchmarking Test
 
-This is the com.sun.net.httpserver portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
+This is an alternative version of the [httpserver benchmarking test suite](../httpserver)
 
-Package [com.sun.net.httpserver](https://docs.oracle.com/javase/8/docs/jre/api/net/httpserver/spec/com/sun/net/httpserver/HttpServer.html)
-provides a simple high-level Http server API, which can be used to build embedded HTTP servers.
-It is built-in to the Oracle JDK and OpenJDK (but is not part of the Java standard
-and is not available in other JDKs).
+Package [robaho.net.httpserver](https://github.com/robaho/httpserver) provides an implementation of `com.sun.net.httpserver` designed for virtual threads, thus requiring JDK21+.
 
-
-
+It can be used with platform threads using a `cached thread pool` which configures a thread per task, which is more efficient for a small number of clients (embedded systems).
 
 ### Test Type Implementation Source Code
 
