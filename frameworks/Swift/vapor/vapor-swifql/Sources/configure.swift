@@ -19,7 +19,7 @@ extension DatabaseHost {
 
 extension DatabaseIdentifier {
     public static var Db: DatabaseIdentifier {
-        .init(name: "hello_world", host: .DbHost, maxConnectionsPerEventLoop: 1000 / System.coreCount)
+        .init(name: "hello_world", host: .DbHost, maxConnectionsPerEventLoop: 2000 / (System.coreCount * 2))
     }
 }
 
@@ -46,6 +46,10 @@ public func configure(_ app: Application) throws {
 }
 
 public func routes(_ app: Application) throws {
+    app.get { req async in 
+        "It works!"
+    }
+
     app.get("plaintext") { req async in
         "Hello, world!"
     }
@@ -113,7 +117,7 @@ public func routes(_ app: Application) throws {
 
         fortunes.append(Fortune(id: 0, message: "Additional fortune added at request time."))
 
-        return try await req.view.render("fortune", Fortunes(fortunes))
+        return try await req.view.render("fortune", ["fortunes": fortunes])
     }
 }
 
