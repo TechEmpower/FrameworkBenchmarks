@@ -5,7 +5,7 @@ FROM swift:5.10 as build
 WORKDIR /build
 
 # Copy entire repo into container
-COPY ./vapor-swifql-ikiga .
+COPY ./vapor-swifql .
 
 # Compile with optimizations
 RUN swift build \

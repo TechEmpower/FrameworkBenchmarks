@@ -101,6 +101,8 @@
       "query_url": "/queries?queries=",
       "update_url": "/updates?queries=",
       "fortune_url": "/fortunes",
+      "database": "Postgres",
+      "orm": "Micro",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
@@ -113,7 +115,7 @@
       "database_os": "Linux",
       "display_name": "Vapor",
       "notes": "",
-      "versus": "swift-nio"
+      "versus": "None"
     }
   }]
 }
