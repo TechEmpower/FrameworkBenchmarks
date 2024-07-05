@@ -9,18 +9,17 @@ import VaporBridges
 extension DatabaseHost {
     public static var DbHost: DatabaseHost {
         return .init(
-            hostname: "localhost",
+            hostname: "tfb-database",
             port: 5432,
             username: "benchmarkdbuser",
-            password: "benchmarkdbpassword",
-            tlsConfiguration: nil
+            password: "benchmarkdbpass"
         )
     }
 }
 
 extension DatabaseIdentifier {
     public static var Db: DatabaseIdentifier {
-        .init(name: "hello_world", host: .DbHost)
+        .init(name: "hello_world", host: .DbHost, maxConnectionsPerEventLoop: 1000 / System.coreCount)
     }
 }
 
