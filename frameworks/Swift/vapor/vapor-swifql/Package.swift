@@ -5,7 +5,7 @@ import PackageDescription
 let package = Package(
     name: "vapor-swifql-ikiga",
     platforms: [
-       .macOS(.v14)
+       .macOS(.v12)
     ],
     products: [
         .executable(name: "app", targets: ["App"])
@@ -21,7 +21,6 @@ let package = Package(
         // sql builder
         .package(url: "https://github.com/SwifQL/VaporBridges.git", from: "1.0.0-rc"),
         .package(url: "https://github.com/SwifQL/PostgresBridge.git", from: "1.0.0-rc"),
-        .package(url: "https://github.com/apple/swift-foundation.git", branch: "main"),
     ],
     targets: [
         .executableTarget(
@@ -34,9 +33,9 @@ let package = Package(
                 .product(name: "VaporBridges", package: "VaporBridges"),
                 .product(name: "PostgresBridge", package: "PostgresBridge"),
                 .product(name: "IkigaJSON", package: "IkigaJSON"),
-                .product(name: "FoundationPreview", package: "swift-foundation"),
             ],
             path: "Sources",
+            resources: [.process("Resources/Views/fortune.leaf")],
             swiftSettings: swiftSettings
         )
     ]
