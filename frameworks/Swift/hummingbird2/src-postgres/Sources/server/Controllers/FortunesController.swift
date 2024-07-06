@@ -4,7 +4,7 @@ import PostgresNIO
 
 struct HTML: ResponseGenerator, Sendable {
     let html: String
-    public func response(from request: Request, context: some BaseRequestContext) -> Response {
+    public func response(from request: Request, context: some RequestContext) -> Response {
         let buffer = context.allocator.buffer(string: html)
         return Response(status: .ok, headers: [.contentType: "text/html; charset=utf-8"], body: .init(byteBuffer: buffer))
     }
