@@ -10,7 +10,7 @@ ENV PATH $PATH:/root/.nimble/bin
 ADD ./ /happyx
 WORKDIR /happyx
 RUN nimble install happyx@#head
-RUN nim c -d:danger -d:beast --threads:on -y -d:disableApiDoc techempower.nim
+RUN nim c -d:danger -d:beast --threads:on -d:disableApiDoc techempower.nim
 
 EXPOSE 5000
 
