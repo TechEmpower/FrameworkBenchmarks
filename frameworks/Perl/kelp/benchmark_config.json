@@ -1,7 +1,7 @@
 {
   "framework": "kelp",
   "tests": [{
-    "gazelle-mysql": {
+    "default": {
       "dockerfile": "kelp.dockerfile",
       "plaintext_url": "/plaintext",
       "json_url": "/json",

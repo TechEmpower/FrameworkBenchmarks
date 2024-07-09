@@ -62,6 +62,10 @@ my %runner_map = (
 	],
 );
 
+# default is gazelle-mysql (techempower will warn if there is no default)
+$test_name = 'kelp-gazelle-mysql'
+	if $test_name eq 'kelp';
+
 die "invalid test name $test_name"
 	unless $test_name =~ m{^kelp-(\w+)-(\w+)$};
 
