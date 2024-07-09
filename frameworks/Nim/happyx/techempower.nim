@@ -1,6 +1,6 @@
 import happyx
 
-serve "127.0.0.1", 5000:
+serve "0.0.0.0", 5000:
   get "/json":
     return {"message": "Hello, World!"}
 
