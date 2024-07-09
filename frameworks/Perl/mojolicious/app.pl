@@ -13,17 +13,12 @@ use constant MAX_DB_CONCURRENCY => 50;
   my $nproc = `nproc`;
   app->config(hypnotoad => {
     accepts => 100000,
-    clients => 50,
+    clients => MAX_DB_CONCURRENCY,
     graceful_timeout => 1,
     requests => 10000,
     workers => $nproc,
     backlog => 256
   });
-}
-
-{
-  my $db_host = 'tfb-database';
-  helper pg => sub { state $pg = Mojo::Pg->new('postgresql://benchmarkdbuser:benchmarkdbpass@' . $db_host . '/hello_world')->max_connections(MAX_DB_CONCURRENCY + 1) };
 }
 
 # Routes
@@ -59,6 +54,12 @@ get '/updates' => sub ($c) {
 get '/plaintext' => { text => 'Hello, World!', format => 'txt' };
 
 # Additional helpers (shared code)
+
+helper pg => sub {
+  state $pg = Mojo::Pg
+    ->new('postgresql://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world')
+    ->max_connections(MAX_DB_CONCURRENCY + 1);
+};
 
 helper 'render_query' => sub ($self, $q, $args = {}) {
   $self->render_later;
