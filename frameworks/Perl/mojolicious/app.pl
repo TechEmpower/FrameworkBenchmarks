@@ -11,7 +11,7 @@ use Data::Dumper;
 {
   my $nproc = `nproc`;
   app->config(hypnotoad => {
-    accepts => 0,
+    accepts => 100000,
     clients => int( 256 / $nproc ) + 1,
     graceful_timeout => 1,
     requests => 10000,

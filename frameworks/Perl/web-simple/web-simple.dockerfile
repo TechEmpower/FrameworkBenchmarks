@@ -21,4 +21,5 @@ EXPOSE 8080
 
 CMD nginx -c /simple/nginx.conf && \
     plackup -E production -s Starman --workers=$(nproc) \
+    --max-requests=100000 \
     -l /tmp/perl-simple.sock -a /simple/app.pl

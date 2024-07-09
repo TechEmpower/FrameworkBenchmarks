@@ -18,4 +18,4 @@ RUN cpanm --notest --no-man-page \
 EXPOSE 8080
 
 CMD nginx -c /dancer/nginx.conf && \
-    plackup -E production -s Starman --workers=$(nproc) -l /tmp/perl-dancer.sock -a ./app.pl
+    plackup -E production -s Starman --workers=$(nproc) --max-requests=100000 -l /tmp/perl-dancer.sock -a ./app.pl
