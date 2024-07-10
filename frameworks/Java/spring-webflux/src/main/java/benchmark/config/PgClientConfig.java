@@ -24,12 +24,12 @@ public class PgClientConfig {
     private String password;
 
     @Bean
-    public Vertx vertx() {
+    Vertx vertx() {
         return Vertx.vertx();
     }
 
     @Bean
-    public PgClients pgClients(Vertx vertx) {
+    PgClients pgClients(Vertx vertx) {
         List<PgClient> clients = new ArrayList<>();
 
         for (int i = 0; i < Runtime.getRuntime().availableProcessors(); i++) {

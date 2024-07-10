@@ -5,9 +5,9 @@ use List::Util qw'min max';
 
 sub {
     state $dbh = DBI->connect(
-	'dbi:mysql:database=hello_world;host=tfb-database;port=3306',
+	'dbi:MariaDB:database=hello_world;host=tfb-database;port=3306',
 	'benchmarkdbuser', 'benchmarkdbpass',
-	+{ qw'RaiseError 0 PrintError 0 mysql_enable_utf8 1' }
+	+{ qw'RaiseError 0 PrintError 0' }
     ) || die $!;
     state $sth = $dbh->prepare('select id,randomnumber from world where id = ?');
     my $env = shift;
@@ -25,3 +25,4 @@ sub {
     }
     [ 404, [], ['not found']];
 }
+

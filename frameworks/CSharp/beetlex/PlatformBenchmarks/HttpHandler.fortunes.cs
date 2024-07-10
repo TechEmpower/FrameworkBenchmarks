@@ -21,11 +21,11 @@ namespace PlatformBenchmarks
             return HtmlEncoder.Create(settings);
         }
 
-        private readonly static AsciiString _fortunesTableStart = "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>";
-        private readonly static AsciiString _fortunesRowStart = "<tr><td>";
-        private readonly static AsciiString _fortunesColumn = "</td><td>";
-        private readonly static AsciiString _fortunesRowEnd = "</td></tr>";
-        private readonly static AsciiString _fortunesTableEnd = "</table></body></html>";
+        private static ReadOnlySpan<byte> _fortunesTableStart => "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>"u8;
+        private static ReadOnlySpan<byte> _fortunesRowStart => "<tr><td>"u8;
+        private static ReadOnlySpan<byte> _fortunesColumn => "</td><td>"u8;
+        private static ReadOnlySpan<byte> _fortunesRowEnd => "</td></tr>"u8;
+        private static ReadOnlySpan<byte> _fortunesTableEnd => "</table></body></html>"u8;
 
 
         public async Task fortunes(IStreamWriter stream)
@@ -34,23 +34,23 @@ namespace PlatformBenchmarks
             try
             {
 
-                var data = await this._db.LoadFortunesRows();
+                var data = await DB.LoadFortunesRows();
 
-                stream.Write(_HtmlResultPreamble.Data, 0, _HtmlResultPreamble.Length);
+                stream.Write(_HtmlResultPreamble);
                 content.Data = GetContentLengthMemory(stream);
                 GMTDate.Default.Write(stream);
 
                 stream.WriteSequenceNetStream.StartWriteLength();
-                stream.Write(_fortunesTableStart.Data, 0, _fortunesTableStart.Length);
+                stream.Write(_fortunesTableStart);
                 foreach (var item in data)
                 {
-                    stream.Write(_fortunesRowStart.Data, 0, _fortunesRowStart.Length);
+                    stream.Write(_fortunesRowStart);
                     stream.WriteString(item.Id.ToString(CultureInfo.InvariantCulture));
-                    stream.Write(_fortunesColumn.Data, 0, _fortunesColumn.Length);
+                    stream.Write(_fortunesColumn);
                     stream.WriteString(htmlEncoder.Encode(item.Message));
-                    stream.Write(_fortunesRowEnd.Data, 0, _fortunesRowEnd.Length);
+                    stream.Write(_fortunesRowEnd);
                 }
-                stream.Write(_fortunesTableEnd.Data, 0, _fortunesTableEnd.Length);
+                stream.Write(_fortunesTableEnd);
             }
             catch (Exception e_)
             {

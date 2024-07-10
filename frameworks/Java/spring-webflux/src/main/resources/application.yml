@@ -1,6 +1,12 @@
+spring:
+  jpa:
+    open-in-view: false
+
 ---
 spring:
-  profiles: postgres
+  config:
+    activate:
+      on-profile: postgres
   datasource:
     url: jdbc:postgresql://${database.host}:${database.port}/${database.name}
     username: ${database.username}
@@ -15,23 +21,53 @@ database:
 
 ---
 spring:
-  profiles: jdbc
+  config:
+    activate:
+      on-profile: jdbc
+  autoconfigure:
+    exclude:
+    - org.springframework.boot.autoconfigure.data.mongo.MongoReactiveDataAutoConfiguration
+    - org.springframework.boot.autoconfigure.r2dbc.R2dbcAutoConfiguration 
 
 ---
 spring:
-  profiles: pgclient
+  config:
+    activate:
+      on-profile: pgclient
+  autoconfigure:
+    exclude:
+    - org.springframework.boot.autoconfigure.data.mongo.MongoReactiveDataAutoConfiguration
+    - org.springframework.boot.autoconfigure.r2dbc.R2dbcAutoConfiguration 
 
 ---
 spring:
-  profiles: rxjdbc
+  config:
+    activate:
+      on-profile: rxjdbc
+  autoconfigure:
+    exclude:
+    - org.springframework.boot.autoconfigure.data.mongo.MongoReactiveDataAutoConfiguration
+    - org.springframework.boot.autoconfigure.r2dbc.R2dbcAutoConfiguration 
 
 ---
 spring:
-  profiles: r2dbc
+  config:
+    activate:
+      on-profile: r2dbc
+  autoconfigure:
+    exclude:
+    - org.springframework.boot.autoconfigure.data.mongo.MongoReactiveDataAutoConfiguration
+    - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration 
 
 ---
 spring:
-  profiles: mongo
+  config:
+    activate:
+      on-profile: mongo
+  autoconfigure:
+    exclude:
+    - org.springframework.boot.autoconfigure.r2dbc.R2dbcAutoConfiguration 
+    - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration 
 
 database:
   url: mongodb://tfb-database:27017/?waitQueueMultiple=200

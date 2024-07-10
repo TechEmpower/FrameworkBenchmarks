@@ -6,12 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="Common.fs" />
+    <Compile Include="Db.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Update="FSharp.Core" Version="8.0.300" />
-    <PackageReference Include="Dapper" Version="2.1.44" />
     <PackageReference Include="Oxpecker" Version="0.10.1" />
     <PackageReference Include="Npgsql" Version="8.0.3" />
   </ItemGroup>
