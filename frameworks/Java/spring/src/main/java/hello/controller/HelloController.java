@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
 
+import hello.model.Message;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,7 +32,7 @@ public final class HelloController {
 		this.updateWorldService = updateWorldService;
 	}
 
-	@GetMapping(value = "/plaintext")
+	@GetMapping("/plaintext")
 	String plaintext(HttpServletResponse response) {
 		response.setContentType(MediaType.TEXT_PLAIN_VALUE);
 		return "Hello, World!";
@@ -101,17 +102,5 @@ public final class HelloController {
 			return 1;
 		}
 		return Math.min(500, Math.max(1, parsedValue));
-	}
-
-	static class Message {
-		private final String message;
-
-		public Message(String message) {
-			this.message = message;
-		}
-
-		public String getMessage() {
-			return message;
-		}
 	}
 }
