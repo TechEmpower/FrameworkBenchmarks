@@ -4,8 +4,8 @@
     "default": {
       "plaintext_url": "/plaintext",
       "port": 8080,
-      "approach": "Unrealistic",
-      "classification": "Platform",
+      "approach": "stripped",
+      "classification": "Micro",
       "database": "None",
       "framework": "gnet",
       "language": "Go",
