@@ -1,17 +1,3 @@
-spring:
-  jpa:
-    open-in-view: false
-
----
-spring:
-  config:
-    activate:
-      on-profile: postgres
-  datasource:
-    url: jdbc:postgresql://${database.host}:${database.port}/${database.name}
-    username: ${database.username}
-    password: ${database.password}
-
 database:
   name: hello_world
   host: tfb-database
@@ -23,41 +9,13 @@ database:
 spring:
   config:
     activate:
-      on-profile: jdbc
-  autoconfigure:
-    exclude:
-    - org.springframework.boot.autoconfigure.data.mongo.MongoReactiveDataAutoConfiguration
-    - org.springframework.boot.autoconfigure.r2dbc.R2dbcAutoConfiguration 
-
----
-spring:
-  config:
-    activate:
-      on-profile: pgclient
-  autoconfigure:
-    exclude:
-    - org.springframework.boot.autoconfigure.data.mongo.MongoReactiveDataAutoConfiguration
-    - org.springframework.boot.autoconfigure.r2dbc.R2dbcAutoConfiguration 
-
----
-spring:
-  config:
-    activate:
-      on-profile: rxjdbc
-  autoconfigure:
-    exclude:
-    - org.springframework.boot.autoconfigure.data.mongo.MongoReactiveDataAutoConfiguration
-    - org.springframework.boot.autoconfigure.r2dbc.R2dbcAutoConfiguration 
-
----
-spring:
-  config:
-    activate:
       on-profile: r2dbc
   autoconfigure:
-    exclude:
-    - org.springframework.boot.autoconfigure.data.mongo.MongoReactiveDataAutoConfiguration
-    - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration 
+    exclude: org.springframework.boot.autoconfigure.mongo.MongoReactiveAutoConfiguration,org.springframework.boot.autoconfigure.data.mongo.MongoReactiveDataAutoConfiguration
+  r2dbc:
+    username: ${database.username}
+    password: ${database.password}
+    url: r2dbc:postgresql://${database.host}:${database.port}/${database.name}
 
 ---
 spring:
@@ -65,10 +23,9 @@ spring:
     activate:
       on-profile: mongo
   autoconfigure:
-    exclude:
-    - org.springframework.boot.autoconfigure.r2dbc.R2dbcAutoConfiguration 
-    - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration 
+    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration,org.springframework.boot.autoconfigure.r2dbc.R2dbcAutoConfiguration
 
-database:
-  url: mongodb://tfb-database:27017/?waitQueueMultiple=200
-  name: hello_world
+  data:
+    mongodb:
+      uri: mongodb://tfb-database:27017/?waitQueueMultiple=200
+      database: hello_world
