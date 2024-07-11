@@ -4,7 +4,7 @@
     "default": {
       "plaintext_url": "/plaintext",
       "port": 8080,
-      "approach": "Realistic",
+      "approach": "Unrealistic",
       "classification": "Platform",
       "database": "None",
       "framework": "gnet",
