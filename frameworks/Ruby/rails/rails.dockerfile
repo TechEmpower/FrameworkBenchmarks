@@ -5,7 +5,8 @@ RUN apt-get update -yqq && apt-get install -yqq --no-install-recommends redis-se
 EXPOSE 8080
 WORKDIR /rails
 
-ENV RUBY_YJIT_ENABLE=1
+# ENV RUBY_YJIT_ENABLE=1 YJIT is enabled in config/initializers/enable_yjit.rb
+
 # Use Jemalloc
 RUN apt-get update && \
     apt-get install -y --no-install-recommends libjemalloc2
