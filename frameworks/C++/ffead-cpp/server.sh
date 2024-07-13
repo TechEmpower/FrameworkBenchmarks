@@ -22,9 +22,15 @@ if [ ! -d tmp ]; then
 mkdir tmp
 fi
 chmod 700 $FFEAD_CPP_PATH/ffead-cpp
+if [ -d $FFEAD_CPP_PATH/ffead-cpp-lithium ]; then
 chmod 700 $FFEAD_CPP_PATH/ffead-cpp-lithium
+fi
+if [ -d $FFEAD_CPP_PATH/ffead-cpp-cinatra ]; then
 chmod 700 $FFEAD_CPP_PATH/ffead-cpp-cinatra
+fi
+if [ -d $FFEAD_CPP_PATH/ffead-cpp-drogon ]; then
 chmod 700 $FFEAD_CPP_PATH/ffead-cpp-drogon
+fi
 chmod 700 $FFEAD_CPP_PATH/resources/*.sh
 chmod 700 $FFEAD_CPP_PATH/tests/*
 chmod 700 $FFEAD_CPP_PATH/rtdcf/*

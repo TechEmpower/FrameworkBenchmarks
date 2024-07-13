@@ -1,0 +1,29 @@
+import os
+
+Import('env')
+
+# copy parent environment so our alterations don't affect it
+env = env.Clone()
+
+# add src dirs to include path
+env.Append(CPPPATH=['../../src/framework'])
+for root, dirnames, filenames in os.walk('../../src/modules'):
+	filenames = [f for f in filenames if not f[0] == '.']
+	dirnames[:] = [d for d in dirnames if not d[0] == '.']
+	for dirname in dirnames:
+		dirPath = os.path.join(root,dirname)
+		if env['PLATFORM'] != 'mingw' and 'wepoll' in dirPath:
+			continue
+		#print('adding src dir to path: %s' % dirPath)
+		env.Append(CPPPATH=[dirPath])
+
+matches = []
+env.Append(CPPPATH=['include'])
+matches.append(Glob("src/*.cpp"))
+
+# debug output
+#print('framework env CPPPATH:')
+#print(env['CPPPATH'])
+
+# build a shared library
+env.SharedLibrary('../../bin/t4', matches, LIBS=['ffead-modules', 'ffead-framework', 'pq'], LIBPATH='../../bin/')

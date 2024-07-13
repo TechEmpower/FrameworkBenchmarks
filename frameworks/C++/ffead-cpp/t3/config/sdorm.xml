@@ -10,6 +10,7 @@
 			<name>PostgreSQL-DSN</name>
 			<type>sql-raw-pq</type>
 			<async>false</async>
+			<batch>false</batch>
 		</config>
 	</data-source>
 </sdorm>
