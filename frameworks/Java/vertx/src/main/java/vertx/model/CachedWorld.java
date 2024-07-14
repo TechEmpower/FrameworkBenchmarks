@@ -1,13 +1,17 @@
 package vertx.model;
 
-import io.vertx.core.json.JsonObject;
+import com.julienviet.jsonsergen.JsonSerGen;
+import io.vertx.codegen.annotations.DataObject;
+import io.vertx.core.buffer.Buffer;
 
-import java.util.Map;
+import java.util.List;
 
 /**
  * The model for the "world" database table.
  */
-public final class CachedWorld extends JsonObject implements Comparable<CachedWorld> {
+@DataObject
+@JsonSerGen
+public final class CachedWorld implements Comparable<CachedWorld> {
 
   private final int id;
   private final int randomNumber;
@@ -19,7 +23,6 @@ public final class CachedWorld extends JsonObject implements Comparable<CachedWo
    * @param randomNumber the random number of the world
    */
   public CachedWorld(int id, int randomNumber) {
-    super(Map.of("id", id, "randomNumber", randomNumber));
     this.id = id;
     this.randomNumber = randomNumber;
   }
@@ -35,5 +38,9 @@ public final class CachedWorld extends JsonObject implements Comparable<CachedWo
   @Override
   public int compareTo(CachedWorld o) {
     return Integer.compare(id, o.id);
+  }
+
+  public static Buffer toJson(List<CachedWorld> worlds) {
+    return CachedWorldJsonSerializer.toJsonBuffer(worlds);
   }
 }
