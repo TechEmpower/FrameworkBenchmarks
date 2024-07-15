@@ -14,3 +14,4 @@ requires "nim >= 1.0.0"
 
 # We lock dependencies here on purpose.
 requires "happyx#head"
+requires "norm"
