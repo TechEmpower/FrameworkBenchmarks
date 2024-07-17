@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <PackageReference Update="FSharp.Core" Version="8.0.300" />
-    <PackageReference Include="Oxpecker" Version="0.10.1" />
+    <PackageReference Include="Oxpecker" Version="0.13.0" />
     <PackageReference Include="Npgsql" Version="8.0.3" />
   </ItemGroup>
 </Project>
