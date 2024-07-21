@@ -1,5 +1,8 @@
 package com.litongjava.tio.http.server;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.litongjava.tio.http.common.HttpConfig;
 import com.litongjava.tio.http.common.handler.HttpRequestHandler;
 import com.litongjava.tio.http.server.config.EhCachePluginConfig;
@@ -8,23 +11,22 @@ import com.litongjava.tio.http.server.config.MysqlDbConfig;
 import com.litongjava.tio.http.server.controller.CacheController;
 import com.litongjava.tio.http.server.controller.DbController;
 import com.litongjava.tio.http.server.controller.IndexController;
-import com.litongjava.tio.http.server.handler.HttpRoutes;
 import com.litongjava.tio.http.server.handler.SimpleHttpDispatcherHandler;
-import com.litongjava.tio.http.server.handler.SimpleHttpRoutes;
+import com.litongjava.tio.http.server.router.DefaultHttpReqeustSimpleHandlerRoute;
+import com.litongjava.tio.http.server.router.HttpReqeustSimpleHandlerRoute;
 import com.litongjava.tio.server.ServerTioConfig;
-import com.litongjava.tio.utils.environment.EnvironmentUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.litongjava.tio.utils.environment.EnvUtils;
 
 public class MainApp {
 
   public static void main(String[] args) {
     Logger log = LoggerFactory.getLogger(MainApp.class);
     long start = System.currentTimeMillis();
-    EnvironmentUtils.buildCmdArgsMap(args);
+    EnvUtils.buildCmdArgsMap(args);
     // add route
     IndexController controller = new IndexController();
-    HttpRoutes simpleHttpRoutes = new SimpleHttpRoutes();
+    
+    HttpReqeustSimpleHandlerRoute simpleHttpRoutes = new DefaultHttpReqeustSimpleHandlerRoute();
     simpleHttpRoutes.add("/", controller::index);
     simpleHttpRoutes.add("/plaintext", controller::plaintext);
     simpleHttpRoutes.add("/json", controller::json);
@@ -54,7 +56,7 @@ public class MainApp {
     // start server
     try {
       httpServerStarter.start();
-      if (!EnvironmentUtils.getBoolean("native")) {
+      if (!EnvUtils.getBoolean("native")) {
         new MysqlDbConfig().init();
         new EnjoyEngineConfig().engine();
         new EhCachePluginConfig().ehCachePlugin();

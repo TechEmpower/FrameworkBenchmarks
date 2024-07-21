@@ -22,8 +22,6 @@ import com.litongjava.tio.http.server.model.Fortune;
 import com.litongjava.tio.http.server.util.Resps;
 import com.litongjava.tio.http.server.utils.BeanConverterUtils;
 import com.litongjava.tio.http.server.utils.RandomUtils;
-import com.litongjava.tio.utils.cache.ICache;
-import com.litongjava.tio.utils.cache.caffeine.CaffeineCache;
 
 public class DbController {
 

@@ -100,7 +100,7 @@ tio-server-benchmark
 
 -windows
 ```
-D:\java\jdk1.8.0_121\bin\java -jar target\tio-server-benchmark-1.0.jar --JDBC_URL=jdbc:mysql://192.168.3.9/hello_world --JDBC_USER=root --JDBC_PSWD=robot_123456#
+D:\java\jdk1.8.0_121\bin\java -jar target\tio-server-benchmark-1.0.jar --JDBC_URL=jdbc:mysql://192.168.3.9/hello_world?useSSL=false --JDBC_USER=root --JDBC_PSWD=robot_123456#
 ```
 or 
 ```
