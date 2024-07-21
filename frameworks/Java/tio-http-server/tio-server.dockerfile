@@ -11,7 +11,7 @@ FROM litongjava/jre:8u391-stable-slim
 
 WORKDIR /app
 
-COPY --from=builder /src/target/tio-http-server-benchmark-1.0.jar /app/target
+COPY --from=builder /src/target/tio-http-server-benchmark-1.0.jar /app/target/tio-http-server-benchmark-1.0.jar
 
 EXPOSE 8080
 
