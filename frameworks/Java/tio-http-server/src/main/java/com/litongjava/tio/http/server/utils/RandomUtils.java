@@ -7,6 +7,7 @@ public class RandomUtils {
 
   private static final int MIN_WORLD_NUMBER = 1;
   private static final int MAX_WORLD_NUMBER_PLUS_ONE = 10_001;
+//  private static final int MAX_WORLD_NUMBER_PLUS_ONE = 30;
 
   public static int randomWorldNumber() {
     return ThreadLocalRandom.current().nextInt(MIN_WORLD_NUMBER, MAX_WORLD_NUMBER_PLUS_ONE);

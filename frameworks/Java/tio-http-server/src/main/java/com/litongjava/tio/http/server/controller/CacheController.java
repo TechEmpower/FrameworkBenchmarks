@@ -17,7 +17,7 @@ import com.litongjava.tio.http.server.utils.RandomUtils;
 public class CacheController {
   // private Logger log = LoggerFactory.getLogger(this.getClass());
 
-  public HttpResponse cacheQuery(HttpRequest request) {
+  public HttpResponse cachedQuery(HttpRequest request) {
     String queries = request.getParam("queries");
     List<Map<String, Object>> recordMaps = RandomUtils.randomWorldNumbers()
         // limit

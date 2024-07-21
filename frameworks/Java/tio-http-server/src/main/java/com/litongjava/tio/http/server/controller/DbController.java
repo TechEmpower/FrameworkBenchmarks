@@ -25,13 +25,13 @@ import com.litongjava.tio.http.server.utils.RandomUtils;
 
 public class DbController {
 
-  // @GetMapping("/db")
   public HttpResponse db(HttpRequest request) {
     Integer id = request.getInt("id");
     if (id == null) {
       id = RandomUtils.randomWorldNumber();
     }
 
+    System.out.println("id:" + id);
     HttpResponse httpResponse = new HttpResponse(request);
 
     // int id = 11;
@@ -39,7 +39,7 @@ public class DbController {
 
     Record recored = Db.findById("world", id);
     if (recored != null) {
-      httpResponse.setBody(JSON.toJSONString(recored.toMap()).getBytes());
+      httpResponse.setBody(JSON.toJSONBytes(recored.toMap()));
     } else {
       httpResponse.setBody("{}".getBytes());
     }
@@ -62,7 +62,7 @@ public class DbController {
 
     HttpResponse httpResponse = new HttpResponse(request);
     httpResponse.addHeader(HeaderName.Content_Type, HeaderValue.Content_Type.TEXT_PLAIN_JSON);
-    httpResponse.setBody(JSON.toJSONString(recordMaps).getBytes());
+    httpResponse.setBody(JSON.toJSONBytes(recordMaps));
     return httpResponse;
   }
 
@@ -71,7 +71,7 @@ public class DbController {
     String queries = request.getParam("queries");
 
     CacheKit.removeAll("world");
-    
+
     List<Map<String, Object>> updatedRecords = RandomUtils.randomWorldNumbers()// random numbers
         // limit
         .limit(RandomUtils.parseQueryCount(queries))
@@ -96,17 +96,15 @@ public class DbController {
 
     HttpResponse httpResponse = new HttpResponse(request);
     httpResponse.addHeader(HeaderName.Content_Type, HeaderValue.Content_Type.TEXT_PLAIN_JSON);
-    httpResponse.setBody(JSON.toJSONString(updatedRecords).getBytes());
+    httpResponse.setBody(JSON.toJSONBytes(updatedRecords));
     return httpResponse;
   }
 
-//@GetMapping("/fortunes")
   public HttpResponse fortunes(HttpRequest request) throws IllegalAccessException, InstantiationException {
-    List<Record> records = Db.find("SELECT * FROM fortune"); // 假设表名为 "fortune"
+    List<Record> records = Db.find("SELECT * FROM fortune"); 
 
     List<Fortune> fortunes = new ArrayList<>(records.size());
     for (Record record : records) {
-
       fortunes.add(BeanConverterUtils.toBean(record.toMap(), Fortune.class));
     }
     // 添加额外的 Fortune

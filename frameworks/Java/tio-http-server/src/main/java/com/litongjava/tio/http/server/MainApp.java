@@ -22,10 +22,10 @@ public class MainApp {
   public static void main(String[] args) {
     Logger log = LoggerFactory.getLogger(MainApp.class);
     long start = System.currentTimeMillis();
-    EnvUtils.buildCmdArgsMap(args);
+    EnvUtils.load();
     // add route
     IndexController controller = new IndexController();
-    
+
     HttpReqeustSimpleHandlerRoute simpleHttpRoutes = new DefaultHttpReqeustSimpleHandlerRoute();
     simpleHttpRoutes.add("/", controller::index);
     simpleHttpRoutes.add("/plaintext", controller::plaintext);
@@ -38,7 +38,7 @@ public class MainApp {
     simpleHttpRoutes.add("/fortunes", dbQueryController::fortunes);
 
     CacheController cacheController = new CacheController();
-    simpleHttpRoutes.add("/cacheQuery", cacheController::cacheQuery);
+    simpleHttpRoutes.add("/cachedQuery", cacheController::cachedQuery);
 
     // config server
     HttpConfig httpConfig = new HttpConfig(8080, null, null, null);
