@@ -31,7 +31,7 @@ public class DbController {
       id = RandomUtils.randomWorldNumber();
     }
 
-    System.out.println("id:" + id);
+    //System.out.println("id:" + id);
     HttpResponse httpResponse = new HttpResponse(request);
 
     // int id = 11;
