@@ -6,8 +6,8 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import com.alibaba.fastjson2.JSON;
-import com.jfinal.plugin.activerecord.Db;
-import com.jfinal.plugin.activerecord.Record;
+import com.litongjava.jfinal.plugin.activerecord.Db;
+import com.litongjava.jfinal.plugin.activerecord.Record;
 import com.litongjava.tio.http.common.HeaderName;
 import com.litongjava.tio.http.common.HeaderValue;
 import com.litongjava.tio.http.common.HttpRequest;
