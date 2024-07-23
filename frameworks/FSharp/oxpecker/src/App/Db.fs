@@ -21,19 +21,19 @@ module Db =
             return result
         }
 
-    let private createReadCommand (connection: DbConnection) =
+    let private createReadCommand (connection: NpgsqlConnection) =
         let cmd = connection.CreateCommand(
             CommandText = "SELECT id, randomnumber FROM world WHERE id = @Id"
         )
-        let id = cmd.CreateParameter(
+        let id = NpgsqlParameter<int>(
             ParameterName = "@Id",
             DbType = DbType.Int32,
-            Value = Random.Shared.Next(1, 10001)
+            TypedValue = Random.Shared.Next(1, 10001)
         )
         cmd.Parameters.Add(id) |> ignore
         cmd
 
-    let private readSingleRow (cmd: DbCommand) =
+    let private readSingleRow (cmd: NpgsqlCommand) =
         task {
             use! rdr = cmd.ExecuteReaderAsync(CommandBehavior.SingleRow)
             let! _ = rdr.ReadAsync()
@@ -83,12 +83,21 @@ module Db =
         | q ->
             q
 
-    let private generateParameters (results: World[]) (command: DbCommand) =
+    // fill cache
+    let _ = [| 0..maxBatch |] |> Array.map batchUpdateString
+
+    let private paramNames =
+        seq { 0..maxBatch*2 }
+        |> Seq.map (fun i -> struct($"@Rn_{i}", $"@Id_{i}"))
+        |> Seq.toArray
+
+    let private generateParameters (results: World[]) (command: NpgsqlCommand) =
         for i in 0..results.Length-1 do
             let randomNumber = Random.Shared.Next(1, 10001)
-            let random = command.CreateParameter(ParameterName = $"@Rn_{i}", DbType = DbType.Int32, Value = randomNumber)
+            let struct(rnParamName, idParamName) = paramNames[i]
+            let random = NpgsqlParameter<int>(ParameterName = rnParamName, DbType = DbType.Int32, TypedValue = randomNumber)
             command.Parameters.Add(random) |> ignore
-            let id = command.CreateParameter(ParameterName = $"@Id_{i}", DbType = DbType.Int32, Value = results[i].id)
+            let id = NpgsqlParameter<int>(ParameterName = idParamName, DbType = DbType.Int32, TypedValue = results[i].id)
             command.Parameters.Add(id) |> ignore
             results[i] <- { results[i] with randomnumber = randomNumber }
 
