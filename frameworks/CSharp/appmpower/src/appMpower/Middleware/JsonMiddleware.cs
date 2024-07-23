@@ -1,5 +1,5 @@
 using System;
-using System.Text.Json;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -14,20 +14,23 @@ public class JsonMiddleware
         _nextStage = nextStage;
     }
 
-    public Task Invoke(HttpContext httpContext)
+    public unsafe Task Invoke(HttpContext httpContext)
     {
         if (httpContext.Request.Path.StartsWithSegments("/json", StringComparison.Ordinal))
         {
             httpContext.Response.StatusCode = 200;
             httpContext.Response.ContentType = "application/json";
-            httpContext.Response.ContentLength = BufferSize;
 
-            var jsonMessage = new JsonMessage
-            {
-                message = "Hello, World!"
-            };
+            var jsonMessage = Encoding.UTF8.GetBytes(new string(NativeMethods.JsonMessage()));
+            var payloadLength = jsonMessage.Length;
+            httpContext.Response.ContentLength = payloadLength; 
 
-            return JsonSerializer.SerializeAsync(httpContext.Response.Body, jsonMessage);
+            //Console.WriteLine("here we are");
+            //Console.WriteLine(jsonMessage);
+            //Console.WriteLine("again");
+
+            return httpContext.Response.Body.WriteAsync(jsonMessage, 0, payloadLength);
+            //return JsonSerializer.SerializeAsync(httpContext.Response.Body, jsonMessage);
         }
 
         return _nextStage(httpContext);
@@ -40,9 +43,4 @@ public static class JsonMiddlewareExtensions
     {
         return builder.UseMiddleware<JsonMiddleware>();
     }
-}
-
-public class JsonMessage
-{
-    public string message { get; set; }
 }
