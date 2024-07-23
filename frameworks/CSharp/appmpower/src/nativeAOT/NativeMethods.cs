@@ -8,9 +8,9 @@ public static class NativeMethods
     [UnmanagedCallersOnly(EntryPoint = "HelloWorld")]
     public static unsafe char* HellowWorld()
     {
-        string hellloWorld = "Hello, World!"; 
+        string helloWorld = "Hello, World!"; 
 
-        fixed(char* s = hellloWorld)
+        fixed(char* s = helloWorld)
         {
             return s; 
         }
