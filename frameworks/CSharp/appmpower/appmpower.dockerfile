@@ -4,6 +4,7 @@ RUN apt-get -yqq install clang zlib1g-dev libkrb5-dev libtinfo5
 
 WORKDIR /app
 COPY src .
+#RUN dotnet publish appMpower/appMpower.csproj -c Release -o out
 RUN dotnet publish -c Release -o out
 
 # Construct the actual image that will run

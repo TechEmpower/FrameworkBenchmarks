@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nativeAOT", "nativeAOT\nativeAOT.csproj", "{1EC05247-7299-4F69-887B-3B746DF5F878}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "appMpower", "appMpower\appMpower.csproj", "{EB5D3496-53B9-49A7-A3AD-754078142F81}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1EC05247-7299-4F69-887B-3B746DF5F878}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1EC05247-7299-4F69-887B-3B746DF5F878}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1EC05247-7299-4F69-887B-3B746DF5F878}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1EC05247-7299-4F69-887B-3B746DF5F878}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB5D3496-53B9-49A7-A3AD-754078142F81}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB5D3496-53B9-49A7-A3AD-754078142F81}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB5D3496-53B9-49A7-A3AD-754078142F81}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB5D3496-53B9-49A7-A3AD-754078142F81}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

@@ -3,10 +3,19 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <OutputType>Exe</OutputType>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
       <None Include="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
+
+
+    <!--<Content Include="../nativeAOT/bin/Debug/net8.0/nativeAOT.dll">-->
+    <!--
+    <Content Include="../nativeAOT/bin/Release/net8.0/linux-arm64/native/nativeAOT.so">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content> 
+    -->
   </ItemGroup>
 
   <ItemGroup>
