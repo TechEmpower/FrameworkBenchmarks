@@ -1,5 +1,5 @@
 using System;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -21,16 +21,33 @@ public class JsonMiddleware
             httpContext.Response.StatusCode = 200;
             httpContext.Response.ContentType = "application/json";
 
-            var jsonMessage = Encoding.UTF8.GetBytes(new string(NativeMethods.JsonMessage()));
-            var payloadLength = jsonMessage.Length;
+            //var jsonMessage = Encoding.UTF8.GetBytes(new string(NativeMethods.JsonMessage()));
+
+            int currentThreadId = Thread.CurrentThread.ManagedThreadId; 
+            int payloadLength = NativeMethods.JsonMessage31(currentThreadId);
+            byte* bytePointer = NativeMethods.JsonMessage32(currentThreadId);
+
+            /*
+            var bytePointer = NativeMethods.JsonMessage2();
+            int payloadLength = 0;
+
+            while (jsonMessage[length] != 0)
+            {
+                length++;
+            }
+            */
+
+            byte[] jsonMessage = new byte[payloadLength];
+
+            for (int i = 0; i < payloadLength; i++)
+            {
+                jsonMessage[i] = bytePointer[i];
+            }
+            
+            //NativeMethods.JsonMessage33(currentThreadId);
+
             httpContext.Response.ContentLength = payloadLength; 
-
-            //Console.WriteLine("here we are");
-            //Console.WriteLine(jsonMessage);
-            //Console.WriteLine("again");
-
             return httpContext.Response.Body.WriteAsync(jsonMessage, 0, payloadLength);
-            //return JsonSerializer.SerializeAsync(httpContext.Response.Body, jsonMessage);
         }
 
         return _nextStage(httpContext);
