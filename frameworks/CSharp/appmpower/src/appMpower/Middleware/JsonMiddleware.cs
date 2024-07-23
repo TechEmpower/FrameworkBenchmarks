@@ -23,19 +23,20 @@ public class JsonMiddleware
 
             //var jsonMessage = Encoding.UTF8.GetBytes(new string(NativeMethods.JsonMessage()));
 
+            /*
             int currentThreadId = Thread.CurrentThread.ManagedThreadId; 
             int payloadLength = NativeMethods.JsonMessage31(currentThreadId);
             byte* bytePointer = NativeMethods.JsonMessage32(currentThreadId);
+            */
 
-            /*
+
             var bytePointer = NativeMethods.JsonMessage2();
             int payloadLength = 0;
 
-            while (jsonMessage[length] != 0)
+            while (bytePointer[payloadLength] != 0)
             {
-                length++;
+                payloadLength++;
             }
-            */
 
             byte[] jsonMessage = new byte[payloadLength];
 

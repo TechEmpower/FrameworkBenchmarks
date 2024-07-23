@@ -63,7 +63,7 @@ public static class NativeMethods
         using var utf8JsonWriter = new Utf8JsonWriter(memoryStream, jsonWriterOptions);
 
         _jsonMessageSerializer.Serialize(utf8JsonWriter, jsonMessage);
-        Console.WriteLine(utf8JsonWriter.BytesCommitted); 
+        //Console.WriteLine(utf8JsonWriter.BytesCommitted); 
 
         fixed(byte* b = memoryStream.ToArray())
         {
