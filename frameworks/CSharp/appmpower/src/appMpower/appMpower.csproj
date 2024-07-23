@@ -7,16 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-      <None Include="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
 
-
-    <!--<Content Include="../nativeAOT/bin/Release/net8.0/linux-arm64/native/nativeAOT.so">-->
-    <Content Include="../nativeAOT/bin/Debug/net8.0/nativeAOT.dll">
+    <Content Include="../nativeAOT/bin/Release/net8.0/osx-arm64/native/nativeAOT.dylib">
+    <!--<Content Include="../nativeAOT/bin/Debug/net8.0/nativeAOT.dll">-->
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content> 
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include = "..\nativeAOT\nativeAOT.csproj" />
     <PackageReference Include="System.Data.Odbc" Version="8.0.0" />
     <PackageReference Include="Npgsql" Version="8.0.3" />
   </ItemGroup>
