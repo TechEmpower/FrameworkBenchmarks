@@ -10,12 +10,10 @@
       <None Include="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
 
 
-    <!--<Content Include="../nativeAOT/bin/Debug/net8.0/nativeAOT.dll">-->
-    <!--
-    <Content Include="../nativeAOT/bin/Release/net8.0/linux-arm64/native/nativeAOT.so">
+    <!--<Content Include="../nativeAOT/bin/Release/net8.0/linux-arm64/native/nativeAOT.so">-->
+    <Content Include="../nativeAOT/bin/Debug/net8.0/nativeAOT.dll">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content> 
-    -->
   </ItemGroup>
 
   <ItemGroup>

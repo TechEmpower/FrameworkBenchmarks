@@ -77,11 +77,6 @@ public class RawDb
 // Extension methods for IApplicationBuilder (placeholders for actual implementations)
 public static class ApplicationBuilderExtensions
 {
-    public static void UseJson(this IApplicationBuilder app)
-    {
-        // Implementation for UseJson middleware
-    }
-
     public static void UseUtf8Json(this IApplicationBuilder app)
     {
         // Implementation for UseUtf8Json middleware
