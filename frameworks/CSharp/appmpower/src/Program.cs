@@ -1,42 +1,48 @@
-﻿using System;
-using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting.Server.Features;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
-using Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets;
-using Microsoft.Extensions.Logging.Abstractions;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 
-namespace appMpower
+class Program
 {
-   class Program
-   {
-      static async Task Main(string[] args)
-      {
-         var socketTransportOptions = new SocketTransportOptions();
-         var socketTransportFactory = new SocketTransportFactory(Options.Create(socketTransportOptions), NullLoggerFactory.Instance);
-         var kestrelServerOptions = new KestrelServerOptions();
+    static void Main(string[] args)
+    {
+        BatchUpdateString.Initalize();
 
-         kestrelServerOptions.Listen(IPAddress.Any, 8080);
-         kestrelServerOptions.AllowSynchronousIO = true; 
-         kestrelServerOptions.AddServerHeader = false;
+        BuildWebHost(args).Run();
+    }
 
-         using var kestrelServer = new KestrelServer(Options.Create(kestrelServerOptions), socketTransportFactory, NullLoggerFactory.Instance);
+    static IHost BuildWebHost(string[] args)
+    {
+        var config = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json")
+            .AddEnvironmentVariables(prefix: "ASPNETCORE_")
+            .AddCommandLine(args)
+            .Build();
 
-         await kestrelServer.StartAsync(new HttpApplication(), CancellationToken.None);
+        var appSettings = config.GetSection("AppSettings").Get<AppSettings>();
+        //Console.WriteLine($"Database: {appSettings.Database}");
 
-         Console.WriteLine("Listening on:");
+        var host = Host.CreateDefaultBuilder(args)
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.UseConfiguration(config)
+                          .UseStartup<Startup>();
+            })
+            .Build();
 
-         foreach (var address in kestrelServer.Features.Get<IServerAddressesFeature>().Addresses)
-         {
-            Console.WriteLine(" - " + address);
-         }
+        return host;
+    }
+}
 
-         Console.WriteLine("Process CTRL+C to quit");
-         var wh = new ManualResetEventSlim();
-         Console.CancelKeyPress += (sender, e) => wh.Set();
-         wh.Wait();
-      }
-   }
+public class AppSettings
+{
+    public string Database { get; set; }
+}
+
+public static class BatchUpdateString
+{
+    public static void Initalize()
+    {
+        // Initialization logic here
+    }
 }
