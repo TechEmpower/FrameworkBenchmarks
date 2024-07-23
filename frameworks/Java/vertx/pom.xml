@@ -10,9 +10,9 @@
 		<maven.compiler.target>17</maven.compiler.target>
 		<!-- the main class -->
 		<main.class>vertx.App</main.class>
-		<stack.version>4.5.8</stack.version>
+		<stack.version>4.5.9</stack.version>
 		<jackson.version>2.16.1</jackson.version>
-		<netty.version>4.1.110.Final</netty.version>
+		<netty.version>4.1.111.Final</netty.version>
 		<netty.io_uring.version>0.0.25.Final</netty.io_uring.version>
 	</properties>
 
@@ -31,6 +31,11 @@
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-core</artifactId>
 			<version>${jackson.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.julienviet</groupId>
+			<artifactId>jsonsergen</artifactId>
+			<version>0.0.4</version>
 		</dependency>
 		<dependency>
 			<groupId>io.netty</groupId>
@@ -70,6 +75,16 @@
 				<configuration>
 					<debug>false</debug>
 				</configuration>
+				<executions>
+					<execution>
+						<id>default-compile</id>
+						<configuration>
+							<annotationProcessors>
+								<annotationProcessor>io.vertx.codegen.CodeGenProcessor</annotationProcessor>
+							</annotationProcessors>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>com.fizzed</groupId>
