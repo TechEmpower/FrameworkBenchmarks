@@ -90,6 +90,7 @@ public static class NativeMethods
 
         _jsonMessageSerializer.Serialize(utf8JsonWriter, jsonMessage);
         //Console.WriteLine(utf8JsonWriter.BytesCommitted); 
+        utf8JsonWriter.Flush();
         _byteArrays[managedThreadId] = memoryStream.ToArray();
         return (int)utf8JsonWriter.BytesCommitted;
     }

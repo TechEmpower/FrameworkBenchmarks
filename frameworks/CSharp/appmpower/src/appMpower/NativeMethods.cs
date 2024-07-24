@@ -1,3 +1,4 @@
+using System;
 using System.Runtime.InteropServices;
 
 public unsafe partial class NativeMethods
@@ -38,13 +39,4 @@ public unsafe partial class NativeMethods
     [DllImport("nativeAOT.so", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
 #endif   
     public static extern byte* JsonMessage32(int currentThreadId); 
-
-/*
-#if DEBUG
-    [DllImport("nativeAOT.dylib", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
-#else
-    [DllImport("nativeAOT.so", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
-#endif   
-    public static extern void JsonMessage33(int currentThreadId); 
-*/
 }

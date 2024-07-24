@@ -26,6 +26,10 @@ class Program
             .ConfigureWebHostDefaults(webBuilder =>
             {
                 webBuilder.UseConfiguration(config)
+                          .UseKestrel(options =>
+                          {
+                            options.AllowSynchronousIO = true;
+                          })
                           .UseStartup<Startup>();
             })
             .Build();

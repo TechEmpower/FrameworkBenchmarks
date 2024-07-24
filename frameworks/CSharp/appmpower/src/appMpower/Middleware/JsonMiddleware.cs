@@ -1,5 +1,5 @@
 using System;
-using System.Threading;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -18,17 +18,18 @@ public class JsonMiddleware
     {
         if (httpContext.Request.Path.StartsWithSegments("/json", StringComparison.Ordinal))
         {
-            httpContext.Response.StatusCode = 200;
-            httpContext.Response.ContentType = "application/json";
+            var response = httpContext.Response; 
+            response.StatusCode = 200;
+            response.ContentType = "application/json";
 
             //var jsonMessage = Encoding.UTF8.GetBytes(new string(NativeMethods.JsonMessage()));
+            //int payloadLength = jsonMessage.Length; 
 
             /*
             int currentThreadId = Thread.CurrentThread.ManagedThreadId; 
             int payloadLength = NativeMethods.JsonMessage31(currentThreadId);
             byte* bytePointer = NativeMethods.JsonMessage32(currentThreadId);
             */
-
 
             var bytePointer = NativeMethods.JsonMessage2();
             int payloadLength = 0;
@@ -47,8 +48,8 @@ public class JsonMiddleware
             
             //NativeMethods.JsonMessage33(currentThreadId);
 
-            httpContext.Response.ContentLength = payloadLength; 
-            return httpContext.Response.Body.WriteAsync(jsonMessage, 0, payloadLength);
+            response.ContentLength = payloadLength; 
+            return response.Body.WriteAsync(jsonMessage, 0, payloadLength);
         }
 
         return _nextStage(httpContext);
