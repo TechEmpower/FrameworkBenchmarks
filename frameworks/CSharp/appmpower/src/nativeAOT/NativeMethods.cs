@@ -25,7 +25,7 @@ public static class NativeMethods
     {
         var jsonMessage = new JsonMessage
         {
-            message = "Hello, World!"
+            Message = "Hello, World!"
         };
 
         var jsonWriterOptions = new JsonWriterOptions
@@ -50,7 +50,7 @@ public static class NativeMethods
     {
         var jsonMessage = new JsonMessage
         {
-            message = "Hello, World!"
+            Message = "Hello, World!"
         };
 
         var jsonWriterOptions = new JsonWriterOptions
@@ -76,7 +76,7 @@ public static class NativeMethods
     {
         var jsonMessage = new JsonMessage
         {
-            message = "Hello, World!"
+            Message = "Hello, World!"
         };
 
         var jsonWriterOptions = new JsonWriterOptions

@@ -1,6 +1,6 @@
 namespace nativeAOT;
 
-public class JsonMessage
+public struct JsonMessage
 {
-    public string message { get; set; }
+    public string Message { get; set; }
 }
