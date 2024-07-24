@@ -5,7 +5,7 @@ import io.vertx.ext.web.RoutingContext
 
 class DefaultHandler : AbstractHandler() {
     fun plaintext(ctx: RoutingContext) {
-        ctx.text().end(MESSAGE_BUFFER)
+        ctx.text().end(MESSAGE_BUFFER, NULL_HANDLER)
     }
 
     companion object {

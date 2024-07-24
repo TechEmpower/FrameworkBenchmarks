@@ -4,7 +4,6 @@ Vert.x-Web in Kotlin with Dsljson serialization
 
 The code is written as a realistic server implementation:
 - Code is organized logically into packages
-- Singletons are provided using Dagger2 modules to make use of efficient compile time dependency injections.
 - Repositories are created for each database entity to handler all operations pertaining to a specific table
 - Handlers map to the logical entities which they serve
 - JSON serialization is provided via Dsljson

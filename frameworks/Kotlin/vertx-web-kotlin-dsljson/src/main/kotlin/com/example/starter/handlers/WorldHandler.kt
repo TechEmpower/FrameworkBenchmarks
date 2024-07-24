@@ -10,7 +10,7 @@ class WorldHandler(private val repository: WorldRepository) : AbstractHandler() 
         repository
             .selectRandomWorld()
             .onSuccess {
-                ctx.json().end(it.serialize(WORLD_SIZE_HINT))
+                ctx.json().end(it.serialize(), NULL_HANDLER)
             }
             .onFailure {
                 logger.error(it) { SOMETHING_WENT_WRONG }
@@ -23,7 +23,7 @@ class WorldHandler(private val repository: WorldRepository) : AbstractHandler() 
         repository
             .selectRandomWorlds(queries)
             .onSuccess {
-                ctx.json().end(it.serialize(queries * WORLD_SIZE_HINT + 4))
+                ctx.json().end(it.serialize(), NULL_HANDLER)
             }
             .onFailure {
                 logger.error(it) { SOMETHING_WENT_WRONG }
@@ -36,7 +36,7 @@ class WorldHandler(private val repository: WorldRepository) : AbstractHandler() 
         repository
             .updateRandomWorlds(queries)
             .onSuccess {
-                ctx.json().end(it.serialize(queries * WORLD_SIZE_HINT + 4))
+                ctx.json().end(it.serialize(), NULL_HANDLER)
             }
             .onFailure {
                 logger.error(it) { SOMETHING_WENT_WRONG }
@@ -46,7 +46,6 @@ class WorldHandler(private val repository: WorldRepository) : AbstractHandler() 
 
     companion object : Logging {
         private const val QUERIES_PARAM_NAME = "queries"
-        private const val WORLD_SIZE_HINT = 35
 
         @Suppress("NOTHING_TO_INLINE")
         private inline fun RoutingContext.queries(): Int {

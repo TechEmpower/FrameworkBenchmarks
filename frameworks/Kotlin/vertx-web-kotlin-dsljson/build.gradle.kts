@@ -30,20 +30,19 @@ kotlin {
 
 val mainClassName = "com.example.starter.App"
 
-val vertxVersion = "4.5.4"
-val nettyVersion = "4.1.111.Final"
-val daggerVersion = "2.51"
-val jacksonVersion = "2.17.2"
+val vertxVersion = "4.5.9"
+val nettyVersion = "4.1.112.Final"
+val scramVersion = "2.1"
 val dslJsonVersion = "2.0.2"
 val htmlFlowVersion = "4.6"
-val log4jVersion = "2.23.0"
+val log4jVersion = "2.23.1"
 
 application {
     mainClass = mainClassName
 }
 
 dependencies {
-    listOf(
+    listOfNotNull(
         // Kotlin
         kotlin("stdlib-jdk8"),
         kotlin("reflect"),
@@ -56,19 +55,11 @@ dependencies {
         "io.vertx:vertx-lang-kotlin",
         "io.vertx:vertx-lang-kotlin-coroutines",
 
-        // Modules
-        "jakarta.inject:jakarta.inject-api:2.0.1",
-        "com.google.dagger:dagger:$daggerVersion",
-
         // Netty
         "io.netty:netty-transport-native-epoll:$nettyVersion:linux-x86_64",
 
-        "com.ongres.scram:client:2.1",
-
-        // Jackson
-        "com.fasterxml.jackson.module:jackson-module-blackbird:$jacksonVersion",
-        "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion",
-        "com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion",
+        // Postgres
+        "com.ongres.scram:client:$scramVersion",
 
         // dsljson
         "com.dslplatform:dsl-json:$dslJsonVersion",
@@ -84,7 +75,6 @@ dependencies {
     ).map { implementation(it) }
 
     listOf(
-        "com.google.dagger:dagger-compiler:$daggerVersion",
         "com.dslplatform:dsl-json:$dslJsonVersion",
         "org.apache.logging.log4j:log4j-core:$log4jVersion",
     ).map { kapt(it) }

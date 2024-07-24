@@ -15,8 +15,12 @@ CMD java \
     -server \
     -Xms2G \
     -Xmx2G \
-    -XX:+UseNUMA \
+    -XX:+AlwaysPreTouch \
     -XX:+UseParallelGC \
+	-XX:InitialCodeCacheSize=512m \
+    -XX:ReservedCodeCacheSize=512m \
+    -XX:MaxInlineLevel=20 \
+    -XX:+UseNUMA \
     -Dvertx.disableMetrics=true \
     -Dvertx.disableH2c=true \
     -Dvertx.disableWebsockets=true \

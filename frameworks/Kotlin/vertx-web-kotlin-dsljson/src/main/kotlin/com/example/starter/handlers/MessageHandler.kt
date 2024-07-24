@@ -6,11 +6,10 @@ import io.vertx.ext.web.RoutingContext
 
 class MessageHandler : AbstractHandler() {
     fun readDefaultMessage(ctx: RoutingContext) {
-        ctx.json().end(DEFAULT_MESSAGE.serialize(DEFAULT_MESSAGE_SIZE_HINT))
+        ctx.json().end(DEFAULT_MESSAGE.serialize(), NULL_HANDLER)
     }
 
     companion object {
         private val DEFAULT_MESSAGE = Message("Hello, World!")
-        private const val DEFAULT_MESSAGE_SIZE_HINT = 28
     }
 }

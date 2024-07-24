@@ -5,8 +5,6 @@ import com.example.starter.models.Fortune
 import htmlflow.HtmlFlow
 import htmlflow.HtmlView
 import io.vertx.ext.web.RoutingContext
-import java.util.Arrays
-import java.util.stream.Stream
 import org.apache.logging.log4j.kotlin.Logging
 
 class FortuneHandler(private val repository: FortuneRepository) : AbstractHandler() {
@@ -16,7 +14,7 @@ class FortuneHandler(private val repository: FortuneRepository) : AbstractHandle
             .onSuccess {
                 val updatedFortunes = it.plus(Fortune(0, "Additional fortune added at request time."))
                 updatedFortunes.sort()
-                ctx.html().end(TEMPLATE.render(Arrays.stream(updatedFortunes)))
+                ctx.html().end(TEMPLATE.render(updatedFortunes), NULL_HANDLER)
             }
             .onFailure {
                 logger.error(it) { SOMETHING_WENT_WRONG }
@@ -40,7 +38,7 @@ class FortuneHandler(private val repository: FortuneRepository) : AbstractHandle
                                     .th().text("id").`__`()
                                     .th().text("message").`__`()
                                 .`__`() // tr
-                                .dynamic<Stream<Fortune>> { container, fortunes ->
+                                .dynamic<Array<Fortune>> { container, fortunes ->
                                     fortunes.forEach {
                                         container
                                             .tr()

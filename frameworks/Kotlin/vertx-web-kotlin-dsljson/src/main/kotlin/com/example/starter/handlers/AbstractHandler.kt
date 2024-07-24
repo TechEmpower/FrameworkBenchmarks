@@ -1,7 +1,9 @@
 package com.example.starter.handlers
 
 import com.example.starter.utils.PeriodicDateResolver
-import io.vertx.core.Future
+import io.vertx.core.AsyncResult
+import io.vertx.core.Handler
+import io.vertx.core.MultiMap
 import io.vertx.core.http.HttpHeaders
 import io.vertx.core.http.HttpServerResponse
 import io.vertx.ext.web.RoutingContext
@@ -9,6 +11,8 @@ import io.vertx.ext.web.RoutingContext
 @Suppress("NOTHING_TO_INLINE")
 abstract class AbstractHandler {
     protected companion object {
+        val NULL_HANDLER: Handler<AsyncResult<Void>>? = null
+
         const val SOMETHING_WENT_WRONG = "Something went wrong"
 
         // Headers
@@ -17,23 +21,37 @@ abstract class AbstractHandler {
         val TEXT_PLAIN: CharSequence = HttpHeaders.createOptimized("text/plain")
         val TEXT_HTML: CharSequence = HttpHeaders.createOptimized("text/html; charset=utf-8")
 
-        inline fun RoutingContext.respWithCommonHeaders(): HttpServerResponse = this
-            .response()
-            .putHeader(HttpHeaders.SERVER, SERVER)
-            .putHeader(HttpHeaders.DATE, PeriodicDateResolver.INSTANCE.current)
+        inline fun MultiMap.common(): MultiMap = this
+            .add(HttpHeaders.SERVER, SERVER)
+            .add(HttpHeaders.DATE, PeriodicDateResolver.current)
 
-        inline fun RoutingContext.json():HttpServerResponse = this
-            .respWithCommonHeaders()
-            .putHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON)
+        inline fun RoutingContext.json(): HttpServerResponse {
+            val response = this.response()
+            val headers = response.headers()
+            headers
+                .common()
+                .add(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON)
+            return response
+        }
 
-        inline fun RoutingContext.text(): HttpServerResponse = this
-            .respWithCommonHeaders()
-            .putHeader(HttpHeaders.CONTENT_TYPE, TEXT_PLAIN)
+        inline fun RoutingContext.text(): HttpServerResponse {
+            val response = this.response()
+            val headers = response.headers()
+            headers
+                .common()
+                .add(HttpHeaders.CONTENT_TYPE, TEXT_PLAIN)
+            return response
+        }
 
-        inline fun RoutingContext.html(): HttpServerResponse = this
-            .respWithCommonHeaders()
-            .putHeader(HttpHeaders.CONTENT_TYPE, TEXT_HTML)
+        inline fun RoutingContext.html(): HttpServerResponse {
+            val response = this.response()
+            val headers = response.headers()
+            headers
+                .common()
+                .add(HttpHeaders.CONTENT_TYPE, TEXT_HTML)
+            return response
+        }
 
-        inline fun RoutingContext.error(): Future<Void> = this.text().end(SOMETHING_WENT_WRONG)
+        inline fun RoutingContext.error(): Unit = this.text().end(SOMETHING_WENT_WRONG, NULL_HANDLER)
     }
 }

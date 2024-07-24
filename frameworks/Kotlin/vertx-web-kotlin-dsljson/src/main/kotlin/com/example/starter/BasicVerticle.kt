@@ -2,14 +2,15 @@ package com.example.starter
 
 import com.example.starter.handlers.DefaultHandler
 import com.example.starter.handlers.MessageHandler
+import com.example.starter.io.JsonResource
 import com.example.starter.utils.isConnectionReset
 import io.vertx.core.AbstractVerticle
 import io.vertx.core.Promise
+import io.vertx.core.http.HttpServerOptions
 import io.vertx.ext.web.Router
-import io.vertx.kotlin.core.http.httpServerOptionsOf
 import org.apache.logging.log4j.kotlin.Logging
 
-class DefaultVerticle : AbstractVerticle() {
+class BasicVerticle : AbstractVerticle() {
     override fun start(startPromise: Promise<Void>) {
         val defaultHandler = DefaultHandler()
         val messageHandler = MessageHandler()
@@ -25,20 +26,7 @@ class DefaultVerticle : AbstractVerticle() {
             .handler(messageHandler::readDefaultMessage)
 
         val server = vertx
-            .createHttpServer(
-                httpServerOptionsOf(
-                    port = 8080,
-                    tcpKeepAlive = true,
-                    tcpFastOpen = true,
-                    tcpNoDelay = true,
-                    tcpQuickAck = true,
-                    reuseAddress = true,
-                    reusePort = true,
-                    acceptBacklog = BACKLOG,
-                    receiveBufferSize = RECV_BUFFER_SIZE,
-                    sendBufferSize = SEND_BUFFER_SIZE,
-                )
-            )
+            .createHttpServer(HTTP_SERVER_OPTIONS)
             .requestHandler(router)
             .exceptionHandler {
                 if (it.isConnectionReset()) return@exceptionHandler
@@ -48,7 +36,7 @@ class DefaultVerticle : AbstractVerticle() {
         server
             .listen()
             .onSuccess {
-                logger.info { "HTTP server started on port 8888" }
+                logger.info { "HTTP server started on port 8080" }
                 startPromise.complete()
             }
             .onFailure {
@@ -58,8 +46,11 @@ class DefaultVerticle : AbstractVerticle() {
     }
 
     companion object : Logging {
-        private const val BACKLOG = 4096
-        private const val RECV_BUFFER_SIZE = 1 * 1024 * 1024 // 1 MB
-        private const val SEND_BUFFER_SIZE = 1 * 1024 * 1024 // 1 MB
+        private const val HTTP_SERVER_OPTIONS_RESOURCE = "http-server-options.json"
+
+        private val HTTP_SERVER_OPTIONS: HttpServerOptions by lazy {
+            val json = JsonResource.of(HTTP_SERVER_OPTIONS_RESOURCE)
+            HttpServerOptions(json)
+        }
     }
 }
