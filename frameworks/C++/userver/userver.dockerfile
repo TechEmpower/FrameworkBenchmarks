@@ -1,4 +1,4 @@
-FROM ghcr.io/userver-framework/ubuntu-userver-build-base:v2 AS builder
+FROM ghcr.io/userver-framework/ubuntu-22.04-userver-pg AS builder
 
 RUN apt update && \
     apt install -y lsb-release wget software-properties-common gnupg && \
@@ -6,7 +6,7 @@ RUN apt update && \
 
 WORKDIR /src
 RUN git clone https://github.com/userver-framework/userver.git && \
-    cd userver && git checkout c2ca5454f0b0e93dd0a2e082904dedda5cda3052
+    cd userver && git checkout ec1a3b07793f8d4cd0968cd61d8e6079d667a1e7
 
 COPY userver_benchmark/ ./
 RUN mkdir build && cd build && \

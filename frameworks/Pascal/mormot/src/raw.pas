@@ -831,8 +831,7 @@ begin
     ConsoleWaitForEnterKey;
     //TSynLog.Family.Level := LOG_VERBOSE; // enable shutdown logs for debug
     if servers = 1 then
-      writeln(ObjectToJsonDebug(rawServers[0].fHttpServer,
-        [woDontStoreVoid, woHumanReadable]))
+      writeln(ObjectToJsonDebug(rawServers[0].fHttpServer))
     else
     begin
       writeln('Per-server accepted connections:');

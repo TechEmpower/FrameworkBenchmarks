@@ -15,6 +15,7 @@ use std::thread::available_parallelism;
 use anyhow::Error;
 use diesel::prelude::*;
 use diesel::r2d2::{ConnectionManager, Pool, PoolError, PooledConnection};
+use dotenv::dotenv;
 use once_cell::sync::OnceCell;
 use rand::rngs::SmallRng;
 use rand::{Rng, SeedableRng};
@@ -22,7 +23,6 @@ use salvo::conn::tcp::TcpAcceptor;
 use salvo::http::header::{self, HeaderValue};
 use salvo::http::ResBody;
 use salvo::prelude::*;
-use dotenv::dotenv;
 
 mod models_diesel;
 mod schema;
@@ -135,7 +135,10 @@ async fn fortunes(res: &mut Response) -> Result<(), Error> {
 
     let headers = res.headers_mut();
     headers.insert(header::SERVER, HeaderValue::from_static("salvo"));
-    headers.insert(header::CONTENT_TYPE, HeaderValue::from_static("text/html; charset=utf-8"));
+    headers.insert(
+        header::CONTENT_TYPE,
+        HeaderValue::from_static("text/html; charset=utf-8"),
+    );
     res.body(ResBody::Once(Bytes::from(data)));
     Ok(())
 }
@@ -164,14 +167,11 @@ markup::define! {
 
 fn main() {
     dotenv().ok();
-    
+
     let db_url: String = utils::get_env_var("TECHEMPOWER_POSTGRES_URL");
     let max_pool_size: u32 = utils::get_env_var("TECHEMPOWER_MAX_POOL_SIZE");
     DB_POOL
-        .set(
-            create_pool(&db_url, max_pool_size)
-                .unwrap_or_else(|_| panic!("Error connecting to {}", &db_url)),
-        )
+        .set(create_pool(&db_url, max_pool_size).unwrap_or_else(|_| panic!("Error connecting to {}", &db_url)))
         .ok();
 
     let router = Arc::new(

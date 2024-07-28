@@ -49,10 +49,10 @@ typedef struct db_query_param_t {
 	on_result_t on_result;
 	void (*on_timeout)(struct db_query_param_t *);
 	const char *command;
-	const char * const *paramValues;
-	const int *paramLengths;
 	const int *paramFormats;
+	const int *paramLengths;
 	const Oid *paramTypes;
+	const char * const *paramValues;
 	size_t nParams;
 	uint_fast32_t flags;
 	int resultFormat;

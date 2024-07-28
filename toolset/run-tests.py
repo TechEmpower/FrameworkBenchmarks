@@ -10,8 +10,8 @@ from toolset.utils.benchmark_config import BenchmarkConfig
 from toolset.utils.output_helper import log
 
 # Enable cross-platform colored output
-from colorama import init, Fore
-init()
+from colorama import Fore, just_fix_windows_console
+just_fix_windows_console()
 
 
 class StoreSeqAction(argparse.Action):

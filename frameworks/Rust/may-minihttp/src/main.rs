@@ -49,7 +49,7 @@ struct PgConnectionPool {
 impl PgConnectionPool {
     fn new(db_url: &'static str, size: usize) -> PgConnectionPool {
         let clients = (0..size)
-            .map(|_| std::thread::spawn(move || PgConnection::new(db_url)))
+            .map(|_| may::go!(move || PgConnection::new(db_url)))
             .collect::<Vec<_>>();
         let mut clients: Vec<_> = clients.into_iter().map(|t| t.join().unwrap()).collect();
         clients.sort_by(|a, b| (a.client.id() % size).cmp(&(b.client.id() % size)));
@@ -59,6 +59,7 @@ impl PgConnectionPool {
     fn get_connection(&self, id: usize) -> PgConnection {
         let len = self.clients.len();
         let connection = &self.clients[id % len];
+        // assert_eq!(connection.client.id() % len, id % len);
         PgConnection {
             client: connection.client.clone(),
             statement: connection.statement.clone(),
@@ -282,7 +283,7 @@ impl HttpServiceFactory for HttpServer {
 
 fn main() {
     may::config().set_pool_capacity(1000).set_stack_size(0x1000);
-    println!("Starting http server: 127.0.0.1:8080");
+    println!("Starting http server: 0.0.0.1:8080");
     let server = HttpServer {
         db_pool: PgConnectionPool::new(
             "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world",

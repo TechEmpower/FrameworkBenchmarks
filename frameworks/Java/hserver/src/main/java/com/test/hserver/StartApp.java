@@ -13,8 +13,6 @@ import cn.hserver.core.server.context.ConstConfig;
 public class StartApp {
 
     public static void main(String[] args) {
-        ConstConfig.bossPool = Runtime.getRuntime().availableProcessors()/2;
-        ConstConfig.workerPool = Runtime.getRuntime().availableProcessors();
         HServerApplication.run(StartApp.class, 8888, args);
     }
 }

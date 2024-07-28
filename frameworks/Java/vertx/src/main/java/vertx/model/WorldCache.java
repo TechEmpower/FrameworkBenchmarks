@@ -3,6 +3,7 @@ package vertx.model;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -19,12 +20,12 @@ public class WorldCache {
         this.cache = cache;
     }
 
-    public CachedWorld[] getCachedWorld(int count) {
-        CachedWorld[] ret = new CachedWorld[count];
+    public List<CachedWorld> getCachedWorld(int count) {
+        List<CachedWorld> ret = new ArrayList<>(count);
         ThreadLocalRandom current = ThreadLocalRandom.current();
         for (int i = 0;i < count;i++) {
             Integer key = Integer.valueOf(current.nextInt(1000));
-            ret[i] = cache.getIfPresent(key);
+            ret.add(cache.getIfPresent(key));
         }
         return ret;
     }

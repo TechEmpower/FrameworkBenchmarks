@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/goccy/go-json v0.10.0
-	github.com/gofiber/fiber/v2 v2.52.1
+	github.com/gofiber/fiber/v2 v2.52.5
 	github.com/jackc/pgx/v5 v5.5.4
 	github.com/valyala/quicktemplate v1.7.0
 )
