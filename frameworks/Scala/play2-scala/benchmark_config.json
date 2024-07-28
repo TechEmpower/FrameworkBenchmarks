@@ -61,6 +61,27 @@
         "fortune_url": "/fortunes",
         "update_url": "/update?queries="
       },
+      "anorm-postgres": {
+        "display_name": "play2-scala-anorm-postgres",
+        "framework": "play2",
+        "language": "Scala",
+        "flavor": "None",
+        "orm": "Full",
+        "os": "Linux",
+        "database": "Postgres",
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "platform": "Akka",
+        "webserver": "None",
+        "database_os": "Linux",
+        "notes": "",
+        "versus": "akka-http",
+        "port": "9000",
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
+        "fortune_url": "/fortunes",
+        "update_url": "/update?queries="
+      },
       "anorm-netty": {
         "display_name": "play2-scala-anorm-netty",
         "framework": "play2",
