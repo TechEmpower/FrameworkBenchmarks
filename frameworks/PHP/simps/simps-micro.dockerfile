@@ -1,22 +1,15 @@
-FROM php:8.3-cli
+FROM phpswoole/swoole:5.1.3-php8.3
 
-RUN pecl install swoole > /dev/null && \
-    docker-php-ext-enable swoole
-
-RUN docker-php-ext-install opcache pdo_mysql > /dev/null
-
-RUN apt -yqq update > /dev/null && \
-    apt -yqq install git unzip > /dev/null
+RUN docker-php-ext-install pcntl opcache curl > /dev/null
 
 WORKDIR /simps
 
-COPY . /simps
-COPY php.ini /usr/local/etc/php/
+COPY --link . .
+COPY --link php.ini /usr/local/etc/php/
 
-RUN curl -sSL https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN composer install --no-dev --classmap-authoritative --quiet > /dev/null
 RUN composer dumpautoload -o
 
 EXPOSE 8080
 
-CMD php sbin/simps.php http:start
+ENTRYPOINT [ "php", "sbin/simps.php", "http:start" ]
