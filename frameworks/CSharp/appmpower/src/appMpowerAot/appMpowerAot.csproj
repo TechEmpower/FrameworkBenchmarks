@@ -37,14 +37,4 @@
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.0" />
   </ItemGroup>
 
-  <PropertyGroup>
-      <DefineConstants>$(DefineConstants);POSTGRESQL</DefineConstants>
-      <!--
-      <DefineConstants Condition=" '$(Driver)' == 'odbc' ">$(DefineConstants);ODBC</DefineConstants>
-      <DefineConstants Condition=" '$(Driver)' == 'ado' ">$(DefineConstants);ADO</DefineConstants>
-      -->
-      <DefineConstants>$(DefineConstants);ODBC</DefineConstants>
-  </PropertyGroup>
-
-
 </Project>

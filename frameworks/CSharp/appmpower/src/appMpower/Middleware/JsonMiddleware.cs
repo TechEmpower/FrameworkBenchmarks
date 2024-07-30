@@ -32,8 +32,6 @@ public class JsonMiddleware
             byte* bytePointer = NativeMethods.JsonMessage32(currentThreadId);
             */
 
-            //TODO
-            /*
             var bytePointer = NativeMethods.JsonMessage();
             int payloadLength = 0;
 
@@ -48,10 +46,9 @@ public class JsonMiddleware
             {
                 jsonMessage[i] = bytePointer[i];
             }
-            */
             
-            var jsonMessage = DotnetMethods.JsonMessage();
-            int payloadLength = jsonMessage.Length; 
+            //var jsonMessage = DotnetMethods.JsonMessage();
+            //int payloadLength = jsonMessage.Length; 
 
             response.ContentLength = payloadLength; 
             return response.Body.WriteAsync(jsonMessage, 0, payloadLength);

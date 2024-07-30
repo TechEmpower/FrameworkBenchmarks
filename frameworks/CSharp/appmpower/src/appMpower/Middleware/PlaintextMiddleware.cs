@@ -6,9 +6,9 @@ using appMpowerAot;
 
 public unsafe class PlaintextMiddleware
 {
-    //private static readonly byte[] HelloWorldPayload = Encoding.UTF8.GetBytes(new string(NativeMethods.HelloWorld()));
-    //TODO
-    private static readonly byte[] HelloWorldPayload = Encoding.UTF8.GetBytes(DotnetMethods.HelloWorld());
+    private static readonly byte[] HelloWorldPayload = Encoding.UTF8.GetBytes(new string(NativeMethods.HelloWorld()));
+    //TEST
+    //private static readonly byte[] HelloWorldPayload = Encoding.UTF8.GetBytes(DotnetMethods.HelloWorld());
     private readonly RequestDelegate _nextStage;
 
     public PlaintextMiddleware(RequestDelegate nextStage)
