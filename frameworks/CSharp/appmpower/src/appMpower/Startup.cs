@@ -16,7 +16,7 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         //services.Configure<AppSettings>(_configuration);
-        services.AddSingleton<ConcurrentRandom>();
+        //services.AddSingleton<ConcurrentRandom>();
 
         var appSettings = _configuration.Get<AppSettings>();
         services.AddSingleton(appSettings);
@@ -59,40 +59,18 @@ public class Startup
     {
         app.UsePlainText();
         app.UseJson();
-        app.UseUtf8Json();
-        app.UseFortunesRaw();
+        //app.UseFortunesRaw();
         app.UseSingleQueryRaw();
-        app.UseMultipleQueriesRaw();
-        app.UseMultipleUpdatesRaw();
+        //app.UseMultipleQueriesRaw();
+        //app.UseMultipleUpdatesRaw();
     }
 }
 
 // Assume these classes and methods are defined somewhere else in your project
 
-public enum DatabaseServer
-{
-    PostgreSql,
-    MySql
-}
-
-public class ConcurrentRandom
-{
-    // Implementation of ConcurrentRandom class
-}
-
-public class RawDb
-{
-    // Implementation of RawDb class
-}
-
 // Extension methods for IApplicationBuilder (placeholders for actual implementations)
 public static class ApplicationBuilderExtensions
 {
-    public static void UseUtf8Json(this IApplicationBuilder app)
-    {
-        // Implementation for UseUtf8Json middleware
-    }
-
     public static void UseFortunesRaw(this IApplicationBuilder app)
     {
         // Implementation for UseFortunesRaw middleware

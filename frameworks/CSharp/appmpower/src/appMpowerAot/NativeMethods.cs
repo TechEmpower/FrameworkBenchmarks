@@ -38,31 +38,6 @@ public static class NativeMethods
         }
     }
 
-    [UnmanagedCallersOnly(EntryPoint = "JsonMessage1")]
-    public static unsafe char* JsonMessage1()
-    {
-        var jsonMessage = new JsonMessage
-        {
-            Message = "Hello, World!"
-        };
-
-        var jsonWriterOptions = new JsonWriterOptions
-        {
-            Indented = false, 
-            SkipValidation = true
-        };
-
-        using var memoryStream = new MemoryStream();
-        using var utf8JsonWriter = new Utf8JsonWriter(memoryStream, jsonWriterOptions);
-
-        _jsonMessageSerializer.Serialize(utf8JsonWriter, jsonMessage);
-
-        fixed(char* s = Encoding.UTF8.GetString(memoryStream.ToArray()))
-        {
-            return s; 
-        }
-    }
-
     [UnmanagedCallersOnly(EntryPoint = "JsonMessage")]
     public static unsafe byte* JsonMessage()
     {
@@ -84,39 +59,6 @@ public static class NativeMethods
         //Console.WriteLine(utf8JsonWriter.BytesCommitted); 
 
         fixed(byte* b = memoryStream.ToArray())
-        {
-            return b; 
-        }
-    }
-
-    [UnmanagedCallersOnly(EntryPoint = "JsonMessage31")]
-    public static unsafe int JsonMessage31(int managedThreadId)
-    {
-        var jsonMessage = new JsonMessage
-        {
-            Message = "Hello, World!"
-        };
-
-        var jsonWriterOptions = new JsonWriterOptions
-        {
-            Indented = false, 
-            SkipValidation = true
-        };
-
-        using var memoryStream = new MemoryStream();
-        using var utf8JsonWriter = new Utf8JsonWriter(memoryStream, jsonWriterOptions);
-
-        _jsonMessageSerializer.Serialize(utf8JsonWriter, jsonMessage);
-        //Console.WriteLine(utf8JsonWriter.BytesCommitted); 
-        utf8JsonWriter.Flush();
-        _byteArrays[managedThreadId] = memoryStream.ToArray();
-        return (int)utf8JsonWriter.BytesCommitted;
-    }
-
-   [UnmanagedCallersOnly(EntryPoint = "JsonMessage32")]
-    public static unsafe byte* JsonMessage32(int managedThreadId)
-    {
-        fixed(byte* b = _byteArrays[managedThreadId])
         {
             return b; 
         }

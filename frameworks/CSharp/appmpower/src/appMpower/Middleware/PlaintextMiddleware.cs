@@ -1,11 +1,16 @@
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Primitives;
 using appMpowerAot;
 
 public unsafe class PlaintextMiddleware
 {
+    private readonly static KeyValuePair<string, StringValues> _headerServer =
+         new KeyValuePair<string, StringValues>("Server", new StringValues("k"));
+
     private static readonly byte[] HelloWorldPayload = Encoding.UTF8.GetBytes(new string(NativeMethods.HelloWorld()));
     //TEST
     //private static readonly byte[] HelloWorldPayload = Encoding.UTF8.GetBytes(DotnetMethods.HelloWorld());
@@ -20,19 +25,18 @@ public unsafe class PlaintextMiddleware
     {
         if (httpContext.Request.Path.Value.StartsWith("/p"))
         {
-            return WriteResponse(httpContext.Response);
+            var response = httpContext.Response; 
+            //response.Headers["Server"] = "k";
+            response.Headers.Add(_headerServer);
+            response.StatusCode = 200;
+            response.ContentType = "text/plain";
+
+            var payloadLength = HelloWorldPayload.Length;
+            response.ContentLength = payloadLength;
+            return response.Body.WriteAsync(HelloWorldPayload, 0, payloadLength);
         }
 
         return _nextStage(httpContext);
-    }
-
-    public static Task WriteResponse(HttpResponse response)
-    {
-        var payloadLength = HelloWorldPayload.Length;
-        response.StatusCode = 200;
-        response.ContentType = "text/plain";
-        response.ContentLength = payloadLength;
-        return response.Body.WriteAsync(HelloWorldPayload, 0, payloadLength);
     }
 }
 

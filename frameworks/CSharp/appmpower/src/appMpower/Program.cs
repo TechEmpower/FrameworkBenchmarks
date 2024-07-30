@@ -28,6 +28,7 @@ class Program
                 webBuilder.UseConfiguration(config)
                           .UseKestrel(options =>
                           {
+                            options.AddServerHeader = false; 
                             options.AllowSynchronousIO = true;
                           })
                           .UseStartup<Startup>();
