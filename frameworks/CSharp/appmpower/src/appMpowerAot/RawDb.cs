@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
+using appMpowerAot; 
 using appMpowerAot.Data; 
 using appMpowerAot.DataObjects;
 using PlatformBenchmarks;
@@ -14,11 +15,8 @@ namespace appMpowerAot
    {
       private const int MaxBatch = 500;
 
-#if ADO      
-      private static ConcurrentRandom _random = new ConcurrentRandom();
-#else
+      //private static ConcurrentRandom _random = (Constants.DbProvider == DbProvider.ADO ? new ConcurrentRandom() : new Random());
       private static Random _random = new Random();
-#endif
 
       private static string[] _queriesMultipleRows = new string[MaxBatch + 1];
 
@@ -87,14 +85,10 @@ namespace appMpowerAot
                fortunes.Add(new Fortune
                (
                    id: dataReader.GetInt32(0),
-#if MYSQL
-               //MariaDB ODBC connector does not correctly support Japanese characters in combination with default ADO.NET;
-               //as a solution we custom read this string
-                message: ReadColumn(dataReader, 1)
-#else
-                message: dataReader.GetString(1)
-#endif
-            ));
+                  //MariaDB ODBC connector does not correctly support Japanese characters in combination with default ADO.NET;
+                  //as a solution we custom read this string
+                  message: (Constants.Dbms == Dbms.MySQL ? ReadColumn(dataReader, 1) : dataReader.GetString(1))
+               ));
             }
 
             dataReader.Close();
@@ -129,10 +123,6 @@ namespace appMpowerAot
          var ids = PlatformBenchmarks.BatchUpdateString.Ids;
          var randoms = PlatformBenchmarks.BatchUpdateString.Randoms;
 
-#if !MYSQL
-         var jds = PlatformBenchmarks.BatchUpdateString.Jds;
-#endif      
-
          for (int i = 0; i < count; i++)
          {
             var randomNumber = _random.Next(1, 10001);
@@ -143,12 +133,15 @@ namespace appMpowerAot
             worlds[i].RandomNumber = randomNumber;
          }
 
-#if !MYSQL
-         for (int i = 0; i < count; i++)
+         if (Constants.Dbms != Dbms.MySQL)
          {
-            updateCommand.CreateParameter(jds[i], DbType.Int32, worlds[i].Id);
+            var jds = PlatformBenchmarks.BatchUpdateString.Jds;
+
+            for (int i = 0; i < count; i++)
+            {
+               updateCommand.CreateParameter(jds[i], DbType.Int32, worlds[i].Id);
+            }
          }
-#endif
 
          await updateCommand.ExecuteNonQueryAsync();
 
@@ -157,11 +150,16 @@ namespace appMpowerAot
 
       private static (DbCommand dbCommand, IDbDataParameter dbDataParameter) CreateReadCommand(DbConnection pooledConnection)
       {
-#if ADO         
-         var dbCommand = new DbCommand("SELECT * FROM world WHERE id=@Id", pooledConnection);
-#else         
-         var dbCommand = new DbCommand("SELECT * FROM world WHERE id=?", pooledConnection);
-#endif         
+         DbCommand dbCommand; 
+
+         if (Constants.DbProvider == DbProvider.ADO)
+         {
+            dbCommand = new DbCommand("SELECT * FROM world WHERE id=@Id", pooledConnection);
+         }
+         else
+         {
+            dbCommand = new DbCommand("SELECT * FROM world WHERE id=?", pooledConnection);
+         }
 
          return (dbCommand, dbCommand.CreateParameter("Id", DbType.Int32, _random.Next(1, 10001)));
       }

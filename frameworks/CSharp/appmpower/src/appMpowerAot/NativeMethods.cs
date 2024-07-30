@@ -1,6 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 using System.Text; 
 using System.Text.Json; 
+using appMpowerAot.Data; 
 using appMpowerAot.DataObjects; 
 using appMpowerAot.Serializers; 
 
@@ -12,6 +13,20 @@ public static class NativeMethods
     private readonly static WorldSerializer _worldSerializer = new WorldSerializer();
     private static byte[][] _byteArrays = new byte[99][];
 
+    [UnmanagedCallersOnly(EntryPoint = "Dbms")]
+    public static void Dbms(int dbms)
+    {
+        Constants.Dbms = (Dbms)dbms; 
+        DbProviderFactory.SetConnectionString();
+    }
+
+    [UnmanagedCallersOnly(EntryPoint = "DbProvider")]
+    public static void DbProvider(int dbProvider)
+    {
+        Constants.DbProvider = (DbProvider)dbProvider; 
+        DbProviderFactory.SetConnectionString();
+    }
+    
     [UnmanagedCallersOnly(EntryPoint = "HelloWorld")]
     public static unsafe char* HelloWorld()
     {

@@ -8,6 +8,20 @@ public unsafe partial class NativeMethods
 #else
     [DllImport("appMpowerAot.so", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
 #endif   
+    public static extern void Dbms(int dbms); 
+
+#if DEBUG
+    [DllImport("appMpowerAot.dylib", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
+#else
+    [DllImport("appMpowerAot.so", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
+#endif   
+    public static extern void DbProvider(int dbProvider); 
+
+#if DEBUG
+    [DllImport("appMpowerAot.dylib", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
+#else
+    [DllImport("appMpowerAot.so", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
+#endif   
     public static extern char* HelloWorld(); 
 
 #if DEBUG

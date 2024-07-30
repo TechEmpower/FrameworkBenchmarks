@@ -4,8 +4,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-using Npgsql;
-
 public class Startup
 {
     private readonly IConfiguration _configuration;
@@ -36,7 +34,20 @@ public class Startup
         }
         */
 
+#if ADO      
+        NativeMethods.DbProvider(0); 
+#else
+        NativeMethods.DbProvider(1); //ODBC
+#endif        
+
+#if POSTGRESQL      
+        NativeMethods.Dbms(1); 
+#else
+        NativeMethods.Dbms(0); //MySQL
+#endif
+
         var settings = new TextEncoderSettings(UnicodeRanges.BasicLatin, UnicodeRanges.Katakana, UnicodeRanges.Hiragana);
+
         settings.AllowCharacter('—');
         services.AddWebEncoders(options =>
         {
