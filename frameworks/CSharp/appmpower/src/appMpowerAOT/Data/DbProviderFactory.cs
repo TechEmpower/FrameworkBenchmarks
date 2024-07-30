@@ -1,6 +1,6 @@
 using System.Data;
 
-namespace appMpower.Data
+namespace appMpowerAot.Data
 {
    public static class DbProviderFactory
    {

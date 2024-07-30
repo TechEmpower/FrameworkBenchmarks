@@ -2,10 +2,13 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using appMpowerAot;
 
 public unsafe class PlaintextMiddleware
 {
-    private static readonly byte[] HelloWorldPayload = Encoding.UTF8.GetBytes(new string(NativeMethods.HelloWorld()));
+    //private static readonly byte[] HelloWorldPayload = Encoding.UTF8.GetBytes(new string(NativeMethods.HelloWorld()));
+    //TODO
+    private static readonly byte[] HelloWorldPayload = Encoding.UTF8.GetBytes(DotnetMethods.HelloWorld());
     private readonly RequestDelegate _nextStage;
 
     public PlaintextMiddleware(RequestDelegate nextStage)

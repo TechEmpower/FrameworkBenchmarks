@@ -18,8 +18,6 @@
 
   <ItemGroup>
     <ProjectReference Include = "..\appMpowerAot\appMpowerAot.csproj" />
-    <PackageReference Include="System.Data.Odbc" Version="8.0.0" />
-    <PackageReference Include="Npgsql" Version="8.0.3" />
   </ItemGroup>
 
   <PropertyGroup>

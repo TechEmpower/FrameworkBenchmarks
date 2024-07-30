@@ -4,10 +4,11 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
-using appMpower.Data; 
+using appMpowerAot.Data; 
+using appMpowerAot.DataObjects;
 using PlatformBenchmarks;
 
-namespace appMpower
+namespace appMpowerAot
 {
    public static class RawDb
    {
@@ -21,6 +22,8 @@ namespace appMpower
 
       private static string[] _queriesMultipleRows = new string[MaxBatch + 1];
 
+      /*
+      TODO
       private static readonly object[] _cacheKeys = Enumerable.Range(0, 10001).Select((i) => new CacheKey(i)).ToArray();
 
       private static readonly appMpower.Memory.MemoryCache _cache = new appMpower.Memory.MemoryCache(
@@ -28,6 +31,7 @@ namespace appMpower
             {
                ExpirationScanFrequency = TimeSpan.FromMinutes(60)
             });
+      */
 
       public static async Task<World> LoadSingleQueryRow()
       {
@@ -250,6 +254,8 @@ namespace appMpower
          return System.Text.Encoding.Default.GetString(values);
       }
 
+      /*
+      TODO
       public static async Task PopulateCache()
       {
          using var pooledConnection = new DbConnection(DbProviderFactory.ConnectionString);
@@ -327,5 +333,6 @@ namespace appMpower
 
          return result;
       }
+      */
    }
 }

@@ -1,4 +1,4 @@
-namespace appMpowerAot;
+namespace appMpowerAot.DataObjects;
 
 public struct JsonMessage
 {

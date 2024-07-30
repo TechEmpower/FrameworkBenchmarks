@@ -15,28 +15,13 @@ public unsafe partial class NativeMethods
 #else
     [DllImport("appMpowerAot.so", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
 #endif   
-    public static extern char* JsonMessage(); 
+    public static extern byte* JsonMessage(); 
 
 #if DEBUG
     [DllImport("appMpowerAot.dylib", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
 #else
     [DllImport("appMpowerAot.so", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
 #endif   
-    public static extern byte* JsonMessage2(); 
+    public static extern byte* Db(); 
 
-
-
-#if DEBUG
-    [DllImport("appMpowerAot.dylib", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
-#else
-    [DllImport("appMpowerAot.so", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
-#endif   
-    public static extern int JsonMessage31(int currentThreadId); 
-
-#if DEBUG
-    [DllImport("appMpowerAot.dylib", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
-#else
-    [DllImport("appMpowerAot.so", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
-#endif   
-    public static extern byte* JsonMessage32(int currentThreadId); 
 }

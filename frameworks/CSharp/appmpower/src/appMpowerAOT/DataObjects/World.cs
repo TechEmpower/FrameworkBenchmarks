@@ -1,4 +1,4 @@
-namespace appMpower
+namespace appMpowerAot.DataObjects
 {
    public struct World
    {

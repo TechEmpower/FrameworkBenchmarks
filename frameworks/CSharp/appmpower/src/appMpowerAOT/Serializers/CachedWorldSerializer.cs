@@ -1,8 +1,9 @@
 using System.Text.Json;
+using appMpowerAot.DataObjects;
 
-namespace appMpower
+namespace appMpowerAot.Serializers
 {
-   public class CachedWorldSerializer : Kestrel.IJsonSerializer<CachedWorld>
+   public class CachedWorldSerializer : IJsonSerializer<CachedWorld>
    {
       public void Serialize(Utf8JsonWriter utf8JsonWriter, CachedWorld world)
       {
@@ -10,6 +11,7 @@ namespace appMpower
          utf8JsonWriter.WriteNumber("id", world.Id);
          utf8JsonWriter.WriteNumber("randomNumber", world.RandomNumber);
          utf8JsonWriter.WriteEndObject();
+         utf8JsonWriter.Flush();
       }
    }
 }

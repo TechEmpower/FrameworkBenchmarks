@@ -1,6 +1,6 @@
 using System;
 
-namespace appMpower
+namespace appMpowerAot.DataObjects
 {
    public readonly struct Fortune : IComparable<Fortune>, IComparable
    {

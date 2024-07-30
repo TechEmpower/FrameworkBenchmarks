@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace appMpower.Kestrel
+namespace appMpowerAot.Serializers
 {
    public interface IJsonSerializer<T>
    {

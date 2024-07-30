@@ -1,7 +1,7 @@
 using System.Collections.Concurrent;
 using System.Data;
 
-namespace appMpower.Data
+namespace appMpowerAot.Data
 {
    public class InternalConnection : System.IDisposable
    {

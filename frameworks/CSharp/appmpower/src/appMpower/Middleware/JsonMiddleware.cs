@@ -3,6 +3,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using appMpowerAot;
 
 public class JsonMiddleware
 {
@@ -31,7 +32,9 @@ public class JsonMiddleware
             byte* bytePointer = NativeMethods.JsonMessage32(currentThreadId);
             */
 
-            var bytePointer = NativeMethods.JsonMessage2();
+            //TODO
+            /*
+            var bytePointer = NativeMethods.JsonMessage();
             int payloadLength = 0;
 
             while (bytePointer[payloadLength] != 0)
@@ -45,8 +48,10 @@ public class JsonMiddleware
             {
                 jsonMessage[i] = bytePointer[i];
             }
+            */
             
-            //NativeMethods.JsonMessage33(currentThreadId);
+            var jsonMessage = DotnetMethods.JsonMessage();
+            int payloadLength = jsonMessage.Length; 
 
             response.ContentLength = payloadLength; 
             return response.Body.WriteAsync(jsonMessage, 0, payloadLength);
