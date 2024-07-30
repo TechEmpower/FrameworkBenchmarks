@@ -154,6 +154,7 @@ namespace appMpowerAot.Data
 
          if (_internalConnection.DbConnection.State == ConnectionState.Closed)
          {
+            //Console.WriteLine("OpenAsync");
             await (_internalConnection.DbConnection as System.Data.Common.DbConnection).OpenAsync();
          }
       }
