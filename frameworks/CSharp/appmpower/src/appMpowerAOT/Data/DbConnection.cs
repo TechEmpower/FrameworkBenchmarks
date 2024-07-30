@@ -1,3 +1,4 @@
+using System; 
 using System.Collections.Concurrent;
 using System.Data;
 using System.Threading.Tasks;
@@ -154,7 +155,7 @@ namespace appMpowerAot.Data
 
          if (_internalConnection.DbConnection.State == ConnectionState.Closed)
          {
-            //Console.WriteLine("OpenAsync");
+            //Console.WriteLine("OpenAsync " + _internalConnection.Number.ToString());
             await (_internalConnection.DbConnection as System.Data.Common.DbConnection).OpenAsync();
          }
       }

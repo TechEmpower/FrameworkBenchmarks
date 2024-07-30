@@ -18,6 +18,12 @@ ENV PATH=/usr/local/unixODBC/bin:$PATH
 WORKDIR /etc/
 COPY odbcinst.ini .
 
+# Full PGO
+ENV DOTNET_TieredPGO 1 
+ENV DOTNET_TC_QuickJitForLoops 1 
+ENV DOTNET_ReadyToRun 0
+
+ENV ASPNETCORE_URLS http://+:8080
 WORKDIR /app
 COPY --from=build /app/out ./
 
