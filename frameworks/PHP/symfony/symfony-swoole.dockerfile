@@ -1,16 +1,11 @@
-FROM php:8.3-cli
+FROM phpswoole/swoole:5.1.3-php8.3
 
-RUN pecl install swoole > /dev/null && \
-    docker-php-ext-enable swoole
+RUN apt-get update -yqq && \
+    apt-get install -yqq libpq-dev libicu-dev > /dev/null && \
+    docker-php-ext-install pdo_pgsql opcache intl > /dev/null
 
 RUN pecl install apcu > /dev/null && \
     docker-php-ext-enable apcu
-
-RUN apt-get update -yqq && \
-    apt-get install -yqq libpq-dev libicu-dev git unzip > /dev/null && \ 
-    docker-php-ext-install pdo_pgsql opcache intl > /dev/null
-
-COPY --from=composer/composer:latest-bin --link /composer /usr/local/bin/composer
 
 COPY --link deploy/swoole/php.ini /usr/local/etc/php/
 WORKDIR /symfony

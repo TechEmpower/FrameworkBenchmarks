@@ -49,7 +49,7 @@ module HttpHandlers =
     let rec private renderFortunes (ctx: HttpContext) (data: ResizeArray<Fortune>) =
         data.Add extra
         data.Sort FortuneComparer
-        data |> HtmlViews.fortunes |> ctx.WriteHtmlView
+        data |> HtmlViews.fortunes |> ctx.WriteHtmlViewChunked
 
     let fortunes : EndpointHandler =
         fun ctx ->
