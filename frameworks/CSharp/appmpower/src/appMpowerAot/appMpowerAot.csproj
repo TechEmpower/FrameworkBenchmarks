@@ -7,7 +7,7 @@
     <PublishAot>true</PublishAot>
     <SelfContained>true</SelfContained>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <RuntimeIdentifier>linux-arm64</RuntimeIdentifier>
+    <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
 
     <InvariantGlobalization>true</InvariantGlobalization>
     <IlcGenerateStackTraceData>false</IlcGenerateStackTraceData>
