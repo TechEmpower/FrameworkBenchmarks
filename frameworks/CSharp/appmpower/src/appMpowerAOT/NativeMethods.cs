@@ -2,7 +2,7 @@
 using System.Text; 
 using System.Text.Json; 
 
-namespace nativeAOT;
+namespace appMpowerAot;
 
 public static class NativeMethods
 {

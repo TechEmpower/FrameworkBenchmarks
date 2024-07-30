@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace nativeAOT
+namespace appMpowerAot
 {
    public class JsonMessageSerializer : IJsonSerializer<JsonMessage>
    {

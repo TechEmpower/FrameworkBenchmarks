@@ -1,4 +1,4 @@
-namespace nativeAOT;
+namespace appMpowerAot;
 
 public struct JsonMessage
 {

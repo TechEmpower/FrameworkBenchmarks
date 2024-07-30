@@ -9,13 +9,15 @@
   <ItemGroup>
     <None Include="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
 
-    <Content Include="../nativeAOT/bin/Release/net8.0/osx-arm64/native/nativeAOT.dylib">
+    <!--
+    <Content Include="../appMpowerAot/bin/Release/net8.0/osx-arm64/native/appMpowerAot.dylib">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content> 
+    -->
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include = "..\nativeAOT\nativeAOT.csproj" />
+    <ProjectReference Include = "..\appMpowerAot\appMpowerAot.csproj" />
     <PackageReference Include="System.Data.Odbc" Version="8.0.0" />
     <PackageReference Include="Npgsql" Version="8.0.3" />
   </ItemGroup>
