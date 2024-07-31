@@ -10,6 +10,8 @@ public unsafe class PlaintextMiddleware
 {
     private readonly static KeyValuePair<string, StringValues> _headerServer =
          new KeyValuePair<string, StringValues>("Server", new StringValues("k"));
+    private readonly static KeyValuePair<string, StringValues> _headerContentType =
+         new KeyValuePair<string, StringValues>("Content-Type", new StringValues("text/plain"));
 
     private static readonly byte[] HelloWorldPayload = Encoding.UTF8.GetBytes(new string(NativeMethods.HelloWorld()));
     //TEST
@@ -25,12 +27,13 @@ public unsafe class PlaintextMiddleware
     {
         if (httpContext.Request.Path.Value.StartsWith("/p"))
         {
+            var payloadLength = HelloWorldPayload.Length;
             var response = httpContext.Response; 
             response.Headers.Add(_headerServer);
-            response.ContentType = "text/plain";
+            response.Headers.Add(_headerContentType);
+            response.Headers.Add(
+                new KeyValuePair<string, StringValues>("Content-Length", payloadLength.ToString()));
 
-            var payloadLength = HelloWorldPayload.Length;
-            response.ContentLength = payloadLength;
             return response.Body.WriteAsync(HelloWorldPayload, 0, payloadLength);
         }
 

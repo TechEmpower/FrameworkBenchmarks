@@ -12,6 +12,8 @@ public class JsonMiddleware
 {
     private readonly static KeyValuePair<string, StringValues> _headerServer =
          new KeyValuePair<string, StringValues>("Server", new StringValues("k"));
+    private readonly static KeyValuePair<string, StringValues> _headerContentType =
+         new KeyValuePair<string, StringValues>("Content-Type", new StringValues("application/json"));
          
     private readonly RequestDelegate _nextStage;
 
@@ -26,7 +28,7 @@ public class JsonMiddleware
         {
             var response = httpContext.Response; 
             response.Headers.Add(_headerServer);
-            response.ContentType = "application/json";
+            response.Headers.Add(_headerContentType);
 
             int payloadLength;
 
@@ -47,7 +49,9 @@ public class JsonMiddleware
             //var jsonMessage = DotnetMethods.JsonMessage();
             //int payloadLength = jsonMessage.Length; 
 
-            response.ContentLength = payloadLength; 
+            response.Headers.Add(
+                new KeyValuePair<string, StringValues>("Content-Length", payloadLength.ToString()));
+                
             return response.Body.WriteAsync(jsonMessage, 0, payloadLength);
         }
 
