@@ -39,7 +39,7 @@ public static class NativeMethods
     }
 
     [UnmanagedCallersOnly(EntryPoint = "JsonMessage")]
-    public static unsafe byte* JsonMessage()
+    public static unsafe byte* JsonMessage(int* length)
     {
         var jsonMessage = new JsonMessage
         {
@@ -57,6 +57,7 @@ public static class NativeMethods
 
         _jsonMessageSerializer.Serialize(utf8JsonWriter, jsonMessage);
         //Console.WriteLine(utf8JsonWriter.BytesCommitted); 
+        *length = (int)utf8JsonWriter.BytesCommitted; 
 
         fixed(byte* b = memoryStream.ToArray())
         {
@@ -65,7 +66,7 @@ public static class NativeMethods
     }
 
     [UnmanagedCallersOnly(EntryPoint = "Db")]
-    public static unsafe byte* Db()
+    public static unsafe byte* Db(int* length)
     {
         var world = RawDb.LoadSingleQueryRow().GetAwaiter().GetResult();
 
@@ -79,6 +80,8 @@ public static class NativeMethods
         using var utf8JsonWriter = new Utf8JsonWriter(memoryStream, jsonWriterOptions);
 
         _worldSerializer.Serialize(utf8JsonWriter, world);
+
+        *length = (int)utf8JsonWriter.BytesCommitted; 
 
         fixed(byte* b = memoryStream.ToArray())
         {

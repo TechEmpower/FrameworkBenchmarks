@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
@@ -12,7 +13,6 @@ public class JsonMiddleware
     private readonly static KeyValuePair<string, StringValues> _headerServer =
          new KeyValuePair<string, StringValues>("Server", new StringValues("k"));
          
-    private const int BufferSize = 27;
     private readonly RequestDelegate _nextStage;
 
     public JsonMiddleware(RequestDelegate nextStage)
@@ -28,20 +28,21 @@ public class JsonMiddleware
             response.Headers.Add(_headerServer);
             response.ContentType = "application/json";
 
-            var bytePointer = NativeMethods.JsonMessage();
-            int payloadLength = 0;
+            int payloadLength;
 
-            while (bytePointer[payloadLength] != 0)
-            {
-                payloadLength++;
-            }
+            IntPtr bytePointer = NativeMethods.JsonMessage(out payloadLength);
+            //var bytePointer = NativeMethods.JsonMessage(out payloadLength);
 
             byte[] jsonMessage = new byte[payloadLength];
+            
+            Marshal.Copy(bytePointer, jsonMessage, 0, payloadLength);
 
+            /*
             for (int i = 0; i < payloadLength; i++)
             {
                 jsonMessage[i] = bytePointer[i];
             }
+            */
             
             //var jsonMessage = DotnetMethods.JsonMessage();
             //int payloadLength = jsonMessage.Length; 
