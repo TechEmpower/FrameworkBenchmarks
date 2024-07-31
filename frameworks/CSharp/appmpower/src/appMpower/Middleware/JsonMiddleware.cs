@@ -25,19 +25,8 @@ public class JsonMiddleware
         if (httpContext.Request.Path.Value.StartsWith("/j"))
         {
             var response = httpContext.Response; 
-            //response.Headers["Server"] = "k";
             response.Headers.Add(_headerServer);
-            response.StatusCode = 200;
             response.ContentType = "application/json";
-
-            //var jsonMessage = Encoding.UTF8.GetBytes(new string(NativeMethods.JsonMessage()));
-            //int payloadLength = jsonMessage.Length; 
-
-            /*
-            int currentThreadId = Thread.CurrentThread.ManagedThreadId; 
-            int payloadLength = NativeMethods.JsonMessage31(currentThreadId);
-            byte* bytePointer = NativeMethods.JsonMessage32(currentThreadId);
-            */
 
             var bytePointer = NativeMethods.JsonMessage();
             int payloadLength = 0;

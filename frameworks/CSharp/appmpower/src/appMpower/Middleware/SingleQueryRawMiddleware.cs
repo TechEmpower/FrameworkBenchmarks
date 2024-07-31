@@ -24,9 +24,7 @@ public class SingleQueryRawMiddleware
         if (httpContext.Request.Path.Value.StartsWith("/d"))
         {
             var response = httpContext.Response; 
-            //response.Headers["Server"] = "k";
             response.Headers.Add(_headerServer);
-            response.StatusCode = 200;
             response.ContentType = "application/json";
 
             var bytePointer = NativeMethods.Db();
@@ -47,6 +45,7 @@ public class SingleQueryRawMiddleware
             //var jsonMessage = DotnetMethods.Db();
             //int payloadLength = jsonMessage.Length; 
 
+            response.ContentLength = payloadLength; 
             return response.Body.WriteAsync(jsonMessage, 0, payloadLength);
         }
 

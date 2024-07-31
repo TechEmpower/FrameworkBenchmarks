@@ -26,9 +26,7 @@ public unsafe class PlaintextMiddleware
         if (httpContext.Request.Path.Value.StartsWith("/p"))
         {
             var response = httpContext.Response; 
-            //response.Headers["Server"] = "k";
             response.Headers.Add(_headerServer);
-            response.StatusCode = 200;
             response.ContentType = "text/plain";
 
             var payloadLength = HelloWorldPayload.Length;
