@@ -51,8 +51,12 @@ public class JsonMiddleware
 
             response.Headers.Add(
                 new KeyValuePair<string, StringValues>("Content-Length", payloadLength.ToString()));
-                
-            return response.Body.WriteAsync(jsonMessage, 0, payloadLength);
+
+            var result = response.Body.WriteAsync(jsonMessage, 0, payloadLength);
+
+            NativeMethods.FreeUnmanagedPointer(bytePointer);
+
+            return result; 
         }
 
         return _nextStage(httpContext);

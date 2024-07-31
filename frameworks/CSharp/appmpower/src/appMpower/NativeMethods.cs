@@ -33,6 +33,13 @@ public unsafe partial class NativeMethods
     public static extern IntPtr JsonMessage(out int length); 
 
 #if DEBUG
+    [DllImport("appMpowerAot.dylib", CallingConvention = CallingConvention.Cdecl)]
+#else
+    [DllImport("appMpowerAot.so", CallingConvention = CallingConvention.Cdecl)]
+#endif
+    public static extern void FreeUnmanagedPointer(IntPtr byteArray);
+
+#if DEBUG
     [DllImport("appMpowerAot.dylib", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
 #else
     [DllImport("appMpowerAot.so", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]

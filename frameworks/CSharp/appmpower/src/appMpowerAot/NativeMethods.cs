@@ -39,7 +39,8 @@ public static class NativeMethods
     }
 
     [UnmanagedCallersOnly(EntryPoint = "JsonMessage")]
-    public static unsafe byte* JsonMessage(int* length)
+    //public static unsafe byte* JsonMessage(int* length)
+    public static unsafe IntPtr JsonMessage(int* length)
     {
         var jsonMessage = new JsonMessage
         {
@@ -56,13 +57,29 @@ public static class NativeMethods
         using var utf8JsonWriter = new Utf8JsonWriter(memoryStream, jsonWriterOptions);
 
         _jsonMessageSerializer.Serialize(utf8JsonWriter, jsonMessage);
-        //Console.WriteLine(utf8JsonWriter.BytesCommitted); 
         *length = (int)utf8JsonWriter.BytesCommitted; 
 
+        /*
         fixed(byte* b = memoryStream.ToArray())
         {
             return b; 
         }
+        */
+
+        byte[] byteArray = memoryStream.ToArray();
+        IntPtr unmanagedPointer = Marshal.AllocHGlobal(byteArray.Length);
+
+        Marshal.Copy(byteArray, 0, unmanagedPointer, byteArray.Length);
+
+        //Console.WriteLine(unmanagedPointer.ToString());
+        return unmanagedPointer;
+    }
+
+    [UnmanagedCallersOnly(EntryPoint = "FreeUnmanagedPointer")]
+    public static void FreeUnmanagedPointer(IntPtr unmanagedPointer)
+    {
+        //Console.WriteLine(unmanagedPointer.ToString());
+        Marshal.FreeHGlobal(unmanagedPointer);
     }
 
     [UnmanagedCallersOnly(EntryPoint = "Db")]
