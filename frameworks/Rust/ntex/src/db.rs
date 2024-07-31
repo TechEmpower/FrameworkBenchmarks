@@ -1,10 +1,11 @@
 use std::{cell::RefCell, fmt::Write as FmtWrite};
 
+use futures::stream::{futures_unordered::FuturesUnordered, StreamExt};
 use nanorand::{Rng, WyRand};
 use ntex::util::{BufMut, Bytes, BytesMut};
 use smallvec::SmallVec;
 use tokio_postgres::types::ToSql;
-use tokio_postgres::{connect, Client, Statement};
+use tokio_postgres::{connect, Client, Row, Statement};
 use yarte::{ywrite_html, Serialize};
 
 use super::utils;
@@ -82,7 +83,7 @@ impl PgConnection {
         let row = self.cl.query_one(&self.world, &[&random_id]).await.unwrap();
 
         let mut body = self.buf.borrow_mut();
-        utils::reserve(&mut body);
+        utils::reserve(&mut body, 256);
         World {
             id: row.get(0),
             randomnumber: row.get(1),
@@ -91,17 +92,20 @@ impl PgConnection {
         body.split().freeze()
     }
 
+    async fn get_one_world(&self, id: i32) -> Row {
+        self.cl.query_one(&self.world, &[&id]).await.unwrap()
+    }
+
     pub async fn get_worlds(&self, num: usize) -> Bytes {
         let mut rng = self.rng.clone();
-        let mut queries = SmallVec::<[_; 32]>::new();
+        let mut queries = FuturesUnordered::new();
         (0..num).for_each(|_| {
             let w_id = (rng.generate::<u32>() % 10_000 + 1) as i32;
-            queries.push(self.cl.query_one(&self.world, &[&w_id]));
+            queries.push(self.get_one_world(w_id))
         });
 
         let mut worlds = SmallVec::<[_; 32]>::new();
-        for fut in queries {
-            let row = fut.await.unwrap();
+        while let Some(row) = queries.next().await {
             worlds.push(World {
                 id: row.get(0),
                 randomnumber: row.get(1),
@@ -109,7 +113,7 @@ impl PgConnection {
         }
 
         let mut body = self.buf.borrow_mut();
-        utils::reserve(&mut body);
+        utils::reserve(&mut body, 8 * 1024);
         body.put_u8(b'[');
         worlds.iter().for_each(|w| {
             w.to_bytes_mut(&mut *body);
@@ -121,16 +125,15 @@ impl PgConnection {
     }
 
     pub async fn update(&self, num: usize) -> Bytes {
-        let mut rng = nanorand::tls_rng();
-        let mut queries = SmallVec::<[_; 32]>::new();
+        let mut rng = self.rng.clone();
+        let mut queries = FuturesUnordered::new();
         (0..num).for_each(|_| {
             let w_id = (rng.generate::<u32>() % 10_000 + 1) as i32;
-            queries.push(self.cl.query_one(&self.world, &[&w_id]));
+            queries.push(self.get_one_world(w_id))
         });
 
         let mut worlds = SmallVec::<[_; 32]>::new();
-        for fut in queries.into_iter() {
-            let row = fut.await.unwrap();
+        while let Some(row) = queries.next().await {
             worlds.push(World {
                 id: row.get(0),
                 randomnumber: (rng.generate::<u32>() % 10_000 + 1) as i32,
@@ -148,7 +151,7 @@ impl PgConnection {
         let _ = self.cl.query(&self.updates[num - 1], &params).await;
 
         let mut body = self.buf.borrow_mut();
-        utils::reserve(&mut body);
+        utils::reserve(&mut body, 8 * 1024);
         body.put_u8(b'[');
         worlds.iter().for_each(|w| {
             w.to_bytes_mut(&mut *body);
@@ -174,7 +177,7 @@ impl PgConnection {
         fortunes.sort_by(|it, next| it.message.cmp(next.message));
 
         let mut body = std::mem::replace(&mut *self.buf.borrow_mut(), BytesMut::new());
-        utils::reserve(&mut body);
+        utils::reserve(&mut body, 8 * 1024);
         ywrite_html!(body, "{{> fortune }}");
         let result = body.split().freeze();
         let _ = std::mem::replace(&mut *self.buf.borrow_mut(), body);

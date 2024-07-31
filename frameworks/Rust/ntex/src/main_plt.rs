@@ -35,7 +35,7 @@ impl Future for App {
                 Ok((req, _)) => {
                     let _ = this.io.with_write_buf(|buf| {
                         buf.with_bytes_mut(|buf| {
-                            utils::reserve(buf);
+                            utils::reserve(buf, 2 * 1024);
                             match req.path() {
                                 "/json" => {
                                     buf.extend_from_slice(JSON);
