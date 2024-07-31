@@ -32,7 +32,7 @@ public class SingleQueryRawMiddleware
 
             int payloadLength;
 
-            IntPtr bytePointer = NativeMethods.JsonMessage(out payloadLength);
+            IntPtr bytePointer = NativeMethods.Db(out payloadLength);
             //var bytePointer = NativeMethods.Db(out payloadLength);
 
             byte[] jsonMessage = new byte[payloadLength];

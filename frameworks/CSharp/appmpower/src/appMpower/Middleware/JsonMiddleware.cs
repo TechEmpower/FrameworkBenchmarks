@@ -54,7 +54,7 @@ public class JsonMiddleware
 
             var result = response.Body.WriteAsync(jsonMessage, 0, payloadLength);
 
-            NativeMethods.FreeUnmanagedPointer(bytePointer);
+            //NativeMethods.FreeUnmanagedPointer(bytePointer);
 
             return result; 
         }
