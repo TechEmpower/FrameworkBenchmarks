@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
-using appMpowerAot;
 
 public class JsonMiddleware
 {
@@ -31,8 +29,9 @@ public class JsonMiddleware
             response.Headers.Add(_headerContentType);
 
             int payloadLength;
+            IntPtr unmanagedPointer; 
 
-            IntPtr bytePointer = NativeMethods.JsonMessage(out payloadLength);
+            IntPtr bytePointer = NativeMethods.JsonMessage(out payloadLength, out unmanagedPointer);
             //var bytePointer = NativeMethods.JsonMessage(out payloadLength);
 
             byte[] jsonMessage = new byte[payloadLength];
@@ -54,7 +53,7 @@ public class JsonMiddleware
 
             var result = response.Body.WriteAsync(jsonMessage, 0, payloadLength);
 
-            //NativeMethods.FreeUnmanagedPointer(bytePointer);
+            NativeMethods.FreeUnmanagedPointer(unmanagedPointer);
 
             return result; 
         }
