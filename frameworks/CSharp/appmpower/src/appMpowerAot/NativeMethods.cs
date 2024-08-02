@@ -15,7 +15,6 @@ public static class NativeMethods
         SkipValidation = true
     };
 
-    private readonly static JsonMessageSerializer _jsonMessageSerializer = new JsonMessageSerializer();
     private readonly static WorldSerializer _worldSerializer = new WorldSerializer();
 
     [UnmanagedCallersOnly(EntryPoint = "Dbms")]

@@ -18,11 +18,6 @@ public class JsonMiddleware
         SkipValidation = true
     };
 
-    private readonly static JsonMessage _jsonMessage = new JsonMessage
-    {
-        Message = "Hello, World!"
-    };
-
     private readonly static JsonMessageSerializer _jsonMessageSerializer = new JsonMessageSerializer();
 
     private readonly static KeyValuePair<string, StringValues> _headerServer =
@@ -47,7 +42,7 @@ public class JsonMiddleware
 
             using var utf8JsonWriter = new Utf8JsonWriter(httpContext.Response.Body, _jsonWriterOptions);
 
-            _jsonMessageSerializer.Serialize(utf8JsonWriter, _jsonMessage);
+            _jsonMessageSerializer.Serialize(utf8JsonWriter, new JsonMessage { Message = "Hello, World!" });
 
             response.Headers.Add(
                 new KeyValuePair<string, StringValues>("Content-Length", utf8JsonWriter.BytesPending.ToString()));

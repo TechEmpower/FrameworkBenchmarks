@@ -101,7 +101,7 @@ namespace appMpowerAot
             {
                fortunes.Add(new Fortune
                (
-                   id: dataReader.GetInt32(0),
+                  id: dataReader.GetInt32(0),
                   //MariaDB ODBC connector does not correctly support Japanese characters in combination with default ADO.NET;
                   //as a solution we custom read this string
                   message: (Constants.Dbms == Dbms.MySQL ? ReadColumn(dataReader, 1) : dataReader.GetString(1))
