@@ -4,7 +4,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
-using appMpowerAot;
+
+namespace appMpower; 
 
 public unsafe class PlaintextMiddleware
 {

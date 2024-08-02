@@ -9,10 +9,14 @@ namespace appMpowerAot;
 
 public static class NativeMethods
 {
+    private static JsonWriterOptions _jsonWriterOptions = new JsonWriterOptions
+    {
+        Indented = false, 
+        SkipValidation = true
+    };
+
     private readonly static JsonMessageSerializer _jsonMessageSerializer = new JsonMessageSerializer();
     private readonly static WorldSerializer _worldSerializer = new WorldSerializer();
-    //private static byte[][] _byteArrays = new byte[99][];
-    //private static GCHandle[] _handles = new GCHandle[99];
 
     [UnmanagedCallersOnly(EntryPoint = "Dbms")]
     public static void Dbms(int dbms)
@@ -41,21 +45,15 @@ public static class NativeMethods
 
     [UnmanagedCallersOnly(EntryPoint = "JsonMessage")]
     //public static unsafe byte* JsonMessage(int* length)
-    public static unsafe IntPtr JsonMessage(int* length, IntPtr* unmanagedPointer)
+    public static unsafe IntPtr JsonMessage(int* length, IntPtr* handlePointer)
     {
         var jsonMessage = new JsonMessage
         {
             Message = "Hello, World!"
         };
 
-        var jsonWriterOptions = new JsonWriterOptions
-        {
-            Indented = false, 
-            SkipValidation = true
-        };
-
         var memoryStream = new MemoryStream();
-        using var utf8JsonWriter = new Utf8JsonWriter(memoryStream, jsonWriterOptions);
+        using var utf8JsonWriter = new Utf8JsonWriter(memoryStream, _jsonWriterOptions);
 
         _jsonMessageSerializer.Serialize(utf8JsonWriter, jsonMessage);
         *length = (int)utf8JsonWriter.BytesCommitted; 
@@ -70,43 +68,45 @@ public static class NativeMethods
         byte[] byteArray = memoryStream.ToArray();
 
         GCHandle handle = GCHandle.Alloc(byteArray, GCHandleType.Pinned);
-        // return the managed and unmanaged pointer
-        IntPtr managedPointer = handle.AddrOfPinnedObject();
-        *unmanagedPointer = GCHandle.ToIntPtr(handle);
+        // return the managed and byteArrayPointer pointer
+        IntPtr byteArrayPointer = handle.AddrOfPinnedObject();
+        *handlePointer = GCHandle.ToIntPtr(handle);
 
-        //Console.WriteLine(managedPointer.ToString());
-        //Console.WriteLine(GCHandle.ToIntPtr(handle).ToString());
-        return managedPointer;
+        return byteArrayPointer;
     }
 
-    [UnmanagedCallersOnly(EntryPoint = "FreeUnmanagedPointer")]
-    public static void FreeUnmanagedPointer(IntPtr unmanagedPointer)
+    [UnmanagedCallersOnly(EntryPoint = "FreeHandlePointer")]
+    public static void FreeHandlePointer(IntPtr handlePointer)
     {
-        GCHandle handle = GCHandle.FromIntPtr(unmanagedPointer);
+        GCHandle handle = GCHandle.FromIntPtr(handlePointer);
         handle.Free();
     }
 
     [UnmanagedCallersOnly(EntryPoint = "Db")]
-    public static unsafe byte* Db(int* length)
+    public static unsafe IntPtr Db(int* length, IntPtr* handlePointer)
     {
         var world = RawDb.LoadSingleQueryRow().GetAwaiter().GetResult();
 
-        var jsonWriterOptions = new JsonWriterOptions
-        {
-            Indented = false, 
-            SkipValidation = true
-        };
-
         var memoryStream = new MemoryStream();
-        using var utf8JsonWriter = new Utf8JsonWriter(memoryStream, jsonWriterOptions);
+        using var utf8JsonWriter = new Utf8JsonWriter(memoryStream, _jsonWriterOptions);
 
         _worldSerializer.Serialize(utf8JsonWriter, world);
 
         *length = (int)utf8JsonWriter.BytesCommitted; 
+        byte[] byteArray = memoryStream.ToArray();
 
+        GCHandle handle = GCHandle.Alloc(byteArray, GCHandleType.Pinned);
+        // return the managed and byteArrayPointer pointer
+        IntPtr byteArrayPointer = handle.AddrOfPinnedObject();
+        *handlePointer = GCHandle.ToIntPtr(handle);
+
+        return byteArrayPointer;
+
+        /*
         fixed(byte* b = memoryStream.ToArray())
         {
             return b; 
         }
+        */
     }
 }

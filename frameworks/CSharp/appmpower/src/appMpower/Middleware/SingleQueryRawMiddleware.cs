@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
-using appMpowerAot;
+
+namespace appMpower; 
 
 public class SingleQueryRawMiddleware
 {
@@ -31,27 +32,27 @@ public class SingleQueryRawMiddleware
             response.Headers.Add(_headerContentType);
 
             int payloadLength;
+            IntPtr handlePointer; 
 
-            IntPtr bytePointer = NativeMethods.Db(out payloadLength);
-            //var bytePointer = NativeMethods.Db(out payloadLength);
-
-            byte[] jsonMessage = new byte[payloadLength];
-            Marshal.Copy(bytePointer, jsonMessage, 0, payloadLength);
+            IntPtr bytePointer = NativeMethods.Db(out payloadLength, out handlePointer);
+            byte[] json = new byte[payloadLength];
+            Marshal.Copy(bytePointer, json, 0, payloadLength);
+            NativeMethods.FreeHandlePointer(handlePointer);
 
             /*
             for (int i = 0; i < payloadLength; i++)
             {
-                jsonMessage[i] = bytePointer[i];
+                json[i] = bytePointer[i];
             }
-            */
 
-            //var jsonMessage = DotnetMethods.Db();
-            //int payloadLength = jsonMessage.Length; 
+            var json = DotnetMethods.Db();
+            int payloadLength = jsonMessage.Length; 
+            */
 
             response.Headers.Add(
                 new KeyValuePair<string, StringValues>("Content-Length", payloadLength.ToString()));
 
-            return response.Body.WriteAsync(jsonMessage, 0, payloadLength);
+            return response.Body.WriteAsync(json, 0, payloadLength);
         }
 
         return _nextStage(httpContext);

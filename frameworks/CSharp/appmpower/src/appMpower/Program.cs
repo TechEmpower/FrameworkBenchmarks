@@ -2,6 +2,8 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
+namespace appMpower; 
+
 class Program
 {
     static void Main(string[] args)

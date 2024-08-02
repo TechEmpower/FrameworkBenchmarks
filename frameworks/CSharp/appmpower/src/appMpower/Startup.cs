@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
+namespace appMpower; 
+
 public class Startup
 {
     private readonly IConfiguration _configuration;

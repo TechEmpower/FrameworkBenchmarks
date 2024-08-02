@@ -1,13 +1,25 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Text.Json; 
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
+using appMpower.Serializers; 
+
+namespace appMpower; 
 
 public class JsonMiddleware
 {
+    private readonly static JsonWriterOptions _jsonWriterOptions = new JsonWriterOptions
+    {
+        Indented = false, 
+        SkipValidation = true
+    };
+
+    private readonly static JsonMessageSerializer _jsonMessageSerializer = new JsonMessageSerializer();
+
     private readonly static KeyValuePair<string, StringValues> _headerServer =
          new KeyValuePair<string, StringValues>("Server", new StringValues("k"));
     private readonly static KeyValuePair<string, StringValues> _headerContentType =
@@ -28,15 +40,16 @@ public class JsonMiddleware
             response.Headers.Add(_headerServer);
             response.Headers.Add(_headerContentType);
 
+            /*
             int payloadLength;
-            IntPtr unmanagedPointer; 
+            IntPtr handlePointer; 
 
-            IntPtr bytePointer = NativeMethods.JsonMessage(out payloadLength, out unmanagedPointer);
-            //var bytePointer = NativeMethods.JsonMessage(out payloadLength);
+            IntPtr bytePointer = NativeMethods.JsonMessage(out payloadLength, out handlePointer);
 
             byte[] jsonMessage = new byte[payloadLength];
             
             Marshal.Copy(bytePointer, jsonMessage, 0, payloadLength);
+            */
 
             /*
             for (int i = 0; i < payloadLength; i++)
@@ -48,14 +61,21 @@ public class JsonMiddleware
             //var jsonMessage = DotnetMethods.JsonMessage();
             //int payloadLength = jsonMessage.Length; 
 
+            var jsonMessage = new JsonMessage
+            {
+                Message = "Hello, World!"
+            };
+
+            using var utf8JsonWriter = new Utf8JsonWriter(httpContext.Response.Body, _jsonWriterOptions);
+
+            _jsonMessageSerializer.Serialize(utf8JsonWriter, jsonMessage);
+
             response.Headers.Add(
-                new KeyValuePair<string, StringValues>("Content-Length", payloadLength.ToString()));
+                new KeyValuePair<string, StringValues>("Content-Length", utf8JsonWriter.BytesPending.ToString()));
 
-            var result = response.Body.WriteAsync(jsonMessage, 0, payloadLength);
+            utf8JsonWriter.Flush();
 
-            NativeMethods.FreeUnmanagedPointer(unmanagedPointer);
-
-            return result; 
+            return Task.CompletedTask;
         }
 
         return _nextStage(httpContext);
