@@ -40,7 +40,16 @@ namespace appMpowerAot
 
          using (dbCommand)
          {
-            var world = await ReadSingleRow(dbCommand);
+            World world; 
+
+            if (Constants.DbProvider == DbProvider.ADO)
+            {
+               world = await ReadSingleRowAysnc(dbCommand);
+            }
+            else
+            {
+               world = ReadSingleRow(dbCommand);
+            }
 
             return world;
          }
@@ -59,7 +68,15 @@ namespace appMpowerAot
          {
             for (int i = 0; i < count; i++)
             {
-               worlds[i] = await ReadSingleRow(dbCommand);
+               if (Constants.DbProvider == DbProvider.ADO)
+               {
+                  worlds[i] = await ReadSingleRowAysnc(dbCommand);
+               }
+               else
+               {
+                  worlds[i] = ReadSingleRow(dbCommand);
+               }
+
                dbDataParameter.Value = _random.Next(1, 10001);
             }
          }
@@ -113,7 +130,15 @@ namespace appMpowerAot
          {
             for (int i = 0; i < count; i++)
             {
-               worlds[i] = await ReadSingleRow(queryCommand);
+               if (Constants.DbProvider == DbProvider.ADO)
+               {
+                  worlds[i] = await ReadSingleRowAysnc(queryCommand);
+               }
+               else
+               {
+                  worlds[i] = ReadSingleRow(queryCommand);
+               }
+
                dbDataParameter.Value = _random.Next(1, 10001);
             }
          }
@@ -164,9 +189,26 @@ namespace appMpowerAot
          return (dbCommand, dbCommand.CreateParameter("Id", DbType.Int32, _random.Next(1, 10001)));
       }
 
-      private static async Task<World> ReadSingleRow(DbCommand dbCommand)
+      private static async Task<World> ReadSingleRowAysnc(DbCommand dbCommand)
       {
          var dataReader = await dbCommand.ExecuteReaderAsync(CommandBehavior.SingleRow & CommandBehavior.SequentialAccess);
+
+         dataReader.Read();
+
+         var world = new World
+         {
+            Id = dataReader.GetInt32(0),
+            RandomNumber = dataReader.GetInt32(1)
+         };
+
+         dataReader.Close();
+
+         return world;
+      }
+
+      private static World ReadSingleRow(DbCommand dbCommand)
+      {
+         var dataReader = dbCommand.ExecuteReader(CommandBehavior.SingleRow & CommandBehavior.SequentialAccess);
 
          dataReader.Read();
 

@@ -18,6 +18,11 @@ public class JsonMiddleware
         SkipValidation = true
     };
 
+    private readonly static JsonMessage _jsonMessage = new JsonMessage
+    {
+        Message = "Hello, World!"
+    };
+
     private readonly static JsonMessageSerializer _jsonMessageSerializer = new JsonMessageSerializer();
 
     private readonly static KeyValuePair<string, StringValues> _headerServer =
@@ -40,35 +45,9 @@ public class JsonMiddleware
             response.Headers.Add(_headerServer);
             response.Headers.Add(_headerContentType);
 
-            /*
-            int payloadLength;
-            IntPtr handlePointer; 
-
-            IntPtr bytePointer = NativeMethods.JsonMessage(out payloadLength, out handlePointer);
-
-            byte[] jsonMessage = new byte[payloadLength];
-            
-            Marshal.Copy(bytePointer, jsonMessage, 0, payloadLength);
-            */
-
-            /*
-            for (int i = 0; i < payloadLength; i++)
-            {
-                jsonMessage[i] = bytePointer[i];
-            }
-            */
-            
-            //var jsonMessage = DotnetMethods.JsonMessage();
-            //int payloadLength = jsonMessage.Length; 
-
-            var jsonMessage = new JsonMessage
-            {
-                Message = "Hello, World!"
-            };
-
             using var utf8JsonWriter = new Utf8JsonWriter(httpContext.Response.Body, _jsonWriterOptions);
 
-            _jsonMessageSerializer.Serialize(utf8JsonWriter, jsonMessage);
+            _jsonMessageSerializer.Serialize(utf8JsonWriter, _jsonMessage);
 
             response.Headers.Add(
                 new KeyValuePair<string, StringValues>("Content-Length", utf8JsonWriter.BytesPending.ToString()));
