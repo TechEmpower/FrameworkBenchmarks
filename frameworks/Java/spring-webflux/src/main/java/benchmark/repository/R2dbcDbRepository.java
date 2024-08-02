@@ -22,7 +22,7 @@ public class R2dbcDbRepository implements DbRepository {
         return databaseClient
                 .sql("SELECT id, randomnumber FROM world WHERE id = $1")
                 .bind("$1", id)
-                .map((row, rowMetaData) -> new World(row.get("id", Integer.class), row.get("randomnumber", Integer.class)))
+                .mapProperties(World.class)
                 .first();
 
     }
@@ -48,7 +48,7 @@ public class R2dbcDbRepository implements DbRepository {
     public Flux<Fortune> fortunes() {
         return databaseClient
                 .sql("SELECT id, message FROM fortune")
-                .map((row, rowMetaData) -> new Fortune(row.get("id", Integer.class), row.get("message", String.class)))
+                .mapProperties(Fortune.class)
                 .all();
     }
 }

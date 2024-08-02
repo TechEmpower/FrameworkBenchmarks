@@ -1,8 +1,16 @@
 package benchmark.web;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.ThreadLocalRandom;
+
 import benchmark.model.Fortune;
+import benchmark.model.Message;
 import benchmark.model.World;
 import benchmark.repository.DbRepository;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
@@ -10,16 +18,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
-
 import static java.util.Comparator.comparing;
 
 @Component
 public class WebfluxHandler {
+
     private final DbRepository dbRepository;
 
     public WebfluxHandler(DbRepository dbRepository) {
@@ -29,13 +32,13 @@ public class WebfluxHandler {
     public Mono<ServerResponse> plaintext(ServerRequest request) {
         return ServerResponse.ok()
                 .contentType(MediaType.TEXT_PLAIN)
-                .body(Mono.just("Hello, World!"), String.class);
+                .bodyValue("Hello, World!");
     }
 
     public Mono<ServerResponse> json(ServerRequest request) {
         return ServerResponse.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(Mono.just(Map.of("message", "Hello, World!")), Map.class);
+                .bodyValue(new Message("Hello, World!"));
     }
 
     public Mono<ServerResponse> db(ServerRequest request) {
@@ -76,7 +79,7 @@ public class WebfluxHandler {
 
     public Mono<ServerResponse> updates(ServerRequest request) {
         int queries = getQueries(request);
-        
+
         Mono<List<World>> worlds = Flux.range(0, queries)
                 .flatMap(i -> dbRepository.findAndUpdateWorld(randomWorldNumber(), randomWorldNumber()))
                 .collectList();

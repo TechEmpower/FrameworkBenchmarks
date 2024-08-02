@@ -37,15 +37,6 @@ For mongoDB access, spring-data-mongodb with reactive support is used. See [Mong
 
 * [Template rendering test source](src/main/java/benchmark/web/WebfluxRouter.java)
 
-## Versions
-
-* [Java OpenJDK 10](http://openjdk.java.net/)
-* [Spring boot 2.1.0.RELEASE](https://spring.io/projects/spring-boot)
-* [Spring data mongodb 2.1.0.RELEASE](https://projects.spring.io/spring-data-mongodb/)
-* [reactive-pg-client 0.10.6](https://github.com/reactiverse/reactive-pg-client)
-* [rxjava2-jdbc 0.2.0](https://github.com/davidmoten/rxjava2-jdbc)
-* [r2dbc-postgresql 1.0.0.BUILD-SNAPSHOT](https://github.com/r2dbc/r2dbc-postgresql)
-
 ## Test URLs
 
 ### Plaintext Test
