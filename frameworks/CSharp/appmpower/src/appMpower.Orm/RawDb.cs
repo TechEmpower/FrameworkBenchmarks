@@ -95,7 +95,16 @@ namespace appMpower.Orm
 
          using (dbCommand)
          {
-            var dataReader = await dbCommand.ExecuteReaderAsync(CommandBehavior.SingleResult & CommandBehavior.SequentialAccess);
+            IDataReader dataReader; 
+
+            if (Constants.DbProvider == DbProvider.ADO)
+            {
+               dataReader = await dbCommand.ExecuteReaderAsync(CommandBehavior.SingleResult & CommandBehavior.SequentialAccess);
+            }
+            else
+            {
+               dataReader = dbCommand.ExecuteReader(CommandBehavior.SingleResult & CommandBehavior.SequentialAccess);
+            }
 
             while (dataReader.Read())
             {
