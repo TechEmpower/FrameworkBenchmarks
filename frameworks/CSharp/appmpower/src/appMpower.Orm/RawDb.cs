@@ -4,12 +4,12 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
-using appMpowerAot; 
-using appMpowerAot.Data; 
-using appMpowerAot.DataObjects;
+using appMpower.Orm; 
+using appMpower.Orm.Data; 
+using appMpower.Orm.Objects;
 using PlatformBenchmarks;
 
-namespace appMpowerAot
+namespace appMpower.Orm
 {
    public static class RawDb
    {

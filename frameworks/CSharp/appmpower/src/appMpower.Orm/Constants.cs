@@ -1,6 +1,6 @@
-using appMpowerAot.Data; 
+using appMpower.Orm.Data; 
 
-namespace appMpowerAot
+namespace appMpower.Orm
 {
   public static class Constants
   {

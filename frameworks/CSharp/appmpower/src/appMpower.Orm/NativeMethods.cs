@@ -1,11 +1,11 @@
 ﻿using System.Runtime.InteropServices;
 using System.Text; 
 using System.Text.Json; 
-using appMpowerAot.Data; 
-using appMpowerAot.DataObjects; 
-using appMpowerAot.Serializers; 
+using appMpower.Orm.Data; 
+using appMpower.Orm.Objects; 
+using appMpower.Orm.Serializers; 
 
-namespace appMpowerAot;
+namespace appMpower.Orm;
 
 public static class NativeMethods
 {

@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace appMpowerAot.Serializers
+namespace appMpower.Orm.Serializers
 {
    public interface IJsonSerializer<T>
    {

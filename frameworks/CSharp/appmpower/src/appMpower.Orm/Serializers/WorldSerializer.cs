@@ -1,7 +1,7 @@
 using System.Text.Json;
-using appMpowerAot.DataObjects;
+using appMpower.Orm.Objects;
 
-namespace appMpowerAot.Serializers
+namespace appMpower.Orm.Serializers
 {
    public class WorldSerializer : IJsonSerializer<World>
    {

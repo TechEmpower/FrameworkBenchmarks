@@ -1,7 +1,7 @@
 using System.Data;
 using System.Threading.Tasks;
 
-namespace appMpowerAot.Data
+namespace appMpower.Orm.Data
 {
    public class DbCommand : IDbCommand
    {

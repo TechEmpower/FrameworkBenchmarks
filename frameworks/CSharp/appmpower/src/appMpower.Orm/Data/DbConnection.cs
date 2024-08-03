@@ -2,9 +2,9 @@ using System;
 using System.Collections.Concurrent;
 using System.Data;
 using System.Threading.Tasks;
-using appMpowerAot; 
+using appMpower.Orm; 
 
-namespace appMpowerAot.Data
+namespace appMpower.Orm.Data
 {
    public class DbConnection : IDbConnection
    {

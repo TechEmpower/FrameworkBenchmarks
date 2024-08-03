@@ -1,7 +1,7 @@
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 
-namespace appMpowerAot.Data
+namespace appMpower.Orm.Data
 {
    public static class DbConnections
    {

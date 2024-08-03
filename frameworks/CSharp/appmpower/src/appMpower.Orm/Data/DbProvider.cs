@@ -1,4 +1,4 @@
-namespace appMpowerAot.Data
+namespace appMpower.Orm.Data
 {
    public enum DbProvider
    {

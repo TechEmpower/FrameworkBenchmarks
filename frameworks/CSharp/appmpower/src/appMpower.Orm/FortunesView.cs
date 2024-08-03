@@ -4,9 +4,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using PlatformBenchmarks;
-using appMpowerAot.DataObjects;
+using appMpower.Orm.Objects;
 
-namespace appMpowerAot
+namespace appMpower.Orm
 {
    public static class FortunesView
    {
