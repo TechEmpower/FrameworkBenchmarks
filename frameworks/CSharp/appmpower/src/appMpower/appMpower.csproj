@@ -10,9 +10,11 @@
     <None Include="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
 
     <!--TODOLOCAL-->
+    <!--
     <Content Include="../appMpower.Orm/bin/Release/net8.0/osx-arm64/native/appMpower.Orm.dylib">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content> 
+    -->
   </ItemGroup>
 
   <ItemGroup>
