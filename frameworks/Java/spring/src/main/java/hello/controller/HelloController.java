@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
 
+import hello.model.Message;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import hello.UpdateWorldService;
 import hello.model.Fortune;
 import hello.model.World;
 import hello.repository.DbRepository;
@@ -21,12 +23,16 @@ import hello.repository.DbRepository;
 public final class HelloController {
 
 	private DbRepository dbRepository;
+	private UpdateWorldService updateWorldService;
 
-	public HelloController(DbRepository dbRepository) {
+	public HelloController(
+			DbRepository dbRepository,
+			UpdateWorldService updateWorldService) {
 		this.dbRepository = dbRepository;
+		this.updateWorldService = updateWorldService;
 	}
 
-	@GetMapping(value = "/plaintext")
+	@GetMapping("/plaintext")
 	String plaintext(HttpServletResponse response) {
 		response.setContentType(MediaType.TEXT_PLAIN_VALUE);
 		return "Hello, World!";
@@ -54,25 +60,9 @@ public final class HelloController {
 	@GetMapping("/updates")
 	World[] updates(HttpServletResponse response, @RequestParam(required = false) String queries) {
 		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-		return randomWorldNumbers().mapToObj(dbRepository::getWorld).map(world -> {
-			// Ensure that the new random number is not equal to the old one.
-			// That would cause the JPA-based implementation to avoid sending the
-			// UPDATE query to the database, which would violate the test
-			// requirements.
-
-			// Locally the records doesn't exist, maybe in the yours is ok but we need to
-			// make this check
-			if (world == null) {
-				return null;
-			}
-
-			int newRandomNumber;
-			do {
-				newRandomNumber = randomWorldNumber();
-			} while (newRandomNumber == world.randomnumber);
-
-			return dbRepository.updateWorld(world, newRandomNumber);
-		}).limit(parseQueryCount(queries)).toArray(World[]::new);
+		return randomWorldNumbers()
+				.mapToObj(id -> updateWorldService.updateWorld(id))
+				.limit(parseQueryCount(queries)).toArray(World[]::new);
 	}
 
 	@GetMapping("/fortunes")
@@ -89,7 +79,7 @@ public final class HelloController {
 	private static final int MIN_WORLD_NUMBER = 1;
 	private static final int MAX_WORLD_NUMBER_PLUS_ONE = 10_001;
 
-	private static int randomWorldNumber() {
+	public static int randomWorldNumber() {
 		return ThreadLocalRandom.current().nextInt(MIN_WORLD_NUMBER, MAX_WORLD_NUMBER_PLUS_ONE);
 	}
 
@@ -112,17 +102,5 @@ public final class HelloController {
 			return 1;
 		}
 		return Math.min(500, Math.max(1, parsedValue));
-	}
-
-	static class Message {
-		private final String message;
-
-		public Message(String message) {
-			this.message = message;
-		}
-
-		public String getMessage() {
-			return message;
-		}
 	}
 }

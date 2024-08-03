@@ -1,11 +1,3 @@
----
-spring:
-  profiles: postgres
-  datasource:
-    url: jdbc:postgresql://${database.host}:${database.port}/${database.name}
-    username: ${database.username}
-    password: ${database.password}
-
 database:
   name: hello_world
   host: tfb-database
@@ -15,24 +7,25 @@ database:
 
 ---
 spring:
-  profiles: jdbc
+  config:
+    activate:
+      on-profile: r2dbc
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.mongo.MongoReactiveAutoConfiguration,org.springframework.boot.autoconfigure.data.mongo.MongoReactiveDataAutoConfiguration
+  r2dbc:
+    username: ${database.username}
+    password: ${database.password}
+    url: r2dbc:postgresql://${database.host}:${database.port}/${database.name}
 
 ---
 spring:
-  profiles: pgclient
+  config:
+    activate:
+      on-profile: mongo
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration,org.springframework.boot.autoconfigure.r2dbc.R2dbcAutoConfiguration
 
----
-spring:
-  profiles: rxjdbc
-
----
-spring:
-  profiles: r2dbc
-
----
-spring:
-  profiles: mongo
-
-database:
-  url: mongodb://tfb-database:27017/?waitQueueMultiple=200
-  name: hello_world
+  data:
+    mongodb:
+      uri: mongodb://tfb-database:27017/?waitQueueMultiple=200
+      database: hello_world

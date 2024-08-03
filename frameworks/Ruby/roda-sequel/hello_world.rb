@@ -22,13 +22,13 @@ class HelloWorld < Roda
     # Test type 1: JSON serialization
     r.is "json" do
       response[CONTENT_TYPE] = JSON_TYPE
-      { message: "Hello, World!" }.to_json
+      RapidJSON.encode({ message: "Hello, World!" })
     end
 
     # Test type 2: Single database query
     r.is "db" do
       response[CONTENT_TYPE] = JSON_TYPE
-      World.with_pk(rand1).values.to_json
+      RapidJSON.encode(World.with_pk(rand1).values)
     end
 
     # Test type 3: Multiple database queries
@@ -40,7 +40,7 @@ class HelloWorld < Roda
             World.with_pk(id).values
           end
         end
-      worlds.to_json
+      RapidJSON.encode(worlds)
     end
 
     # Test type 4: Fortunes
@@ -58,17 +58,19 @@ class HelloWorld < Roda
     # Test type 5: Database updates
     r.is "updates" do
       response[CONTENT_TYPE] = JSON_TYPE
-      worlds =
-        DB.synchronize do
+      worlds = []
+      DB.synchronize do
+        worlds =
           ALL_IDS.sample(bounded_queries).map do |id|
             world = World.with_pk(id)
             new_value = rand1
             new_value = rand1 while new_value == world.randomnumber
-            world.update(randomnumber: new_value)
-            world.values
+            world.randomnumber = new_value
+            world
           end
-        end
-      worlds.to_json
+        World.batch_update(worlds)
+      end
+      RapidJSON.encode(worlds.map!(&:values))
     end
 
     # Test type 6: Plaintext

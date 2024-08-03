@@ -1,4 +1,6 @@
+import Foundation
 import Hummingbird
+import HummingbirdCore
 import Logging
 import NIOCore
 
@@ -7,18 +9,23 @@ struct Object: ResponseEncodable {
 }
 
 struct TechFrameworkRequestContext: RequestContext {
+
     static let jsonEncoder = JSONEncoder()
     static let jsonDecoder = JSONDecoder()
 
-    var coreContext: Hummingbird.CoreRequestContext
+    var coreContext: Hummingbird.CoreRequestContextStorage
 
     // Use a global JSON Encoder
     var responseEncoder: JSONEncoder { Self.jsonEncoder }
     // Use a global JSON Decoder
     var requestDecoder: JSONDecoder { Self.jsonDecoder }
 
+    init(source: Hummingbird.ApplicationRequestContextSource) {
+        self.coreContext = CoreRequestContextStorage(source: ApplicationRequestContextSource(channel: source.channel, logger: source.logger))
+    }
+
     init(channel: any Channel, logger: Logger) {
-        self.coreContext = .init(allocator: channel.allocator, logger: logger)
+        self.coreContext = CoreRequestContextStorage(source: ApplicationRequestContextSource(channel: channel, logger: logger))
     }
 }
 

@@ -1,7 +1,8 @@
 requires 'Mojolicious', '7.84';
 requires 'Mojo::Pg', '4.08';
-requires 'Cpanel::JSON::XS', '4.02';
+requires 'Cpanel::JSON::XS', '4.38';
 requires 'EV', '4.22';
 
 recommends 'IO::Socket::IP', '0.36';
 recommends 'IO::Socket::SSL';
+

@@ -14,7 +14,7 @@ import org.springframework.context.event.EventListener;
 
 import com.zaxxer.hikari.HikariDataSource;
 
-@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class, MongoRepositoriesAutoConfiguration.class})
+@SpringBootApplication
 public class App {
 
 	public static void main(String[] args) {
@@ -28,7 +28,7 @@ public class App {
 
 	@Bean
 	@Profile({ "jdbc", "jpa" })
-	public DataSource datasource(DataSourceProperties dataSourceProperties) {
+	DataSource datasource(DataSourceProperties dataSourceProperties) {
 		HikariDataSource dataSource = dataSourceProperties.initializeDataSourceBuilder().type(HikariDataSource.class)
 				.build();
 		dataSource.setMaximumPoolSize(Runtime.getRuntime().availableProcessors() * 2);

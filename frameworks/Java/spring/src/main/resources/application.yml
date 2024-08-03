@@ -1,5 +1,15 @@
 ---
 spring:
+  jpa:
+    open-in-view: false
+  config:
+    activate:
+      on-profile: jdbc
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration,org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration,org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration,org.springframework.boot.autoconfigure.data.mongo.MongoRepositoriesAutoConfiguration
+
+---
+spring:
   config:
     activate:
       on-profile: jdbc,jpa
@@ -20,15 +30,18 @@ spring:
   config:
     activate:
       on-profile: jpa
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration,org.springframework.boot.autoconfigure.data.mongo.MongoRepositoriesAutoConfiguration
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-    open-in-view: false
 
 ---
 spring:
   config:
     activate:
       on-profile: mongo
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration,org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration,org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
 
 spring.data.mongodb:
   host: tfb-database

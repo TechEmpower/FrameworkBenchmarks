@@ -1,0 +1,15 @@
+{
+  "user": "benchmarkdbuser",
+  "password": "benchmarkdbpass",
+  "host": "tfb-database",
+  "port": 5432,
+  "database": "hello_world",
+  "cachePreparedStatements": true,
+  "preparedStatementCacheMaxSize": 512,
+  "preparedStatementCacheSqlLimit": 2048,
+  "tcpKeepAlive": true,
+  "tcpFastOpen": true,
+  "pipeliningLimit": 100000,
+  "receiveBufferSize": 262144,
+  "sendBufferSize": 262144
+}

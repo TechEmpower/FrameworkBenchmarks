@@ -33,7 +33,7 @@ namespace PlatformBenchmarks
             ContentLengthMemory content = new ContentLengthMemory();
             try
             {
-                var data = await _db.LoadCachedQueries(count);
+                var data = await DB.LoadCachedQueries(count);
                 stream.Write(_jsonResultPreamble.Data, 0, _jsonResultPreamble.Length);
                 content.Data = GetContentLengthMemory(stream);
                 GMTDate.Default.Write(stream);
