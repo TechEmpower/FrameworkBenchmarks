@@ -4,6 +4,7 @@
 using System.Text;
 
 namespace PlatformBenchmarks; 
+
 internal static class StringBuilderCache
 {
     private const int DefaultCapacity = 1386;
