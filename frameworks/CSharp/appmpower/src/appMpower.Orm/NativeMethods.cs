@@ -65,4 +65,20 @@ public static class NativeMethods
         }
         */
     }
+
+    [UnmanagedCallersOnly(EntryPoint = "Fortunes")]
+    public static unsafe IntPtr Fortunes(int* length, IntPtr* handlePointer)
+    {
+        List<Fortune> fortunes = RawDb.LoadFortunesRows().GetAwaiter().GetResult(); 
+        string fortunesView = FortunesView.Render(fortunes);
+        byte[] byteArray = Encoding.UTF8.GetBytes(fortunesView);
+
+        *length = fortunesView.Length + 32; 
+
+        GCHandle handle = GCHandle.Alloc(byteArray, GCHandleType.Pinned);
+        IntPtr byteArrayPointer = handle.AddrOfPinnedObject();
+        *handlePointer = GCHandle.ToIntPtr(handle);
+
+        return byteArrayPointer;
+    }
 }

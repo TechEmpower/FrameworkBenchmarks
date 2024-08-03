@@ -61,8 +61,8 @@ public class Startup
     {
         app.UsePlainText();
         app.UseJson();
-        //app.UseFortunesRaw();
         app.UseSingleQueryRaw();
+        app.UseFortunesRaw();
         //app.UseMultipleQueriesRaw();
         //app.UseMultipleUpdatesRaw();
     }
@@ -73,19 +73,6 @@ public class Startup
 // Extension methods for IApplicationBuilder (placeholders for actual implementations)
 public static class ApplicationBuilderExtensions
 {
-    public static void UseFortunesRaw(this IApplicationBuilder app)
-    {
-        // Implementation for UseFortunesRaw middleware
-        /*
-        private readonly static KeyValuePair<string, StringValues> _headerServer =
-            new KeyValuePair<string, StringValues>("Server", "k");
-        private readonly static KeyValuePair<string, StringValues> _headerContentType =
-            new KeyValuePair<string, StringValues>("Content-Type", "text/html; charset=UTF-8");
-         headerDictionary.Add(new KeyValuePair<string, StringValues>("Content-Length", (writer.Length + 32).ToString()));
-        */
-
-    }
-
     public static void UseMultipleQueriesRaw(this IApplicationBuilder app)
     {
         // Implementation for UseMultipleQueriesRaw middleware

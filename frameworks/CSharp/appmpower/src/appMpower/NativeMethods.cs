@@ -31,4 +31,11 @@ public unsafe partial class NativeMethods
 #endif   
     //public static extern byte* Db(out int length); 
     public static extern IntPtr Db(out int length, out IntPtr handlePointer); 
+
+#if DEBUG
+    [DllImport("appMpower.Orm.dylib", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
+#else
+    [DllImport("appMpower.Orm.so", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
+#endif   
+    public static extern IntPtr Fortunes(out int length, out IntPtr handlePointer); 
 }

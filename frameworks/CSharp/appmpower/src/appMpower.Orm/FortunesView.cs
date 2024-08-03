@@ -16,7 +16,7 @@ namespace appMpower.Orm
       public static char[] _fortunesRowEnd = "</td></tr>".ToCharArray();
       public static char[] _fortunesTableEnd = "</table></body></html>".ToCharArray();
 
-      public static void Render(List<Fortune> fortunes)
+      public static string Render(List<Fortune> fortunes)
       {
          var writer = StringBuilderCache.Acquire();
 
@@ -29,7 +29,7 @@ namespace appMpower.Orm
 
          writer.Append(_fortunesTableEnd);
 
-         var test = Encoding.UTF8.GetBytes(StringBuilderCache.GetStringAndRelease(writer));
+         return StringBuilderCache.GetStringAndRelease(writer);
       }
    }
 }

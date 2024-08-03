@@ -9,24 +9,23 @@ using Microsoft.Extensions.Primitives;
 
 namespace appMpower; 
 
-public class SingleQueryRawMiddleware
+public class FortunesMiddleware
 {
     private readonly static KeyValuePair<string, StringValues> _headerServer =
          new KeyValuePair<string, StringValues>("Server", new StringValues("k"));
     private readonly static KeyValuePair<string, StringValues> _headerContentType =
-         new KeyValuePair<string, StringValues>("Content-Type", new StringValues("application/json"));
+         new KeyValuePair<string, StringValues>("Content-Type", new StringValues("text/html; charset=UTF-8"));
 
-    private readonly RequestDelegate _nextStage;
+    private readonly RequestDelegate _next;
 
-    public SingleQueryRawMiddleware(RequestDelegate nextStage)
+    public FortunesMiddleware(RequestDelegate next)
     {
-        _nextStage = nextStage;
+        _next = next;
     }
 
     public unsafe Task Invoke(HttpContext httpContext)
     {
-        if (httpContext.Request.Path.StartsWithSegments("/db", StringComparison.Ordinal))
-        //if (httpContext.Request.Path.Value.StartsWith("/d"))
+        if (httpContext.Request.Path.StartsWithSegments("/fortunes", StringComparison.Ordinal))
         {
             var response = httpContext.Response; 
             response.Headers.Add(_headerServer);
@@ -35,20 +34,10 @@ public class SingleQueryRawMiddleware
             int payloadLength;
             IntPtr handlePointer; 
 
-            IntPtr bytePointer = NativeMethods.Db(out payloadLength, out handlePointer);
+            IntPtr bytePointer = NativeMethods.Fortunes(out payloadLength, out handlePointer);
             byte[] json = new byte[payloadLength];
             Marshal.Copy(bytePointer, json, 0, payloadLength);
             NativeMethods.FreeHandlePointer(handlePointer);
-
-            /*
-            for (int i = 0; i < payloadLength; i++)
-            {
-                json[i] = bytePointer[i];
-            }
-
-            var json = DotnetMethods.Db();
-            int payloadLength = jsonMessage.Length; 
-            */
 
             response.Headers.Add(
                 new KeyValuePair<string, StringValues>("Content-Length", payloadLength.ToString()));
@@ -56,14 +45,14 @@ public class SingleQueryRawMiddleware
             return response.Body.WriteAsync(json, 0, payloadLength);
         }
 
-        return _nextStage(httpContext);
+        return _next(httpContext);
     }
 }
 
-public static class SingleQueryRawMiddlewareExtensions
+public static class FortunesMiddlewareExtensions
 {
-    public static IApplicationBuilder UseSingleQueryRaw(this IApplicationBuilder builder)
+    public static IApplicationBuilder UseFortunesRaw(this IApplicationBuilder builder)
     {
-        return builder.UseMiddleware<SingleQueryRawMiddleware>();
+        return builder.UseMiddleware<FortunesMiddleware>();
     }
 }
