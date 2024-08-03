@@ -73,7 +73,8 @@ public static class NativeMethods
         string fortunesView = FortunesView.Render(fortunes);
         byte[] byteArray = Encoding.UTF8.GetBytes(fortunesView);
 
-        *length = fortunesView.Length + 32; 
+        //*length = Encoding.UTF8.GetByteCount(fortunesView); //fortunesView.Length + 32; 
+        *length = byteArray.Length; 
 
         GCHandle handle = GCHandle.Alloc(byteArray, GCHandleType.Pinned);
         IntPtr byteArrayPointer = handle.AddrOfPinnedObject();
