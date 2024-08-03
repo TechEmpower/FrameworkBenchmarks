@@ -18,8 +18,8 @@ class Startup @Inject()(config: Config) {
   logger.info("Configuration")
   logger.info("-------------")
   logger.info("akka.actor.default-dispatcher.fork-join-executor.parallelism-max: " + config.getInt("akka.actor.default-dispatcher.fork-join-executor.parallelism-max"))
-  logger.info("fixedConnectionPool: " + config.getInt("fixedConnectionPool"));
-  logger.info("database.dispatcher.thread-pool-executor.fixed-pool-size: " + config.getInt("database.dispatcher.thread-pool-executor.fixed-pool-size"));
+  logger.info("fixedConnectionPool: " + config.getInt("fixedConnectionPool"))
+  logger.info("database.dispatcher.thread-pool-executor.fixed-pool-size: " + config.getInt("database.dispatcher.thread-pool-executor.fixed-pool-size"))
   logger.info("db.default.hikaricp.maximumPoolSize: " + config.getInt("db.default.hikaricp.maximumPoolSize"));
-
+  logger.info("db.default.url: " + config.getString("db.default.url"))
 }
