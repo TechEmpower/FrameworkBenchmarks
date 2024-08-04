@@ -21,6 +21,7 @@ CMD java \
     -XX:ReservedCodeCacheSize=512m \
     -XX:MaxInlineLevel=20 \
     -XX:+UseNUMA \
+    -Djava.lang.Integer.IntegerCache.high=10000 \
     -Dvertx.disableMetrics=true \
     -Dvertx.disableH2c=true \
     -Dvertx.disableWebsockets=true \
@@ -29,6 +30,7 @@ CMD java \
     -Dvertx.disableContextTimings=true \
     -Dvertx.disableTCCL=true \
     -Dvertx.disableHttpHeadersValidation=true \
+    -Dvertx.eventLoopPoolSize=$((`grep --count ^processor /proc/cpuinfo`)) \
     -Dlog4j2.contextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector \
     -Dio.netty.buffer.checkBounds=false \
     -Dio.netty.buffer.checkAccessible=false \

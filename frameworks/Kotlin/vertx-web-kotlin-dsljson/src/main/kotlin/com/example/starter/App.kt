@@ -3,7 +3,6 @@ package com.example.starter
 import com.example.starter.utils.PeriodicDateResolver
 import com.example.starter.utils.block
 import io.vertx.core.Vertx
-import io.vertx.core.impl.cpu.CpuCoreSensor
 import io.vertx.kotlin.core.deploymentOptionsOf
 import io.vertx.kotlin.core.vertxOptionsOf
 import kotlin.time.Duration.Companion.seconds
@@ -14,11 +13,12 @@ object App : Logging {
 
     @JvmStatic
     fun main(args: Array<out String?>?) {
-        val numCores = CpuCoreSensor.availableProcessors()
+        val eventLoopPoolSize = System.getProperty("vertx.eventLoopPoolSize")?.toInt()
+            ?: Runtime.getRuntime().availableProcessors()
 
         val vertx = Vertx.vertx(
             vertxOptionsOf(
-                eventLoopPoolSize = numCores,
+                eventLoopPoolSize = eventLoopPoolSize,
                 preferNativeTransport = true,
             )
         )
@@ -41,7 +41,7 @@ object App : Logging {
         vertx.deployVerticle(
             { if (hasDb) PostgresVerticle() else BasicVerticle() },
             deploymentOptionsOf(
-                instances = numCores,
+                instances = eventLoopPoolSize,
             )
         )
 

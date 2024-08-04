@@ -14,9 +14,10 @@ import java.util.concurrent.ThreadLocalRandom
 import java.util.concurrent.atomic.AtomicInteger
 
 @Suppress("NOTHING_TO_INLINE", "UNCHECKED_CAST")
-class WorldRepository(pool: Array<PgConnection>) : AbstractRepository<World>(pool) {
-    private val selectWorldQuery = this.pool[0].preparedQuery(SELECT_WORLD_SQL)
-    private val updateWorldQueries = generateQueries(this.pool[1])
+
+class WorldRepository(conn: PgConnection) : AbstractRepository<World>(conn) {
+    private val selectWorldQuery = this.conn.preparedQuery(SELECT_WORLD_SQL)
+    private val updateWorldQueries = generateQueries(this.conn)
 
     fun selectRandomWorld(): Future<World> = selectWorldQuery
         .execute(Tuple.of(randomWorld()))
@@ -26,7 +27,7 @@ class WorldRepository(pool: Array<PgConnection>) : AbstractRepository<World>(poo
         val promise = Promise.promise<Array<World>>()
         val arr = arrayOfNulls<World>(numWorlds)
         val count = AtomicInteger(0)
-        (this.pool[0] as SqlClientInternal).group { c ->
+        (this.conn as SqlClientInternal).group { c ->
             repeat(numWorlds) {
                 c.preparedQuery(SELECT_WORLD_SQL).execute(Tuple.of(randomWorld())) { ar ->
                     val index = count.getAndIncrement()

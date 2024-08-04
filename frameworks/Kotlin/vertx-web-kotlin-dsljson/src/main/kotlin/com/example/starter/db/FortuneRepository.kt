@@ -7,8 +7,8 @@ import io.vertx.core.Future
 import io.vertx.pgclient.PgConnection
 import io.vertx.sqlclient.Row
 
-class FortuneRepository(pool: Array<PgConnection>) : AbstractRepository<Fortune>(pool) {
-    private val selectFortuneQuery = this.pool[0].preparedQuery(SELECT_FORTUNE_SQL)
+class FortuneRepository(conn: PgConnection) : AbstractRepository<Fortune>(conn) {
+    private val selectFortuneQuery = this.conn.preparedQuery(SELECT_FORTUNE_SQL)
 
     fun selectFortunes(): Future<Array<Fortune>> = selectFortuneQuery
         .execute()
