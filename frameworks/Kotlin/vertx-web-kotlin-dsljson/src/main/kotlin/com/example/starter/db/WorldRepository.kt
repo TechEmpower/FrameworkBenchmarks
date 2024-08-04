@@ -13,7 +13,7 @@ import io.vertx.sqlclient.impl.SqlClientInternal
 import java.util.concurrent.ThreadLocalRandom
 import java.util.concurrent.atomic.AtomicInteger
 
-@Suppress("NOTHING_TO_INLINE")
+@Suppress("NOTHING_TO_INLINE", "UNCHECKED_CAST")
 class WorldRepository(pool: Array<PgConnection>) : AbstractRepository<World>(pool) {
     private val selectWorldQuery = this.pool[0].preparedQuery(SELECT_WORLD_SQL)
     private val updateWorldQueries = generateQueries(this.pool[1])
