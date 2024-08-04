@@ -17,7 +17,7 @@ CMD java \
     -Xmx2G \
     -XX:+AlwaysPreTouch \
     -XX:+UseParallelGC \
-	-XX:InitialCodeCacheSize=512m \
+    -XX:InitialCodeCacheSize=512m \
     -XX:ReservedCodeCacheSize=512m \
     -XX:MaxInlineLevel=20 \
     -XX:+UseNUMA \

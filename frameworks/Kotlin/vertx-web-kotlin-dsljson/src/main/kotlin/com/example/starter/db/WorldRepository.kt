@@ -14,7 +14,6 @@ import java.util.concurrent.ThreadLocalRandom
 import java.util.concurrent.atomic.AtomicInteger
 
 @Suppress("NOTHING_TO_INLINE", "UNCHECKED_CAST")
-
 class WorldRepository(conn: PgConnection) : AbstractRepository<World>(conn) {
     private val selectWorldQuery = this.conn.preparedQuery(SELECT_WORLD_SQL)
     private val updateWorldQueries = generateQueries(this.conn)
