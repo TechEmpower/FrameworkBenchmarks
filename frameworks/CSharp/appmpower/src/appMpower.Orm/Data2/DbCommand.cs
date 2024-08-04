@@ -1,41 +1,56 @@
 using System.Data;
-using System.Data.Odbc; 
 using System.Threading.Tasks;
 
-namespace appMpower.Orm.Data
+namespace appMpower.Orm.Data2
 {
    public class DbCommand : IDbCommand
    {
-      private OdbcCommand _odbcCommand;
+      private IDbCommand _dbCommand;
       private DbConnection _dbConnection;
 
       public DbCommand(DbConnection dbConnection)
       {
-         _odbcCommand = (OdbcCommand)dbConnection.CreateCommand();
+         _dbCommand = dbConnection.CreateCommand();
          _dbConnection = dbConnection;
       }
 
       public DbCommand(string commandText, DbConnection dbConnection)
       {
-         _odbcCommand = dbConnection.GetCommand(commandText, CommandType.Text);
-         _dbConnection = dbConnection;
+         dbConnection.GetCommand(commandText, CommandType.Text, this);
       }
 
       public DbCommand(string commandText, CommandType commandType, DbConnection dbConnection)
       {
-         _odbcCommand = dbConnection.GetCommand(commandText, commandType);
-         _dbConnection = dbConnection; 
+         dbConnection.GetCommand(commandText, commandType, this);
+      }
+
+      internal DbCommand(IDbCommand dbCommand, DbConnection dbConnection)
+      {
+         _dbCommand = dbCommand;
+         _dbConnection = dbConnection;
       }
 
       internal IDbCommand Command
       {
          get
          {
-            return _odbcCommand;
+            return _dbCommand;
          }
          set
          {
-            _odbcCommand = (OdbcCommand)value;
+            _dbCommand = value;
+         }
+      }
+
+      internal DbConnection DbConnection
+      {
+         get
+         {
+            return _dbConnection;
+         }
+         set
+         {
+            _dbConnection = value;
          }
       }
 
@@ -43,11 +58,11 @@ namespace appMpower.Orm.Data
       {
          get
          {
-            return _odbcCommand.CommandText;
+            return _dbCommand.CommandText;
          }
          set
          {
-            _odbcCommand.CommandText = value;
+            _dbCommand.CommandText = value;
          }
       }
 
@@ -55,22 +70,22 @@ namespace appMpower.Orm.Data
       {
          get
          {
-            return _odbcCommand.CommandTimeout;
+            return _dbCommand.CommandTimeout;
          }
          set
          {
-            _odbcCommand.CommandTimeout = value;
+            _dbCommand.CommandTimeout = value;
          }
       }
       public CommandType CommandType
       {
          get
          {
-            return _odbcCommand.CommandType;
+            return _dbCommand.CommandType;
          }
          set
          {
-            _odbcCommand.CommandType = value;
+            _dbCommand.CommandType = value;
          }
       }
 
@@ -79,11 +94,11 @@ namespace appMpower.Orm.Data
       {
          get
          {
-            return _odbcCommand.Connection;
+            return _dbCommand.Connection;
          }
          set
          {
-            _odbcCommand.Connection = (OdbcConnection?)value;
+            _dbCommand.Connection = (IDbConnection?)value;
          }
       }
 #nullable disable
@@ -92,7 +107,7 @@ namespace appMpower.Orm.Data
       {
          get
          {
-            return _odbcCommand.Parameters;
+            return _dbCommand.Parameters;
          }
       }
 
@@ -101,11 +116,11 @@ namespace appMpower.Orm.Data
       {
          get
          {
-            return _odbcCommand.Transaction;
+            return _dbCommand.Transaction;
          }
          set
          {
-            _odbcCommand.Transaction = (OdbcTransaction?)value;
+            _dbCommand.Transaction = (IDbTransaction?)value;
          }
       }
 #nullable disable
@@ -114,21 +129,21 @@ namespace appMpower.Orm.Data
       {
          get
          {
-            return _odbcCommand.UpdatedRowSource;
+            return _dbCommand.UpdatedRowSource;
          }
          set
          {
-            _odbcCommand.UpdatedRowSource = value;
+            _dbCommand.UpdatedRowSource = value;
          }
       }
       public void Cancel()
       {
-         _odbcCommand.Cancel();
+         _dbCommand.Cancel();
       }
 
       public IDbDataParameter CreateParameter()
       {
-         return _odbcCommand.CreateParameter();
+         return _dbCommand.CreateParameter();
       }
 
       public IDbDataParameter CreateParameter(string name, object value)
@@ -147,7 +162,7 @@ namespace appMpower.Orm.Data
          }
          else
          {
-            dbDataParameter = _odbcCommand.CreateParameter();
+            dbDataParameter = _dbCommand.CreateParameter();
 
             dbDataParameter.ParameterName = name;
             dbDataParameter.DbType = dbType;
@@ -160,51 +175,51 @@ namespace appMpower.Orm.Data
 
       public int ExecuteNonQuery()
       {
-         return _odbcCommand.ExecuteNonQuery();
+         return _dbCommand.ExecuteNonQuery();
       }
 
       public IDataReader ExecuteReader()
       {
-         return _odbcCommand.ExecuteReader();
+         return _dbCommand.ExecuteReader();
       }
 
       public async Task<int> ExecuteNonQueryAsync()
       {
-         return await (_odbcCommand as System.Data.Common.DbCommand).ExecuteNonQueryAsync();
+         return await (_dbCommand as System.Data.Common.DbCommand).ExecuteNonQueryAsync();
       }
 
       public async Task<System.Data.Common.DbDataReader> ExecuteReaderAsync(CommandBehavior behavior)
       {
-         return await (_odbcCommand as System.Data.Common.DbCommand).ExecuteReaderAsync(behavior);
+         return await (_dbCommand as System.Data.Common.DbCommand).ExecuteReaderAsync(behavior);
       }
 
       public IDataReader ExecuteReader(CommandBehavior behavior)
       {
-         return _odbcCommand.ExecuteReader(behavior);
+         return _dbCommand.ExecuteReader(behavior);
       }
 
 #nullable enable
       public object? ExecuteScalar()
       {
-         return _odbcCommand.ExecuteScalar();
+         return _dbCommand.ExecuteScalar();
       }
 #nullable disable
 
 #nullable enable
       public async Task<object?> ExecuteScalarAsync()
       {
-         return await ((System.Data.Common.DbCommand)_odbcCommand).ExecuteScalarAsync();
+         return await ((System.Data.Common.DbCommand)_dbCommand).ExecuteScalarAsync();
       }
 #nullable disable
 
       public void Prepare()
       {
-         _odbcCommand.Prepare();
+         _dbCommand.Prepare();
       }
 
       public void Dispose()
       {
-         _dbConnection.OdbcCommands.Push(_odbcCommand);
+         _dbConnection.ReleaseCommand(this);
       }
    }
 }

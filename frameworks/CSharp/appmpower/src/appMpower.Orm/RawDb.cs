@@ -40,16 +40,7 @@ namespace appMpower.Orm
 
          using (dbCommand)
          {
-            World world; 
-
-            if (Constants.DbProvider == DbProvider.ADO)
-            {
-               world = await ReadSingleRowAysnc(dbCommand);
-            }
-            else
-            {
-               world = ReadSingleRow(dbCommand);
-            }
+            World world = ReadSingleRow(dbCommand);
 
             return world;
          }
@@ -68,15 +59,7 @@ namespace appMpower.Orm
          {
             for (int i = 0; i < count; i++)
             {
-               if (Constants.DbProvider == DbProvider.ADO)
-               {
-                  worlds[i] = await ReadSingleRowAysnc(dbCommand);
-               }
-               else
-               {
-                  worlds[i] = ReadSingleRow(dbCommand);
-               }
-
+               worlds[i] = ReadSingleRow(dbCommand);
                dbDataParameter.Value = _random.Next(1, 10001);
             }
          }
@@ -95,16 +78,7 @@ namespace appMpower.Orm
 
          using (dbCommand)
          {
-            IDataReader dataReader; 
-
-            if (Constants.DbProvider == DbProvider.ADO)
-            {
-               dataReader = await dbCommand.ExecuteReaderAsync(CommandBehavior.SingleResult & CommandBehavior.SequentialAccess);
-            }
-            else
-            {
-               dataReader = dbCommand.ExecuteReader(CommandBehavior.SingleResult & CommandBehavior.SequentialAccess);
-            }
+            IDataReader dataReader = dbCommand.ExecuteReader(CommandBehavior.SingleResult & CommandBehavior.SequentialAccess);
 
             while (dataReader.Read())
             {
@@ -139,15 +113,7 @@ namespace appMpower.Orm
          {
             for (int i = 0; i < count; i++)
             {
-               if (Constants.DbProvider == DbProvider.ADO)
-               {
-                  worlds[i] = await ReadSingleRowAysnc(queryCommand);
-               }
-               else
-               {
-                  worlds[i] = ReadSingleRow(queryCommand);
-               }
-
+               worlds[i] = ReadSingleRow(queryCommand);
                dbDataParameter.Value = _random.Next(1, 10001);
             }
          }
@@ -184,16 +150,7 @@ namespace appMpower.Orm
 
       private static (DbCommand dbCommand, IDbDataParameter dbDataParameter) CreateReadCommand(DbConnection pooledConnection)
       {
-         DbCommand dbCommand; 
-
-         if (Constants.DbProvider == DbProvider.ADO)
-         {
-            dbCommand = new DbCommand("SELECT * FROM world WHERE id=@Id", pooledConnection);
-         }
-         else
-         {
-            dbCommand = new DbCommand("SELECT * FROM world WHERE id=?", pooledConnection);
-         }
+         DbCommand dbCommand = new DbCommand("SELECT * FROM world WHERE id=?", pooledConnection);
 
          return (dbCommand, dbCommand.CreateParameter("Id", DbType.Int32, _random.Next(1, 10001)));
       }

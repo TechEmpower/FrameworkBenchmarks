@@ -42,30 +42,6 @@ namespace PlatformBenchmarks
                sb.Append("UPDATE world SET randomNumber=? WHERE id=?;");
             }
          }
-         else if (Constants.DbProvider == DbProvider.ADO)
-         {
-            /*
-            sb.Append("UPDATE world SET randomNumber = temp.randomNumber FROM (VALUES ");
-            Enumerable.Range(0, lastIndex).ToList().ForEach(i => sb.Append($"(@i{i}, @r{i}), "));
-            sb.Append($"(@i{lastIndex}, @r{lastIndex}) ORDER BY 1) AS temp(id, randomNumber) WHERE temp.id = world.id");
-            */
-
-            sb.Append("UPDATE world SET randomNumber=CASE id ");
-
-            for (int i = 0; i < batchSize; i++)
-            {
-               sb.Append("WHEN @i" + i + " THEN @r" + i + " ");
-            }
-
-            sb.Append("ELSE randomnumber END WHERE id IN(");
-
-            for (int i = 0; i < lastIndex; i++)
-            {
-               sb.Append("@j" + i + ",");
-            }
-
-            sb.Append("@j" + lastIndex + ")");
-         }
          else
          {
             sb.Append("UPDATE world SET randomNumber=CASE id ");

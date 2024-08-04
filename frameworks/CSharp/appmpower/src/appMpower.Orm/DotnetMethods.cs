@@ -1,6 +1,7 @@
 using System.Runtime.InteropServices;
 using System.Text; 
 using System.Text.Json; 
+using appMpower.Orm.Data; 
 using appMpower.Orm.Objects; 
 using appMpower.Orm.Serializers; 
 
@@ -18,6 +19,10 @@ public static class DotnetMethods
 
     public static byte[] Db()
     {
+        Constants.Dbms = Dbms.PostgreSQL; 
+        Constants.DbProvider = DbProvider.ODBC; 
+        DbProviderFactory.SetConnectionString();
+
         var world = RawDb.LoadSingleQueryRow().GetAwaiter().GetResult();
 
         var memoryStream = new MemoryStream();

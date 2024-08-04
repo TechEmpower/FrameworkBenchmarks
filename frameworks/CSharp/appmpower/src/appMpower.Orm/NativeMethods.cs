@@ -57,7 +57,6 @@ public static class NativeMethods
         *handlePointer = GCHandle.ToIntPtr(handle);
 
         return byteArrayPointer;
-
         /*
         fixed(byte* b = memoryStream.ToArray())
         {

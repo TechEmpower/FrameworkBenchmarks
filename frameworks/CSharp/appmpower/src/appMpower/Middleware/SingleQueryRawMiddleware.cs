@@ -45,10 +45,10 @@ public class SingleQueryRawMiddleware
             {
                 json[i] = bytePointer[i];
             }
-
-            var json = DotnetMethods.Db();
-            int payloadLength = jsonMessage.Length; 
             */
+
+            //var json = Orm.DotnetMethods.Db();
+            //int payloadLength = json.Length; 
 
             response.Headers.Add(
                 new KeyValuePair<string, StringValues>("Content-Length", payloadLength.ToString()));

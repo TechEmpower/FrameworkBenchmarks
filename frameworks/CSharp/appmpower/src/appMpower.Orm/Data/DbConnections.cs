@@ -9,58 +9,57 @@ namespace appMpower.Orm.Data
       private static short _createdConnections = 0;
       private static short _maxConnections = 500;
 
-      private static ConcurrentStack<InternalConnection> _stack = new();
-      private static ConcurrentQueue<TaskCompletionSource<InternalConnection>> _waitingQueue = new();
+      private static ConcurrentStack<DbConnection> _stack = new();
+      private static ConcurrentQueue<TaskCompletionSource<DbConnection>> _waitingQueue = new();
 
-      public static async Task<InternalConnection> GetConnection(string connectionString)
+      public static async Task GetConnection(string connectionString, DbConnection dbConnection)
       {
-         InternalConnection internalConnection = null;
-
          if (_connectionsCreated)
          {
-            if (!_stack.TryPop(out internalConnection))
+            DbConnection popDbConnection = null;
+
+            if (!_stack.TryPop(out popDbConnection))
             {
-               internalConnection = await GetDbConnectionAsync();
+               popDbConnection = await GetDbConnectionAsync();
             }
 
-            return internalConnection;
+            dbConnection._odbcConnection = popDbConnection._odbcConnection; 
+            dbConnection.OdbcCommands = popDbConnection.OdbcCommands;
+            dbConnection._number = popDbConnection._number; 
          }
          else
          {
-            internalConnection = new InternalConnection();
-            internalConnection.DbConnection = new System.Data.Odbc.OdbcConnection(connectionString);
+            dbConnection._odbcConnection = new System.Data.Odbc.OdbcConnection(connectionString);
 
             _createdConnections++;
 
             if (_createdConnections == _maxConnections) _connectionsCreated = true;
 
-            internalConnection.Number = _createdConnections;
-            internalConnection.DbCommands = new ConcurrentDictionary<string, DbCommand>();
+            dbConnection._number = _createdConnections;
+            //dbConnection.DbCommands = new ConcurrentDictionary<string, DbCommand>();
             //Console.WriteLine("opened connection number: " + dbConnection.Number);
-
-            return internalConnection;
          }
       }
 
-      public static Task<InternalConnection> GetDbConnectionAsync()
+      public static Task<DbConnection> GetDbConnectionAsync()
       {
-         var taskCompletionSource = new TaskCompletionSource<InternalConnection>(TaskCreationOptions.RunContinuationsAsynchronously);
+         var taskCompletionSource = new TaskCompletionSource<DbConnection>(TaskCreationOptions.RunContinuationsAsynchronously);
 
          _waitingQueue.Enqueue(taskCompletionSource);
          return taskCompletionSource.Task;
       }
 
-      public static void Release(InternalConnection internalConnection)
+      public static void Release(DbConnection dbConnection)
       {
-         TaskCompletionSource<InternalConnection> taskCompletionSource;
+         TaskCompletionSource<DbConnection> taskCompletionSource;
 
          if (_waitingQueue.TryDequeue(out taskCompletionSource))
          {
-            taskCompletionSource.SetResult(internalConnection);
+            taskCompletionSource.SetResult(dbConnection);
          }
          else
          {
-            _stack.Push(internalConnection);
+            _stack.Push(dbConnection);
          }
       }
    }
