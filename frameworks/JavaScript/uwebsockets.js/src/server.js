@@ -16,7 +16,7 @@ if (DATABASE) db = await import(`./database/${DATABASE}.js`);
 
 const webserver = uWebSockets.App();
 
-webserver._cfg('silent');
+uWebSockets._cfg('silent');
 
 webserver.get("/plaintext", new uWebSockets.DeclarativeResponse()
               .writeHeader("Server", "uWS")
