@@ -12,7 +12,7 @@ namespace appMpower.Orm.Data
       private string _connectionString;
       internal int _number; 
       internal OdbcConnection _odbcConnection;
-      public Stack<OdbcCommand> OdbcCommands = new();
+      public ConcurrentStack<OdbcCommand> OdbcCommands = new();
 
       public DbConnection()
       {
@@ -103,6 +103,7 @@ namespace appMpower.Orm.Data
          return _odbcConnection.CreateCommand();
       }
 
+      /*
       public void Open()
       {
          if (_odbcConnection.State == ConnectionState.Closed)
@@ -110,12 +111,29 @@ namespace appMpower.Orm.Data
             _odbcConnection.Open();
          }
       }
+      */
 
       public void Dispose()
       {
          DbConnections.Release(this);
       }
 
+      public void Open()
+      {
+         if (_odbcConnection is null)
+         {
+            DbConnections.GetConnection(_connectionString, this);
+         }
+
+         if (_odbcConnection.State == ConnectionState.Closed)
+         {
+            //Console.WriteLine("OpenAsync " + _odbcConnection.Number.ToString());
+            //await (_odbcConnection as System.Data.Common.DbConnection).OpenAsync();
+            _odbcConnection.Open();
+         }
+      }
+
+      /*
       public async Task OpenAsync()
       {
          if (_odbcConnection is null)
@@ -130,6 +148,7 @@ namespace appMpower.Orm.Data
             await (_odbcConnection as System.Data.Common.DbConnection).OpenAsync();
          }
       }
+      */
 
       internal OdbcCommand GetCommand(string commandText, CommandType commandType)
       {

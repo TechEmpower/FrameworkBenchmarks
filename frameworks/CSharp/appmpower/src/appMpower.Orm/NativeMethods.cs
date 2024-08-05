@@ -41,7 +41,8 @@ public static class NativeMethods
     [UnmanagedCallersOnly(EntryPoint = "Db")]
     public static unsafe IntPtr Db(int* length, IntPtr* handlePointer)
     {
-        var world = RawDb.LoadSingleQueryRow().GetAwaiter().GetResult();
+        //var world = RawDb.LoadSingleQueryRow().GetAwaiter().GetResult();
+        var world = RawDb.LoadSingleQueryRow();
 
         var memoryStream = new MemoryStream();
         using var utf8JsonWriter = new Utf8JsonWriter(memoryStream, _jsonWriterOptions);
@@ -68,7 +69,8 @@ public static class NativeMethods
     [UnmanagedCallersOnly(EntryPoint = "Fortunes")]
     public static unsafe IntPtr Fortunes(int* length, IntPtr* handlePointer)
     {
-        List<Fortune> fortunes = RawDb.LoadFortunesRows().GetAwaiter().GetResult(); 
+        //List<Fortune> fortunes = RawDb.LoadFortunesRows().GetAwaiter().GetResult(); 
+        List<Fortune> fortunes = RawDb.LoadFortunesRows(); 
         string fortunesView = FortunesView.Render(fortunes);
         byte[] byteArray = Encoding.UTF8.GetBytes(fortunesView);
 

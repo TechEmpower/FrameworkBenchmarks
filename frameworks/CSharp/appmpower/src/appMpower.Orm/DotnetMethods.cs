@@ -23,7 +23,8 @@ public static class DotnetMethods
         Constants.DbProvider = DbProvider.ODBC; 
         DbProviderFactory.SetConnectionString();
 
-        var world = RawDb.LoadSingleQueryRow().GetAwaiter().GetResult();
+        //var world = RawDb.LoadSingleQueryRow().GetAwaiter().GetResult();
+        var world = RawDb.LoadSingleQueryRow();
 
         var memoryStream = new MemoryStream();
         using var utf8JsonWriter = new Utf8JsonWriter(memoryStream, _jsonWriterOptions);

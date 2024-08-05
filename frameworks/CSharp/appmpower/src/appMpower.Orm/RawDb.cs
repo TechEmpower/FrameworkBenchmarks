@@ -31,10 +31,13 @@ namespace appMpower.Orm
             });
       */
 
-      public static async Task<World> LoadSingleQueryRow()
+      //public static async Task<World> LoadSingleQueryRow()
+      public static World LoadSingleQueryRow()
       {
-         using var pooledConnection = new DbConnection(DbProviderFactory.ConnectionString);
-         await pooledConnection.OpenAsync();
+         //using var pooledConnection = new DbConnection(DbProviderFactory.ConnectionString);
+         using var pooledConnection = DbConnections.GetConnection(DbProviderFactory.ConnectionString);
+         //await pooledConnection.OpenAsync();
+         pooledConnection.Open();
 
          var (dbCommand, _) = CreateReadCommand(pooledConnection);
 
@@ -46,12 +49,14 @@ namespace appMpower.Orm
          }
       }
 
-      public static async Task<World[]> LoadMultipleQueriesRows(int count)
+      //public static async Task<World[]> LoadMultipleQueriesRows(int count)
+      public static World[] LoadMultipleQueriesRows(int count)
       {
          var worlds = new World[count];
 
          using var pooledConnection = new DbConnection(DbProviderFactory.ConnectionString);
-         await pooledConnection.OpenAsync();
+         //await pooledConnection.OpenAsync();
+         pooledConnection.Open();
 
          var (dbCommand, dbDataParameter) = CreateReadCommand(pooledConnection);
 
@@ -67,12 +72,14 @@ namespace appMpower.Orm
          return worlds;
       }
 
-      public static async Task<List<Fortune>> LoadFortunesRows()
+      //public static async Task<List<Fortune>> LoadFortunesRows()
+      public static List<Fortune> LoadFortunesRows()
       {
          var fortunes = new List<Fortune>();
 
          using var pooledConnection = new DbConnection(DbProviderFactory.ConnectionString);
-         await pooledConnection.OpenAsync();
+         //await pooledConnection.OpenAsync();
+         pooledConnection.Open();
 
          var dbCommand = new DbCommand("SELECT * FROM fortune", pooledConnection);
 
@@ -105,7 +112,8 @@ namespace appMpower.Orm
          var worlds = new World[count];
 
          using var pooledConnection = new DbConnection(DbProviderFactory.ConnectionString);
-         await pooledConnection.OpenAsync();
+         //await pooledConnection.OpenAsync();
+         pooledConnection.Open();
 
          var (queryCommand, dbDataParameter) = CreateReadCommand(pooledConnection);
 
@@ -189,7 +197,8 @@ namespace appMpower.Orm
          return world;
       }
 
-      public static async Task<World[]> ReadMultipleRows(int count)
+      //public static async Task<World[]> ReadMultipleRows(int count)
+      public static World[] ReadMultipleRows(int count)
       {
          int j = 0;
          var ids = PlatformBenchmarks.BatchUpdateString.Ids;
@@ -213,7 +222,8 @@ namespace appMpower.Orm
          }
 
          using var pooledConnection = new DbConnection(DbProviderFactory.ConnectionString);
-         await pooledConnection.OpenAsync();
+         //await pooledConnection.OpenAsync();
+         pooledConnection.Open();
 
          using var dbCommand = new DbCommand(queryString, pooledConnection);
 
@@ -222,7 +232,8 @@ namespace appMpower.Orm
             dbCommand.CreateParameter(ids[i], DbType.Int32, _random.Next(1, 10001));
          }
 
-         var dataReader = await dbCommand.ExecuteReaderAsync(CommandBehavior.Default & CommandBehavior.SequentialAccess);
+         //var dataReader = await dbCommand.ExecuteReaderAsync(CommandBehavior.Default & CommandBehavior.SequentialAccess);
+         var dataReader = dbCommand.ExecuteReader(CommandBehavior.Default & CommandBehavior.SequentialAccess);
 
          do
          {
@@ -235,7 +246,8 @@ namespace appMpower.Orm
             };
 
             j++;
-         } while (await dataReader.NextResultAsync());
+         } while (dataReader.NextResult());
+         //while (await dataReader.NextResultAsync());
 
          dataReader.Close();
 
