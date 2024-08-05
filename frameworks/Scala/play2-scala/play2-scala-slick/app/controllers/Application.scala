@@ -1,7 +1,7 @@
 package controllers
 
 import java.util.concurrent._
-import javax.inject.{Singleton, Inject}
+import jakarta.inject.{Singleton, Inject}
 import play.api.mvc._
 import play.mvc.Http
 import play.api.libs.json.Json
