@@ -2,7 +2,6 @@ using System;
 using System.Collections.Concurrent;
 using System.Data;
 using System.Data.Odbc; 
-using System.Threading.Tasks;
 using appMpower.Orm; 
 
 namespace appMpower.Orm.Data
@@ -12,7 +11,7 @@ namespace appMpower.Orm.Data
       private string _connectionString;
       internal int _number; 
       internal OdbcConnection _odbcConnection;
-      public ConcurrentStack<OdbcCommand> OdbcCommands = new();
+      internal ConcurrentStack<OdbcCommand> _commandsStack = new();
 
       public DbConnection()
       {
@@ -93,29 +92,9 @@ namespace appMpower.Orm.Data
          _odbcConnection.Close();
       }
 
-      public async Task CloseAsync()
-      {
-         await (_odbcConnection as System.Data.Common.DbConnection).CloseAsync();
-      }
-
       public IDbCommand CreateCommand()
       {
          return _odbcConnection.CreateCommand();
-      }
-
-      /*
-      public void Open()
-      {
-         if (_odbcConnection.State == ConnectionState.Closed)
-         {
-            _odbcConnection.Open();
-         }
-      }
-      */
-
-      public void Dispose()
-      {
-         DbConnections.Release(this);
       }
 
       public void Open()
@@ -127,39 +106,26 @@ namespace appMpower.Orm.Data
 
          if (_odbcConnection.State == ConnectionState.Closed)
          {
-            //Console.WriteLine("OpenAsync " + _odbcConnection.Number.ToString());
-            //await (_odbcConnection as System.Data.Common.DbConnection).OpenAsync();
             _odbcConnection.Open();
          }
       }
 
-      /*
-      public async Task OpenAsync()
+      public void Dispose()
       {
-         if (_odbcConnection is null)
-         {
-            //_odbcConnection = 
-            await DbConnections.GetConnection(_connectionString, this);
-         }
-
-         if (_odbcConnection.State == ConnectionState.Closed)
-         {
-            //Console.WriteLine("OpenAsync " + _odbcConnection.Number.ToString());
-            await (_odbcConnection as System.Data.Common.DbConnection).OpenAsync();
-         }
+         DbConnections.Release(this);
       }
-      */
 
       internal OdbcCommand GetCommand(string commandText, CommandType commandType)
       {
          OdbcCommand odbcCommand;
 
-         if (this.OdbcCommands.TryPop(out odbcCommand))
+         if (_commandsStack.TryPop(out odbcCommand))
          {
             if (commandText != odbcCommand.CommandText)
             {
                odbcCommand.CommandText = commandText; 
                odbcCommand.CommandType = commandType;
+               odbcCommand.Parameters.Clear();
 
                odbcCommand.Prepare();
             }

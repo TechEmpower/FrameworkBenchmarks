@@ -1,6 +1,5 @@
 using System.Data;
 using System.Data.Odbc; 
-using System.Threading.Tasks;
 
 namespace appMpower.Orm.Data
 {
@@ -173,11 +172,6 @@ namespace appMpower.Orm.Data
          return await (_odbcCommand as System.Data.Common.DbCommand).ExecuteNonQueryAsync();
       }
 
-      public async Task<System.Data.Common.DbDataReader> ExecuteReaderAsync(CommandBehavior behavior)
-      {
-         return await (_odbcCommand as System.Data.Common.DbCommand).ExecuteReaderAsync(behavior);
-      }
-
       public IDataReader ExecuteReader(CommandBehavior behavior)
       {
          return _odbcCommand.ExecuteReader(behavior);
@@ -190,13 +184,6 @@ namespace appMpower.Orm.Data
       }
 #nullable disable
 
-#nullable enable
-      public async Task<object?> ExecuteScalarAsync()
-      {
-         return await ((System.Data.Common.DbCommand)_odbcCommand).ExecuteScalarAsync();
-      }
-#nullable disable
-
       public void Prepare()
       {
          _odbcCommand.Prepare();
@@ -204,7 +191,7 @@ namespace appMpower.Orm.Data
 
       public void Dispose()
       {
-         _dbConnection.OdbcCommands.Push(_odbcCommand);
+         _dbConnection._commandsStack.Push(_odbcCommand);
       }
    }
 }
