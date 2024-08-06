@@ -1,11 +1,12 @@
-FROM dart:3.4.4
+FROM dart:3.4.4 AS build
 
+COPY . /app
 WORKDIR /app
-COPY pubspec.yaml pubspec.yaml
-COPY server.dart server.dart
+RUN dart compile exe ./bin/server.dart -o ./server
 
-RUN dart pub upgrade
+FROM scratch
+COPY --from=build /runtime/ /
+COPY --from=build /app/ /bin
 
 EXPOSE 8080
-
-CMD ["dart", "server.dart"]
+CMD ["server"]

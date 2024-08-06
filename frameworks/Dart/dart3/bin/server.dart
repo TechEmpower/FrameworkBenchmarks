@@ -12,7 +12,8 @@ void main(List<String> _) {
 
 /// Creates an [HttpServer] for each [Isolate]
 void _startInIsolate(List<String> _) => HttpServer.bind(
-      InternetAddress('0.0.0.0', type: InternetAddressType.IPv4),
+      InternetAddress.anyIPv4,
+      //InternetAddress('0.0.0.0', type: InternetAddressType.IPv4),
       8080,
       shared: true,
     ).then(
