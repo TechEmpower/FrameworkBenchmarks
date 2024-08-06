@@ -14,7 +14,7 @@ namespace appMpower.Orm
    {
       private const int MaxBatch = 500;
 
-      //private static ConcurrentRandom _random = (Constants.DbProvider == DbProvider.ADO ? new ConcurrentRandom() : new Random());
+      private static ConcurrentRandom _concurrentRandom = new ConcurrentRandom();
       private static Random _random = new Random();
 
       private static string[] _queriesMultipleRows = new string[MaxBatch + 1];
@@ -59,7 +59,7 @@ namespace appMpower.Orm
             for (int i = 0; i < count; i++)
             {
                worlds[i] = ReadSingleRow(dbCommand);
-               dbDataParameter.Value = _random.Next(1, 10001);
+               dbDataParameter.Value = _concurrentRandom.Next(1, 10001);
             }
          }
 

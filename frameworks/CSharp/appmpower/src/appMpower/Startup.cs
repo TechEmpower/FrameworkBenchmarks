@@ -23,16 +23,18 @@ public class Startup
         var appSettings = _configuration.Get<AppSettings>();
         services.AddSingleton(appSettings);
 
-#if ADO      
+#if !DEBUG
+    #if ADO      
         NativeMethods.DbProvider(0); 
-#else
+    #else
         NativeMethods.DbProvider(1); //ODBC
-#endif        
+    #endif        
 
-#if POSTGRESQL      
+    #if POSTGRESQL      
         NativeMethods.Dbms(1); 
-#else
+    #else
         NativeMethods.Dbms(0); //MySQL
+    #endif
 #endif
 
         var settings = new TextEncoderSettings(UnicodeRanges.BasicLatin, UnicodeRanges.Katakana, UnicodeRanges.Hiragana);

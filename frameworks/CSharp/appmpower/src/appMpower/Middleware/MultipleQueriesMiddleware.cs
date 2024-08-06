@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 
+namespace appMpower; 
+
 public class MultipleQueriesMiddleware
 {
     private readonly static KeyValuePair<string, StringValues> _headerServer =
@@ -25,8 +27,9 @@ public class MultipleQueriesMiddleware
    {
       if (httpContext.Request.Path.StartsWithSegments("/queries", StringComparison.Ordinal))
       {
-         int queries = Convert.ToInt16(httpContext.Request.Query["queries"]);
-
+         var queryString = httpContext.Request.QueryString.ToString(); 
+         int queries; 
+         Int32.TryParse(queryString.Substring(queryString.LastIndexOf("=") + 1), out queries); 
          queries = queries > 500 ? 500 : (queries > 0 ? queries : 1);
 
          var response = httpContext.Response;
@@ -48,7 +51,7 @@ public class MultipleQueriesMiddleware
          }
          */
 
-         //var json = Orm.DotnetMethods.Query();
+         //var json = Orm.DotnetMethods.Query(queries); 
          //int payloadLength = json.Length; 
 
          response.Headers.Add(

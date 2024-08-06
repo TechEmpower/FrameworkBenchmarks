@@ -16,6 +16,7 @@ public static class DotnetMethods
     };
 
     private readonly static WorldSerializer _worldSerializer = new WorldSerializer();
+    private readonly static WorldsSerializer _worldsSerializer = new WorldsSerializer();
 
     public static byte[] Db()
     {
@@ -30,6 +31,22 @@ public static class DotnetMethods
         using var utf8JsonWriter = new Utf8JsonWriter(memoryStream, _jsonWriterOptions);
 
         _worldSerializer.Serialize(utf8JsonWriter, world);
+
+        return memoryStream.ToArray();
+    }
+
+    public static byte[] Query(int queries)
+    {
+        Constants.Dbms = Dbms.PostgreSQL; 
+        Constants.DbProvider = DbProvider.ODBC; 
+        DbProviderFactory.SetConnectionString();
+
+        World[] worlds = RawDb.ReadMultipleRows(queries);
+
+        var memoryStream = new MemoryStream();
+        using var utf8JsonWriter = new Utf8JsonWriter(memoryStream, _jsonWriterOptions);
+
+        _worldsSerializer.Serialize(utf8JsonWriter, worlds);
 
         return memoryStream.ToArray();
     }
