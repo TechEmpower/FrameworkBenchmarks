@@ -9,7 +9,7 @@ using Microsoft.Extensions.Primitives;
 
 namespace appMpower; 
 
-public class SingleQueryRawMiddleware
+public class SingleQueryMiddleware
 {
     private readonly static KeyValuePair<string, StringValues> _headerServer =
          new KeyValuePair<string, StringValues>("Server", new StringValues("k"));
@@ -18,7 +18,7 @@ public class SingleQueryRawMiddleware
 
     private readonly RequestDelegate _nextStage;
 
-    public SingleQueryRawMiddleware(RequestDelegate nextStage)
+    public SingleQueryMiddleware(RequestDelegate nextStage)
     {
         _nextStage = nextStage;
     }
@@ -60,10 +60,10 @@ public class SingleQueryRawMiddleware
     }
 }
 
-public static class SingleQueryRawMiddlewareExtensions
+public static class SingleQueryMiddlewareExtensions
 {
-    public static IApplicationBuilder UseSingleQueryRaw(this IApplicationBuilder builder)
+    public static IApplicationBuilder UseSingleQuery(this IApplicationBuilder builder)
     {
-        return builder.UseMiddleware<SingleQueryRawMiddleware>();
+        return builder.UseMiddleware<SingleQueryMiddleware>();
     }
 }

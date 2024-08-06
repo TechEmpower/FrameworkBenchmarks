@@ -51,7 +51,7 @@ public class FortunesMiddleware
 
 public static class FortunesMiddlewareExtensions
 {
-    public static IApplicationBuilder UseFortunesRaw(this IApplicationBuilder builder)
+    public static IApplicationBuilder UseFortunes(this IApplicationBuilder builder)
     {
         return builder.UseMiddleware<FortunesMiddleware>();
     }

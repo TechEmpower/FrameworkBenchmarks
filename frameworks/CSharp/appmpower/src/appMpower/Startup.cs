@@ -23,19 +23,6 @@ public class Startup
         var appSettings = _configuration.Get<AppSettings>();
         services.AddSingleton(appSettings);
 
-        /*
-        if (appSettings.Database == DatabaseServer.PostgreSql)
-        {
-            services.AddSingleton<DbProviderFactory>(NpgsqlFactory.Instance);
-            services.AddSingleton<RawDb>();
-        }
-        else if (appSettings.Database == DatabaseServer.MySql)
-        {
-            services.AddSingleton<DbProviderFactory>(MySqlConnectorFactory.Instance);
-            services.AddSingleton<RawDb>();
-        }
-        */
-
 #if ADO      
         NativeMethods.DbProvider(0); 
 #else
@@ -61,10 +48,10 @@ public class Startup
     {
         app.UsePlainText();
         app.UseJson();
-        app.UseSingleQueryRaw();
-        app.UseFortunesRaw();
-        //app.UseMultipleQueriesRaw();
-        //app.UseMultipleUpdatesRaw();
+        app.UseSingleQuery();
+        app.UseFortunes();
+        app.UseMultipleQueries();
+        //app.UseMultipleUpdates();
     }
 }
 
@@ -73,13 +60,8 @@ public class Startup
 // Extension methods for IApplicationBuilder (placeholders for actual implementations)
 public static class ApplicationBuilderExtensions
 {
-    public static void UseMultipleQueriesRaw(this IApplicationBuilder app)
+    public static void UseMultipleUpdates(this IApplicationBuilder app)
     {
-        // Implementation for UseMultipleQueriesRaw middleware
-    }
-
-    public static void UseMultipleUpdatesRaw(this IApplicationBuilder app)
-    {
-        // Implementation for UseMultipleUpdatesRaw middleware
+        // Implementation for UseMultipleUpdates middleware
     }
 }
