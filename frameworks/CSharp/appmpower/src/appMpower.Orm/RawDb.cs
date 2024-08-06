@@ -117,10 +117,10 @@ namespace appMpower.Orm
             }
          }
 
-         using var updateCommand = new DbCommand(PlatformBenchmarks.BatchUpdateString.Query(count), pooledConnection);
+         using var updateCommand = new DbCommand(BatchUpdateString.Query(count), pooledConnection);
 
-         var ids = PlatformBenchmarks.BatchUpdateString.Ids;
-         var randoms = PlatformBenchmarks.BatchUpdateString.Randoms;
+         var ids = BatchUpdateString.Ids;
+         var randoms = BatchUpdateString.Randoms;
 
          for (int i = 0; i < count; i++)
          {
@@ -134,7 +134,7 @@ namespace appMpower.Orm
 
          if (Constants.Dbms != Dbms.MySQL)
          {
-            var jds = PlatformBenchmarks.BatchUpdateString.Jds;
+            var jds = BatchUpdateString.Jds;
 
             for (int i = 0; i < count; i++)
             {

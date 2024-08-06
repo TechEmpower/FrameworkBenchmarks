@@ -53,17 +53,6 @@ public class Startup
         app.UseSingleQuery();
         app.UseFortunes();
         app.UseMultipleQueries();
-        //app.UseMultipleUpdates();
-    }
-}
-
-// Assume these classes and methods are defined somewhere else in your project
-
-// Extension methods for IApplicationBuilder (placeholders for actual implementations)
-public static class ApplicationBuilderExtensions
-{
-    public static void UseMultipleUpdates(this IApplicationBuilder app)
-    {
-        // Implementation for UseMultipleUpdates middleware
+        app.UseMultipleUpdates();
     }
 }

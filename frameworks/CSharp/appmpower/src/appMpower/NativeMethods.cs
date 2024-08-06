@@ -46,4 +46,12 @@ public unsafe partial class NativeMethods
 #endif   
     //public static extern byte* Query(int queries, out int length); 
     public static extern IntPtr Query(int queries, out int length, out IntPtr handlePointer); 
+
+#if DEBUG
+    [DllImport("appMpower.Orm.dylib", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
+#else
+    [DllImport("appMpower.Orm.so", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
+#endif   
+    //public static extern byte* Updates(int queries, out int length); 
+    public static extern IntPtr Updates(int queries, out int length, out IntPtr handlePointer); 
 }

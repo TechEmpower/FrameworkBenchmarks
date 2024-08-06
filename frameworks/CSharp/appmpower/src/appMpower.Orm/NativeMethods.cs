@@ -112,4 +112,32 @@ public static class NativeMethods
         }
         */
     }
+
+    [UnmanagedCallersOnly(EntryPoint = "Updates")]
+    public static unsafe IntPtr Updates(int count, int* length, IntPtr* handlePointer)
+    //public static unsafe byte* Updates(int count, int* length)
+    {
+        World[] worlds = RawDb.LoadMultipleUpdatesRows(count);
+
+        var memoryStream = new MemoryStream();
+        using var utf8JsonWriter = new Utf8JsonWriter(memoryStream, _jsonWriterOptions);
+
+        _worldsSerializer.Serialize(utf8JsonWriter, worlds);
+
+        *length = (int)utf8JsonWriter.BytesCommitted; 
+        byte[] byteArray = memoryStream.ToArray();
+
+        GCHandle handle = GCHandle.Alloc(byteArray, GCHandleType.Pinned);
+        // return the managed and byteArrayPointer pointer
+        IntPtr byteArrayPointer = handle.AddrOfPinnedObject();
+        *handlePointer = GCHandle.ToIntPtr(handle);
+
+        return byteArrayPointer;
+        /*
+        fixed(byte* b = memoryStream.ToArray())
+        {
+            return b; 
+        }
+        */
+    }
 }
