@@ -174,7 +174,7 @@ namespace appMpower.Orm
       public static World[] ReadMultipleRows(int count)
       {
          int j = 0;
-         var ids = PlatformBenchmarks.BatchUpdateString.Ids;
+         var ids = BatchUpdateString.Ids;
          var worlds = new World[count];
          string queryString;
 
@@ -184,14 +184,14 @@ namespace appMpower.Orm
          }
          else
          {
-            var stringBuilder = PlatformBenchmarks.StringBuilderCache.Acquire();
+            var stringBuilder = StringBuilderCache.Acquire();
 
             for (int i = 0; i < count; i++)
             {
                stringBuilder.Append("SELECT * FROM world WHERE id=?;");
             }
 
-            queryString = _queriesMultipleRows[count] = PlatformBenchmarks.StringBuilderCache.GetStringAndRelease(stringBuilder);
+            queryString = _queriesMultipleRows[count] = StringBuilderCache.GetStringAndRelease(stringBuilder);
          }
 
          using var pooledConnection = DbConnections.GetConnection(DbProviderFactory.ConnectionString);
