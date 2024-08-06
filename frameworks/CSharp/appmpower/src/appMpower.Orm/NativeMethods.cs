@@ -87,6 +87,7 @@ public static class NativeMethods
 
     [UnmanagedCallersOnly(EntryPoint = "Query")]
     public static unsafe IntPtr Query(int queries, int* length, IntPtr* handlePointer)
+    //public static unsafe byte* Query(int queries, int* length)
     {
         World[] worlds = RawDb.ReadMultipleRows(queries);
 

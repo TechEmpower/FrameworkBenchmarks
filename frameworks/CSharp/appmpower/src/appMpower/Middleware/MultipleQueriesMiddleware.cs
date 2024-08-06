@@ -40,6 +40,7 @@ public class MultipleQueriesMiddleware
          IntPtr handlePointer;
 
          IntPtr bytePointer = NativeMethods.Query(queries, out payloadLength, out handlePointer);
+         //var bytePointer = NativeMethods.Query(queries, out payloadLength);
          byte[] json = new byte[payloadLength];
          Marshal.Copy(bytePointer, json, 0, payloadLength);
          NativeMethods.FreeHandlePointer(handlePointer);
