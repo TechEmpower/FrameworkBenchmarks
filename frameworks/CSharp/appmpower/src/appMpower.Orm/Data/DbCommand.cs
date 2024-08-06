@@ -191,7 +191,8 @@ namespace appMpower.Orm.Data
 
       public void Dispose()
       {
-         _dbConnection._commandsStack.Push(_odbcCommand);
+         //_dbConnection._odbcCommands.Push(_odbcCommand);
+         _dbConnection._odbcCommands.TryAdd(_odbcCommand.CommandText, _odbcCommand);
       }
    }
 }

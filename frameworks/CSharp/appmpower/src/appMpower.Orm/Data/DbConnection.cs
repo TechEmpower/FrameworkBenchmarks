@@ -11,7 +11,8 @@ namespace appMpower.Orm.Data
       private string _connectionString;
       internal int _number; 
       internal OdbcConnection _odbcConnection;
-      internal ConcurrentStack<OdbcCommand> _commandsStack = new();
+      //internal ConcurrentStack<OdbcCommand> _odbcCommands = new();
+      internal Dictionary<string, OdbcCommand> _odbcCommands = new();
 
       public DbConnection()
       {
@@ -119,27 +120,29 @@ namespace appMpower.Orm.Data
       {
          OdbcCommand odbcCommand;
 
-         if (_commandsStack.TryPop(out odbcCommand))
+         /*
+         if (_odbcCommands.TryPop(out odbcCommand))
          {
             if (commandText != odbcCommand.CommandText)
             {
                odbcCommand.CommandText = commandText; 
                odbcCommand.CommandType = commandType;
+               //odbcCommand.Prepare();
                odbcCommand.Parameters.Clear();
-
-               odbcCommand.Prepare();
+               
+               //Console.WriteLine(commandText);
             }
          }
          else
+         */
+         if (!_odbcCommands.TryGetValue(commandText, out odbcCommand))
          {
             odbcCommand = _odbcConnection.CreateCommand();
             odbcCommand.CommandText = commandText;
             odbcCommand.CommandType = commandType;
-            //dbCommand.DbConnection = this;
-
             odbcCommand.Prepare();
 
-            //Console.WriteLine("prepare pool connection: " + this._odbcConnection.Number + " for command " + _odbcConnection.DbCommands.Count);
+            //Console.WriteLine("prepare pool connection: " + this._internalConnection.Number + " for command " + _internalConnection.DbCommands.Count);
          }
 
          return odbcCommand;

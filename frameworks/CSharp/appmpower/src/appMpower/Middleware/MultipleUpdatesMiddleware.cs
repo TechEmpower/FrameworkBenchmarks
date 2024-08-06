@@ -52,7 +52,7 @@ public class MultipleUpdatesMiddelware
          }
          */
 
-         //var json = Orm.DotnetMethods.Query(queries); 
+         //var json = Orm.DotnetMethods.Query(count); 
          //int payloadLength = json.Length; 
 
          response.Headers.Add(

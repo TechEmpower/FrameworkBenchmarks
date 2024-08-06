@@ -32,7 +32,7 @@ namespace appMpower.Orm.Data
          if (_connectionsStack.TryPop(out popDbConnection))
          {
             dbConnection._odbcConnection = popDbConnection._odbcConnection; 
-            dbConnection._commandsStack = popDbConnection._commandsStack;
+            dbConnection._odbcCommands = popDbConnection._odbcCommands;
             dbConnection._number = popDbConnection._number; 
          }
          else

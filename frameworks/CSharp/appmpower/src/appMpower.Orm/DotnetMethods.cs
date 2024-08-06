@@ -50,4 +50,20 @@ public static class DotnetMethods
 
         return memoryStream.ToArray();
     }
+
+    public static byte[] Updates(int count)
+    {
+        Constants.Dbms = Dbms.PostgreSQL; 
+        Constants.DbProvider = DbProvider.ODBC; 
+        DbProviderFactory.SetConnectionString();
+
+        World[] worlds = RawDb.LoadMultipleUpdatesRows(count);
+
+        var memoryStream = new MemoryStream();
+        using var utf8JsonWriter = new Utf8JsonWriter(memoryStream, _jsonWriterOptions);
+
+        _worldsSerializer.Serialize(utf8JsonWriter, worlds);
+
+        return memoryStream.ToArray();
+    }
 }
