@@ -1,4 +1,4 @@
-FROM dart:3.5.0
+FROM dart:stable
 
 WORKDIR /app
 COPY pubspec.yaml pubspec.yaml
