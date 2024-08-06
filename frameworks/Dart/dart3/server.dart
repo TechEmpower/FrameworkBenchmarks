@@ -2,27 +2,28 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:isolate';
 
-final _numberOfProcessors = Platform.numberOfProcessors;
-
 final _encoder = JsonUtf8Encoder();
 
-void main(List<String> _) async {
-  final errorPort = ReceivePort()..listen((e) => print(e));
-  for (var i = 1; i < _numberOfProcessors; i++) {
-    await Isolate.spawn(_startInIsolate, [], onError: errorPort.sendPort);
+void main(List<String> _) {
+  for (var i = 0; i < Platform.numberOfProcessors; i++) {
+    Isolate.spawn(_startInIsolate, _);
   }
-  _startInIsolate([]);
 }
 
-void _startInIsolate(List _) =>
-    HttpServer.bind('0.0.0.0', 8080, shared: true).then(
+/// Creates an [HttpServer] for each [Isolate]
+void _startInIsolate(List<String> _) => HttpServer.bind(
+      InternetAddress('0.0.0.0', type: InternetAddressType.IPv4),
+      8080,
+      shared: true,
+    ).then(
       (server) => server
         ..defaultResponseHeaders.clear()
         ..serverHeader = 'dart'
-        ..listen(_onHttpRequest),
+        ..listen(_handleHttpRequest),
     );
 
-void _onHttpRequest(HttpRequest request) {
+/// Handles the incoming [HttpRequest]s
+void _handleHttpRequest(HttpRequest request) {
   switch (request.uri.path) {
     case '/json':
       _jsonTest(request);
@@ -31,11 +32,7 @@ void _onHttpRequest(HttpRequest request) {
       _plaintextTest(request);
       break;
     default:
-      _sendResponse(
-        request,
-        HttpStatus.notFound,
-        type: UnsupportedContentType(),
-      );
+      _sendResponse(request, HttpStatus.notFound);
   }
 }
 
@@ -82,19 +79,3 @@ void _plaintextTest(HttpRequest request) => _sendText(
       request,
       'Hello, World!',
     );
-
-final class UnsupportedContentType implements ContentType {
-  static const _message = 'ContentType not supported';
-  @override
-  String? get charset => throw Exception(_message);
-  @override
-  String get mimeType => throw Exception(_message);
-  @override
-  Map<String, String?> get parameters => throw Exception(_message);
-  @override
-  String get primaryType => throw Exception(_message);
-  @override
-  String get subType => throw Exception(_message);
-  @override
-  String get value => throw Exception(_message);
-}
