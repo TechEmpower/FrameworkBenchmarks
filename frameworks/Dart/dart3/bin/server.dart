@@ -10,29 +10,32 @@ void main(List<String> _) {
   }
 }
 
-/// Creates an [HttpServer] for each [Isolate]
-void _startInIsolate(List<String> _) => HttpServer.bind(
-      '0.0.0.0',
-      8080,
-      shared: true,
-    ).then(
-      (server) => server
-        ..defaultResponseHeaders.clear()
-        ..serverHeader = 'dart'
-        ..listen(_handleHttpRequest),
-    );
+/// Creates an [HttpServer] for each [Isolate].
+void _startInIsolate(List<String> _) async {
+  /// Binds the [HttpServer] on `0.0.0.0:8080`.
+  final server = await HttpServer.bind(
+    InternetAddress('0.0.0.0', type: InternetAddressType.IPv4),
+    8080,
+    shared: true,
+  );
 
-/// Handles the incoming [HttpRequest]s
-void _handleHttpRequest(HttpRequest request) {
-  switch (request.uri.path) {
-    case '/json':
-      _jsonTest(request);
-      break;
-    case '/plaintext':
-      _plaintextTest(request);
-      break;
-    default:
-      _sendResponse(request, HttpStatus.notFound);
+  /// Sets [HttpServer]'s [serverHeader].
+  server
+    ..defaultResponseHeaders.clear()
+    ..serverHeader = 'dart';
+
+  /// Handles [HttpRequest]'s from [HttpServer].
+  await for (final request in server) {
+    switch (request.uri.path) {
+      case '/json':
+        _jsonTest(request);
+        break;
+      case '/plaintext':
+        _plaintextTest(request);
+        break;
+      default:
+        _sendResponse(request, HttpStatus.notFound);
+    }
   }
 }
 

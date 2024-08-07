@@ -1,3 +1,4 @@
+# From https://hub.docker.com/_/dart
 .dockerignore
 Dockerfile
 build/
@@ -5,5 +6,4 @@ build/
 .git/
 .github/
 .gitignore
-.idea/
 .packages
