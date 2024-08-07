@@ -12,7 +12,7 @@ namespace appMpower.Orm.Data
       internal int _number; 
       internal OdbcConnection _odbcConnection;
       internal ConcurrentStack<OdbcCommand> _odbcCommands = new();
-      internal Dictionary<string, OdbcCommand> _keyedOdbcCommands = new();
+      internal Dictionary<string, OdbcCommand> _keyedOdbcCommands;
 
       public DbConnection()
       {
@@ -120,27 +120,37 @@ namespace appMpower.Orm.Data
       {
          OdbcCommand odbcCommand;
 
-         if ((!keyed && _odbcCommands.TryPop(out odbcCommand)) ||
-             (keyed && _keyedOdbcCommands.TryGetValue(commandText, out odbcCommand)))
+         if (_odbcCommands.TryPop(out odbcCommand))
          {
-            if (!keyed && commandText != odbcCommand.CommandText)
+            if (commandText != odbcCommand.CommandText)
             {
                odbcCommand.CommandText = commandText; 
                odbcCommand.Parameters.Clear();
             }
+
+            return odbcCommand; 
+         }
+         else if (_keyed && _keyedOdbcCommands.TryGetValue(commandText, out odbcCommand))
+         {
+            return odbcCommand; 
          }
          else
          {
-            this._keyed = keyed; 
+            if (!_keyed && keyed) 
+            {
+               _keyedOdbcCommands = new();
+               _keyed = keyed; 
+            }
+            
             odbcCommand = _odbcConnection.CreateCommand();
             odbcCommand.CommandText = commandText;
             odbcCommand.CommandType = commandType;
             odbcCommand.Prepare();
             //Console.WriteLine("prepare pool connection: " + this._number + " for command " + this._odbcCommands.Count + " or " + this._keyedOdbcCommands.Count);
             //Console.WriteLine(commandText);
-         }
 
-         return odbcCommand;
+            return odbcCommand;
+         }
       }
    }
 }

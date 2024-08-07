@@ -147,7 +147,14 @@ namespace appMpower.Orm
          return worlds;
       }
 
-      private static (DbCommand dbCommand, IDbDataParameter dbDataParameter) CreateReadCommand(DbConnection pooledConnection, bool keyed = false)
+      private static (DbCommand dbCommand, IDbDataParameter dbDataParameter) CreateReadCommand(DbConnection pooledConnection)
+      {
+         DbCommand dbCommand = new DbCommand("SELECT * FROM world WHERE id=?", pooledConnection);
+
+         return (dbCommand, dbCommand.CreateParameter("Id", DbType.Int32, _random.Next(1, 10001)));
+      }
+
+      private static (DbCommand dbCommand, IDbDataParameter dbDataParameter) CreateReadCommand(DbConnection pooledConnection, bool keyed)
       {
          DbCommand dbCommand = new DbCommand("SELECT * FROM world WHERE id=?", pooledConnection, keyed);
 

@@ -14,7 +14,13 @@ namespace appMpower.Orm.Data
          _dbConnection = dbConnection;
       }
 
-      public DbCommand(string commandText, DbConnection dbConnection, bool keyed = false)
+      public DbCommand(string commandText, DbConnection dbConnection)
+      {
+         _odbcCommand = dbConnection.GetCommand(commandText, CommandType.Text);
+         _dbConnection = dbConnection;
+      }
+
+      public DbCommand(string commandText, DbConnection dbConnection, bool keyed)
       {
          _odbcCommand = dbConnection.GetCommand(commandText, CommandType.Text, keyed);
          _dbConnection = dbConnection;
@@ -137,11 +143,11 @@ namespace appMpower.Orm.Data
 
       public IDbDataParameter CreateParameter(string name, DbType dbType, object value)
       {
-         IDbDataParameter dbDataParameter = null;
+         IDbDataParameter dbDataParameter;
 
-         if (this.Parameters.Contains(name))
+         if (_odbcCommand.Parameters.Contains(name))
          {
-            dbDataParameter = this.Parameters[name] as IDbDataParameter;
+            dbDataParameter = _odbcCommand.Parameters[name];
             dbDataParameter.Value = value;
          }
          else
@@ -151,7 +157,7 @@ namespace appMpower.Orm.Data
             dbDataParameter.ParameterName = name;
             dbDataParameter.DbType = dbType;
             dbDataParameter.Value = value;
-            this.Parameters.Add(dbDataParameter);
+            _odbcCommand.Parameters.Add(dbDataParameter);
          }
 
          return dbDataParameter;
@@ -191,8 +197,8 @@ namespace appMpower.Orm.Data
 
       public void Dispose()
       {
-         if (!_dbConnection._keyed) _dbConnection._odbcCommands.Push(_odbcCommand);
-         else _dbConnection._keyedOdbcCommands.TryAdd(_odbcCommand.CommandText, _odbcCommand);
+         if (_dbConnection._keyed) _dbConnection._keyedOdbcCommands.TryAdd(_odbcCommand.CommandText, _odbcCommand);
+         else _dbConnection._odbcCommands.Push(_odbcCommand);
       }
    }
 }
