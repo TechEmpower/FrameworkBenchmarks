@@ -18,7 +18,7 @@ namespace appMpower.Orm.Data
 
             _createdConnections++;
             popDbConnection._number = _createdConnections;
-            Console.WriteLine("connection created: " + _createdConnections.ToString());
+            //Console.WriteLine("connection created: " + _createdConnections.ToString());
          }
 
          return popDbConnection; 
@@ -42,7 +42,7 @@ namespace appMpower.Orm.Data
             _createdConnections++;
             dbConnection._number = _createdConnections;
 
-            Console.WriteLine("connection created: " + _createdConnections.ToString());
+            //Console.WriteLine("connection created: " + _createdConnections.ToString());
          }
       }
 
