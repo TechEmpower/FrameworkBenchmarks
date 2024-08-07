@@ -2,17 +2,17 @@ using System;
 using System.Collections.Concurrent;
 using System.Data;
 using System.Data.Odbc; 
-using appMpower.Orm; 
 
 namespace appMpower.Orm.Data
 {
    public class DbConnection : IDbConnection
    {
       private string _connectionString;
+      internal bool _keyed = false; 
       internal int _number; 
       internal OdbcConnection _odbcConnection;
-      //internal ConcurrentStack<OdbcCommand> _odbcCommands = new();
-      internal Dictionary<string, OdbcCommand> _odbcCommands = new();
+      internal ConcurrentStack<OdbcCommand> _odbcCommands = new();
+      internal Dictionary<string, OdbcCommand> _keyedOdbcCommands = new();
 
       public DbConnection()
       {
@@ -116,33 +116,28 @@ namespace appMpower.Orm.Data
          DbConnections.Release(this);
       }
 
-      internal OdbcCommand GetCommand(string commandText, CommandType commandType)
+      internal OdbcCommand GetCommand(string commandText, CommandType commandType, bool keyed = false)
       {
          OdbcCommand odbcCommand;
 
-         /*
-         if (_odbcCommands.TryPop(out odbcCommand))
+         if ((!keyed && _odbcCommands.TryPop(out odbcCommand)) ||
+             (keyed && _keyedOdbcCommands.TryGetValue(commandText, out odbcCommand)))
          {
-            if (commandText != odbcCommand.CommandText)
+            if (!keyed && commandText != odbcCommand.CommandText)
             {
                odbcCommand.CommandText = commandText; 
-               odbcCommand.CommandType = commandType;
-               //odbcCommand.Prepare();
                odbcCommand.Parameters.Clear();
-               
-               //Console.WriteLine(commandText);
             }
          }
          else
-         */
-         if (!_odbcCommands.TryGetValue(commandText, out odbcCommand))
          {
+            this._keyed = keyed; 
             odbcCommand = _odbcConnection.CreateCommand();
             odbcCommand.CommandText = commandText;
             odbcCommand.CommandType = commandType;
             odbcCommand.Prepare();
-
-            //Console.WriteLine("prepare pool connection: " + this._internalConnection.Number + " for command " + _internalConnection.DbCommands.Count);
+            //Console.WriteLine("prepare pool connection: " + this._number + " for command " + this._odbcCommands.Count + " or " + this._keyedOdbcCommands.Count);
+            //Console.WriteLine(commandText);
          }
 
          return odbcCommand;

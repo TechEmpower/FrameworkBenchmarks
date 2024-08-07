@@ -14,9 +14,9 @@ namespace appMpower.Orm.Data
          _dbConnection = dbConnection;
       }
 
-      public DbCommand(string commandText, DbConnection dbConnection)
+      public DbCommand(string commandText, DbConnection dbConnection, bool keyed = false)
       {
-         _odbcCommand = dbConnection.GetCommand(commandText, CommandType.Text);
+         _odbcCommand = dbConnection.GetCommand(commandText, CommandType.Text, keyed);
          _dbConnection = dbConnection;
       }
 
@@ -191,8 +191,8 @@ namespace appMpower.Orm.Data
 
       public void Dispose()
       {
-         //_dbConnection._odbcCommands.Push(_odbcCommand);
-         _dbConnection._odbcCommands.TryAdd(_odbcCommand.CommandText, _odbcCommand);
+         if (!_dbConnection._keyed) _dbConnection._odbcCommands.Push(_odbcCommand);
+         else _dbConnection._keyedOdbcCommands.TryAdd(_odbcCommand.CommandText, _odbcCommand);
       }
    }
 }
