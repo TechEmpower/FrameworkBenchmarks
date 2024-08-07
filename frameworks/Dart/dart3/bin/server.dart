@@ -4,14 +4,19 @@ import 'dart:isolate';
 
 final _encoder = JsonUtf8Encoder();
 
-void main(List<String> _) {
-  for (var i = 0; i < Platform.numberOfProcessors; i++) {
-    Isolate.spawn(_startInIsolate, _);
+void main(List<String> _) async {
+  /// Create an [Isolate] containinig an [HttpServer]
+  /// for each processor after the first
+  for (var i = 1; i < Platform.numberOfProcessors; i++) {
+    await Isolate.spawn(_startServer, _);
   }
+
+  /// Create a [HttpServer] for the first processor
+  await _startServer(_);
 }
 
-/// Creates an [HttpServer] for each [Isolate].
-void _startInIsolate(List<String> _) async {
+/// Creates and setup a [HttpServer]
+Future<void> _startServer(List<String> _) async {
   /// Binds the [HttpServer] on `0.0.0.0:8080`.
   final server = await HttpServer.bind(
     InternetAddress('0.0.0.0', type: InternetAddressType.IPv4),
