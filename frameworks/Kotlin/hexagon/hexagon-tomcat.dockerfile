@@ -1,7 +1,7 @@
 #
 # BUILD
 #
-FROM docker.io/gradle:8.6-jdk21-alpine AS build
+FROM docker.io/gradle:8.9-jdk21-alpine AS build
 USER root
 WORKDIR /hexagon
 
@@ -12,7 +12,7 @@ RUN gradle --quiet -x test war
 #
 # RUNTIME
 #
-FROM docker.io/tomcat:10-jre21-temurin-jammy
+FROM docker.io/tomcat:11.0.0-jre21-temurin-noble
 ARG MODULE=/hexagon/hexagon_tomcat_postgresql
 
 ENV POSTGRESQL_DB_HOST tfb-database
