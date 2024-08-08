@@ -31,6 +31,5 @@ EXPOSE 8080
 # Uncomment next line for Laravel console error logging to be viewable in docker logs
 # RUN echo "catch_workers_output = yes" >> /etc/php/8.3/fpm/php-fpm.conf
 
-RUN mkdir -p /run/php
-CMD /usr/sbin/php-fpm8.3 --fpm-config /etc/php/8.3/fpm/php-fpm.conf && \
+CMD service php8.3-fpm start && \
     nginx -c /laravel/deploy/nginx.conf
