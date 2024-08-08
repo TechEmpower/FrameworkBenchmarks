@@ -10,4 +10,4 @@ COPY --from=maven /httpserver-robaho/target/httpserver-robaho-1.0-jar-with-depen
 
 EXPOSE 8080
 
-CMD ["java", "-server", "-jar", "app.jar", "postgres"]
+CMD ["java", "-Xmx2G", "-Xms2G", "-server", "-jar", "app.jar", "postgres"]
