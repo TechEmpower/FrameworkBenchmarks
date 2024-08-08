@@ -23,8 +23,7 @@ RUN mkdir -p bootstrap/cache \
             storage/framework/views \
             storage/framework/cache
 
-COPY deploy/workerman/composer.json .
-RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
+RUN composer require joanhey/adapterman --update-no-dev --no-scripts --quiet
 RUN php artisan optimize
 
 COPY --link deploy/conf/cli-php.ini /etc/php/8.3/cli/php.ini
