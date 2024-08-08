@@ -22,6 +22,7 @@ defmodule FrameworkBenchmarks.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:plug_cowboy, "~> 2.5"},
       {:jason, "~> 1.4"},
       {:ecto_sql, "~> 3.10"},
       {:postgrex, ">= 0.0.0"},
