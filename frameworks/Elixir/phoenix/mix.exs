@@ -4,8 +4,8 @@ defmodule Hello.Mixfile do
   def project do
     [
       app: :hello,
-      version: "0.1.0",
-      elixir: "~> 1.14",
+      version: "1.1.1",
+      elixir: "~> 1.17",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       deps: deps()
