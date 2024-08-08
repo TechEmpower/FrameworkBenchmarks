@@ -4,7 +4,7 @@ config :hello, HelloWeb.Endpoint,
   adapter: Bandit.PhoenixAdapter,
   http: [port: 8080, ip: {0, 0, 0, 0}],
   cache_static_lookup: false,
-  check_orgin: false,
+  check_origin: false,
   debug_errors: false,
   code_reloader: false,
   server: true
