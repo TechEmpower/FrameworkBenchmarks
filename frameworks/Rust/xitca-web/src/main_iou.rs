@@ -24,7 +24,7 @@ use xitca_http::{
 };
 use xitca_io::{
     bytes::{Bytes, BytesMut},
-    io_uring::IoBuf,
+    io_uring::BoundedBuf,
     net::{io_uring::TcpStream as IOUTcpStream, TcpStream},
 };
 use xitca_service::{fn_build, fn_service, middleware::UncheckedReady, Service, ServiceExt};
