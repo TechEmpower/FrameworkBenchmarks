@@ -15,7 +15,7 @@
 
     <InvariantGlobalization>true</InvariantGlobalization>
     <IlcGenerateStackTraceData>false</IlcGenerateStackTraceData>
-    <IlcOptimizationPreference>Speed</IlcOptimizationPreference>
+    <IlcOptimizationPreference>Size</IlcOptimizationPreference>
     <DebugType>none</DebugType>
     <GenerateRuntimeConfigurationFiles>false</GenerateRuntimeConfigurationFiles>
 

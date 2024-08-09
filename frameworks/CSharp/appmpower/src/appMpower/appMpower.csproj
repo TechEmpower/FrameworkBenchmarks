@@ -22,9 +22,9 @@
   </ItemGroup>
 
   <PropertyGroup>
-      <DefineConstants>$(DefineConstants);POSTGRESQL</DefineConstants>
       <DefineConstants Condition=" '$(Driver)' == 'odbc' ">$(DefineConstants);ODBC</DefineConstants>
-      <DefineConstants Condition=" '$(Driver)' == 'ado' ">$(DefineConstants);ADO</DefineConstants>
+      <DefineConstants Condition=" '$(Database)' == 'postgresql' ">$(DefineConstants);POSTGRESQL</DefineConstants>
+      <DefineConstants Condition=" '$(Database)' == 'mysql' ">$(DefineConstants);MYSQL</DefineConstants>
   </PropertyGroup>
 
 </Project>

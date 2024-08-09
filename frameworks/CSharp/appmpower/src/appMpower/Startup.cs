@@ -24,10 +24,10 @@ public class Startup
         services.AddSingleton(appSettings);
 
 #if !DEBUG
-    #if ADO      
-        NativeMethods.DbProvider(0); 
-    #else
+    #if ODBC      
         NativeMethods.DbProvider(1); //ODBC
+    #else
+        NativeMethods.DbProvider(0); 
     #endif        
 
     #if POSTGRESQL      
