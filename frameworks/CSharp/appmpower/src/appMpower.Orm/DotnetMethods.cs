@@ -20,11 +20,10 @@ public static class DotnetMethods
 
     public static byte[] Db()
     {
-        Constants.Dbms = Dbms.PostgreSQL; 
+        Constants.Dbms = Dbms.MySQL; 
         Constants.DbProvider = DbProvider.ODBC; 
         DbProviderFactory.SetConnectionString();
 
-        //var world = RawDb.LoadSingleQueryRow().GetAwaiter().GetResult();
         var world = RawDb.LoadSingleQueryRow();
 
         var memoryStream = new MemoryStream();
@@ -65,5 +64,18 @@ public static class DotnetMethods
         _worldsSerializer.Serialize(utf8JsonWriter, worlds);
 
         return memoryStream.ToArray();
+    }
+
+    public static byte[] Fortunes()
+    {
+        Constants.Dbms = Dbms.MySQL; 
+        Constants.DbProvider = DbProvider.ODBC; 
+        DbProviderFactory.SetConnectionString();
+
+        List<Fortune> fortunes = RawDb.LoadFortunesRows(); 
+        string fortunesView = FortunesView.Render(fortunes);
+        byte[] byteArray = Encoding.UTF8.GetBytes(fortunesView);
+
+        return byteArray.ToArray();
     }
 }
