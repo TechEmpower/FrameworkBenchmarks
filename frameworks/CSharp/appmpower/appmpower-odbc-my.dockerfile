@@ -1,6 +1,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0.100 AS build
 RUN apt-get update
 RUN apt-get -yqq install clang zlib1g-dev
+RUN apt-get update
 
 WORKDIR /app
 COPY src .
@@ -16,11 +17,6 @@ RUN apt-get install -y unixodbc wget curl
 RUN apt-get update
 
 WORKDIR /odbc
-
-#RUN curl -L -o mariadb-connector-odbc-3.1.17-debian-bullseye-amd64.tar.gz https://downloads.mariadb.com/Connectors/odbc/connector-odbc-3.1.17/mariadb-connector-odbc-3.1.17-debian-bullseye-amd64.tar.gz
-#RUN tar -xvzf mariadb-connector-odbc-3.1.17-debian-bullseye-amd64.tar.gz
-#RUN cp mariadb-connector-odbc-3.1.17-debian-bullseye-amd64/lib/mariadb/libm* /usr/lib/
-#RUN cp -r /odbc/mariadb-connector-odbc-3.1.17-debian-bullseye-amd64/lib/mariadb /usr/local/lib/mariadb
 
 RUN curl -L -o mariadb-connector-odbc-3.1.20-debian-bookworm-amd64.tar.gz https://downloads.mariadb.com/Connectors/odbc/connector-odbc-3.1.20/mariadb-connector-odbc-3.1.20-debian-bookworm-amd64.tar.gz
 RUN tar -xvzf mariadb-connector-odbc-3.1.20-debian-bookworm-amd64.tar.gz
