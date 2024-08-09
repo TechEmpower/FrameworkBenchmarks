@@ -1,4 +1,4 @@
-aiohttp==3.9.4
+aiohttp==3.10.2
 -e git+https://github.com/Eyepea/aiohttp_jinja2.git@c9675e5c1e1ee7741b30aea8d8fbffcde016c7a0#egg=aiohttp_jinja2-master
 aiopg==0.7.0
 -e git+https://github.com/Eyepea/API-Hour.git@577abbdcbb8cc2810dad46e260b338b15db4d0e3#egg=api_hour-master
