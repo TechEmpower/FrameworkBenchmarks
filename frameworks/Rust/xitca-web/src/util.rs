@@ -49,7 +49,7 @@ mod non_wasm {
         }
     }
 
-    #[cfg(any(feature = "pg", feature = "pg-iou"))]
+    #[cfg(feature = "pg")]
     mod pg_state {
         use core::{cell::RefCell, future::Future, pin::Pin};
 
@@ -79,7 +79,7 @@ mod non_wasm {
         }
     }
 
-    #[cfg(any(feature = "pg", feature = "pg-iou"))]
+    #[cfg(feature = "pg")]
     pub use pg_state::*;
 }
 
