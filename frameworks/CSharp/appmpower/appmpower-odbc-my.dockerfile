@@ -17,17 +17,16 @@ RUN apt-get update
 
 WORKDIR /odbc
 
+#RUN curl -L -o mariadb-connector-odbc-3.1.17-debian-bullseye-amd64.tar.gz https://downloads.mariadb.com/Connectors/odbc/connector-odbc-3.1.17/mariadb-connector-odbc-3.1.17-debian-bullseye-amd64.tar.gz
+#RUN tar -xvzf mariadb-connector-odbc-3.1.17-debian-bullseye-amd64.tar.gz
+#RUN cp mariadb-connector-odbc-3.1.17-debian-bullseye-amd64/lib/mariadb/libm* /usr/lib/
+#RUN cp -r /odbc/mariadb-connector-odbc-3.1.17-debian-bullseye-amd64/lib/mariadb /usr/local/lib/mariadb
 
-RUN curl -L -o mariadb-connector-odbc-3.1.17-debian-bullseye-amd64.tar.gz https://downloads.mariadb.com/Connectors/odbc/connector-odbc-3.1.17/mariadb-connector-odbc-3.1.17-debian-bullseye-amd64.tar.gz
-RUN tar -xvzf mariadb-connector-odbc-3.1.17-debian-bullseye-amd64.tar.gz
-RUN cp mariadb-connector-odbc-3.1.17-debian-bullseye-amd64/lib/mariadb/libm* /usr/lib/
-RUN cp -r /odbc/mariadb-connector-odbc-3.1.17-debian-bullseye-amd64/lib/mariadb /usr/local/lib/mariadb
-
-#RUN curl -L -o mariadb-connector-odbc-3.1.20-debian-bookworm-amd64.tar.gz https://dlm.mariadb.com/3852001/Connectors/odbc/connector-odbc-3.1.20/mariadb-connector-odbc-3.1.20-debian-bookworm-amd64.tar.gz
-#RUN tar -xvzf mariadb-connector-odbc-3.1.20-debian-bookworm-amd64.tar.gz
-#RUN cp mariadb-connector-odbc-3.1.20-debian-bookworm-amd64/lib/mariadb/libm* /usr/lib/
-#RUN cp -r /odbc/mariadb-connector-odbc-3.1.20-debian-bookworm-amd64/lib/mariadb /usr/local/lib/mariadb
-#RUN rm mariadb-connector-odbc-3.1.20-debian-bookworm-amd64.tar.gz
+RUN curl -L -o mariadb-connector-odbc-3.1.20-debian-bookworm-amd64.tar.gz https://downloads.mariadb.com/Connectors/odbc/connector-odbc-3.1.20/mariadb-connector-odbc-3.1.20-debian-bookworm-amd64.tar.gz
+RUN tar -xvzf mariadb-connector-odbc-3.1.20-debian-bookworm-amd64.tar.gz
+RUN cp mariadb-connector-odbc-3.1.20-debian-bookworm-amd64/lib/mariadb/libm* /usr/lib/
+RUN cp -r /odbc/mariadb-connector-odbc-3.1.20-debian-bookworm-amd64/lib/mariadb /usr/local/lib/mariadb
+RUN rm mariadb-connector-odbc-3.1.20-debian-bookworm-amd64.tar.gz
 #TODOLOCAL
 #RUN curl -L -o mariadb-connector-odbc-3.1.20-debian-bookworm-aarch64.tar.gz https://downloads.mariadb.com/Connectors/odbc/connector-odbc-3.1.20/mariadb-connector-odbc-3.1.20-debian-bookworm-aarch64.tar.gz
 #RUN tar -xvzf mariadb-connector-odbc-3.1.20-debian-bookworm-aarch64.tar.gz
