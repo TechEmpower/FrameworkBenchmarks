@@ -15,8 +15,11 @@ public static class NativeMethods
         SkipValidation = true
     };
 
+    private readonly static CachedWorldsSerializer _cachedWorldsSerializer = new CachedWorldsSerializer();
     private readonly static WorldSerializer _worldSerializer = new WorldSerializer();
     private readonly static WorldsSerializer _worldsSerializer = new WorldsSerializer();
+
+    public static RawDbCache RawDbCache { get; set; } = new();
 
     [UnmanagedCallersOnly(EntryPoint = "Dbms")]
     public static void Dbms(int dbms)
@@ -87,7 +90,6 @@ public static class NativeMethods
 
     [UnmanagedCallersOnly(EntryPoint = "Query")]
     public static unsafe IntPtr Query(int queries, int* length, IntPtr* handlePointer)
-    //public static unsafe byte* Query(int queries, int* length)
     {
         World[] worlds = RawDb.ReadMultipleRows(queries);
 
@@ -105,17 +107,10 @@ public static class NativeMethods
         *handlePointer = GCHandle.ToIntPtr(handle);
 
         return byteArrayPointer;
-        /*
-        fixed(byte* b = memoryStream.ToArray())
-        {
-            return b; 
-        }
-        */
     }
 
     [UnmanagedCallersOnly(EntryPoint = "Updates")]
     public static unsafe IntPtr Updates(int count, int* length, IntPtr* handlePointer)
-    //public static unsafe byte* Updates(int count, int* length)
     {
         World[] worlds = RawDb.LoadMultipleUpdatesRows(count);
 
@@ -133,11 +128,26 @@ public static class NativeMethods
         *handlePointer = GCHandle.ToIntPtr(handle);
 
         return byteArrayPointer;
-        /*
-        fixed(byte* b = memoryStream.ToArray())
-        {
-            return b; 
-        }
-        */
+    }
+
+    [UnmanagedCallersOnly(EntryPoint = "Caching")]
+    public static unsafe IntPtr Caching(int count, int* length, IntPtr* handlePointer)
+    {
+        CachedWorld[] cachedWorlds = RawDbCache.LoadCachedQueries(count);
+
+        var memoryStream = new MemoryStream();
+        using var utf8JsonWriter = new Utf8JsonWriter(memoryStream, _jsonWriterOptions);
+
+        _cachedWorldsSerializer.Serialize(utf8JsonWriter, cachedWorlds);
+
+        *length = (int)utf8JsonWriter.BytesCommitted; 
+        byte[] byteArray = memoryStream.ToArray();
+
+        GCHandle handle = GCHandle.Alloc(byteArray, GCHandleType.Pinned);
+        // return the managed and byteArrayPointer pointer
+        IntPtr byteArrayPointer = handle.AddrOfPinnedObject();
+        *handlePointer = GCHandle.ToIntPtr(handle);
+
+        return byteArrayPointer;
     }
 }

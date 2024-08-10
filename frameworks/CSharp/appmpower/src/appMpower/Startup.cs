@@ -17,9 +17,6 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
-        //services.Configure<AppSettings>(_configuration);
-        //services.AddSingleton<ConcurrentRandom>();
-
         var appSettings = _configuration.Get<AppSettings>();
         services.AddSingleton(appSettings);
 
@@ -51,6 +48,7 @@ public class Startup
         app.UsePlainText();
         app.UseJson();
         app.UseSingleQuery();
+        app.UseCaching();
         app.UseFortunes();
         app.UseMultipleQueries();
         app.UseMultipleUpdates();
