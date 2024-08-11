@@ -11,8 +11,6 @@ namespace appMpower;
 
 public class CachingMiddleware
 {
-   //private static readonly MemoryCache _cache
-   //   = new(new MemoryCacheOptions { ExpirationScanFrequency = TimeSpan.FromMinutes(60) });
    private static readonly Dictionary<int, byte[]> _cache = new();
    private static readonly Random _random = new();
 
@@ -50,7 +48,6 @@ public class CachingMiddleware
                json = new byte[payloadLength];
                Marshal.Copy(bytePointer, json, 0, payloadLength);
                NativeMethods.FreeHandlePointer(handlePointer);
-               //_cache.GetOrCreate<byte[]>(i, json);
                _cache.Add(i, json);
             }
          }
@@ -70,7 +67,17 @@ public class CachingMiddleware
          for (int i = 0; i < queries; i++)
          {
             keys[i] = _random.Next(1, 10001);
-            queriesLength += _cache[keys[i]].Length;
+            
+            if (!_cache.TryGetValue(keys[i], out json))
+            {
+               bytePointer = NativeMethods.DbById(keys[i], out payloadLength, out handlePointer);
+               json = new byte[payloadLength];
+               Marshal.Copy(bytePointer, json, 0, payloadLength);
+               NativeMethods.FreeHandlePointer(handlePointer);
+               _cache.Add(keys[i], json);
+            }
+
+            queriesLength += json.Length;
          }
 
          byte[] result = new byte[_startBytes.Length + _endBytes.Length + (_comma.Length * queries - 1) + queriesLength];
@@ -81,7 +88,7 @@ public class CachingMiddleware
 
          for (int i = 0; i < queries; i++)
          {
-            json = _cache[keys[i]];
+            json = _cache[keys[i]]; 
             Buffer.BlockCopy(json, 0, result, position, json.Length);
             position += json.Length;
 
