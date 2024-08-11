@@ -37,8 +37,6 @@
 
   <ItemGroup>
     <PackageReference Include="System.Data.Odbc" Version="8.0.0" />
-    <PackageReference Include="Npgsql" Version="8.0.3" />
-    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.0" />
   </ItemGroup>
 
 </Project>
