@@ -150,4 +150,25 @@ public static class NativeMethods
 
         return byteArrayPointer;
     }
+
+    [UnmanagedCallersOnly(EntryPoint = "DbById")]
+    public static unsafe IntPtr DbById(int id, int* length, IntPtr* handlePointer)
+    {
+        var world = RawDb.LoadSingleQueryRowById(id);
+
+        var memoryStream = new MemoryStream();
+        using var utf8JsonWriter = new Utf8JsonWriter(memoryStream, _jsonWriterOptions);
+
+        _worldSerializer.Serialize(utf8JsonWriter, world);
+
+        *length = (int)utf8JsonWriter.BytesCommitted; 
+        byte[] byteArray = memoryStream.ToArray();
+
+        GCHandle handle = GCHandle.Alloc(byteArray, GCHandleType.Pinned);
+        // return the managed and byteArrayPointer pointer
+        IntPtr byteArrayPointer = handle.AddrOfPinnedObject();
+        *handlePointer = GCHandle.ToIntPtr(handle);
+
+        return byteArrayPointer;
+    }
 }

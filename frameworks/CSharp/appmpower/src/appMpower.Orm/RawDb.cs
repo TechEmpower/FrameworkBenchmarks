@@ -33,6 +33,21 @@ namespace appMpower.Orm
          }
       }
 
+      public static World LoadSingleQueryRowById(int id)
+      {
+         using var pooledConnection = DbConnections.GetConnection(DbProviderFactory.ConnectionString);
+         pooledConnection.Open();
+
+         var (dbCommand, _) = CreateReadCommandById(pooledConnection, id);
+
+         using (dbCommand)
+         {
+            World world = ReadSingleRow(dbCommand);
+
+            return world;
+         }
+      }
+
       public static World[] LoadMultipleQueriesRows(int count)
       {
          var worlds = new World[count];
@@ -147,6 +162,13 @@ namespace appMpower.Orm
          DbCommand dbCommand = new DbCommand("SELECT * FROM world WHERE id=?", pooledConnection, keyed);
 
          return (dbCommand, dbCommand.CreateParameter("Id", DbType.Int32, _random.Next(1, 10001)));
+      }
+
+      internal static (DbCommand dbCommand, IDbDataParameter dbDataParameter) CreateReadCommandById(DbConnection pooledConnection, int id)
+      {
+         DbCommand dbCommand = new DbCommand("SELECT * FROM world WHERE id=?", pooledConnection);
+
+         return (dbCommand, dbCommand.CreateParameter("Id", DbType.Int32, id));
       }
 
       internal static World ReadSingleRow(DbCommand dbCommand)

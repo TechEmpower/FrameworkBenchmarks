@@ -59,4 +59,12 @@ public unsafe partial class NativeMethods
     [DllImport("appMpower.Orm.so", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
 #endif   
     public static extern IntPtr Caching(int queries, out int length, out IntPtr handlePointer); 
+
+#if DEBUG
+    [DllImport("appMpower.Orm.dylib", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
+#else
+    [DllImport("appMpower.Orm.so", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
+#endif   
+    //public static extern byte* Db(out int length); 
+    public static extern IntPtr DbById(int id, out int length, out IntPtr handlePointer); 
 }
