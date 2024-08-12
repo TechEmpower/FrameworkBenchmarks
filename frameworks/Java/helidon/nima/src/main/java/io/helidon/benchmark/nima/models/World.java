@@ -9,9 +9,9 @@ import jakarta.json.JsonObject;
 
 public final class World {
 
-    private static final String ID_KEY = "id";
-    private static final String ID_RANDOM_NUMBER = "randomNumber";
-    private static final JsonBuilderFactory JSON = Json.createBuilderFactory(Collections.emptyMap());
+    static final String ID_KEY = "id";
+    static final String ID_RANDOM_NUMBER = "randomNumber";
+    static final JsonBuilderFactory JSON = Json.createBuilderFactory(Collections.emptyMap());
 
     public int id;
     public int randomNumber;
