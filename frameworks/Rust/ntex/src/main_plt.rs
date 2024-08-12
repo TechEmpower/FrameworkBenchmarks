@@ -1,5 +1,6 @@
 #[global_allocator]
 static GLOBAL: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
+
 use std::{future::Future, io, pin::Pin, task::Context, task::Poll};
 
 use ntex::{fn_service, http::h1, io::Io, io::RecvError, util::ready, util::PoolId};
