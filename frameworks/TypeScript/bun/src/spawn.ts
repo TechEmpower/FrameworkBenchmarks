@@ -1,8 +1,6 @@
-import os from "node:os";
-
-const numCPUs = os.cpus().length;
+const numCPUs = navigator.hardwareConcurrency;
 for (let i = 0; i < numCPUs; i++) {
-  Bun.spawn(["bun", "index.ts"], {
+  Bun.spawn(["./server"], {
     stdio: ["inherit", "inherit", "inherit"],
     env: { ...process.env },
   });
