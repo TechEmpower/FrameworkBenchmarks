@@ -6,7 +6,7 @@ defmodule Hello.Application do
   def start(_type, _args) do
     children = [
       Hello.Repo,
-      {Hello.Cache, []},
+      {Hello.WorldCache, []},
       HelloWeb.Endpoint
     ]
 
