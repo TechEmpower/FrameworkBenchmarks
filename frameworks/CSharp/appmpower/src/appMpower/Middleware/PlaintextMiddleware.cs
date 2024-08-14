@@ -26,7 +26,6 @@ public unsafe class PlaintextMiddleware
     public Task Invoke(HttpContext httpContext)
     {
         if (httpContext.Request.Path.StartsWithSegments("/plaintext", StringComparison.Ordinal))
-        //if (httpContext.Request.Path.Value.StartsWith("/p"))
         {
             var payloadLength = _helloWorldPayload.Length;
             var response = httpContext.Response; 

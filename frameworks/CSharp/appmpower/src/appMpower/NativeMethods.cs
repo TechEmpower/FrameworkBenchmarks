@@ -58,6 +58,5 @@ public unsafe partial class NativeMethods
 #else
     [DllImport("appMpower.Orm.so", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
 #endif   
-    //public static extern byte* Db(out int length); 
     public static extern IntPtr DbById(int id, out int length, out IntPtr handlePointer); 
 }

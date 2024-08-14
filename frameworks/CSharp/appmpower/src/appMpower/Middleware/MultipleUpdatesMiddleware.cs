@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -40,20 +39,9 @@ public class MultipleUpdatesMiddelware
          IntPtr handlePointer;
 
          IntPtr bytePointer = NativeMethods.Updates(count, out payloadLength, out handlePointer);
-         //var bytePointer = NativeMethods.Updates(count, out payloadLength);
          byte[] json = new byte[payloadLength];
          Marshal.Copy(bytePointer, json, 0, payloadLength);
          NativeMethods.FreeHandlePointer(handlePointer);
-
-         /*
-         for (int i = 0; i < payloadLength; i++)
-         {
-             json[i] = bytePointer[i];
-         }
-         */
-
-         //var json = Orm.DotnetMethods.Query(count); 
-         //int payloadLength = json.Length; 
 
          response.Headers.Add(
              new KeyValuePair<string, StringValues>("Content-Length", payloadLength.ToString()));

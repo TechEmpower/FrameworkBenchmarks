@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -26,7 +25,6 @@ public class SingleQueryMiddleware
     public unsafe Task Invoke(HttpContext httpContext)
     {
         if (httpContext.Request.Path.StartsWithSegments("/db", StringComparison.Ordinal))
-        //if (httpContext.Request.Path.Value.StartsWith("/d"))
         {
             var response = httpContext.Response; 
             response.Headers.Add(_headerServer);
@@ -39,16 +37,6 @@ public class SingleQueryMiddleware
             byte[] json = new byte[payloadLength];
             Marshal.Copy(bytePointer, json, 0, payloadLength);
             NativeMethods.FreeHandlePointer(handlePointer);
-
-            /*
-            for (int i = 0; i < payloadLength; i++)
-            {
-                json[i] = bytePointer[i];
-            }
-            */
-
-            //var json = Orm.DotnetMethods.Db();
-            //int payloadLength = json.Length; 
 
             response.Headers.Add(
                 new KeyValuePair<string, StringValues>("Content-Length", payloadLength.ToString()));

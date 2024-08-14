@@ -8,8 +8,6 @@ class Program
 {
     static void Main(string[] args)
     {
-        BatchUpdateString.Initalize();
-
         BuildWebHost(args).Run();
     }
 
@@ -22,7 +20,6 @@ class Program
             .Build();
 
         var appSettings = config.GetSection("AppSettings").Get<AppSettings>();
-        //Console.WriteLine($"Database: {appSettings.Database}");
 
         var host = Host.CreateDefaultBuilder(args)
             .ConfigureWebHostDefaults(webBuilder =>
@@ -44,12 +41,4 @@ class Program
 public class AppSettings
 {
     public string Database { get; set; }
-}
-
-public static class BatchUpdateString
-{
-    public static void Initalize()
-    {
-        // Initialization logic here
-    }
 }

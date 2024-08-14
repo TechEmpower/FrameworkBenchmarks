@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using System.Text.Json; 
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
@@ -35,7 +34,6 @@ public class JsonMiddleware
     public unsafe Task Invoke(HttpContext httpContext)
     {
         if (httpContext.Request.Path.StartsWithSegments("/json", StringComparison.Ordinal))
-        //if (httpContext.Request.Path.Value.StartsWith("/j"))
         {
             var response = httpContext.Response; 
             response.Headers.Add(_headerServer);

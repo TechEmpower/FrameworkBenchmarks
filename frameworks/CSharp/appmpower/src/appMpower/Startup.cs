@@ -24,11 +24,11 @@ public class Startup
     #if ODBC      
         NativeMethods.DbProvider(1); //ODBC
     #else
-        NativeMethods.DbProvider(0); 
+        NativeMethods.DbProvider(0); //ADO
     #endif        
 
     #if POSTGRESQL      
-        NativeMethods.Dbms(1); 
+        NativeMethods.Dbms(1); //PostgreSQL
     #else
         NativeMethods.Dbms(0); //MySQL
     #endif
