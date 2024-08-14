@@ -1,0 +1,47 @@
+{
+  "framework": "uwebsockets.js",
+  "tests": [
+    {
+      "default": {
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "None",
+        "database_os": "Linux",
+        "display_name": "uWebSockets.js",
+        "flavor": "NodeJS",
+        "framework": "uWebSockets.js",
+        "json_url": "/json",
+        "language": "JavaScript",
+        "notes": "",
+        "orm": "Raw",
+        "os": "Linux",
+        "plaintext_url": "/plaintext",
+        "platform": "nodejs",
+        "port": 8080,
+        "versus": "nodejs",
+        "webserver": "None"
+      },
+      "postgres": {
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "Postgres",
+        "database_os": "Linux",
+        "db_url": "/db",
+        "display_name": "uWebSockets.js",
+        "flavor": "NodeJS",
+        "fortune_url": "/fortunes",
+        "framework": "uWebSockets.js",
+        "language": "JavaScript",
+        "notes": "",
+        "orm": "Raw",
+        "os": "Linux",
+        "platform": "None",
+        "port": 8080,
+        "query_url": "/queries?queries=",
+        "update_url": "/updates?queries=",
+        "versus": "nodejs",
+        "webserver": "None"
+      }
+    }
+  ]
+}

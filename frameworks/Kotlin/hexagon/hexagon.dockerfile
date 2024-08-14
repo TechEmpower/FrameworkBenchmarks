@@ -1,7 +1,7 @@
 #
 # BUILD
 #
-FROM docker.io/gradle:8.6-jdk21-alpine AS build
+FROM docker.io/gradle:8.9-jdk21-alpine AS build
 USER root
 WORKDIR /hexagon
 
@@ -12,7 +12,7 @@ RUN gradle --quiet -x test installDist
 #
 # RUNTIME
 #
-FROM docker.io/eclipse-temurin:21-jre-alpine
+FROM docker.io/bellsoft/liberica-runtime-container:jre-21-musl
 ARG PROJECT=hexagon_jetty_postgresql
 
 ENV POSTGRESQL_DB_HOST tfb-database

@@ -6,32 +6,18 @@ import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.RouterFunctions;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
-import static org.springframework.web.reactive.function.server.RequestPredicates.GET;
-
 @Configuration
 public class WebfluxRouter {
 
     @Bean
-    RouterFunction<ServerResponse> route(WebfluxHandler handler) {
-        return RouterFunctions
-                .route(
-                        GET("/plaintext"),
-                        handler::plaintext)
-                .andRoute(
-                        GET("/json"),
-                        handler::json)
-                .andRoute(
-                        GET("/db"),
-                        handler::db)
-                .andRoute(
-                        GET("/queries"),
-                        handler::queries)
-                .andRoute(
-                        GET("/updates"),
-                        handler::updates)
-                .andRoute(
-                        GET("/fortunes"),
-                        handler::fortunes)
-                ;
+    public RouterFunction<ServerResponse> route(WebfluxHandler handler) {
+        return RouterFunctions.route()
+                .GET("/plaintext", handler::plaintext)
+                .GET("/json", handler::json)
+                .GET("/db", handler::db)
+                .GET("/queries", handler::queries)
+                .GET("/updates", handler::updates)
+                .GET("/fortunes", handler::fortunes)
+                .build();
     }
 }

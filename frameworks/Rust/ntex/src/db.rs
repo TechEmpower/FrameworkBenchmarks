@@ -1,4 +1,5 @@
-use std::{cell::RefCell, fmt::Write as FmtWrite};
+#![allow(clippy::uninit_vec)]
+use std::{borrow::Cow, cell::RefCell, fmt::Write as FmtWrite};
 
 use nanorand::{Rng, WyRand};
 use ntex::util::{BufMut, Bytes, BytesMut};
@@ -16,9 +17,9 @@ pub struct World {
 }
 
 #[derive(Serialize, Debug)]
-pub struct Fortune<'a> {
+pub struct Fortune {
     pub id: i32,
-    pub message: &'a str,
+    pub message: Cow<'static, str>,
 }
 
 /// Postgres interface
@@ -59,10 +60,7 @@ impl PgConnection {
             q.push(')');
             updates.push(cl.prepare(&q).await.unwrap());
         }
-        let world = cl
-            .prepare("SELECT id, randomnumber FROM world WHERE id=$1")
-            .await
-            .unwrap();
+        let world = cl.prepare("SELECT * FROM world WHERE id=$1").await.unwrap();
 
         PgConnection {
             cl,
@@ -82,7 +80,7 @@ impl PgConnection {
         let row = self.cl.query_one(&self.world, &[&random_id]).await.unwrap();
 
         let mut body = self.buf.borrow_mut();
-        utils::reserve(&mut body);
+        utils::reserve(&mut body, 8 * 1024);
         World {
             id: row.get(0),
             randomnumber: row.get(1),
@@ -109,7 +107,7 @@ impl PgConnection {
         }
 
         let mut body = self.buf.borrow_mut();
-        utils::reserve(&mut body);
+        utils::reserve(&mut body, 8 * 1024);
         body.put_u8(b'[');
         worlds.iter().for_each(|w| {
             w.to_bytes_mut(&mut *body);
@@ -121,7 +119,7 @@ impl PgConnection {
     }
 
     pub async fn update(&self, num: usize) -> Bytes {
-        let mut rng = nanorand::tls_rng();
+        let mut rng = self.rng.clone();
         let mut queries = SmallVec::<[_; 32]>::new();
         (0..num).for_each(|_| {
             let w_id = (rng.generate::<u32>() % 10_000 + 1) as i32;
@@ -148,7 +146,7 @@ impl PgConnection {
         let _ = self.cl.query(&self.updates[num - 1], &params).await;
 
         let mut body = self.buf.borrow_mut();
-        utils::reserve(&mut body);
+        utils::reserve(&mut body, 8 * 1024);
         body.put_u8(b'[');
         worlds.iter().for_each(|w| {
             w.to_bytes_mut(&mut *body);
@@ -160,21 +158,25 @@ impl PgConnection {
     }
 
     pub async fn tell_fortune(&self) -> Bytes {
-        let rows = self.cl.query_raw(&self.fortune, &[]).await.unwrap();
+        let fut = self.cl.query_raw(&self.fortune, &[]);
 
-        let mut fortunes = Vec::with_capacity(rows.len() + 1);
-        fortunes.push(Fortune {
+        let rows = fut.await.unwrap();
+        let mut fortunes: SmallVec<[_; 32]> = smallvec::smallvec![Fortune {
             id: 0,
-            message: "Additional fortune added at request time.",
-        });
-        fortunes.extend(rows.iter().map(|row| Fortune {
-            id: row.get(0),
-            message: row.get(1),
-        }));
-        fortunes.sort_by(|it, next| it.message.cmp(next.message));
+            message: Cow::Borrowed("Additional fortune added at request time."),
+        }];
+
+        for row in rows {
+            fortunes.push(Fortune {
+                id: row.get(0),
+                message: Cow::Owned(row.get(1)),
+            });
+        }
+
+        fortunes.sort_by(|it, next| it.message.cmp(&next.message));
 
         let mut body = std::mem::replace(&mut *self.buf.borrow_mut(), BytesMut::new());
-        utils::reserve(&mut body);
+        utils::reserve(&mut body, 8 * 1024);
         ywrite_html!(body, "{{> fortune }}");
         let result = body.split().freeze();
         let _ = std::mem::replace(&mut *self.buf.borrow_mut(), body);

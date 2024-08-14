@@ -9,7 +9,11 @@ RUN echo "opcache.jit_buffer_size=128M" >> /usr/local/etc/php/conf.d/docker-php-
 WORKDIR /laravel
 COPY --link . .
 
-RUN mkdir -p /laravel/bootstrap/cache  /laravel/storage/framework/sessions /laravel/storage/framework/views /laravel/storage/framework/cache
+RUN mkdir -p bootstrap/cache \
+            storage/logs \
+            storage/framework/sessions \
+            storage/framework/views \
+            storage/framework/cache
 
 COPY --link deploy/swoole/composer.json .
 

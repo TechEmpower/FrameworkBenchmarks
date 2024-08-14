@@ -5,7 +5,7 @@
  */
 package org.redkalex.benchmark;
 
-import org.redkale.annotation.Bean;
+import org.redkale.annotation.Serial;
 import org.redkale.convert.ConvertSmallString;
 import org.redkale.convert.json.JsonConvert;
 
@@ -13,14 +13,13 @@ import org.redkale.convert.json.JsonConvert;
  *
  * @author zhangjx
  */
-@Bean
+@Serial
 public final class Message {
 
     @ConvertSmallString
     private String message;
 
-    public Message() {
-    }
+    public Message() {}
 
     public Message(String message) {
         this.message = message;

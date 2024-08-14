@@ -7,9 +7,14 @@ RUN echo "opcache.enable_cli=1" >> /usr/local/etc/php/conf.d/docker-php-ext-opca
 #RUN echo "opcache.jit_buffer_size=128M" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
 
 WORKDIR /lumen
-ADD --link . .
+COPY --link . .
 
-RUN mkdir -p /lumen/bootstrap/cache /lumen/storage/logs /lumen/storage/framework/sessions /lumen/storage/framework/views /lumen/storage/framework/cache
+RUN mkdir -p bootstrap/cache \
+            storage/logs \
+            storage/framework/sessions \
+            storage/framework/views \
+            storage/framework/cache
+
 RUN chmod -R 777 /lumen
 
 COPY deploy/laravel-s/composer.json ./

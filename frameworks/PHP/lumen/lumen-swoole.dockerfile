@@ -3,7 +3,7 @@ FROM phpswoole/swoole:5.1.3-php8.3
 RUN docker-php-ext-install pcntl opcache curl > /dev/null
 
 WORKDIR /lumen
-ADD --link . .
+COPY --link . .
 
 COPY --link deploy/swoole/php.ini /usr/local/etc/php/
 

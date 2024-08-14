@@ -1,0 +1,17 @@
+{
+  "dependencies": {
+    "postgres": "3.4.4",
+    "slow-json-stringify": "^2.0.1",
+    "uWebSockets.js": "uNetworking/uWebSockets.js#v20.44.0"
+  },
+  "license": "MIT",
+  "main": "src/server.js",
+  "name": "uwebsockets.js",
+  "private": true,
+  "scripts": {
+    "dev": "node src/server.js",
+    "start": "node src/clustered.js"
+  },
+  "type": "module",
+  "version": "0.0.1"
+}
