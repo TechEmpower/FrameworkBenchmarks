@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "bun run --watch src/index.ts",
     "start": "bun run src/index.ts",
-    "build": "bun build --target=bun --minify src/index.ts --outdir=build"
+    "build": "bun build --compile --minify --outfile server src/index.ts"
   },
   "dependencies": {
     "elysia": "^1.1.6",

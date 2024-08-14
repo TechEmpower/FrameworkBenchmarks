@@ -2,7 +2,7 @@ const cpus = navigator.hardwareConcurrency;
 const buns = new Array(cpus);
 
 for (let i = 0; i < cpus; i++) {
-  buns[i] = Bun.spawn(['bun', 'build/index.js'], {
+  buns[i] = Bun.spawn(['./server'], {
     stdio: ['inherit', 'inherit', 'inherit'],
     env: { ...process.env },
   });
