@@ -9,16 +9,16 @@ const sql = postgres({
   max: 1,
 });
 
-export const fortunes = async () =>
-  await sql<Fortune[]>`SELECT id, message FROM fortune`;
+export const fortunes = () =>
+  sql<Fortune[]>`SELECT id, message FROM fortune`;
 
-export const find = async (id: number) =>
-  await sql<World[]>`SELECT id, randomNumber FROM world WHERE id = ${id}`.then(
+export const find = (id: number) =>
+  sql<World[]>`SELECT id, randomNumber FROM world WHERE id = ${id}`.then(
     (arr) => arr[0]
   );
 
-export const bulkUpdate = async (worlds: World[]) =>
-  await sql`UPDATE world SET randomNumber = (update_data.randomNumber)::int
+export const bulkUpdate = (worlds: World[]) =>
+  sql`UPDATE world SET randomNumber = (update_data.randomNumber)::int
   FROM (VALUES ${sql(
     worlds
       .map((world) => [world.id, world.randomNumber])
