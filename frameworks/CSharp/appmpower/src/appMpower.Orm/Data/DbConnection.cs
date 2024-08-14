@@ -1,4 +1,3 @@
-using System; 
 using System.Collections.Concurrent;
 using System.Data;
 using System.Data.Odbc; 
@@ -146,8 +145,6 @@ namespace appMpower.Orm.Data
             odbcCommand.CommandText = commandText;
             odbcCommand.CommandType = commandType;
             odbcCommand.Prepare();
-            //Console.WriteLine("prepare pool connection: " + this._number + " for command " + this._odbcCommands.Count + " or " + this._keyedOdbcCommands.Count);
-            //Console.WriteLine(commandText);
 
             return odbcCommand;
          }

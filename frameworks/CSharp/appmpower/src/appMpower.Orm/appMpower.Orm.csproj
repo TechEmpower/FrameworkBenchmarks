@@ -24,7 +24,7 @@
     <IlcInvariantGlobalization>true</IlcInvariantGlobalization>
     <IlcGenerateCompleteTypeMetadata>false</IlcGenerateCompleteTypeMetadata>
 
-    <!--<IlcDisableReflection>true</IlcDisableReflection>-->
+    <IlcDisableReflection>true</IlcDisableReflection>
 
     <SuppressTrimAnalysisWarnings>true</SuppressTrimAnalysisWarnings>
 

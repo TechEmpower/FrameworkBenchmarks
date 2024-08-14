@@ -1,5 +1,3 @@
-using System;
-
 namespace appMpower.Orm.Objects
 {
    public readonly struct Fortune : IComparable<Fortune>, IComparable

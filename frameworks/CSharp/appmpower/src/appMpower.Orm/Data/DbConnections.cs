@@ -18,7 +18,11 @@ namespace appMpower.Orm.Data
 
             _createdConnections++;
             popDbConnection._number = _createdConnections;
-            //Console.WriteLine("connection created: " + _createdConnections.ToString());
+
+            if (_createdConnections % 25 == 0)
+            {
+               Console.WriteLine("Pooled connections created: " + _createdConnections.ToString());
+            }
          }
 
          return popDbConnection; 
@@ -42,8 +46,11 @@ namespace appMpower.Orm.Data
             _createdConnections++;
             dbConnection._number = _createdConnections;
 
-            //Console.WriteLine("connection created: " + _createdConnections.ToString());
-         }
+           if (_createdConnections % 25 == 0)
+            {
+               Console.WriteLine("Pooled connections created: " + _createdConnections.ToString());
+            }
+          }
       }
 
       public static void Release(DbConnection dbConnection)

@@ -18,7 +18,7 @@ namespace appMpower.Orm.Serializers
          }
 
          utf8JsonWriter.WriteEndArray();
-         utf8JsonWriter.Flush();
+         //utf8JsonWriter.Flush();
       }
    }
 }

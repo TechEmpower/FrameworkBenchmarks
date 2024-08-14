@@ -42,7 +42,6 @@ public static class NativeMethods
     [UnmanagedCallersOnly(EntryPoint = "Db")]
     public static unsafe IntPtr Db(int* length, IntPtr* handlePointer)
     {
-        //var world = RawDb.LoadSingleQueryRow().GetAwaiter().GetResult();
         var world = RawDb.LoadSingleQueryRow();
 
         var memoryStream = new MemoryStream();
@@ -70,12 +69,10 @@ public static class NativeMethods
     [UnmanagedCallersOnly(EntryPoint = "Fortunes")]
     public static unsafe IntPtr Fortunes(int* length, IntPtr* handlePointer)
     {
-        //List<Fortune> fortunes = RawDb.LoadFortunesRows().GetAwaiter().GetResult(); 
         List<Fortune> fortunes = RawDb.LoadFortunesRows(); 
         string fortunesView = FortunesView.Render(fortunes);
         byte[] byteArray = Encoding.UTF8.GetBytes(fortunesView);
 
-        //*length = Encoding.UTF8.GetByteCount(fortunesView); //fortunesView.Length + 32; 
         *length = byteArray.Length; 
 
         GCHandle handle = GCHandle.Alloc(byteArray, GCHandleType.Pinned);
@@ -99,7 +96,6 @@ public static class NativeMethods
         byte[] byteArray = memoryStream.ToArray();
 
         GCHandle handle = GCHandle.Alloc(byteArray, GCHandleType.Pinned);
-        // return the managed and byteArrayPointer pointer
         IntPtr byteArrayPointer = handle.AddrOfPinnedObject();
         *handlePointer = GCHandle.ToIntPtr(handle);
 
@@ -120,7 +116,6 @@ public static class NativeMethods
         byte[] byteArray = memoryStream.ToArray();
 
         GCHandle handle = GCHandle.Alloc(byteArray, GCHandleType.Pinned);
-        // return the managed and byteArrayPointer pointer
         IntPtr byteArrayPointer = handle.AddrOfPinnedObject();
         *handlePointer = GCHandle.ToIntPtr(handle);
 
@@ -141,7 +136,6 @@ public static class NativeMethods
         byte[] byteArray = memoryStream.ToArray();
 
         GCHandle handle = GCHandle.Alloc(byteArray, GCHandleType.Pinned);
-        // return the managed and byteArrayPointer pointer
         IntPtr byteArrayPointer = handle.AddrOfPinnedObject();
         *handlePointer = GCHandle.ToIntPtr(handle);
 

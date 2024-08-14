@@ -11,7 +11,7 @@ namespace appMpower.Orm.Serializers
          utf8JsonWriter.WriteNumber("id", world.Id);
          utf8JsonWriter.WriteNumber("randomNumber", world.RandomNumber);
          utf8JsonWriter.WriteEndObject();
-         utf8JsonWriter.Flush();
+         //utf8JsonWriter.Flush();
       }
    }
 }

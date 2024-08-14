@@ -7,6 +7,7 @@ using appMpower.Orm.Serializers;
 
 namespace appMpower.Orm;
 
+//These methods are for test purposes only; not used in actual execution
 public static class DotnetMethods
 {
     private static JsonWriterOptions _jsonWriterOptions = new JsonWriterOptions
@@ -20,10 +21,6 @@ public static class DotnetMethods
 
     public static byte[] Db()
     {
-        Constants.Dbms = Dbms.MySQL; 
-        Constants.DbProvider = DbProvider.ODBC; 
-        DbProviderFactory.SetConnectionString();
-
         var world = RawDb.LoadSingleQueryRow();
 
         var memoryStream = new MemoryStream();
@@ -36,10 +33,6 @@ public static class DotnetMethods
 
     public static byte[] Query(int queries)
     {
-        Constants.Dbms = Dbms.PostgreSQL; 
-        Constants.DbProvider = DbProvider.ODBC; 
-        DbProviderFactory.SetConnectionString();
-
         World[] worlds = RawDb.ReadMultipleRows(queries);
 
         var memoryStream = new MemoryStream();
@@ -52,10 +45,6 @@ public static class DotnetMethods
 
     public static byte[] Updates(int count)
     {
-        Constants.Dbms = Dbms.PostgreSQL; 
-        Constants.DbProvider = DbProvider.ODBC; 
-        DbProviderFactory.SetConnectionString();
-
         World[] worlds = RawDb.LoadMultipleUpdatesRows(count);
 
         var memoryStream = new MemoryStream();
@@ -68,10 +57,6 @@ public static class DotnetMethods
 
     public static byte[] Fortunes()
     {
-        Constants.Dbms = Dbms.MySQL; 
-        Constants.DbProvider = DbProvider.ODBC; 
-        DbProviderFactory.SetConnectionString();
-
         List<Fortune> fortunes = RawDb.LoadFortunesRows(); 
         string fortunesView = FortunesView.Render(fortunes);
         byte[] byteArray = Encoding.UTF8.GetBytes(fortunesView);
