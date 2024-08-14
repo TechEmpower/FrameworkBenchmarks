@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "module": "src/index.js",
   "devDependencies": {
-    "bun-types": "latest"
+    "bun-types": "^1.1.22",
+    "typescript": "^5.5.4"
   },
   "scripts": {
     "dev": "bun run --watch src/index.ts",
