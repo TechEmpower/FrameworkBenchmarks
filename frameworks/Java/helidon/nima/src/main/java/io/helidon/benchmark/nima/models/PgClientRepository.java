@@ -158,14 +158,18 @@ public class PgClientRepository implements DbRepository {
 
     @Override
     public List<Fortune> getFortunes() {
-        return getFortuneQuery.execute()
-                .map(rows -> {
-                    List<Fortune> fortunes = new ArrayList<>(rows.size() + 1);
-                    for (Row r : rows) {
-                        fortunes.add(new Fortune(r.getInteger(0), r.getString(1)));
-                    }
-                    return fortunes;
-                }).result();
+        try {
+            return getFortuneQuery.execute()
+                    .map(rows -> {
+                        List<Fortune> fortunes = new ArrayList<>(rows.size() + 1);
+                        for (Row r : rows) {
+                            fortunes.add(new Fortune(r.getInteger(0), r.getString(1)));
+                        }
+                        return fortunes;
+                    }).toCompletionStage().toCompletableFuture().get();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private CompletableFuture<List<World>> updateWorlds(List<World> worlds, int from, SqlClient pool) {
