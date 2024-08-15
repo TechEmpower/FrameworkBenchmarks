@@ -19,7 +19,7 @@
   "author": "Костя Третяк",
   "license": "MIT",
   "dependencies": {
-    "@ditsmod/core": "~2.54.2",
+    "@ditsmod/core": "~2.55.0",
     "@ditsmod/routing": "~2.3.0",
     "handlebars": "^4.7.8",
     "lru-cache": "^11.0.0",

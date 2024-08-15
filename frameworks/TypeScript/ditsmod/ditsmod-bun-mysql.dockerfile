@@ -6,7 +6,6 @@ RUN bun install
 RUN bun run build
 
 ENV NODE_ENV production
-ENV IS_BUN true
 ENV DATABASE mysql
 ENV MYSQL_HOST tfb-database
 ENV MYSQL_USER benchmarkdbuser

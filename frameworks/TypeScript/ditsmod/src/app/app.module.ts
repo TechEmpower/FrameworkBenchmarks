@@ -1,13 +1,13 @@
-import { PreRouter, rootModule } from '@ditsmod/core';
+import { PreRouter, Providers, rootModule } from '@ditsmod/core';
 
 import { SimpleModule } from '#routed/simple/simple.module.js';
 import { BunPreRouter } from './bun-integration/pre-router.js';
-import { BunProviders } from './bun-integration/bun-providers.js';
 
 @rootModule({
   appends: [SimpleModule],
-  providersPerApp: [
-    ...new BunProviders().useLogConfig({ level: 'off' }).if(process.env.IS_BUN).useClass(PreRouter, BunPreRouter),
-  ],
+  providersPerApp: new Providers()
+    .useLogConfig({ level: 'off' })
+    .$if(global['Bun'])
+    .useClass(PreRouter, BunPreRouter),
 })
 export class AppModule {}
