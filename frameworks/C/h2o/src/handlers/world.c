@@ -238,8 +238,10 @@ static int do_multiple_queries(bool do_update, bool use_cache, h2o_req_t *req)
 	const size_t num_query = get_query_number(req);
 
 	// MAX_QUERIES is a relatively small number, say less than or equal to UINT16_MAX, so assume no
-	// overflow in the following arithmetic operations.
-	assert(num_query && num_query <= MAX_QUERIES && num_query <= UINT16_MAX);
+	// unsigned overflow in the following arithmetic operations.
+	static_assert(MAX_QUERIES <= UINT16_MAX,
+	              "potential out-of-bounds memory accesses in the following code");
+	assert(num_query && num_query <= MAX_QUERIES);
 
 	size_t base_size = offsetof(multiple_query_ctx_t, res) + num_query * sizeof(query_result_t);
 

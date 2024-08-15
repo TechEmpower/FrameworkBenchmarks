@@ -5,7 +5,6 @@ gem 'passenger', '~> 6.0', :platforms=>[:ruby, :mswin], :require=>false
 gem 'puma', '~> 6.4', :require=>false
 gem 'sequel', '~> 5.0'
 gem 'sinatra', '~> 3.0', :require=>'sinatra/base'
-gem 'slim', '~> 3.0'
 gem 'unicorn', '~> 6.1', :platforms=>[:ruby, :mswin], :require=>false
 
 group :mysql do

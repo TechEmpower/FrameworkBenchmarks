@@ -33,7 +33,7 @@ RUN apt-get -yqq update && \
       ruby \
       systemtap-sdt-dev
 
-ARG H2O_VERSION=18b175f71ede08b50d3e5ae8303dacef3ea510fc
+ARG H2O_VERSION=c54c63285b52421da2782f028022647fc2ea3dd1
 
 WORKDIR /tmp/h2o-build
 RUN curl -LSs "https://github.com/h2o/h2o/archive/${H2O_VERSION}.tar.gz" | \

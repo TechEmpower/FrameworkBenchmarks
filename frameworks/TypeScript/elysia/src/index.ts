@@ -3,23 +3,27 @@ import dbHandlers from './db-handlers';
 
 const app = new Elysia({
   serve: {
-    // @ts-ignore
     reusePort: true,
   },
 })
-  .onAfterHandle(({ set }) => {
+  .get('/plaintext', ({ set }) => {
     set.headers['server'] = 'Elysia';
+    return 'Hello, World!';
   })
-  .decorate('HELLO_WORLD_STR', 'Hello, World!')
-  .get('/plaintext', ({ HELLO_WORLD_STR }) => HELLO_WORLD_STR)
-  .get('/json', ({ HELLO_WORLD_STR }) => ({ message: HELLO_WORLD_STR }));
 
-if (process.env.DATABASE) {
+  .get('/json', ({ set }) => {
+    set.headers = {
+      'content-type': 'application/json',
+      'server': 'Elysia',
+    };
+
+    return JSON.stringify({ message: 'Hello, World!' });
+  });
+
+if (Bun.env.DATABASE) {
   app.use(dbHandlers);
 }
 
 app.listen(8080);
 
-console.info(
-  `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`
-);
+console.info(`🦊 Elysia is running at ${app.server!.url}`);

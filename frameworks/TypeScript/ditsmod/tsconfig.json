@@ -16,14 +16,17 @@
     "noImplicitAny": true,
     "strictPropertyInitialization": false,
     "allowJs": false,
-    "paths": {
-      "#routed/*": ["./src/app/modules/routed/*"],
-      "#service/*": ["./src/app/modules/service/*"],
-      "#utils/*": ["./src/app/utils/*"],
-    }
+    "types": ["bun-types"],
+    // Bun works with bugs if this code is uncommented.
+    // "paths": {
+    //   "#routed/*": ["./src/app/modules/routed/*"],
+    //   "#service/*": ["./src/app/modules/service/*"],
+    //   "#utils/*": ["./src/app/utils/*"],
+    // }
   },
   "include": [
     "src",
-    "test"
+    "test",
+    "./spawn.ts"
   ]
 }

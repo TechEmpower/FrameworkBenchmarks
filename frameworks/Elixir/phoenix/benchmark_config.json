@@ -18,36 +18,11 @@
             "flavor": "None",
             "orm": "full",
             "platform": "beam",
-            "webserver": "cowboy",
-            "os": "Linux",
-            "database_os": "Linux",
-            "display_name": "Phoenix",
-            "notes": "",
-            "versus": ""
-        },
-        "bandit": {
-            "json_url": "/json",
-            "db_url": "/db",
-            "query_url": "/queries?queries=",
-            "fortune_url": "/fortunes",
-            "plaintext_url": "/plaintext",
-            "update_url": "/updates?queries=",
-            "cached_query_url": "/cached-queries?count=",
-            "port": 8080,
-            "approach": "Realistic",
-            "classification": "Fullstack",
-            "database": "Postgres",
-            "framework": "Phoenix",
-            "language": "Elixir",
-            "flavor": "None",
-            "orm": "full",
-            "platform": "beam",
             "webserver": "bandit",
             "os": "Linux",
             "database_os": "Linux",
-            "display_name": "Phoenix-Bandit",
-            "notes": "",
-            "versus": "default"
+            "display_name": "Phoenix",
+            "notes": ""
         }
     }]
 }

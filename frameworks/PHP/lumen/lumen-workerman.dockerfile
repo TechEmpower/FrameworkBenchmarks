@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -14,16 +14,17 @@ COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 RUN apt-get install -y php-pear php8.3-dev libevent-dev > /dev/null
 RUN pecl install event-3.1.3 > /dev/null && echo "extension=event.so" > /etc/php/8.3/cli/conf.d/event.ini
 
-ADD ./ /lumen
 WORKDIR /lumen
+COPY --link . .
+
 
 RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
 RUN composer require joanhey/adapterman:^0.6 --quiet
 
-RUN mkdir -p /lumen/storage
-RUN mkdir -p /lumen/storage/framework/sessions
-RUN mkdir -p /lumen/storage/framework/views
-RUN mkdir -p /lumen/storage/framework/cache
+RUN mkdir -p storage \
+            storage/framework/sessions \
+            storage/framework/views \
+            storage/framework/cache
 
 RUN chmod -R 777 /lumen
 

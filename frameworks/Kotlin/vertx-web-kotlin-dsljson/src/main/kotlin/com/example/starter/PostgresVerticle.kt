@@ -5,10 +5,8 @@ import com.example.starter.db.WorldRepository
 import com.example.starter.handlers.FortuneHandler
 import com.example.starter.handlers.WorldHandler
 import com.example.starter.io.JsonResource
-import com.example.starter.utils.array
 import com.example.starter.utils.isConnectionReset
 import io.vertx.core.AbstractVerticle
-import io.vertx.core.Future
 import io.vertx.core.Promise
 import io.vertx.core.http.HttpServerOptions
 import io.vertx.ext.web.Router
@@ -18,15 +16,10 @@ import org.apache.logging.log4j.kotlin.Logging
 
 class PostgresVerticle : AbstractVerticle() {
     override fun start(startPromise: Promise<Void>) {
-        Future.all(
-            PgConnection.connect(vertx, PG_CONNECT_OPTIONS),
-            PgConnection.connect(vertx, PG_CONNECT_OPTIONS),
-        )
-            .onSuccess { cf ->
-                val pool = cf.array<PgConnection>()
-
-                val fortuneHandler = FortuneHandler(FortuneRepository(pool))
-                val worldHandler = WorldHandler(WorldRepository(pool))
+        PgConnection.connect(vertx, PG_CONNECT_OPTIONS)
+            .onSuccess { conn ->
+                val fortuneHandler = FortuneHandler(FortuneRepository(conn))
+                val worldHandler = WorldHandler(WorldRepository(conn))
 
                 val router = Router.router(vertx)
 
