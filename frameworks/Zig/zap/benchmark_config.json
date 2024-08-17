@@ -4,7 +4,6 @@
     "default": {
       "json_url": "/json",
       "db_url": "/db",
-      "fortune_url": "/fortunes",
       "plaintext_url": "/plaintext",
       "port": 3000,
       "approach": "Realistic",
