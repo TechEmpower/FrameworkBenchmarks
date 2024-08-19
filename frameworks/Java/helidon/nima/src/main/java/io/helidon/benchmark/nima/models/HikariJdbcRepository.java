@@ -7,6 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 import java.util.logging.Logger;
 
 import com.zaxxer.hikari.HikariConfig;
@@ -36,6 +38,11 @@ public class HikariJdbcRepository implements DbRepository {
         int poolSize = config.get("sql-pool-size").asInt().orElse(64);
         hikariConfig.addDataSourceProperty("maximumPoolSize", poolSize);
         LOGGER.info("Db pool size is set to " + poolSize);
+
+        // use VTs with Hikari
+        ThreadFactory vtThreadFactory = Thread.ofVirtual().factory();
+        hikariConfig.setThreadFactory(vtThreadFactory);
+        hikariConfig.setScheduledExecutor(Executors.newScheduledThreadPool(poolSize, vtThreadFactory));
     }
 
     private Connection getConnection() throws SQLException {
