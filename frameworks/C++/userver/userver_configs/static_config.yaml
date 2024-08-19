@@ -14,6 +14,7 @@ components_manager:
             thread_name: main-worker    # OS will show the threads of this task processor with 'main-worker' prefix.
             worker_threads: 46
             guess-cpu-limit: true
+            task-processor-queue: work-stealing-task-queue
 
         fs-task-processor:              # Make a separate task processor for filesystem bound tasks.
             thread_name: fs-worker
