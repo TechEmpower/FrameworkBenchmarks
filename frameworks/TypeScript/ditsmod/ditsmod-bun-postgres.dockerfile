@@ -13,4 +13,4 @@ ENV PG_PSWD benchmarkdbpass
 ENV PG_DBNAME hello_world
 
 EXPOSE 8080
-CMD rm node_modules/@ditsmod/*/tsconfig.json && bun src/app/bun-integration/spawn.ts
+CMD rm node_modules/@ditsmod/*/tsconfig.json && bun dist/main.js
