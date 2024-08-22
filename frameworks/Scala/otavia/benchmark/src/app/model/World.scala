@@ -5,4 +5,4 @@ import cc.otavia.serde.annotation.rename
 import cc.otavia.sql.{Row, RowCodec}
 
 /** The model for the "world" database table. */
-case class World(id: Int, @rename("randomnumber") randomNumber: Int) extends Row derives RowCodec, JsonSerde
+case class World(id: Int, randomNumber: Int) extends Row derives RowCodec, JsonSerde
