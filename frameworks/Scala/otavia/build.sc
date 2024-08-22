@@ -1,7 +1,7 @@
 import mill._
 import mill.scalalib._
 
-def otaviaVersion = "0.4.0"
+def otaviaVersion = "0.4.2"
 
 object benchmark extends ScalaModule {
 
