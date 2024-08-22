@@ -53,7 +53,7 @@ where
 
 async fn plain_text(ctx: Ctx<'_>) -> HandleResult<Response> {
     let (req, _) = ctx.into_parts();
-    let mut res = req.into_response(Bytes::from_static(b"Hello, World!"));
+    let mut res = req.into_response(const { Bytes::from_static(b"Hello, World!") });
     res.headers_mut().insert(CONTENT_TYPE, TEXT);
     Ok(res)
 }

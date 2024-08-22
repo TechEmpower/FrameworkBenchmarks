@@ -27,6 +27,7 @@ fn main() -> std::io::Result<()> {
         .at_typed(updates)
         .map(header)
         .serve()
+        .disable_vectored_write()
         .bind("0.0.0.0:8080")?
         .run()
         .wait()
@@ -45,10 +46,8 @@ fn db(StateOwn(pool): StateOwn<Pool>) -> HandleResult<Json<impl Serialize>> {
 #[route("/fortunes", method = get)]
 fn fortunes(StateOwn(pool): StateOwn<Pool>) -> HandleResult<Html<String>> {
     use sailfish::TemplateOnce;
-    pool.tell_fortune()?
-        .render_once()
-        .map(Html)
-        .map_err(Into::into)
+    let html = pool.tell_fortune()?.render_once()?;
+    Ok(Html(html))
 }
 
 #[route("/queries", method = get)]
