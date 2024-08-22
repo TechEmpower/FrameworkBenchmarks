@@ -30,7 +30,7 @@ platform = ".NET"
 webserver = "Kestrel"
 versus = "aspnetcore-minimal"
 
-[ado-pg]
+[odbc-my]
 urls.db = "/db"
 urls.query = "/queries?c="
 urls.update = "/updates?c="
@@ -38,7 +38,7 @@ urls.fortune = "/fortunes"
 urls.cached_query = "/cached-worlds?c="
 approach = "Realistic"
 classification = "Micro"
-database = "Postgres"
+database = "MySQL"
 database_os = "Linux"
 os = "Linux"
 orm = "Raw"
