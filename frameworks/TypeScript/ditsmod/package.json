@@ -10,11 +10,6 @@
     "build": "tsc -b tsconfig.build.json",
     "clean": "rm -rf dist*"
   },
-  "imports": {
-    "#routed/*": "./dist/app/modules/routed/*",
-    "#service/*": "./dist/app/modules/service/*",
-    "#utils/*": "./dist/app/utils/*"
-  },
   "keywords": [],
   "author": "Костя Третяк",
   "license": "MIT",
