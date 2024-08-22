@@ -21,7 +21,7 @@ public class DatabaseContext : DbContext
     public DbSet<CachedWorldRow> CachedWorld { get; set; }
     public DbSet<FortuneRow> Fortune { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) => optionsBuilder.UseSqlServer(ConnectionString.Value);
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) => optionsBuilder.UseNpgsql(ConnectionString.Value);
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
