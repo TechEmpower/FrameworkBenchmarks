@@ -31,6 +31,6 @@ All tests are implemented in a single file ([app.py](app.py)).
 
 ## Resources
 
-* [GitHub](https://github.com/AliRn76/Panther)
-* [Documentation](https://pantherpy.github.io)
-* [PyPI](https://pypi.org/project/panther)
+* GitHub -> [GitHub.com/AliRn76/Panther](https://github.com/AliRn76/Panther)
+* Documentation -> [PantherPy.GitHub.io](https://pantherpy.github.io)
+* PyPI -> [PyPI.org/project/Panther](https://pypi.org/project/panther)
