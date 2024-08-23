@@ -2,11 +2,9 @@ package benchmark.web;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
 import benchmark.model.Fortune;
-import benchmark.model.Message;
 import benchmark.model.World;
 import benchmark.repository.DbRepository;
 import reactor.core.publisher.Flux;
@@ -21,24 +19,12 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import static java.util.Comparator.comparing;
 
 @Component
-public class WebfluxHandler {
+public class DbHandler {
 
     private final DbRepository dbRepository;
 
-    public WebfluxHandler(DbRepository dbRepository) {
+    public DbHandler(DbRepository dbRepository) {
         this.dbRepository = dbRepository;
-    }
-
-    public Mono<ServerResponse> plaintext(ServerRequest request) {
-        return ServerResponse.ok()
-                .contentType(MediaType.TEXT_PLAIN)
-                .bodyValue("Hello, World!");
-    }
-
-    public Mono<ServerResponse> json(ServerRequest request) {
-        return ServerResponse.ok()
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(new Message("Hello, World!"));
     }
 
     public Mono<ServerResponse> db(ServerRequest request) {
@@ -52,7 +38,7 @@ public class WebfluxHandler {
     }
 
     public Mono<ServerResponse> queries(ServerRequest request) {
-        int queries = getQueries(request);
+        int queries = parseQueryCount(request.queryParams().getFirst("queries"));
 
         Mono<List<World>> worlds = Flux.range(0, queries)
                 .flatMap(i -> dbRepository.getWorld(randomWorldNumber()))
@@ -64,13 +50,13 @@ public class WebfluxHandler {
                 });
     }
 
-    private static int parseQueryCount(Optional<String> maybeTextValue) {
-        if (!maybeTextValue.isPresent()) {
+    private static int parseQueryCount(String maybeTextValue) {
+        if (maybeTextValue == null) {
             return 1;
         }
         int parsedValue;
         try {
-            parsedValue = Integer.parseInt(maybeTextValue.get());
+            parsedValue = Integer.parseInt(maybeTextValue);
         } catch (NumberFormatException e) {
             return 1;
         }
@@ -78,7 +64,7 @@ public class WebfluxHandler {
     }
 
     public Mono<ServerResponse> updates(ServerRequest request) {
-        int queries = getQueries(request);
+        int queries = parseQueryCount(request.queryParams().getFirst("queries"));
 
         Mono<List<World>> worlds = Flux.range(0, queries)
                 .flatMap(i -> dbRepository.findAndUpdateWorld(randomWorldNumber(), randomWorldNumber()))
@@ -99,10 +85,6 @@ public class WebfluxHandler {
 
         return ServerResponse.ok()
                 .render("fortunes", Collections.singletonMap("fortunes", result));
-    }
-
-    private static int getQueries(ServerRequest request) {
-        return parseQueryCount(request.queryParam("queries"));
     }
 
     private static int randomWorldNumber() {
