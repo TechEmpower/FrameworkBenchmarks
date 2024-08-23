@@ -1,6 +1,6 @@
 FROM ubuntu:22.04
 
-ENV SWOOLE_VERSION 5.1.1
+ENV SWOOLE_VERSION 5.1.4
 ENV ENABLE_COROUTINE 0
 ENV DATABASE_DRIVER pgsql
 
@@ -10,7 +10,7 @@ RUN apt update -yqq > /dev/null \
     && apt install -yqq software-properties-common > /dev/null \
     && LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php > /dev/null \
     && apt update -yqq > /dev/null \
-    && apt install php8.3-cli php8.3-pdo-pgsql php8.3-dev libpq-dev -y > /dev/null \
+    && apt install libbrotli-dev php8.3-cli php8.3-pdo-pgsql php8.3-dev libpq-dev -y > /dev/null \
     && cd /tmp && curl -sSL "https://github.com/swoole/swoole-src/archive/v${SWOOLE_VERSION}.tar.gz" | tar xzf - \
     && cd /tmp/swoole-src-${SWOOLE_VERSION} \
     && phpize > /dev/null \

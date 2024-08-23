@@ -133,7 +133,7 @@ class Connections
             ->withUsername('benchmarkdbuser')
             ->withPassword('benchmarkdbpass');
 
-        self::$pool = new PDOPool($config, intval(1024 / swoole_cpu_num()));
+        self::$pool = new PDOPool($config, 128);
     }
 
     public static function db(): string
