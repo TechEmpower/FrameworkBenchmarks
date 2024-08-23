@@ -12,4 +12,4 @@ RUN deno cache main.ts
 
 EXPOSE 8080
 
-CMD ["serve", "--parallel", "--port", "8080", "--host", "0.0.0.0", "-A", "main.ts"]
+CMD ["deno", "serve", "--parallel", "--port", "8080", "--host", "0.0.0.0", "-A", "main.ts"]
