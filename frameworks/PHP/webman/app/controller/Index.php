@@ -1,11 +1,9 @@
 <?php
 namespace app\controller;
 
-use support\Request;
 use support\bootstrap\Date;
 use support\bootstrap\db\Raw as Db;
 use support\Response;
-use PDO;
 
 class Index
 {
