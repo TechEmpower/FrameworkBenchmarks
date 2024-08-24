@@ -74,6 +74,7 @@ $app->get('/updates', function (Request $request, Response $response) {
     }
 
     $sth = Raw::$random;
+    $update = Raw::$update;
     //$updateSth = Raw::update();
 
     $worlds = [];
@@ -81,11 +82,9 @@ $app->get('/updates', function (Request $request, Response $response) {
         $sth->execute([mt_rand(1, 10000)]);
         $world = $sth->fetch();
         $world['randomNumber'] = mt_rand(1, 10000);
-
+        $update->execute([$world['randomNumber'], $world['id']]);
         $worlds[] = $world;
     }
-
-    Raw::update($worlds);
 
     return $response
         ->withJson($worlds);

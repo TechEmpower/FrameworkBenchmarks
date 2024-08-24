@@ -31,17 +31,15 @@ class KuController extends AppController
     {
         $count = min(max((int) $count, 1), 500);
         $random = KuRaw::$random;
+        $update = KuRaw::$update;
 
         while ($count--) {
-
             $random->execute([mt_rand(1, 10000)]);
             $row = $random->fetch();
             $row['randomNumber'] = mt_rand(1, 10000);
-
+            $update->execute([$row['randomNumber'], $row['id']]);
             $worlds[] = $row;
         }
-        
-        KuRaw::update($worlds);
 
         echo json_encode($worlds);
     }

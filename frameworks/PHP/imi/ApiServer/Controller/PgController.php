@@ -179,22 +179,18 @@ class PgController extends HttpController
         }
         $db = Db::getInstance(self::POOL_NAME);
         $stmtSelect = $db->prepare('SELECT id, randomnumber FROM World WHERE id = ? LIMIT 1');
-        $stmtUpdate = $db->prepare('UPDATE World SET randomNumber = CASE id' . \str_repeat(' WHEN ?::INTEGER THEN ?::INTEGER ', $queryCount) . 'END WHERE id IN (' . \str_repeat('?::INTEGER,', $queryCount - 1) . '?::INTEGER)');
+        $stmtUpdate = $db->prepare('UPDATE World SET randomNumber=? WHERE id=?');
         $list = [];
-        $keys = $values = [];
         while ($queryCount--)
         {
-            $values[] = $keys[] = $id = \mt_rand(1, 10000);
+            $id = \mt_rand(1, 10000);
             $stmtSelect->execute([$id]);
             $row = $stmtSelect->fetch();
 
-            $values[] = $row['randomNumber'] = \mt_rand(1, 10000);
+            $row['randomNumber'] = \mt_rand(1, 10000);
+            $stmtUpdate->execute([$row['randomNumber'], $row['id']]);
             $list[] = $row;
         }
-        $stmtUpdate->execute([
-            ...$values,
-            ...$keys
-        ]);
 
         return $list;
     }

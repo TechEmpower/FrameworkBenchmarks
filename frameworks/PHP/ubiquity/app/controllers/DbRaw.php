@@ -18,16 +18,12 @@ class DbRaw extends \Ubiquity\controllers\Controller {
 	 */
 	protected static $db;
 
-	private static function prepareUpdate(int $count) {
-		$sql = 'UPDATE World SET randomNumber = CASE id' . \str_repeat(' WHEN ?::INTEGER THEN ?::INTEGER ', $count) . 'END WHERE id IN (' . \str_repeat('?::INTEGER,', $count - 1) . '?::INTEGER)';
-		return self::$uStatements[$count] = self::$db->prepareStatement($sql);
-	}
-
 	public function __construct() {}
 
 	public static function warmup(\Ubiquity\db\Database $db) {
 		self::$db = $db;
 		self::$statement = $db->prepareStatement('SELECT id,randomNumber FROM World WHERE id=?');
+        self::$uStatements = $db->prepareStatement('UPDATE World SET randomNumber=? WHERE id=?');
 	}
 
 	public function initialize() {
@@ -54,23 +50,17 @@ class DbRaw extends \Ubiquity\controllers\Controller {
 	}
 
 	public function update($queries = 1) {
-		$worlds = [];
-		$keys = $values = [];
-		$count = \min(\max((int) $queries, 1), 500);
-		for ($i = 0; $i < $count; ++ $i) {
-			$values[] = $keys[] = $id = \mt_rand(1, 10000);
-			self::$statement->execute([
-				$id
-			]);
-			$row = self::$statement->fetch();
+        $worlds = [];
+        $count = \min(\max((int) $queries, 1), 500);
+        for ($i = 0; $i < $count; ++ $i) {
+            $id = \mt_rand(1, 10000);
+            self::$statement->execute([$id]);
+            $row = self::$statement->fetch();
 
-			$values[] = $row['randomNumber'] = \mt_rand(1, 10000);
-			$worlds[] = $row;
-		}
-		(self::$uStatements[$count] ?? self::prepareUpdate($count))->execute([
-			...$values,
-			...$keys
-		]);
-		echo \json_encode($worlds);
+            $row['randomNumber'] = \mt_rand(1, 10000);
+            self::$uStatements->execute([$row['randomNumber'], $row['id']]);
+            $worlds[] = $row;
+        }
+        echo \json_encode($worlds);
 	}
 }

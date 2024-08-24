@@ -31,10 +31,7 @@ class Raw implements Bootstrap
 
     public static PDOStatement $random;
 
-    /**
-     * @var PDOStatement[]
-     */
-    public static array $update;
+    public static PDOStatement $update;
 
     /**
      * @param Worker $worker
@@ -46,39 +43,11 @@ class Raw implements Bootstrap
         $pdo = new PDO('pgsql:host=tfb-database;dbname=hello_world',
             'benchmarkdbuser', 'benchmarkdbpass',
             [PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                PDO::ATTR_EMULATE_PREPARES    => false]
+             PDO::ATTR_EMULATE_PREPARES    => false]
         );
         self::$random    = $pdo->prepare('SELECT id,randomNumber FROM World WHERE id=?');
         self::$fortune   = $pdo->prepare('SELECT id,message FROM Fortune');
+        self::$update    = $pdo->prepare('UPDATE World SET randomNumber=? WHERE id=?');
         self::$pdo = $pdo;
-    }
-
-    /**
-     * Postgres bulk update
-     *
-     * @param array $worlds
-     * @return void
-     */
-    public static function update(array $worlds)
-    {
-        $rows = count($worlds);
-
-        if (!isset(self::$update[$rows])) {
-            $sql = 'UPDATE world SET randomNumber = CASE id'
-                . str_repeat(' WHEN ?::INTEGER THEN ?::INTEGER ', $rows)
-                . 'END WHERE id IN ('
-                . str_repeat('?::INTEGER,', $rows - 1) . '?::INTEGER)';
-
-            self::$update[$rows] = self::$pdo->prepare($sql);
-        }
-
-        $val = [];
-        $keys = [];
-        foreach ($worlds as $world) {
-            $val[] = $keys[] = $world['id'];
-            $val[] = $world['randomNumber'];
-        }
-
-        self::$update[$rows]->execute([...$val, ...$keys]);
     }
 }

@@ -69,6 +69,7 @@ function query($request)
 function updateraw($request)
 {
     $random = DbRaw::$random;
+    $update = DbRaw::$update;
 
     $query_count = 1;
     $q = (int) $request->get('q');
@@ -77,15 +78,12 @@ function updateraw($request)
     }
 
     while ($query_count--) {
-
         $random->execute([mt_rand(1, 10000)]);
         $row = $random->fetch();
         $row['randomNumber'] = mt_rand(1, 10000);
-
+        $update->execute([$row['randomNumber'], $row['id']]);
         $worlds[] = $row;
     }
-
-    DbRaw::update($worlds);
 
     return new Response(200, [
         'Content-Type' => 'application/json',

@@ -83,6 +83,7 @@ class Index
     public function updates($request, $q = 1)
     {
         $random = Db::$random;
+        $update = Db::$update;
 
         $query_count = 1;
         if ((int) $q > 1) {
@@ -95,17 +96,13 @@ class Index
             $random->execute([\mt_rand(1, 10000)]);
             $world = $random->fetch();
             $world['randomNumber'] = \mt_rand(1, 10000);
-
+            $update->execute([$world['randomNumber'], $world['id']]);
             $worlds[] = $world;
         }
-
-        Db::update($worlds);
 
         return new Response(200, [
             'Content-Type' => 'application/json',
             'Date'         => Date::$date
         ], \json_encode($worlds));
     }
-
-
 }

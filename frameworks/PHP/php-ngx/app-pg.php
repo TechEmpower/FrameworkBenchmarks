@@ -36,16 +36,14 @@ function update()
     if ($params > 1) {
         $query_count = min($params, 500);
     }
-    while ($query_count--) {
 
+    while ($query_count--) {
         DbRaw::$random->execute([mt_rand(1, 10000)]);
         $row = DbRaw::$random->fetch();
         $row['randomNumber'] = mt_rand(1, 10000);
-
+        DbRaw::$update->execute([$row['randomNumber'], $row['id']]);
         $worlds[] = $row;
     }
-
-    DbRaw::update($worlds);
 
     echo json_encode($worlds, JSON_NUMERIC_CHECK);
 }
