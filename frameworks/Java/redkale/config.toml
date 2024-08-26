@@ -85,7 +85,7 @@ platform = "Redkale"
 webserver = "Redkale"
 versus = "Redkale"
 
-[vertx]
+[pgclient]
 urls.db = "/db"
 urls.fortune = "/fortunes"
 urls.query = "/queries?q="
