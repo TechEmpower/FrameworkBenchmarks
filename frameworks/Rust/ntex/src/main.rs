@@ -1,6 +1,5 @@
 #[global_allocator]
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
-// static GLOBAL: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 
 use ntex::http::header::{CONTENT_TYPE, SERVER};
 use ntex::{http, time::Seconds, util::BytesMut, util::PoolId, web};
