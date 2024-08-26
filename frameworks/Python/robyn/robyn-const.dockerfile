@@ -8,4 +8,4 @@ RUN pip3 install -r /robyn/requirements-const.txt
 
 EXPOSE 8080
 
-CMD ["python", "app-const.py", "--log-level", "warn"]]
+CMD ["robyn", "app-const.py", "--fast"]
