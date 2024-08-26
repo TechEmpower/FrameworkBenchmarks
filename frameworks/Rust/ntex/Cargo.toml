@@ -71,9 +71,9 @@ ntex-rt = { git = "https://github.com/ntex-rs/ntex.git", branch = "compio" }
 ntex-net = { git = "https://github.com/ntex-rs/ntex.git", branch = "compio" }
 ntex-compio = { git = "https://github.com/ntex-rs/ntex.git", branch = "compio" }
 
-compio-io = { git = "https://github.com/fafhrd91/compio.git" }
-compio-fs = { git = "https://github.com/fafhrd91/compio.git" }
-compio-buf = { git = "https://github.com/fafhrd91/compio.git" }
-compio-net = { git = "https://github.com/fafhrd91/compio.git" }
-compio-driver = { git = "https://github.com/fafhrd91/compio.git" }
-compio-runtime = { git = "https://github.com/fafhrd91/compio.git" }
+compio-io = { git = "https://github.com/compio-rs/compio.git" }
+compio-fs = { git = "https://github.com/compio-rs/compio.git" }
+compio-buf = { git = "https://github.com/compio-rs/compio.git" }
+compio-net = { git = "https://github.com/compio-rs/compio.git" }
+compio-driver = { git = "https://github.com/compio-rs/compio.git" }
+compio-runtime = { git = "https://github.com/compio-rs/compio.git" }
