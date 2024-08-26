@@ -7,7 +7,7 @@ import cc.otavia.serde.Serde
 import java.nio.charset.StandardCharsets
 import scala.annotation.switch
 
-class FortunesRender extends Serde[Seq[Fortune]] {
+class FortunesRender extends Serde[Array[Fortune]] {
 
     private val text1 =
         "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>"
@@ -27,7 +27,7 @@ class FortunesRender extends Serde[Seq[Fortune]] {
     private val squot = "&#39;".getBytes()
     private val amp   = "&amp;".getBytes()
 
-    override def serialize(fortunes: Seq[Fortune], out: Buffer): Unit = {
+    override def serialize(fortunes: Array[Fortune], out: Buffer): Unit = {
         out.writeBytes(text1)
         for (fortune <- fortunes) {
             out.writeBytes(text2)
@@ -39,7 +39,7 @@ class FortunesRender extends Serde[Seq[Fortune]] {
         out.writeBytes(text5)
     }
 
-    override def deserialize(in: Buffer): Seq[Fortune] = throw new UnsupportedOperationException()
+    override def deserialize(in: Buffer): Array[Fortune] = throw new UnsupportedOperationException()
 
     private def writeEscapeMessage(buffer: Buffer, message: String): Unit = {
         var i = 0
