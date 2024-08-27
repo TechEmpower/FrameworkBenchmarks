@@ -14,7 +14,7 @@ platform = "None"
 webserver = "ntex"
 versus = ""
 
-[astd]
+[compio]
 urls.plaintext = "/plaintext"
 urls.json = "/json"
 approach = "Realistic"
@@ -42,7 +42,7 @@ platform = "None"
 webserver = "ntex"
 versus = ""
 
-[db-astd]
+[db-compio]
 urls.db = "/db"
 urls.query = "/query?q="
 urls.update = "/update?q="
@@ -70,7 +70,7 @@ platform = "None"
 webserver = "ntex"
 versus = ""
 
-[plt-astd]
+[plt-compio]
 urls.plaintext = "/plaintext"
 urls.json = "/json"
 approach = "Realistic"

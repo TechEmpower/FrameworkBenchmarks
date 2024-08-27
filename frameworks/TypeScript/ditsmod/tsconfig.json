@@ -17,12 +17,6 @@
     "strictPropertyInitialization": false,
     "allowJs": false,
     "types": ["bun-types"],
-    // Bun works with bugs if this code is uncommented.
-    // "paths": {
-    //   "#routed/*": ["./src/app/modules/routed/*"],
-    //   "#service/*": ["./src/app/modules/service/*"],
-    //   "#utils/*": ["./src/app/utils/*"],
-    // }
   },
   "include": [
     "src",

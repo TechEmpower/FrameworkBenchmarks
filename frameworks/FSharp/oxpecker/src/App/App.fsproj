@@ -8,12 +8,13 @@
   <ItemGroup>
     <Compile Include="Common.fs" />
     <Compile Include="Db.fs" />
+    <Compile Include="RenderHelpers.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Update="FSharp.Core" Version="8.0.300" />
-    <PackageReference Include="Oxpecker" Version="0.13.0" />
+    <PackageReference Update="FSharp.Core" Version="8.0.400" />
+    <PackageReference Include="Oxpecker" Version="0.14.1" />
     <PackageReference Include="Npgsql" Version="8.0.3" />
   </ItemGroup>
 </Project>

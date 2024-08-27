@@ -9,9 +9,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
-        <solon.version>2.0.0</solon.version>
+        <java.vertsion>11</java.vertsion>
+        <solon.version>2.9.1</solon.version>
     </properties>
 
     <dependencies>
@@ -66,11 +65,11 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>3.11.0</version>
                 <configuration>
                     <compilerArgument>-parameters</compilerArgument>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>${java.vertsion}</source>
+                    <target>${java.vertsion}</target>
                     <encoding>UTF-8</encoding>
                     <debug>false</debug>
                 </configuration>
@@ -79,7 +78,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>3.3.0</version>
+                <version>3.6.0</version>
                 <configuration>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>

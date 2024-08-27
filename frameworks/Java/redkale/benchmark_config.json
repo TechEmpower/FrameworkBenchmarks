@@ -116,7 +116,7 @@
                 "notes": "",
                 "versus": "Redkale"
             },
-            "vertx": {
+            "pgclient": {
                 "db_url": "/db",
                 "query_url": "/queries?q=", 
                 "fortune_url": "/fortunes",
@@ -133,7 +133,7 @@
                 "webserver": "Redkale",
                 "os": "Linux",
                 "database_os": "Linux",
-                "display_name": "redkale-vertx",
+                "display_name": "redkale-pgclient",
                 "notes": "",
                 "versus": "Redkale"
             }
