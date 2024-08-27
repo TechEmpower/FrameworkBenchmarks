@@ -7,32 +7,34 @@ open Oxpecker
 module HtmlViews =
     open Oxpecker.ViewEngine
 
-    let private fortunesHead =
-        head() {
-            title() { raw "Fortunes" }
-        }
-
-    let private layout (content: HtmlElement) =
-        html() {
-            fortunesHead
-            body() { content }
-        }
-
-    let private fortunesTableHeader =
-        tr() {
-            th() { raw "id" }
-            th() { raw "message" }
-        }
+    let private head, tail =
+        (fun (content: HtmlElement) ->
+            html() {
+                head() {
+                    title() { "Fortunes" }
+                }
+                body() {
+                    table() {
+                        tr() {
+                            th() { "id" }
+                            th() { "message" }
+                        }
+                        content
+                    }
+                }
+            } :> HtmlElement
+        ) |> RenderHelpers.prerender
 
     let fortunes (fortunesData: ResizeArray<Fortune>) =
-        table() {
-            fortunesTableHeader
-            for fortune in fortunesData do
-                tr() {
-                    td() { raw <| string fortune.id }
-                    td() { fortune.message }
-                }
-        } |> layout
+        RenderHelpers.combine head tail (
+            __() {
+                for fortune in fortunesData do
+                    tr() {
+                        td() { raw <| string fortune.id }
+                        td() { fortune.message }
+                    }
+            }
+        )
 
 [<RequireQualifiedAccess>]
 module HttpHandlers =
