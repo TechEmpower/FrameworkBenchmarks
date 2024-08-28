@@ -34,8 +34,6 @@ class Benchmarker:
         self.results = Results(self)
         self.docker_helper = DockerHelper(self)
 
-        self.last_test = False
-
     ##########################################################################################
     # Public methods
     ##########################################################################################
@@ -61,8 +59,6 @@ class Benchmarker:
         with open(os.path.join(self.results.directory, 'benchmark.log'),
                   'w') as benchmark_log:
             for test in self.tests:
-                if self.tests.index(test) + 1 == len(self.tests):
-                    self.last_test = True
                 log("Running Test: %s" % test.name, border='-')
                 with self.config.quiet_out.enable():
                     if not self.__run_test(test, benchmark_log):
@@ -98,13 +94,17 @@ class Benchmarker:
                 color=Fore.RED if success else '')
         self.time_logger.log_test_end(log_prefix=prefix, file=file)
         if self.config.mode == "benchmark":
-            # Sleep for 60 seconds to ensure all host connects are closed
-            log("Clean up: Sleep 60 seconds...", prefix=prefix, file=file)
-            time.sleep(60)
+            total_tcp_sockets = subprocess.check_output("ss -s | grep TCP: | awk '{print $2}'", shell=True, text=True)
+            log("Total TCP sockets: " + total_tcp_sockets, prefix=prefix, file=file)
+
+            if int(total_tcp_sockets) > 5000:
+                # Sleep for 60 seconds to ensure all host connects are closed
+                log("Clean up: Sleep 60 seconds...", prefix=prefix, file=file)
+                time.sleep(60)
+
             # After benchmarks are complete for all test types in this test,
             # let's clean up leftover test images (techempower/tfb.test.test-name)
             self.docker_helper.clean()
-
         return success
 
     def __run_test(self, test, benchmark_log):
