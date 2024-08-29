@@ -154,11 +154,11 @@
 			"language": "PHP",
 			"flavor": "PHP8.3",
 			"orm": "Full",
-			"platform": "pripple",
+			"platform": "PRipple",
 			"webserver": "PServer",
 			"os": "Linux",
 			"database_os": "Linux",
-			"display_name": "laravel",
+			"display_name": "laravel-pripple",
 			"notes": "",
 			"versus": "php"
 		}
