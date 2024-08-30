@@ -30,25 +30,25 @@ required-features = ["pg-orm", "template", "web-codegen"]
 
 [features]
 # pg optional
-pg = ["xitca-postgres/single-thread"]
+pg = ["dep:xitca-postgres"]
 # pg send/sync optional
-pg-sync = ["xitca-postgres"]
+pg-sync = ["pg"]
 # pg orm optional
-pg-orm = ["diesel"]
+pg-orm = ["dep:diesel"]
 # http router optional
 router = ["xitca-http/router"]
 # web optional
-web = ["xitca-web"]
+web = ["dep:xitca-web"]
 # web codegen optional
 web-codegen = ["xitca-web/codegen", "xitca-web/urlencoded"]
 # template optional
-template = ["sailfish"]
+template = ["dep:sailfish"]
 # io-uring optional
 io-uring = ["xitca-http/io-uring", "xitca-server/io-uring"]
 # axum optional
-axum = ["dep:axum", "http-body", "tower", "tower-http", "xitca-web/tower-http-compat" ]
+axum = ["dep:axum", "dep:http-body", "dep:tower", "dep:tower-http", "xitca-web/tower-http-compat" ]
 # unrealistic performance optimization
-perf = ["mimalloc", "tokio/parking_lot"]
+perf = ["dep:mimalloc", "tokio/parking_lot"]
 
 [dependencies]
 xitca-http = "0.6"
@@ -95,5 +95,5 @@ codegen-units = 1
 panic = "abort"
 
 [patch.crates-io]
-xitca-postgres = { git = "https://github.com/HFQR/xitca-web.git", rev = "f4e7bed" }
+xitca-postgres = { git = "https://github.com/HFQR/xitca-web.git", rev = "314312c4a9be138ac3235dfafe06e63379fca7ee" }
 mio = { git = "https://github.com/fakeshadow/mio", rev = "9bae6012b7ecfc6083350785f71a5e8265358178" }

@@ -100,7 +100,7 @@ impl Client {
         let mut res = {
             let (ref mut rng, ref mut buf) = *self.shared();
 
-            let mut pipe = Pipeline::<_, false>::with_capacity_from_buf(len, buf);
+            let mut pipe = Pipeline::with_capacity_from_buf(len, buf);
 
             (0..num).try_for_each(|_| pipe.query_raw(&self.world, [rng.gen_id()]))?;
 
@@ -128,7 +128,7 @@ impl Client {
         let mut res = {
             let (ref mut rng, ref mut buf) = *self.shared();
 
-            let mut pipe = Pipeline::<_, false>::with_capacity_from_buf(len + 1, buf);
+            let mut pipe = Pipeline::with_capacity_from_buf(len + 1, buf);
 
             (0..num).try_for_each(|_| {
                 let w_id = rng.gen_id();
