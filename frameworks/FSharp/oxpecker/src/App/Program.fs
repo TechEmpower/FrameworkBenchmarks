@@ -2,6 +2,7 @@ namespace App
 
 open System
 open Oxpecker
+open System.Runtime.InteropServices
 
 [<RequireQualifiedAccess>]
 module HtmlViews =
@@ -26,15 +27,14 @@ module HtmlViews =
         ) |> RenderHelpers.prerender
 
     let fortunes (fortunesData: ResizeArray<Fortune>) =
-        RenderHelpers.combine head tail (
-            __() {
-                for fortune in fortunesData do
-                    tr() {
-                        td() { raw <| string fortune.id }
-                        td() { fortune.message }
-                    }
+        let fragment = __()
+        for fortune in CollectionsMarshal.AsSpan fortunesData do
+            tr() {
+                td() { raw <| string fortune.id }
+                td() { fortune.message }
             }
-        )
+            |> fragment.AddChild
+        RenderHelpers.combine head tail fragment
 
 [<RequireQualifiedAccess>]
 module HttpHandlers =
