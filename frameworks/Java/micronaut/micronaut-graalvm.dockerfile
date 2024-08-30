@@ -1,4 +1,4 @@
-FROM container-registry.oracle.com/graalvm/native-image:22
+FROM container-registry.oracle.com/graalvm/native-image:21
 RUN microdnf install findutils # Gradle 8.7 requires xargs
 COPY . /home/gradle/src
 WORKDIR /home/gradle/src
