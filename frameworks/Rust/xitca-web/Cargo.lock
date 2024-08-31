@@ -798,9 +798,9 @@ checksum = "f3cb5ba0dc43242ce17de99c180e96db90b235b8a9fdc9543c96d2209116bd9f"
 
 [[package]]
 name = "sailfish"
-version = "0.8.3"
+version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "acd5f4680149b62b3478f6af08a8f1c37794bc1bc577e28874a4d0c70084d600"
+checksum = "d4d5cd6d4f24f3ab107e949ab424738cf55b03deddce3b184c46985d7b1394ef"
 dependencies = [
  "itoap",
  "ryu",
@@ -810,9 +810,9 @@ dependencies = [
 
 [[package]]
 name = "sailfish-compiler"
-version = "0.8.3"
+version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "67087aca4a3886686a88cee6835089c53e6143a0b8c5be01e63e4fe2f6dfe7cb"
+checksum = "7254ec7b3651f7f723a9073153f5dcddc1f2bf1bf8d1b23ac71c236ef6360d2b"
 dependencies = [
  "filetime",
  "home",
@@ -824,9 +824,9 @@ dependencies = [
 
 [[package]]
 name = "sailfish-macros"
-version = "0.8.3"
+version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e47e31910c5f9230e99992568d05a5968fe4f42a635c3f912c993e9f66a619a5"
+checksum = "00812289fe1891c191cc2d9db461352fc410619e07ec2bb748faaa06412619d0"
 dependencies = [
  "proc-macro2",
  "sailfish-compiler",
@@ -987,9 +987,9 @@ checksum = "13c2bddecc57b384dee18652358fb23172facb8a2c51ccc10d74c157bdea3292"
 
 [[package]]
 name = "syn"
-version = "2.0.76"
+version = "2.0.77"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "578e081a14e0cefc3279b0472138c513f37b41a08d5a3cca9b6e4e8ceb6cd525"
+checksum = "9f35bcdf61fd8e7be6caf75f429fdca8beb3ed76584befb503b1569faee373ed"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1319,7 +1319,7 @@ dependencies = [
 [[package]]
 name = "xitca-postgres"
 version = "0.1.0"
-source = "git+https://github.com/HFQR/xitca-web.git?rev=6109b84#6109b84708af9cb81c90933146557930b7bf0937"
+source = "git+https://github.com/HFQR/xitca-web.git?rev=6870448#687044829f0e89bab3efafcf7fb53e53167ad32c"
 dependencies = [
  "fallible-iterator",
  "percent-encoding",

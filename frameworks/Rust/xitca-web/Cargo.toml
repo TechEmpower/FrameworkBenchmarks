@@ -32,7 +32,7 @@ required-features = ["pg-orm", "template", "web-codegen"]
 # pg optional
 pg = ["dep:xitca-postgres"]
 # pg send/sync optional
-pg-sync = ["pg"]
+pg-sync = ["dep:xitca-postgres"]
 # pg orm optional
 pg-orm = ["dep:diesel"]
 # http router optional
@@ -71,7 +71,7 @@ xitca-postgres = { version = "0.1", optional = true }
 diesel = { version = "2", features = ["postgres", "r2d2"], optional = true }
 
 # template optional
-sailfish = { version = "0.8", default-features = false, features = ["derive", "perf-inline"], optional = true }
+sailfish = { version = "0.9", default-features = false, features = ["derive", "perf-inline"], optional = true }
 
 # axum optional
 axum = { version = "0.7", optional = true, default-features = false, features = ["json", "query"] }
@@ -95,5 +95,5 @@ codegen-units = 1
 panic = "abort"
 
 [patch.crates-io]
-xitca-postgres = { git = "https://github.com/HFQR/xitca-web.git", rev = "6109b84" }
+xitca-postgres = { git = "https://github.com/HFQR/xitca-web.git", rev = "6870448" }
 mio = { git = "https://github.com/fakeshadow/mio", rev = "9bae6012b7ecfc6083350785f71a5e8265358178" }
