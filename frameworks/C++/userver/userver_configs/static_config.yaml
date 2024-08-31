@@ -1,8 +1,7 @@
 # yaml
 components_manager:
     event_thread_pool:
-        threads: 9
-        dedicated_timer_threads: 1
+        threads: 8
     coro_pool:
         initial_size: 10000              # Preallocate 10000 coroutines at startup.
         max_size: 300000                 # Do not keep more than 300000 preallocated coroutines.
@@ -12,8 +11,9 @@ components_manager:
 
         main-task-processor:            # Make a task processor for CPU-bound couroutine tasks.
             thread_name: main-worker    # OS will show the threads of this task processor with 'main-worker' prefix.
-            worker_threads: 46
+            worker_threads: 48
             guess-cpu-limit: true
+            task-processor-queue: work-stealing-task-queue
 
         fs-task-processor:              # Make a separate task processor for filesystem bound tasks.
             thread_name: fs-worker

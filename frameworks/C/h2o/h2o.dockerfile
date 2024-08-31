@@ -109,4 +109,4 @@ CMD ["taskset", \
      "dbname=hello_world host=tfb-database password=benchmarkdbpass sslmode=disable user=benchmarkdbuser", \
      "-f", \
      "/opt/h2o_app/share/h2o_app/template", \
-     "-m2"]
+     "-m1"]

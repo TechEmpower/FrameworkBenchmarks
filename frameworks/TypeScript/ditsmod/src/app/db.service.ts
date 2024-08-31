@@ -1,8 +1,8 @@
 import { injectable } from '@ditsmod/core';
 import { LRUCache } from 'lru-cache';
 
-import { getNumberOfObjects, getRandomNumber } from '#utils/helper.js';
 import { ModelService, World } from './types.js';
+import { getNumberOfObjects, getRandomNumber } from './helper.js';
 
 @injectable()
 export class DbService {

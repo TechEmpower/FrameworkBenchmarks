@@ -8,7 +8,7 @@ RUN mill benchmark.assembly
 EXPOSE 8080
 
 CMD java -server \
-    -Dcc.otavia.actor.worker.size=28 -Dcc.otavia.nio.worker.size=56 \
+    -Dcc.otavia.actor.worker.size=56 -Dcc.otavia.nio.worker.size=56 \
     -jar \
     out/benchmark/assembly.dest/out.jar \
     jdbc:postgresql://tfb-database:5432/hello_world \

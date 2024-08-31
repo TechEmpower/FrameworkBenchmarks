@@ -1,4 +1,4 @@
-import { Fortune } from '#service/db/types.js';
+import { Fortune } from './types.js';
 
 export function getRandomNumber() {
   return Math.floor(Math.random() * 10000) + 1;
