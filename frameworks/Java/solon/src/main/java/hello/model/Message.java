@@ -1,4 +1,4 @@
-package pmg.model;
+package hello.model;
 
 /**
  * @author pmg1991

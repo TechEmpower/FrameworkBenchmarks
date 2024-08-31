@@ -1,9 +1,9 @@
-package pmg.controller;
+package hello.controller;
 
 import org.noear.solon.annotation.Controller;
 import org.noear.solon.annotation.Get;
 import org.noear.solon.annotation.Mapping;
-import pmg.model.Message;
+import hello.model.Message;
 
 /**
  * @author noear
