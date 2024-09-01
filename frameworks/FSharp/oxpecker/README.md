@@ -19,5 +19,5 @@ This includes tests for plaintext, json, fortunes, single query, mutliple querie
 
 * [Oxpecker](https://github.com/Lanayx/Oxpecker)
 * [Npgsql](https://github.com/npgsql/npgsql)
-* [System.Text.Json](https://github.com/dotnet/runtime/tree/main/src/libraries/System.Text.Json)
+* [SpanJson](https://github.com/Tornhoof/SpanJson)
 * ASP.NET Core

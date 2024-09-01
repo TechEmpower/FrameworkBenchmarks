@@ -17,5 +17,6 @@
     <PackageReference Include="Oxpecker" Version="0.14.1" />
     <PackageReference Include="Oxpecker.ViewEngine" Version="0.14.0" />
     <PackageReference Include="Npgsql" Version="8.0.3" />
+    <PackageReference Include="SpanJson" Version="4.2.0" />
   </ItemGroup>
 </Project>
