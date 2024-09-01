@@ -10,4 +10,4 @@ COPY --from=maven /solon/target/hello-solon.jar app.jar
 
 EXPOSE 8080
 
-CMD ["java", "-jar", "app.jar"]
+CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC",  "-cp", "app.jar", "hello.Main"]
