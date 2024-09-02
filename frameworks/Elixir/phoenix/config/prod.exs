@@ -1,9 +1,10 @@
 import Config
 
 config :hello, HelloWeb.Endpoint,
-  url: [host: "0.0.0.0"],
-  http: [port: 8080, protocol_options: [max_keepalive: :infinity], backlog: 8096],
-  cache_static_lookup: false,
+  adapter: Bandit.PhoenixAdapter,
+  http: [port: 8080, ip: {0, 0, 0, 0}],
+  http_options: [log_protocol_errors: false],
+  compress: false,
   check_origin: false,
   debug_errors: false,
   code_reloader: false,
@@ -14,7 +15,7 @@ config :hello, Hello.Repo,
   password: "benchmarkdbpass",
   database: "hello_world",
   hostname: "tfb-database",
-  pool_size: 40,
+  pool_size: 50,
   queue_target: 5000,
   log: false
 

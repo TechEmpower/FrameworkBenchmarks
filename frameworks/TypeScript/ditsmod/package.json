@@ -10,27 +10,23 @@
     "build": "tsc -b tsconfig.build.json",
     "clean": "rm -rf dist*"
   },
-  "imports": {
-    "#routed/*": "./dist/app/modules/routed/*",
-    "#service/*": "./dist/app/modules/service/*",
-    "#utils/*": "./dist/app/utils/*"
-  },
   "keywords": [],
   "author": "Костя Третяк",
   "license": "MIT",
   "dependencies": {
-    "@ditsmod/core": "~2.51.1",
-    "@ditsmod/routing": "~2.1.0",
+    "@ditsmod/core": "~2.55.0",
+    "@ditsmod/routing": "~2.3.0",
     "handlebars": "^4.7.8",
-    "lru-cache": "^10.0.1",
-    "mariadb": "^3.2.1",
-    "postgres": "^3.3.5"
+    "lru-cache": "^11.0.0",
+    "mariadb": "^3.3.1",
+    "postgres": "^3.4.4"
   },
   "devDependencies": {
     "@types/eslint": "^8.44.2",
     "@types/node": "^20.5.7",
     "@typescript-eslint/eslint-plugin": "^6.5.0",
     "@typescript-eslint/parser": "^6.5.0",
+    "bun-types": "^1.1.22",
     "eslint": "^8.48.0",
     "prettier": "^3.0.2",
     "typescript": "^5.2.2"

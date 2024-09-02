@@ -24,7 +24,7 @@ use xitca_http::{
 };
 use xitca_io::{
     bytes::{Bytes, BytesMut},
-    io_uring::IoBuf,
+    io_uring::BoundedBuf,
     net::{io_uring::TcpStream as IOUTcpStream, TcpStream},
 };
 use xitca_service::{fn_build, fn_service, middleware::UncheckedReady, Service, ServiceExt};
@@ -57,8 +57,7 @@ async fn handler(ctx: Ctx<'_, Request>) -> Result<Response, Infallible> {
     let (req, state) = ctx.into_parts();
     let mut res = match req.uri().path() {
         "/plaintext" => {
-            const HELLO: Bytes = Bytes::from_static(b"Hello, World!");
-            let mut res = req.into_response(HELLO);
+            let mut res = req.into_response(const { Bytes::from_static(b"Hello, World!") });
             res.headers_mut().insert(CONTENT_TYPE, TEXT);
             res
         }

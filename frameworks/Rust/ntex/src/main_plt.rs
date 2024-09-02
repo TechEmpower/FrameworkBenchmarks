@@ -1,5 +1,6 @@
 #[global_allocator]
-static GLOBAL: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
+static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
+
 use std::{future::Future, io, pin::Pin, task::Context, task::Poll};
 
 use ntex::{fn_service, http::h1, io::Io, io::RecvError, util::ready, util::PoolId};
@@ -35,7 +36,7 @@ impl Future for App {
                 Ok((req, _)) => {
                     let _ = this.io.with_write_buf(|buf| {
                         buf.with_bytes_mut(|buf| {
-                            utils::reserve(buf);
+                            utils::reserve(buf, 2 * 1024);
                             match req.path() {
                                 "/json" => {
                                     buf.extend_from_slice(JSON);

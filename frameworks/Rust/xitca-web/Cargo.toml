@@ -11,7 +11,7 @@ required-features = ["io-uring", "pg", "router", "template"]
 [[bin]]
 name = "xitca-web-iou"
 path = "./src/main_iou.rs"
-required-features = ["io-uring", "perf", "pg-iou", "template"]
+required-features = ["io-uring", "perf", "pg", "template"]
 
 [[bin]]
 name = "xitca-web-wasm"
@@ -33,8 +33,6 @@ required-features = ["pg-orm", "template", "web-codegen"]
 pg = ["xitca-postgres/single-thread"]
 # pg send/sync optional
 pg-sync = ["xitca-postgres"]
-# pg io_uring optional
-pg-iou = ["pg", "xitca-postgres/io-uring"]
 # pg orm optional
 pg-orm = ["diesel"]
 # http router optional
@@ -53,18 +51,18 @@ axum = ["dep:axum", "http-body", "tower", "tower-http", "xitca-web/tower-http-co
 perf = ["mimalloc", "tokio/parking_lot"]
 
 [dependencies]
-xitca-http = "0.5"
-xitca-io = "0.3"
-xitca-server = "0.3"
-xitca-service = "0.1"
-xitca-unsafe-collection = "0.1.1"
+xitca-http = "0.6"
+xitca-io = "0.4"
+xitca-server = "0.4"
+xitca-service = "0.2"
+xitca-unsafe-collection = "0.2"
 
 atoi = "2"
 serde = { version = "1" }
 serde_json = { version = "1" }
 
 # web optional
-xitca-web = { version = "0.5", features = ["json"], optional = true }
+xitca-web = { version = "0.6", features = ["json"], optional = true }
 
 # raw-pg optional
 xitca-postgres = { version = "0.1", optional = true }
@@ -97,4 +95,5 @@ codegen-units = 1
 panic = "abort"
 
 [patch.crates-io]
-xitca-postgres = { git = "https://github.com/HFQR/xitca-web.git", rev = "ea1f5a2447e0969a6dff84eac9ff9ff90dbc7ed1" }
+xitca-postgres = { git = "https://github.com/HFQR/xitca-web.git", rev = "f4e7bed" }
+mio = { git = "https://github.com/fakeshadow/mio", rev = "9bae6012b7ecfc6083350785f71a5e8265358178" }

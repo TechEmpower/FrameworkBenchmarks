@@ -1,6 +1,6 @@
 [package]
-name = "ntex"
-version = "1.0.0"
+name = "ntex-bench"
+version = "2.0.0"
 edition = "2018"
 
 [[bin]]
@@ -8,7 +8,7 @@ name = "ntex"
 path = "src/main.rs"
 
 [[bin]]
-name = "ntex-astd"
+name = "ntex-compio"
 path = "src/main.rs"
 
 [[bin]]
@@ -16,7 +16,7 @@ name = "ntex-db"
 path = "src/main_db.rs"
 
 [[bin]]
-name = "ntex-db-astd"
+name = "ntex-db-compio"
 path = "src/main_db.rs"
 
 [[bin]]
@@ -24,7 +24,7 @@ name = "ntex-plt"
 path = "src/main_plt.rs"
 
 [[bin]]
-name = "ntex-plt-astd"
+name = "ntex-plt-compio"
 path = "src/main_plt.rs"
 
 [features]
@@ -33,26 +33,27 @@ default = []
 # tokio runtime
 tokio = ["ntex/tokio"]
 
-# async-std runtime
-async-std = ["ntex/async-std"]
+# compio runtime
+compio = ["ntex/compio"]
 
 [dependencies]
-ntex = "1.0.0"
+ntex = "2.4"
 ntex-bytes = { version = "0.1.21", features=["simd"] }
 mimalloc = { version = "0.1.25", default-features = false }
 snmalloc-rs = { version = "0.3.3", features = ["native-cpu"] }
 yarte = { version = "0.15", features = ["bytes-buf", "json"] }
 buf-min = { version = "0.7", features = ["ntex-bytes"] }
-env_logger = "0.10"
+env_logger = "0.11"
 nanorand = { version = "0.7", default-features = false, features = ["std", "wyrand", "tls"] }
 atoi = "2.0"
 num_cpus = "1.16"
-smallvec = "1.11"
+smallvec = "1.13"
+futures = "0.3"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 log = { version = "0.4", features = ["release_max_level_off"] }
 tok_io = {version = "1", package = "tokio" }
-tokio-postgres = { git="https://github.com/fafhrd91/postgres.git", branch="ntex-1.0" }
+tokio-postgres = { git="https://github.com/fafhrd91/postgres.git", branch="ntex-2" }
 
 [profile.release]
 opt-level = 3
@@ -62,3 +63,10 @@ lto = "thin"
 debug = false
 incremental = false
 overflow-checks = false
+
+[patch.crates-io]
+ntex = { git = "https://github.com/ntex-rs/ntex.git", branch = "compio" }
+ntex-io = { git = "https://github.com/ntex-rs/ntex.git", branch = "compio" }
+ntex-rt = { git = "https://github.com/ntex-rs/ntex.git", branch = "compio" }
+ntex-net = { git = "https://github.com/ntex-rs/ntex.git", branch = "compio" }
+ntex-compio = { git = "https://github.com/ntex-rs/ntex.git", branch = "compio" }

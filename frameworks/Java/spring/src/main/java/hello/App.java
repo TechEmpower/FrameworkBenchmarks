@@ -14,7 +14,7 @@ import org.springframework.context.event.EventListener;
 
 import com.zaxxer.hikari.HikariDataSource;
 
-@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class, MongoRepositoriesAutoConfiguration.class})
+@SpringBootApplication
 public class App {
 
 	public static void main(String[] args) {

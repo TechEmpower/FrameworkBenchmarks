@@ -16,8 +16,8 @@ pub struct _Pool {
 
 pub fn create() -> std::io::Result<Arc<_Pool>> {
     r2d2::Builder::new()
-        .max_size(256)
-        .min_idle(Some(256))
+        .max_size(100)
+        .min_idle(Some(100))
         .test_on_check_out(false)
         .idle_timeout(None)
         .max_lifetime(None)
@@ -34,7 +34,7 @@ pub fn create() -> std::io::Result<Arc<_Pool>> {
 #[cold]
 #[inline(never)]
 fn not_found() -> Error {
-    format!("world not found").into()
+    "world not found".into()
 }
 
 impl _Pool {

@@ -1,11 +1,12 @@
 package vertx.model;
 
+import com.julienviet.jsonsergen.Backend;
 import com.julienviet.jsonsergen.JsonSerGen;
 import io.vertx.codegen.annotations.DataObject;
 import io.vertx.core.buffer.Buffer;
 
 @DataObject
-@JsonSerGen
+@JsonSerGen(backends = Backend.DSL_JSON)
 public class Message {
 
   private String message;

@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-# Configure Slim templating engine
-Slim::Engine.set_options :format=>:html, :sort_attrs=>false
-
 # Our Rack application to be executed by rackup
 class HelloWorld < Sinatra::Base
   configure do
@@ -73,7 +70,7 @@ class HelloWorld < Sinatra::Base
     )
     @fortunes.sort_by!(&:message)
 
-    slim :fortunes
+    erb :fortunes, :layout=>true
   end
 
   # Test type 5: Database updates
