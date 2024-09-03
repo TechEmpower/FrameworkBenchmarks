@@ -138,6 +138,29 @@
 			"display_name": "laravel-octane [frankenphp]",
 			"notes": "",
 			"versus": "php"
+		},
+		"pripple": {
+			"json_url": "/json",
+			"db_url": "/db",
+			"query_url": "/queries/",
+			"fortune_url": "/fortunes",
+			"update_url": "/updates/",
+			"plaintext_url": "/plaintext",
+			"port": 8080,
+			"approach": "Realistic",
+			"classification": "Fullstack",
+			"database": "MySQL",
+			"framework": "laravel",
+			"language": "PHP",
+			"flavor": "PHP8.3",
+			"orm": "Full",
+			"platform": "PRipple",
+			"webserver": "PServer",
+			"os": "Linux",
+			"database_os": "Linux",
+			"display_name": "laravel-pripple",
+			"notes": "",
+			"versus": "php"
 		}
 	}]
 }
