@@ -9,7 +9,7 @@
         "query_url": "/queries/",
         "fortune_url": "/fortunes",
         "update_url": "/updates/",
-        "cached_query_url": "/cached-queries/",
+        "cached_query_url": "/cachedqueries/",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Platform",
