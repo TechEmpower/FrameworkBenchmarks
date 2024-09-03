@@ -1,13 +1,24 @@
 [package]
 name    = "ohkami_framework_benchmarks"
-version = "0.19.0"
+version = "0.20.0"
 edition = "2021"
 authors = ["kanarus <kanarus786@gmail.com>"]
 
 [dependencies]
-ohkami       = { version = "=0.19.0", features = ["rt_tokio"] }
-tokio        = { version = "1.38.0" , features = ["full"] }
+ohkami       = { version = "=0.20.0", features = ["rt_tokio"] }
+tokio        = { version = "1.40.0" , features = ["full"] }
 rand         = { version = "0.8.5"  , features = ["small_rng"] }
-sqlx         = { version = "0.7.4"  , features = ["postgres", "macros", "runtime-tokio-native-tls"] }
+sqlx         = { version = "0.8.1"  , features = ["postgres", "macros", "runtime-tokio-native-tls"] }
 yarte        = { version = "0.15.7" }
 futures-util = { version = "0.3.30" }
+
+[profile.release]
+opt-level = 3
+debug = false
+debug-assertions = false
+lto = true
+panic = "abort"
+incremental = false
+codegen-units = 1
+rpath = false
+strip = false
