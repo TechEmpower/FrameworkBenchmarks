@@ -1,22 +1,9 @@
-use std::{env, fmt::Debug, str::FromStr};
-
 use axum::{
-    body::{Bytes, Full},
+    body::Bytes,
     http::{header, HeaderValue, StatusCode},
     response::{IntoResponse, Response},
 };
-use rand::{rngs::SmallRng, Rng};
 use serde::Deserialize;
-
-pub fn get_environment_variable<T: FromStr>(key: &str) -> T
-where
-    <T as FromStr>::Err: Debug,
-{
-    env::var(key)
-        .unwrap_or_else(|_| panic!("{key} environment variable was not set"))
-        .parse::<T>()
-        .unwrap_or_else(|_| panic!("could not parse {key}"))
-}
 
 #[derive(Debug, Deserialize)]
 pub struct Params {
@@ -24,12 +11,7 @@ pub struct Params {
 }
 
 #[allow(dead_code)]
-pub fn random_number(rng: &mut SmallRng) -> i32 {
-    (rng.gen::<u32>() % 10_000 + 1) as i32
-}
-
-#[allow(dead_code)]
-pub fn parse_params(params: Params) -> i32 {
+pub fn parse_params(params: Params) -> usize {
     params
         .queries
         .and_then(|q| q.parse().ok())
@@ -52,7 +34,7 @@ pub struct Utf8Html<T>(pub T);
 
 impl<T> IntoResponse for Utf8Html<T>
 where
-    T: Into<Full<Bytes>>,
+    T: Into<Bytes>,
 {
     fn into_response(self) -> Response {
         let mut res = (StatusCode::OK, self.0.into()).into_response();

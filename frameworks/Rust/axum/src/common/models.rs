@@ -1,5 +1,10 @@
 use serde::{Deserialize, Serialize};
 
+#[derive(Serialize)]
+pub struct Message {
+    pub message: &'static str,
+}
+
 #[derive(Clone, Debug, PartialEq, Deserialize, Serialize)]
 pub struct Fortune {
     pub id: i32,
