@@ -8,6 +8,6 @@ var app = builder.Build();
 
 SetCodeBehind.CodeBehindCompiler.Initialization();
 
-app.UseCodeBehindRoute();
+app.UseCodeBehind();
 
 app.Run();
