@@ -65,9 +65,7 @@ mod non_wasm {
 
         pub type Ctx<'a, Req> = Context<'a, Req, State<Client>>;
 
-        pub fn context_mw(
-        ) -> ContextBuilder<impl Fn() -> Pin<Box<dyn Future<Output = HandleResult<State<Client>>>>>>
-        {
+        pub fn context_mw() -> ContextBuilder<impl Fn() -> Pin<Box<dyn Future<Output = HandleResult<State<Client>>>>>> {
             ContextBuilder::new(|| {
                 Box::pin(async {
                     db::create().await.map(|client| State {

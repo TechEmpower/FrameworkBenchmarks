@@ -43,11 +43,7 @@ impl _Pool {
 
         let w_id = self.rng.lock().unwrap().gen_id();
         let mut conn = self.pool.get()?;
-        world
-            .filter(id.eq(w_id))
-            .load(&mut conn)?
-            .pop()
-            .ok_or_else(not_found)
+        world.filter(id.eq(w_id)).load(&mut conn)?.pop().ok_or_else(not_found)
     }
 
     pub fn get_worlds(&self, num: u16) -> HandleResult<Vec<World>> {
