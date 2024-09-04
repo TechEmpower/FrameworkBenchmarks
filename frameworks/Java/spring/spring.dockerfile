@@ -12,4 +12,4 @@ RUN java -Djarmode=tools -jar app.jar extract
 
 EXPOSE 8080
 
-CMD ["java", "-XX:+DisableExplicitGC", "-XX:+UseStringDeduplication", "-Dlogging.level.root=OFF", "-jar", "app/app.jar", "--spring.profiles.active=jpa"]
+CMD ["java", "-XX:+DisableExplicitGC", "-XX:+UseStringDeduplication", "-Dlogging.level.root=OFF", "-jar", "app/app.jar", "--spring.profiles.active=jdbc"]
