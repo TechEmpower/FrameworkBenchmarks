@@ -51,17 +51,11 @@ fn fortunes(StateOwn(pool): StateOwn<Pool>) -> HandleResult<Html<String>> {
 }
 
 #[route("/queries", method = get)]
-fn queries(
-    Query(Num(num)): Query<Num>,
-    StateOwn(pool): StateOwn<Pool>,
-) -> HandleResult<Json<impl Serialize>> {
+fn queries(Query(Num(num)): Query<Num>, StateOwn(pool): StateOwn<Pool>) -> HandleResult<Json<impl Serialize>> {
     pool.get_worlds(num).map(Json)
 }
 
 #[route("/updates", method = get)]
-fn updates(
-    Query(Num(num)): Query<Num>,
-    StateOwn(pool): StateOwn<Pool>,
-) -> HandleResult<Json<impl Serialize>> {
+fn updates(Query(Num(num)): Query<Num>, StateOwn(pool): StateOwn<Pool>) -> HandleResult<Json<impl Serialize>> {
     pool.update(num).map(Json)
 }

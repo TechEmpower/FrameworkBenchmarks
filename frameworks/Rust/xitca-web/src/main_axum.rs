@@ -99,9 +99,7 @@ mod tower_compat {
         HttpServiceBuilder,
     };
     use xitca_io::net::io_uring::TcpStream;
-    use xitca_service::{
-        fn_build, middleware::UncheckedReady, ready::ReadyService, Service, ServiceExt,
-    };
+    use xitca_service::{fn_build, middleware::UncheckedReady, ready::ReadyService, Service, ServiceExt};
     use xitca_web::service::tower_http_compat::{CompatReqBody, CompatResBody};
 
     pub struct TowerHttp<S, B> {
@@ -112,17 +110,11 @@ mod tower_compat {
     impl<S, B> TowerHttp<S, B> {
         pub fn service<F, Fut>(
             func: F,
-        ) -> impl Service<
-            Response = impl ReadyService + Service<(TcpStream, SocketAddr)>,
-            Error = impl fmt::Debug,
-        >
+        ) -> impl Service<Response = impl ReadyService + Service<(TcpStream, SocketAddr)>, Error = impl fmt::Debug>
         where
             F: Fn() -> Fut + Send + Sync + Clone,
             Fut: Future<Output = Result<S, crate::util::Error>>,
-            S: tower::Service<
-                Request<CompatReqBody<RequestExt<RequestBody>, ()>>,
-                Response = Response<B>,
-            >,
+            S: tower::Service<Request<CompatReqBody<RequestExt<RequestBody>, ()>>, Response = Response<B>>,
             S::Error: fmt::Debug,
             B: Body<Data = Bytes> + Send + 'static,
         {
@@ -142,18 +134,12 @@ mod tower_compat {
 
     impl<S, B> Service<Request<RequestExt<RequestBody>>> for TowerHttp<S, B>
     where
-        S: tower::Service<
-            Request<CompatReqBody<RequestExt<RequestBody>, ()>>,
-            Response = Response<B>,
-        >,
+        S: tower::Service<Request<CompatReqBody<RequestExt<RequestBody>, ()>>, Response = Response<B>>,
     {
         type Response = Response<CompatResBody<B>>;
         type Error = S::Error;
 
-        async fn call(
-            &self,
-            req: Request<RequestExt<RequestBody>>,
-        ) -> Result<Self::Response, Self::Error> {
+        async fn call(&self, req: Request<RequestExt<RequestBody>>) -> Result<Self::Response, Self::Error> {
             let (parts, ext) = req.into_parts();
             let req = Request::from_parts(parts, CompatReqBody::new(ext, ()));
             let fut = self.service.borrow_mut().call(req);

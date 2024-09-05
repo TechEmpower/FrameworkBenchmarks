@@ -12,30 +12,21 @@ use std::{convert::Infallible, fmt, future::poll_fn, io, pin::pin};
 
 use futures_core::stream::Stream;
 use xitca_http::{
-    body::Once,
     date::DateTimeService,
     h1::proto::context::Context,
-    http::{
-        self,
-        const_header_value::{TEXT, TEXT_HTML_UTF8},
-        header::{CONTENT_TYPE, SERVER},
-        IntoResponse, RequestExt, StatusCode,
-    },
+    http::{header::SERVER, StatusCode},
 };
 use xitca_io::{
-    bytes::{Bytes, BytesMut},
+    bytes::BytesMut,
     io_uring::BoundedBuf,
     net::{io_uring::TcpStream as IOUTcpStream, TcpStream},
 };
 use xitca_service::{fn_build, fn_service, middleware::UncheckedReady, Service, ServiceExt};
 
 use self::{
-    ser::{json_response, Message},
+    ser::{error_response, IntoResponse, Message, Request, Response},
     util::{context_mw, Ctx, QueryParse, SERVER_HEADER_VALUE},
 };
-
-type Request = http::Request<RequestExt<()>>;
-type Response = http::Response<Once<Bytes>>;
 
 fn main() -> io::Result<()> {
     let service = fn_service(handler)
@@ -53,47 +44,31 @@ fn main() -> io::Result<()> {
         .wait()
 }
 
-async fn handler(ctx: Ctx<'_, Request>) -> Result<Response, Infallible> {
+async fn handler(ctx: Ctx<'_, Request<()>>) -> Result<Response, Infallible> {
     let (req, state) = ctx.into_parts();
     let mut res = match req.uri().path() {
-        "/plaintext" => {
-            let mut res = req.into_response(const { Bytes::from_static(b"Hello, World!") });
-            res.headers_mut().insert(CONTENT_TYPE, TEXT);
-            res
-        }
-        "/json" => json_response(req, &mut state.write_buf.borrow_mut(), &Message::new()).unwrap(),
+        "/plaintext" => req.text_response().unwrap(),
+        "/json" => req.json_response(state, &Message::new()).unwrap(),
         "/db" => {
             let world = state.client.get_world().await.unwrap();
-            json_response(req, &mut state.write_buf.borrow_mut(), &world).unwrap()
+            req.json_response(state, &world).unwrap()
         }
         "/queries" => {
             let num = req.uri().query().parse_query();
             let worlds = state.client.get_worlds(num).await.unwrap();
-            json_response(req, &mut state.write_buf.borrow_mut(), worlds.as_slice()).unwrap()
+            req.json_response(state, &worlds).unwrap()
         }
         "/updates" => {
             let num = req.uri().query().parse_query();
             let worlds = state.client.update(num).await.unwrap();
-            json_response(req, &mut state.write_buf.borrow_mut(), worlds.as_slice()).unwrap()
+            req.json_response(state, &worlds).unwrap()
         }
         "/fortunes" => {
             use sailfish::TemplateOnce;
-            let fortunes = state
-                .client
-                .tell_fortune()
-                .await
-                .unwrap()
-                .render_once()
-                .unwrap();
-            let mut res = req.into_response(Bytes::from(fortunes));
-            res.headers_mut().append(CONTENT_TYPE, TEXT_HTML_UTF8);
-            res
+            let fortunes = state.client.tell_fortune().await.unwrap().render_once().unwrap();
+            req.html_response(fortunes).unwrap()
         }
-        _ => {
-            let mut res = req.into_response(Bytes::new());
-            *res.status_mut() = StatusCode::NOT_FOUND;
-            res
-        }
+        _ => error_response(StatusCode::NOT_FOUND),
     };
     res.headers_mut().insert(SERVER, SERVER_HEADER_VALUE);
     Ok(res)
@@ -107,7 +82,7 @@ struct Http1IOU<S> {
 // runner for http service.
 impl<S> Service<TcpStream> for Http1IOU<S>
 where
-    S: Service<Request, Response = Response>,
+    S: Service<Request<()>, Response = Response>,
     S::Error: fmt::Debug,
 {
     type Response = ();
@@ -138,10 +113,7 @@ where
                 let (parts, body) = self.service.call(req).await.unwrap().into_parts();
                 let mut encoder = ctx.encode_head(parts, &body, &mut write_buf).unwrap();
                 let mut body = pin!(body);
-                let chunk = poll_fn(|cx| body.as_mut().poll_next(cx))
-                    .await
-                    .unwrap()
-                    .unwrap();
+                let chunk = poll_fn(|cx| body.as_mut().poll_next(cx)).await.unwrap().unwrap();
                 encoder.encode(chunk, &mut write_buf);
                 encoder.encode_eof(&mut write_buf);
             }

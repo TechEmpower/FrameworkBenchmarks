@@ -5,11 +5,19 @@ use std::borrow::Cow;
 use serde::{ser::SerializeStruct, Deserialize, Deserializer, Serialize, Serializer};
 use xitca_http::{
     body::Once,
-    bytes::{BufMutWriter, Bytes, BytesMut},
-    http::{const_header_value::JSON, header::CONTENT_TYPE, IntoResponse, Request, Response},
+    bytes::{BufMutWriter, Bytes},
+    http::{
+        self,
+        const_header_value::{JSON, TEXT, TEXT_HTML_UTF8},
+        header::CONTENT_TYPE,
+        IntoResponse as _, RequestExt, StatusCode,
+    },
 };
 
-use crate::util::Error;
+use crate::util::{Error, State};
+
+const HELLO: &str = "Hello, World!";
+const HELLO_BYTES: &[u8] = HELLO.as_bytes();
 
 #[derive(Clone)]
 pub struct Message {
@@ -19,9 +27,7 @@ pub struct Message {
 impl Message {
     #[inline]
     pub const fn new() -> Self {
-        Self {
-            message: "Hello, World!",
-        }
+        Self { message: HELLO }
     }
 }
 
@@ -128,8 +134,7 @@ impl<'de> Deserialize<'de> for Num {
             where
                 V: MapAccess<'de>,
             {
-                map.next_key::<Field>()?
-                    .ok_or_else(|| Error::missing_field("q"))?;
+                map.next_key::<Field>()?.ok_or_else(|| Error::missing_field("q"))?;
                 let q = map.next_value::<u16>().unwrap_or(1);
                 let q = cmp::min(500, cmp::max(1, q));
                 Ok(Num(q))
@@ -163,16 +168,44 @@ impl Serialize for World {
     }
 }
 
-pub fn json_response<Ext, S>(
-    req: Request<Ext>,
-    buf: &mut BytesMut,
-    value: &S,
-) -> Result<Response<Once<Bytes>>, Error>
-where
-    S: ?Sized + Serialize,
-{
-    serde_json::to_writer(BufMutWriter(buf), value)?;
-    let mut res = req.into_response(buf.split().freeze());
-    res.headers_mut().insert(CONTENT_TYPE, JSON);
-    Ok(res)
+pub type Request<B> = http::Request<RequestExt<B>>;
+pub type Response = http::Response<Once<Bytes>>;
+
+pub trait IntoResponse: Sized {
+    fn json_response<C>(self, state: &State<C>, val: &impl Serialize) -> Result<Response, Error>;
+
+    fn text_response(self) -> Result<Response, Error>;
+
+    fn html_response(self, val: String) -> Result<Response, Error>;
+}
+
+impl<Ext> IntoResponse for Request<Ext> {
+    fn json_response<C>(self, state: &State<C>, val: &impl Serialize) -> Result<Response, Error> {
+        let buf = &mut *state.write_buf.borrow_mut();
+        serde_json::to_writer(BufMutWriter(buf), val)?;
+        let mut res = self.into_response(buf.split().freeze());
+        res.headers_mut().insert(CONTENT_TYPE, JSON);
+        Ok(res)
+    }
+
+    fn text_response(self) -> Result<Response, Error> {
+        let mut res = self.into_response(const { Bytes::from_static(HELLO_BYTES) });
+        res.headers_mut().insert(CONTENT_TYPE, TEXT);
+        Ok(res)
+    }
+
+    fn html_response(self, val: String) -> Result<Response, Error> {
+        let mut res = self.into_response(Bytes::from(val));
+        res.headers_mut().insert(CONTENT_TYPE, TEXT_HTML_UTF8);
+        Ok(res)
+    }
+}
+
+#[cold]
+#[inline(never)]
+pub fn error_response(status: StatusCode) -> Response {
+    http::Response::builder()
+        .status(status)
+        .body(Once::new(Bytes::new()))
+        .unwrap()
 }
