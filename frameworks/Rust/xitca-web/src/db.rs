@@ -84,12 +84,9 @@ impl Client {
         let mut conn = self.pool.get().await?;
         let stmt = conn.prepare(WORLD_SQL, WORLD_SQL_TYPES).await?;
         let id = self.shared().0.gen_id();
-        conn.query_raw(&stmt, [id])
-            .inspect(|_| drop(conn))?
-            .try_next()
-            .await?
-            .map(|row| World::new(row.get_raw(0), row.get_raw(1)))
-            .ok_or_else(|| "World does not exist".into())
+        let mut res = conn.consume().query_raw(&stmt, [id])?;
+        let row = res.try_next().await?.ok_or_else(|| "World does not exist")?;
+        Ok(World::new(row.get_raw(0), row.get_raw(1)))
     }
 
     pub async fn get_worlds(&self, num: u16) -> HandleResult<Vec<World>> {
@@ -102,7 +99,7 @@ impl Client {
             let (ref mut rng, ref mut buf) = *self.shared();
             let mut pipe = Pipeline::with_capacity_from_buf(len, buf);
             (0..num).try_for_each(|_| pipe.query_raw(&stmt, [rng.gen_id()]))?;
-            conn.pipeline(pipe).inspect(|_| drop(conn))?
+            conn.consume().pipeline(pipe)?
         };
 
         let mut worlds = Vec::with_capacity(len);
@@ -137,7 +134,7 @@ impl Client {
                 pipe.query_raw(&world_stmt, [w_id])
             })?;
             pipe.query_raw(&update_stmt, sort_update_params(&params))?;
-            conn.pipeline(pipe).inspect(|_| drop(conn))?
+            conn.consume().pipeline(pipe)?
         };
 
         let mut worlds = Vec::with_capacity(len);
@@ -160,7 +157,7 @@ impl Client {
 
         let mut conn = self.pool.get().await?;
         let stmt = conn.prepare(FORTUNE_SQL, FORTUNE_SQL_TYPES).await?;
-        let mut res = conn.query_raw::<[i32; 0]>(&stmt, []).inspect(|_| drop(conn))?;
+        let mut res = conn.consume().query_raw::<[i32; 0]>(&stmt, [])?;
 
         while let Some(row) = res.try_next().await? {
             items.push(Fortune::new(row.get_raw(0), row.get_raw::<String>(1)));
