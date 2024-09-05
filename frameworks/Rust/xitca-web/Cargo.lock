@@ -1343,7 +1343,7 @@ dependencies = [
 [[package]]
 name = "xitca-postgres"
 version = "0.1.0"
-source = "git+https://github.com/HFQR/xitca-web.git?rev=8394c43#8394c4345ecb34ac28360b6da5e2873b08ef0d69"
+source = "git+https://github.com/HFQR/xitca-web.git?rev=97a3a5b#97a3a5b7707b1fd09c305700d3c5447d6a397b9b"
 dependencies = [
  "fallible-iterator",
  "percent-encoding",
