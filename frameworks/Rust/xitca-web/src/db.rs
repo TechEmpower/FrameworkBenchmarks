@@ -1,7 +1,7 @@
 use std::fmt::Write;
 
 use xitca_io::bytes::BytesMut;
-use xitca_postgres::{pipeline::Pipeline, AsyncLendingIterator, ExclusivePool, Type};
+use xitca_postgres::{pipeline::Pipeline, AsyncLendingIterator, Pool, Type};
 
 use super::{
     ser::{Fortune, Fortunes, World},
@@ -9,7 +9,7 @@ use super::{
 };
 
 pub struct Client {
-    pool: ExclusivePool,
+    pool: Pool,
     #[cfg(not(feature = "pg-sync"))]
     shared: std::cell::RefCell<Shared>,
     #[cfg(feature = "pg-sync")]
@@ -28,11 +28,11 @@ const WORLD_SQL: &str = "SELECT * FROM world WHERE id=$1";
 const WORLD_SQL_TYPES: &[Type] = &[Type::INT4];
 
 fn update_query(num: usize) -> Box<str> {
-    const PREFIX: &str = "UPDATE world SET randomNumber = w.num FROM (VALUES ";
-    const SUFFIX: &str = ") AS w (id,num) WHERE world.id = w.id";
+    const PREFIX: &str = "UPDATE world SET randomNumber = w.r FROM (VALUES ";
+    const SUFFIX: &str = ") AS w (i,r) WHERE world.id = w.i";
 
     let (_, mut query) = (1..=num).fold((1, String::from(PREFIX)), |(idx, mut query), _| {
-        write!(query, "(${}::int4,${}::int4),", idx, idx + 1).unwrap();
+        write!(query, "(${}::int,${}::int),", idx, idx + 1).unwrap();
         (idx + 2, query)
     });
 
@@ -44,7 +44,7 @@ fn update_query(num: usize) -> Box<str> {
 }
 
 pub async fn create() -> HandleResult<Client> {
-    let pool = ExclusivePool::builder(DB_URL).capacity(1).build()?;
+    let pool = Pool::builder(DB_URL).capacity(1).build()?;
 
     let shared = (Rand::default(), BytesMut::new());
 
@@ -125,7 +125,7 @@ impl Client {
         let world_stmt = conn.prepare(WORLD_SQL, WORLD_SQL_TYPES).await?;
         let update_stmt = conn.prepare(&update, &[]).await?;
 
-        let mut params = Vec::with_capacity(len * 2);
+        let mut params = Vec::with_capacity(len);
 
         let mut res = {
             let (ref mut rng, ref mut buf) = *self.shared();
@@ -136,9 +136,7 @@ impl Client {
                 params.push([w_id, r_id]);
                 pipe.query_raw(&world_stmt, [w_id])
             })?;
-            let mut params = params.clone();
-            params.sort_by(|a, b| a[0].cmp(&b[0]));
-            pipe.query_raw(&update_stmt, params.into_iter().flatten().collect::<Vec<_>>())?;
+            pipe.query_raw(&update_stmt, sort_update_params(&params))?;
             conn.pipeline(pipe).inspect(|_| drop(conn))?
         };
 
@@ -172,4 +170,34 @@ impl Client {
 
         Ok(Fortunes::new(items))
     }
+}
+
+fn sort_update_params(params: &Vec<[i32; 2]>) -> impl ExactSizeIterator<Item = i32> {
+    let mut params = params.clone();
+    params.sort_by(|a, b| a[0].cmp(&b[0]));
+
+    struct ParamIter<I>(I);
+
+    impl<I> Iterator for ParamIter<I>
+    where
+        I: Iterator,
+    {
+        type Item = I::Item;
+
+        #[inline]
+        fn next(&mut self) -> Option<Self::Item> {
+            self.0.next()
+        }
+
+        #[inline]
+        fn size_hint(&self) -> (usize, Option<usize>) {
+            self.0.size_hint()
+        }
+    }
+
+    // impl depends on compiler optimization to flat Vec<[T]> to Vec<T> when inferring
+    // it's size hint. possible to cause runtime panic.
+    impl<I> ExactSizeIterator for ParamIter<I> where I: Iterator {}
+
+    ParamIter(params.into_iter().flatten())
 }

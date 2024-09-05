@@ -16,6 +16,9 @@ use xitca_http::{
 
 use crate::util::{Error, State};
 
+const HELLO: &str = "Hello, World!";
+const HELLO_BYTES: &[u8] = HELLO.as_bytes();
+
 #[derive(Clone)]
 pub struct Message {
     message: &'static str,
@@ -24,9 +27,7 @@ pub struct Message {
 impl Message {
     #[inline]
     pub const fn new() -> Self {
-        Self {
-            message: "Hello, World!",
-        }
+        Self { message: HELLO }
     }
 }
 
@@ -188,7 +189,7 @@ impl<Ext> IntoResponse for Request<Ext> {
     }
 
     fn text_response(self) -> Result<Response, Error> {
-        let mut res = self.into_response(const { Bytes::from_static(b"hello,world!") });
+        let mut res = self.into_response(const { Bytes::from_static(HELLO_BYTES) });
         res.headers_mut().insert(CONTENT_TYPE, TEXT);
         Ok(res)
     }
