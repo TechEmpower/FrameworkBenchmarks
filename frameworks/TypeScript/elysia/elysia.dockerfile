@@ -10,4 +10,4 @@ RUN bun install --production
 
 RUN bun run build
 
-CMD ["bun", "spawn.ts"]
+CMD ["bun", "./dist/index.js"]
