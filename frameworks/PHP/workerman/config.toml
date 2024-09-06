@@ -33,7 +33,7 @@ platform = "workerman"
 webserver = "None"
 versus = "php"
 
-[php8-jit]
+[mysql]
 urls.plaintext = "/plaintext"
 urls.json = "/json"
 urls.db = "/db"
@@ -50,15 +50,3 @@ platform = "workerman"
 webserver = "None"
 versus = "php"
 
-[async]
-urls.db = "/db"
-urls.fortune = "/fortunes"
-approach = "Realistic"
-classification = "Platform"
-database = "MySQL"
-database_os = "Linux"
-os = "Linux"
-orm = "Raw"
-platform = "workerman"
-webserver = "None"
-versus = "php"

@@ -1,5 +1,7 @@
 FROM ubuntu:24.04
 
+ENV TEST_TYPE default
+
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update -yqq && apt-get install -yqq software-properties-common > /dev/null
@@ -11,14 +13,13 @@ RUN apt-get install -yqq php8.3-cli php8.3-mysql php8.3-xml > /dev/null
 COPY --from=composer/composer:latest-bin --link /composer /usr/local/bin/composer
 
 RUN apt-get install -y php-pear php8.3-dev libevent-dev git > /dev/null && \
-    pecl install event-3.1.3 > /dev/null && echo "extension=event.so" > /etc/php/8.3/cli/conf.d/event.ini
- 
-COPY --link php-jit.ini /etc/php/8.3/cli/php.ini 
+    pecl install event-3.1.3 > /dev/null && echo "extension=event.so" > /etc/php/8.3/cli/conf.d/30-event.ini
 
 WORKDIR /workerman
 COPY --link . .
 
 RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
+COPY php.ini /etc/php/8.3/cli/conf.d/10-opcache.ini
 
 EXPOSE 8080
 
