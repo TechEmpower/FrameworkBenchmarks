@@ -10,9 +10,10 @@ FROM ghcr.io/graalvm/native-image-community:22.0.2
 WORKDIR /redkale
 COPY conf conf
 COPY --from=maven /redkale/target/redkale-benchmark-1.0.0.jar redkale-benchmark.jar
-
 RUN native-image -H:+ReportExceptionStackTraces --report-unsupported-elements-at-runtime -jar redkale-benchmark.jar
 
+FROM ghcr.io/graalvm/jdk-community:22.0.2
+WORKDIR /redkale
 RUN ls -lh
 
 EXPOSE 8080
