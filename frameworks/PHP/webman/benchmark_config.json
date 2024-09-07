@@ -1,5 +1,6 @@
 {
   "framework": "webman",
+  "maintainers": ["walkor"],
   "tests": [{
     "default": {
       "dockerfile": "webman.dockerfile",

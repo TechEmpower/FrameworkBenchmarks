@@ -1,5 +1,6 @@
 {
   "framework": "workerman",
+  "maintainers": ["walkor"],
   "tests": [{
     "default": {
       "dockerfile": "workerman.dockerfile",
