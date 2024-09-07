@@ -45,7 +45,7 @@
       "versus": "php"
     },
     "pgsql": {
-      "dockerfile": "workerman-mysql-jit.dockerfile",
+      "dockerfile": "workerman-pgsql-jit.dockerfile",
       "db_url": "/db",
       "query_url": "/query?q=",
       "update_url": "/update?q=",
