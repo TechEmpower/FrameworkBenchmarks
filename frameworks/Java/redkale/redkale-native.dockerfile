@@ -6,7 +6,7 @@ COPY pom.xml pom.xml
 RUN mvn package -q
 
 
-FROM ghcr.io/graalvm/jdk-community:22.0.2
+FROM ghcr.io/graalvm/graalvm-ce:22.3.3
 RUN gu install native-image
 WORKDIR /redkale
 COPY conf conf
