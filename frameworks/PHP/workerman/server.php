@@ -13,7 +13,6 @@ if ($test_type === 'pgsql') {
 $process_count = (int) shell_exec('nproc') * ($test_type === 'default' ? 1 : 4);
 
 $http_worker                = new Worker('http://0.0.0.0:8080');
-$http_worker->reusePort     = true;
 $http_worker->count         = $process_count;
 $http_worker->onWorkerStart = static function () use ($test_type) {
     Header::$date = gmdate('D, d M Y H:i:s').' GMT';
