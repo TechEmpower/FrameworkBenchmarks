@@ -12,8 +12,8 @@
         <vertx.version>4.5.8</vertx.version>
         <vertx-scram.version>2.1</vertx-scram.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>18</maven.compiler.source>
-        <maven.compiler.target>18</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
     </properties> 
 
     <dependencies>  
@@ -84,7 +84,6 @@
                     <encoding>UTF-8</encoding>
                     <compilerArgs>
                         <arg>-parameters</arg>
-                        <arg>--enable-preview</arg>
                     </compilerArgs>
                     <showDeprecation>true</showDeprecation>
                 </configuration>
