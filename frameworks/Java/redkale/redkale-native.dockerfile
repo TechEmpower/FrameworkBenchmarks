@@ -15,7 +15,6 @@ RUN native-image -H:+ReportExceptionStackTraces --report-unsupported-elements-at
 FROM ghcr.io/graalvm/jdk-community:22.0.2
 WORKDIR /redkale
 COPY --from=native /redkale/redkale-benchmark redkale-benchmark
-RUN ls -lh
 
 EXPOSE 8080
 
