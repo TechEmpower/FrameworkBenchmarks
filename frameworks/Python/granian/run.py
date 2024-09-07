@@ -7,9 +7,11 @@ from granian import Granian
 if __name__ == '__main__':
     interface = sys.argv[1]
     threading_mode = sys.argv[2]
+    workers = multiprocessing.cpu_count()
 
-    #: split cores between the two loops
-    workers = round(multiprocessing.cpu_count() / 2)
+    if interface == "rsgi":
+        #: split cores between the two loops
+        workers = round(workers / 2)
 
     blocking_threads = None
     if interface == "wsgi":

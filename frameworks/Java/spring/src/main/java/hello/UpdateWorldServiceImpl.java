@@ -3,7 +3,8 @@ package hello;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import hello.controller.HelloController;
+import hello.web.DbHandler;
+import hello.web.WebmvcRouter;
 import hello.model.World;
 import hello.repository.DbRepository;
 
@@ -33,7 +34,7 @@ public class UpdateWorldServiceImpl implements UpdateWorldService {
 
 		int newRandomNumber;
 		do {
-			newRandomNumber = HelloController.randomWorldNumber();
+			newRandomNumber = DbHandler.randomWorldNumber();
 		} while (newRandomNumber == world.randomnumber);
 
 		return dbRepository.updateWorld(world, newRandomNumber);
