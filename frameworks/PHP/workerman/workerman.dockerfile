@@ -13,7 +13,7 @@ RUN apt-get install -yqq php8.3-cli php8.3-mysql php8.3-xml > /dev/null
 COPY --from=composer/composer:latest-bin --link /composer /usr/local/bin/composer
 
 RUN apt-get install -y php-pear php8.3-dev libevent-dev git > /dev/null && \
-    pecl install event-3.1.3 > /dev/null && echo "extension=event.so" > /etc/php/8.3/cli/conf.d/30-event.ini
+    pecl install event > /dev/null && echo "extension=event.so" > /etc/php/8.3/cli/conf.d/30-event.ini
 
 WORKDIR /workerman
 COPY --link . .
