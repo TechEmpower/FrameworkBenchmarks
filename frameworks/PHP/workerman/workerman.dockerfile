@@ -19,7 +19,7 @@ WORKDIR /workerman
 COPY --link . .
 
 RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
-COPY php.ini /etc/php/8.3/cli/conf.d/10-opcache.ini
+COPY php.ini /etc/php/8.3/cli/php.ini
 
 EXPOSE 8080
 

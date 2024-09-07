@@ -1,6 +1,6 @@
 FROM ubuntu:24.04
 
-ENV TEST_TYPE pgsql
+ENV TEST_TYPE mysql
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -8,7 +8,7 @@ RUN apt-get update -yqq && apt-get install -yqq software-properties-common > /de
 RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php > /dev/null && \
     apt-get update -yqq > /dev/null && apt-get upgrade -yqq > /dev/null
 
-RUN apt-get install -yqq php8.3-cli php8.3-pgsql php8.3-xml > /dev/null
+RUN apt-get install -yqq php8.3-cli php8.3-mysql php8.3-xml > /dev/null
 
 COPY --from=composer/composer:latest-bin --link /composer /usr/local/bin/composer
 
@@ -19,7 +19,7 @@ WORKDIR /workerman
 COPY --link . .
 
 RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
-COPY php.ini /etc/php/8.3/cli/php.ini
+COPY php-jit.ini /etc/php/8.3/cli/conf.d/10-opcache.ini
 
 EXPOSE 8080
 
