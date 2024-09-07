@@ -6,7 +6,8 @@ COPY pom.xml pom.xml
 RUN mvn package -q
 
 
-FROM ghcr.io/graalvm/native-image-community:21
+FROM ghcr.io/graalvm/jdk-community:22.0.2
+RUN gu install native-image
 WORKDIR /redkale
 COPY conf conf
 COPY --from=maven /redkale/target/redkale-benchmark-1.0.0.jar redkale-benchmark.jar
