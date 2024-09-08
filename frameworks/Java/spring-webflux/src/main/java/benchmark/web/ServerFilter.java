@@ -1,6 +1,5 @@
 package benchmark.web;
 
-import io.netty.handler.codec.http.HttpHeaderNames;
 import org.springframework.http.HttpHeaders;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -28,8 +27,8 @@ public class ServerFilter implements WebFilter {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
         HttpHeaders headers = exchange.getResponse().getHeaders();
-        headers.add(HttpHeaderNames.SERVER.toString(), SERVER_NAME);
-        headers.add(HttpHeaderNames.DATE.toString(), this.date);
+        headers.add(HttpHeaders.SERVER, SERVER_NAME);
+        headers.add(HttpHeaders.DATE, this.date);
         return chain.filter(exchange);
     }
 }

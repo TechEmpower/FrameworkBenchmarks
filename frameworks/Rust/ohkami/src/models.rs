@@ -1,8 +1,7 @@
-use ohkami::typed::{Payload, Query};
-use ohkami::builtin::payload::JSON;
+use ohkami::serde::{Serialize, Deserialize};
 
 
-#[Payload(JSON/S)]
+#[derive(Serialize)]
 pub struct Message {
     pub message: &'static str,
 }
@@ -14,14 +13,14 @@ pub struct Fortune {
 }
 
 #[derive(sqlx::FromRow)]
-#[Payload(JSON/S)]
+#[derive(Serialize)]
 pub struct World {
     pub id:           i32,
     #[serde(rename="randomNumber")]
     pub randomnumber: i32,
 }
 
-#[Query]
+#[derive(Deserialize)]
 pub struct WorldsQuery<'q> {
     q: Option<&'q str>,
 }

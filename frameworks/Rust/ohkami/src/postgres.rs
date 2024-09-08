@@ -6,9 +6,32 @@ use crate::models::{World, Fortune};
 #[derive(Clone)]
 pub struct Postgres(sqlx::PgPool);
 
-impl From<sqlx::PgPool> for Postgres {
-    fn from(pgpool: sqlx::PgPool) -> Self {
-        Self(pgpool)
+impl Postgres {
+    pub async fn new() -> Self {
+        macro_rules! load_env {
+            ($($name:ident as $t:ty)*) => {$(
+                #[allow(non_snake_case)]
+                let $name = ::std::env::var(stringify!($name))
+                    .expect(concat!(
+                        "Failed to load environment variable ",
+                        "`", stringify!($name), "`"
+                    ))
+                    .parse::<$t>()
+                    .unwrap();
+            )*};
+        } load_env! {
+            MAX_CONNECTIONS as u32
+            MIN_CONNECTIONS as u32
+            DATABASE_URL    as String
+        }
+        
+        let pool = sqlx::postgres::PgPoolOptions::new()
+            .max_connections(MAX_CONNECTIONS)
+            .min_connections(MIN_CONNECTIONS)
+            .connect(&DATABASE_URL).await
+            .unwrap();
+
+        Self(pool)
     }
 }
 

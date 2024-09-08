@@ -1,13 +1,10 @@
 use std::{convert::Infallible, io};
 
 use axum::{async_trait, extract::FromRequestParts, http::request::Parts};
-use futures_util::{stream::FuturesUnordered, TryStreamExt};
-use mongodb::{
-    bson::{doc, RawDocumentBuf},
-    Database,
-};
+use futures_util::{stream::FuturesUnordered, StreamExt, TryStreamExt};
+use mongodb::{bson::doc, Database};
 
-use crate::World;
+use crate::common::models::{Fortune, World};
 
 pub struct DatabaseConnection(pub Database);
 
@@ -24,6 +21,7 @@ impl FromRequestParts<Database> for DatabaseConnection {
 }
 
 #[derive(Debug)]
+#[allow(dead_code)]
 pub enum MongoError {
     Io(io::Error),
     Mongo(mongodb::error::Error),
@@ -42,30 +40,16 @@ impl From<mongodb::error::Error> for MongoError {
 }
 
 pub async fn find_world_by_id(db: Database, id: i32) -> Result<World, MongoError> {
-    let world_collection = db.collection::<RawDocumentBuf>("world");
+    let world_collection = db.collection::<World>("world");
 
     let filter = doc! { "_id": id as f32 };
 
-    let raw: RawDocumentBuf = world_collection
+    let world: World = world_collection
         .find_one(Some(filter), None)
         .await
         .unwrap()
         .expect("expected world, found none");
-
-    Ok(World {
-        id: raw
-            .get("id")
-            .expect("expected to parse world id")
-            .expect("could not get world id")
-            .as_i32()
-            .expect("could not extract world id"),
-        random_number: raw
-            .get("id")
-            .expect("expected to parse world id")
-            .expect("could not get world id")
-            .as_i32()
-            .expect("could not extract world id"),
-    })
+    Ok(world)
 }
 
 pub async fn find_worlds(db: Database, ids: Vec<i32>) -> Result<Vec<World>, MongoError> {
@@ -77,6 +61,29 @@ pub async fn find_worlds(db: Database, ids: Vec<i32>) -> Result<Vec<World>, Mong
 
     let worlds: Result<Vec<World>, MongoError> = future_worlds.try_collect().await;
     worlds
+}
+
+pub async fn fetch_fortunes(db: Database) -> Result<Vec<Fortune>, MongoError> {
+    let fortune_collection = db.collection::<Fortune>("fortune");
+
+    let mut fortune_cursor = fortune_collection
+        .find(None, None)
+        .await
+        .expect("fortunes could not be loaded");
+
+    let mut fortunes: Vec<Fortune> = Vec::new();
+
+    while let Some(doc) = fortune_cursor.next().await {
+        fortunes.push(doc.expect("could not load fortune"));
+    }
+
+    fortunes.push(Fortune {
+        id: 0,
+        message: "Additional fortune added at request time.".to_string(),
+    });
+
+    fortunes.sort_by(|a, b| a.message.cmp(&b.message));
+    Ok(fortunes)
 }
 
 pub async fn update_worlds(
