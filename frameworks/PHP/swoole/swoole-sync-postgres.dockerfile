@@ -2,6 +2,7 @@ FROM ubuntu:24.04
 
 ENV SWOOLE_VERSION 5.1.4
 ENV ENABLE_COROUTINE 0
+ENV CPU_MULTIPLES 4
 ENV DATABASE_DRIVER pgsql
 
 ARG DEBIAN_FRONTEND=noninteractive
@@ -15,7 +16,7 @@ RUN apt update -yqq > /dev/null \
     && cd /tmp/swoole-src-${SWOOLE_VERSION} \
     && phpize > /dev/null \
     && ./configure > /dev/null \
-    && make -j2 > /dev/null \
+    && make -j8 > /dev/null \
     && make install > /dev/null \
     && echo "extension=swoole.so" > /etc/php/8.3/cli/conf.d/50-swoole.ini
 
