@@ -12,21 +12,6 @@ pub fn initPool(allocator: Allocator) !*pg.Pool {
     const info = try parsePostgresConnStr(allocator);
     std.debug.print("Connection: {s}:{s}@{s}:{d}/{s}\n", .{ info.username, info.password, info.hostname, info.port, info.database });
 
-    // const hostname = info.hostname;
-    // var addresses = try dns.helpers.getAddressList(hostname, allocator);
-    // defer addresses.deinit();
-
-    // var hostAddress = std.net.Address.parseIp("127.0.0.1", 0) catch unreachable;
-
-    // for (addresses.addrs) |address| {
-    //     std.debug.print("tfb address {}\n", .{address.in});
-    //     hostAddress = address;
-    // }
-
-    // std.debug.print("tfb hostname is {}\n", .{hostAddress.in});
-
-    // const host = try addressAsString(hostAddress);
-
     const pg_pool = try Pool.init(allocator, .{
         .size = 28,
         .connect = .{

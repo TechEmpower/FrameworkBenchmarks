@@ -64,7 +64,7 @@ pub const FortunesEndpoint = struct {
         defer conn.release();
 
         var rows = try conn.query("SELECT id, message FROM Fortune", .{});
-        rows.deinit();
+        defer rows.deinit();
 
         var fortunes = std.ArrayList(Fortune).init(middleware.SharedAllocator.getAllocator());
         defer fortunes.deinit();
