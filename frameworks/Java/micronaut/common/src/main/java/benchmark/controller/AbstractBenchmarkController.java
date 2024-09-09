@@ -10,8 +10,6 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
 
-import static java.util.Comparator.comparing;
-
 public class AbstractBenchmarkController {
 
     protected final Integer[] boxed = IntStream.range(1, 10001).boxed().toArray(Integer[]::new);
