@@ -59,9 +59,8 @@ public class FortuneRender implements org.redkale.net.http.HttpRender {
         ByteArray array = request.getSubobjectIfAbsent(arrayName, arrayFunc).clear();
         array.put(text1);
         for (Fortune item : (List<Fortune>) scope.getReferObj()) {
-            array.put(text2).put(escapeId(item.getId())).put(text3);
-            putEscapeMessage(array, item.getMessage());
-            array.put(text4);
+            ByteArray msg = request.getSubobjectIfAbsent(item.getMessage(), this::escapeMessage);
+            array.put(text2).put(escapeId(item.getId())).put(text3).put(msg).put(text4);
         }
         array.put(text5);
         response.finish(contentType, array);
@@ -75,7 +74,8 @@ public class FortuneRender implements org.redkale.net.http.HttpRender {
         }
     }
 
-    private void putEscapeMessage(ByteArray array, String message) {
+    private ByteArray escapeMessage(String message) {
+        ByteArray array = new ByteArray(128);
         CharSequence cs = message;
         for (int i = 0; i < cs.length(); i++) {
             char c = cs.charAt(i);
@@ -90,5 +90,6 @@ public class FortuneRender implements org.redkale.net.http.HttpRender {
                 array.put((byte) (0xe0 | (c >> 12)), (byte) (0x80 | ((c >> 6) & 0x3f)), (byte) (0x80 | (c & 0x3f)));
             }
         }
+        return array;
     }
 }

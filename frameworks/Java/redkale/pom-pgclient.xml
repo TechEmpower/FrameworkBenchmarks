@@ -7,8 +7,8 @@
 
     <properties>
         <main.class>org.redkale.boot.Application</main.class>
-        <redkale.version>2.9.0-SNAPSHOT</redkale.version>
-        <redkale-maven.version>1.3.0-SNAPSHOT</redkale-maven.version>
+        <redkale.version>2.8.0-SNAPSHOT</redkale.version>
+        <redkale-maven.version>1.2.0-SNAPSHOT</redkale-maven.version>
         <vertx.version>4.5.8</vertx.version>
         <vertx-scram.version>2.1</vertx-scram.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
