@@ -1,21 +1,13 @@
-.{
-    .name = "Zap testing",
-    .version = "0.1.0",
-
-    .dependencies = .{
-        // zap v0.5.1
-        .zap = .{
-            .url = "https://github.com/zigzap/zap/archive/refs/tags/v0.5.1.tar.gz",
-            .hash = "1220d4802fb09d4e99c0e7265f90d6f3cfdc3e5e31c1b05f0924ee2dd26d9d6dbbf4",
-        },
-        .pg = .{
-            .url = "https://github.com/karlseguin/pg.zig/archive/f3f4a0b3b9996bfb1bf9bd0bdd0d73b36e915a86.tar.gz",
-            .hash = "1220337202642ee66408a35f254549f22cf3a096c6fa6c28e6f87a0161d5a6c0f4ab"
-        },
-        .dig = .{
-            .url = "https://github.com/lun-4/zigdig/archive/2ec407ec3c7f347e747717977958e9ba339eb82f.tar.gz",
-            .hash = "1220dfdb3089dfe9a4e4bc1226fcff08d91d0c0853f287d98d8b81270da251790331"
-        },
-
-    }
-}
+.{ .name = "Zap testing", .version = "0.1.1", .paths = .{
+    "build.zig",
+    "build.zig.zon",
+    "src",
+}, .dependencies = .{
+    .zap = .{
+        .url = "https://github.com/zigzap/zap/archive/refs/tags/v0.8.0.tar.gz",
+        .hash = "12209936c3333b53b53edcf453b1670babb9ae8c2197b1ca627c01e72670e20c1a21",
+    },
+    .pg = .{ .url = "https://github.com/karlseguin/pg.zig/archive/239a4468163a49d8c0d03285632eabe96003e9e2.tar.gz", 
+        .hash = "1220a1d7e51e2fa45e547c76a9e099c09d06e14b0b9bfc6baa89367f56f1ded399a0" },
+    .dig = .{ .url = "https://github.com/lun-4/zigdig/archive/a54c85c26aa83c64ee81e3ee1818890be5cbed0b.tar.gz", .hash = "1220f078ab62d1328339504f9122dc4d241be30ada451628d78b8a3bf5bb9be1dcba" },
+} }
