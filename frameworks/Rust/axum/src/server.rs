@@ -107,6 +107,7 @@ pub async fn serve_hyper(app: Router<()>, port: Option<u16>) {
 }
 
 /// Start a single-threaded tokio runtime on multiple threads.
+#[allow(dead_code)]
 pub fn start_tokio<Fut>(f: fn() -> Fut)
 where
     Fut: Future<Output = ()> + 'static,
