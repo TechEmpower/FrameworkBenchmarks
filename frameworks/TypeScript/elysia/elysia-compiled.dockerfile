@@ -10,6 +10,6 @@ RUN bun install --production
 
 ENV DATABASE postgres
 
-RUN bun run build
+RUN bun run compile
 
-CMD ["bun", "./dist/index.js"]
+CMD ["./server"]
