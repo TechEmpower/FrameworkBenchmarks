@@ -1,4 +1,5 @@
 use std::{
+    future::Future,
     io,
     net::{Ipv4Addr, SocketAddr, TcpListener},
 };
@@ -103,4 +104,26 @@ pub async fn serve_hyper(app: Router<()>, port: Option<u16>) {
             {}
         });
     }
+}
+
+/// Start a single-threaded tokio runtime on multiple threads.
+pub fn start_tokio<Fut>(f: fn() -> Fut)
+where
+    Fut: Future<Output = ()> + 'static,
+{
+    let rt = tokio::runtime::Builder::new_current_thread()
+        .enable_all()
+        .build()
+        .unwrap();
+
+    for _ in 1..num_cpus::get() {
+        std::thread::spawn(move || {
+            let rt = tokio::runtime::Builder::new_current_thread()
+                .enable_all()
+                .build()
+                .unwrap();
+            rt.block_on(f());
+        });
+    }
+    rt.block_on(f());
 }
