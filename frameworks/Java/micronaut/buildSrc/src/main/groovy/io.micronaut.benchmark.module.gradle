@@ -28,7 +28,7 @@ dependencies {
 }
 
 graalvmNative.binaries.all {
-    buildArgs.add("--initialize-at-build-time=views")
+    buildArgs.add("--initialize-at-build-time=gg.jte.generated.precompiled")
 }
 
 test {

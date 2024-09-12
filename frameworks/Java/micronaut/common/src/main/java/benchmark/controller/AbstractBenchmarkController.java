@@ -5,6 +5,7 @@ import benchmark.model.World;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
@@ -12,6 +13,20 @@ import java.util.stream.IntStream;
 public class AbstractBenchmarkController {
 
     protected final Integer[] boxed = IntStream.range(1, 10001).boxed().toArray(Integer[]::new);
+    private static final Comparator<Fortune> FORTUNES_COMPARATOR = new Comparator<>() {
+        @Override
+        public int compare(Fortune o1, Fortune o2) {
+            return o1.message().compareTo(o2.message());
+        }
+    };
+
+    protected List<Fortune> prepareFortunes(List<Fortune> fortuneList) {
+        List<Fortune> all = new ArrayList<>(fortuneList.size() + 1);
+        all.add(new Fortune(0, "Additional fortune added at request time."));
+        all.addAll(fortuneList);
+        all.sort(FORTUNES_COMPARATOR);
+        return all;
+    }
 
     protected List<Fortune> createFortunes() {
         List<Integer> fortuneMessages = IntStream.range(0, 10).boxed().toList();
