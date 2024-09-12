@@ -9,10 +9,10 @@ ENV LD_PRELOAD=libjemalloc.so.2
 
 WORKDIR /rack
 
-COPY Gemfile  ./
+COPY Gemfile ./
 
 ENV BUNDLE_FORCE_RUBY_PLATFORM=true
-RUN bundle config set without 'development test'
+RUN bundle config set without 'development test puma unicorn'
 RUN bundle install --jobs=8
 
 COPY . .

@@ -30,13 +30,13 @@ class HelloWorld
   SERVER_STRING = if defined?(PhusionPassenger)
                     'Passenger'
                   elsif defined?(Puma)
-                    Puma::Const::PUMA_SERVER_STRING
+                    'Puma'
                   elsif defined?(Unicorn)
                     'Unicorn'
                   elsif defined?(Falcon)
                     'Falcon'
                   else
-                    ' Ruby Rack'
+                    'Ruby Rack'
                   end
   TEMPLATE_PREFIX = '<!DOCTYPE html>
 <html>

@@ -12,13 +12,11 @@ WORKDIR /rack
 COPY Gemfile ./
 
 ENV BUNDLE_FORCE_RUBY_PLATFORM=true
-RUN bundle config set without 'development test'
+RUN bundle config set without 'development test falcon puma'
 RUN bundle install --jobs=8
 
 COPY . .
 
 EXPOSE 8080
-
-#CMD nginx -c /rack/config/nginx.conf && bundle exec unicorn -E production -c config/unicorn.rb
 
 CMD bundle exec unicorn -c config/unicorn.rb -o 0.0.0.0 -p 8080 -E production
