@@ -6,8 +6,8 @@ ConnectionString.Set(builder.Configuration.GetConnectionString("BenchmarkConnect
 
 var app = builder.Build();
 
-SetCodeBehind.CodeBehindCompiler.Initialization(true);
+SetCodeBehind.CodeBehindCompiler.Initialization();
 
-app.UseCodeBehind();
+app.UseCodeBehindRoute();
 
 app.Run();
