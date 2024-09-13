@@ -1,7 +1,7 @@
 using CodeBehind;
 using Microsoft.EntityFrameworkCore;
 
-public partial class FortunesController : CodeBehindController
+public partial class fortunes : CodeBehindController
 {
     public async void PageLoad(HttpContext context)
     {
