@@ -1,7 +1,7 @@
 using CodeBehind;
 using System.Text.Json;
 
-public partial class CachedQueriesController : CodeBehindController
+public partial class cached__queries : CodeBehindController
 {
     public async void PageLoad(HttpContext context)
     {
