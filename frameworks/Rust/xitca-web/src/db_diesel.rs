@@ -119,6 +119,7 @@ impl _Pool {
 }
 
 // diesel does not support high level bulk update api. use raw sql to bypass the limitation.
+// relate discussion: https://github.com/diesel-rs/diesel/discussions/2879
 fn update_query(ids: &[(i32, i32)]) -> String {
     bulk_update_gen(|query| {
         use std::fmt::Write;
