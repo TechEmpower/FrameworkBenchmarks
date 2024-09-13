@@ -1,7 +1,7 @@
 using CodeBehind;
 using System.Text.Json;
 
-public partial class DBController : CodeBehindController
+public partial class db : CodeBehindController
 {
     public async void PageLoad(HttpContext context)
     {
