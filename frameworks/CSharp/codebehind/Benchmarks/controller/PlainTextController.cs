@@ -1,6 +1,6 @@
 using CodeBehind;
 
-public partial class PlainTextController : CodeBehindController
+public partial class plaintext : CodeBehindController
 {
     public void PageLoad(HttpContext context)
     {
