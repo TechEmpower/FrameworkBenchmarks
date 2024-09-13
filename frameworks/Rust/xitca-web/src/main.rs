@@ -39,16 +39,22 @@ async fn middleware<S>(service: &S, req: Ctx<'_>) -> Result<Response, core::conv
 where
     S: for<'c> Service<Ctx<'c>, Response = Response, Error = RouterError<util::Error>>,
 {
-    let mut res = service.call(req).await.unwrap_or_else(|e| match e {
+    let mut res = service.call(req).await.unwrap_or_else(error_handler);
+    res.headers_mut().insert(SERVER, SERVER_HEADER_VALUE);
+    Ok(res)
+}
+
+#[cold]
+#[inline(never)]
+fn error_handler(e: RouterError<util::Error>) -> Response {
+    match e {
         RouterError::Match(_) => error_response(StatusCode::NOT_FOUND),
         RouterError::NotAllowed(_) => error_response(StatusCode::METHOD_NOT_ALLOWED),
         RouterError::Service(e) => {
             println!("{e}");
             error_response(StatusCode::INTERNAL_SERVER_ERROR)
         }
-    });
-    res.headers_mut().insert(SERVER, SERVER_HEADER_VALUE);
-    Ok(res)
+    }
 }
 
 async fn plain_text(ctx: Ctx<'_>) -> HandleResult<Response> {
