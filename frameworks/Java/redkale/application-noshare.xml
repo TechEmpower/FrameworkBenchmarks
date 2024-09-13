@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<application port="8585">     
+    
+    <properties>    
+        <property name="system.property.redkale.trace.enabled" value="false"/>  
+        <property name="system.property.redkale.http.response.header.server" value="redkale"/>
+        <property name="system.property.redkale.http.response.header.connection" value="none"/>
+    </properties>
+        
+    <server protocol="HTTP" port="8080">    
+        <response>
+            <content-type plain="text/plain" json="application/json"/>  
+            <date period="1000"/>
+        </response>
+        <request lazyHeader="true"/>
+        <render value="org.redkalex.benchmark.FortuneRender"/>      
+        <rest autoload="true"/>
+        <services autoload="true"/>  
+        <servlets autoload="true"/>        
+    </server>
+        
+</application>

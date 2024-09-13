@@ -136,6 +136,30 @@
                 "display_name": "redkale-pgclient",
                 "notes": "",
                 "versus": "Redkale"
+            },
+            "noshare": {
+                "plaintext_url": "/plaintext",
+                "json_url": "/json",
+                "db_url": "/db",
+                "query_url": "/queries?q=", 
+                "fortune_url": "/fortunes",
+                "update_url": "/updates?q=",
+                "cached_query_url": "/cached-worlds?q=",
+                "port": 8080,
+                "approach": "Realistic",
+                "classification": "Fullstack",
+                "database": "Postgres",
+                "framework": "Redkale",
+                "language": "Java",
+                "flavor": "None",
+                "orm": "Raw",
+                "platform": "Redkale",
+                "webserver": "Redkale",
+                "os": "Linux",
+                "database_os": "Linux",
+                "display_name": "redkale-noshare",
+                "notes": "",
+                "versus": "Redkale"
             }
         }
     ]
