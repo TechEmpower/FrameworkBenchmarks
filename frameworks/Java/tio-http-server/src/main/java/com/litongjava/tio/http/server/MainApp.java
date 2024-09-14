@@ -4,16 +4,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.litongjava.tio.http.common.HttpConfig;
-import com.litongjava.tio.http.common.handler.HttpRequestHandler;
+import com.litongjava.tio.http.common.handler.ITioHttpRequestHandler;
 import com.litongjava.tio.http.server.config.EhCachePluginConfig;
 import com.litongjava.tio.http.server.config.EnjoyEngineConfig;
 import com.litongjava.tio.http.server.config.MysqlDbConfig;
 import com.litongjava.tio.http.server.controller.CacheController;
 import com.litongjava.tio.http.server.controller.DbController;
 import com.litongjava.tio.http.server.controller.IndexController;
-import com.litongjava.tio.http.server.handler.SimpleHttpDispatcherHandler;
-import com.litongjava.tio.http.server.router.DefaultHttpReqeustSimpleHandlerRoute;
-import com.litongjava.tio.http.server.router.HttpReqeustSimpleHandlerRoute;
+import com.litongjava.tio.http.server.handler.DefaultHttpRequestDispatcher;
+import com.litongjava.tio.http.server.router.DefaultHttpReqeustRouter;
+import com.litongjava.tio.http.server.router.HttpRequestRouter;
 import com.litongjava.tio.server.ServerTioConfig;
 import com.litongjava.tio.utils.environment.EnvUtils;
 
@@ -26,7 +26,7 @@ public class MainApp {
     // add route
     IndexController controller = new IndexController();
 
-    HttpReqeustSimpleHandlerRoute simpleHttpRoutes = new DefaultHttpReqeustSimpleHandlerRoute();
+    HttpRequestRouter simpleHttpRoutes = new DefaultHttpReqeustRouter();
     simpleHttpRoutes.add("/", controller::index);
     simpleHttpRoutes.add("/plaintext", controller::plaintext);
     simpleHttpRoutes.add("/json", controller::json);
@@ -47,7 +47,7 @@ public class MainApp {
     httpConfig.setCheckHost(false);
     httpConfig.setCompatible1_0(false);
 
-    HttpRequestHandler requestHandler = new SimpleHttpDispatcherHandler(httpConfig, simpleHttpRoutes);
+    ITioHttpRequestHandler requestHandler = new DefaultHttpRequestDispatcher(httpConfig, simpleHttpRoutes);
     HttpServerStarter httpServerStarter = new HttpServerStarter(httpConfig, requestHandler);
     ServerTioConfig serverTioConfig = httpServerStarter.getServerTioConfig();
     // close Heartbeat
@@ -56,7 +56,7 @@ public class MainApp {
     // start server
     try {
       httpServerStarter.start();
-      if (!EnvUtils.getBoolean("native")) {
+      if (EnvUtils.getBoolean("native", false)) {
         new MysqlDbConfig().init();
         new EnjoyEngineConfig().engine();
         new EhCachePluginConfig().ehCachePlugin();
