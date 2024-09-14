@@ -1,0 +1,13 @@
+{
+  "name": "mesh",
+  "version": "0.0.1",
+  "description": "Mesh tests for TechEmpower Framework Benchmarks.",
+  "main": "app.js",
+  "private": true,
+  "dependencies": {
+    "@ionited/mesh": "^0.6.0",
+    "mongodb": "^3.7.4",
+    "mysql": "^2.18.1",
+    "pg": "^8.11.3"
+  }
+}

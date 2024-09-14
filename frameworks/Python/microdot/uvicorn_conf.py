@@ -1,6 +1,5 @@
 import multiprocessing
 import os
-import sys
 
 _is_travis = os.environ.get("TRAVIS") == "true"
 

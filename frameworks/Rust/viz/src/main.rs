@@ -3,7 +3,7 @@
 use serde::Serialize;
 use viz::{
     header::{HeaderValue, SERVER},
-    Error, Request, Response, ResponseExt, Result, Router, ServiceMaker,
+    Error, Request, Response, ResponseExt, Result, Router,
 };
 
 mod server;
@@ -36,9 +36,5 @@ async fn main() -> Result<()> {
         .get("/plaintext", plaintext)
         .get("/json", json);
 
-    server::builder()
-        .http1_pipeline_flush(true)
-        .serve(ServiceMaker::from(app))
-        .await
-        .map_err(Error::normal)
+    server::serve(app).await.map_err(Error::Boxed)
 }

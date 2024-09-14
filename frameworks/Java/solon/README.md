@@ -4,13 +4,13 @@
 This is the solon portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
 
 ### JSON Encoding Test
-* [JSON test source](src/main/java/pmg/Main.java)
-* [Plaintext test source](src/main/java/pmg/Main.java)
+* [JSON test source](src/main/java/hello/Main.java)
+* [Plaintext test source](src/main/java/hello/Main.java)
 
 ## Versions
 
-* [Java OpenJDK 1.8](http://openjdk.java.net/)
-* [solon 2.0.0](https://github.com/noear/solon)
+* [Java OpenJDK 21](http://openjdk.java.net/)
+* [solon 2.9.1](https://github.com/noear/solon)
 
 ## Test URLs
 

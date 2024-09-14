@@ -1,4 +1,4 @@
-FROM rust:1.74
+FROM rust:1.78-buster
 
 ENV TECHEMPOWER_MONGODB_URL=mongodb://tfb-database:27017
 ENV TECHEMPOWER_MAX_POOL_SIZE=28

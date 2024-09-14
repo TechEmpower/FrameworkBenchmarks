@@ -1,13 +1,10 @@
-FROM php:8.3-cli
+FROM phpswoole/swoole:5.1.3-php8.3
 
-RUN pecl install swoole > /dev/null && docker-php-ext-enable swoole
+RUN docker-php-ext-install pcntl opcache bcmath > /dev/null
 
-RUN docker-php-ext-install opcache pdo_mysql bcmath > /dev/null
-
-RUN apt -yqq update && apt -yqq install git unzip > /dev/null
-
-COPY . /mixphp
-COPY php.ini /usr/local/etc/php/
+WORKDIR /mixphp
+COPY --link . .
+COPY --link php.ini /usr/local/etc/php/
 RUN echo "opcache.enable=1" >> /usr/local/etc/php/php.ini
 RUN echo "opcache.enable_cli=1" >> /usr/local/etc/php/php.ini
 RUN echo "pcre.jit=1" >> /usr/local/etc/php/php.ini
@@ -16,9 +13,6 @@ RUN echo "opcache.jit_buffer_size=256M" >> /usr/local/etc/php/php.ini
 
 RUN php -v && php -i | grep opcache
 
-WORKDIR /mixphp
-
-COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 RUN composer install --no-dev --classmap-authoritative --quiet > /dev/null
 RUN composer dumpautoload -o
 
@@ -27,4 +21,4 @@ RUN chmod -R 777 /mixphp/runtime/logs
 
 EXPOSE 9501
 
-CMD php /mixphp/bin/swoole.php start
+ENTRYPOINT [ "php", "/mixphp/bin/swoole.php", "start" ]

@@ -13,6 +13,7 @@ import org.redkale.annotation.*;
 import org.redkale.net.http.*;
 import org.redkale.service.AbstractService;
 import org.redkale.source.DataSource;
+import org.redkale.util.AnyValue;
 
 /**
  *
@@ -26,6 +27,10 @@ public class BenchmarkService extends AbstractService {
 
     @Resource
     private DataSource source;
+
+    public void init(AnyValue conf) {
+        source.finds(CachedWorld.class, 1);
+    }
 
     @RestMapping(auth = false)
     public byte[] plaintext() {
@@ -53,8 +58,8 @@ public class BenchmarkService extends AbstractService {
         IntStream ids = ThreadLocalRandom.current().ints(size, 1, 10001);
         int[] newNumbers = ThreadLocalRandom.current().ints(size, 1, 10001).toArray();
         return source.findsListAsync(World.class, ids.boxed())
-            .thenCompose(words -> source.updateAsync(World.updateNewNumbers(words, newNumbers))
-            .thenApply(v -> words));
+                .thenCompose(words -> source.updateAsync(World.updateNewNumbers(words, newNumbers))
+                        .thenApply(v -> words));
     }
 
     @RestMapping(auth = false)

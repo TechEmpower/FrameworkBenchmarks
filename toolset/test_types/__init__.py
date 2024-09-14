@@ -1,4 +1,4 @@
-import imp
+import importlib
 import re
 
 from glob import glob
@@ -14,5 +14,7 @@ for folder in test_type_folders:
     # ignore generated __pycache__ folder
     if test_type_name == '__pycache__':
         continue
-    test_type = imp.load_source("TestType", "%s%s.py" % (folder, test_type_name))
+    spec = importlib.util.spec_from_file_location("TestType", "%s%s.py" % (folder, test_type_name))
+    test_type = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(test_type)
     test_types[test_type_name] = test_type.TestType

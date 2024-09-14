@@ -1,4 +1,4 @@
-FROM rust:1.74
+FROM rust:1.77
 WORKDIR /trillium
 COPY src src
 COPY templates templates
@@ -12,5 +12,5 @@ ENV PORT=8080
 ENV HOST=0.0.0.0
 ENV DATABASE_URL=postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world
 
-RUN cargo build --release --features jemallocator
+RUN cargo build --release --features jemallocator,smol
 CMD ["./target/release/trillium-techempower"]

@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <EnableDefaultContentItems>false</EnableDefaultContentItems>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Common.fs" />
+    <Compile Include="Db.fs" />
+    <Compile Include="RenderHelpers.fs" />
+    <Compile Include="Program.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="FSharp.Core" Version="8.0.400" />
+    <PackageReference Include="Oxpecker" Version="0.14.1" />
+    <PackageReference Include="Oxpecker.ViewEngine" Version="0.14.0" />
+    <PackageReference Include="Npgsql" Version="8.0.3" />
+    <PackageReference Include="SpanJson" Version="4.2.0" />
+  </ItemGroup>
+</Project>

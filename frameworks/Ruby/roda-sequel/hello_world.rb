@@ -7,9 +7,7 @@ class HelloWorld < Roda
 
   def bounded_queries
     queries = request.params["queries"].to_i
-    return QUERIES_MIN if queries < QUERIES_MIN
-    return QUERIES_MAX if queries > QUERIES_MAX
-    queries
+    queries.clamp(QUERIES_MIN, QUERIES_MAX)
   end
 
   # Return a random number between 1 and MAX_PK
@@ -18,33 +16,36 @@ class HelloWorld < Roda
   end
 
   route do |r|
-    response["Date"] = Time.now.httpdate
-    response["Server"] = SERVER_STRING if SERVER_STRING
-    #default content type
-    response["Content-Type"] = "application/json"
+    response[DATE_HEADER] = Time.now.httpdate
+    response[SERVER_HEADER] = SERVER_STRING if SERVER_STRING
 
     # Test type 1: JSON serialization
     r.is "json" do
-      { message: "Hello, World!" }.to_json
+      response[CONTENT_TYPE] = JSON_TYPE
+      RapidJSON.encode({ message: "Hello, World!" })
     end
 
     # Test type 2: Single database query
     r.is "db" do
-      World.with_pk(rand1).values.to_json
+      response[CONTENT_TYPE] = JSON_TYPE
+      RapidJSON.encode(World.with_pk(rand1).values)
     end
 
     # Test type 3: Multiple database queries
     r.is "queries" do
+      response[CONTENT_TYPE] = JSON_TYPE
       worlds =
         DB.synchronize do
-          Array.new(bounded_queries) { World.with_pk(rand1).values }
+          ALL_IDS.sample(bounded_queries).map do |id|
+            World.with_pk(id).values
+          end
         end
-      worlds.to_json
+      RapidJSON.encode(worlds)
     end
 
     # Test type 4: Fortunes
     r.is "fortunes" do
-      response["Content-Type"] = "text/html; charset=utf-8"
+      response[CONTENT_TYPE] = HTML_TYPE
       @fortunes = Fortune.all
       @fortunes << Fortune.new(
         id: 0,
@@ -56,22 +57,25 @@ class HelloWorld < Roda
 
     # Test type 5: Database updates
     r.is "updates" do
-      worlds =
-        DB.synchronize do
-          Array.new(bounded_queries) do
-            world = World.with_pk(rand1)
+      response[CONTENT_TYPE] = JSON_TYPE
+      worlds = []
+      DB.synchronize do
+        worlds =
+          ALL_IDS.sample(bounded_queries).map do |id|
+            world = World.with_pk(id)
             new_value = rand1
             new_value = rand1 while new_value == world.randomnumber
-            world.update(randomnumber: new_value)
-            world.values
+            world.randomnumber = new_value
+            world
           end
-        end
-      worlds.to_json
+        World.batch_update(worlds)
+      end
+      RapidJSON.encode(worlds.map!(&:values))
     end
 
     # Test type 6: Plaintext
     r.is "plaintext" do
-      response["Content-Type"] = "text/plain"
+      response[CONTENT_TYPE] = PLAINTEXT_TYPE
       "Hello, World!"
     end
   end

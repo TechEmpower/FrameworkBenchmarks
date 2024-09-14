@@ -1,5 +1,5 @@
 #[global_allocator]
-static GLOBAL: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
+static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
 use ntex::http::header::{CONTENT_TYPE, SERVER};
 use ntex::{http, time::Seconds, util::BytesMut, util::PoolId, web};
@@ -55,7 +55,9 @@ async fn main() -> std::io::Result<()> {
 
             http::HttpService::build()
                 .keep_alive(http::KeepAlive::Os)
-                .client_timeout(Seconds(0))
+                .client_timeout(Seconds::ZERO)
+                .headers_read_rate(Seconds::ZERO, Seconds::ZERO, 0)
+                .payload_read_rate(Seconds::ZERO, Seconds::ZERO, 0)
                 .h1(web::App::new().service(json).service(plaintext).finish())
         })?
         .workers(num_cpus::get())

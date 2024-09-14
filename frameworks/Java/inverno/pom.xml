@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>io.inverno.dist</groupId>
 		<artifactId>inverno-parent</artifactId>
-		<version>1.4.1</version>
+		<version>1.10.0</version>
 	</parent>
 	<groupId>com.techempower</groupId>
 	<artifactId>inverno-benchmark</artifactId>
@@ -17,9 +17,9 @@
 	<description>Inverno framework benchmark test</description>
 	
 	<properties>
-		<maven.compiler.source>16</maven.compiler.source>
-		<maven.compiler.target>16</maven.compiler.target>
-		<maven.compiler.release>16</maven.compiler.release>
+		<maven.compiler.source>21</maven.compiler.source>
+		<maven.compiler.target>21</maven.compiler.target>
+		<maven.compiler.release>21</maven.compiler.release>
 	</properties>
 	
 	<dependencies>
@@ -47,7 +47,7 @@
 			<groupId>io.inverno.mod</groupId>
 			<artifactId>inverno-sql-vertx</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.unbescape</groupId>
 			<artifactId>unbescape</artifactId>
@@ -71,55 +71,109 @@
 		<dependency>
 			<groupId>io.netty</groupId>
 			<artifactId>netty-handler-proxy</artifactId>
-			<version>${version.netty}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.netty</groupId>
 			<artifactId>netty-resolver-dns</artifactId>
-			<version>${version.netty}</version>
 		</dependency>
 
-		<dependency>
-			<groupId>io.netty</groupId>
-			<artifactId>netty-transport-native-epoll</artifactId>
-			<classifier>linux-x86_64</classifier>
-		</dependency>
-		
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
 		</dependency>
 	</dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>io.inverno.tool</groupId>
-				<artifactId>inverno-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>inverno-package</id>
-						<phase>package</phase>
-						<goals>
-							<goal>build-app</goal>
-						</goals>
+	
+	<profiles>
+		<profile>
+			<id>io.inverno.epoll</id>
+			<dependencies>
+				<dependency>
+					<groupId>io.netty</groupId>
+					<artifactId>netty-transport-native-epoll</artifactId>
+					<classifier>linux-x86_64</classifier>
+				</dependency>
+			</dependencies>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>io.inverno.tool</groupId>
+						<artifactId>inverno-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>inverno-package-app</id>
+								<phase>package</phase>
+								<goals>
+									<goal>package-app</goal>
+								</goals>
+								<configuration>
+									<vm>server</vm>
+									<launchers>
+										<launcher>
+											<name>inverno-benchmark</name>
+											<vmOptions>-Xms2g -Xmx2g -server -XX:+UseNUMA -XX:+UseParallelGC -Dlog4j2.level=OFF -Dio.netty.leakDetection.level=disabled -Dio.netty.buffer.checkBounds=false -Dio.netty.buffer.checkAccessible=false -Dvertx.disableHttpHeadersValidation=true -Dvertx.disableMetrics=true -Dvertx.disableH2c=true -Dvertx.disableWebsockets=true -Dvertx.flashPolicyHandler=false -Dvertx.threadChecks=false -Dvertx.disableContextTimings=true -Dvertx.disableTCCL=true --add-modules io.netty.transport.unix.common,io.netty.transport.classes.epoll,io.netty.transport.epoll.linux.x86_64</vmOptions>
+										</launcher>
+									</launchers>
+									<archiveFormats>
+										<archiveFormat>zip</archiveFormat>
+									</archiveFormats>
+								</configuration>
+							</execution>
+						</executions>
 						<configuration>
-							<vm>server</vm>
-							<launchers>
-								<launcher>
-									<name>inverno-benchmark</name>
-									<vmOptions>-Xms2g -Xmx2g -server -XX:+UseNUMA -XX:+UseParallelGC -Dio.netty.leakDetection.level=disabled -Dvertx.disableHttpHeadersValidation=true -Dvertx.disableMetrics=true -Dvertx.disableH2c=true -Dvertx.disableWebsockets=true -Dvertx.flashPolicyHandler=false -Dvertx.threadChecks=false -Dvertx.disableContextTimings=true -Dvertx.disableTCCL=true --add-modules io.netty.transport.unix.common,io.netty.transport.epoll</vmOptions>
-								</launcher>
-							</launchers>
-							<formats>
-								<format>zip</format>
-							</formats>
+							<vmOptions>--add-modules io.netty.transport.unix.common,io.netty.transport.classes.epoll,io.netty.transport.epoll.linux.x86_64</vmOptions>
 						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>io.inverno.io_uring</id>
+			<dependencies>
+				<dependency>
+					<groupId>io.netty.incubator</groupId>
+					<artifactId>netty-incubator-transport-native-io_uring</artifactId>
+					<classifier>linux-x86_64</classifier>
+				</dependency>
+		
+				<dependency>
+					<groupId>io.vertx</groupId>
+					<artifactId>vertx-io_uring-incubator</artifactId>
+				</dependency>
+			</dependencies>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>io.inverno.tool</groupId>
+						<artifactId>inverno-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>inverno-package-app</id>
+								<phase>package</phase>
+								<goals>
+									<goal>package-app</goal>
+								</goals>
+								<configuration>
+									<vm>server</vm>
+									<launchers>
+										<launcher>
+											<name>inverno-benchmark</name>
+											<vmOptions>-Xms2g -Xmx2g -server -XX:+UseNUMA -XX:+UseParallelGC -Dlog4j2.level=OFF -Dio.netty.leakDetection.level=disabled -Dio.netty.buffer.checkBounds=false -Dio.netty.buffer.checkAccessible=false -Dvertx.disableHttpHeadersValidation=true -Dvertx.disableMetrics=true -Dvertx.disableH2c=true -Dvertx.disableWebsockets=true -Dvertx.flashPolicyHandler=false -Dvertx.threadChecks=false -Dvertx.disableContextTimings=true -Dvertx.disableTCCL=true --add-modules io.netty.transport.unix.common,io.netty.incubator.transport.classes.io_uring,io.netty.incubator.transport.io_uring.linux.x86_64</vmOptions>
+										</launcher>
+									</launchers>
+									<archiveFormats>
+										<archiveFormat>zip</archiveFormat>
+									</archiveFormats>
+								</configuration>
+							</execution>
+						</executions>
+						<configuration>
+							<vmOptions>--add-modules io.netty.transport.unix.common,io.netty.incubator.transport.classes.io_uring,io.netty.incubator.transport.io_uring.linux.x86_64</vmOptions>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 </project>
 

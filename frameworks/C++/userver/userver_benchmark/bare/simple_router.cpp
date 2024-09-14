@@ -52,32 +52,32 @@ SimpleResponse SimpleRouter::RouteRequest(std::string_view url) const {
   }
 
   if (StartsWith(url, kJsonUrlPrefix)) {
-    return {ToString(json::Handler::GetResponse()), kContentTypeJson};
+    return {json::Handler::GetResponse(), kContentTypeJson};
   }
 
   if (StartsWith(url, kSingleQueryUrlPrefix)) {
-    return {ToString(single_query_.GetResponse()), kContentTypeJson};
+    return {single_query_.GetResponse(), kContentTypeJson};
   }
 
   if (StartsWith(url, kMultipleQueriesUrlPrefix)) {
     const auto queries = db_helpers::ParseParamFromQuery(
         url.substr(kMultipleQueriesUrlPrefix.size()), "queries");
 
-    return {ToString(multiple_queries_.GetResponse(queries)), kContentTypeJson};
+    return {multiple_queries_.GetResponse(queries), kContentTypeJson};
   }
 
   if (StartsWith(url, kUpdatesUrlPrefix)) {
     const auto queries = db_helpers::ParseParamFromQuery(
         url.substr(kMultipleQueriesUrlPrefix.size()), "queries");
 
-    return {ToString(updates_.GetResponse(queries)), kContentTypeJson};
+    return {updates_.GetResponse(queries), kContentTypeJson};
   }
 
   if (StartsWith(url, kCachedQueriesUrlPrefix)) {
     const auto count = db_helpers::ParseParamFromQuery(
         url.substr(kCachedQueriesUrlPrefix.size()), "count");
 
-    return {ToString(cached_queries_.GetResponse(count)), kContentTypeJson};
+    return {cached_queries_.GetResponse(count), kContentTypeJson};
   }
 
   if (StartsWith(url, kFortunesUrlPrefix)) {

@@ -8,10 +8,11 @@
     <properties>
         <main.class>org.redkale.boot.Application</main.class>
         <redkale.version>2.8.0-SNAPSHOT</redkale.version>
-        <postgresql.version>42.6.0</postgresql.version>
+        <redkale-maven.version>1.3.0-SNAPSHOT</redkale-maven.version>
+        <postgresql.version>42.7.2</postgresql.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>18</maven.compiler.source>
-        <maven.compiler.target>18</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
     </properties> 
 
     <dependencies>  
@@ -76,7 +77,6 @@
                     <encoding>UTF-8</encoding>
                     <compilerArgs>
                         <arg>-parameters</arg>
-                        <arg>--enable-preview</arg>
                     </compilerArgs>
                     <showDeprecation>true</showDeprecation>
                 </configuration>
@@ -85,7 +85,7 @@
             <plugin>
                 <groupId>org.redkale.maven.plugins</groupId>
                 <artifactId>redkale-maven-plugin</artifactId>
-                <version>1.2.0-SNAPSHOT</version>                                                
+                <version>${redkale-maven.version}</version>                              
                 <configuration>		
                     <nativeimageArgs>
                         <arg>--no-fallback</arg>

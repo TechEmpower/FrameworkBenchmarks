@@ -5,6 +5,7 @@ micronaut:
     port: 8080
     server-header: Micronaut
     date-header: false
+    validate-url: false
 
 netty:
   resource-leak-detector-level: DISABLED
@@ -17,7 +18,7 @@ datasources:
     driverClassName: org.postgresql.Driver
     db-type: postgresql
     dialect: POSTGRES
-    maximum-pool-size: 48
+    maximum-pool-size: 512
     transaction-per-operation: false
     allow-connection-per-operation: true
 
@@ -29,7 +30,7 @@ r2dbc:
       options:
         protocol: postgres
         initialSize: 0 # https://github.com/micronaut-projects/micronaut-data/issues/2136
-        maxSize: 48
+        maxSize: 512
 
 mongodb:
   package-names:

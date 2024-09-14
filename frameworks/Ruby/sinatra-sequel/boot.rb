@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 require 'bundler/setup'
 require 'time'
+require 'oj'
 
 MAX_PK = 10_000
+ID_RANGE = (1..MAX_PK).freeze
+ALL_IDS = ID_RANGE.to_a
 QUERIES_MIN = 1
 QUERIES_MAX = 500
 SEQUEL_NO_ASSOCIATIONS = true
@@ -20,6 +23,8 @@ SERVER_STRING =
   end
 
 Bundler.require(:default) # Load core modules
+
+Oj.mimic_JSON
 
 def connect(dbtype)
   Bundler.require(dbtype) # Load database-specific modules
@@ -57,6 +62,21 @@ DB = connect ENV.fetch('DBTYPE').to_sym
 # Define ORM models
 class World < Sequel::Model(:World)
   def_column_alias(:randomnumber, :randomNumber) if DB.database_type == :mysql
+
+  def self.batch_update(worlds)
+    if DB.database_type == :mysql
+      worlds.map(&:save_changes)
+    else
+      ids = []
+      sql = String.new("UPDATE world SET randomnumber = CASE id ")
+      worlds.each do |world|
+        sql << "when #{world.id} then #{world.randomnumber} "
+        ids << world.id
+      end
+      sql << "ELSE randomnumber END WHERE id IN ( #{ids.join(',')})"
+      DB.run(sql)
+    end
+  end
 end
 
 class Fortune < Sequel::Model(:Fortune)

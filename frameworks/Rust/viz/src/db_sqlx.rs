@@ -1,5 +1,3 @@
-use std::borrow::Cow;
-
 use nanorand::{Rng, WyRand};
 
 pub use sqlx::{
@@ -8,10 +6,7 @@ pub use sqlx::{
     Arguments, PgPool, Postgres, Row,
 };
 
-use viz::{
-    async_trait, Error, FromRequest, IntoResponse, Request, RequestExt, Response,
-    StatusCode,
-};
+use viz::{Error, FromRequest, IntoResponse, Request, RequestExt, Response, StatusCode};
 
 use crate::models_sqlx::*;
 use crate::utils::get_query_param;
@@ -19,7 +14,6 @@ use crate::RANGE;
 
 pub struct DatabaseConnection(pub PoolConnection<Postgres>);
 
-#[async_trait]
 impl FromRequest for DatabaseConnection {
     type Error = PgError;
 
@@ -53,7 +47,6 @@ impl IntoResponse for PgError {
 
 pub struct Counter(pub u16);
 
-#[async_trait]
 impl FromRequest for Counter {
     type Error = Error;
 
@@ -110,14 +103,14 @@ pub async fn get_fortunes(
     let mut items = sqlx::query("SELECT * FROM Fortune")
         .map(|row: PgRow| Fortune {
             id: row.get(0),
-            message: Cow::Owned(row.get(1)),
+            message: row.get(1),
         })
         .fetch_all(&mut *conn)
         .await?;
 
     items.push(Fortune {
         id: 0,
-        message: Cow::Borrowed("Additional fortune added at request time."),
+        message: "Additional fortune added at request time.".to_string(),
     });
 
     items.sort_by(|it, next| it.message.cmp(&next.message));

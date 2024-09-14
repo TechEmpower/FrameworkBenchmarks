@@ -2,7 +2,6 @@ package benchmark;
 
 import benchmark.model.World;
 import benchmark.repository.AsyncWorldRepository;
-import io.vertx.sqlclient.Pool;
 import io.vertx.sqlclient.Row;
 import io.vertx.sqlclient.Tuple;
 import jakarta.inject.Singleton;
@@ -18,10 +17,6 @@ import java.util.stream.Collectors;
 public class VertxPgWorldRepository extends AbstractVertxSqlClientRepository implements AsyncWorldRepository {
 
     private static final Function<Row, World> ROW_TO_WORLD_MAPPER = row -> new World(row.getInteger(0), row.getInteger(1));
-
-    public VertxPgWorldRepository(Pool client) {
-        super(client);
-    }
 
     private CompletionStage<?> createTable() {
         return execute("DROP TABLE IF EXISTS World;").thenCompose(ignore -> execute("CREATE TABLE World (id INTEGER NOT NULL,randomNumber INTEGER NOT NULL);"));
@@ -44,7 +39,7 @@ public class VertxPgWorldRepository extends AbstractVertxSqlClientRepository imp
         for (Integer id : ids) {
             data.add(Tuple.of(id));
         }
-        return client.withConnection(sqlConnection ->
+        return holder.get().flatMap(sqlConnection ->
                 executeMany(sqlConnection, "SELECT * FROM world WHERE id = $1", data, ROW_TO_WORLD_MAPPER))
                 .toCompletionStage();
     }

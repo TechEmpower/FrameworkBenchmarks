@@ -15,7 +15,7 @@ The tests were run with:
 
 There are individual handlers for each DB approach. The logic for each of them are found here:
 
-- [PostgreSQL](database/postgres.js)
+- [PostgreSQL](src/database/postgres.js)
 
 There are **no database endpoints** or drivers attached by default.
 
