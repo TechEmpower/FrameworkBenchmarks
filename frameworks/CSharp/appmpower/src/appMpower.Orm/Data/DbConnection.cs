@@ -99,14 +99,23 @@ namespace appMpower.Orm.Data
 
       public void Open()
       {
+         OpenAsync().GetAwaiter().GetResult();
+      }
+
+      public async Task OpenAsync()
+      {
          if (_odbcConnection is null)
          {
-            DbConnections.GetConnection(_connectionString, this);
+            DbConnection dbConnection = await DbConnections.GetConnection(_connectionString);
+
+            _odbcConnection = dbConnection._odbcConnection; 
+            _odbcCommands = dbConnection._odbcCommands;
+            _number = dbConnection._number; 
          }
 
          if (_odbcConnection.State == ConnectionState.Closed)
          {
-            _odbcConnection.Open();
+            await _odbcConnection.OpenAsync();
          }
       }
 

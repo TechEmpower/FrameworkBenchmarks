@@ -175,12 +175,17 @@ namespace appMpower.Orm.Data
 
       public async Task<int> ExecuteNonQueryAsync()
       {
-         return await (_odbcCommand as System.Data.Common.DbCommand).ExecuteNonQueryAsync();
+         return await _odbcCommand.ExecuteNonQueryAsync();
       }
 
       public IDataReader ExecuteReader(CommandBehavior behavior)
       {
          return _odbcCommand.ExecuteReader(behavior);
+      }
+
+      public async Task<System.Data.Common.DbDataReader> ExecuteReaderAsync(CommandBehavior behavior)
+      {
+         return await _odbcCommand.ExecuteReaderAsync(behavior);
       }
 
 #nullable enable

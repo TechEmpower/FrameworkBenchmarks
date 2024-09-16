@@ -1,61 +1,66 @@
 using System.Collections.Concurrent;
+using System.Threading.Tasks;
 
 namespace appMpower.Orm.Data
 {
    public static class DbConnections
    {
+      private static bool _connectionsCreated = false;
       private static short _createdConnections = 0;
-      private static ConcurrentStack<DbConnection> _connectionsStack = new();
+      private static short _maxConnections = 500;
 
-      public static DbConnection GetConnection(string connectionString)
+      private static ConcurrentStack<DbConnection> _stack = new();
+      private static ConcurrentQueue<TaskCompletionSource<DbConnection>> _waitingQueue = new();
+
+      public static async Task<DbConnection> GetConnection(string connectionString)
       {
-         DbConnection popDbConnection; 
+         DbConnection dbConnection;
 
-         if (!_connectionsStack.TryPop(out popDbConnection))
+         if (_connectionsCreated)
          {
-            popDbConnection = new DbConnection();
-            popDbConnection._odbcConnection = new System.Data.Odbc.OdbcConnection(connectionString);
-
-            _createdConnections++;
-            popDbConnection._number = _createdConnections;
-
-            if (_createdConnections % 25 == 0)
+            if (!_stack.TryPop(out dbConnection))
             {
-               Console.WriteLine("Pooled connections created: " + _createdConnections.ToString());
+               dbConnection = await GetDbConnectionAsync();
             }
-         }
 
-         return popDbConnection; 
-      }
-
-
-      public static void GetConnection(string connectionString, DbConnection dbConnection)
-      {
-         DbConnection popDbConnection = null;
-
-         if (_connectionsStack.TryPop(out popDbConnection))
-         {
-            dbConnection._odbcConnection = popDbConnection._odbcConnection; 
-            dbConnection._odbcCommands = popDbConnection._odbcCommands;
-            dbConnection._number = popDbConnection._number; 
+            return dbConnection;
          }
          else
          {
-            dbConnection._odbcConnection = new System.Data.Odbc.OdbcConnection(connectionString);
-
             _createdConnections++;
+            
+            dbConnection = new DbConnection();
+            dbConnection._odbcConnection = new System.Data.Odbc.OdbcConnection(connectionString);
             dbConnection._number = _createdConnections;
 
-           if (_createdConnections % 25 == 0)
-            {
-               Console.WriteLine("Pooled connections created: " + _createdConnections.ToString());
-            }
-          }
+            if (_createdConnections == _maxConnections) _connectionsCreated = true;
+
+            //Console.WriteLine("opened connection number: " + dbConnection._number);
+
+            return dbConnection;
+         }
+      }
+
+      public static Task<DbConnection> GetDbConnectionAsync()
+      {
+         var taskCompletionSource = new TaskCompletionSource<DbConnection>(TaskCreationOptions.RunContinuationsAsynchronously);
+
+         _waitingQueue.Enqueue(taskCompletionSource);
+         return taskCompletionSource.Task;
       }
 
       public static void Release(DbConnection dbConnection)
       {
-         _connectionsStack.Push(dbConnection);
+         TaskCompletionSource<DbConnection> taskCompletionSource;
+
+         if (_waitingQueue.TryDequeue(out taskCompletionSource))
+         {
+            taskCompletionSource.SetResult(dbConnection);
+         }
+         else
+         {
+            _stack.Push(dbConnection);
+         }
       }
    }
 }

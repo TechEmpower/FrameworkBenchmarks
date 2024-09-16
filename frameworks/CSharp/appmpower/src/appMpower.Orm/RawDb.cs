@@ -13,42 +13,42 @@ namespace appMpower.Orm
 
       private static string[] _queriesMultipleRows = new string[MaxBatch + 1];
 
-      public static World LoadSingleQueryRow()
+      public static async Task<World> LoadSingleQueryRow()
       {
-         using var pooledConnection = DbConnections.GetConnection(DbProviderFactory.ConnectionString);
-         pooledConnection.Open();
+         using var pooledConnection = await DbConnections.GetConnection(DbProviderFactory.ConnectionString);
+         await pooledConnection.OpenAsync();
 
          var (dbCommand, _) = CreateReadCommand(pooledConnection);
 
          using (dbCommand)
          {
-            World world = ReadSingleRow(dbCommand);
+            World world = await ReadSingleRow(dbCommand);
 
             return world;
          }
       }
 
-      public static World LoadSingleQueryRowById(int id)
+      public static async Task<World> LoadSingleQueryRowById(int id)
       {
-         using var pooledConnection = DbConnections.GetConnection(DbProviderFactory.ConnectionString);
-         pooledConnection.Open();
+         using var pooledConnection = await DbConnections.GetConnection(DbProviderFactory.ConnectionString);
+         await pooledConnection.OpenAsync();
 
          var (dbCommand, _) = CreateReadCommandById(pooledConnection, id);
 
          using (dbCommand)
          {
-            World world = ReadSingleRow(dbCommand);
+            World world = await ReadSingleRow(dbCommand);
 
             return world;
          }
       }
 
-      public static World[] LoadMultipleQueriesRows(int count)
+      public static async Task<World[]> LoadMultipleQueriesRows(int count)
       {
          var worlds = new World[count];
 
-         using var pooledConnection = DbConnections.GetConnection(DbProviderFactory.ConnectionString);
-         pooledConnection.Open();
+         using var pooledConnection = await DbConnections.GetConnection(DbProviderFactory.ConnectionString);
+         await pooledConnection.OpenAsync();
 
          var (dbCommand, dbDataParameter) = CreateReadCommand(pooledConnection);
 
@@ -56,7 +56,7 @@ namespace appMpower.Orm
          {
             for (int i = 0; i < count; i++)
             {
-               worlds[i] = ReadSingleRow(dbCommand);
+               worlds[i] = await ReadSingleRow(dbCommand);
                dbDataParameter.Value = _random.Next(1, 10001);
             }
          }
@@ -64,18 +64,18 @@ namespace appMpower.Orm
          return worlds;
       }
 
-      public static List<Fortune> LoadFortunesRows()
+      public static async Task<List<Fortune>> LoadFortunesRows()
       {
          var fortunes = new List<Fortune>();
 
-         using var pooledConnection = DbConnections.GetConnection(DbProviderFactory.ConnectionString);
-         pooledConnection.Open();
+         using var pooledConnection = await DbConnections.GetConnection(DbProviderFactory.ConnectionString);
+         await pooledConnection.OpenAsync();
 
          var dbCommand = new DbCommand("SELECT * FROM fortune", pooledConnection);
 
          using (dbCommand)
          {
-            IDataReader dataReader = dbCommand.ExecuteReader(CommandBehavior.SingleResult & CommandBehavior.SequentialAccess);
+            IDataReader dataReader = await dbCommand.ExecuteReaderAsync(CommandBehavior.SingleResult & CommandBehavior.SequentialAccess);
 
             while (dataReader.Read())
             {
@@ -97,12 +97,12 @@ namespace appMpower.Orm
          return fortunes;
       }
 
-      public static World[] LoadMultipleUpdatesRows(int count)
+      public static async Task<World[]> LoadMultipleUpdatesRows(int count)
       {
          var worlds = new World[count];
 
-         using var pooledConnection = DbConnections.GetConnection(DbProviderFactory.ConnectionString);
-         pooledConnection.Open();
+         using var pooledConnection = await DbConnections.GetConnection(DbProviderFactory.ConnectionString);
+         await pooledConnection.OpenAsync();
 
          var (queryCommand, dbDataParameter) = CreateReadCommand(pooledConnection, true);
 
@@ -110,7 +110,7 @@ namespace appMpower.Orm
          {
             for (int i = 0; i < count; i++)
             {
-               worlds[i] = ReadSingleRow(queryCommand);
+               worlds[i] = await ReadSingleRow(queryCommand);
                dbDataParameter.Value = _random.Next(1, 10001);
             }
          }
@@ -166,9 +166,9 @@ namespace appMpower.Orm
          return (dbCommand, dbCommand.CreateParameter("Id", DbType.Int32, id));
       }
 
-      internal static World ReadSingleRow(DbCommand dbCommand)
+      internal static async Task<World> ReadSingleRow(DbCommand dbCommand)
       {
-         var dataReader = dbCommand.ExecuteReader(CommandBehavior.SingleRow & CommandBehavior.SequentialAccess);
+         var dataReader = await dbCommand.ExecuteReaderAsync(CommandBehavior.SingleRow & CommandBehavior.SequentialAccess);
 
          dataReader.Read();
 
@@ -183,7 +183,7 @@ namespace appMpower.Orm
          return world;
       }
 
-      public static World[] ReadMultipleRows(int count)
+      public static async Task<World[]> ReadMultipleRows(int count)
       {
          int j = 0;
          var ids = BatchUpdateString.Ids;
@@ -206,8 +206,8 @@ namespace appMpower.Orm
             queryString = _queriesMultipleRows[count] = StringBuilderCache.GetStringAndRelease(stringBuilder);
          }
 
-         using var pooledConnection = DbConnections.GetConnection(DbProviderFactory.ConnectionString);
-         pooledConnection.Open();
+         using var pooledConnection = await DbConnections.GetConnection(DbProviderFactory.ConnectionString);
+         await pooledConnection.OpenAsync();
 
          using var dbCommand = new DbCommand(queryString, pooledConnection);
 
@@ -216,7 +216,7 @@ namespace appMpower.Orm
             dbCommand.CreateParameter(ids[i], DbType.Int32, _random.Next(1, 10001));
          }
 
-         var dataReader = dbCommand.ExecuteReader(CommandBehavior.Default & CommandBehavior.SequentialAccess);
+         var dataReader = await dbCommand.ExecuteReaderAsync(CommandBehavior.Default & CommandBehavior.SequentialAccess);
 
          do
          {
@@ -229,7 +229,7 @@ namespace appMpower.Orm
             };
 
             j++;
-         } while (dataReader.NextResult());
+         } while (await dataReader.NextResultAsync());
 
          dataReader.Close();
 

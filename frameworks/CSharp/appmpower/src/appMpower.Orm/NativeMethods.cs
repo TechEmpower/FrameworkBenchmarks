@@ -42,7 +42,7 @@ public static class NativeMethods
     [UnmanagedCallersOnly(EntryPoint = "Db")]
     public static unsafe IntPtr Db(int* length, IntPtr* handlePointer)
     {
-        var world = RawDb.LoadSingleQueryRow();
+        var world = RawDb.LoadSingleQueryRow().GetAwaiter().GetResult();
 
         var memoryStream = new MemoryStream();
         using var utf8JsonWriter = new Utf8JsonWriter(memoryStream, _jsonWriterOptions);
@@ -69,7 +69,7 @@ public static class NativeMethods
     [UnmanagedCallersOnly(EntryPoint = "Fortunes")]
     public static unsafe IntPtr Fortunes(int* length, IntPtr* handlePointer)
     {
-        List<Fortune> fortunes = RawDb.LoadFortunesRows(); 
+        List<Fortune> fortunes = RawDb.LoadFortunesRows().GetAwaiter().GetResult(); 
         string fortunesView = FortunesView.Render(fortunes);
         byte[] byteArray = Encoding.UTF8.GetBytes(fortunesView);
 
@@ -85,7 +85,7 @@ public static class NativeMethods
     [UnmanagedCallersOnly(EntryPoint = "Query")]
     public static unsafe IntPtr Query(int queries, int* length, IntPtr* handlePointer)
     {
-        World[] worlds = RawDb.ReadMultipleRows(queries);
+        World[] worlds = RawDb.ReadMultipleRows(queries).GetAwaiter().GetResult();
 
         var memoryStream = new MemoryStream();
         using var utf8JsonWriter = new Utf8JsonWriter(memoryStream, _jsonWriterOptions);
@@ -105,7 +105,7 @@ public static class NativeMethods
     [UnmanagedCallersOnly(EntryPoint = "Updates")]
     public static unsafe IntPtr Updates(int count, int* length, IntPtr* handlePointer)
     {
-        World[] worlds = RawDb.LoadMultipleUpdatesRows(count);
+        World[] worlds = RawDb.LoadMultipleUpdatesRows(count).GetAwaiter().GetResult();
 
         var memoryStream = new MemoryStream();
         using var utf8JsonWriter = new Utf8JsonWriter(memoryStream, _jsonWriterOptions);
@@ -125,7 +125,7 @@ public static class NativeMethods
     [UnmanagedCallersOnly(EntryPoint = "DbById")]
     public static unsafe IntPtr DbById(int id, int* length, IntPtr* handlePointer)
     {
-        var world = RawDb.LoadSingleQueryRowById(id);
+        var world = RawDb.LoadSingleQueryRowById(id).GetAwaiter().GetResult();
 
         var memoryStream = new MemoryStream();
         using var utf8JsonWriter = new Utf8JsonWriter(memoryStream, _jsonWriterOptions);
