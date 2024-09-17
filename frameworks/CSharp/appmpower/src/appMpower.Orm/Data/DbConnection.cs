@@ -15,12 +15,12 @@ namespace appMpower.Orm.Data
 
       public DbConnection()
       {
-         _connectionString = DbProviderFactory.ConnectionString;
       }
 
       public DbConnection(string connectionString)
       {
-         _connectionString = connectionString;
+         _connectionString = connectionString; 
+         GetConnection();
       }
 
       public IDbConnection Connection
@@ -43,8 +43,18 @@ namespace appMpower.Orm.Data
          }
          set
          {
-            _odbcConnection.ConnectionString = value;
+            _connectionString = value; 
+            GetConnection();
          }
+      }
+
+      private void GetConnection()
+      {
+         DbConnection dbConnection = DbConnections.GetConnection(_connectionString).GetAwaiter().GetResult();
+         
+         _odbcConnection = dbConnection._odbcConnection;
+         _odbcCommands = dbConnection._odbcCommands;
+         _number = dbConnection._number; 
       }
 
       public int ConnectionTimeout
@@ -99,20 +109,14 @@ namespace appMpower.Orm.Data
 
       public void Open()
       {
-         OpenAsync().GetAwaiter().GetResult();
+         if (_odbcConnection.State == ConnectionState.Closed)
+         {
+            _odbcConnection.Open();
+         }
       }
 
       public async Task OpenAsync()
       {
-         if (_odbcConnection is null)
-         {
-            DbConnection dbConnection = await DbConnections.GetConnection(_connectionString);
-
-            _odbcConnection = dbConnection._odbcConnection; 
-            _odbcCommands = dbConnection._odbcCommands;
-            _number = dbConnection._number; 
-         }
-
          if (_odbcConnection.State == ConnectionState.Closed)
          {
             await _odbcConnection.OpenAsync();

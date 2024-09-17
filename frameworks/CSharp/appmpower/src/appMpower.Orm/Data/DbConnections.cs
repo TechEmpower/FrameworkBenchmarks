@@ -1,44 +1,41 @@
 using System.Collections.Concurrent;
-using System.Threading.Tasks;
 
 namespace appMpower.Orm.Data
 {
    public static class DbConnections
    {
-      private static bool _connectionsCreated = false;
+      private static bool _maxConnectionsCreated = false;
       private static short _createdConnections = 0;
       private static short _maxConnections = 500;
 
-      private static ConcurrentStack<DbConnection> _stack = new();
+      private static ConcurrentStack<DbConnection> _connectionsStack = new();
       private static ConcurrentQueue<TaskCompletionSource<DbConnection>> _waitingQueue = new();
 
       public static async Task<DbConnection> GetConnection(string connectionString)
       {
          DbConnection dbConnection;
 
-         if (_connectionsCreated)
+         if (!_connectionsStack.TryPop(out dbConnection))
          {
-            if (!_stack.TryPop(out dbConnection))
+            if (_maxConnectionsCreated)
             {
                dbConnection = await GetDbConnectionAsync();
             }
+            else
+            {
+               _createdConnections++;
+               
+               dbConnection = new DbConnection();
+               dbConnection._odbcConnection = new System.Data.Odbc.OdbcConnection(connectionString);
+               dbConnection._number = _createdConnections;
 
-            return dbConnection;
+               if (_createdConnections == _maxConnections) _maxConnectionsCreated = true;
+
+               //Console.WriteLine("opened connection number: " + dbConnection._number);
+            }
          }
-         else
-         {
-            _createdConnections++;
-            
-            dbConnection = new DbConnection();
-            dbConnection._odbcConnection = new System.Data.Odbc.OdbcConnection(connectionString);
-            dbConnection._number = _createdConnections;
 
-            if (_createdConnections == _maxConnections) _connectionsCreated = true;
-
-            //Console.WriteLine("opened connection number: " + dbConnection._number);
-
-            return dbConnection;
-         }
+         return dbConnection;
       }
 
       public static Task<DbConnection> GetDbConnectionAsync()
@@ -59,7 +56,7 @@ namespace appMpower.Orm.Data
          }
          else
          {
-            _stack.Push(dbConnection);
+            _connectionsStack.Push(dbConnection);
          }
       }
    }
