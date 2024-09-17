@@ -1,17 +1,17 @@
 using System.Collections.Concurrent;
 using System.Data;
-using System.Data.Odbc; 
+using System.Data.Odbc;
 
 namespace appMpower.Orm.Data
 {
    public class DbConnection : IDbConnection
    {
       private string _connectionString;
-      internal bool _keyed = false; 
-      internal int _number; 
-      internal OdbcConnection _odbcConnection;
-      internal ConcurrentStack<OdbcCommand> _odbcCommands = new();
-      internal Dictionary<string, OdbcCommand> _keyedOdbcCommands;
+      private bool _keyed = false;
+      private int _number;
+      private OdbcConnection _odbcConnection;
+      private ConcurrentStack<OdbcCommand> _odbcCommands = new();
+      private Dictionary<string, OdbcCommand> _keyedOdbcCommands;
 
       public DbConnection()
       {
@@ -50,11 +50,8 @@ namespace appMpower.Orm.Data
 
       private void GetConnection()
       {
-         DbConnection dbConnection = DbConnections.GetConnection(_connectionString).GetAwaiter().GetResult();
-         
-         _odbcConnection = dbConnection._odbcConnection;
-         _odbcCommands = dbConnection._odbcCommands;
-         _number = dbConnection._number; 
+         (_number, _odbcConnection, _odbcCommands) = 
+            DbConnections.GetConnectionBase(_connectionString).GetAwaiter().GetResult();
       }
 
       public int ConnectionTimeout
@@ -125,7 +122,7 @@ namespace appMpower.Orm.Data
 
       public void Dispose()
       {
-         DbConnections.Release(this);
+         DbConnections.Release((Number: _number, OdbcConnection: _odbcConnection, OdbcCommands: _odbcCommands));
       }
 
       internal OdbcCommand GetCommand(string commandText, CommandType commandType, bool keyed = false)
@@ -161,6 +158,12 @@ namespace appMpower.Orm.Data
 
             return odbcCommand;
          }
+      }
+
+      internal void Release(OdbcCommand odbcCommand)
+      {
+         if (_keyed) _keyedOdbcCommands.TryAdd(odbcCommand.CommandText, odbcCommand);
+         else _odbcCommands.Push(odbcCommand);
       }
    }
 }

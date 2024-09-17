@@ -15,7 +15,7 @@ namespace appMpower.Orm
 
       public static async Task<World> LoadSingleQueryRow()
       {
-         using var pooledConnection = await DbConnections.GetConnection(DbProviderFactory.ConnectionString);
+         using var pooledConnection = new DbConnection(DbProviderFactory.ConnectionString);
          await pooledConnection.OpenAsync();
 
          var (dbCommand, _) = CreateReadCommand(pooledConnection);
@@ -30,7 +30,7 @@ namespace appMpower.Orm
 
       public static async Task<World> LoadSingleQueryRowById(int id)
       {
-         using var pooledConnection = await DbConnections.GetConnection(DbProviderFactory.ConnectionString);
+         using var pooledConnection = new DbConnection(DbProviderFactory.ConnectionString);
          await pooledConnection.OpenAsync();
 
          var (dbCommand, _) = CreateReadCommandById(pooledConnection, id);
@@ -47,7 +47,7 @@ namespace appMpower.Orm
       {
          var worlds = new World[count];
 
-         using var pooledConnection = await DbConnections.GetConnection(DbProviderFactory.ConnectionString);
+         using var pooledConnection = new DbConnection(DbProviderFactory.ConnectionString);
          await pooledConnection.OpenAsync();
 
          var (dbCommand, dbDataParameter) = CreateReadCommand(pooledConnection);
@@ -68,7 +68,7 @@ namespace appMpower.Orm
       {
          var fortunes = new List<Fortune>();
 
-         using var pooledConnection = await DbConnections.GetConnection(DbProviderFactory.ConnectionString);
+         using var pooledConnection = new DbConnection(DbProviderFactory.ConnectionString);
          await pooledConnection.OpenAsync();
 
          var dbCommand = new DbCommand("SELECT * FROM fortune", pooledConnection);
@@ -101,7 +101,7 @@ namespace appMpower.Orm
       {
          var worlds = new World[count];
 
-         using var pooledConnection = await DbConnections.GetConnection(DbProviderFactory.ConnectionString);
+         using var pooledConnection = new DbConnection(DbProviderFactory.ConnectionString);
          await pooledConnection.OpenAsync();
 
          var (queryCommand, dbDataParameter) = CreateReadCommand(pooledConnection, true);
@@ -206,7 +206,7 @@ namespace appMpower.Orm
             queryString = _queriesMultipleRows[count] = StringBuilderCache.GetStringAndRelease(stringBuilder);
          }
 
-         using var pooledConnection = await DbConnections.GetConnection(DbProviderFactory.ConnectionString);
+         using var pooledConnection = new DbConnection(DbProviderFactory.ConnectionString);
          await pooledConnection.OpenAsync();
 
          using var dbCommand = new DbCommand(queryString, pooledConnection);

@@ -202,8 +202,7 @@ namespace appMpower.Orm.Data
 
       public void Dispose()
       {
-         if (_dbConnection._keyed) _dbConnection._keyedOdbcCommands.TryAdd(_odbcCommand.CommandText, _odbcCommand);
-         else _dbConnection._odbcCommands.Push(_odbcCommand);
+         _dbConnection.Release(_odbcCommand);
       }
    }
 }
