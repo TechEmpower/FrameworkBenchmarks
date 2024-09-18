@@ -20,12 +20,6 @@ namespace appMpower.Orm.Data
          _dbConnection = dbConnection;
       }
 
-      public DbCommand(string commandText, DbConnection dbConnection, bool keyed)
-      {
-         _odbcCommand = dbConnection.GetCommand(commandText, CommandType.Text, keyed);
-         _dbConnection = dbConnection;
-      }
-
       public DbCommand(string commandText, CommandType commandType, DbConnection dbConnection)
       {
          _odbcCommand = dbConnection.GetCommand(commandText, commandType);

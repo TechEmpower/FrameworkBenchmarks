@@ -101,10 +101,10 @@ namespace appMpower.Orm
       {
          var worlds = new World[count];
 
-         using var pooledConnection = new DbConnection(DbProviderFactory.ConnectionString);
+         using var pooledConnection = new DbConnection(DbProviderFactory.ConnectionString, true);
          await pooledConnection.OpenAsync();
 
-         var (queryCommand, dbDataParameter) = CreateReadCommand(pooledConnection, true);
+         var (queryCommand, dbDataParameter) = CreateReadCommand(pooledConnection);
 
          using (queryCommand)
          {
@@ -115,7 +115,7 @@ namespace appMpower.Orm
             }
          }
 
-         using var updateCommand = new DbCommand(BatchUpdateString.Query(count), pooledConnection, true);
+         using var updateCommand = new DbCommand(BatchUpdateString.Query(count), pooledConnection);
 
          var ids = BatchUpdateString.Ids;
          var randoms = BatchUpdateString.Randoms;
@@ -148,13 +148,6 @@ namespace appMpower.Orm
       internal static (DbCommand dbCommand, IDbDataParameter dbDataParameter) CreateReadCommand(DbConnection pooledConnection)
       {
          DbCommand dbCommand = new DbCommand("SELECT * FROM world WHERE id=?", pooledConnection);
-
-         return (dbCommand, dbCommand.CreateParameter("Id", DbType.Int32, _random.Next(1, 10001)));
-      }
-
-      internal static (DbCommand dbCommand, IDbDataParameter dbDataParameter) CreateReadCommand(DbConnection pooledConnection, bool keyed)
-      {
-         DbCommand dbCommand = new DbCommand("SELECT * FROM world WHERE id=?", pooledConnection, keyed);
 
          return (dbCommand, dbCommand.CreateParameter("Id", DbType.Int32, _random.Next(1, 10001)));
       }

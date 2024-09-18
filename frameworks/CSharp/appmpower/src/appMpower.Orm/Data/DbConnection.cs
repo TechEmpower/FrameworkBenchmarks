@@ -17,8 +17,9 @@ namespace appMpower.Orm.Data
       {
       }
 
-      public DbConnection(string connectionString)
+      public DbConnection(string connectionString, bool keyed = false)
       {
+         _keyed = keyed;
          _connectionString = connectionString; 
          GetConnection();
       }
@@ -50,8 +51,16 @@ namespace appMpower.Orm.Data
 
       private void GetConnection()
       {
-         (_number, _odbcConnection, _odbcCommands, _keyedOdbcCommands) = 
-            DbConnections.GetConnectionBase(_connectionString).GetAwaiter().GetResult();
+         if (_keyed)
+         {
+            (_number, _odbcConnection, _keyedOdbcCommands) = 
+               DbConnectionsKeyed.GetConnectionBase(_connectionString).GetAwaiter().GetResult();
+         }
+         else
+         {
+            (_number, _odbcConnection, _odbcCommands) = 
+               DbConnections.GetConnectionBase(_connectionString).GetAwaiter().GetResult();
+         }
       }
 
       public int ConnectionTimeout
@@ -122,10 +131,17 @@ namespace appMpower.Orm.Data
 
       public void Dispose()
       {
-         DbConnections.Release((Number: _number, OdbcConnection: _odbcConnection, OdbcCommands: _odbcCommands, KeyedOdbcCommands: _keyedOdbcCommands));
+         if (_keyed)
+         {
+            DbConnectionsKeyed.Release((Number: _number, OdbcConnection: _odbcConnection, KeyedOdbcCommands: _keyedOdbcCommands));
+         }
+         else
+         {
+            DbConnections.Release((Number: _number, OdbcConnection: _odbcConnection, OdbcCommands: _odbcCommands));
+         }
       }
 
-      internal OdbcCommand GetCommand(string commandText, CommandType commandType, bool keyed = false)
+      internal OdbcCommand GetCommand(string commandText, CommandType commandType)
       {
          OdbcCommand odbcCommand;
 
@@ -139,16 +155,7 @@ namespace appMpower.Orm.Data
 
             return odbcCommand; 
          }
-         else if (keyed)
-         {
-            _keyed = true;
-
-            if (_keyedOdbcCommands is null) 
-            {
-               _keyedOdbcCommands = new();
-            }
-            else if (_keyedOdbcCommands.TryGetValue(commandText, out odbcCommand)) return odbcCommand; 
-         }
+         else if (_keyed && _keyedOdbcCommands.TryGetValue(commandText, out odbcCommand)) return odbcCommand; 
 
          odbcCommand = _odbcConnection.CreateCommand();
          odbcCommand.CommandText = commandText;

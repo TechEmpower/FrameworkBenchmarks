@@ -9,12 +9,12 @@ namespace appMpower.Orm.Data
       private static short _createdConnections = 0;
       private static short _maxConnections = 500;
 
-      private static ConcurrentStack<(int Number, OdbcConnection OdbcConnection, ConcurrentStack<OdbcCommand> OdbcCommands, Dictionary<string, OdbcCommand>)> _connectionsStack = new();
-      private static ConcurrentQueue<TaskCompletionSource<(int Number, OdbcConnection OdbcConnection, ConcurrentStack<OdbcCommand> OdbcCommands, Dictionary<string, OdbcCommand>)>> _waitingQueue = new();
-
-      internal static async Task<(int Number, OdbcConnection OdbcConnection, ConcurrentStack<OdbcCommand> OdbcCommands, Dictionary<string, OdbcCommand> KeyedOdbcCommands)> GetConnectionBase(string connectionString)
+      private static ConcurrentStack<(int Number, OdbcConnection OdbcConnection, ConcurrentStack<OdbcCommand> OdbcCommands)> _connectionsStack = new();
+      private static ConcurrentQueue<TaskCompletionSource<(int Number, OdbcConnection OdbcConnection, ConcurrentStack<OdbcCommand> OdbcCommands)>> _waitingQueue = new();
+      
+      internal static async Task<(int Number, OdbcConnection OdbcConnection, ConcurrentStack<OdbcCommand> OdbcCommands)> GetConnectionBase(string connectionString)
       {
-         (int Number, OdbcConnection OdbcConnection, ConcurrentStack<OdbcCommand> OdbcCommands, Dictionary<string, OdbcCommand>) dbConnectionBase;
+         (int Number, OdbcConnection OdbcConnection, ConcurrentStack<OdbcCommand> OdbcCommands) dbConnectionBase;
 
          if (!_connectionsStack.TryPop(out dbConnectionBase))
          {
@@ -25,12 +25,9 @@ namespace appMpower.Orm.Data
             else
             {
                _createdConnections++;
+               dbConnectionBase = (Number: _maxConnections, OdbcConnection: new OdbcConnection(connectionString), OdbcCommands: new ConcurrentStack<OdbcCommand>());
 
-#pragma warning disable CS8123 // The tuple element name is ignored because a different name or no name is specified by the assignment target.
-                    dbConnectionBase = (Number: _maxConnections, OdbcConnection: new OdbcConnection(connectionString), OdbcCommands: new ConcurrentStack<OdbcCommand>(), KeyedOdbcCommands: null);
-#pragma warning restore CS8123 // The tuple element name is ignored because a different name or no name is specified by the assignment target.
-
-                    if (_createdConnections == _maxConnections) _maxConnectionsCreated = true;
+               if (_createdConnections == _maxConnections) _maxConnectionsCreated = true;
 
                //Console.WriteLine("opened connection number: " + dbConnectionBase._number);
             }
@@ -39,9 +36,9 @@ namespace appMpower.Orm.Data
          return dbConnectionBase;
       }
 
-      internal static void Release((int Number, OdbcConnection OdbcConnection, ConcurrentStack<OdbcCommand> OdbcCommands, Dictionary<string, OdbcCommand> KeyedOdbcCommands) dbConnectionBase)
+      internal static void Release((int Number, OdbcConnection OdbcConnection, ConcurrentStack<OdbcCommand> OdbcCommands) dbConnectionBase)
       {
-         TaskCompletionSource<(int Number, OdbcConnection OdbcConnection, ConcurrentStack<OdbcCommand> OdbcCommands, Dictionary<string, OdbcCommand>)> taskCompletionSource;
+         TaskCompletionSource<(int Number, OdbcConnection OdbcConnection, ConcurrentStack<OdbcCommand> OdbcCommands)> taskCompletionSource;
 
          if (_waitingQueue.TryDequeue(out taskCompletionSource))
          {
@@ -53,9 +50,9 @@ namespace appMpower.Orm.Data
          }
       }
 
-      private static Task<(int Number, OdbcConnection OdbcConnection, ConcurrentStack<OdbcCommand> OdbcCommands, Dictionary<string, OdbcCommand>)> GetDbConnectionBaseAsync()
+      private static Task<(int Number, OdbcConnection OdbcConnection, ConcurrentStack<OdbcCommand> OdbcCommands)> GetDbConnectionBaseAsync()
       {
-         var taskCompletionSource = new TaskCompletionSource<(int Number, OdbcConnection OdbcConnection, ConcurrentStack<OdbcCommand> OdbcCommands, Dictionary<string, OdbcCommand>)>(TaskCreationOptions.RunContinuationsAsynchronously);
+         var taskCompletionSource = new TaskCompletionSource<(int Number, OdbcConnection OdbcConnection, ConcurrentStack<OdbcCommand> OdbcCommands)>(TaskCreationOptions.RunContinuationsAsynchronously);
 
          _waitingQueue.Enqueue(taskCompletionSource);
          return taskCompletionSource.Task;
