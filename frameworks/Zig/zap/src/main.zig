@@ -21,16 +21,12 @@ pub fn main() !void {
         .child_allocator = gpa.allocator(),
     };
 
-    var allocator = tsa.allocator();
+    const allocator = tsa.allocator();
 
     var pg_pool = try pool.initPool(allocator);
     defer pg_pool.deinit();
 
-    var rnd = std.rand.DefaultPrng.init(blk: {
-        var seed: u64 = undefined;
-        try std.os.getrandom(std.mem.asBytes(&seed));
-        break :blk seed;
-    });
+    var prng = std.rand.DefaultPrng.init(@as(u64, @bitCast(std.time.milliTimestamp())));
 
     middleware.SharedAllocator.init(allocator);
 
@@ -66,7 +62,7 @@ pub fn main() !void {
     );
 
     var headerHandler = middleware.HeaderMiddleWare.init(dbEndpointHandler.getHandler());
-    var prngHandler = middleware.PrngMiddleWare.init(headerHandler.getHandler(), &rnd);
+    var prngHandler = middleware.RandomMiddleWare.init(headerHandler.getHandler(), &prng);
     var pgHandler = middleware.PgMiddleWare.init(prngHandler.getHandler(), pg_pool);
 
     var listener = try zap.Middleware.Listener(middleware.Context).init(
@@ -92,4 +88,3 @@ pub fn main() !void {
         .workers = 1,
     });
 }
-

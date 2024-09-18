@@ -2,43 +2,45 @@ namespace App
 
 open System
 open Oxpecker
+open System.Runtime.InteropServices
 
 [<RequireQualifiedAccess>]
 module HtmlViews =
     open Oxpecker.ViewEngine
 
-    let private fortunesHead =
-        head() {
-            title() { raw "Fortunes" }
-        }
-
-    let private layout (content: HtmlElement) =
-        html() {
-            fortunesHead
-            body() { content }
-        }
-
-    let private fortunesTableHeader =
-        tr() {
-            th() { raw "id" }
-            th() { raw "message" }
-        }
+    let private head, tail =
+        (fun (content: HtmlElement) ->
+            html() {
+                head() {
+                    title() { "Fortunes" }
+                }
+                body() {
+                    table() {
+                        tr() {
+                            th() { "id" }
+                            th() { "message" }
+                        }
+                        content
+                    }
+                }
+            } :> HtmlElement
+        ) |> RenderHelpers.prerender
 
     let fortunes (fortunesData: ResizeArray<Fortune>) =
-        table() {
-            fortunesTableHeader
-            for fortune in fortunesData do
-                tr() {
-                    td() { raw <| string fortune.id }
-                    td() { fortune.message }
-                }
-        } |> layout
+        let fragment = __()
+        for fortune in CollectionsMarshal.AsSpan fortunesData do
+            tr() {
+                td() { raw <| string fortune.id }
+                td() { fortune.message }
+            }
+            |> fragment.AddChild
+        RenderHelpers.combine head tail fragment
 
 [<RequireQualifiedAccess>]
 module HttpHandlers =
     open System.Text
     open Microsoft.AspNetCore.Http
-    open System.Text.Json
+    open SpanJson
 
     let private extra =
         {
@@ -96,9 +98,9 @@ module HttpHandlers =
             ctx.WriteBytes(result)
 
     let jsonSimple value : EndpointHandler =
-        let options = JsonSerializerOptions(JsonSerializerDefaults.Web)
         fun ctx ->
-            ctx.Response.WriteAsJsonAsync(value, options)
+            ctx.SetContentType("application/json")
+            JsonSerializer.Generic.Utf8.SerializeAsync<_>(value, stream = ctx.Response.Body).AsTask()
 
     let endpoints =
         [|

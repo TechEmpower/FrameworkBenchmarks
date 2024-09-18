@@ -64,27 +64,27 @@ pub const FortunesEndpoint = struct {
         defer conn.release();
 
         var rows = try conn.query("SELECT id, message FROM Fortune", .{});
-        rows.deinit();
+        defer rows.deinit();
 
         var fortunes = std.ArrayList(Fortune).init(middleware.SharedAllocator.getAllocator());
         defer fortunes.deinit();
 
         while (try rows.next()) |row| {
-            var fortune = Fortune{ .id = row.get(i32, 0), .message = row.get([]const u8, 1) };
-            _ = try fortunes.append(fortune);
+            const fortune = Fortune{ .id = row.get(i32, 0), .message = row.get([]const u8, 1) };
+            try fortunes.append(fortune);
         }
 
-        var fortune = Fortune{ .id = 0, .message = "Additional fortune added at request time." };
-        _ = try fortunes.append(fortune);
+        const fortune = Fortune{ .id = 0, .message = "Additional fortune added at request time." };
+        try fortunes.append(fortune);
 
-        var fortunes_slice = try fortunes.toOwnedSlice();
+        const fortunes_slice = try fortunes.toOwnedSlice();
         std.mem.sort(Fortune, fortunes_slice, {}, cmpFortuneByMessage);
 
         return fortunes_slice;
     }
 
     fn getFortunesHtml(self: *Self, pool: *pg.Pool) ![]const u8 {
-        var fortunes = try getFortunes(pool);
+        const fortunes = try getFortunes(pool);
 
         self.mutex.lock();
         const ret = self.mustache.build(.{ .fortunes = fortunes });
@@ -95,7 +95,7 @@ pub const FortunesEndpoint = struct {
 
         // std.debug.print("mustache output {s}\n", .{raw});
 
-        var html = try deescapeHtml(raw);
+        const html = try deescapeHtml(raw);
 
         // std.debug.print("html output {s}\n", .{html});
 
@@ -103,7 +103,7 @@ pub const FortunesEndpoint = struct {
     }
 
     pub fn get(ep: *zap.Endpoint, req: zap.Request) void {
-        const self = @fieldParentPtr(Self, "ep", ep);
+        const self: *FortunesEndpoint = @fieldParentPtr("ep", ep);
 
         if (!checkPath(ep, req)) return;
 
@@ -118,7 +118,7 @@ pub const FortunesEndpoint = struct {
             }
         }
 
-        var fortunes_html = getFortunesHtml(self, pool) catch return;
+        const fortunes_html = getFortunesHtml(self, pool) catch return;
 
         req.sendBody(fortunes_html) catch return;
 
@@ -146,7 +146,7 @@ pub const DbEndpoint = struct {
     }
 
     pub fn get(ep: *zap.Endpoint, req: zap.Request) void {
-        const self = @fieldParentPtr(Self, "ep", ep);
+        const self: *DbEndpoint = @fieldParentPtr("ep", ep);
 
         if (!checkPath(ep, req)) return;
 
@@ -177,14 +177,13 @@ pub const DbEndpoint = struct {
         var conn = pool.acquire() catch return;
         defer conn.release();
 
-        var row_result = conn.row("SELECT id, randomNumber FROM World WHERE id = $1", .{random_number}) catch |err| {
+        const row_result = conn.row("SELECT id, randomNumber FROM World WHERE id = $1", .{random_number}) catch |err| {
             std.debug.print("Error querying database: {}\n", .{err});
             return;
         };
         var row = row_result.?;
-        defer row.deinit();
 
-        var world = World{ .id = row.get(i32, 0), .randomNumber = row.get(i32, 1) };
+        const world = World{ .id = row.get(i32, 0), .randomNumber = row.get(i32, 1) };
 
         var buf: [100]u8 = undefined;
         var json_to_send: []const u8 = undefined;
@@ -218,7 +217,7 @@ pub const PlaintextEndpoint = struct {
     }
 
     pub fn get(ep: *zap.Endpoint, req: zap.Request) void {
-        const self = @fieldParentPtr(Self, "ep", ep);
+        const self: *PlaintextEndpoint = @fieldParentPtr("ep", ep);
         _ = self;
 
         if (!checkPath(ep, req)) return;
@@ -248,14 +247,14 @@ pub const JsonEndpoint = struct {
     }
 
     pub fn get(ep: *zap.Endpoint, req: zap.Request) void {
-        const self = @fieldParentPtr(Self, "ep", ep);
+        const self: *JsonEndpoint  = @fieldParentPtr("ep", ep);
         _ = self;
 
         if (!checkPath(ep, req)) return;
 
         req.setContentType(.JSON) catch return;
 
-        var message = Message{ .message = "Hello, World!" };
+        const message = Message{ .message = "Hello, World!" };
 
         var buf: [100]u8 = undefined;
         var json_to_send: []const u8 = undefined;

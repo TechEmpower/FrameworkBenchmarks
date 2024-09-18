@@ -1,25 +1,26 @@
+mod common;
+mod pg;
+
 use axum::{
-    extract::Query,
-    http::{header, HeaderValue, StatusCode},
-    response::IntoResponse,
-    routing::get,
-    Json, Router,
+    extract::Query, http::StatusCode, response::IntoResponse, routing::get, Router,
 };
 use dotenv::dotenv;
-use tower_http::set_header::SetResponseHeaderLayer;
+use rand::{rngs::SmallRng, thread_rng, SeedableRng};
 use yarte::Template;
 
-mod database_pg;
-mod models_common;
-mod models_pg;
-mod server;
-mod utils;
+#[cfg(not(feature = "simd-json"))]
+use axum::Json;
+#[cfg(feature = "simd-json")]
+use common::simd_json::Json;
 
-use self::{
-    database_pg::{DatabaseConnection, PgConnection},
-    models_pg::Fortune,
-    utils::{get_environment_variable, parse_params, Params, Utf8Html},
+mod server;
+
+use common::{
+    get_env, random_id,
+    utils::{parse_params, Params, Utf8Html},
 };
+use pg::database::{DatabaseConnection, PgConnection};
+use pg::models::Fortune;
 
 #[derive(Template)]
 #[template(path = "fortunes.html.hbs")]
@@ -28,7 +29,12 @@ pub struct FortunesTemplate<'a> {
 }
 
 async fn db(DatabaseConnection(conn): DatabaseConnection) -> impl IntoResponse {
-    let world = conn.get_world().await.expect("error loading world");
+    let mut rng = SmallRng::from_rng(&mut thread_rng()).unwrap();
+
+    let world = conn
+        .fetch_world_by_id(random_id(&mut rng))
+        .await
+        .expect("error loading world");
 
     (StatusCode::OK, Json(world))
 }
@@ -40,7 +46,7 @@ async fn queries(
     let q = parse_params(params);
 
     let results = conn
-        .get_worlds(q as usize)
+        .fetch_random_worlds(q)
         .await
         .expect("error loading worlds");
 
@@ -48,8 +54,10 @@ async fn queries(
 }
 
 async fn fortunes(DatabaseConnection(conn): DatabaseConnection) -> impl IntoResponse {
-    let fortunes: Vec<Fortune> =
-        conn.tell_fortune().await.expect("error loading fortunes");
+    let fortunes: Vec<Fortune> = conn
+        .fetch_all_fortunes()
+        .await
+        .expect("error loading fortunes");
 
     Utf8Html(
         FortunesTemplate {
@@ -65,52 +73,26 @@ async fn updates(
     Query(params): Query<Params>,
 ) -> impl IntoResponse {
     let q = parse_params(params);
+    let worlds = conn.update_worlds(q).await.expect("error updating worlds");
 
-    let results = conn.update(q as u16).await.expect("error updating worlds");
-
-    (StatusCode::OK, Json(results))
+    (StatusCode::OK, Json(worlds))
 }
 
-fn main() {
+#[tokio::main]
+async fn main() {
     dotenv().ok();
 
-    let rt = tokio::runtime::Builder::new_current_thread()
-        .enable_all()
-        .build()
-        .unwrap();
+    let database_url: String = get_env("POSTGRES_URL");
 
-    for _ in 1..num_cpus::get() {
-        std::thread::spawn(move || {
-            let rt = tokio::runtime::Builder::new_current_thread()
-                .enable_all()
-                .build()
-                .unwrap();
-            rt.block_on(serve());
-        });
-    }
-    rt.block_on(serve());
-}
-
-async fn serve() {
-    let database_url: String = get_environment_variable("AXUM_TECHEMPOWER_DATABASE_URL");
-
-    // setup connection pool
+    // Create shared database connection
     let pg_connection = PgConnection::connect(database_url).await;
-    let server_header_value = HeaderValue::from_static("Axum");
 
-    let router = Router::new()
+    let app = Router::new()
         .route("/fortunes", get(fortunes))
         .route("/db", get(db))
         .route("/queries", get(queries))
         .route("/updates", get(updates))
-        .with_state(pg_connection)
-        .layer(SetResponseHeaderLayer::if_not_present(
-            header::SERVER,
-            server_header_value,
-        ));
+        .with_state(pg_connection);
 
-    server::builder()
-        .serve(router.into_make_service())
-        .await
-        .unwrap();
+    server::serve_hyper(app, Some(8000)).await
 }
