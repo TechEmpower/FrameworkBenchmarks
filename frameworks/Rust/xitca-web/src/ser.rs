@@ -62,7 +62,7 @@ impl Fortune {
     }
 }
 
-// TODO: use another template engine with faster compile time.(perferably with no proc macro)
+// TODO: use another template engine with faster compile time.(preferably with no proc macro)
 #[cfg_attr(
     feature = "template",
     derive(sailfish::TemplateOnce),
@@ -84,11 +84,11 @@ impl<'de> Deserialize<'de> for Num {
     where
         D: Deserializer<'de>,
     {
-        use core::{cmp, fmt};
+        use core::fmt;
 
         use serde::de::{Error, MapAccess, Visitor};
 
-        const FIELDS: &'static [&'static str] = &["q"];
+        const FIELDS: &[&str] = &["q"];
 
         struct Field;
 
@@ -135,9 +135,7 @@ impl<'de> Deserialize<'de> for Num {
                 V: MapAccess<'de>,
             {
                 map.next_key::<Field>()?.ok_or_else(|| Error::missing_field("q"))?;
-                let q = map.next_value::<u16>().unwrap_or(1);
-                let q = cmp::min(500, cmp::max(1, q));
-                Ok(Num(q))
+                Ok(Num(map.next_value().unwrap_or(1).clamp(1, 500)))
             }
         }
 
@@ -201,8 +199,6 @@ impl<Ext> IntoResponse for Request<Ext> {
     }
 }
 
-#[cold]
-#[inline(never)]
 pub fn error_response(status: StatusCode) -> Response {
     http::Response::builder()
         .status(status)
