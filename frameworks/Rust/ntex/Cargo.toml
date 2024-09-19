@@ -34,10 +34,11 @@ default = []
 tokio = ["ntex/tokio"]
 
 # compio runtime
-compio = ["ntex/compio"]
+compio = ["ntex/compio", ]
 
 [dependencies]
 ntex = "2.4"
+ntex-compio = "0.1.2"
 ntex-bytes = { version = "0.1.21", features=["simd"] }
 mimalloc = { version = "0.1.25", default-features = false }
 snmalloc-rs = { version = "0.3.3", features = ["native-cpu"] }
@@ -52,6 +53,7 @@ futures = "0.3"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 log = { version = "0.4", features = ["release_max_level_off"] }
+compio-driver = { version = "0.4", features = ["io-uring", "io-uring-socket"]}
 tok_io = {version = "1", package = "tokio" }
 tokio-postgres = { git="https://github.com/fafhrd91/postgres.git", branch="ntex-2" }
 
@@ -63,10 +65,3 @@ lto = "thin"
 debug = false
 incremental = false
 overflow-checks = false
-
-[patch.crates-io]
-ntex = { git = "https://github.com/ntex-rs/ntex.git", branch = "compio" }
-ntex-io = { git = "https://github.com/ntex-rs/ntex.git", branch = "compio" }
-ntex-rt = { git = "https://github.com/ntex-rs/ntex.git", branch = "compio" }
-ntex-net = { git = "https://github.com/ntex-rs/ntex.git", branch = "compio" }
-ntex-compio = { git = "https://github.com/ntex-rs/ntex.git", branch = "compio" }
