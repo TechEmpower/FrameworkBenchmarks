@@ -27,6 +27,14 @@
       <version>${jfinal-plugins.version}</version>
     </dependency>
 
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.12</version>
+      <scope>test</scope>
+    </dependency>
+
+
     <!-- https://mvnrepository.com/artifact/com.jfinal/activerecord -->
     <!--
     <dependency>

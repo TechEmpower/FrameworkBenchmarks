@@ -1,8 +1,5 @@
 package com.litongjava.tio.http.server;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.litongjava.tio.http.common.HttpConfig;
 import com.litongjava.tio.http.common.handler.ITioHttpRequestHandler;
 import com.litongjava.tio.http.server.config.EhCachePluginConfig;
@@ -20,7 +17,6 @@ import com.litongjava.tio.utils.environment.EnvUtils;
 public class MainApp {
 
   public static void main(String[] args) {
-    Logger log = LoggerFactory.getLogger(MainApp.class);
     long start = System.currentTimeMillis();
     EnvUtils.load();
     // add route
@@ -55,14 +51,10 @@ public class MainApp {
     serverTioConfig.statOn = false;
     // start server
     try {
+      new MysqlDbConfig().init();
+      new EnjoyEngineConfig().engine();
+      new EhCachePluginConfig().ehCachePlugin();
       httpServerStarter.start();
-      if (EnvUtils.getBoolean("native", false)) {
-        new MysqlDbConfig().init();
-        new EnjoyEngineConfig().engine();
-        new EhCachePluginConfig().ehCachePlugin();
-      } else {
-        log.info("native mode,only start server");
-      }
       long end = System.currentTimeMillis();
       System.out.println((end - start) + "ms");
     } catch (Exception e) {
