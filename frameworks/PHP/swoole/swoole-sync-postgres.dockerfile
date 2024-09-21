@@ -2,6 +2,7 @@ FROM ubuntu:24.04
 
 ENV SWOOLE_VERSION 5.1.4
 ENV ENABLE_COROUTINE 0
+ENV CPU_MULTIPLES 4
 ENV DATABASE_DRIVER pgsql
 
 ARG DEBIAN_FRONTEND=noninteractive
@@ -15,17 +16,19 @@ RUN apt update -yqq > /dev/null \
     && cd /tmp/swoole-src-${SWOOLE_VERSION} \
     && phpize > /dev/null \
     && ./configure > /dev/null \
-    && make -j2 > /dev/null \
+    && make -j8 > /dev/null \
     && make install > /dev/null \
-    && echo "extension=swoole.so" > /etc/php/8.3/cli/conf.d/50-swoole.ini
+    && echo "extension=swoole.so" > /etc/php/8.3/cli/conf.d/50-swoole.ini \
+    && echo "memory_limit=1024M" >> /etc/php/8.3/cli/php.ini \
+    && php -m
 
 WORKDIR /swoole
 
 ADD ./swoole-server.php /swoole
-ADD ./php.ini /swoole
+ADD 10-opcache.ini /swoole
 ADD ./database.php /swoole
 
-RUN cat /swoole/php.ini >> /etc/php/8.3/cli/php.ini
+COPY 10-opcache.ini /etc/php/8.3/cli/conf.d/10-opcache.ini
 
 EXPOSE 8080
 CMD php /swoole/swoole-server.php

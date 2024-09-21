@@ -2,8 +2,14 @@ import Config
 
 config :hello, HelloWeb.Endpoint,
   adapter: Bandit.PhoenixAdapter,
-  http: [port: 8080, ip: {0, 0, 0, 0}],
-  http_options: [log_protocol_errors: false],
+  http: [
+    port: 8080,
+    ip: {0, 0, 0, 0},
+    http_options: [
+      compress: false,
+      log_protocol_errors: false
+    ]
+  ],
   compress: false,
   check_origin: false,
   debug_errors: false,

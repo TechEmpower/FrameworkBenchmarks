@@ -1,9 +1,12 @@
 const std = @import("std");
+const ModuleMap = std.StringArrayHashMap(*std.Build.Module);
+var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+const allocator = gpa.allocator();
 
 // Although this function looks imperative, note that its job is to
 // declaratively construct a build graph that will be executed by an external
 // runner.
-pub fn build(b: *std.Build) void {
+pub fn build(b: *std.Build) !void {
     // Standard target options allows the person running `zig build` to choose
     // what target to build for. Here we do not override the defaults, which
     // means any target is allowed, and the default is native. Other options
@@ -15,41 +18,38 @@ pub fn build(b: *std.Build) void {
     // set a preferred release mode, allowing the user to decide how to optimize.
     const optimize = b.standardOptimizeOption(.{});
 
+    const dep_opts = .{ .target = target, .optimize = optimize };
+
     const exe = b.addExecutable(.{
         .name = "zap",
         // In this case the main source file is merely a path, however, in more
         // complicated build scripts, this could be a generated file.
-        .root_source_file = .{ .path = "src/main.zig" },
+        .root_source_file = b.path("src/main.zig"),
         .target = target,
         .optimize = optimize,
     });
-
-    //exe.addPackagePath("random", "src/random.zig");
 
     const zap = b.dependency("zap", .{
         .target = target,
         .optimize = optimize,
         .openssl = false, // set to true to enable TLS support
     });
-    exe.addModule("zap", zap.module("zap"));
 
-    const pg = b.dependency("pg", .{
-        .target = target,
-        .optimize = optimize,
-    });
-    exe.addModule("pg", pg.module("pg"));
+    var modules = ModuleMap.init(allocator);
+    defer modules.deinit();
 
-    const dig = b.dependency("dig", .{
-    .target = target,
-    .optimize = optimize,
-    });
-    exe.addModule("dns", dig.module("dns"));
+    const zap_module = b.dependency("zap", dep_opts).module("zap");
+    const pg_module = b.dependency("pg", dep_opts).module("pg");
+    const dig_module = b.dependency("dig", dep_opts).module("dns");
 
-    // const mustache = b.dependency("mustache", .{
-    //     .target = target,
-    //     .optimize = optimize,
-    // });
-    // exe.addModule("mustache", mustache.module("mustache"));
+    try modules.put("zap", zap_module);
+    try modules.put("pg", pg_module);
+    try modules.put("dig", dig_module);
+
+    //     // Expose this as a module that others can import
+    exe.root_module.addImport("zap", zap_module);
+    exe.root_module.addImport("pg", pg_module);
+    exe.root_module.addImport("dig", dig_module);
 
     exe.linkLibrary(zap.artifact("facil.io"));
 
@@ -84,7 +84,7 @@ pub fn build(b: *std.Build) void {
     // Creates a step for unit testing. This only builds the test executable
     // but does not run it.
     const unit_tests = b.addTest(.{
-        .root_source_file = .{ .path = "src/main.zig" },
+        .root_source_file = b.path("src/main.zig"),
         .target = target,
         .optimize = optimize,
     });

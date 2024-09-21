@@ -6,12 +6,12 @@ COPY . .
 
 ENV NODE_ENV production
 
-RUN bun install --production
-
-RUN bun run build
+RUN bun install
 
 ENV DATABASE postgres
 
+RUN bun run build
+
 RUN sed -i 's/smol = false/smol = true/g' bunfig.toml
 
-CMD ["bun", "spawn.ts"]
+CMD ["bun", "./dist/index.js"]
