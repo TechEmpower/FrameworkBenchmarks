@@ -33,7 +33,7 @@ impl Message {
 
 pub struct Num(pub u16);
 
-#[cfg_attr(feature = "pg-orm", derive(diesel::Queryable))]
+#[cfg_attr(any(feature = "pg-orm", feature = "pg-orm-async"), derive(diesel::Queryable))]
 pub struct World {
     pub id: i32,
     pub randomnumber: i32,
@@ -46,7 +46,7 @@ impl World {
     }
 }
 
-#[cfg_attr(feature = "pg-orm", derive(diesel::Queryable))]
+#[cfg_attr(any(feature = "pg-orm", feature = "pg-orm-async"), derive(diesel::Queryable))]
 pub struct Fortune {
     pub id: i32,
     pub message: Cow<'static, str>,

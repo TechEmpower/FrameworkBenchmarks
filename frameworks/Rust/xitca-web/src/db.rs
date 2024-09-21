@@ -2,7 +2,7 @@
 #![allow(clippy::unnecessary_lazy_evaluations)]
 
 use xitca_io::bytes::BytesMut;
-use xitca_postgres::{pipeline::Pipeline, pool::Pool, AsyncLendingIterator, Type};
+use xitca_postgres::{pipeline::Pipeline, pool::Pool, types::Type, AsyncLendingIterator};
 
 use super::{
     ser::{Fortune, Fortunes, World},
@@ -21,11 +21,9 @@ pub struct Client {
 type Shared = (Rand, BytesMut);
 
 const FORTUNE_SQL: &str = "SELECT * FROM fortune";
-
 const FORTUNE_SQL_TYPES: &[Type] = &[];
 
 const WORLD_SQL: &str = "SELECT * FROM world WHERE id=$1";
-
 const WORLD_SQL_TYPES: &[Type] = &[Type::INT4];
 
 fn update_query(num: usize) -> Box<str> {
@@ -71,18 +69,18 @@ impl Client {
 
     pub async fn get_world(&self) -> HandleResult<World> {
         let mut conn = self.pool.get().await?;
-        let stmt = conn.prepare(WORLD_SQL, WORLD_SQL_TYPES).await?;
+        let stmt = conn.prepare_cache(WORLD_SQL, WORLD_SQL_TYPES).await?;
         let id = self.shared().0.gen_id();
         let mut res = conn.consume().query_raw(&stmt, [id])?;
         let row = res.try_next().await?.ok_or_else(|| "World does not exist")?;
-        Ok(World::new(row.get_raw(0), row.get_raw(1)))
+        Ok(World::new(row.get(0), row.get(1)))
     }
 
     pub async fn get_worlds(&self, num: u16) -> HandleResult<Vec<World>> {
         let len = num as usize;
 
         let mut conn = self.pool.get().await?;
-        let stmt = conn.prepare(WORLD_SQL, WORLD_SQL_TYPES).await?;
+        let stmt = conn.prepare_cache(WORLD_SQL, WORLD_SQL_TYPES).await?;
 
         let mut res = {
             let (ref mut rng, ref mut buf) = *self.shared();
@@ -95,7 +93,7 @@ impl Client {
 
         while let Some(mut item) = res.try_next().await? {
             while let Some(row) = item.try_next().await? {
-                worlds.push(World::new(row.get_raw(0), row.get_raw(1)))
+                worlds.push(World::new(row.get(0), row.get(1)))
             }
         }
 
@@ -108,8 +106,8 @@ impl Client {
         let update = self.updates.get(len).ok_or_else(|| "num out of bound")?;
 
         let mut conn = self.pool.get().await?;
-        let world_stmt = conn.prepare(WORLD_SQL, WORLD_SQL_TYPES).await?;
-        let update_stmt = conn.prepare(update, &[]).await?;
+        let world_stmt = conn.prepare_cache(WORLD_SQL, WORLD_SQL_TYPES).await?;
+        let update_stmt = conn.prepare_cache(update, &[]).await?;
 
         let mut params = Vec::with_capacity(len);
 
@@ -133,7 +131,7 @@ impl Client {
         while let Some(mut item) = res.try_next().await? {
             while let Some(row) = item.try_next().await? {
                 let r_id = r_ids.next().unwrap()[1];
-                worlds.push(World::new(row.get_raw(0), r_id))
+                worlds.push(World::new(row.get(0), r_id))
             }
         }
 
@@ -145,11 +143,11 @@ impl Client {
         items.push(Fortune::new(0, "Additional fortune added at request time."));
 
         let mut conn = self.pool.get().await?;
-        let stmt = conn.prepare(FORTUNE_SQL, FORTUNE_SQL_TYPES).await?;
-        let mut res = conn.consume().query_raw::<[i32; 0]>(&stmt, [])?;
+        let stmt = conn.prepare_cache(FORTUNE_SQL, FORTUNE_SQL_TYPES).await?;
+        let mut res = conn.consume().query_raw::<_, [i32; 0]>(&stmt, [])?;
 
         while let Some(row) = res.try_next().await? {
-            items.push(Fortune::new(row.get_raw(0), row.get_raw::<String>(1)));
+            items.push(Fortune::new(row.get(0), row.get::<String>(1)));
         }
 
         items.sort_by(|it, next| it.message.cmp(&next.message));
