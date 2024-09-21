@@ -2,7 +2,7 @@
 // with comment on explaining why some practice are unrealistic
 
 // custom global memory allocation don't affect real world performance in noticeable amount.
-// in real world they should be used for reason like security, debug/profiling capability etc. 
+// in real world they should be used for reason like security, debug/profiling capability etc.
 #[global_allocator]
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
@@ -32,15 +32,6 @@ fn main() -> io::Result<()> {
     let handle = core::iter::repeat_with(|| {
         std::thread::spawn(move || {
             tokio_uring::start(async {
-                let service = std::rc::Rc::new(
-                    fn_service(handler)
-                        .enclosed(context_mw())
-                        .enclosed(HttpServiceBuilder::h1().io_uring())
-                        .call(())
-                        .await
-                        .unwrap(),
-                );
-
                 let socket = tokio::net::TcpSocket::new_v4()?;
                 socket.set_reuseaddr(true)?;
                 // unrealistic due to following reason:

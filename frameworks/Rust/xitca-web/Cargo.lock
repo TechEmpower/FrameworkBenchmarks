@@ -251,7 +251,7 @@ dependencies = [
 [[package]]
 name = "diesel-async"
 version = "0.5.0"
-source = "git+https://github.com/weiznich/diesel_async#5b8262b86d8ed0e13adbbc4aee39500b9931ef8d"
+source = "git+https://github.com/weiznich/diesel_async?rev=5b8262b#5b8262b86d8ed0e13adbbc4aee39500b9931ef8d"
 dependencies = [
  "async-trait",
  "bb8",
@@ -1546,7 +1546,7 @@ dependencies = [
 [[package]]
 name = "xitca-postgres-diesel"
 version = "0.1.0"
-source = "git+https://github.com/fakeshadow/xitca-postgres-diesel#7d004873ada7e76cd34eda2d2f07454ef4bd32c4"
+source = "git+https://github.com/fakeshadow/xitca-postgres-diesel?rev=7d00487#7d004873ada7e76cd34eda2d2f07454ef4bd32c4"
 dependencies = [
  "diesel",
  "diesel-async",
