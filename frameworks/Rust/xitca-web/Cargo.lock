@@ -1529,7 +1529,8 @@ dependencies = [
 [[package]]
 name = "xitca-postgres"
 version = "0.1.0"
-source = "git+https://github.com/HFQR/xitca-web.git?rev=55afa4a#55afa4a0ef421019ad3fa7e2e56c526ef53df89d"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "37aa7cc74ea36c08586e6fc86a94955924159d61cbb5df4adba2ef9d799951d6"
 dependencies = [
  "fallible-iterator",
  "futures-core",
@@ -1546,7 +1547,7 @@ dependencies = [
 [[package]]
 name = "xitca-postgres-diesel"
 version = "0.1.0"
-source = "git+https://github.com/fakeshadow/xitca-postgres-diesel?rev=7d00487#7d004873ada7e76cd34eda2d2f07454ef4bd32c4"
+source = "git+https://github.com/fakeshadow/xitca-postgres-diesel?rev=8addeca#8addeca29b98c4bfb97b045ffe75b9fd82f565c5"
 dependencies = [
  "diesel",
  "diesel-async",
