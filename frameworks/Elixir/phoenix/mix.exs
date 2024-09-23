@@ -29,7 +29,7 @@ defmodule Hello.Mixfile do
   # Type `mix help deps` for examples and options
   defp deps do
     [
-      {:bandit, "~> 1.0.0"},
+      {:bandit, "1.5.7"},
       {:gettext, "~> 0.20"},
       {:ecto_sql, "~> 3.10"},
       {:jason, "~> 1.2"},

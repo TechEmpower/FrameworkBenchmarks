@@ -1,11 +1,12 @@
-use std::fmt::Write;
+// clippy is dumb and have no idea what should be lazy or not
+#![allow(clippy::unnecessary_lazy_evaluations)]
 
 use xitca_io::bytes::BytesMut;
-use xitca_postgres::{pipeline::Pipeline, AsyncLendingIterator, Pool, Type};
+use xitca_postgres::{pipeline::Pipeline, pool::Pool, AsyncLendingIterator, Type};
 
 use super::{
     ser::{Fortune, Fortunes, World},
-    util::{HandleResult, Rand, DB_URL},
+    util::{bulk_update_gen, HandleResult, Rand, DB_URL},
 };
 
 pub struct Client {
@@ -28,19 +29,14 @@ const WORLD_SQL: &str = "SELECT * FROM world WHERE id=$1";
 const WORLD_SQL_TYPES: &[Type] = &[Type::INT4];
 
 fn update_query(num: usize) -> Box<str> {
-    const PREFIX: &str = "UPDATE world SET randomNumber = w.r FROM (VALUES ";
-    const SUFFIX: &str = ") AS w (i,r) WHERE world.id = w.i";
-
-    let (_, mut query) = (1..=num).fold((1, String::from(PREFIX)), |(idx, mut query), _| {
-        write!(query, "(${}::int,${}::int),", idx, idx + 1).unwrap();
-        (idx + 2, query)
-    });
-
-    query.pop();
-
-    query.push_str(SUFFIX);
-
-    query.into_boxed_str()
+    bulk_update_gen(|query| {
+        use std::fmt::Write;
+        (1..=num).fold((1, query), |(idx, query), _| {
+            write!(query, "(${}::int,${}::int),", idx, idx + 1).unwrap();
+            (idx + 2, query)
+        });
+    })
+    .into_boxed_str()
 }
 
 pub async fn create() -> HandleResult<Client> {
@@ -50,14 +46,7 @@ pub async fn create() -> HandleResult<Client> {
 
     let updates = core::iter::once(Box::from(""))
         .chain((1..=500).map(update_query))
-        .collect::<Box<[Box<str>]>>();
-
-    {
-        let mut conn = pool.get().await?;
-        for update in updates.iter().skip(1) {
-            conn.prepare(update, &[]).await?;
-        }
-    }
+        .collect();
 
     Ok(Client {
         pool,
@@ -120,7 +109,7 @@ impl Client {
 
         let mut conn = self.pool.get().await?;
         let world_stmt = conn.prepare(WORLD_SQL, WORLD_SQL_TYPES).await?;
-        let update_stmt = conn.prepare(&update, &[]).await?;
+        let update_stmt = conn.prepare(update, &[]).await?;
 
         let mut params = Vec::with_capacity(len);
 
@@ -169,8 +158,8 @@ impl Client {
     }
 }
 
-fn sort_update_params(params: &Vec<[i32; 2]>) -> impl ExactSizeIterator<Item = i32> {
-    let mut params = params.clone();
+fn sort_update_params(params: &[[i32; 2]]) -> impl ExactSizeIterator<Item = i32> {
+    let mut params = params.to_owned();
     params.sort_by(|a, b| a[0].cmp(&b[0]));
 
     struct ParamIter<I>(I);

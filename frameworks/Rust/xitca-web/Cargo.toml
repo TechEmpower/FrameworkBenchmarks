@@ -85,7 +85,7 @@ mimalloc = { version = "0.1", default-features = false, optional = true }
 # stuff can not be used or not needed in wasi target
 [target.'cfg(not(target_family = "wasm"))'.dependencies]
 futures-core = { version = "0.3", default-features = false }
-nanorand = { version = "0.7", default-features = false, features = ["tls"] }
+rand = { version = "0.8", features = ["small_rng"] }
 tokio = "1"
 
 [profile.release]
@@ -95,5 +95,5 @@ codegen-units = 1
 panic = "abort"
 
 [patch.crates-io]
-xitca-postgres = { git = "https://github.com/HFQR/xitca-web.git", rev = "9835c0b" }
+xitca-postgres = { git = "https://github.com/HFQR/xitca-web.git", rev = "0cda225" }
 mio = { git = "https://github.com/fakeshadow/mio", rev = "9bae6012b7ecfc6083350785f71a5e8265358178" }

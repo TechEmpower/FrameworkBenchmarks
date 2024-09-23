@@ -12,6 +12,7 @@ import org.redkale.annotation.*;
 import org.redkale.net.http.*;
 import org.redkale.service.AbstractService;
 import org.redkale.source.DataSource;
+import org.redkale.util.AnyValue;
 
 /**
  * 测试redkale-jdbc, 需要覆盖到原BenchmarkService
@@ -26,6 +27,10 @@ public class BenchmarkService extends AbstractService {
     @Resource
     private DataSource source;
 
+    public void init(AnyValue conf) {
+        source.finds(CachedWorld.class, 1);
+    }
+    
     @NonBlocking
     @RestMapping(auth = false)
     public byte[] plaintext() {

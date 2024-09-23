@@ -4,19 +4,19 @@
     
     <properties>    
         <property name="system.property.redkale.trace.enabled" value="false"/>  
-        <property name="system.property.redkale.http.request.pipeline.sameheaders" value="true"/>  
         <property name="system.property.redkale.http.response.header.server" value="redkale"/>
         <property name="system.property.redkale.http.response.header.connection" value="none"/>
     </properties>
         
-    <server protocol="HTTP" lazy="true" port="8080">      
+    <server protocol="HTTP" port="8080" shareio="true">    
         <response>
             <content-type plain="text/plain" json="application/json"/>  
             <date period="1000"/>
         </response>
-        <render value="org.redkalex.benchmark.FortuneRender"/>
-        <services autoload="true"/>        
+        <request lazyHeader="true" sameHeader="true"/>
+        <render value="org.redkalex.benchmark.FortuneRender"/>      
         <rest autoload="true"/>
+        <services autoload="true"/>  
         <servlets autoload="true"/>        
     </server>
         

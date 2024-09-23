@@ -13,7 +13,6 @@ components_manager:
             thread_name: main-worker    # OS will show the threads of this task processor with 'main-worker' prefix.
             worker_threads: 48
             guess-cpu-limit: true
-            task-processor-queue: work-stealing-task-queue
 
         fs-task-processor:              # Make a separate task processor for filesystem bound tasks.
             thread_name: fs-worker
@@ -29,7 +28,6 @@ components_manager:
                 handler-defaults:
                     set_tracing_headers: false
             server-name: us
-            middleware-pipeline-builder: minimal-middleware-pipeline-builder
         simple-router:
         simple-server:
             port: 8081
@@ -63,7 +61,6 @@ components_manager:
         noop-tracing-manager:
         tracing-manager-locator:
             component-name: noop-tracing-manager
-        minimal-middleware-pipeline-builder:
 
         plaintext-handler:
             path: /plaintext
