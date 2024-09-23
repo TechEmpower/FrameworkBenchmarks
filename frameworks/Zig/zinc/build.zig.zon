@@ -1,0 +1,19 @@
+.{
+    .name = "zinc",
+    .version = "0.1.0",
+    .dependencies = .{
+        .zinc = .{
+            .url = "https://github.com/zon-dev/zinc/archive/refs/heads/main.zip",
+            .hash = "1220bbd81a53f8268d970dfbf92268c36a25b50978dd8e7dcbf551e69b2c03677e33",
+        },
+        .@"zig-datetime" = .{
+            .url = "https://github.com/frmdstryr/zig-datetime/archive/refs/heads/master.zip",
+            .hash = "122077215ce36e125a490e59ec1748ffd4f6ba00d4d14f7308978e5360711d72d77f",
+        },
+    },
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "src",
+    },
+}
