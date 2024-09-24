@@ -11,10 +11,7 @@ use super::{
 
 pub struct Client {
     pool: Pool,
-    #[cfg(not(feature = "pg-sync"))]
     shared: std::cell::RefCell<Shared>,
-    #[cfg(feature = "pg-sync")]
-    shared: std::sync::Mutex<Shared>,
     updates: Box<[Box<str>]>,
 }
 
@@ -39,39 +36,21 @@ fn update_query(num: usize) -> Box<str> {
 
 pub async fn create() -> HandleResult<Client> {
     let pool = Pool::builder(DB_URL).capacity(1).build()?;
-
-    let shared = (Rand::default(), BytesMut::new());
-
-    let updates = core::iter::once(Box::from(""))
-        .chain((1..=500).map(update_query))
-        .collect();
-
     Ok(Client {
         pool,
-        #[cfg(not(feature = "pg-sync"))]
-        shared: std::cell::RefCell::new(shared),
-        #[cfg(feature = "pg-sync")]
-        shared: std::sync::Mutex::new(shared),
-        updates,
+        shared: std::cell::RefCell::new((Rand::default(), BytesMut::new())),
+        updates: core::iter::once(Box::from(""))
+            .chain((1..=500).map(update_query))
+            .collect(),
     })
 }
 
 impl Client {
-    #[cfg(not(feature = "pg-sync"))]
-    fn shared(&self) -> std::cell::RefMut<'_, Shared> {
-        self.shared.borrow_mut()
-    }
-
-    #[cfg(feature = "pg-sync")]
-    fn shared(&self) -> std::sync::MutexGuard<'_, Shared> {
-        self.shared.lock().unwrap()
-    }
-
     pub async fn get_world(&self) -> HandleResult<World> {
         let mut conn = self.pool.get().await?;
         let stmt = conn.prepare_cache(WORLD_SQL, WORLD_SQL_TYPES).await?;
-        let id = self.shared().0.gen_id();
-        let mut res = conn.consume().query_raw(&stmt, [id])?;
+        let id = self.shared.borrow_mut().0.gen_id();
+        let mut res = conn.consume().query(stmt.bind([id]))?;
         let row = res.try_next().await?.ok_or_else(|| "World does not exist")?;
         Ok(World::new(row.get(0), row.get(1)))
     }
@@ -83,9 +62,9 @@ impl Client {
         let stmt = conn.prepare_cache(WORLD_SQL, WORLD_SQL_TYPES).await?;
 
         let mut res = {
-            let (ref mut rng, ref mut buf) = *self.shared();
+            let (ref mut rng, ref mut buf) = *self.shared.borrow_mut();
             let mut pipe = Pipeline::with_capacity_from_buf(len, buf);
-            (0..num).try_for_each(|_| pipe.query_raw(&stmt, [rng.gen_id()]))?;
+            (0..num).try_for_each(|_| pipe.query(stmt.bind([rng.gen_id()])))?;
             conn.consume().pipeline(pipe)?
         };
 
@@ -112,15 +91,15 @@ impl Client {
         let mut params = Vec::with_capacity(len);
 
         let mut res = {
-            let (ref mut rng, ref mut buf) = *self.shared();
+            let (ref mut rng, ref mut buf) = *self.shared.borrow_mut();
             let mut pipe = Pipeline::with_capacity_from_buf(len + 1, buf);
             (0..num).try_for_each(|_| {
                 let w_id = rng.gen_id();
                 let r_id = rng.gen_id();
                 params.push([w_id, r_id]);
-                pipe.query_raw(&world_stmt, [w_id])
+                pipe.query(world_stmt.bind([w_id]))
             })?;
-            pipe.query_raw(&update_stmt, sort_update_params(&params))?;
+            pipe.query(update_stmt.bind(sort_update_params(&params)))?;
             conn.consume().pipeline(pipe)?
         };
 
@@ -144,7 +123,7 @@ impl Client {
 
         let mut conn = self.pool.get().await?;
         let stmt = conn.prepare_cache(FORTUNE_SQL, FORTUNE_SQL_TYPES).await?;
-        let mut res = conn.consume().query_raw::<_, [i32; 0]>(&stmt, [])?;
+        let mut res = conn.consume().query(&stmt)?;
 
         while let Some(row) = res.try_next().await? {
             items.push(Fortune::new(row.get(0), row.get::<String>(1)));
