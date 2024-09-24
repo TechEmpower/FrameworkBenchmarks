@@ -14,7 +14,7 @@ RUN mkdir build && cd build && \
           -DUSERVER_FEATURE_UTEST=0 \
           -DUSERVER_FEATURE_POSTGRESQL=1 \
           -DUSERVER_FEATURE_ERASE_LOG_WITH_LEVEL=warning \
-          -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-march=native -flto=thin" -DCMAKE_C_FLAGS="-march=native -flto=thin" \
+          -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-march=native" -DCMAKE_C_FLAGS="-march=native" \
           -DCMAKE_CXX_COMPILER=clang++-16 -DCMAKE_C_COMPILER=clang-16 -DUSERVER_USE_LD=lld-16 \
           -DUSERVER_LTO=0 .. && \
     make -j $(nproc)
