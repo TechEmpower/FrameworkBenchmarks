@@ -1,8 +1,8 @@
 package com.litongjava.tio.http.server.config;
 
-import com.litongjava.jfinal.plugin.activerecord.ActiveRecordPlugin;
-import com.litongjava.jfinal.plugin.activerecord.OrderedFieldContainerFactory;
-import com.litongjava.jfinal.plugin.hikaricp.HikariCpPlugin;
+import com.litongjava.db.activerecord.ActiveRecordPlugin;
+import com.litongjava.db.activerecord.OrderedFieldContainerFactory;
+import com.litongjava.db.hikaricp.HikariCpPlugin;
 import com.litongjava.tio.utils.environment.EnvUtils;
 
 public class MysqlDbConfig {

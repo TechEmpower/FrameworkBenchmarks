@@ -9,8 +9,6 @@
     <java.version>1.8</java.version>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
-    <jfinal-plugins.version>1.1.2</jfinal-plugins.version>
-
     <graalvm.version>23.1.1</graalvm.version>
     <main.class>com.litongjava.tio.http.server.MainApp</main.class>
   </properties>
@@ -18,15 +16,13 @@
     <dependency>
       <groupId>com.litongjava</groupId>
       <artifactId>tio-http-server</artifactId>
-      <version>3.7.3.v20240915-RELEASE</version>
+      <version>3.7.3.v20240919-RELEASE</version>
     </dependency>
-
     <dependency>
       <groupId>com.litongjava</groupId>
-      <artifactId>jfinal-plugins</artifactId>
-      <version>${jfinal-plugins.version}</version>
+      <artifactId>java-db</artifactId>
+      <version>1.2.6</version>
     </dependency>
-
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>

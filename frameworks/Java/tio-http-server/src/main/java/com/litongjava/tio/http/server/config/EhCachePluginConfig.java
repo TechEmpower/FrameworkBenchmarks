@@ -1,6 +1,6 @@
   package com.litongjava.tio.http.server.config;
 
-import com.litongjava.jfinal.plugin.ehcache.EhCachePlugin;
+import com.litongjava.ehcache.EhCachePlugin;
 
 public class EhCachePluginConfig {
 
