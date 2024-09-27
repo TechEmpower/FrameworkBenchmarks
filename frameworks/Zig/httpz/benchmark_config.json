@@ -5,7 +5,7 @@
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "db_url": "/db",
-      "fortune_url": "/fortunes",      
+      "fortune_url": "/fortunes",
       "port": 3000,
       "approach": "Realistic",
       "classification": "Fullstack",

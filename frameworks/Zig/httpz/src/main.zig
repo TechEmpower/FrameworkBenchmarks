@@ -42,6 +42,7 @@ pub fn main() !void {
     router.get("/json", endpoints.json);
     router.get("/plaintext", endpoints.plaintext);
     router.get("/db", endpoints.db);
+    router.get("/fortunes", endpoints.fortune);
 
     std.debug.print("Httpz listening at 0.0.0.0:{d}\n", .{3000});
 
