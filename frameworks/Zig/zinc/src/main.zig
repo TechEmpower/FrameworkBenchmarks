@@ -20,6 +20,7 @@ pub fn main() !void {
     });
 
     var router = z.getRouter();
+
     try router.use(&.{setupHeader});
 
     try router.get("/json", json);
