@@ -10,8 +10,7 @@ COPY build.zig build.zig
 
 RUN dnf install -y zig
 RUN zig version
-# RUN zig build -Doptimize=ReleaseFast 
-RUN zig build
+RUN zig build -Doptimize=ReleaseFast 
 RUN cp /zinc/zig-out/bin/zinc /usr/local/bin
 
 EXPOSE 8080
