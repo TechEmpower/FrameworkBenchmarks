@@ -3,7 +3,7 @@
     .version = "0.1.0",
     .dependencies = .{
         .zinc = .{
-            .url = "https://github.com/zon-dev/zinc/archive/refs/heads/main.zip",
+            .url = "https://github.com/zon-dev/zinc/archive/refs/tags/0.1.0-beta4.tar.gz",
             .hash = "12201f5d2138d81c9aa85bf18a550df6329d98f02645bc5f9e1eb82b2ed98d211bb6",
         },
         .@"zig-datetime" = .{
