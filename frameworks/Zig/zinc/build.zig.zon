@@ -4,7 +4,7 @@
     .dependencies = .{
         .zinc = .{
             .url = "https://github.com/zon-dev/zinc/archive/refs/heads/main.zip",
-            .hash = "1220bbd81a53f8268d970dfbf92268c36a25b50978dd8e7dcbf551e69b2c03677e33",
+            .hash = "12201f5d2138d81c9aa85bf18a550df6329d98f02645bc5f9e1eb82b2ed98d211bb6",
         },
         .@"zig-datetime" = .{
             .url = "https://github.com/frmdstryr/zig-datetime/archive/refs/heads/master.zip",

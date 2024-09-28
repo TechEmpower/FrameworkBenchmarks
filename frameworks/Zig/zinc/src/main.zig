@@ -3,10 +3,21 @@ const zinc = @import("zinc");
 const Datetime = @import("datetime").datetime.Datetime;
 
 pub fn main() !void {
-    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-    const allocator = gpa.allocator();
+    var gpa = std.heap.GeneralPurposeAllocator(.{
+        .thread_safe = true,
+    }){};
+    var tsa = std.heap.ThreadSafeAllocator{
+        .child_allocator = gpa.allocator(),
+    };
+    const allocator = tsa.allocator();
 
-    var z = try zinc.init(.{ .port = 8080, .allocator = allocator, .num_threads = 255 });
+    const cpuCount = @as(u8, @intCast(std.Thread.getCpuCount() catch 1));
+
+    var z = try zinc.init(.{
+        .port = 8080,
+        .allocator = allocator,
+        .num_threads = 16 * cpuCount,
+    });
 
     var router = z.getRouter();
     try router.use(&.{setupHeader});
@@ -14,7 +25,7 @@ pub fn main() !void {
     try router.get("/json", json);
     try router.get("/plaintext", plaintext);
 
-    try z.run();
+    z.run() catch |err| std.debug.print("Error: {any}\n", .{err});
 }
 
 fn plaintext(ctx: *zinc.Context) anyerror!void {
@@ -27,12 +38,10 @@ fn json(ctx: *zinc.Context) anyerror!void {
 
 fn setupHeader(ctx: *zinc.Context) anyerror!void {
     try ctx.setHeader("Server", "Zinc");
-    // try ctx.setHeader("date", "Sun Sep 22 10:01:11 CEST 2024");
-    // In UTC
+    try ctx.setHeader("Connection", "keep-alive");
+
     const now = Datetime.now();
     const now_str = try now.formatHttp(ctx.allocator);
-    // defer ctx.allocator.free(now_str);
-    // std.debug.warn("The time is now: {}\n", .{now_str});
     // The time is now: Fri, 20 Dec 2019 22:03:02 UTC
     try ctx.setHeader("date", now_str);
 }
