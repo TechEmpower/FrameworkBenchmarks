@@ -139,7 +139,7 @@
 			"notes": "",
 			"versus": "php"
 		},
-		"pripple": {
+		"ripple": {
 			"json_url": "/json",
 			"db_url": "/db",
 			"query_url": "/queries/",
@@ -154,11 +154,11 @@
 			"language": "PHP",
 			"flavor": "PHP8.3",
 			"orm": "Full",
-			"platform": "PRipple",
+			"platform": "Ripple",
 			"webserver": "PServer",
 			"os": "Linux",
 			"database_os": "Linux",
-			"display_name": "laravel-pripple",
+			"display_name": "laravel-ripple",
 			"notes": "",
 			"versus": "php"
 		}
