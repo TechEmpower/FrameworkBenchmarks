@@ -1,5 +1,4 @@
 defmodule HelloWeb.PageController do
-
   use HelloWeb, :controller
 
   alias Hello.Models.Fortune
@@ -25,13 +24,18 @@ defmodule HelloWeb.PageController do
   end
 
   def queries(conn, params) do
-    :rand.seed(:exsp)
+    {:ok, worlds} =
+      Repo.transaction(fn ->
+        :rand.seed(:exsp)
 
-    worlds =
-      Stream.repeatedly(&random_id/0)
-      |> Stream.uniq()
-      |> Stream.map(&Repo.get(World, &1))
-      |> Enum.take(size(params["queries"]))
+        worlds =
+          Stream.repeatedly(&random_id/0)
+          |> Stream.uniq()
+          |> Stream.map(&Repo.get(World, &1))
+          |> Enum.take(size(params["queries"]))
+
+        worlds
+      end)
 
     json(conn, worlds)
   end
@@ -50,26 +54,31 @@ defmodule HelloWeb.PageController do
   end
 
   def updates(conn, params) do
-    :rand.seed(:exsp)
+    {:ok, worlds} =
+      Repo.transaction(fn ->
+        :rand.seed(:exsp)
 
-    worlds =
-      Stream.repeatedly(&random_id/0)
-      |> Stream.uniq()
-      |> Stream.map(&Repo.get(World, &1))
-      |> Stream.map(fn world -> %{id: world.id, randomnumber: :rand.uniform(@random_max)} end)
-      |> Enum.take(size(params["queries"]))
-      # If this is not sorted it sometimes generates
-      #  FAIL for http://tfb-server:8080/updates/20
-      #  Only 20470 executed queries in the database out of roughly 20480 expected.
-      |> Enum.sort_by(& &1.id)
+        worlds =
+          Stream.repeatedly(&random_id/0)
+          |> Stream.uniq()
+          |> Stream.map(&Repo.get(World, &1))
+          |> Stream.map(fn world -> %{id: world.id, randomnumber: :rand.uniform(@random_max)} end)
+          |> Enum.take(size(params["queries"]))
+          # If this is not sorted it sometimes generates
+          #  FAIL for http://tfb-server:8080/updates/20
+          #  Only 20470 executed queries in the database out of roughly 20480 expected.
+          |> Enum.sort_by(& &1.id)
 
-    Repo.insert_all(
-      World,
-      worlds,
-      on_conflict: {:replace_all_except, [:id]},
-      conflict_target: [:id],
-      returning: false
-    )
+        Repo.insert_all(
+          World,
+          worlds,
+          on_conflict: {:replace_all_except, [:id]},
+          conflict_target: [:id],
+          returning: false
+        )
+
+        worlds
+      end)
 
     json(conn, worlds)
   end
