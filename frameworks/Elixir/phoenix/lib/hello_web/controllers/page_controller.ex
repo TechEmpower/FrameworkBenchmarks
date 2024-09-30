@@ -1,5 +1,4 @@
 defmodule HelloWeb.PageController do
-
   use HelloWeb, :controller
 
   alias Hello.Models.Fortune
@@ -25,13 +24,12 @@ defmodule HelloWeb.PageController do
   end
 
   def queries(conn, params) do
-    :rand.seed(:exsp)
-
     worlds =
-      Stream.repeatedly(&random_id/0)
-      |> Stream.uniq()
-      |> Stream.map(&Repo.get(World, &1))
-      |> Enum.take(size(params["queries"]))
+      Repo.checkout(fn ->
+        params["queries"]
+        |> random_ids_sample()
+        |> Enum.map(&Repo.get(World, &1))
+      end)
 
     json(conn, worlds)
   end
@@ -44,34 +42,38 @@ defmodule HelloWeb.PageController do
 
     fortunes =
       [additional_fortune | Repo.all(Fortune)]
-      |> Enum.sort_by(& &1.message)
+      |> Enum.sort(fn a, b -> a.message < b.message end)
 
     render(conn, :fortunes, fortunes: fortunes)
   end
 
   def updates(conn, params) do
-    :rand.seed(:exsp)
-
-    worlds =
-      Stream.repeatedly(&random_id/0)
-      |> Stream.uniq()
-      |> Stream.map(&Repo.get(World, &1))
-      |> Stream.map(fn world -> %{id: world.id, randomnumber: :rand.uniform(@random_max)} end)
-      |> Enum.take(size(params["queries"]))
-      # If this is not sorted it sometimes generates
-      #  FAIL for http://tfb-server:8080/updates/20
-      #  Only 20470 executed queries in the database out of roughly 20480 expected.
-      |> Enum.sort_by(& &1.id)
+    world_updates =
+      Repo.checkout(fn ->
+        params["queries"]
+        |> random_ids_sample()
+        |> Enum.sort()
+        #
+        # If this is not sorted it will intermittently generate:
+        #
+        #   FAIL for http://tfb-server:8080/updates/20
+        #   Only 20470 executed queries in the database out of roughly 20480 expected.
+        #
+        |> Enum.map(fn id ->
+          world = Repo.get(World, id)
+          %{id: world.id, randomnumber: :rand.uniform(@random_max)}
+        end)
+      end)
 
     Repo.insert_all(
       World,
-      worlds,
+      world_updates,
       on_conflict: {:replace_all_except, [:id]},
       conflict_target: [:id],
       returning: false
     )
 
-    json(conn, worlds)
+    json(conn, world_updates)
   end
 
   def plaintext(conn, _params) do
@@ -79,14 +81,12 @@ defmodule HelloWeb.PageController do
   end
 
   def cached(conn, params) do
-    :rand.seed(:exsp)
     WorldCache.seed()
 
     worlds =
-      Stream.repeatedly(&random_id/0)
-      |> Stream.uniq()
-      |> Stream.map(&WorldCache.fetch(&1))
-      |> Enum.take(size(params["count"]))
+      params["count"]
+      |> random_ids_sample()
+      |> Enum.map(&WorldCache.fetch(&1))
 
     json(conn, worlds)
   end
@@ -95,11 +95,17 @@ defmodule HelloWeb.PageController do
     :rand.uniform(@random_max)
   end
 
-  defp size(nil), do: 1
-  defp size(""), do: 1
+  defp random_ids_sample(count) do
+    # Use the fastest rand algorithm
+    :rand.seed(:exsp)
 
-  defp size(queries) when is_bitstring(queries) do
-    case Integer.parse(queries) do
+    Stream.repeatedly(&random_id/0)
+    |> Stream.uniq()
+    |> Enum.take(size(count))
+  end
+
+  defp size(param_count) when is_bitstring(param_count) do
+    case Integer.parse(param_count) do
       {count, _} -> max(1, min(500, count))
       _ -> 1
     end
