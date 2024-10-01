@@ -12,4 +12,4 @@ RUN java -Djarmode=tools -jar app.jar extract
 
 EXPOSE 8080
 
-CMD ["java", "-Dlogging.level.root=OFF", "-Dreactor.netty.http.server.lastFlushWhenNoRead=true", "-jar", "app/app.jar", "--spring.profiles.active=r2dbc"]
+CMD ["java", "-Dlogging.level.root=OFF", "-Dio.netty.leakDetection.level=disabled", "-Dreactor.netty.http.server.lastFlushWhenNoRead=true", "-jar", "app/app.jar", "--spring.profiles.active=r2dbc"]

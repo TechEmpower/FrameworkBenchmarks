@@ -1,83 +1,71 @@
 package hello.web;
 
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.IntStream;
+import java.util.Collections;
+import java.util.List;
 
-import hello.UpdateWorldService;
+import hello.Utils;
 import hello.model.Fortune;
 import hello.model.World;
 import hello.repository.DbRepository;
+import io.jstach.jstachio.JStachio;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.function.RenderingResponse;
 import org.springframework.web.servlet.function.ServerRequest;
 import org.springframework.web.servlet.function.ServerResponse;
-
-import static java.util.Comparator.comparing;
 
 @Component
 public class DbHandler {
 
-	private DbRepository dbRepository;
-	private UpdateWorldService updateWorldService;
+	private final DbRepository dbRepository;
 
-	public DbHandler(DbRepository dbRepository, UpdateWorldService updateWorldService) {
+	public DbHandler(DbRepository dbRepository) {
 		this.dbRepository = dbRepository;
-		this.updateWorldService = updateWorldService;
 	}
 
 	ServerResponse db(ServerRequest request) {
 		return ServerResponse.ok()
-				.contentType(MediaType.APPLICATION_JSON)
-				.body(dbRepository.getWorld(randomWorldNumber()));
+				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+				.body(dbRepository.getWorld(Utils.randomWorldNumber()));
 	}
 
 	ServerResponse queries(ServerRequest request) {
-		String queries = request.params().getFirst("queries");
-		World[] worlds = randomWorldNumbers()
-				.mapToObj(dbRepository::getWorld).limit(parseQueryCount(queries))
+		int queries = parseQueryCount(request.params().getFirst("queries"));
+		World[] worlds = Utils.randomWorldNumbers()
+				.mapToObj(dbRepository::getWorld).limit(queries)
 				.toArray(World[]::new);
 		return ServerResponse.ok()
-				.contentType(MediaType.APPLICATION_JSON)
+				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
 				.body(worlds);
 	}
 
 	ServerResponse updates(ServerRequest request) {
-		String queries = request.params().getFirst("queries");
-		World[] worlds = randomWorldNumbers()
-				.mapToObj(id -> updateWorldService.updateWorld(id))
-				.limit(parseQueryCount(queries)).toArray(World[]::new);
+		int queries = parseQueryCount(request.params().getFirst("queries"));
+		List<World> worlds = Utils.randomWorldNumbers()
+				.mapToObj(id -> {
+					World world = dbRepository.getWorld(id);
+					int randomNumber;
+					do {
+						randomNumber = Utils.randomWorldNumber();
+					} while (randomNumber == world.randomNumber);
+					world.randomNumber = randomNumber;
+					return world;
+				}).limit(queries)
+				.toList();
+		dbRepository.updateWorlds(worlds);
 		return ServerResponse.ok()
-				.contentType(MediaType.APPLICATION_JSON)
+				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
 				.body(worlds);
 	}
 
 	ServerResponse fortunes(ServerRequest request) {
-		var fortunes = dbRepository.fortunes();
+		List<Fortune> fortunes = dbRepository.fortunes();
 		fortunes.add(new Fortune(0, "Additional fortune added at request time."));
-		fortunes.sort(comparing(fortune -> fortune.message));
-		return RenderingResponse
-				.create("fortunes")
-				.modelAttribute("fortunes", fortunes)
+		Collections.sort(fortunes);
+		return ServerResponse.ok()
 				.header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_HTML_VALUE)
-				.build();
-	}
-
-	private static final int MIN_WORLD_NUMBER = 1;
-	private static final int MAX_WORLD_NUMBER_PLUS_ONE = 10_001;
-
-	public static int randomWorldNumber() {
-		return ThreadLocalRandom.current().nextInt(MIN_WORLD_NUMBER, MAX_WORLD_NUMBER_PLUS_ONE);
-	}
-
-	private static IntStream randomWorldNumbers() {
-		return ThreadLocalRandom.current().ints(MIN_WORLD_NUMBER, MAX_WORLD_NUMBER_PLUS_ONE)
-				// distinct() allows us to avoid using Hibernate's first-level cache in
-				// the JPA-based implementation. Using a cache like that would bypass
-				// querying the database, which would violate the test requirements.
-				.distinct();
+				.body(JStachio.render(new Fortunes(fortunes)));
 	}
 
 	private static int parseQueryCount(String textValue) {
