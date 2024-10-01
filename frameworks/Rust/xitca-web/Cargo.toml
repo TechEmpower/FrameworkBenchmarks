@@ -95,8 +95,7 @@ codegen-units = 1
 panic = "abort"
 
 [patch.crates-io]
-xitca-postgres = { git = "https://github.com/HFQR/xitca-web.git", rev = "7e6534f" }
-xitca-postgres-diesel = { git = "https://github.com/fakeshadow/xitca-postgres-diesel", rev = "8addeca" }
+xitca-postgres-diesel = { git = "https://github.com/fakeshadow/xitca-postgres-diesel", rev = "5fb1e6d5f0f20cfb5ef0833a44dc209b1f46f1df" }
 
 diesel-async = { git = "https://github.com/weiznich/diesel_async", rev = "5b8262b" }
 mio = { git = "https://github.com/fakeshadow/mio", rev = "9bae6012b7ecfc6083350785f71a5e8265358178" }
