@@ -11,4 +11,5 @@ libraryDependencies ++= Seq(
   jdbc,
   "org.playframework.anorm" %% "anorm" % "2.6.7",
   "mysql" % "mysql-connector-java" % "8.0.21"
+  ,"org.postgresql" % "postgresql" % "42.2.8"
 )
