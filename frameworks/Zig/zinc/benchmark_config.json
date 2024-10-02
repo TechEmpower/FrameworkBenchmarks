@@ -6,7 +6,7 @@
         "json_url": "/json",
         "plaintext_url": "/plaintext",
         "port": 8080,
-        "approach": "Stripped",
+        "approach": "Realistic",
         "classification": "Fullstack",
         "database": "None",
         "framework": "Zinc",
