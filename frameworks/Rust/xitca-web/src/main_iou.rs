@@ -6,6 +6,7 @@
 #[global_allocator]
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
+#[path = "db_unrealistic.rs"]
 mod db;
 mod ser;
 mod util;
@@ -86,8 +87,10 @@ async fn handler<B>(ctx: Ctx<'_, Request<B>>) -> Result<http::Response<ResponseB
         // unrealistic due to lack of dynamic route matching.
         "/plaintext" => req.text_response().unwrap(),
         "/json" => req.json_response(state, &Message::new()).unwrap(),
+        // all database related categories are unrealistic. please reference db_unrealistic module for detail.
         "/db" => {
-            // unrealistic due to no error handling. any db/serialization error will cause process crash
+            // unrealistic due to no error handling. any db/serialization error will cause process crash.
+            // the same goes for all following unwraps on database related functions.
             let world = state.client.get_world().await.unwrap();
             req.json_response(state, &world).unwrap()
         }
