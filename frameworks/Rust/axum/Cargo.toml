@@ -39,7 +39,7 @@ simd-json = [
 ]
 
 [dependencies]
-axum = { version = "0.7.5", default-features = false, features = [
+axum = { version = "0.7.6", default-features = false, features = [
     "json",
     "query",
     "http1",

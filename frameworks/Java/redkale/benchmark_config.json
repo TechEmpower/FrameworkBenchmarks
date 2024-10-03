@@ -96,6 +96,7 @@
                 "versus": "Redkale"
             },
             "block": {
+                "plaintext_url": "/plaintext",
                 "db_url": "/db",
                 "query_url": "/queries?q=", 
                 "fortune_url": "/fortunes",

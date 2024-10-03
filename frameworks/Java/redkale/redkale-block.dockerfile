@@ -9,6 +9,7 @@ RUN mvn package -q
 FROM openjdk:23-jdk-slim
 WORKDIR /redkale
 COPY conf conf
+RUN sed -i 's/sameHeader="true"/ /g' /redkale/conf/application.xml
 COPY --from=maven /redkale/target/redkale-benchmark-1.0.0.jar redkale-benchmark.jar
 
 EXPOSE 8080

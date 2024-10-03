@@ -8,7 +8,7 @@
         <property name="system.property.redkale.http.response.header.connection" value="none"/>
     </properties>
         
-    <server protocol="HTTP" port="8080" shareio="true">    
+    <server protocol="HTTP" port="8080">    
         <response>
             <content-type plain="text/plain" json="application/json"/>  
             <date period="1000"/>
