@@ -1,19 +1,18 @@
+#[path = "./db_util.rs"]
+mod db_util;
+
 use std::cell::RefCell;
 
-use xitca_io::bytes::BytesMut;
 use xitca_postgres::{
-    iter::AsyncLendingIterator,
-    pipeline::Pipeline,
-    pool::Pool,
-    statement::{Statement, StatementNamed},
-    types::Type,
-    Execute, ExecuteMut,
+    iter::AsyncLendingIterator, pipeline::Pipeline, pool::Pool, statement::Statement, Execute, ExecuteMut,
 };
 
 use super::{
     ser::{Fortune, Fortunes, World},
-    util::{bulk_update_gen, HandleResult, Rand, DB_URL},
+    util::{HandleResult, DB_URL},
 };
+
+use db_util::{sort_update_params, update_query, Shared, FORTUNE_STMT, WORLD_STMT};
 
 pub struct Client {
     pool: Pool,
@@ -21,26 +20,10 @@ pub struct Client {
     updates: Box<[Box<str>]>,
 }
 
-type Shared = (Rand, BytesMut);
-
-const FORTUNE_STMT: StatementNamed = Statement::named("SELECT * FROM fortune", &[]);
-const WORLD_STMT: StatementNamed = Statement::named("SELECT * FROM world WHERE id=$1", &[Type::INT4]);
-
-fn update_query(num: usize) -> Box<str> {
-    bulk_update_gen(|query| {
-        use std::fmt::Write;
-        (1..=num).fold((1, query), |(idx, query), _| {
-            write!(query, "(${}::int,${}::int),", idx, idx + 1).unwrap();
-            (idx + 2, query)
-        });
-    })
-    .into_boxed_str()
-}
-
 pub async fn create() -> HandleResult<Client> {
     Ok(Client {
         pool: Pool::builder(DB_URL).capacity(1).build()?,
-        shared: RefCell::new((Rand::default(), BytesMut::new())),
+        shared: Default::default(),
         updates: core::iter::once(Box::from(""))
             .chain((1..=500).map(update_query))
             .collect(),
@@ -134,34 +117,4 @@ impl Client {
 
         Ok(Fortunes::new(items))
     }
-}
-
-fn sort_update_params(params: &[[i32; 2]]) -> impl ExactSizeIterator<Item = i32> {
-    let mut params = params.to_owned();
-    params.sort_by(|a, b| a[0].cmp(&b[0]));
-
-    struct ParamIter<I>(I);
-
-    impl<I> Iterator for ParamIter<I>
-    where
-        I: Iterator,
-    {
-        type Item = I::Item;
-
-        #[inline]
-        fn next(&mut self) -> Option<Self::Item> {
-            self.0.next()
-        }
-
-        #[inline]
-        fn size_hint(&self) -> (usize, Option<usize>) {
-            self.0.size_hint()
-        }
-    }
-
-    // impl depends on compiler optimization to flat Vec<[T]> to Vec<T> when inferring
-    // it's size hint. possible to cause runtime panic.
-    impl<I> ExactSizeIterator for ParamIter<I> where I: Iterator {}
-
-    ParamIter(params.into_iter().flatten())
 }
