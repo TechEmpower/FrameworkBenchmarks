@@ -1,7 +1,7 @@
 // reference of if/how moving from epoll to io-uring(or mixture of the two) make sense for network io.
 // with comment on explaining why some practice are unrealistic
 
-// custom global memory allocation don't affect real world performance in noticeable amount.
+// custom global memory allocator don't affect real world performance in noticeable amount.
 // in real world they should be used for reason like security, debug/profiling capability etc.
 #[global_allocator]
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
@@ -14,16 +14,14 @@ mod util;
 use std::{convert::Infallible, io};
 
 use xitca_http::{
-    body::ResponseBody,
-    http::{self, header::SERVER, StatusCode},
-    HttpServiceBuilder,
+    bytes::BufMutWriter,
+    h1::dispatcher_uring_unreal::{Dispatcher, Request, Response},
+    http::StatusCode,
 };
-use xitca_service::{fn_service, Service, ServiceExt};
+use xitca_io::net::io_uring::TcpStream;
+use xitca_service::Service;
 
-use self::{
-    ser::{error_response, IntoResponse, Message, Request},
-    util::{context_mw, Ctx, QueryParse, SERVER_HEADER_VALUE},
-};
+use self::{ser::Message, util::State};
 
 fn main() -> io::Result<()> {
     let addr = "0.0.0.0:8080".parse().unwrap();
@@ -43,23 +41,19 @@ fn main() -> io::Result<()> {
                 socket.bind(addr)?;
                 let listener = socket.listen(1024)?;
 
-                let service = fn_service(handler)
-                    .enclosed(context_mw())
-                    .enclosed(HttpServiceBuilder::h1().io_uring())
-                    .call(())
-                    .await
-                    .unwrap();
+                let client = db::create().await.unwrap();
 
-                let service = std::rc::Rc::new(service);
+                // unrealistic http dispatcher. no spec check. no security feature.
+                let service = Dispatcher::new(handler, State::new(client));
 
                 loop {
                     match listener.accept().await {
-                        Ok((stream, addr)) => {
+                        Ok((stream, _)) => {
                             let stream = stream.into_std()?;
-                            let stream = xitca_io::net::io_uring::TcpStream::from_std(stream);
+                            let stream = TcpStream::from_std(stream);
                             let service = service.clone();
                             tokio::task::spawn_local(async move {
-                                let _ = service.call((stream, addr)).await;
+                                let _ = service.call(stream).await;
                             });
                         }
                         Err(e) => return Err(e),
@@ -80,37 +74,78 @@ fn main() -> io::Result<()> {
     Ok(())
 }
 
-async fn handler<B>(ctx: Ctx<'_, Request<B>>) -> Result<http::Response<ResponseBody>, Infallible> {
-    let (req, state) = ctx.into_parts();
-    // unrealistic due to lack of http method check
-    let mut res = match req.uri().path() {
-        // unrealistic due to lack of dynamic route matching.
-        "/plaintext" => req.text_response().unwrap(),
-        "/json" => req.json_response(state, &Message::new()).unwrap(),
+async fn handler<'h>(req: Request<'h, '_>, res: Response<'h>, state: &State<db::Client>) -> Response<'h, 3> {
+    // unrealistic due to no http method check
+    match req.path.unwrap_or("404") {
+        // unrealistic due to no dynamic path matching
+        "/plaintext" => {
+            // unrealistic due to no body streaming and no post processing. violating middleware feature of xitca-web
+            res.status(StatusCode::OK)
+                .header("content-type", "text/plain")
+                .header("server", "X")
+                // unrealistic content length header.
+                .header("content-length", "13")
+                .body_writer(|buf| Ok::<_, Infallible>(buf.extend_from_slice(b"Hello, World!")))
+                .unwrap()
+        }
+        "/json" => res
+            .status(StatusCode::OK)
+            .header("content-type", "application/json")
+            .header("server", "X")
+            // unrealistic content length header.
+            .header("content-length", "27")
+            .body_writer(|buf| serde_json::to_writer(BufMutWriter(buf), &Message::new()))
+            .unwrap(),
         // all database related categories are unrealistic. please reference db_unrealistic module for detail.
+        "/fortunes" => {
+            use sailfish::TemplateOnce;
+            let fortunes = state.client.tell_fortune().await.unwrap().render_once().unwrap();
+            res.status(StatusCode::OK)
+                .header("content-type", "text/html; charset=utf-8")
+                .header("server", "X")
+                .body(fortunes.as_bytes())
+        }
         "/db" => {
             // unrealistic due to no error handling. any db/serialization error will cause process crash.
             // the same goes for all following unwraps on database related functions.
             let world = state.client.get_world().await.unwrap();
-            req.json_response(state, &world).unwrap()
+            json_response(res, state, &world)
         }
-        "/queries" => {
-            let num = req.uri().query().parse_query();
+        p if p.starts_with("/queries") => {
+            let num = path_param(p);
             let worlds = state.client.get_worlds(num).await.unwrap();
-            req.json_response(state, &worlds).unwrap()
+            json_response(res, state, &worlds)
         }
-        "/updates" => {
-            let num = req.uri().query().parse_query();
+        p if p.starts_with("/updates") => {
+            let num = path_param(p);
             let worlds = state.client.update(num).await.unwrap();
-            req.json_response(state, &worlds).unwrap()
+            json_response(res, state, &worlds)
         }
-        "/fortunes" => {
-            use sailfish::TemplateOnce;
-            let fortunes = state.client.tell_fortune().await.unwrap().render_once().unwrap();
-            req.html_response(fortunes).unwrap()
-        }
-        _ => error_response(StatusCode::NOT_FOUND),
+        _ => res.status(StatusCode::NOT_FOUND).header("server", "X").body(&[]),
+    }
+}
+
+fn json_response<'r, DB, T>(res: Response<'r>, state: &State<DB>, val: &T) -> Response<'r, 3>
+where
+    T: serde::Serialize,
+{
+    let buf = &mut *state.write_buf.borrow_mut();
+    serde_json::to_writer(BufMutWriter(buf), val).unwrap();
+    let res = res
+        .status(StatusCode::OK)
+        .header("content-type", "application/json")
+        .header("server", "X")
+        .body(buf.as_ref());
+    buf.clear();
+    res
+}
+
+fn path_param(query: &str) -> u16 {
+    use atoi::FromRadix10;
+    let q = if let Some(pos) = query.find("?q") {
+        u16::from_radix_10(query.split_at(pos + 3).1.as_ref()).0
+    } else {
+        1
     };
-    res.headers_mut().insert(SERVER, SERVER_HEADER_VALUE);
-    Ok(res.map(Into::into))
+    q.clamp(1, 500)
 }

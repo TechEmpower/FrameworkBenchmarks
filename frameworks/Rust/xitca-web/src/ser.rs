@@ -77,7 +77,7 @@ impl sailfish::TemplateOnce for Fortunes {
         const PREFIX: &str = "<!DOCTYPE html>\n<html>\n<head><title>Fortunes</title></head>\n<body>\n<table>\n<tr><th>id</th><th>message</th></tr>\n";
         const SUFFIX: &str = "\n</table>\n</body>\n</html>";
 
-        let mut buf = Buffer::with_capacity(2048);
+        let mut buf = Buffer::with_capacity(1236);
 
         buf.push_str(PREFIX);
         for item in self.items {
