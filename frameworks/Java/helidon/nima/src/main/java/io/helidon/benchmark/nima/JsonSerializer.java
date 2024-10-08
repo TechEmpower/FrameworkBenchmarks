@@ -72,8 +72,14 @@ public class JsonSerializer {
         try {
             stream.reset(null);
             stream.writeArrayStart();
+            int i = 0;
+            int n = objs.size();
             for (Object obj : objs) {
                 stream.writeVal(obj.getClass(), obj);
+                if (i++ < n - 1) {
+                    stream.writeMore();
+                }
+
             }
             stream.writeArrayEnd();
             return Arrays.copyOfRange(stream.buffer().data(), 0, stream.buffer().tail());

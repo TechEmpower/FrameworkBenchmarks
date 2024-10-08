@@ -6,6 +6,7 @@ import java.util.List;
 import io.helidon.benchmark.nima.models.DbRepository;
 import io.helidon.benchmark.nima.models.World;
 import io.helidon.common.parameters.Parameters;
+import io.helidon.http.HeaderValues;
 import io.helidon.webserver.http.HttpRules;
 import io.helidon.webserver.http.HttpService;
 import io.helidon.webserver.http.ServerRequest;
@@ -33,17 +34,20 @@ public class DbService implements HttpService {
 
     private void db(ServerRequest req, ServerResponse res) {
         res.header(SERVER);
+        res.header(HeaderValues.CONTENT_TYPE_JSON);
         res.send(serialize(repository.getWorld(randomWorldNumber())));
     }
 
     private void queries(ServerRequest req, ServerResponse res) {
         res.header(SERVER);
+        res.header(HeaderValues.CONTENT_TYPE_JSON);
         int count = parseQueryCount(req.query());
         res.send(serialize(repository.getWorlds(count)));
     }
 
     private void updates(ServerRequest req, ServerResponse res) {
         res.header(SERVER);
+        res.header(HeaderValues.CONTENT_TYPE_JSON);
         int count = parseQueryCount(req.query());
         List<World> worlds = repository.updateWorlds(count);
         res.send(serialize(worlds));
