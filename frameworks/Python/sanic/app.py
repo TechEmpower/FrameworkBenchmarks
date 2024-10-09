@@ -11,6 +11,8 @@ from wsgiref.handlers import format_date_time
 import sanic
 from sanic import response
 
+from orjson import dumps
+
 
 logger = getLogger(__name__)
 
@@ -41,23 +43,26 @@ def get_num_queries(queries):
     return query_count
 
 
-connection_pool = None
 sort_fortunes_key = itemgetter(1)
 template = load_fortunes_template()
 
-app = sanic.Sanic(name=__name__)
+app = sanic.Sanic(name=__name__, dumps=dumps)
 
 
 @app.listener('before_server_start')
 async def setup_database(app, loop):
-        global connection_pool
-        connection_pool = await asyncpg.create_pool(
-            user=os.getenv('PGUSER', 'benchmarkdbuser'),
-            password=os.getenv('PGPASS', 'benchmarkdbpass'),
-            database='hello_world',
-            host='tfb-database',
-            port=5432
-        )
+    app.ctx.pool = await asyncpg.create_pool(
+        user=os.getenv('PGUSER', 'benchmarkdbuser'),
+        password=os.getenv('PGPASS', 'benchmarkdbpass'),
+        database='hello_world',
+        host='tfb-database',
+        port=5432
+    )
+
+
+@app.listener('after_server_stop')
+async def close_database(app, loop):
+    app.ctx.pool.close()
 
 
 @app.get('/json')
@@ -69,7 +74,7 @@ def json_view(request):
 async def single_database_query_view(request):
     row_id = randint(1, 10000)
 
-    async with connection_pool.acquire() as connection:
+    async with request.app.ctx.pool.acquire() as connection:
         number = await connection.fetchval(READ_ROW_SQL, row_id)
 
     return response.json(
@@ -84,7 +89,7 @@ async def multiple_database_queries_view(request):
     row_ids = sample(range(1, 10000), num_queries)
     worlds = []
 
-    async with connection_pool.acquire() as connection:
+    async with request.app.ctx.pool.acquire() as connection:
         statement = await connection.prepare(READ_ROW_SQL)
         for row_id in row_ids:
             number = await statement.fetchval(row_id)
@@ -100,7 +105,7 @@ async def multiple_database_queries_view(request):
 
 @app.get('/fortunes')
 async def fortunes_view(request):
-    async with connection_pool.acquire() as connection:
+    async with request.app.ctx.pool.acquire() as connection:
         fortunes = await connection.fetch('SELECT * FROM Fortune')
 
     fortunes.append(ADDITIONAL_ROW)
@@ -112,22 +117,21 @@ async def fortunes_view(request):
 
 @app.get('/updates')
 async def database_updates_view(request):
-    worlds = []
-    updates = set()
     queries = request.args.get('queries', 1)
+    num_queries = get_num_queries(queries)
+    # To avoid deadlock
+    ids = sorted(sample(range(1, 10000 + 1), num_queries))
+    numbers = sorted(sample(range(1, 10000), num_queries))
+    updates = list(zip(ids, numbers))
 
-    async with connection_pool.acquire() as connection:
-        statement = await connection.prepare(READ_ROW_SQL_TO_UPDATE)
+    worlds = [
+        {"id": row_id, "randomNumber": number} for row_id, number in updates
+    ]
 
-        for row_id in sample(range(1, 10000), get_num_queries(queries)):
-            record = await statement.fetchrow(row_id)
-            world = dict(
-                id=record['id'], randomNumber=record['randomnumber']
-            )
-            world['randomNumber'] = randint(1, 10000)
-            worlds.append(world)
-            updates.add((world['id'], world['randomNumber']))
-
+    async with request.app.ctx.pool.acquire() as connection:
+        statement = await connection.prepare(READ_ROW_SQL)
+        for row_id, _ in updates:
+            await statement.fetchval(row_id)
         await connection.executemany(WRITE_ROW_SQL, updates)
 
     return response.json(worlds, headers=get_headers())
