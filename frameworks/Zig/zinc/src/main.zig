@@ -3,34 +3,24 @@ const zinc = @import("zinc");
 const Datetime = @import("datetime").datetime.Datetime;
 
 pub fn main() !void {
-    var gpa = std.heap.GeneralPurposeAllocator(.{
-        .thread_safe = true,
-    }){};
-    var tsa = std.heap.ThreadSafeAllocator{
-        .child_allocator = gpa.allocator(),
-    };
-    const allocator = tsa.allocator();
-
-    const cpuCount = @as(u8, @intCast(std.Thread.getCpuCount() catch 1));
-
     var z = try zinc.init(.{
-        .port = 8080,
-        .allocator = allocator,
-        .num_threads = 16 * cpuCount,
+        .port = 3000,
+        .allocator = std.heap.c_allocator,
+        .num_threads = 16 * @as(u8, @intCast(std.Thread.getCpuCount() catch 1)),
     });
+    defer z.deinit();
 
     var router = z.getRouter();
-
     try router.use(&.{setupHeader});
-
     try router.get("/json", json);
     try router.get("/plaintext", plaintext);
 
-    z.run() catch |err| std.debug.print("Error: {any}\n", .{err});
+    try z.run();
 }
 
 fn plaintext(ctx: *zinc.Context) anyerror!void {
-    try ctx.text("Hello, World!", .{});
+    try ctx.setHeader("Content-Type", "text/plain; charset=utf-8");
+    try ctx.setBody("Hello, world!", .{});
 }
 
 fn json(ctx: *zinc.Context) anyerror!void {
@@ -39,10 +29,11 @@ fn json(ctx: *zinc.Context) anyerror!void {
 
 fn setupHeader(ctx: *zinc.Context) anyerror!void {
     try ctx.setHeader("Server", "Zinc");
-    try ctx.setHeader("Connection", "keep-alive");
 
     const now = Datetime.now();
     const now_str = try now.formatHttp(ctx.allocator);
+    // defer ctx.allocator.free(now_str);
+
     // The time is now: Fri, 20 Dec 2019 22:03:02 UTC
     try ctx.setHeader("date", now_str);
 }
