@@ -71,6 +71,7 @@ webserver = "Redkale"
 versus = "Redkale"
 
 [block]
+urls.plaintext = "/plaintext"
 urls.db = "/db"
 urls.fortune = "/fortunes"
 urls.query = "/queries?q="

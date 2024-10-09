@@ -7,13 +7,11 @@ package org.redkalex.benchmark;
 
 import java.util.*;
 import java.util.concurrent.*;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
+import java.util.stream.*;
 import org.redkale.annotation.*;
 import org.redkale.net.http.*;
 import org.redkale.service.AbstractService;
 import org.redkale.source.DataSource;
-import org.redkale.util.AnyValue;
 
 /**
  *
@@ -27,10 +25,6 @@ public class BenchmarkService extends AbstractService {
 
     @Resource
     private DataSource source;
-
-    public void init(AnyValue conf) {
-        source.finds(CachedWorld.class, 1);
-    }
 
     @RestMapping(auth = false)
     public byte[] plaintext() {

@@ -1,26 +1,27 @@
 using System.Collections.Concurrent;
 using System.Data;
-using System.Data.Odbc; 
+using System.Data.Odbc;
 
 namespace appMpower.Orm.Data
 {
    public class DbConnection : IDbConnection
    {
       private string _connectionString;
-      internal bool _keyed = false; 
-      internal int _number; 
-      internal OdbcConnection _odbcConnection;
-      internal ConcurrentStack<OdbcCommand> _odbcCommands = new();
-      internal Dictionary<string, OdbcCommand> _keyedOdbcCommands;
+      private bool _keyed = false;
+      private int _number;
+      private OdbcConnection _odbcConnection;
+      private ConcurrentStack<OdbcCommand> _odbcCommands = new();
+      private Dictionary<string, OdbcCommand> _keyedOdbcCommands;
 
       public DbConnection()
       {
-         _connectionString = DbProviderFactory.ConnectionString;
       }
 
-      public DbConnection(string connectionString)
+      public DbConnection(string connectionString, bool keyed = false)
       {
-         _connectionString = connectionString;
+         _keyed = keyed;
+         _connectionString = connectionString; 
+         GetConnection();
       }
 
       public IDbConnection Connection
@@ -43,7 +44,22 @@ namespace appMpower.Orm.Data
          }
          set
          {
-            _odbcConnection.ConnectionString = value;
+            _connectionString = value; 
+            GetConnection();
+         }
+      }
+
+      private void GetConnection()
+      {
+         if (_keyed)
+         {
+            (_number, _odbcConnection, _keyedOdbcCommands) = 
+               DbConnectionsKeyed.GetConnectionBase(_connectionString).GetAwaiter().GetResult();
+         }
+         else
+         {
+            (_number, _odbcConnection, _odbcCommands) = 
+               DbConnections.GetConnectionBase(_connectionString).GetAwaiter().GetResult();
          }
       }
 
@@ -99,23 +115,33 @@ namespace appMpower.Orm.Data
 
       public void Open()
       {
-         if (_odbcConnection is null)
-         {
-            DbConnections.GetConnection(_connectionString, this);
-         }
-
          if (_odbcConnection.State == ConnectionState.Closed)
          {
             _odbcConnection.Open();
          }
       }
 
-      public void Dispose()
+      public async Task OpenAsync()
       {
-         DbConnections.Release(this);
+         if (_odbcConnection.State == ConnectionState.Closed)
+         {
+            await _odbcConnection.OpenAsync();
+         }
       }
 
-      internal OdbcCommand GetCommand(string commandText, CommandType commandType, bool keyed = false)
+      public void Dispose()
+      {
+         if (_keyed)
+         {
+            DbConnectionsKeyed.Release((Number: _number, OdbcConnection: _odbcConnection, KeyedOdbcCommands: _keyedOdbcCommands));
+         }
+         else
+         {
+            DbConnections.Release((Number: _number, OdbcConnection: _odbcConnection, OdbcCommands: _odbcCommands));
+         }
+      }
+
+      internal OdbcCommand GetCommand(string commandText, CommandType commandType)
       {
          OdbcCommand odbcCommand;
 
@@ -129,25 +155,20 @@ namespace appMpower.Orm.Data
 
             return odbcCommand; 
          }
-         else if (_keyed && _keyedOdbcCommands.TryGetValue(commandText, out odbcCommand))
-         {
-            return odbcCommand; 
-         }
-         else
-         {
-            if (!_keyed && keyed) 
-            {
-               _keyedOdbcCommands = new();
-               _keyed = keyed; 
-            }
-            
-            odbcCommand = _odbcConnection.CreateCommand();
-            odbcCommand.CommandText = commandText;
-            odbcCommand.CommandType = commandType;
-            odbcCommand.Prepare();
+         else if (_keyed && _keyedOdbcCommands.TryGetValue(commandText, out odbcCommand)) return odbcCommand; 
 
-            return odbcCommand;
-         }
+         odbcCommand = _odbcConnection.CreateCommand();
+         odbcCommand.CommandText = commandText;
+         odbcCommand.CommandType = commandType;
+         odbcCommand.Prepare();
+
+         return odbcCommand;
+      }
+
+      internal void Release(OdbcCommand odbcCommand)
+      {
+         if (_keyed) _keyedOdbcCommands.TryAdd(odbcCommand.CommandText, odbcCommand);
+         else _odbcCommands.Push(odbcCommand);
       }
    }
 }

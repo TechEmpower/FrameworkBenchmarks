@@ -78,10 +78,12 @@ async fn updates(
     (StatusCode::OK, Json(worlds))
 }
 
-#[tokio::main]
-async fn main() {
+fn main() {
     dotenv().ok();
+    server::start_tokio(serve_app)
+}
 
+async fn serve_app() {
     let database_url: String = get_env("POSTGRES_URL");
 
     // Create shared database connection
