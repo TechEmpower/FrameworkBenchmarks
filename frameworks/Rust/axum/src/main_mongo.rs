@@ -1,5 +1,6 @@
 mod common;
 mod mongo;
+mod server;
 //mod mongo_raw;
 
 use std::time::Duration;
@@ -23,8 +24,6 @@ use mongodb::{
 };
 use rand::{rngs::SmallRng, thread_rng, Rng, SeedableRng};
 use yarte::Template;
-
-mod server;
 
 use common::{
     get_env,
@@ -117,25 +116,10 @@ async fn fortunes(DatabaseConnection(db): DatabaseConnection) -> impl IntoRespon
 
 fn main() {
     dotenv().ok();
-
-    let rt = tokio::runtime::Builder::new_current_thread()
-        .enable_all()
-        .build()
-        .unwrap();
-
-    for _ in 1..num_cpus::get() {
-        std::thread::spawn(move || {
-            let rt = tokio::runtime::Builder::new_current_thread()
-                .enable_all()
-                .build()
-                .unwrap();
-            rt.block_on(serve());
-        });
-    }
-    rt.block_on(serve());
+    server::start_tokio(serve_app)
 }
 
-async fn serve() {
+async fn serve_app() {
     let database_url: String = get_env("MONGODB_URL");
     let max_pool_size: u32 = get_env("MONGODB_MAX_POOL_SIZE");
     let min_pool_size: u32 = get_env("MONGODB_MIN_POOL_SIZE");

@@ -1,61 +1,61 @@
 using System.Collections.Concurrent;
+using System.Data.Odbc;
 
 namespace appMpower.Orm.Data
 {
-   public static class DbConnections
+   internal static class DbConnections
    {
+      private static bool _maxConnectionsCreated = false;
       private static short _createdConnections = 0;
-      private static ConcurrentStack<DbConnection> _connectionsStack = new();
+      private static short _maxConnections = 500;
 
-      public static DbConnection GetConnection(string connectionString)
+      private static ConcurrentStack<(int Number, OdbcConnection OdbcConnection, ConcurrentStack<OdbcCommand> OdbcCommands)> _connectionsStack = new();
+      private static ConcurrentQueue<TaskCompletionSource<(int Number, OdbcConnection OdbcConnection, ConcurrentStack<OdbcCommand> OdbcCommands)>> _waitingQueue = new();
+      
+      internal static async Task<(int Number, OdbcConnection OdbcConnection, ConcurrentStack<OdbcCommand> OdbcCommands)> GetConnectionBase(string connectionString)
       {
-         DbConnection popDbConnection; 
+         (int Number, OdbcConnection OdbcConnection, ConcurrentStack<OdbcCommand> OdbcCommands) dbConnectionBase;
 
-         if (!_connectionsStack.TryPop(out popDbConnection))
+         if (!_connectionsStack.TryPop(out dbConnectionBase))
          {
-            popDbConnection = new DbConnection();
-            popDbConnection._odbcConnection = new System.Data.Odbc.OdbcConnection(connectionString);
-
-            _createdConnections++;
-            popDbConnection._number = _createdConnections;
-
-            if (_createdConnections % 25 == 0)
+            if (_maxConnectionsCreated)
             {
-               Console.WriteLine("Pooled connections created: " + _createdConnections.ToString());
+               dbConnectionBase = await GetDbConnectionBaseAsync();
+            }
+            else
+            {
+               _createdConnections++;
+               dbConnectionBase = (Number: _maxConnections, OdbcConnection: new OdbcConnection(connectionString), OdbcCommands: new ConcurrentStack<OdbcCommand>());
+
+               if (_createdConnections == _maxConnections) _maxConnectionsCreated = true;
+
+               //Console.WriteLine("opened connection number: " + dbConnectionBase._number);
             }
          }
 
-         return popDbConnection; 
+         return dbConnectionBase;
       }
 
-
-      public static void GetConnection(string connectionString, DbConnection dbConnection)
+      internal static void Release((int Number, OdbcConnection OdbcConnection, ConcurrentStack<OdbcCommand> OdbcCommands) dbConnectionBase)
       {
-         DbConnection popDbConnection = null;
+         TaskCompletionSource<(int Number, OdbcConnection OdbcConnection, ConcurrentStack<OdbcCommand> OdbcCommands)> taskCompletionSource;
 
-         if (_connectionsStack.TryPop(out popDbConnection))
+         if (_waitingQueue.TryDequeue(out taskCompletionSource))
          {
-            dbConnection._odbcConnection = popDbConnection._odbcConnection; 
-            dbConnection._odbcCommands = popDbConnection._odbcCommands;
-            dbConnection._number = popDbConnection._number; 
+            taskCompletionSource.SetResult(dbConnectionBase);
          }
          else
          {
-            dbConnection._odbcConnection = new System.Data.Odbc.OdbcConnection(connectionString);
-
-            _createdConnections++;
-            dbConnection._number = _createdConnections;
-
-           if (_createdConnections % 25 == 0)
-            {
-               Console.WriteLine("Pooled connections created: " + _createdConnections.ToString());
-            }
-          }
+            _connectionsStack.Push(dbConnectionBase);
+         }
       }
 
-      public static void Release(DbConnection dbConnection)
+      private static Task<(int Number, OdbcConnection OdbcConnection, ConcurrentStack<OdbcCommand> OdbcCommands)> GetDbConnectionBaseAsync()
       {
-         _connectionsStack.Push(dbConnection);
+         var taskCompletionSource = new TaskCompletionSource<(int Number, OdbcConnection OdbcConnection, ConcurrentStack<OdbcCommand> OdbcCommands)>(TaskCreationOptions.RunContinuationsAsynchronously);
+
+         _waitingQueue.Enqueue(taskCompletionSource);
+         return taskCompletionSource.Task;
       }
    }
 }

@@ -11,7 +11,6 @@ import org.springframework.web.reactive.function.server.HandlerStrategies;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.RouterFunctions;
 import org.springframework.web.reactive.function.server.ServerResponse;
-import org.springframework.web.reactive.result.view.ViewResolver;
 import org.springframework.web.server.WebHandler;
 import org.springframework.web.server.adapter.WebHttpHandlerBuilder;
 
@@ -20,8 +19,8 @@ import org.springframework.web.server.adapter.WebHttpHandlerBuilder;
 public class App  {
 
     @Bean
-    public HttpHandler httpHandler(RouterFunction<ServerResponse> route, ServerFilter serverFilter, ViewResolver viewResolver) {
-        WebHandler webHandler = RouterFunctions.toWebHandler(route, HandlerStrategies.builder().viewResolver(viewResolver).build());
+    public HttpHandler httpHandler(RouterFunction<ServerResponse> route, ServerFilter serverFilter) {
+        WebHandler webHandler = RouterFunctions.toWebHandler(route, HandlerStrategies.builder().build());
         return WebHttpHandlerBuilder.webHandler(webHandler).filter(serverFilter).build();
     }
 
