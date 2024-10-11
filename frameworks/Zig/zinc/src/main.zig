@@ -3,9 +3,13 @@ const zinc = @import("zinc");
 const Datetime = @import("datetime").datetime.Datetime;
 
 pub fn main() !void {
+    var gpa = std.heap.GeneralPurposeAllocator(.{ .thread_safe = true }){};
+    defer _ = gpa.deinit();
+    const allocator = gpa.allocator();
+
     var z = try zinc.init(.{
         .port = 3000,
-        .allocator = std.heap.c_allocator,
+        .allocator = allocator,
         .num_threads = 16 * @as(u8, @intCast(std.Thread.getCpuCount() catch 1)),
     });
     defer z.deinit();
