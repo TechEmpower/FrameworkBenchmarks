@@ -21,8 +21,8 @@ config :hello, Hello.Repo,
   password: "benchmarkdbpass",
   database: "hello_world",
   hostname: "tfb-database",
-  pool_count: 24,
-  pool_size: 64,
+  pool_count: 56,
+  pool_size: 15,
   queue_target: 5000,
   log: false
 
