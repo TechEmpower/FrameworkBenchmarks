@@ -3,12 +3,20 @@
     .version = "0.1.0",
     .dependencies = .{
         .zinc = .{
-            .url = "https://github.com/zon-dev/zinc/archive/refs/tags/0.1.0-beta4.tar.gz",
-            .hash = "12201f5d2138d81c9aa85bf18a550df6329d98f02645bc5f9e1eb82b2ed98d211bb6",
+            .url = "https://github.com/zon-dev/zinc/archive/refs/tags/0.1.0-beta.5.tar.gz",
+            .hash = "12201444aa36b4a83f262f319e7c17ccdcff9fbde2efbeb5fc94f1a07eda0d99428e",
         },
         .@"zig-datetime" = .{
-            .url = "https://github.com/frmdstryr/zig-datetime/archive/refs/heads/master.zip",
+            .url = "git+https://github.com/frmdstryr/zig-datetime#70aebf28fb3e137cd84123a9349d157a74708721",
             .hash = "122077215ce36e125a490e59ec1748ffd4f6ba00d4d14f7308978e5360711d72d77f",
+        },
+        .pg = .{
+            .url = "git+https://github.com/karlseguin/pg.zig",
+            .hash = "1220df8995ceea78a4a37a505fc779ded75725d0606c33fded26103953524dde1619",
+        },
+        .mustache = .{
+            .url = "git+https://github.com/batiati/mustache-zig",
+            .hash = "1220cd6e1b49bdd0a568682957dab9a6864554755908f7de990ec7c050f58cf41da2",
         },
     },
     .paths = .{
