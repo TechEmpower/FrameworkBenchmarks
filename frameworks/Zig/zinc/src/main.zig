@@ -20,7 +20,7 @@ pub fn main() !void {
 
 fn plaintext(ctx: *zinc.Context) anyerror!void {
     try ctx.setHeader("Content-Type", "text/plain; charset=utf-8");
-    try ctx.setBody("Hello, world!", .{});
+    try ctx.setBody("Hello, world!");
 }
 
 fn json(ctx: *zinc.Context) anyerror!void {

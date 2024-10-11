@@ -11,7 +11,7 @@
             .hash = "122077215ce36e125a490e59ec1748ffd4f6ba00d4d14f7308978e5360711d72d77f",
         },
         .pg = .{
-            .url = "git+https://github.com/karlseguin/pg.zig",
+            .url = "git+https://github.com/karlseguin/pg.zig#21db2306aff657802f9cb10a1e7f8fe9c33e7990",
             .hash = "1220df8995ceea78a4a37a505fc779ded75725d0606c33fded26103953524dde1619",
         },
         .mustache = .{
