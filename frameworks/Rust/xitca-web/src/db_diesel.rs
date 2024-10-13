@@ -1,3 +1,6 @@
+#[path = "./db_util.rs"]
+mod db_util;
+
 use std::{
     io,
     sync::{Arc, Mutex},
@@ -7,8 +10,10 @@ use diesel::{prelude::*, r2d2};
 
 use crate::{
     ser::{Fortune, Fortunes, World},
-    util::{bulk_update_gen, Error, HandleResult, Rand, DB_URL},
+    util::{HandleResult, Rand, DB_URL},
 };
+
+use db_util::{not_found, update_query_from_ids};
 
 pub type Pool = Arc<_Pool>;
 
@@ -34,12 +39,6 @@ pub fn create() -> io::Result<Arc<_Pool>> {
         })
 }
 
-#[cold]
-#[inline(never)]
-fn not_found() -> Error {
-    "world not found".into()
-}
-
 impl _Pool {
     pub fn get_world(&self) -> HandleResult<World> {
         use crate::schema::world::dsl::*;
@@ -53,16 +52,12 @@ impl _Pool {
         use crate::schema::world::dsl::*;
 
         let mut conn = self.pool.get()?;
-        (0..num)
-            .map(|_| {
-                let w_id = self.rng.lock().unwrap().gen_id();
-                world
-                    .filter(id.eq(w_id))
-                    .load::<World>(&mut conn)?
-                    .pop()
-                    .ok_or_else(not_found)
-            })
-            .collect()
+        core::iter::repeat_with(|| {
+            let w_id = self.rng.lock().unwrap().gen_id();
+            world.filter(id.eq(w_id)).load(&mut conn)?.pop().ok_or_else(not_found)
+        })
+        .take(num as _)
+        .collect()
     }
 
     pub fn update(&self, num: u16) -> HandleResult<Vec<World>> {
@@ -75,30 +70,20 @@ impl _Pool {
 
         rngs.sort_by(|(a, _), (b, _)| a.cmp(b));
 
-        let mut worlds = {
-            let mut conn = self.pool.get()?;
+        let update_sql = update_query_from_ids(&rngs);
 
-            let worlds = rngs
-                .iter()
-                .map(|(w_id, num)| {
-                    world
-                        .filter(id.eq(w_id))
-                        .load::<World>(&mut conn)?
-                        .pop()
-                        .map(|mut w| {
-                            w.randomnumber = *num;
-                            w
-                        })
-                        .ok_or_else(not_found)
-                })
-                .collect::<HandleResult<Vec<_>>>()?;
+        let mut conn = self.pool.get()?;
 
-            diesel::sql_query(update_query(&rngs)).execute(&mut conn)?;
+        let worlds = rngs
+            .into_iter()
+            .map(|(w_id, num)| {
+                let mut w: World = world.filter(id.eq(w_id)).load(&mut conn)?.pop().ok_or_else(not_found)?;
+                w.randomnumber = num;
+                Ok(w)
+            })
+            .collect::<HandleResult<Vec<_>>>()?;
 
-            worlds
-        };
-
-        worlds.sort_by_key(|w| w.id);
+        diesel::sql_query(update_sql).execute(&mut conn)?;
 
         Ok(worlds)
     }
@@ -108,7 +93,7 @@ impl _Pool {
 
         let mut items = {
             let mut conn = self.pool.get()?;
-            fortune.load::<Fortune>(&mut conn)?
+            fortune.load(&mut conn)?
         };
 
         items.push(Fortune::new(0, "Additional fortune added at request time."));
@@ -116,15 +101,4 @@ impl _Pool {
 
         Ok(Fortunes::new(items))
     }
-}
-
-// diesel does not support high level bulk update api. use raw sql to bypass the limitation.
-// relate discussion: https://github.com/diesel-rs/diesel/discussions/2879
-fn update_query(ids: &[(i32, i32)]) -> String {
-    bulk_update_gen(|query| {
-        use std::fmt::Write;
-        ids.iter().for_each(|(w_id, num)| {
-            write!(query, "({}::int,{}::int),", w_id, num).unwrap();
-        });
-    })
 }

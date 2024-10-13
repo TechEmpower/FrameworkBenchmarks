@@ -21,7 +21,10 @@ use xitca_http::{
 use xitca_io::net::io_uring::TcpStream;
 use xitca_service::Service;
 
-use self::{ser::Message, util::State};
+use self::{
+    ser::Message,
+    util::{QueryParse, State},
+};
 
 fn main() -> io::Result<()> {
     let addr = "0.0.0.0:8080".parse().unwrap();
@@ -74,9 +77,9 @@ fn main() -> io::Result<()> {
     Ok(())
 }
 
-async fn handler<'h>(req: Request<'h, '_>, res: Response<'h>, state: &State<db::Client>) -> Response<'h, 3> {
+async fn handler<'h>(req: Request<'h>, res: Response<'h>, state: &State<db::Client>) -> Response<'h, 3> {
     // unrealistic due to no http method check
-    match req.path.unwrap_or("404") {
+    match req.path {
         // unrealistic due to no dynamic path matching
         "/plaintext" => {
             // unrealistic due to no body streaming and no post processing. violating middleware feature of xitca-web
@@ -112,12 +115,12 @@ async fn handler<'h>(req: Request<'h, '_>, res: Response<'h>, state: &State<db::
             json_response(res, state, &world)
         }
         p if p.starts_with("/queries") => {
-            let num = path_param(p);
+            let num = p.parse_query();
             let worlds = state.client.get_worlds(num).await.unwrap();
             json_response(res, state, &worlds)
         }
         p if p.starts_with("/updates") => {
-            let num = path_param(p);
+            let num = p.parse_query();
             let worlds = state.client.update(num).await.unwrap();
             json_response(res, state, &worlds)
         }
@@ -138,14 +141,4 @@ where
         .body(buf.as_ref());
     buf.clear();
     res
-}
-
-fn path_param(query: &str) -> u16 {
-    use atoi::FromRadix10;
-    let q = if let Some(pos) = query.find("?q") {
-        u16::from_radix_10(query.split_at(pos + 3).1.as_ref()).0
-    } else {
-        1
-    };
-    q.clamp(1, 500)
 }
