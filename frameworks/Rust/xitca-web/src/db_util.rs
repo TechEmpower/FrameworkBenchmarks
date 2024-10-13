@@ -1,17 +1,24 @@
 use crate::util::Error;
 
+#[cfg(any(feature = "pg-orm", feature = "pg-orm-async"))]
 // diesel does not support high level bulk update api. use raw sql to bypass the limitation.
 // relate discussion: https://github.com/diesel-rs/diesel/discussions/2879
 pub fn update_query_from_ids(ids: &[(i32, i32)]) -> String {
+    update_query(|query| {
+        use core::fmt::Write;
+        ids.iter().for_each(|(w_id, num)| {
+            write!(query, "({}::int,{}::int),", w_id, num).unwrap();
+        });
+    })
+}
+
+fn update_query(func: impl FnOnce(&mut String)) -> String {
     const PREFIX: &str = "UPDATE world SET randomNumber = w.r FROM (VALUES ";
     const SUFFIX: &str = ") AS w (i,r) WHERE world.id = w.i";
 
     let mut query = String::from(PREFIX);
 
-    use std::fmt::Write;
-    ids.iter().for_each(|(w_id, num)| {
-        write!(query, "({}::int,{}::int),", w_id, num).unwrap();
-    });
+    func(&mut query);
 
     if query.ends_with(',') {
         query.pop();
@@ -46,12 +53,15 @@ pub mod pg {
     pub const FORTUNE_STMT: StatementNamed = Statement::named("SELECT * FROM fortune", &[]);
     pub const WORLD_STMT: StatementNamed = Statement::named("SELECT * FROM world WHERE id=$1", &[Type::INT4]);
 
-    pub fn update_query(num: usize) -> Box<str> {
-        let (_, ids) = (1..=num).fold((1, Vec::new()), |(id, mut ids), _| {
-            ids.push((id, id + 1));
-            (id + 2, ids)
-        });
-        super::update_query_from_ids(&ids).into_boxed_str()
+    pub fn update_query_from_num(num: usize) -> Box<str> {
+        super::update_query(|query| {
+            use core::fmt::Write;
+            (1..=num).fold(1, |idx, _| {
+                write!(query, "(${}::int,${}::int),", idx, idx + 1).unwrap();
+                idx + 2
+            });
+        })
+        .into_boxed_str()
     }
 
     pub fn sort_update_params(params: &[[i32; 2]]) -> impl ExactSizeIterator<Item = i32> {

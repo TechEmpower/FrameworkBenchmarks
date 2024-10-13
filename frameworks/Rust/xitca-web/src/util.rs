@@ -10,17 +10,15 @@ pub trait QueryParse {
 
 impl QueryParse for Option<&str> {
     fn parse_query(self) -> u16 {
-        self.map(QueryParse::parse_query).unwrap_or(1)
+        self.and_then(|q| q.find('q').map(|pos| q.split_at(pos + 2).1.parse_query()))
+            .unwrap_or(1)
     }
 }
 
 impl QueryParse for &str {
     fn parse_query(self) -> u16 {
         use atoi::FromRadix10;
-        self.find('q')
-            .map(|pos| u16::from_radix_10(self.split_at(pos + 2).1.as_ref()).0)
-            .unwrap_or(1)
-            .clamp(1, 500)
+        u16::from_radix_10(self.as_bytes()).0.clamp(1, 500)
     }
 }
 

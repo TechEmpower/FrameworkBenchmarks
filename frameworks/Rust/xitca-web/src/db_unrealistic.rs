@@ -13,7 +13,7 @@ use super::{
     util::{HandleResult, DB_URL},
 };
 
-use db_util::{not_found, sort_update_params, update_query, Shared, FORTUNE_STMT, WORLD_STMT};
+use db_util::{not_found, sort_update_params, update_query_from_num, Shared, FORTUNE_STMT, WORLD_STMT};
 
 pub struct Client {
     cli: xitca_postgres::Client,
@@ -36,7 +36,7 @@ pub async fn create() -> HandleResult<Client> {
 
     let mut updates = vec![Statement::default()];
 
-    for update in (1..=500).map(update_query).into_iter() {
+    for update in (1..=500).map(update_query_from_num).into_iter() {
         let stmt = Statement::named(&update, &[]).execute(&cli).await?.leak();
         updates.push(stmt);
     }

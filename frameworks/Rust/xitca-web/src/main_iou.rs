@@ -114,13 +114,13 @@ async fn handler<'h>(req: Request<'h>, res: Response<'h>, state: &State<db::Clie
             let world = state.client.get_world().await.unwrap();
             json_response(res, state, &world)
         }
-        p if p.starts_with("/queries") => {
-            let num = p.parse_query();
+        p if p.starts_with("/q") => {
+            let num = p["/queries?q=".len()..].parse_query();
             let worlds = state.client.get_worlds(num).await.unwrap();
             json_response(res, state, &worlds)
         }
-        p if p.starts_with("/updates") => {
-            let num = p.parse_query();
+        p if p.starts_with("/u") => {
+            let num = p["/updates?q=".len()..].parse_query();
             let worlds = state.client.update(num).await.unwrap();
             json_response(res, state, &worlds)
         }

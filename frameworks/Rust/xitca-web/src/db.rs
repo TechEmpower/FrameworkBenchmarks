@@ -10,7 +10,7 @@ use super::{
     util::{HandleResult, DB_URL},
 };
 
-use db_util::{not_found, sort_update_params, update_query, Shared, FORTUNE_STMT, WORLD_STMT};
+use db_util::{not_found, sort_update_params, update_query_from_num, Shared, FORTUNE_STMT, WORLD_STMT};
 
 pub struct Client {
     pool: Pool,
@@ -23,7 +23,7 @@ pub async fn create() -> HandleResult<Client> {
         pool: Pool::builder(DB_URL).capacity(1).build()?,
         shared: Default::default(),
         updates: core::iter::once(Box::from(""))
-            .chain((1..=500).map(update_query))
+            .chain((1..=500).map(update_query_from_num))
             .collect(),
     })
 }
