@@ -1,5 +1,4 @@
-// reference of if/how moving from epoll to io-uring(or mixture of the two) make sense for network io.
-// with comment on explaining why some practice are unrealistic
+// unrealistic bench showcase popular tricks for boosting bench score artificially
 
 // custom global memory allocator don't affect real world performance in noticeable amount.
 // in real world they should be used for reason like security, debug/profiling capability etc.
@@ -15,10 +14,10 @@ use std::{convert::Infallible, io};
 
 use xitca_http::{
     bytes::BufMutWriter,
-    h1::dispatcher_uring_unreal::{Dispatcher, Request, Response},
+    h1::dispatcher_unreal::{Dispatcher, Request, Response},
     http::StatusCode,
 };
-use xitca_io::net::io_uring::TcpStream;
+use xitca_io::net::TcpStream;
 use xitca_service::Service;
 
 use self::{
@@ -33,36 +32,40 @@ fn main() -> io::Result<()> {
 
     let handle = core::iter::repeat_with(|| {
         std::thread::spawn(move || {
-            tokio_uring::start(async {
-                let socket = tokio::net::TcpSocket::new_v4()?;
-                socket.set_reuseaddr(true)?;
-                // unrealistic due to following reason:
-                // 1. this only works good on unix system.
-                // 2. no resource distribution adjustment between sockets on different threads. causing uneven workload
-                // where some threads are idle while others busy. resulting in overall increased latency
-                socket.set_reuseport(true)?;
-                socket.bind(addr)?;
-                let listener = socket.listen(1024)?;
+            tokio::runtime::Builder::new_current_thread()
+                .enable_all()
+                .build_local(&Default::default())
+                .unwrap()
+                .block_on(async {
+                    let socket = tokio::net::TcpSocket::new_v4()?;
+                    socket.set_reuseaddr(true)?;
+                    // unrealistic due to following reason:
+                    // 1. this only works good on unix system.
+                    // 2. no resource distribution adjustment between sockets on different threads. causing uneven workload
+                    // where some threads are idle while others busy. resulting in overall increased latency
+                    socket.set_reuseport(true)?;
+                    socket.bind(addr)?;
+                    let listener = socket.listen(1024)?;
 
-                let client = db::create().await.unwrap();
+                    let client = db::create().await.unwrap();
 
-                // unrealistic http dispatcher. no spec check. no security feature.
-                let service = Dispatcher::new(handler, State::new(client));
+                    // unrealistic http dispatcher. no spec check. no security feature.
+                    let service = Dispatcher::new(handler, State::new(client));
 
-                loop {
-                    match listener.accept().await {
-                        Ok((stream, _)) => {
-                            let stream = stream.into_std()?;
-                            let stream = TcpStream::from_std(stream);
-                            let service = service.clone();
-                            tokio::task::spawn_local(async move {
-                                let _ = service.call(stream).await;
-                            });
-                        }
-                        Err(e) => return Err(e),
-                    };
-                }
-            })
+                    loop {
+                        match listener.accept().await {
+                            Ok((stream, _)) => {
+                                let stream = stream.into_std()?;
+                                let stream = TcpStream::from_std(stream)?;
+                                let service = service.clone();
+                                tokio::task::spawn_local(async move {
+                                    let _ = service.call(stream).await;
+                                });
+                            }
+                            Err(e) => return Err(e),
+                        };
+                    }
+                })
         })
     })
     .take(cores)

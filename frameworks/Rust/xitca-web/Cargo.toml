@@ -9,9 +9,9 @@ path = "./src/main.rs"
 required-features = ["io-uring", "pg", "router", "template"]
 
 [[bin]]
-name = "xitca-web-iou"
-path = "./src/main_iou.rs"
-required-features = ["io-uring", "perf", "pg", "template"]
+name = "xitca-web-unrealistic"
+path = "./src/main_unrealistic.rs"
+required-features = ["perf", "pg", "template"]
 
 [[bin]]
 name = "xitca-web-wasm"
@@ -100,10 +100,11 @@ xitca-postgres-diesel = { git = "https://github.com/fakeshadow/xitca-postgres-di
 
 diesel-async = { git = "https://github.com/weiznich/diesel_async", rev = "5b8262b" }
 mio = { git = "https://github.com/fakeshadow/mio", rev = "9bae6012b7ecfc6083350785f71a5e8265358178" }
+tokio = { git = "https://github.com/tokio-rs/tokio.git", rev = "512e9de" }
 
-xitca-codegen = { git = "http://github.com/HFQR/xitca-web", rev = "e4c2a85" }
-xitca-http = { git = "http://github.com/HFQR/xitca-web", rev = "e4c2a85" }
-xitca-postgres = { git = "http://github.com/HFQR/xitca-web", rev = "e4c2a85" }
-xitca-server = { git = "http://github.com/HFQR/xitca-web", rev = "e4c2a85" }
-xitca-service = { git = "http://github.com/HFQR/xitca-web", rev = "e4c2a85" }
-xitca-web = { git = "http://github.com/HFQR/xitca-web", rev = "e4c2a85" }
+xitca-codegen = { git = "http://github.com/HFQR/xitca-web", rev = "1de8d9c" }
+xitca-http = { git = "http://github.com/HFQR/xitca-web", rev = "1de8d9c" }
+xitca-postgres = { git = "http://github.com/HFQR/xitca-web", rev = "1de8d9c" }
+xitca-server = { git = "http://github.com/HFQR/xitca-web", rev = "1de8d9c" }
+xitca-service = { git = "http://github.com/HFQR/xitca-web", rev = "1de8d9c" }
+xitca-web = { git = "http://github.com/HFQR/xitca-web", rev = "1de8d9c" }
