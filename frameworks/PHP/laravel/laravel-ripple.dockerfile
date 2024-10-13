@@ -40,7 +40,8 @@ RUN echo "PRP_HTTP_SANDBOX=1" >> .env
 
 # Configure
 RUN composer install --quiet
-RUN composer require cclilshy/p-ripple-drive --quiet
+RUN composer require cloudtay/ripple-driver --quiet
+RUN php artisan vendor:publish --tag=ripple-config
 RUN php artisan optimize
 
 # Start
