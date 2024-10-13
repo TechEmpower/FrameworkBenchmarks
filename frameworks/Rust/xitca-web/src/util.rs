@@ -54,6 +54,15 @@ pub struct State<DB> {
     pub write_buf: RefCell<BytesMut>,
 }
 
+impl<DB> State<DB> {
+    pub fn new(client: DB) -> Self {
+        Self {
+            client,
+            write_buf: Default::default(),
+        }
+    }
+}
+
 #[cfg(not(target_arch = "wasm32"))]
 mod non_wasm {
     use rand::{rngs::SmallRng, Rng, SeedableRng};
@@ -72,37 +81,6 @@ mod non_wasm {
             self.0.gen_range(1..=10000)
         }
     }
-
-    #[cfg(feature = "pg")]
-    mod pg_state {
-        use core::{cell::RefCell, future::Future, pin::Pin};
-
-        use xitca_http::{
-            bytes::BytesMut,
-            util::middleware::context::{Context, ContextBuilder},
-        };
-
-        use crate::{
-            db::{self, Client},
-            util::{HandleResult, State},
-        };
-
-        pub type Ctx<'a, Req> = Context<'a, Req, State<Client>>;
-
-        pub fn context_mw() -> ContextBuilder<impl Fn() -> Pin<Box<dyn Future<Output = HandleResult<State<Client>>>>>> {
-            ContextBuilder::new(|| {
-                Box::pin(async {
-                    db::create().await.map(|client| State {
-                        client,
-                        write_buf: RefCell::new(BytesMut::new()),
-                    })
-                }) as _
-            })
-        }
-    }
-
-    #[cfg(feature = "pg")]
-    pub use pg_state::*;
 }
 
 #[cfg(not(target_arch = "wasm32"))]

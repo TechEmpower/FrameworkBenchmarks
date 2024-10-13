@@ -1,11 +1,12 @@
+//! this module is unrealistic. related issue:
+//! https://github.com/TechEmpower/FrameworkBenchmarks/issues/8790
+
 #[path = "./db_util.rs"]
 mod db_util;
 
 use std::cell::RefCell;
 
-use xitca_postgres::{
-    iter::AsyncLendingIterator, pipeline::Pipeline, pool::Pool, statement::Statement, Execute, ExecuteMut,
-};
+use xitca_postgres::{iter::AsyncLendingIterator, pipeline::Pipeline, statement::Statement, Execute, ExecuteMut};
 
 use super::{
     ser::{Fortune, Fortunes, World},
@@ -15,27 +16,44 @@ use super::{
 use db_util::{sort_update_params, update_query, Shared, FORTUNE_STMT, WORLD_STMT};
 
 pub struct Client {
-    pool: Pool,
+    cli: xitca_postgres::Client,
     shared: RefCell<Shared>,
-    updates: Box<[Box<str>]>,
+    fortune: Statement,
+    world: Statement,
+    updates: Box<[Statement]>,
 }
 
 pub async fn create() -> HandleResult<Client> {
+    let (cli, mut drv) = xitca_postgres::Postgres::new(DB_URL).connect().await?;
+
+    tokio::task::spawn(tokio::task::unconstrained(async move {
+        while drv.try_next().await?.is_some() {}
+        HandleResult::Ok(())
+    }));
+
+    let world = WORLD_STMT.execute(&cli).await?.leak();
+    let fortune = FORTUNE_STMT.execute(&cli).await?.leak();
+
+    let mut updates = vec![Statement::default()];
+
+    for update in (1..=500).map(update_query).into_iter() {
+        let stmt = Statement::named(&update, &[]).execute(&cli).await?.leak();
+        updates.push(stmt);
+    }
+
     Ok(Client {
-        pool: Pool::builder(DB_URL).capacity(1).build()?,
+        cli,
         shared: Default::default(),
-        updates: core::iter::once(Box::from(""))
-            .chain((1..=500).map(update_query))
-            .collect(),
+        world,
+        fortune,
+        updates: updates.into_boxed_slice(),
     })
 }
 
 impl Client {
     pub async fn get_world(&self) -> HandleResult<World> {
-        let mut conn = self.pool.get().await?;
-        let stmt = WORLD_STMT.execute_mut(&mut conn).await?;
         let id = self.shared.borrow_mut().0.gen_id();
-        let mut res = stmt.bind([id]).query(&conn.consume()).await?;
+        let mut res = self.world.bind([id]).query(&self.cli).await?;
         let row = res.try_next().await?.ok_or("request World does not exist")?;
         Ok(World::new(row.get(0), row.get(1)))
     }
@@ -43,14 +61,11 @@ impl Client {
     pub async fn get_worlds(&self, num: u16) -> HandleResult<Vec<World>> {
         let len = num as usize;
 
-        let mut conn = self.pool.get().await?;
-        let stmt = WORLD_STMT.execute_mut(&mut conn).await?;
-
         let mut res = {
             let (ref mut rng, ref mut buf) = *self.shared.borrow_mut();
             let mut pipe = Pipeline::with_capacity_from_buf(len, buf);
-            (0..num).try_for_each(|_| stmt.bind([rng.gen_id()]).query_mut(&mut pipe))?;
-            pipe.query(&conn.consume())?
+            (0..num).try_for_each(|_| self.world.bind([rng.gen_id()]).query_mut(&mut pipe))?;
+            pipe.query(&self.cli)?
         };
 
         let mut worlds = Vec::with_capacity(len);
@@ -67,11 +82,6 @@ impl Client {
     pub async fn update(&self, num: u16) -> HandleResult<Vec<World>> {
         let len = num as usize;
 
-        let update = self.updates.get(len).ok_or("request num is out of range")?;
-        let mut conn = self.pool.get().await?;
-        let world_stmt = WORLD_STMT.execute_mut(&mut conn).await?;
-        let update_stmt = Statement::named(update, &[]).execute_mut(&mut conn).await?;
-
         let mut params = Vec::with_capacity(len);
 
         let mut res = {
@@ -81,10 +91,12 @@ impl Client {
                 let w_id = rng.gen_id();
                 let r_id = rng.gen_id();
                 params.push([w_id, r_id]);
-                world_stmt.bind([w_id]).query_mut(&mut pipe)
+                self.world.bind([w_id]).query_mut(&mut pipe)
             })?;
-            update_stmt.bind(sort_update_params(&params)).query_mut(&mut pipe)?;
-            pipe.query(&conn.consume())?
+            self.updates[len]
+                .bind(sort_update_params(&params))
+                .query_mut(&mut pipe)?;
+            pipe.query(&self.cli)?
         };
 
         let mut worlds = Vec::with_capacity(len);
@@ -105,9 +117,7 @@ impl Client {
         let mut items = Vec::with_capacity(32);
         items.push(Fortune::new(0, "Additional fortune added at request time."));
 
-        let mut conn = self.pool.get().await?;
-        let stmt = FORTUNE_STMT.execute_mut(&mut conn).await?;
-        let mut res = stmt.query(&conn.consume()).await?;
+        let mut res = self.fortune.query(&self.cli).await?;
 
         while let Some(row) = res.try_next().await? {
             items.push(Fortune::new(row.get(0), row.get::<String>(1)));
