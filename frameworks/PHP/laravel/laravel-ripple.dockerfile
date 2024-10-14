@@ -33,16 +33,17 @@ RUN mkdir -p bootstrap/cache \
             storage/framework/views \
             storage/framework/cache
 
-# Configure
 RUN echo "PRP_HTTP_LISTEN=http://0.0.0.0:8080" >> .env
-RUN echo "PRP_HTTP_COUNT=64" >> .env
+RUN echo "PRP_HTTP_WORKERS=64" >> .env
+RUN echo "PRP_HTTP_RELOAD=0" >> .env
+RUN echo "PRP_HTTP_SANDBOX=1" >> .env
 
+# Configure
 RUN composer install --quiet
+RUN composer require cloudtay/ripple-driver --quiet
+RUN php artisan vendor:publish --tag=ripple-config
 RUN php artisan optimize
 
-RUN composer require cclilshy/p-ripple-drive --quiet
-RUN composer update --quiet
-
+# Start
 EXPOSE 8080
-
-ENTRYPOINT ["php","artisan","p:server","start"]
+ENTRYPOINT ["php","artisan","ripple:server","start"]
