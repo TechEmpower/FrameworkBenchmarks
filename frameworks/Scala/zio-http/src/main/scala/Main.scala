@@ -1,42 +1,43 @@
-import zhttp.http._
-import zhttp.service.Server
-import zio.{App, ExitCode, URIO}
-import com.github.plokhotnyuk.jsoniter_scala.macros._
-import com.github.plokhotnyuk.jsoniter_scala.core._
-import zhttp.http.Response
+import zio._
+import zio.http._
+import zio.http.netty.NettyConfig
+import zio.http.netty.NettyConfig.LeakDetectionLevel
+import java.lang.{Runtime => JRuntime}
 
-import java.time.format.DateTimeFormatter
-import java.time.{Instant, ZoneOffset}
+object Main extends ZIOAppDefault {
 
-case class Message(message: String)
+  private val plainTextMessage: String = "hello, world!"
+  private val jsonMessage: String      = """{"message": "hello, world!"}"""
 
-object Main extends App {
-  val message: String                         = "Hello, World!"
-  implicit val codec: JsonValueCodec[Message] = JsonCodecMaker.make
+  private val STATIC_SERVER_NAME = "zio-http"
+  private val NUM_PROCESSORS     = JRuntime.getRuntime.availableProcessors()
 
-  val app: Http[Any, HttpError, Request, Response] = Http.collect[Request] {
-    case Method.GET -> Root / "plaintext" =>
-      Response.http(
-        content = HttpContent.Complete(message),
-        headers = Header.contentTypeTextPlain :: headers(),
-      )
-    case Method.GET -> Root / "json"      =>
-      Response.http(
-        content = HttpContent.Complete(writeToString(Message(message))),
-        headers = Header.contentTypeJson :: headers(),
-      )
-  }
+  val app: Routes[Any, Response] = Routes(
+    Method.GET / "/plaintext" ->
+      Handler.fromResponse(
+        Response
+          .text(plainTextMessage)
+          .addHeader(Header.Server(STATIC_SERVER_NAME)),
+      ),
+    Method.GET / "/json"      ->
+      Handler.fromResponse(
+        Response
+          .json(jsonMessage)
+          .addHeader(Header.Server(STATIC_SERVER_NAME)),
+      ),
+  )
 
-  override def run(args: List[String]): URIO[zio.ZEnv, ExitCode] = Server.start(8080, app).exitCode
+  private val config = Server.Config.default
+    .port(8080)
+    .enableRequestStreaming
 
-  val formatter: DateTimeFormatter                = DateTimeFormatter.RFC_1123_DATE_TIME.withZone(ZoneOffset.UTC)
-  val constantHeaders: List[Header]               = Header("server", "zio-http") :: Nil
-  @volatile var lastHeaders: (Long, List[Header]) = (0, Nil)
+  private val nettyConfig = NettyConfig.default
+    .leakDetection(LeakDetectionLevel.DISABLED)
+    .maxThreads(NUM_PROCESSORS)
 
-  def headers(): List[Header] = {
-    val t = System.currentTimeMillis()
-    if (t - lastHeaders._1 >= 1000)
-      lastHeaders = (t, Header("date", formatter.format(Instant.ofEpochMilli(t))) :: constantHeaders)
-    lastHeaders._2
-  }
+  private val configLayer      = ZLayer.succeed(config)
+  private val nettyConfigLayer = ZLayer.succeed(nettyConfig)
+
+  val run: UIO[ExitCode] =
+    Server.serve(app).provide(configLayer, nettyConfigLayer, Server.customized).exitCode
 }
