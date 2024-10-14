@@ -2,6 +2,7 @@ import zio._
 import zio.http._
 import zio.http.netty.NettyConfig
 import zio.http.netty.NettyConfig.LeakDetectionLevel
+import java.lang.{Runtime => JRuntime}
 
 object Main extends ZIOAppDefault {
 
@@ -9,7 +10,7 @@ object Main extends ZIOAppDefault {
   private val jsonMessage: String      = """{"message": "hello, world!"}"""
 
   private val STATIC_SERVER_NAME = "zio-http"
-  private val NUM_PROCESSORS     = Runtime.getRuntime.availableProcessors()
+  private val NUM_PROCESSORS     = JRuntime.getRuntime.availableProcessors()
 
   val app: Routes[Any, Response] = Routes(
     Method.GET / "/plaintext" ->
@@ -38,5 +39,5 @@ object Main extends ZIOAppDefault {
   private val nettyConfigLayer = ZLayer.succeed(nettyConfig)
 
   val run: UIO[ExitCode] =
-    Server.serve(app.toHttpApp).provide(configLayer, nettyConfigLayer, Server.customized).exitCode
+    Server.serve(app).provide(configLayer, nettyConfigLayer, Server.customized).exitCode
 }
