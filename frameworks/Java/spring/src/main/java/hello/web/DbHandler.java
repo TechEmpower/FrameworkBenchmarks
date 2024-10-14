@@ -1,6 +1,7 @@
 package hello.web;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import hello.Utils;
@@ -52,6 +53,7 @@ public class DbHandler {
 					world.randomNumber = randomNumber;
 					return world;
 				}).limit(queries)
+				.sorted(Comparator.comparingInt(w -> w.id))
 				.toList();
 		dbRepository.updateWorlds(worlds);
 		return ServerResponse.ok()
