@@ -9,6 +9,8 @@ EXPOSE 8080
 
 CMD java -server \
     -Dcc.otavia.actor.worker.size=56 \
+    -Dcc.otavia.buffer.page.size=8 \
+    -Dio.netty5.noKeySetOptimization=true \
     -jar \
     out/benchmark/assembly.dest/out.jar \
     jdbc:postgresql://tfb-database:5432/hello_world \
