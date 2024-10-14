@@ -6,14 +6,14 @@ mod db_util;
 
 use std::cell::RefCell;
 
-use xitca_postgres::{iter::AsyncLendingIterator, pipeline::Pipeline, statement::Statement, Execute, ExecuteMut};
+use xitca_postgres::{iter::AsyncLendingIterator, pipeline::Pipeline, statement::Statement, Execute};
 
 use super::{
     ser::{Fortune, Fortunes, World},
     util::{HandleResult, DB_URL},
 };
 
-use db_util::{sort_update_params, update_query, Shared, FORTUNE_STMT, WORLD_STMT};
+use db_util::{not_found, sort_update_params, update_query_from_num, Shared, FORTUNE_STMT, WORLD_STMT};
 
 pub struct Client {
     cli: xitca_postgres::Client,
@@ -36,7 +36,7 @@ pub async fn create() -> HandleResult<Client> {
 
     let mut updates = vec![Statement::default()];
 
-    for update in (1..=500).map(update_query).into_iter() {
+    for update in (1..=500).map(update_query_from_num).into_iter() {
         let stmt = Statement::named(&update, &[]).execute(&cli).await?.leak();
         updates.push(stmt);
     }
@@ -54,26 +54,28 @@ impl Client {
     pub async fn get_world(&self) -> HandleResult<World> {
         let id = self.shared.borrow_mut().0.gen_id();
         let mut res = self.world.bind([id]).query(&self.cli).await?;
-        let row = res.try_next().await?.ok_or("request World does not exist")?;
+        let row = res.try_next().await?.ok_or_else(not_found)?;
         Ok(World::new(row.get(0), row.get(1)))
     }
 
     pub async fn get_worlds(&self, num: u16) -> HandleResult<Vec<World>> {
         let len = num as usize;
 
-        let mut res = {
-            let (ref mut rng, ref mut buf) = *self.shared.borrow_mut();
-            let mut pipe = Pipeline::with_capacity_from_buf(len, buf);
-            (0..num).try_for_each(|_| self.world.bind([rng.gen_id()]).query_mut(&mut pipe))?;
-            pipe.query(&self.cli)?
+        let mut res = Vec::with_capacity(len);
+
+        {
+            let (ref mut rng, ..) = *self.shared.borrow_mut();
+            for _ in 0..len {
+                let stream = self.world.bind([rng.gen_id()]).query(&self.cli).await?;
+                res.push(stream);
+            }
         };
 
         let mut worlds = Vec::with_capacity(len);
 
-        while let Some(mut item) = res.try_next().await? {
-            while let Some(row) = item.try_next().await? {
-                worlds.push(World::new(row.get(0), row.get(1)))
-            }
+        for mut stream in res {
+            let row = stream.try_next().await?.ok_or_else(not_found)?;
+            worlds.push(World::new(row.get(0), row.get(1)));
         }
 
         Ok(worlds)
@@ -86,16 +88,15 @@ impl Client {
 
         let mut res = {
             let (ref mut rng, ref mut buf) = *self.shared.borrow_mut();
-            let mut pipe = Pipeline::with_capacity_from_buf(len + 1, buf);
+            // unrealistic as all queries are sent with only one sync point.
+            let mut pipe = Pipeline::unsync_with_capacity_from_buf(len + 1, buf);
             (0..num).try_for_each(|_| {
                 let w_id = rng.gen_id();
                 let r_id = rng.gen_id();
                 params.push([w_id, r_id]);
-                self.world.bind([w_id]).query_mut(&mut pipe)
+                self.world.bind([w_id]).query(&mut pipe)
             })?;
-            self.updates[len]
-                .bind(sort_update_params(&params))
-                .query_mut(&mut pipe)?;
+            self.updates[len].bind(sort_update_params(&params)).query(&mut pipe)?;
             pipe.query(&self.cli)?
         };
 

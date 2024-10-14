@@ -10,34 +10,16 @@ pub trait QueryParse {
 
 impl QueryParse for Option<&str> {
     fn parse_query(self) -> u16 {
-        self.and_then(|this| {
-            use atoi::FromRadix10;
-            this.find('q')
-                .map(|pos| u16::from_radix_10(this.split_at(pos + 2).1.as_ref()).0)
-        })
-        .unwrap_or(1)
-        .clamp(1, 500)
+        self.and_then(|q| q.find('q').map(|pos| q.split_at(pos + 2).1.parse_query()))
+            .unwrap_or(1)
     }
 }
 
-pub fn bulk_update_gen<F>(func: F) -> String
-where
-    F: FnOnce(&mut String),
-{
-    const PREFIX: &str = "UPDATE world SET randomNumber = w.r FROM (VALUES ";
-    const SUFFIX: &str = ") AS w (i,r) WHERE world.id = w.i";
-
-    let mut query = String::from(PREFIX);
-
-    func(&mut query);
-
-    if query.ends_with(',') {
-        query.pop();
+impl QueryParse for &str {
+    fn parse_query(self) -> u16 {
+        use atoi::FromRadix10;
+        u16::from_radix_10(self.as_bytes()).0.clamp(1, 500)
     }
-
-    query.push_str(SUFFIX);
-
-    query
 }
 
 #[allow(clippy::declare_interior_mutable_const)]
@@ -64,7 +46,7 @@ impl<DB> State<DB> {
 }
 
 #[cfg(not(target_arch = "wasm32"))]
-mod non_wasm {
+pub mod non_wasm {
     use rand::{rngs::SmallRng, Rng, SeedableRng};
 
     pub struct Rand(SmallRng);

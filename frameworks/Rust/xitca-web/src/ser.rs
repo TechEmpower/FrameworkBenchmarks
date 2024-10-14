@@ -8,7 +8,7 @@ use xitca_http::{
     bytes::{BufMutWriter, Bytes},
     http::{
         self,
-        const_header_value::{JSON, TEXT, TEXT_HTML_UTF8},
+        const_header_value::{JSON, TEXT_HTML_UTF8, TEXT_UTF8},
         header::CONTENT_TYPE,
         IntoResponse as _, RequestExt, StatusCode,
     },
@@ -213,7 +213,7 @@ impl<Ext> IntoResponse for Request<Ext> {
 
     fn text_response(self) -> Result<Response, Error> {
         let mut res = self.into_response(const { Bytes::from_static(HELLO_BYTES) });
-        res.headers_mut().insert(CONTENT_TYPE, TEXT);
+        res.headers_mut().insert(CONTENT_TYPE, TEXT_UTF8);
         Ok(res)
     }
 
