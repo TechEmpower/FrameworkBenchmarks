@@ -25,7 +25,6 @@ RUN apt update -yqq > /dev/null \
 WORKDIR /swoole
 
 ADD ./swoole-server.php /swoole
-ADD 10-opcache.ini /swoole
 ADD ./database.php /swoole
 
 COPY 10-opcache.ini /etc/php/8.3/cli/conf.d/10-opcache.ini
