@@ -1,8 +1,8 @@
 package utils;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
-import akka.actor.ActorSystem;
+import org.apache.pekko.actor.ActorSystem;
 import play.libs.concurrent.CustomExecutionContext;
 
 public class DatabaseExecutionContext extends CustomExecutionContext {
