@@ -5,7 +5,7 @@ defmodule FrameworkBenchmarks.Handlers.Query do
   def handle(conn) do
     number_of_queries = FrameworkBenchmarks.Handlers.Helpers.parse_queries(conn, "queries")
 
-    records =
+    json =
       1..number_of_queries
       |> Enum.map(fn _ ->
         :rand.uniform(10_000)
@@ -15,16 +15,8 @@ defmodule FrameworkBenchmarks.Handlers.Query do
           FrameworkBenchmarks.Repo.get(FrameworkBenchmarks.Models.World, &1)
         end)
       )
-      |> Enum.map(&Task.await(&1))
-
-    {:ok, json} =
-      records
-      |> Enum.map(fn record ->
-        record
-        |> Map.from_struct()
-        |> Map.drop([:__meta__])
-      end)
-      |> Jason.encode()
+      |> Enum.map(&Task.await(&1, :infinity))
+      |> Jason.encode_to_iodata!()
 
     conn
     |> Plug.Conn.put_resp_content_type("application/json")

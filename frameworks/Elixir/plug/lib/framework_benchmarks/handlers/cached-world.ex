@@ -11,10 +11,10 @@ defmodule FrameworkBenchmarks.Handlers.CachedWorld do
         :rand.uniform(10_000)
       end)
 
-    {:ok, json} =
+    json =
       ids
       |> Enum.map(&FrameworkBenchmarks.CachedWorld.get/1)
-      |> Jason.encode()
+      |> Jason.encode_to_iodata!()
 
     conn
     |> Plug.Conn.put_resp_content_type("application/json")
