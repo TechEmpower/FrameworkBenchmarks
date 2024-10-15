@@ -1,7 +1,7 @@
-FROM sumeetchhetri/ffead-cpp-base:6.0
+FROM sumeetchhetri/ffead-cpp-base:7.0-te
 
 ENV IROOT=/installs
 
 WORKDIR /
 
-CMD ./run_ffead.sh ffead-cpp-6.0-sql emb postgresql redis
+CMD ./run_ffead.sh ffead-cpp-7.0-sql emb postgresql-raw memory
