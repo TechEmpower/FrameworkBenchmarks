@@ -1,3 +1,3 @@
 #!/bin/bash
 service redis-server start
-rails server
+bundle exec falcon host
