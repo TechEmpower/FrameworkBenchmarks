@@ -1,0 +1,3 @@
+asyncpg==0.29.0
+emmett55[orjson]>=1.0.0,<1.1.0
+renoir==1.8.0
