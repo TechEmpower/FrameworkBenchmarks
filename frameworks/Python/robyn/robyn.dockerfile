@@ -8,4 +8,4 @@ RUN pip3 install -r /robyn/requirements.txt
 
 EXPOSE 8080
 
-CMD ["robyn", "app.py", "--fast"]
+CMD ["python", "app.py", "--log-level", "warn"]
