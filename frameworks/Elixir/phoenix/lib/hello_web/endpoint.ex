@@ -20,4 +20,3 @@ defmodule HelloWeb.Endpoint do
   plug HelloWeb.HeadersPlug
   plug HelloWeb.Router
 end
-

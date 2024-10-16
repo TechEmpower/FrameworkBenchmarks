@@ -23,9 +23,9 @@ defmodule Hello.WorldCache do
         world = Repo.get(World, id)
         :ok = __MODULE__.put(id, world)
         world
+
       world ->
         world
     end
   end
-
 end
