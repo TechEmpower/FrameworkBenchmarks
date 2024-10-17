@@ -1,10 +1,10 @@
 import multiprocessing
 
-from emmett.server import run
+from emmett_core.server import run
 
 
 if __name__ == "__main__":
-    workers = round(multiprocessing.cpu_count() / 2)
+    workers = multiprocessing.cpu_count()
 
     run(
         "rsgi",
