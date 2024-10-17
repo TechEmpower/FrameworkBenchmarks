@@ -15,7 +15,7 @@ class Operation
     public static function db(PDOStatement|PDOStatementProxy $db): string
     {
         $db->execute([mt_rand(1, 10000)]);
-        return json_encode($db->fetch(PDO::FETCH_ASSOC), JSON_NUMERIC_CHECK);
+        return json_encode($db->fetch(PDO::FETCH_ASSOC));
     }
 
     public static function fortunes(PDOStatement|PDOStatementProxy $fortune): string
@@ -42,7 +42,7 @@ class Operation
             $results[] = $query->fetch(PDO::FETCH_ASSOC);
         }
 
-        return json_encode($results, JSON_NUMERIC_CHECK);
+        return json_encode($results);
     }
 
     public static function updates(PDOStatement|PDOStatementProxy $random, PDOStatement|PDOStatementProxy $update, int $queries, string $driver): string
@@ -65,7 +65,7 @@ class Operation
         if ($driver == 'pgsql') {
             $update->execute([...$values, ...$keys]);
         }
-        return json_encode($results, JSON_NUMERIC_CHECK);
+        return json_encode($results);
     }
 }
 
@@ -130,9 +130,6 @@ class Connections
 {
     private static PDOPool $pool;
     private static string $driver;
-    private static array $dbs = [];
-    private static array $fortunes = [];
-    private static array $updates = [];
 
     public static function init(string $driver): void
     {
@@ -195,28 +192,14 @@ class Connections
 
     private static function getStatement(PDO|PDOProxy $pdo, string $type, int $queries = 0): PDOStatement|PDOStatementProxy
     {
-        $hash = spl_object_id($pdo);
-
         if ('select' == $type) {
-            if (!isset(self::$dbs[$hash])) {
-                self::$dbs[$hash] = $pdo->prepare(Operation::WORLD_SELECT_SQL);
-            }
-
-            return self::$dbs[$hash];
+            return $pdo->prepare(Operation::WORLD_SELECT_SQL);
         } elseif ('fortunes' == $type) {
-            if (!isset(self::$fortunes[$hash])) {
-                self::$fortunes[$hash] = $pdo->prepare(Operation::FORTUNE_SQL);
-            }
-
-            return self::$fortunes[$hash];
+            return $pdo->prepare(Operation::FORTUNE_SQL);
         } else {
-            if (!isset(self::$updates[$hash][$queries])) {
-                self::$updates[$hash][$queries] = self::$driver == 'pgsql'
-                    ? $pdo->prepare('UPDATE World SET randomNumber = CASE id'.\str_repeat(' WHEN ?::INTEGER THEN ?::INTEGER ', $queries).'END WHERE id IN ('.\str_repeat('?::INTEGER,', $queries - 1).'?::INTEGER)')
-                    : $pdo->prepare(Operation::WORLD_UPDATE_SQL);
-            }
-
-            return self::$updates[$hash][$queries];
+            return self::$driver == 'pgsql'
+                ? $pdo->prepare('UPDATE World SET randomNumber = CASE id'.\str_repeat(' WHEN ?::INTEGER THEN ?::INTEGER ', $queries).'END WHERE id IN ('.\str_repeat('?::INTEGER,', $queries - 1).'?::INTEGER)')
+                : $pdo->prepare(Operation::WORLD_UPDATE_SQL);
         }
     }
 }
