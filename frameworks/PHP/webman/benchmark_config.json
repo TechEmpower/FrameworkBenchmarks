@@ -1,9 +1,29 @@
 {
   "framework": "webman",
+  "maintainers": ["walkor"],
   "tests": [{
     "default": {
+      "dockerfile": "webman.dockerfile",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "Postgres",
+      "framework": "webman",
+      "language": "PHP",
+      "flavor": "PHP7",
+      "orm": "Raw",
+      "platform": "workerman",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "webman",
+      "notes": "",
+      "versus": "workerman"
+    },
+    "pgsql": {
+      "dockerfile": "webman-pgsql.dockerfile",
       "db_url": "/db",
       "query_url": "/queries/",
       "update_url": "/updates/",
@@ -20,7 +40,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "webman",
+      "display_name": "webman-pgsql",
       "notes": "",
       "versus": "workerman"
     }
