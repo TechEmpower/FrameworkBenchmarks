@@ -6,8 +6,6 @@ import org.springframework.stereotype.Component;
 
 import benchmark.model.Fortune;
 import benchmark.model.World;
-import io.r2dbc.spi.Connection;
-import io.r2dbc.spi.ConnectionFactory;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -16,12 +14,9 @@ import reactor.core.publisher.Mono;
 public class R2dbcDbRepository implements DbRepository {
 
     private final DatabaseClient databaseClient;
-    private final ConnectionFactory connectionFactory;
-    private final ThreadLocal<Mono<? extends Connection>> conn = new ThreadLocal<>();
 
     public R2dbcDbRepository(DatabaseClient databaseClient) {
         this.databaseClient = databaseClient;
-        this.connectionFactory = databaseClient.getConnectionFactory();
     }
 
     @Override
@@ -54,16 +49,10 @@ public class R2dbcDbRepository implements DbRepository {
 
     @Override
     public Flux<Fortune> fortunes() {
-        return getConnection()
-                .flatMapMany(conn -> conn.createStatement("SELECT id, message FROM " + "fortune").execute())
-                .flatMap(result -> result.map(r -> new Fortune(r.get(0, Integer.class), r.get(1, String.class))));
-    }
-
-    private Mono<? extends Connection> getConnection() {
-        if (this.conn.get() == null) {
-            this.conn.set(Mono.from(connectionFactory.create()).cache());
-        }
-        return this.conn.get();
+        return databaseClient
+                .sql("SELECT id, message FROM fortune")
+                .mapProperties(Fortune.class)
+                .all();
     }
 
 }
