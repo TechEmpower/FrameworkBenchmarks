@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'activerecord', '~> 7.1', require: 'active_record'
+gem 'activerecord', '~> 7.2', require: 'active_record'
 gem 'oj'
 gem 'passenger', '~> 6.0', platforms: [:ruby, :mswin], require: false
 gem 'puma', '~> 6.4', require: false
