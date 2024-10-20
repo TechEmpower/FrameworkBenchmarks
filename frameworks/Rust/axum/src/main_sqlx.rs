@@ -1,8 +1,6 @@
 mod common;
 mod sqlx;
 
-use std::sync::Arc;
-
 use ::sqlx::PgPool;
 use axum::{
     extract::{Query, State},
@@ -98,7 +96,7 @@ async fn cache(
 ) -> impl IntoResponse {
     let count = parse_params(params);
     let mut rng = SmallRng::from_rng(&mut thread_rng()).unwrap();
-    let mut worlds: Vec<Option<Arc<World>>> = Vec::with_capacity(count);
+    let mut worlds: Vec<Option<World>> = Vec::with_capacity(count);
 
     for id in random_ids(&mut rng, count) {
         worlds.push(cache.get(&id).await);
@@ -115,14 +113,15 @@ async fn preload_cache(AppState { db, cache }: &AppState) {
         .expect("error loading worlds");
 
     for world in worlds {
-        cache.insert(world.id, Arc::new(world)).await;
+        cache.insert(world.id, world).await;
     }
 }
 
+/// Application state
 #[derive(Clone)]
 struct AppState {
     db: PgPool,
-    cache: Cache<i32, Arc<World>>,
+    cache: Cache<i32, World>,
 }
 
 #[tokio::main]
@@ -135,7 +134,10 @@ async fn main() {
 
     let state = AppState {
         db: create_pool(database_url, max_pool_size, min_pool_size).await,
-        cache: Cache::new(10000),
+        cache: Cache::builder()
+        .initial_capacity(10000)
+        .max_capacity(10000)
+        .build()
     };
 
     // Prime the cache with CachedWorld objects
