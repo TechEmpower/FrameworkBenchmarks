@@ -1,10 +1,10 @@
-FROM python:3.8
+FROM python:3.13
 
 ADD ./ /aiohttp
 
 WORKDIR aiohttp
 
-RUN pip3 install cython==0.29.23 && \
+RUN pip3 install cython==3.0.11 && \
     pip3 install -r /aiohttp/requirements.txt
 
 WORKDIR /aiohttp
