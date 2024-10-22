@@ -11,4 +11,4 @@ ENV CONNECTION=RAW
 
 EXPOSE 8080
 
-CMD gunicorn app.gunicorn:app -c gunicorn_conf.py
+CMD python3 -O -m gunicorn app.gunicorn:app -c gunicorn_conf.py
