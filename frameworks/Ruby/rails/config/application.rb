@@ -51,5 +51,7 @@ module Hello
     config.middleware.delete Rack::Sendfile
     config.middleware.delete Rack::TempfileReaper
     config.middleware.delete Rails::Rack::Logger
+
+    config.active_support.isolation_level = :fiber if defined?(Falcon)
   end
 end
