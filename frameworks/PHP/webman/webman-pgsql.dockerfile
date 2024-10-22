@@ -1,6 +1,6 @@
 FROM ubuntu:24.04
 
-ENV TEST_TYPE default
+ENV TEST_TYPE pgsql
 
 ARG DEBIAN_FRONTEND=noninteractive
 
