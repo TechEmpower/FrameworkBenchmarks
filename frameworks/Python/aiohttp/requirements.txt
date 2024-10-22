@@ -2,7 +2,7 @@ aiohttp==3.10.10
 asyncpg==0.30.0
 gunicorn==23.0.0
 jinja2==3.1.4
-psycopg2==3.2.3
+psycopg2==2.9.10
 SQLAlchemy==2.0.36
 ujson==5.10.0
 uvloop==0.21.0
