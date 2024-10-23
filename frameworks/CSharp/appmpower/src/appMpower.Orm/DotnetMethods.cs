@@ -21,7 +21,7 @@ public static class DotnetMethods
 
     public static byte[] Db()
     {
-        var world = RawDb.LoadSingleQueryRow();
+        var world = RawDb.LoadSingleQueryRow().GetAwaiter().GetResult();
 
         var memoryStream = new MemoryStream();
         using var utf8JsonWriter = new Utf8JsonWriter(memoryStream, _jsonWriterOptions);
@@ -33,7 +33,7 @@ public static class DotnetMethods
 
     public static byte[] Query(int queries)
     {
-        World[] worlds = RawDb.ReadMultipleRows(queries);
+        World[] worlds = RawDb.ReadMultipleRows(queries).GetAwaiter().GetResult();
 
         var memoryStream = new MemoryStream();
         using var utf8JsonWriter = new Utf8JsonWriter(memoryStream, _jsonWriterOptions);
@@ -45,7 +45,7 @@ public static class DotnetMethods
 
     public static byte[] Updates(int count)
     {
-        World[] worlds = RawDb.LoadMultipleUpdatesRows(count);
+        World[] worlds = RawDb.LoadMultipleUpdatesRows(count).GetAwaiter().GetResult();
 
         var memoryStream = new MemoryStream();
         using var utf8JsonWriter = new Utf8JsonWriter(memoryStream, _jsonWriterOptions);
@@ -57,7 +57,7 @@ public static class DotnetMethods
 
     public static byte[] Fortunes()
     {
-        List<Fortune> fortunes = RawDb.LoadFortunesRows(); 
+        List<Fortune> fortunes = RawDb.LoadFortunesRows().GetAwaiter().GetResult(); 
         string fortunesView = FortunesView.Render(fortunes);
         byte[] byteArray = Encoding.UTF8.GetBytes(fortunesView);
 

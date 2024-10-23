@@ -6,7 +6,7 @@
 package org.redkalex.benchmark;
 
 import org.redkale.annotation.Serial;
-import org.redkale.convert.ConvertSmallString;
+import org.redkale.convert.ConvertStandardString;
 import org.redkale.convert.json.JsonConvert;
 
 /**
@@ -16,7 +16,7 @@ import org.redkale.convert.json.JsonConvert;
 @Serial
 public final class Message {
 
-    @ConvertSmallString
+    @ConvertStandardString
     private String message;
 
     public Message() {}

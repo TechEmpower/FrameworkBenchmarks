@@ -39,10 +39,6 @@ class HelloWorld < Sinatra::Base
     response['Server'] = SERVER_STRING
   end if SERVER_STRING
 
-  after do
-    ActiveRecord::Base.connection_handler.clear_active_connections!
-  end
-
   # Test type 1: JSON serialization
   get '/json' do
      json message: 'Hello, World!'
@@ -51,7 +47,7 @@ class HelloWorld < Sinatra::Base
   # Test type 2: Single database query
   get '/db' do
     world =
-      ActiveRecord::Base.connection_pool.with_connection do
+      ActiveRecord::Base.with_connection do
         World.find(rand1).attributes
       end
 
@@ -61,7 +57,7 @@ class HelloWorld < Sinatra::Base
   # Test type 3: Multiple database queries
   get '/queries' do
     worlds =
-      ActiveRecord::Base.connection_pool.with_connection do
+      ActiveRecord::Base.with_connection do
         ALL_IDS.sample(bounded_queries).map do |id|
           World.find(id).attributes
         end
@@ -72,7 +68,7 @@ class HelloWorld < Sinatra::Base
 
   # Test type 4: Fortunes
   get '/fortunes' do
-    @fortunes = ActiveRecord::Base.connection_pool.with_connection do
+    @fortunes = ActiveRecord::Base.with_connection do
       Fortune.all
     end.to_a
     @fortunes << Fortune.new(
@@ -86,17 +82,18 @@ class HelloWorld < Sinatra::Base
 
   # Test type 5: Database updates
   get '/updates' do
-    worlds =
-      ALL_IDS.sample(bounded_queries).map do |id|
-        world = ActiveRecord::Base.connection_pool.with_connection do
-          World.find(id)
-        end
+    worlds = nil
+    ActiveRecord::Base.with_connection do
+      worlds = ALL_IDS.sample(bounded_queries).map do |id|
+        world = World.find(id)
         new_value = rand1
         new_value = rand1 until new_value != world.randomNumber
         { id: id, randomNumber: new_value }
       end
-    ActiveRecord::Base.connection_pool.with_connection do
-      World.upsert_all(worlds.sort_by!{_1[:id]})
+    end
+    worlds.sort_by!{_1[:id]}
+    ActiveRecord::Base.with_connection do
+      World.upsert_all(worlds)
     end
     json worlds
   end

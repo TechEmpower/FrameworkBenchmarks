@@ -7,8 +7,7 @@ package org.redkalex.benchmark;
 
 import java.util.*;
 import java.util.concurrent.*;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
+import java.util.stream.*;
 import org.redkale.annotation.*;
 import org.redkale.net.http.*;
 import org.redkale.service.AbstractService;
@@ -53,8 +52,8 @@ public class BenchmarkService extends AbstractService {
         IntStream ids = ThreadLocalRandom.current().ints(size, 1, 10001);
         int[] newNumbers = ThreadLocalRandom.current().ints(size, 1, 10001).toArray();
         return source.findsListAsync(World.class, ids.boxed())
-            .thenCompose(words -> source.updateAsync(World.updateNewNumbers(words, newNumbers))
-            .thenApply(v -> words));
+                .thenCompose(words -> source.updateAsync(World.updateNewNumbers(words, newNumbers))
+                        .thenApply(v -> words));
     }
 
     @RestMapping(auth = false)

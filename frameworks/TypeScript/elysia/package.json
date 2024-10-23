@@ -3,16 +3,16 @@
   "version": "0.0.1",
   "module": "src/index.js",
   "devDependencies": {
-    "bun-types": "^1.1.23",
     "typescript": "^5.5.4"
   },
   "scripts": {
     "dev": "bun run --watch src/index.ts",
     "start": "bun run src/index.ts",
-    "build": "bun build --compile --minify --outfile server src/index.ts"
+    "build": "bun build --minify --target bun --outdir dist src/index.ts",
+    "compile": "bun build --compile --minify --target bun --outfile server src/index.ts"
   },
   "dependencies": {
-    "elysia": "^1.1.6",
+    "elysia": "^1.1.16",
     "postgres": "^3.4.4"
   }
 }

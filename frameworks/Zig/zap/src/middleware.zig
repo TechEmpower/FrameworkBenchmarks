@@ -22,7 +22,7 @@ pub const SharedAllocator = struct {
 
 // create a combined context struct
 pub const Context = struct {
-    prng: ?PrngMiddleWare.Prng = null,
+    prng: ?RandomMiddleWare.Prng = null,
     pg: ?PgMiddleWare.Pg = null,
 };
 
@@ -47,7 +47,7 @@ pub const HeaderMiddleWare = struct {
     // note that the first parameter is of type *Handler, not *Self !!!
     pub fn onRequest(handler: *Handler, req: zap.Request, context: *Context) bool {
         // this is how we would get our self pointer
-        var self = @fieldParentPtr(Self, "handler", handler);
+        const self: *Self = @fieldParentPtr("handler", handler);
         _ = self;
 
         req.setHeader("Server", "Zap") catch return false;
@@ -57,7 +57,7 @@ pub const HeaderMiddleWare = struct {
     }
 };
 
-pub const PrngMiddleWare = struct {
+pub const RandomMiddleWare = struct {
     handler: Handler,
     rnd: *std.rand.DefaultPrng,
 
@@ -83,7 +83,7 @@ pub const PrngMiddleWare = struct {
     pub fn onRequest(handler: *Handler, req: zap.Request, context: *Context) bool {
 
         // this is how we would get our self pointer
-        var self = @fieldParentPtr(Self, "handler", handler);
+        const self: *RandomMiddleWare = @fieldParentPtr("handler", handler);
 
         context.prng = Prng{ .rnd = self.rnd };
 
@@ -118,7 +118,7 @@ pub const PgMiddleWare = struct {
     pub fn onRequest(handler: *Handler, req: zap.Request, context: *Context) bool {
 
         // this is how we would get our self pointer
-        var self = @fieldParentPtr(Self, "handler", handler);
+        const self: *Self = @fieldParentPtr("handler", handler);
 
         // do our work: fill in the user field of the context
         context.pg = Pg{ .pool = self.pool };

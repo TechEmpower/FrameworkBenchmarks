@@ -8,8 +8,8 @@ ENV NODE_ENV production
 
 RUN bun install --production
 
-RUN bun run build
-
 ENV DATABASE postgres
 
-CMD ["bun", "spawn.ts"]
+RUN bun run build
+
+CMD ["bun", "./dist/index.js"]
