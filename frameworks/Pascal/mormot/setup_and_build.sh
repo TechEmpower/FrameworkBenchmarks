@@ -27,7 +27,7 @@ rm -rf ./libs
 mkdir -p ./libs/mORMot/static
 # echo "Getting the latest pre-release URL..."
 # USED_TAG=$(wget -qO- https://api.github.com/repos/synopse/mORMot2/releases/latest | jq -r '.tag_name')
-USED_TAG="2.2.stable"
+USED_TAG="2.3.stable"
 
 echo "Used release tag $USED_TAG"
 URL="https://github.com/synopse/mORMot2/releases/download/$USED_TAG/mormot2static.tgz"
@@ -35,8 +35,8 @@ echo "Download statics from $URL ..."
 wget -qO- "$URL" | tar -xz -C ./libs/mORMot/static
 
 # uncomment for fixed commit URL
-URL=https://github.com/synopse/mORMot2/tarball/6dc09ceca456931384857b383ed61b63f11f3be7
-#URL="https://api.github.com/repos/synopse/mORMot2/tarball/$USED_TAG"
+#URL=https://github.com/synopse/mORMot2/tarball/6dc09ceca456931384857b383ed61b63f11f3be7
+URL="https://api.github.com/repos/synopse/mORMot2/tarball/$USED_TAG"
 echo "Download and unpacking mORMot sources from $URL ..."
 wget -qO- "$URL" | tar -xz -C ./libs/mORMot  --strip-components=1
 
@@ -80,7 +80,7 @@ fpc -MDelphi -Sci -Ci -O3 -g -gl -gw2 -Xg -k'-rpath=$ORIGIN' -k-L$BIN \
   -Fu"$MSRC/core" -Fu"$MSRC/db" -Fu"$MSRC/rest" -Fu"$MSRC/crypt" \
     -Fu"$MSRC/app" -Fu"$MSRC/net" -Fu"$MSRC/lib" -Fu"$MSRC/orm" -Fu"$MSRC/soa" \
   -FU"$BIN/fpc-$ARCH_TG/.dcu" -FE"$BIN/fpc-$ARCH_TG" -o"$BIN/fpc-$ARCH_TG/$dest_fn" \
-  -dFPC_X64MM -dFPCMM_SERVER \
+  -dFPC_LIBCMM -dFPC_LIBCMM_NOMSIZE \
   -B -Se1 "./src/raw.pas" | grep "[Warning|Error|Fatal]:"
 
 script_successful
