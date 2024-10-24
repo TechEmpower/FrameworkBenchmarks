@@ -10,7 +10,7 @@ This is the solon portion of a [benchmarking test suite](../) comparing a variet
 ## Versions
 
 * [Java OpenJDK 21](http://openjdk.java.net/)
-* [solon 2.9.1](https://github.com/noear/solon)
+* [solon 3.0.2](https://github.com/noear/solon)
 
 ## Test URLs
 
