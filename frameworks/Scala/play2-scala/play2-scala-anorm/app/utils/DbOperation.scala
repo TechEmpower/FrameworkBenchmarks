@@ -1,9 +1,9 @@
 package utils
 
-import akka.actor.ActorSystem
+import org.apache.pekko.actor.ActorSystem
 import java.sql.Connection
 import java.util.concurrent._
-import javax.inject.{Singleton, Inject}
+import jakarta.inject.{Singleton, Inject}
 import play.api.db.Database
 import play.api.libs.concurrent.CustomExecutionContext
 import play.api.Configuration

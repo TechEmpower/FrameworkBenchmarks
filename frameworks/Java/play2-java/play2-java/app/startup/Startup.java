@@ -3,8 +3,8 @@ package startup;
 import com.typesafe.config.Config;
 import play.Logger;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 @Singleton
 public class Startup {
@@ -20,7 +20,7 @@ public class Startup {
         logger.info("");
         logger.info("Configuration");
         logger.info("-------------");
-        logger.info("akka.actor.default-dispatcher.fork-join-executor.parallelism-max: {}", config.getInt("akka.actor.default-dispatcher.fork-join-executor.parallelism-max"));
+        logger.info("pekko.actor.default-dispatcher.fork-join-executor.parallelism-max: {}", config.getInt("pekko.actor.default-dispatcher.fork-join-executor.parallelism-max"));
         logger.info("");
     }
 }
