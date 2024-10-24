@@ -1,8 +1,8 @@
 mkdir /tmp/profile-data
 
-rm -rf $IROOT/ffead-cpp-6.0-sql
+rm -rf $IROOT/ffead-cpp-7.0-sql
 
-if [ "$1" = "batch-old" ]
+if [ "$1" = "batch-experimental-unused" ]
 then
 	apt remove -yqq libpq-dev
 	apt autoremove -yqq
@@ -26,7 +26,7 @@ then
 	cp ../../../src/include/postgres_ext.h ../../../src/include/pg_config_ext.h libpq-fe.h /usr/include
 fi
 
-if [ "$1" = "batch" ]
+if [ "$1" = "batch-old-commit-unused" ]
 then
 	apt remove -yqq libpq-dev
 	apt autoremove -yqq
@@ -49,7 +49,6 @@ then
 fi
 
 cd $IROOT/ffead-cpp-src/
-rm -rf $IROOT/ffead-cpp-sql-raw
 rm -rf CMakeCache.txt CMakeFiles
 rm -rf web/t1 web/t2
 
@@ -62,20 +61,52 @@ if [ "$3" = "async" ]
 then
 	sed -i 's|add_subdirectory(${PROJECT_SOURCE_DIR}/web/t3)||g' CMakeLists.txt
 	sed -i 's|install(FILES ${PROJECT_BINARY_DIR}/web/t3/libt3${LIB_EXT} DESTINATION ${PROJECT_NAME}-bin/lib)||g' CMakeLists.txt
+	sed -i 's|add_subdirectory(${PROJECT_SOURCE_DIR}/web/t6)||g' CMakeLists.txt
+	sed -i 's|install(FILES ${PROJECT_BINARY_DIR}/web/t6/libt6${LIB_EXT} DESTINATION ${PROJECT_NAME}-bin/lib)||g' CMakeLists.txt
+	sed -i 's|add_subdirectory(${PROJECT_SOURCE_DIR}/web/t7)||g' CMakeLists.txt
+	sed -i 's|install(FILES ${PROJECT_BINARY_DIR}/web/t7/libt7${LIB_EXT} DESTINATION ${PROJECT_NAME}-bin/lib)||g' CMakeLists.txt
 	sed -i 's|tfb-database|localhost|g' $IROOT/ffead-cpp-src/web/t4/config/sdorm.xml
 	sed -i 's|tfb-database|localhost|g' $IROOT/ffead-cpp-src/web/t5/config/sdorm.xml
-	rm -rf web/t3
+	rm -rf web/t3 web/t6 web/t7
 	if [ "$4" = "pool" ]
 	then
 		sed -i 's|"TeBkUmLpqAsyncRouter"|"TeBkUmLpqAsyncRouterPooled"|g' $IROOT/ffead-cpp-src/web/t4/config/application.xml
 		sed -i 's|TeBkUmLpqAsyncRouter|TeBkUmLpqAsyncRouterPooled|g' $IROOT/ffead-cpp-src/web/t4/config/cachememory.xml
 		sed -i 's|"TeBkUmLpqQwAsyncRouter"|"TeBkUmLpqQwAsyncRouterPooled"|g' $IROOT/ffead-cpp-src/web/t5/config/application.xml
 	fi
+elif [ "$3" = "wire" ]
+then
+	sed -i 's|add_subdirectory(${PROJECT_SOURCE_DIR}/web/t3)||g' CMakeLists.txt
+	sed -i 's|install(FILES ${PROJECT_BINARY_DIR}/web/t3/libt3${LIB_EXT} DESTINATION ${PROJECT_NAME}-bin/lib)||g' CMakeLists.txt
+	sed -i 's|add_subdirectory(${PROJECT_SOURCE_DIR}/web/t4)||g' CMakeLists.txt
+	sed -i 's|install(FILES ${PROJECT_BINARY_DIR}/web/t4/libt4${LIB_EXT} DESTINATION ${PROJECT_NAME}-bin/lib)||g' CMakeLists.txt
+	sed -i 's|add_subdirectory(${PROJECT_SOURCE_DIR}/web/t5)||g' CMakeLists.txt
+	sed -i 's|install(FILES ${PROJECT_BINARY_DIR}/web/t5/libt5${LIB_EXT} DESTINATION ${PROJECT_NAME}-bin/lib)||g' CMakeLists.txt
+	sed -i 's|add_subdirectory(${PROJECT_SOURCE_DIR}/web/t7)||g' CMakeLists.txt
+	sed -i 's|install(FILES ${PROJECT_BINARY_DIR}/web/t7/libt7${LIB_EXT} DESTINATION ${PROJECT_NAME}-bin/lib)||g' CMakeLists.txt
+	sed -i 's|tfb-database|localhost|g' $IROOT/ffead-cpp-src/web/t6/config/sdorm.xml
+	rm -rf web/t3 web/t4 web/t5 web/t7
+elif [ "$3" = "async-wire" ]
+then
+	sed -i 's|add_subdirectory(${PROJECT_SOURCE_DIR}/web/t3)||g' CMakeLists.txt
+	sed -i 's|install(FILES ${PROJECT_BINARY_DIR}/web/t3/libt3${LIB_EXT} DESTINATION ${PROJECT_NAME}-bin/lib)||g' CMakeLists.txt
+	sed -i 's|add_subdirectory(${PROJECT_SOURCE_DIR}/web/t4)||g' CMakeLists.txt
+	sed -i 's|install(FILES ${PROJECT_BINARY_DIR}/web/t4/libt4${LIB_EXT} DESTINATION ${PROJECT_NAME}-bin/lib)||g' CMakeLists.txt
+	sed -i 's|add_subdirectory(${PROJECT_SOURCE_DIR}/web/t5)||g' CMakeLists.txt
+	sed -i 's|install(FILES ${PROJECT_BINARY_DIR}/web/t5/libt5${LIB_EXT} DESTINATION ${PROJECT_NAME}-bin/lib)||g' CMakeLists.txt
+	sed -i 's|add_subdirectory(${PROJECT_SOURCE_DIR}/web/t6)||g' CMakeLists.txt
+	sed -i 's|install(FILES ${PROJECT_BINARY_DIR}/web/t6/libt6${LIB_EXT} DESTINATION ${PROJECT_NAME}-bin/lib)||g' CMakeLists.txt
+	sed -i 's|tfb-database|localhost|g' $IROOT/ffead-cpp-src/web/t7/config/sdorm.xml
+	rm -rf web/t3 web/t4 web/t5 web/t6
 else
 	sed -i 's|add_subdirectory(${PROJECT_SOURCE_DIR}/web/t4)||g' CMakeLists.txt
 	sed -i 's|install(FILES ${PROJECT_BINARY_DIR}/web/t4/libt4${LIB_EXT} DESTINATION ${PROJECT_NAME}-bin/lib)||g' CMakeLists.txt
 	sed -i 's|add_subdirectory(${PROJECT_SOURCE_DIR}/web/t5)||g' CMakeLists.txt
 	sed -i 's|install(FILES ${PROJECT_BINARY_DIR}/web/t5/libt5${LIB_EXT} DESTINATION ${PROJECT_NAME}-bin/lib)||g' CMakeLists.txt
+	sed -i 's|add_subdirectory(${PROJECT_SOURCE_DIR}/web/t6)||g' CMakeLists.txt
+	sed -i 's|install(FILES ${PROJECT_BINARY_DIR}/web/t6/libt6${LIB_EXT} DESTINATION ${PROJECT_NAME}-bin/lib)||g' CMakeLists.txt
+	sed -i 's|add_subdirectory(${PROJECT_SOURCE_DIR}/web/t7)||g' CMakeLists.txt
+	sed -i 's|install(FILES ${PROJECT_BINARY_DIR}/web/t7/libt7${LIB_EXT} DESTINATION ${PROJECT_NAME}-bin/lib)||g' CMakeLists.txt
 	sed -i 's|tfb-database|localhost|g' $IROOT/ffead-cpp-src/web/t3/config/sdorm.xml
-	rm -rf web/t4 web/t5
+	rm -rf web/t4 web/t5 web/t6 web/t7
 fi
