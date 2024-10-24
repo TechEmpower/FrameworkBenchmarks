@@ -4,9 +4,11 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
-public final class Fortune {
+public final class Fortune implements Comparable<Fortune> {
+
     @Id
     public int id;
+
     public String message;
 
     public Fortune(int id, String message) {
@@ -14,11 +16,8 @@ public final class Fortune {
         this.message = message;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public String getMessage() {
-        return message;
+    @Override
+    public int compareTo(final Fortune other) {
+        return message.compareTo(other.message);
     }
 }

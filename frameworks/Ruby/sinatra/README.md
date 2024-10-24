@@ -16,7 +16,7 @@ The tests will be run with:
 * [Puma 6](http://puma.io)
 * [Passenger 6](https://www.phusionpassenger.com)
 * [Unicorn 6](https://bogomips.org/unicorn/)
-* [Sinatra 3](http://www.sinatrarb.com)
+* [Sinatra 4](http://www.sinatrarb.com)
 * [ActiveRecord 7](https://github.com/rails/rails/tree/master/activerecord)
 * [MySQL 5.5](https://www.mysql.com)
 * [Postgres 9.3](https://www.postgresql.org)

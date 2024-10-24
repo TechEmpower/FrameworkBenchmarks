@@ -19,6 +19,7 @@ server:
   port: 8080
   backlog: 8192
   write-queue-length: 8192
+  smart-async-writes: true
   connection-options:
     read-timeout: PT0S
     connect-timeout: PT0S

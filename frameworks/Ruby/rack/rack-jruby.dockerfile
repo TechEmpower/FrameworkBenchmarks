@@ -6,7 +6,7 @@ WORKDIR /rack
 
 COPY Gemfile  ./
 
-RUN bundle config set without 'development test'
+RUN bundle config set without 'development test falcon unicorn'
 RUN bundle install --jobs=8
 
 COPY . .

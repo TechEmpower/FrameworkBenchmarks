@@ -1,7 +1,7 @@
 plugins {
     id 'java'
     id "io.micronaut.library"
-    id "nu.studer.rocker" version "3.0.4"
+    id "gg.jte.gradle" version "3.1.12"
 }
 
 group 'io.micronaut.benchmark'
@@ -16,14 +16,10 @@ micronaut {
     testRuntime "junit5"
 }
 
-rocker {
-    configurations {
-        main {
-            templateDir = file('src/main/resources')
-            outputDir = file('build/generated/rocker')
-            optimize = true
-        }
-    }
+jte {
+    sourceDirectory = file("src/main/jte").toPath()
+    generate()
+    binaryStaticContent = true
 }
 
 dependencies {
@@ -38,7 +34,8 @@ dependencies {
         transitive = false
     }
 
-    implementation("com.fizzed:rocker-runtime")
+    // Switch to BOM version after https://github.com/micronaut-projects/micronaut-views/issues/876
+    implementation("gg.jte:jte-runtime:3.1.12")
 
     runtimeOnly("ch.qos.logback:logback-classic")
     runtimeOnly("org.yaml:snakeyaml")
@@ -46,4 +43,11 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+// Gradle requires that generateJte is run before some tasks
+tasks.configureEach {
+    if (name == "inspectRuntimeClasspath") {
+        mustRunAfter("generateJte")
+    }
 }

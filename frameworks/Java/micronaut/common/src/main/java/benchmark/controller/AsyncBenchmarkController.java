@@ -5,11 +5,9 @@ import benchmark.model.World;
 import benchmark.repository.AsyncFortuneRepository;
 import benchmark.repository.AsyncWorldRepository;
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.QueryValue;
-import views.fortunes;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -55,15 +53,8 @@ public class AsyncBenchmarkController extends AbstractBenchmarkController {
 
     // https://github.com/TechEmpower/FrameworkBenchmarks/wiki/Project-Information-Framework-Tests-Overview#fortunes
     @Get(value = "/fortunes", produces = "text/html;charset=utf-8")
-    public CompletionStage<HttpResponse<String>> fortune() {
-        return fortuneRepository.findAll().thenApply(fortuneList -> {
-            List<Fortune> all = new ArrayList<>(fortuneList.size() + 1);
-            all.add(new Fortune(0, "Additional fortune added at request time."));
-            all.addAll(fortuneList);
-            all.sort(comparing(Fortune::message));
-            String body = fortunes.template(all).render().toString();
-            return HttpResponse.ok(body).contentType("text/html;charset=utf-8");
-        });
+    public CompletionStage<List<Fortune>> fortune() {
+        return fortuneRepository.findAll().thenApply(this::prepareFortunes);
     }
 
     // https://github.com/TechEmpower/FrameworkBenchmarks/wiki/Project-Information-Framework-Tests-Overview#database-updates
