@@ -11,7 +11,7 @@ itsdangerous==2.1.2
 Jinja2==3.1.4
 MarkupSafe==2.1.1
 priority==2.0.0
-quart==0.18.0
+quart==0.19.7
 toml==0.10.2
 uvloop==0.16.0
 Werkzeug==3.0.3
