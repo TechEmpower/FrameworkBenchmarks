@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-# Configure Slim templating engine
-Slim::Engine.set_options :format=>:html, :sort_attrs=>false
-
 # Our Rack application to be executed by rackup
 class HelloWorld < Sinatra::Base
   configure do
@@ -73,21 +70,23 @@ class HelloWorld < Sinatra::Base
     )
     @fortunes.sort_by!(&:message)
 
-    slim :fortunes
+    erb :fortunes, :layout=>true
   end
 
   # Test type 5: Database updates
   get '/updates' do
-    worlds =
-      DB.synchronize do
+    worlds = nil
+    DB.synchronize do
+      worlds =
         ALL_IDS.sample(bounded_queries).map do |id|
           world = World.with_pk(id)
           new_value = rand1
           new_value = rand1 while new_value == world.randomnumber
-          world.update(randomnumber: new_value)
+          world.randomnumber = new_value
           world
         end
-      end
+      World.batch_update(worlds)
+    end
 
     json worlds.map!(&:values)
   end

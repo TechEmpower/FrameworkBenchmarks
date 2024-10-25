@@ -62,9 +62,7 @@ defmodule HelloWeb do
   defp html_helpers do
     quote do
       # Use all HTML functionality (forms, tags, etc)
-      use Phoenix.HTML
-      # Core UI Components and translation
-      import HelloWeb.Gettext
+      import Phoenix.HTML
 
       # Routes generation with the ~p sigil
       unquote(verified_routes())
@@ -97,8 +95,8 @@ defmodule HelloWeb do
   end
 
   @doc """
-    When used, dispatch to the appropriate controller/view/etc.
-    """
+  When used, dispatch to the appropriate controller/view/etc.
+  """
   defmacro __using__(which) when is_atom(which) do
     apply(__MODULE__, which, [])
   end

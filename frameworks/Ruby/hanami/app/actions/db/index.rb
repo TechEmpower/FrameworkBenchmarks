@@ -2,7 +2,7 @@
 
 module HelloWorld
   module Actions
-    module Db
+    module DB
       class Index < HelloWorld::Action
         QUERY_RANGE = 1..10_000    # range of IDs in the Fortune DB
         include Deps["persistence.rom"]

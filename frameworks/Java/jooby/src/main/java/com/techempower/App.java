@@ -28,13 +28,8 @@ public class App extends Jooby {
 
   private static final byte[] MESSAGE_BYTES = MESSAGE.getBytes(StandardCharsets.US_ASCII);
 
-  private static final ByteBuffer MESSAGE_BUFFER = (ByteBuffer) ByteBuffer
-      .allocateDirect(MESSAGE_BYTES.length)
-      .put(MESSAGE_BYTES)
-      .flip();
-
   {
-
+    var bufferFactory = getBufferFactory();
     /** Database: */
     install(new HikariModule());
     DataSource ds = require(DataSource.class);
@@ -43,7 +38,7 @@ public class App extends Jooby {
     install(new RockerModule());
 
     get("/plaintext", ctx ->
-        ctx.send(MESSAGE_BUFFER.duplicate())
+        ctx.send(bufferFactory.wrap(MESSAGE_BYTES))
     );
 
     get("/json", ctx -> ctx

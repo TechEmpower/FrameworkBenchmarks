@@ -1,4 +1,4 @@
-FROM openjdk:11.0.3-jdk-stretch as build
+FROM maven:3.9.7-amazoncorretto-17-debian as build
 WORKDIR /app
 COPY ktor-pgclient/gradle gradle
 COPY ktor-pgclient/build.gradle.kts build.gradle.kts
@@ -6,7 +6,7 @@ COPY ktor-pgclient/gradlew gradlew
 COPY ktor-pgclient/src src
 RUN /app/gradlew --no-daemon shadowJar
 
-FROM openjdk:11.0.3-jdk-slim
+FROM amazoncorretto:17.0.11-al2023-headless
 WORKDIR /app
 COPY --from=build /app/build/libs/ktor-pgclient.jar ktor-pgclient.jar
 

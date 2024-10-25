@@ -3,6 +3,8 @@
   "tests": [
     {
       "default": {
+        "dockerfile": "axum.dockerfile",
+        "docker_cmd": "/app/axum",
         "json_url": "/json",
         "plaintext_url": "/plaintext",
         "port": 8000,
@@ -22,8 +24,11 @@
         "versus": "None"
       },
       "sqlx": {
+        "dockerfile": "axum.dockerfile",
+        "docker_cmd": "/app/axum-sqlx",
         "db_url": "/db",
         "fortune_url": "/fortunes",
+        "cached_query_url": "/cached-queries?queries=",
         "port": 8000,
         "approach": "Realistic",
         "classification": "Fullstack",
@@ -41,6 +46,8 @@
         "versus": "None"
       },
       "pg": {
+        "dockerfile": "axum.dockerfile",
+        "docker_cmd": "/app/axum-pg",
         "db_url": "/db",
         "fortune_url": "/fortunes",
         "query_url": "/queries?queries=",
@@ -62,6 +69,8 @@
         "versus": "None"
       },
       "pg-pool": {
+        "dockerfile": "axum.dockerfile",
+        "docker_cmd": "/app/axum-pg-pool",
         "db_url": "/db",
         "query_url": "/queries?queries=",
         "update_url": "/updates?queries=",
@@ -83,6 +92,8 @@
         "versus": "None"
       },
       "mongo": {
+        "dockerfile": "axum.dockerfile",
+        "docker_cmd": "/app/axum-mongo",
         "db_url": "/db",
         "query_url": "/queries?queries=",
         "fortune_url": "/fortunes",
@@ -104,6 +115,8 @@
         "versus": "None"
       },
       "mongo-raw": {
+        "dockerfile": "axum.dockerfile",
+        "docker_cmd": "/app/axum-mongo-raw",
         "db_url": "/db",
         "query_url": "/queries?queries=",
         "update_url": "/updates?queries=",

@@ -19,7 +19,7 @@
         "notes": "",
         "versus": ""
     },
-    "astd": {
+    "compio": {
         "json_url": "/json",
         "plaintext_url": "/plaintext",
         "port": 8080,
@@ -33,7 +33,7 @@
         "webserver": "ntex",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "ntex [async-std]",
+        "display_name": "ntex [compio]",
         "notes": "",
         "versus": ""
     },
@@ -57,7 +57,7 @@
         "notes": "",
         "versus": ""
     },
-    "db-astd": {
+    "db-compio": {
         "fortune_url": "/fortunes",
         "db_url": "/db",
         "query_url": "/query?q=",
@@ -73,7 +73,7 @@
         "webserver": "ntex",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "ntex [async-std,db]",
+        "display_name": "ntex [compio,db]",
         "notes": "",
         "versus": ""
     },
@@ -95,7 +95,7 @@
         "notes": "",
         "versus": ""
     },
-    "plt-astd": {
+    "plt-compio": {
         "json_url": "/json",
         "plaintext_url": "/plaintext",
         "port": 8080,
@@ -109,7 +109,7 @@
         "webserver": "ntex",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "ntex [async-std,platform]",
+        "display_name": "ntex [compio,platform]",
         "notes": "",
         "versus": ""
     }

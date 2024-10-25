@@ -1,70 +1,46 @@
 namespace App
 
 open System
-open System.Collections.Generic
 open Oxpecker
-
-[<AutoOpen>]
-module Common =
-
-    [<Struct>]
-    [<CLIMutable>]
-    type JsonMessage = {
-        message : string
-    }
-
-    [<CLIMutable>]
-    type Fortune = {
-        id: int
-        message: string
-    }
-
-    [<Literal>]
-    let ConnectionString = "Server=tfb-database;Database=hello_world;User Id=benchmarkdbuser;Password=benchmarkdbpass;SSL Mode=Disable;Maximum Pool Size=1024;NoResetOnClose=true;Enlist=false;Max Auto Prepare=4;Multiplexing=true;Write Coalescing Buffer Threshold Bytes=1000"
-
-    let FortuneComparer = {
-        new IComparer<Fortune> with
-            member self.Compare(a,b) = String.CompareOrdinal(a.message, b.message)
-    }
+open System.Runtime.InteropServices
 
 [<RequireQualifiedAccess>]
 module HtmlViews =
     open Oxpecker.ViewEngine
 
-    let private fortunesHead =
-        head() {
-            title() { raw "Fortunes" }
-        }
-
-    let private layout (content: HtmlElement) =
-        html() {
-            fortunesHead
-            body() { content }
-        }
-
-    let private fortunesTableHeader =
-        tr() {
-            th() { raw "id" }
-            th() { raw "message" }
-        }
-
-    let fortunes fortunesData =
-        table() {
-            fortunesTableHeader
-            for fortune in fortunesData do
-                tr() {
-                    td() { raw <| string fortune.id }
-                    td() { fortune.message }
+    let private head, tail =
+        (fun (content: HtmlElement) ->
+            html() {
+                head() {
+                    title() { "Fortunes" }
                 }
-        } |> layout
+                body() {
+                    table() {
+                        tr() {
+                            th() { "id" }
+                            th() { "message" }
+                        }
+                        content
+                    }
+                }
+            } :> HtmlElement
+        ) |> RenderHelpers.prerender
+
+    let fortunes (fortunesData: ResizeArray<Fortune>) =
+        let fragment = __()
+        for fortune in CollectionsMarshal.AsSpan fortunesData do
+            tr() {
+                td() { raw <| string fortune.id }
+                td() { fortune.message }
+            }
+            |> fragment.AddChild
+        RenderHelpers.combine head tail fragment
 
 [<RequireQualifiedAccess>]
 module HttpHandlers =
-    open Dapper
-    open Npgsql
     open System.Text
     open Microsoft.AspNetCore.Http
-    open System.Text.Json
+    open SpanJson
 
     let private extra =
         {
@@ -72,32 +48,24 @@ module HttpHandlers =
             message = "Additional fortune added at request time."
         }
 
-    let rec private renderFortunes (ctx: HttpContext) (dbFortunes: Fortune seq) =
-        let data = dbFortunes.AsList()
+    let rec private renderFortunes (ctx: HttpContext) (data: ResizeArray<Fortune>) =
         data.Add extra
         data.Sort FortuneComparer
-        data |> HtmlViews.fortunes |> ctx.WriteHtmlView
+        data |> HtmlViews.fortunes |> ctx.WriteHtmlViewChunked
 
-    let private fortunes : EndpointHandler =
+    let fortunes : EndpointHandler =
         fun ctx ->
             task {
-                use conn = new NpgsqlConnection(ConnectionString)
-                let! dbFortunes = conn.QueryAsync<Fortune>("SELECT id, message FROM fortune")
+                let! dbFortunes = loadFortunes ()
                 return! renderFortunes ctx dbFortunes
             }
 
-    [<Struct>]
-    [<CLIMutable>]
-    type World = {
-        id: int
-        randomnumber: int
-    }
-
-    let private readSingleRow (conn: NpgsqlConnection) =
-        conn.QueryFirstOrDefaultAsync<World>(
-            "SELECT id, randomnumber FROM world WHERE id = @Id",
-            {| Id = Random.Shared.Next(1, 10001) |}
-        )
+    let singleQuery : EndpointHandler =
+        fun ctx ->
+            task {
+                let! result = loadSingleRow()
+                return! ctx.WriteJsonChunked result
+            }
 
     let private parseQueries (ctx: HttpContext) =
         match ctx.TryGetRouteValue<string>("count") with
@@ -107,66 +75,19 @@ module HttpHandlers =
             | _, _ -> 1
         | _ -> 1
 
-    let private singleQuery : EndpointHandler =
-        fun ctx ->
-            task {
-                use conn = new NpgsqlConnection(ConnectionString)
-                let! result = readSingleRow conn
-                return! ctx.WriteJsonChunked result
-            }
-
-    let private multipleQueries : EndpointHandler =
+    let multipleQueries : EndpointHandler =
         fun ctx ->
             let count = parseQueries ctx
-            let results = Array.zeroCreate<World> count
             task {
-                use conn = new NpgsqlConnection(ConnectionString)
-                do! conn.OpenAsync()
-                for i in 0..results.Length-1 do
-                    let! result = readSingleRow conn
-                    results[i] <- result
+                let! results = loadMultipleRows count
                 return! ctx.WriteJsonChunked results
             }
 
-    let private maxBatch = 500
-    let private queries = Array.zeroCreate (maxBatch + 1)
-
-    let private batchUpdateString batchSize =
-        match queries[batchSize] with
-        | null ->
-            let lastIndex = batchSize - 1
-            let sb = StringBuilder()
-            sb.Append("UPDATE world SET randomNumber = temp.randomNumber FROM (VALUES ") |> ignore
-            for i in 0..lastIndex-1 do
-                sb.AppendFormat("(@Id_{0}, @Rn_{0}), ", i) |> ignore
-            sb.AppendFormat("(@Id_{0}, @Rn_{0}) ORDER BY 1) AS temp(id, randomNumber) WHERE temp.id = world.id", lastIndex) |> ignore
-            let result = sb.ToString()
-            queries[batchSize] <- result
-            result
-        | q ->
-            q
-
-    let private generateParameters (results: World[]) =
-        let parameters = Dictionary<string,obj>()
-        for i in 0..results.Length-1 do
-            let randomNumber = Random.Shared.Next(1, 10001)
-            parameters[$"@Rn_{i}"] <- randomNumber
-            parameters[$"@Id_{i}"] <- results[i].id
-            results[i] <- { results[i] with randomnumber = randomNumber }
-        parameters
-
-    let private multipleUpdates : EndpointHandler =
+    let multipleUpdates : EndpointHandler =
         fun ctx ->
             let count = parseQueries ctx
-            let results = Array.zeroCreate<World> count
             task {
-                use conn = new NpgsqlConnection(ConnectionString)
-                do! conn.OpenAsync()
-                for i in 0..results.Length-1 do
-                    let! result = readSingleRow conn
-                    results[i] <- result
-                let parameters = generateParameters results
-                let! _ = conn.ExecuteAsync(batchUpdateString count, parameters)
+                let! results = doMultipleUpdates count
                 return! ctx.WriteJsonChunked results
             }
 
@@ -177,9 +98,9 @@ module HttpHandlers =
             ctx.WriteBytes(result)
 
     let jsonSimple value : EndpointHandler =
-        let options = JsonSerializerOptions(JsonSerializerDefaults.Web)
         fun ctx ->
-            ctx.Response.WriteAsJsonAsync(value, options)
+            ctx.SetContentType("application/json")
+            JsonSerializer.Generic.Utf8.SerializeAsync<_>(value, stream = ctx.Response.Body).AsTask()
 
     let endpoints =
         [|

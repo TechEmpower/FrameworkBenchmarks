@@ -5,3 +5,4 @@ dist*
 .pnp*
 nodemon.json
 package-lock.json
+bun.lockb

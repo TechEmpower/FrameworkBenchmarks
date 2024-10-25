@@ -9,7 +9,11 @@ RUN echo "opcache.enable_cli=1" >> /usr/local/etc/php/conf.d/docker-php-ext-opca
 WORKDIR /laravel
 COPY --link . .
 
-RUN mkdir -p /laravel/bootstrap/cache /laravel/storage/logs /laravel/storage/framework/sessions /laravel/storage/framework/views /laravel/storage/framework/cache
+RUN mkdir -p bootstrap/cache \
+            storage/logs \
+            storage/framework/sessions \
+            storage/framework/views \
+            storage/framework/cache
 
 RUN apt-get update > /dev/null && \
     apt-get install -yqq curl unzip > /dev/null
