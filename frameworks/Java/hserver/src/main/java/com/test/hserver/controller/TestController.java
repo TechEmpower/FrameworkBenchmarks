@@ -3,7 +3,7 @@ package com.test.hserver.controller;
 import cn.hserver.core.ioc.annotation.Autowired;
 import cn.hserver.plugin.web.annotation.Controller;
 import cn.hserver.plugin.web.annotation.GET;
-import cn.hserver.plugin.web.context.WebConstConfig;
+import cn.hserver.plugin.web.interfaces.HttpRequest;
 import cn.hserver.plugin.web.interfaces.HttpResponse;
 import com.test.hserver.bean.Fortune;
 import com.test.hserver.bean.Message;
@@ -29,7 +29,6 @@ import static com.test.hserver.util.Util.randomWorld;
 public class TestController {
     private static final String HELLO = "Hello, World!";
     private static final String SELECT_WORLD = "select * from world where id=?";
-    private static final Logger log = LoggerFactory.getLogger(TestController.class);
 
     @Autowired
     private DataSource dataSource;
@@ -63,9 +62,8 @@ public class TestController {
     }
 
     @GET("/queries")
-    public void queries(String queries,HttpResponse response) throws Exception {
-        int queries1 = getQueries(queries);
-        World[] result = new World[queries1];
+    public void queries(HttpRequest request,HttpResponse response) throws Exception {
+        World[] result = new World[getQueries(request.query("queries"))];
         try (Connection conn = dataSource.getConnection()) {
             for (int i = 0; i < result.length; i++) {
                 try (final PreparedStatement statement = conn.prepareStatement(SELECT_WORLD)) {
@@ -73,23 +71,18 @@ public class TestController {
                     try (ResultSet rs = statement.executeQuery()) {
                         rs.next();
                         result[i] = new World(rs.getInt("id"), rs.getInt("randomNumber"));
-                    }catch (Exception e){
-                        log.error(e.getMessage());
                     }
-                }catch (Exception e){
-                    log.error(e.getMessage());
                 }
             }
         }
         response.setHeader("Date", DateUtil.getTime());
-        log.debug("\n请求:{}\n响应：{}\n",queries1, WebConstConfig.JSON.writeValueAsString(result));
         response.sendJson(result);
     }
 
 
     @GET("/updates")
-    public void updates(String queries,HttpResponse response) throws Exception {
-        World[] result = new World[getQueries(queries)];
+    public void updates(HttpRequest request,HttpResponse response) throws Exception {
+        World[] result = new World[getQueries(request.query("queries"))];
         StringJoiner updateSql = new StringJoiner(
                 ", ",
                 "UPDATE world SET randomNumber = temp.randomNumber FROM (VALUES ",
