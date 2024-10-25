@@ -1,4 +1,4 @@
-FROM maven:3.6.3-openjdk-8-slim as maven
+FROM maven:3.6.1-jdk-11-slim as maven
 WORKDIR /hserver
 COPY pom.xml pom.xml
 COPY src src
