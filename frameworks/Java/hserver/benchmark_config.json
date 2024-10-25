@@ -5,10 +5,8 @@
     {
       "default": {
         "db_url": "/db",
-        "query_url": "/queries?queries=",
         "fortune_url": "/fortunes",
         "plaintext_url": "/plaintext",
-        "update_url": "/updates?queries=",
         "json_url": "/json",
         "port": 8888,
         "approach": "Realistic",
