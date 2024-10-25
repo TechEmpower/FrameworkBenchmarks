@@ -51,14 +51,12 @@ where
 #[cold]
 #[inline(never)]
 fn error_handler(e: RouterError<util::Error>) -> Response {
-    match e {
-        RouterError::Match(_) => error_response(StatusCode::NOT_FOUND),
-        RouterError::NotAllowed(_) => error_response(StatusCode::METHOD_NOT_ALLOWED),
-        RouterError::Service(e) => {
-            println!("{e}");
-            error_response(StatusCode::INTERNAL_SERVER_ERROR)
-        }
-    }
+    let status = match e {
+        RouterError::Match(_) => StatusCode::NOT_FOUND,
+        RouterError::NotAllowed(_) => StatusCode::METHOD_NOT_ALLOWED,
+        RouterError::Service(_) => StatusCode::INTERNAL_SERVER_ERROR,
+    };
+    error_response(status)
 }
 
 async fn plain_text(ctx: Ctx<'_>) -> HandleResult<Response> {

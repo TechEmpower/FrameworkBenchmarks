@@ -10,7 +10,7 @@ mod db;
 mod ser;
 mod util;
 
-use std::{convert::Infallible, io};
+use std::io;
 
 use xitca_http::{
     bytes::BufMutWriter,
@@ -30,49 +30,60 @@ fn main() -> io::Result<()> {
 
     let cores = std::thread::available_parallelism().map(|num| num.get()).unwrap_or(56);
 
+    let mut ids = core_affinity::get_core_ids().unwrap();
+
+    let worker = move |id: Option<core_affinity::CoreId>| {
+        tokio::runtime::Builder::new_current_thread()
+            .enable_all()
+            .on_thread_start(move || {
+                if let Some(id) = id {
+                    let _ = core_affinity::set_for_current(id);
+                }
+            })
+            .build_local(&Default::default())
+            .unwrap()
+            .block_on(async {
+                let socket = tokio::net::TcpSocket::new_v4()?;
+                socket.set_reuseaddr(true)?;
+                // unrealistic due to following reason:
+                // 1. this only works good on unix system.
+                // 2. no resource distribution adjustment between sockets on different threads. causing uneven workload
+                // where some threads are idle while others busy. resulting in overall increased latency
+                socket.set_reuseport(true)?;
+                socket.bind(addr)?;
+                let listener = socket.listen(1024)?;
+
+                let client = db::create().await.unwrap();
+
+                // unrealistic http dispatcher. no spec check. no security feature.
+                let service = Dispatcher::new(handler, State::new(client));
+
+                loop {
+                    match listener.accept().await {
+                        Ok((stream, _)) => {
+                            let stream = stream.into_std()?;
+                            let stream = TcpStream::from_std(stream)?;
+                            let service = service.clone();
+                            tokio::task::spawn_local(async move {
+                                let _ = service.call(stream).await;
+                            });
+                        }
+                        Err(e) => return Err(e),
+                    };
+                }
+            })
+    };
+
     let handle = core::iter::repeat_with(|| {
-        std::thread::spawn(move || {
-            tokio::runtime::Builder::new_current_thread()
-                .enable_all()
-                .build_local(&Default::default())
-                .unwrap()
-                .block_on(async {
-                    let socket = tokio::net::TcpSocket::new_v4()?;
-                    socket.set_reuseaddr(true)?;
-                    // unrealistic due to following reason:
-                    // 1. this only works good on unix system.
-                    // 2. no resource distribution adjustment between sockets on different threads. causing uneven workload
-                    // where some threads are idle while others busy. resulting in overall increased latency
-                    socket.set_reuseport(true)?;
-                    socket.bind(addr)?;
-                    let listener = socket.listen(1024)?;
-
-                    let client = db::create().await.unwrap();
-
-                    // unrealistic http dispatcher. no spec check. no security feature.
-                    let service = Dispatcher::new(handler, State::new(client));
-
-                    loop {
-                        match listener.accept().await {
-                            Ok((stream, _)) => {
-                                let stream = stream.into_std()?;
-                                let stream = TcpStream::from_std(stream)?;
-                                let service = service.clone();
-                                tokio::task::spawn_local(async move {
-                                    let _ = service.call(stream).await;
-                                });
-                            }
-                            Err(e) => return Err(e),
-                        };
-                    }
-                })
-        })
+        let id = ids.pop();
+        std::thread::spawn(move || worker(id))
     })
-    .take(cores)
+    .take(cores - 1)
     .collect::<Vec<_>>();
 
     // unrealistic due to no signal handling, not shutdown handling. when killing this process all resources that
     // need clean async shutdown will be leaked.
+    worker(ids.pop())?;
     for handle in handle {
         handle.join().unwrap()?;
     }
@@ -91,8 +102,7 @@ async fn handler<'h>(req: Request<'h>, res: Response<'h>, state: &State<db::Clie
                 .header("server", "X")
                 // unrealistic content length header.
                 .header("content-length", "13")
-                .body_writer(|buf| Ok::<_, Infallible>(buf.extend_from_slice(b"Hello, World!")))
-                .unwrap()
+                .body_writer(|buf| buf.extend_from_slice(b"Hello, World!"))
         }
         "/json" => res
             .status(StatusCode::OK)
@@ -100,8 +110,8 @@ async fn handler<'h>(req: Request<'h>, res: Response<'h>, state: &State<db::Clie
             .header("server", "X")
             // unrealistic content length header.
             .header("content-length", "27")
-            .body_writer(|buf| serde_json::to_writer(BufMutWriter(buf), &Message::new()))
-            .unwrap(),
+            .body_writer(|buf| serde_json::to_writer(BufMutWriter(buf), &Message::new()).unwrap()),
+
         // all database related categories are unrealistic. please reference db_unrealistic module for detail.
         "/fortunes" => {
             use sailfish::TemplateOnce;
