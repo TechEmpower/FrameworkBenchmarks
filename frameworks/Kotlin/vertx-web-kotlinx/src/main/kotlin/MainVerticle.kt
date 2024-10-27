@@ -8,14 +8,15 @@ import io.vertx.ext.web.Router
 import io.vertx.ext.web.RoutingContext
 import io.vertx.kotlin.core.http.httpServerOptionsOf
 import io.vertx.kotlin.coroutines.CoroutineVerticle
-import io.vertx.kotlin.coroutines.await
+import io.vertx.kotlin.coroutines.coAwait
 import io.vertx.kotlin.pgclient.pgConnectOptionsOf
 import io.vertx.pgclient.PgConnection
 import io.vertx.sqlclient.PreparedQuery
 import io.vertx.sqlclient.Row
 import io.vertx.sqlclient.RowSet
 import io.vertx.sqlclient.Tuple
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.html.*
 import kotlinx.html.stream.appendHTML
 import kotlinx.serialization.Serializable
@@ -68,7 +69,7 @@ class MainVerticle(val hasDb: Boolean) : CoroutineVerticle() {
                     cachePreparedStatements = true,
                     pipeliningLimit = 100000
                 )
-            ).await()
+            ).coAwait()
 
             selectWorldQuery = pgConnection.preparedQuery(SELECT_WORLD_SQL)
             selectFortuneQuery = pgConnection.preparedQuery(SELECT_FORTUNE_SQL)
@@ -89,7 +90,7 @@ class MainVerticle(val hasDb: Boolean) : CoroutineVerticle() {
                 logger.info("Exception in HttpServer: $it")
                 it.printStackTrace()
             }
-            .listen().await()
+            .listen().coAwait()
     }
 
 
@@ -114,7 +115,7 @@ class MainVerticle(val hasDb: Boolean) : CoroutineVerticle() {
         checkedCoroutineHandlerUnconfined {
             it.response().run {
                 putJsonResponseHeader()
-                end(Json.encodeToString(requestHandler(it)))/*.await()*/
+                end(Json.encodeToString(requestHandler(it)))/*.coAwait()*/
             }
         }
 
@@ -131,7 +132,7 @@ class MainVerticle(val hasDb: Boolean) : CoroutineVerticle() {
         }
 
         get("/db").jsonResponseHandler {
-            val rowSet = selectWorldQuery.execute(Tuple.of(randomIntBetween1And10000())).await()
+            val rowSet = selectWorldQuery.execute(Tuple.of(randomIntBetween1And10000())).coAwait()
             rowSet.single().toWorld()
         }
 
@@ -142,7 +143,7 @@ class MainVerticle(val hasDb: Boolean) : CoroutineVerticle() {
 
         get("/fortunes").checkedCoroutineHandlerUnconfined {
             val fortunes = mutableListOf<Fortune>()
-            selectFortuneQuery.execute().await()
+            selectFortuneQuery.execute().coAwait()
                 .mapTo(fortunes) { it.toFortune() }
 
             fortunes.add(Fortune(0, "Additional fortune added at request time."))
@@ -173,7 +174,7 @@ class MainVerticle(val hasDb: Boolean) : CoroutineVerticle() {
             it.response().run {
                 putCommonHeaders()
                 putHeader(HttpHeaders.CONTENT_TYPE, "text/html; charset=utf-8")
-                end(htmlString)/*.await()*/
+                end(htmlString)/*.coAwait()*/
             }
         }
 
@@ -185,7 +186,7 @@ class MainVerticle(val hasDb: Boolean) : CoroutineVerticle() {
             // Approach 1
             // The updated worlds need to be sorted first to avoid deadlocks.
             updateWordQuery
-                .executeBatch(updatedWorlds.sortedBy { it.id }.map { Tuple.of(it.randomNumber, it.id) }).await()
+                .executeBatch(updatedWorlds.sortedBy { it.id }.map { Tuple.of(it.randomNumber, it.id) }).coAwait()
 
             /*
             // Approach 2, worse performance
@@ -201,7 +202,7 @@ class MainVerticle(val hasDb: Boolean) : CoroutineVerticle() {
             it.response().run {
                 putCommonHeaders()
                 putHeader(HttpHeaders.CONTENT_TYPE, "text/plain")
-                end("Hello, World!")/*.await()*/
+                end("Hello, World!")/*.coAwait()*/
             }
         }
     }

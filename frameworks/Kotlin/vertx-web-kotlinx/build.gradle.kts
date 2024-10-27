@@ -1,12 +1,9 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 tasks.wrapper {
     distributionType = Wrapper.DistributionType.ALL
 }
 
 plugins {
-    val kotlinVersion = "1.8.10"
+    val kotlinVersion = "2.0.21"
     kotlin("jvm") version kotlinVersion
     kotlin("plugin.serialization") version kotlinVersion
     application
@@ -16,7 +13,7 @@ repositories {
     mavenCentral()
 }
 
-val vertxVersion = "4.3.8"
+val vertxVersion = "4.5.10"
 dependencies {
     implementation(platform("io.vertx:vertx-stack-depchain:$vertxVersion"))
     implementation("io.vertx:vertx-web")
@@ -25,14 +22,12 @@ dependencies {
     implementation("io.vertx:vertx-lang-kotlin")
     implementation("io.vertx:vertx-lang-kotlin-coroutines")
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
-    implementation("org.jetbrains.kotlinx:kotlinx-html:0.8.0")
-    //implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-html:0.11.0")
+    //implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0") // the latest version is 0.6.1
 }
 
-tasks.withType<KotlinCompile> {
-    compilerOptions.jvmTarget.set(JvmTarget.JVM_17)
-}
+kotlin.jvmToolchain(21)
 
 application.mainClass.set("MainKt")
