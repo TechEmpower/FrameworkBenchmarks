@@ -21,6 +21,9 @@ dependencies {
     implementation("io.netty", "netty-transport-native-epoll", classifier = "linux-x86_64")
     implementation("io.vertx:vertx-lang-kotlin")
     implementation("io.vertx:vertx-lang-kotlin-coroutines")
+    runtimeOnly("io.vertx:vertx-io_uring-incubator")
+    // This dependency has to be added for io_uring to work.
+    runtimeOnly("io.netty.incubator:netty-incubator-transport-native-io_uring:0.0.25.Final:linux-x86_64")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
