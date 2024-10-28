@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 import kotlinx.html.*
 import kotlinx.html.stream.appendHTML
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.encodeToString
+import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.json.Json
 import java.net.SocketException
 import java.time.ZonedDateTime
@@ -111,11 +111,13 @@ class MainVerticle(val hasDb: Boolean) : CoroutineVerticle() {
         putHeader(HttpHeaders.CONTENT_TYPE, "application/json")
     }
 
-    inline fun <reified T : Any> Route.jsonResponseHandler(crossinline requestHandler: suspend (RoutingContext) -> @Serializable T) =
+    inline fun <reified T : Any> Route.jsonResponseHandler(
+        serializer: SerializationStrategy<T>, crossinline requestHandler: suspend (RoutingContext) -> @Serializable T
+    ) =
         checkedCoroutineHandlerUnconfined {
             it.response().run {
                 putJsonResponseHeader()
-                end(Json.encodeToString(requestHandler(it)))/*.coAwait()*/
+                end(Json.encodeToString(serializer, requestHandler(it)))/*.coAwait()*/
             }
         }
 
@@ -127,16 +129,16 @@ class MainVerticle(val hasDb: Boolean) : CoroutineVerticle() {
     }
 
     fun Router.routes() {
-        get("/json").jsonResponseHandler {
+        get("/json").jsonResponseHandler(Serializers.message) {
             jsonSerializationMessage
         }
 
-        get("/db").jsonResponseHandler {
+        get("/db").jsonResponseHandler(Serializers.world) {
             val rowSet = selectWorldQuery.execute(Tuple.of(randomIntBetween1And10000())).coAwait()
             rowSet.single().toWorld()
         }
 
-        get("/queries").jsonResponseHandler {
+        get("/queries").jsonResponseHandler(Serializers.worlds) {
             val queries = it.request().getQueries()
             selectRandomWorlds(queries)
         }
@@ -178,7 +180,7 @@ class MainVerticle(val hasDb: Boolean) : CoroutineVerticle() {
             }
         }
 
-        get("/updates").jsonResponseHandler {
+        get("/updates").jsonResponseHandler(Serializers.worlds) {
             val queries = it.request().getQueries()
             val worlds = selectRandomWorlds(queries)
             val updatedWorlds = worlds.map { it.copy(randomNumber = randomIntBetween1And10000()) }
