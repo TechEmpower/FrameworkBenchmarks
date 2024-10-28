@@ -5,7 +5,7 @@ COPY build.gradle.kts build.gradle.kts
 COPY settings.gradle.kts settings.gradle.kts
 COPY gradle.properties gradle.properties
 COPY src src
-RUN gradle installDist
+RUN gradle --no-daemon installDist
 
 EXPOSE 8080
 
