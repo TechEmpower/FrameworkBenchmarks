@@ -22,7 +22,6 @@ import kotlinx.html.stream.appendHTML
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.json.Json
-import java.net.SocketException
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
@@ -82,8 +81,12 @@ class MainVerticle(val hasDb: Boolean) : CoroutineVerticle() {
             .requestHandler(Router.router(vertx).apply { routes() })
             .exceptionHandler {
                 // wrk resets the connections when benchmarking is finished.
-                if ((it is NativeIoException && it.message == "recvAddress(..) failed: Connection reset by peer")
-                    || (it is SocketException && it.message == "Connection reset")
+                if (
+                // for epoll
+                /*(it is NativeIoException && it.message == "recvAddress(..) failed: Connection reset by peer")
+                || (it is SocketException && it.message == "Connection reset")*/
+                // for io_uring
+                    it is NativeIoException && it.message == "io_uring read(..) failed: Connection reset by peer"
                 )
                     return@exceptionHandler
 
