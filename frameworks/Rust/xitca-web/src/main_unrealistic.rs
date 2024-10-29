@@ -33,13 +33,12 @@ fn main() -> io::Result<()> {
     let mut ids = core_affinity::get_core_ids().unwrap();
 
     let worker = move |id: Option<core_affinity::CoreId>| {
+        if let Some(id) = id {
+            let _ = core_affinity::set_for_current(id);
+        }
+
         tokio::runtime::Builder::new_current_thread()
             .enable_all()
-            .on_thread_start(move || {
-                if let Some(id) = id {
-                    let _ = core_affinity::set_for_current(id);
-                }
-            })
             .build_local(&Default::default())
             .unwrap()
             .block_on(async {
@@ -91,7 +90,7 @@ fn main() -> io::Result<()> {
     Ok(())
 }
 
-async fn handler<'h>(req: Request<'h>, res: Response<'h>, state: &State<db::Client>) -> Response<'h, 3> {
+async fn handler<'h>(req: Request<'h, State<db::Client>>, res: Response<'h>) -> Response<'h, 3> {
     // unrealistic due to no http method check
     match req.path {
         // unrealistic due to no dynamic path matching
@@ -115,7 +114,7 @@ async fn handler<'h>(req: Request<'h>, res: Response<'h>, state: &State<db::Clie
         // all database related categories are unrealistic. please reference db_unrealistic module for detail.
         "/fortunes" => {
             use sailfish::TemplateOnce;
-            let fortunes = state.client.tell_fortune().await.unwrap().render_once().unwrap();
+            let fortunes = req.ctx.client.tell_fortune().await.unwrap().render_once().unwrap();
             res.status(StatusCode::OK)
                 .header("content-type", "text/html; charset=utf-8")
                 .header("server", "X")
@@ -124,18 +123,18 @@ async fn handler<'h>(req: Request<'h>, res: Response<'h>, state: &State<db::Clie
         "/db" => {
             // unrealistic due to no error handling. any db/serialization error will cause process crash.
             // the same goes for all following unwraps on database related functions.
-            let world = state.client.get_world().await.unwrap();
-            json_response(res, state, &world)
+            let world = req.ctx.client.get_world().await.unwrap();
+            json_response(res, req.ctx, &world)
         }
         p if p.starts_with("/q") => {
             let num = p["/queries?q=".len()..].parse_query();
-            let worlds = state.client.get_worlds(num).await.unwrap();
-            json_response(res, state, &worlds)
+            let worlds = req.ctx.client.get_worlds(num).await.unwrap();
+            json_response(res, req.ctx, &worlds)
         }
         p if p.starts_with("/u") => {
             let num = p["/updates?q=".len()..].parse_query();
-            let worlds = state.client.update(num).await.unwrap();
-            json_response(res, state, &worlds)
+            let worlds = req.ctx.client.update(num).await.unwrap();
+            json_response(res, req.ctx, &worlds)
         }
         _ => res.status(StatusCode::NOT_FOUND).header("server", "X").body(&[]),
     }

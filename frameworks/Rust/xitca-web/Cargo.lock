@@ -793,18 +793,18 @@ checksum = "94143f37725109f92c262ed2cf5e59bce7498c01bcc1502d7b9afe439a4e9f49"
 
 [[package]]
 name = "serde"
-version = "1.0.213"
+version = "1.0.214"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3ea7893ff5e2466df8d720bb615088341b295f849602c6956047f8f80f0e9bc1"
+checksum = "f55c3193aca71c12ad7890f1785d2b73e1b9f63a0bbc353c08ef26fe03fc56b5"
 dependencies = [
  "serde_derive",
 ]
 
 [[package]]
 name = "serde_derive"
-version = "1.0.213"
+version = "1.0.214"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7e85ad2009c50b58e87caa8cd6dac16bdf511bbfb7af6c33df902396aa480fa5"
+checksum = "de523f781f095e28fa605cdce0f8307e451cc0fd14e2eb4cd2e98a355b147766"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1269,7 +1269,7 @@ checksum = "589f6da84c646204747d1270a2a5661ea66ed1cced2631d546fdfb155959f9ec"
 [[package]]
 name = "xitca-codegen"
 version = "0.4.0"
-source = "git+http://github.com/HFQR/xitca-web?rev=4f4e349#4f4e3495adda11a5be8b56861cffcde418f673a3"
+source = "git+http://github.com/HFQR/xitca-web?rev=693a5ce#693a5ce72fc976c49e4f445d64f27ed96bcbc2ec"
 dependencies = [
  "quote",
  "syn",
@@ -1278,7 +1278,7 @@ dependencies = [
 [[package]]
 name = "xitca-http"
 version = "0.7.0"
-source = "git+http://github.com/HFQR/xitca-web?rev=4f4e349#4f4e3495adda11a5be8b56861cffcde418f673a3"
+source = "git+http://github.com/HFQR/xitca-web?rev=693a5ce#693a5ce72fc976c49e4f445d64f27ed96bcbc2ec"
 dependencies = [
  "futures-core",
  "http",
@@ -1328,7 +1328,7 @@ dependencies = [
 [[package]]
 name = "xitca-postgres"
 version = "0.3.0"
-source = "git+http://github.com/HFQR/xitca-web?rev=4f4e349#4f4e3495adda11a5be8b56861cffcde418f673a3"
+source = "git+http://github.com/HFQR/xitca-web?rev=693a5ce#693a5ce72fc976c49e4f445d64f27ed96bcbc2ec"
 dependencies = [
  "fallible-iterator",
  "futures-core",
@@ -1366,7 +1366,7 @@ dependencies = [
 [[package]]
 name = "xitca-server"
 version = "0.5.0"
-source = "git+http://github.com/HFQR/xitca-web?rev=4f4e349#4f4e3495adda11a5be8b56861cffcde418f673a3"
+source = "git+http://github.com/HFQR/xitca-web?rev=693a5ce#693a5ce72fc976c49e4f445d64f27ed96bcbc2ec"
 dependencies = [
  "socket2 0.5.7",
  "tokio",
@@ -1380,7 +1380,7 @@ dependencies = [
 [[package]]
 name = "xitca-service"
 version = "0.3.0"
-source = "git+http://github.com/HFQR/xitca-web?rev=4f4e349#4f4e3495adda11a5be8b56861cffcde418f673a3"
+source = "git+http://github.com/HFQR/xitca-web?rev=693a5ce#693a5ce72fc976c49e4f445d64f27ed96bcbc2ec"
 
 [[package]]
 name = "xitca-unsafe-collection"
@@ -1422,7 +1422,7 @@ dependencies = [
 [[package]]
 name = "xitca-web"
 version = "0.7.0"
-source = "git+http://github.com/HFQR/xitca-web?rev=4f4e349#4f4e3495adda11a5be8b56861cffcde418f673a3"
+source = "git+http://github.com/HFQR/xitca-web?rev=693a5ce#693a5ce72fc976c49e4f445d64f27ed96bcbc2ec"
 dependencies = [
  "futures-core",
  "pin-project-lite",
