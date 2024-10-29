@@ -9,17 +9,17 @@
         "approach": "Realistic",
         "classification": "Fullstack",
         "database": "None",
-        "framework": "solon-vertx",
+        "framework": "solon",
         "language": "Java",
         "flavor": "None",
-        "orm": "Full",
-        "platform": "solon",
-        "webserver": "vertx",
+        "orm": "Micro",
+        "platform": "Netty",
+        "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
         "display_name": "solon-vertx",
         "notes": "",
-        "versus": "None"
+        "versus": "solon"
       }
     }
   ]
