@@ -1,6 +1,6 @@
 FROM ubuntu:24.04
 
-ENV SWOOLE_VERSION 5.1.4
+ENV SWOOLE_VERSION 5.1.5
 ENV ENABLE_COROUTINE 1
 ENV CPU_MULTIPLES 1
 ENV DATABASE_DRIVER mysql
@@ -16,16 +16,14 @@ RUN apt update -yqq > /dev/null \
     && cd /tmp/swoole-src-${SWOOLE_VERSION} \
     && phpize > /dev/null \
     && ./configure > /dev/null \
-    && make -j8 > /dev/null \
+    && make -j "$(nproc)" > /dev/null \
     && make install > /dev/null \
     && echo "extension=swoole.so" > /etc/php/8.3/cli/conf.d/50-swoole.ini \
-    && echo "memory_limit=1024M" >> /etc/php/8.3/cli/php.ini \
-    && php -m
+    && echo "memory_limit=1024M" >> /etc/php/8.3/cli/php.ini
 
 WORKDIR /swoole
 
 ADD ./swoole-server.php /swoole
-ADD 10-opcache.ini /swoole
 ADD ./database.php /swoole
 
 COPY 10-opcache.ini /etc/php/8.3/cli/conf.d/10-opcache.ini

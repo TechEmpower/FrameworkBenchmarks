@@ -20,12 +20,6 @@ namespace appMpower.Orm.Data
          _dbConnection = dbConnection;
       }
 
-      public DbCommand(string commandText, DbConnection dbConnection, bool keyed)
-      {
-         _odbcCommand = dbConnection.GetCommand(commandText, CommandType.Text, keyed);
-         _dbConnection = dbConnection;
-      }
-
       public DbCommand(string commandText, CommandType commandType, DbConnection dbConnection)
       {
          _odbcCommand = dbConnection.GetCommand(commandText, commandType);
@@ -175,12 +169,17 @@ namespace appMpower.Orm.Data
 
       public async Task<int> ExecuteNonQueryAsync()
       {
-         return await (_odbcCommand as System.Data.Common.DbCommand).ExecuteNonQueryAsync();
+         return await _odbcCommand.ExecuteNonQueryAsync();
       }
 
       public IDataReader ExecuteReader(CommandBehavior behavior)
       {
          return _odbcCommand.ExecuteReader(behavior);
+      }
+
+      public async Task<System.Data.Common.DbDataReader> ExecuteReaderAsync(CommandBehavior behavior)
+      {
+         return await _odbcCommand.ExecuteReaderAsync(behavior);
       }
 
 #nullable enable
@@ -197,8 +196,7 @@ namespace appMpower.Orm.Data
 
       public void Dispose()
       {
-         if (_dbConnection._keyed) _dbConnection._keyedOdbcCommands.TryAdd(_odbcCommand.CommandText, _odbcCommand);
-         else _dbConnection._odbcCommands.Push(_odbcCommand);
+         _dbConnection.Release(_odbcCommand);
       }
    }
 }

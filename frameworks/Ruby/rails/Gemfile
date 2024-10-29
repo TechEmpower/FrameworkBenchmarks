@@ -1,9 +1,31 @@
 source 'https://rubygems.org'
 
 gem 'oj', '~> 3.16'
-gem 'pg', '~> 1.5', group: :postgresql
-gem 'puma', '~> 6.4'
 gem 'rails', '~> 7.2.0'
 gem 'redis', '~> 5.0'
-gem 'trilogy', '~> 2.8.1', group: :mysql
 gem 'tzinfo-data'
+
+group :mysql do
+  gem 'trilogy', '~> 2.8.1'
+end
+
+group :postgresql do
+  gem 'pg', '~> 1.5'
+end
+
+group :falcon do
+  gem 'falcon', '~> 0.47', require: false
+end
+
+group :puma do
+  gem 'puma', '~> 6.4', require: false
+end
+
+group :unicorn do
+  gem 'unicorn', '~> 6.1', require: false
+end
+
+group :agoo do
+  gem 'agoo', require: false
+  gem 'rackup'
+end

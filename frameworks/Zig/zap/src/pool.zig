@@ -10,7 +10,7 @@ const Regex = regex.Regex;
 
 pub fn initPool(allocator: Allocator) !*pg.Pool {
     const info = try parsePostgresConnStr(allocator);
-    std.debug.print("Connection: {s}:{s}@{s}:{d}/{s}\n", .{ info.username, info.password, info.hostname, info.port, info.database });
+    //std.debug.print("Connection: {s}:{s}@{s}:{d}/{s}\n", .{ info.username, info.password, info.hostname, info.port, info.database });
 
     const pg_pool = try Pool.init(allocator, .{
         .size = 28,
@@ -60,7 +60,7 @@ fn addressAsString(address: std.net.Address) ![]const u8 {
 
 fn parsePostgresConnStr(allocator: Allocator) !ConnectionInfo {
     const pg_port = try getEnvVar(allocator, "PG_PORT", "5432");
-    std.debug.print("tfb port {s}\n", .{pg_port});
+    // std.debug.print("tfb port {s}\n", .{pg_port});
     var port = try std.fmt.parseInt(u16, pg_port, 0);
 
     if (port == 0) {

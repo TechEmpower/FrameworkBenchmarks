@@ -168,20 +168,28 @@ pub const DbEndpoint = struct {
             }
         }
 
-        // std.debug.print("Attempting to return random: {}\n", .{random_number});
-
         if (random_number == 0) {
             return;
         }
 
-        var conn = pool.acquire() catch return;
-        defer conn.release();
-
-        const row_result = conn.row("SELECT id, randomNumber FROM World WHERE id = $1", .{random_number}) catch |err| {
+        const json_to_send = getJson(pool, random_number) catch |err| {
             std.debug.print("Error querying database: {}\n", .{err});
             return;
         };
+
+        req.sendBody(json_to_send) catch return;
+
+        return;
+    }
+
+    fn getJson(pool: *pg.Pool, random_number: u32) ![]const u8{
+        var conn = try pool.acquire();
+        defer conn.release();
+
+        const row_result = try conn.row("SELECT id, randomNumber FROM World WHERE id = $1", .{random_number});
+
         var row = row_result.?;
+        defer row.deinit() catch {};
 
         const world = World{ .id = row.get(i32, 0), .randomNumber = row.get(i32, 1) };
 
@@ -193,9 +201,7 @@ pub const DbEndpoint = struct {
             json_to_send = "null";
         }
 
-        req.sendBody(json_to_send) catch return;
-
-        return;
+        return json_to_send;
     }
 };
 

@@ -8,8 +8,8 @@ from robyn.argument_parser import Config
 class SpecialConfig(Config):
     def __init__(self):
         super().__init__()
-        self.workers = (os.cpu_count() * 2) + 1
-        self.processes = os.cpu_count()
+        self.workers = 2
+        self.processes = ( os.cpu_count() * 2 ) + 1
         self.log_level = "WARN"
 
 

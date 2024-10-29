@@ -79,6 +79,8 @@
                 <configuration>		
                     <nativeimageArgs>
                         <arg>--no-fallback</arg>
+                        <arg>-J-XX:+UseNUMA</arg>
+                        <arg>-J-XX:+UseParallelGC</arg>
                     </nativeimageArgs>
                 </configuration>                                    
                 <executions>
