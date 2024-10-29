@@ -20,12 +20,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.html.*
 import kotlinx.html.stream.appendHTML
+import kotlinx.io.buffered
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.okio.encodeToBufferedSink
-import okio.buffer
+import kotlinx.serialization.json.io.encodeToSink
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
@@ -133,17 +133,17 @@ class MainVerticle(val hasDb: Boolean) : CoroutineVerticle() {
                 /*
                 // approach 2
                 // java.lang.IllegalStateException: You must set the Content-Length header to be the total size of the message body BEFORE sending any data if you are not using HTTP chunked encoding.
-                toSink().buffer().use { bufferedSink ->
+                toRawSink().buffered().use { bufferedSink ->
                     @OptIn(ExperimentalSerializationApi::class)
-                    Json.encodeToBufferedSink(serializer, requestHandler(it), bufferedSink)
+                    Json.encodeToSink(serializer, requestHandler(it), bufferedSink)
                 }
                 */
 
                 // approach 3
                 end(Buffer.buffer().apply {
-                    toSink().buffer().use { bufferedSink ->
+                    toRawSink().buffered().use { bufferedSink ->
                         @OptIn(ExperimentalSerializationApi::class)
-                        Json.encodeToBufferedSink(serializer, requestHandler(it), bufferedSink)
+                        Json.encodeToSink(serializer, requestHandler(it), bufferedSink)
                     }
                 })
             }

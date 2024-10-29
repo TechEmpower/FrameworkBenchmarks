@@ -29,9 +29,8 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinxSerializationVersion")
-    //implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-io:$kotlinxSerializationVersion")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-okio:$kotlinxSerializationVersion")
-    implementation("com.squareup.okio:okio:3.9.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-io:$kotlinxSerializationVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-io-core:0.5.4")
 
     implementation("org.jetbrains.kotlinx:kotlinx-html:0.11.0")
     //implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0") // the latest version is 0.6.1
