@@ -17,6 +17,7 @@ public class FilterImpl implements Filter {
     public void doFilter(Context ctx, FilterChain chain) throws Throwable {
         String dateString = DATE_FORMAT.format(new Date());
         ctx.headerSet("Date", dateString);
+        ctx.headerSet("Server", "solon-boot-vertx");
         chain.doFilter(ctx);
     }
 }
