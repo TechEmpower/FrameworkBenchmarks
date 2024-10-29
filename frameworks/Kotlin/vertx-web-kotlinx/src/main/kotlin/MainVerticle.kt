@@ -1,4 +1,5 @@
 import io.netty.channel.unix.Errors.NativeIoException
+import io.vertx.core.buffer.Buffer
 import io.vertx.core.http.HttpHeaders
 import io.vertx.core.http.HttpServer
 import io.vertx.core.http.HttpServerRequest
@@ -19,9 +20,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.html.*
 import kotlinx.html.stream.appendHTML
+import kotlinx.io.buffered
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.io.encodeToSink
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
@@ -120,7 +124,28 @@ class MainVerticle(val hasDb: Boolean) : CoroutineVerticle() {
         checkedCoroutineHandlerUnconfined {
             it.response().run {
                 putJsonResponseHeader()
+
+                /*
+                // approach 1
                 end(Json.encodeToString(serializer, requestHandler(it)))/*.coAwait()*/
+                */
+
+                /*
+                // approach 2
+                // java.lang.IllegalStateException: You must set the Content-Length header to be the total size of the message body BEFORE sending any data if you are not using HTTP chunked encoding.
+                toRawSink().buffered().use { bufferedSink ->
+                    @OptIn(ExperimentalSerializationApi::class)
+                    Json.encodeToSink(serializer, requestHandler(it), bufferedSink)
+                }
+                */
+
+                // approach 3
+                end(Buffer.buffer().apply {
+                    toRawSink().buffered().use { bufferedSink ->
+                        @OptIn(ExperimentalSerializationApi::class)
+                        Json.encodeToSink(serializer, requestHandler(it), bufferedSink)
+                    }
+                })
             }
         }
 

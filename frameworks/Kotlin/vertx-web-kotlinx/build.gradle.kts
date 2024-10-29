@@ -14,6 +14,7 @@ repositories {
 }
 
 val vertxVersion = "4.5.10"
+val kotlinxSerializationVersion = "1.7.3"
 dependencies {
     implementation(platform("io.vertx:vertx-stack-depchain:$vertxVersion"))
     implementation("io.vertx:vertx-web")
@@ -26,7 +27,11 @@ dependencies {
     runtimeOnly("io.netty.incubator:netty-incubator-transport-native-io_uring:0.0.25.Final:linux-x86_64")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinxSerializationVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-io:$kotlinxSerializationVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-io-core:0.5.4")
+
     implementation("org.jetbrains.kotlinx:kotlinx-html:0.11.0")
     //implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0") // the latest version is 0.6.1
 }
