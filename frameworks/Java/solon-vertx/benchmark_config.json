@@ -9,7 +9,7 @@
         "approach": "Realistic",
         "classification": "Fullstack",
         "database": "None",
-        "framework": "solon",
+        "framework": "solon-vertx",
         "language": "Java",
         "flavor": "None",
         "orm": "Full",

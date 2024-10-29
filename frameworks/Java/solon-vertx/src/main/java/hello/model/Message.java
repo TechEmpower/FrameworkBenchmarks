@@ -1,7 +1,7 @@
 package hello.model;
 
 /**
- * @author pmg1991
+ * @author noear
  * @version V1.0
  */
 public class Message {

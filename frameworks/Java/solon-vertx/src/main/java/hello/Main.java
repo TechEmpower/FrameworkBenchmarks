@@ -3,7 +3,7 @@ package hello;
 import org.noear.solon.Solon;
 
 /**
- * @author pmg1991
+ * @author noear
  * @version V1.0
  */
 public class Main {
