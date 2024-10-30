@@ -1,16 +1,16 @@
 
 plugins {
-    id("gg.jte.gradle") version("3.1.4")
+    id("gg.jte.gradle") version("3.1.13")
 }
 
 dependencies {
     api(project(":model"))
-    api("com.hexagonkt:http_server:$hexagonVersion")
-    api("com.hexagonkt:templates_jte:$hexagonVersion")
-    api("com.hexagonkt:serialization_jackson_json:$hexagonVersion")
+    api("com.hexagontk:http_server:$hexagonVersion")
+    api("com.hexagontk:templates_jte:$hexagonVersion")
+    api("com.hexagontk:serialization_jackson_json:$hexagonVersion")
     api("org.cache2k:cache2k-core:$cache2kVersion")
 
-    jteGenerate("gg.jte:jte-native-resources:3.1.4")
+    jteGenerate("gg.jte:jte-native-resources:3.1.13")
 }
 
 tasks.register("minimizeTemplate") {

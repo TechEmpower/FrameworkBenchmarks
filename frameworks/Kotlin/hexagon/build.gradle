@@ -6,10 +6,10 @@ plugins {
 
 version = "1.0.0"
 description = "TFB benchmark"
-group = "com.hexagonkt"
+group = "com.hexagontk"
 
 ext {
-    hexagonVersion = "3.7.2"
+    hexagonVersion = "4.0.0-A6"
     jettyVersion = "12.0.14"
     nettyVersion = "4.1.114.Final"
 
@@ -18,9 +18,9 @@ ext {
     vertxVersion = "4.5.10"
     cache2kVersion = "2.6.1.Final"
 
-    applicationClass = "com.hexagonkt.BenchmarkKt"
+    applicationClass = "com.hexagontk.BenchmarkKt"
     modules = "java.naming,java.sql,java.management"
-    gradleScripts = "https://raw.githubusercontent.com/hexagonkt/hexagon/$hexagonVersion/gradle"
+    gradleScripts = "https://raw.githubusercontent.com/hexagontk/hexagon/$hexagonVersion/gradle"
 }
 
 subprojects {

@@ -1,10 +1,10 @@
-package com.hexagonkt.store
+package com.hexagontk.store
 
-import com.hexagonkt.model.CachedWorld
-import com.hexagonkt.model.Fortune
-import com.hexagonkt.Settings
-import com.hexagonkt.model.World
-import com.hexagonkt.core.Jvm
+import com.hexagontk.model.CachedWorld
+import com.hexagontk.model.Fortune
+import com.hexagontk.Settings
+import com.hexagontk.model.World
+import com.hexagontk.core.Platform
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import org.cache2k.Cache
@@ -22,9 +22,9 @@ class BenchmarkSqlStore(
     }
 
     private val dataSource: HikariDataSource by lazy {
-        val dbHost = Jvm.systemSettingOrNull("${engine.uppercase()}_DB_HOST") ?: "tfb-database"
-        val environment = Jvm.systemSettingOrNull(String::class, "BENCHMARK_ENV")?.lowercase()
-        val poolSize = 8 + if (environment == "citrine") Jvm.cpuCount else Jvm.cpuCount * 2
+        val dbHost = Platform.systemSettingOrNull("${engine.uppercase()}_DB_HOST") ?: "tfb-database"
+        val environment = Platform.systemSettingOrNull(String::class, "BENCHMARK_ENV")?.lowercase()
+        val poolSize = 8 + if (environment == "citrine") Platform.cpuCount else Platform.cpuCount * 2
         val postgresqlSettings = listOf(
             "ssl=false",
             "assumeMinServerVersion=12.10",
@@ -34,7 +34,7 @@ class BenchmarkSqlStore(
         ).joinToString("&")
         val config = HikariConfig().apply {
             jdbcUrl = "jdbc:postgresql://$dbHost/${settings.databaseName}?$postgresqlSettings"
-            maximumPoolSize = Jvm.systemSettingOrNull(Int::class, "maximumPoolSize") ?: poolSize
+            maximumPoolSize = Platform.systemSettingOrNull(Int::class, "maximumPoolSize") ?: poolSize
             driverClassName = settings.databaseDriver
             username = settings.databaseUsername
             password = settings.databasePassword
