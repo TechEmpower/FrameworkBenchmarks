@@ -1,10 +1,10 @@
-FROM maven:3.9.7-amazoncorretto-23 as maven
+FROM maven:3.9.7-amazoncorretto-21 as maven
 WORKDIR /solon
 COPY pom.xml pom.xml
 COPY src src
 RUN mvn compile assembly:single -q
 
-FROM openjdk:23-jdk-slim
+FROM openjdk:21-jdk-slim
 WORKDIR /solon
 COPY --from=maven /solon/target/hello-solon.jar app.jar
 
