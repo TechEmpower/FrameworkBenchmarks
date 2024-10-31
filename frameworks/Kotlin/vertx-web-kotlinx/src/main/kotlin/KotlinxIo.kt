@@ -16,7 +16,6 @@ private inline fun Long.toIntOrThrow(): Int {
 value class VertxBufferWriteStreamRawSink(val writeStream: WriteStream<VertxBuffer>) : RawSink {
     override fun write(source: KotlinxIoBuffer, byteCount: Long) {
         runBlocking {
-            // `source` is temporarily converted to a byte array because wrapping it as a Vert.x `Buffer` is too complicated to implement.
             writeStream.write(VertxBuffer.buffer(source.readByteArray(byteCount.toIntOrThrow()))).coAwait()
         }
     }
@@ -36,7 +35,6 @@ fun WriteStream<VertxBuffer>.toRawSink(): RawSink =
 @JvmInline
 value class VertxBufferRawSink(val vertxBuffer: VertxBuffer) : RawSink {
     override fun write(source: KotlinxIoBuffer, byteCount: Long) {
-        // same problem as above
         vertxBuffer.appendBytes(source.readByteArray(byteCount.toIntOrThrow()))
     }
 
