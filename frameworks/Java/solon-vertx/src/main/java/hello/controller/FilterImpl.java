@@ -11,7 +11,7 @@ import java.util.Date;
 
 @Component
 public class FilterImpl implements Filter {
-    private static DateFormat DATE_FORMAT = new SimpleDateFormat("EEE, dd MMM yyyyy HH:mm:ss z");
+    private static DateFormat DATE_FORMAT = new SimpleDateFormat("EEE, d MMM yyyyy HH:mm:ss z");
 
     @Override
     public void doFilter(Context ctx, FilterChain chain) throws Throwable {
