@@ -39,7 +39,3 @@ password: benchmarkdbpass
 sql-pool-size: 300
 db-repository: "pgclient"     # "pgclient" (default) or "hikari"
 
-# The following for pgclient only
-update-batch-size: 4
-update-timeout-millis: 10000
-update-max-retries: 3
