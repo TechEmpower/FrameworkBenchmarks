@@ -1,0 +1,29 @@
+{
+  "framework": "ripple",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
+        "fortune_url": "/fortunes",
+        "update_url": "/updates?queries=",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "MySQL",
+        "framework": "ripple",
+        "language": "PHP",
+        "flavor": "PHP8.3",
+        "orm": "Raw",
+        "platform": "ripple",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "ripple",
+        "notes": "",
+        "versus": "php"
+      }
+    }
+  ]
+}

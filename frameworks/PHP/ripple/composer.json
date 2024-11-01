@@ -1,0 +1,10 @@
+{
+  "require": {
+    "ext-pdo": "*",
+    "cloudtay/ripple-http": "^0.3.0",
+    "cloudtay/ripple-rdo": "*",
+    "cloudtay/ripple": "^1.0@alpha"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}
