@@ -39,7 +39,8 @@ public class PgClientRepository implements DbRepository {
                 .setHost(config.get("host").asString().orElse("tfb-database"))
                 .setDatabase(config.get("db").asString().orElse("hello_world"))
                 .setUser(config.get("username").asString().orElse("benchmarkdbuser"))
-                .setPassword(config.get("password").asString().orElse("benchmarkdbpass"));
+                .setPassword(config.get("password").asString().orElse("benchmarkdbpass"))
+                .setPipeliningLimit(100000);
 
         int sqlPoolSize = config.get("sql-pool-size").asInt().orElse(64);
         PoolOptions clientOptions = new PoolOptions().setMaxSize(sqlPoolSize);
