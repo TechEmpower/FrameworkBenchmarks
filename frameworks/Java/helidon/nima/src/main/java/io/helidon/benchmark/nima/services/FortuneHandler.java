@@ -1,7 +1,7 @@
 
 package io.helidon.benchmark.nima.services;
 
-import java.util.Comparator;
+import java.util.Collections;
 import java.util.List;
 
 import com.fizzed.rocker.runtime.ArrayOfByteArraysOutput;
@@ -32,7 +32,7 @@ public class FortuneHandler implements Handler {
         res.header(CONTENT_TYPE_HTML);
         List<Fortune> fortuneList = repository.getFortunes();
         fortuneList.add(ADDITIONAL_FORTUNE);
-        fortuneList.sort(Comparator.comparing(Fortune::getMessage));
+        Collections.sort(fortuneList);
         res.send(fortunes.template(fortuneList)
                 .render(ArrayOfByteArraysOutput.FACTORY)
                 .toByteArray());
