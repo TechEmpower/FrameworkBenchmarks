@@ -10,6 +10,8 @@ ENV DOTNET_SYSTEM_NET_SOCKETS_INLINE_COMPLETIONS 1
 ENV DOTNET_TieredPGO 1 
 ENV DOTNET_TC_QuickJitForLoops 1 
 ENV DOTNET_ReadyToRun 0
+ENV DOTNET_GCDynamicAdaptationMode 0
+ENV DOTNET_HillClimbing_Disable 1
 
 WORKDIR /app
 COPY --from=build /app/out ./
