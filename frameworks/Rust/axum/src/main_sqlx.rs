@@ -149,7 +149,7 @@ async fn main() {
         .route("/fortunes", get(fortunes))
         .route("/db", get(db))
         .route("/queries", get(queries))
-        .route("/cached", get(cache))
+        .route("/cached-queries", get(cache))
         .with_state(state);
 
     server::serve_hyper(app, Some(8000)).await

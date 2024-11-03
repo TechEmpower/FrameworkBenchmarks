@@ -28,7 +28,7 @@
         "docker_cmd": "/app/axum-sqlx",
         "db_url": "/db",
         "fortune_url": "/fortunes",
-        "cached_query_url": "/cached?q=",
+        "cached_query_url": "/cached-queries?q=",
         "port": 8000,
         "approach": "Realistic",
         "classification": "Fullstack",
