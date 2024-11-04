@@ -1,10 +1,8 @@
-FROM gradle:7.6-jdk17 as gradle
+FROM gradle:8.10.2-jdk17 as gradle
 WORKDIR /vertx-web-kotlin-coroutines
-COPY gradle gradle
 COPY src src
 COPY build.gradle.kts build.gradle.kts
 COPY gradle.properties gradle.properties
-COPY gradlew gradlew
 COPY settings.gradle.kts settings.gradle.kts
 RUN gradle shadowJar
 
