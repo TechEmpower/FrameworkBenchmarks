@@ -1,10 +1,10 @@
 <?php
 require_once __DIR__.'/vendor/autoload.php';
 
-
 use Workerman\Worker;
 use Workerman\Events\Swow;
 use Workerman\Events\Swoole;
+use Workerman\Events\Select;
 use Workerman\Protocols\Http\Response;
 
 $test_type = getenv('TEST_TYPE') ?: 'default';
@@ -28,7 +28,9 @@ $http_worker->onWorkerStart = static function () use ($test_type, $pool_size, &$
     };
     $date = new Date();
 };
-if (in_array($test_type, ['pgsql-swow', 'mysql-swow'])) {
+if ($test_type === 'default') {
+    Worker::$eventLoopClass = Select::class;
+} elseif (in_array($test_type, ['pgsql-swow', 'mysql-swow'])) {
     Worker::$eventLoopClass = Swow::class;
 } elseif (in_array($test_type, ['pgsql-swoole', 'mysql-swoole'])) {
     Worker::$eventLoopClass = Swoole::class;
