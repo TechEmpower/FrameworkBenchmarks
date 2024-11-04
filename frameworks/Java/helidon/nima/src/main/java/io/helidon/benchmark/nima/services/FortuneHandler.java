@@ -8,7 +8,6 @@ import java.util.List;
 import com.fizzed.rocker.runtime.ArrayOfByteArraysOutput;
 import io.helidon.benchmark.nima.models.DbRepository;
 import io.helidon.benchmark.nima.models.Fortune;
-import io.helidon.common.buffers.BufferData;
 import io.helidon.webserver.http.Handler;
 import io.helidon.webserver.http.ServerRequest;
 import io.helidon.webserver.http.ServerResponse;
@@ -39,11 +38,17 @@ public class FortuneHandler implements Handler {
         Collections.sort(fortuneList);
         ArrayOfByteArraysOutput output = fortunes.template(fortuneList).render(ArrayOfByteArraysOutput.FACTORY);
         List<byte[]> entity = output.getArrays();
-        BufferData bufferData = BufferData.create(entity.stream().map(BufferData::create).toList());
-        int length = bufferData.available();
+
+        int length = 0;
+        for (byte[] bytes : entity) {
+            length += bytes.length;
+        }
         res.header(CONTENT_LENGTH, String.valueOf(length));
+
         try (var out = res.outputStream()) {
-            bufferData.writeTo(out);
+            for (byte[] bytes : entity) {
+                out.write(bytes);
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
