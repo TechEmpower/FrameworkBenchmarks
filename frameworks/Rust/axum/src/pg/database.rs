@@ -90,21 +90,18 @@ impl PgConnection {
     }
 
     pub async fn update_worlds(&self, num: usize) -> Result<Vec<World>, PgError> {
-        let worlds = self.fetch_random_worlds(num).await?;
+        let mut worlds = self.fetch_random_worlds(num).await?;
 
         // Update the worlds with new random numbers
         let mut rng = SmallRng::from_rng(&mut thread_rng()).unwrap();
         let mut ids = Vec::with_capacity(num);
         let mut nids = Vec::with_capacity(num);
-        let worlds: Vec<World> = worlds
-            .into_iter()
-            .map(|mut w| {
-                w.randomnumber = random_id(&mut rng);
-                ids.push(w.id);
-                nids.push(w.randomnumber);
-                w
-            })
-            .collect();
+
+        for w in &mut worlds {
+            w.randomnumber = random_id(&mut rng);
+            ids.push(w.id);
+            nids.push(w.randomnumber);
+        }
 
         // Update the random worlds in the database.
         self.client
