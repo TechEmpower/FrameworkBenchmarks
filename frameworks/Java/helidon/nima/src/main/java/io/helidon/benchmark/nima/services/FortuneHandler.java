@@ -33,18 +33,21 @@ public class FortuneHandler implements Handler {
         res.header(SERVER);
         res.header(CONTENT_TYPE_HTML);
 
+        // render using template and get list of buffers
         List<Fortune> fortuneList = repository.getFortunes();
         fortuneList.add(ADDITIONAL_FORTUNE);
         Collections.sort(fortuneList);
         ArrayOfByteArraysOutput output = fortunes.template(fortuneList).render(ArrayOfByteArraysOutput.FACTORY);
         List<byte[]> entity = output.getArrays();
 
+        // compute entity length and set header
         int length = 0;
         for (byte[] bytes : entity) {
             length += bytes.length;
         }
         res.header(CONTENT_LENGTH, String.valueOf(length));
 
+        // write entity to output
         try (var out = res.outputStream()) {
             for (byte[] bytes : entity) {
                 out.write(bytes);
