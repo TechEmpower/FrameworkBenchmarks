@@ -14,7 +14,7 @@ The tests will be run with:
 
 * [Ruby 3.3](http://www.ruby-lang.org)
 * [Puma 6](http://puma.io)
-* [Passenger 5](https://www.phusionpassenger.com)
+* [Passenger 6](https://www.phusionpassenger.com)
 * [Unicorn 5](https://bogomips.org/unicorn/)
 * [Roda 3](http://roda.jeremyevans.net)
 * [Sequel 5](http://sequel.jeremyevans.net)
