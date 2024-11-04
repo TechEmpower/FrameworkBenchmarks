@@ -13,4 +13,6 @@ COPY . .
 
 EXPOSE 8080
 
+CMD config/java_tune.sh
+
 CMD bundle exec puma -C config/puma.rb -b tcp://0.0.0.0:8080 -e production
