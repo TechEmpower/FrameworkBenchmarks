@@ -1,6 +1,7 @@
 FROM ubuntu:24.04
 
 ENV TEST_TYPE default
+ENV PROCESS_MULTIPLIER 1
 
 ARG DEBIAN_FRONTEND=noninteractive
 

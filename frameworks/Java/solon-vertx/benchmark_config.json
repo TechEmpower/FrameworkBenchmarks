@@ -1,0 +1,26 @@
+{
+  "framework": "solon-vertx",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "None",
+        "framework": "solon",
+        "language": "Java",
+        "flavor": "None",
+        "orm": "Micro",
+        "platform": "Netty",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "solon-vertx",
+        "notes": "",
+        "versus": "solon"
+      }
+    }
+  ]
+}
