@@ -1,8 +1,7 @@
 
 package io.helidon.benchmark.nima.services;
 
-import java.io.IOException;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import com.fizzed.rocker.runtime.ArrayOfByteArraysOutput;
@@ -15,7 +14,6 @@ import views.fortunes;
 
 import static io.helidon.benchmark.nima.Main.CONTENT_TYPE_HTML;
 import static io.helidon.benchmark.nima.Main.SERVER;
-import static io.helidon.http.HeaderNames.CONTENT_LENGTH;
 
 public class FortuneHandler implements Handler {
 
@@ -32,28 +30,11 @@ public class FortuneHandler implements Handler {
     public void handle(ServerRequest req, ServerResponse res) {
         res.header(SERVER);
         res.header(CONTENT_TYPE_HTML);
-
-        // render using template and get list of buffers
         List<Fortune> fortuneList = repository.getFortunes();
         fortuneList.add(ADDITIONAL_FORTUNE);
-        Collections.sort(fortuneList);
-        ArrayOfByteArraysOutput output = fortunes.template(fortuneList).render(ArrayOfByteArraysOutput.FACTORY);
-        List<byte[]> entity = output.getArrays();
-
-        // compute entity length and set header
-        int length = 0;
-        for (byte[] bytes : entity) {
-            length += bytes.length;
-        }
-        res.header(CONTENT_LENGTH, String.valueOf(length));
-
-        // write entity to output
-        try (var out = res.outputStream()) {
-            for (byte[] bytes : entity) {
-                out.write(bytes);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        fortuneList.sort(Comparator.comparing(Fortune::getMessage));
+        res.send(fortunes.template(fortuneList)
+                .render(ArrayOfByteArraysOutput.FACTORY)
+                .toByteArray());
     }
 }
