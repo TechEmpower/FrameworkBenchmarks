@@ -1,6 +1,8 @@
 
 package io.helidon.benchmark.nima.models;
 
+import java.util.concurrent.locks.ReentrantLock;
+
 import io.vertx.core.Vertx;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.pgclient.PgConnection;
@@ -14,6 +16,7 @@ class PgClientConnectionPool implements AutoCloseable {
     private final Vertx vertx;
     private final PgConnectOptions options;
     private final PgClientConnection[] connections;
+    private final ReentrantLock lock = new ReentrantLock();
 
     public PgClientConnectionPool(Vertx vertx, int size, PgConnectOptions options) {
         this.size = size;
@@ -24,21 +27,17 @@ class PgClientConnectionPool implements AutoCloseable {
 
     public PgClientConnection clientConnection() {
         int bucket = Thread.currentThread().hashCode() % size;
-        return connections[bucket];
-    }
-
-    public void connect() {
-        try {
-            for (int i = 0; i < size; i++) {
-                PgConnection conn = PgConnection.connect(vertx, options)
-                        .toCompletionStage().toCompletableFuture().get();
-                PgClientConnection clientConn = new PgClientConnection(conn);
-                clientConn.prepare();
-                connections[i] = clientConn;
+        if (connections[bucket] == null) {
+            try {
+                lock.lock();
+                if (connections[bucket] == null) {
+                    connect(bucket);
+                }
+            } finally {
+                lock.unlock();
             }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
         }
+        return connections[bucket];
     }
 
     @Override
@@ -47,6 +46,18 @@ class PgClientConnectionPool implements AutoCloseable {
             for (PgClientConnection connection : connections) {
                 connection.close();
             }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void connect(int bucket) {
+        try {
+            PgConnection conn = PgConnection.connect(vertx, options)
+                    .toCompletionStage().toCompletableFuture().get();
+            PgClientConnection clientConn = new PgClientConnection(conn);
+            clientConn.prepare();
+            connections[bucket] = clientConn;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
