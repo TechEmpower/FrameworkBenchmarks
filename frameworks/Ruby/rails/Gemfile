@@ -20,10 +20,6 @@ group :puma do
   gem 'puma', '~> 6.4', require: false
 end
 
-group :unicorn do
-  gem 'unicorn', '~> 6.1', require: false
-end
-
 group :agoo do
   gem 'agoo', require: false
   gem 'rackup'
