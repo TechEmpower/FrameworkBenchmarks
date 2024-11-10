@@ -1,47 +1,60 @@
-# Ultimate-Express Benchmarking Test
+# UltimateExpress Benchmarking Test
 
-This is the Ultimate Express portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
-The Ultimate Express. Fastest http server with full Express compatibility, based on µWebSockets.
+The Ultimate Express. Fastest http server with full Express compatibility, based on [µWebSockets](https://github.com/uNetworking/uWebSockets.js).
 
-### JSON Encoding Test
+## Important Libraries
 
-* [JSON test source](app.js)
-
-### Data-Store/Database Mapping Test
-
-* [DB test controller/model](app.js)
-
-## Infrastructure Software Versions
 The tests were run with:
-* [Node.js v20.12.2](http://nodejs.org/)
-* [µExpress / Ultimate Express 1.3.7](https://github.com/dimdenGD/ultimate-express)
 
-## Resources
-* http://nodejs.org/api/cluster.html
+- [ultimate-express](https://github.com/dimdenGD/ultimate-express)
+- [postgres](https://github.com/porsager/postgres)
+- [mariadb](https://github.com/mariadb-corporation/mariadb-connector-nodejs)
+- [lru-cache](https://github.com/isaacs/node-lru-cache)
 
-## Test URLs
-### JSON Encoding Test
+## Database
 
-http://localhost:8080/json
+There are individual handlers for each DB approach. The logic for each of them are found here:
 
-### Data-Store/Database Mapping Test
+- [Postgres](database/postgres.js)
+- [MySQL](database/mysql.js)
 
-MongoDB:
-http://localhost:8080/mongoose
+There are **no database endpoints** or drivers attached by default.
 
-MySQL:
-http://localhost:8080/sequelize
+To initialize the application with one of these, run any _one_ of the following commands:
 
-PostgreSQL:
-http://localhost:8080/db
+```sh
+$ DATABASE=postgres npm start
+$ DATABASE=mysql npm start
+```
 
-### Variable Query Test
+## Test Endpoints
 
-MongoDB:
-http://localhost:8080/mongoose?queries=2
+> Visit the test requirements [here](https://github.com/TechEmpower/FrameworkBenchmarks/wiki/Project-Information-Framework-Tests-Overview)
 
-MySQL:
-http://localhost:8080/sequelize?queries=2
+```sh
+$ curl localhost:8080/json
+$ curl localhost:8080/plaintext
 
-PostgreSQL:
-http://localhost:8080/queries?queries=2
+# The following are only available with the DATABASE env var
+
+$ curl localhost:8080/db
+$ curl localhost:8080/fortunes
+
+$ curl localhost:8080/queries?queries=2
+$ curl localhost:8080/queries?queries=0
+$ curl localhost:8080/queries?queries=foo
+$ curl localhost:8080/queries?queries=501
+$ curl localhost:8080/queries?queries=
+
+$ curl localhost:8080/updates?queries=2
+$ curl localhost:8080/updates?queries=0
+$ curl localhost:8080/updates?queries=foo
+$ curl localhost:8080/updates?queries=501
+$ curl localhost:8080/updates?queries=
+
+$ curl localhost:8080/cached-worlds?count=2
+$ curl localhost:8080/cached-worlds?count=0
+$ curl localhost:8080/cached-worlds?count=foo
+$ curl localhost:8080/cached-worlds?count=501
+$ curl localhost:8080/cached-worlds?count=
+```
