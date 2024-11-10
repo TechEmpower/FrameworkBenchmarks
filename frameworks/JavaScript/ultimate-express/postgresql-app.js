@@ -58,7 +58,7 @@ if (cluster.isPrimary) {
     console.log('worker ' + worker.pid + ' died'));
 } else {
   const app = module.exports = express();
-
+  app.set("etag", false);
   app.use((req, res, next) => {
     res.setHeader("Server", "UltimateExpress");
     return next();

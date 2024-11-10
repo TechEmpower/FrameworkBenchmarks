@@ -55,7 +55,7 @@ if (cluster.isPrimary) {
     console.log('worker ' + worker.pid + ' died'));
 } else {
   const app = module.exports = express();
-
+  app.set("etag", false);
   // Configuration
   // https://github.com/expressjs/method-override#custom-logic
   app.use(express.urlencoded({ extended: true }));

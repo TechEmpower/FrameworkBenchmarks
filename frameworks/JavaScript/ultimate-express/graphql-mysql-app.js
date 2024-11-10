@@ -13,6 +13,7 @@ if (cluster.isPrimary) {
   cluster.on('exit', (worker, code, signal) =>
     console.log('worker ' + worker.pid + ' died'));
 } else {
+  app.set("etag", false);
   app.use(express.urlencoded({ extended:false }));
   app.use(express.json());
 

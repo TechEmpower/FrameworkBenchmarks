@@ -20,7 +20,7 @@ if (cluster.isPrimary) {
   });
 } else {
   const app = module.exports = express();
-
+  app.set("etag", false);
   // Configuration
   app.use(express.urlencoded({ extended: true }));
 

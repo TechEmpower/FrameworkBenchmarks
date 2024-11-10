@@ -39,7 +39,7 @@ if (cluster.isPrimary) {
   cluster.on('exit', (worker, code, signal) => console.log('worker ' + worker.pid + ' died'));
 } else {
   const app = module.exports = express();
-
+  app.set("etag", false);
   const randomTfbNumber = () => Math.floor(Math.random() * 10000) + 1;
   const toClientWorld = (world) => {
     if (world) {
