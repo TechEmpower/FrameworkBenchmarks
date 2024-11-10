@@ -21,23 +21,29 @@ if (cluster.isPrimary) {
 } else {
   const app = module.exports = express();
   app.set("etag", false);
+  app.set('view engine', 'jade');
+  app.set('views', __dirname + '/views');
+
+  // Routes
+  app.get('/json', (req, res) => {
+    res.setHeader("Server", "UltimateExpress");
+    res.send({ message: 'Hello, World!' });
+  });
+
+  app.get('/plaintext', (req, res) => {
+    res.setHeader('Content-Type', 'text/plain');
+    res.setHeader("Server", "UltimateExpress");
+    res.send('Hello, World!');
+  });
+
   // Configuration
   app.use(express.urlencoded({ extended: true }));
 
   // Set headers for all routes
   app.use((req, res, next) => {
-    res.setHeader("Server", "Express");
-    return next();
+      res.setHeader("Server", "UltimateExpress");
+      return next();
   });
-
-  app.set('view engine', 'jade');
-  app.set('views', __dirname + '/views');
-
-  // Routes
-  app.get('/json', (req, res) => res.send({ message: 'Hello, World!' }));
-
-  app.get('/plaintext', (req, res) =>
-    res.header('Content-Type', 'text/plain').send('Hello, World!'));
 
   app.listen(8080);
 }

@@ -5,6 +5,20 @@ export function handleError(error, response) {
   response.end("Internal Server Error");
 }
 
+export const headerTypes = {
+  plain: "text/plain",
+  json: "application/json",
+  html: "text/html; charset=UTF-8",
+};
+
+export function writeResponse(res, text, type = headerTypes["json"]) {
+  res.writeHead(200, {
+    "content-type": type,
+    server: "UltimateExpress",
+  });
+  res.end(text);
+}
+
 export function getQueriesCount(request) {
   return Math.min(parseInt(request.query["queries"]) || 1, 500);
 }
