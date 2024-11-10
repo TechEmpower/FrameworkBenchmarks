@@ -20,7 +20,8 @@ const cache = new LRUCache({
 });
 
 const app = express();
-app.set("ejs", false);
+app.set("etag", false);
+app.set("x-powered-by", false);
 
 app.get('/plaintext', (req, res) => {
   res.setHeader('Server', 'UltimateExpress');
