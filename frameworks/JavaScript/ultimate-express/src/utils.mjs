@@ -2,20 +2,6 @@ import { sjs, attr } from "slow-json-stringify";
 
 export const GREETING = "Hello, World!";
 
-export const headerTypes = {
-  plain: "text/plain",
-  json: "application/json",
-  html: "text/html; charset=UTF-8",
-};
-
-export function writeResponse(res, text, type = headerTypes["json"]) {
-  res.writeHead(200, {
-    "content-type": type,
-    server: "Express",
-  });
-  res.end(text);
-}
-
 export function handleError(error, response) {
   console.error(error);
   response.end("Internal Server Error");

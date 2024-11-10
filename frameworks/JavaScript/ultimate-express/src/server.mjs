@@ -7,8 +7,6 @@ import {
   jsonSerializer,
   worldObjectSerializer,
   sortByMessage,
-  writeResponse,
-  headerTypes,
   GREETING,
 } from "./utils.mjs";
 
@@ -21,18 +19,20 @@ const extra = { id: 0, message: "Additional fortune added at request time." };
 const app = express();
 
 app.get("/plaintext", (req, res) => {
-  writeResponse(res, GREETING, headerTypes["plain"]);
+  res.setHeader("Content-Type", "text/plain");
+  res.setHeader("Server", "UltimateExpress");
+  res.send("Hello, World!");
 });
 
 app.get("/json", (req, res) => {
-  writeResponse(res, jsonSerializer({ message: GREETING }));
+  res.send(jsonSerializer({ message: GREETING }));
 });
 
 if (db) {
   app.get("/db", async (req, res) => {
     try {
       const row = await db.find(generateRandomNumber());
-      writeResponse(res, worldObjectSerializer(row));
+      res.send(worldObjectSerializer(row));
     } catch (error) {
       handleError(error, res);
     }
@@ -45,13 +45,15 @@ if (db) {
         .fill()
         .map(() => db.find(generateRandomNumber()));
       const worldObjects = await Promise.all(databaseJobs);
-      writeResponse(res, JSON.stringify(worldObjects));
+      res.send(worldObjects);
     } catch (error) {
       handleError(error, res);
     }
   });
 
   app.get("/fortunes", async (req, res) => {
+    res.setHeader("Content-Type", "text/html; charset=UTF-8");
+    res.setHeader("Server", "UltimateExpress");
     try {
       const rows = [extra, ...(await db.fortunes())];
       sortByMessage(rows);
@@ -64,11 +66,8 @@ if (db) {
         )}</td></tr>`;
       }
 
-      writeResponse(
-        res,
-        `<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>${html}</table></body></html>`,
-        headerTypes["html"]
-      );
+      res.send(
+        `<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>${html}</table></body></html>`);
     } catch (error) {
       handleError(error, res);
     }
@@ -87,7 +86,7 @@ if (db) {
         worldObjects[i].randomNumber = generateRandomNumber();
       }
       await db.bulkUpdate(worldObjects);
-      writeResponse(res, JSON.stringify(worldObjects));
+      res.send(worldObjects);
     } catch (error) {
       handleError(error, res);
     }
