@@ -1,7 +1,5 @@
 import { sjs, attr } from "slow-json-stringify";
 
-export const GREETING = "Hello, World!";
-
 export function handleError(error, response) {
   console.error(error);
   response.end("Internal Server Error");

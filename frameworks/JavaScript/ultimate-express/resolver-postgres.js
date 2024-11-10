@@ -15,7 +15,7 @@ const db = pgp(`postgres://${connection.username}:${connection.password}@${conne
 
 async function arrayOfRandomWorlds(totalWorldsToReturn) {
 
-    var totalIterations = helper.sanititizeTotal(totalWorldsToReturn);
+    var totalIterations = helper.sanitizeTotal(totalWorldsToReturn);
     var arr = [];
 
     return new Promise(async(resolve, reject) => {
@@ -32,7 +32,7 @@ async function arrayOfRandomWorlds(totalWorldsToReturn) {
 
 async function updateRandomWorlds(totalToUpdate) {
 
-    const total = helper.sanititizeTotal(totalToUpdate);
+    const total = helper.sanitizeTotal(totalToUpdate);
     var arr = [];
 
     return new Promise(async(resolve, reject) => {

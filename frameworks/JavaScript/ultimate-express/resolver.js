@@ -50,7 +50,7 @@ const Fortune = sequelize.define('fortune', {
 
 async function arrayOfRandomWorlds(totalWorldToReturn) {
 
-    var totalIterations = helper.sanititizeTotal(totalWorldToReturn);
+    var totalIterations = helper.sanitizeTotal(totalWorldToReturn);
     var arr = [];
 
     return new Promise(async (resolve, reject) => {
@@ -66,7 +66,7 @@ async function arrayOfRandomWorlds(totalWorldToReturn) {
 
 async function updateRandomWorlds(totalToUpdate) {
 
-    const total = helper.sanititizeTotal(totalToUpdate);
+    const total = helper.sanitizeTotal(totalToUpdate);
     var arr = [];
 
     return new Promise(async (resolve, reject) => {

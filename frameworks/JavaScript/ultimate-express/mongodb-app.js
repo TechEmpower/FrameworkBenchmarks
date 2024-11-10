@@ -8,9 +8,6 @@ const express = require('ultimate-express');
 const mongoose = require('mongoose');
 const connection = mongoose.createConnection('mongodb://tfb-database/hello_world');
 
-// Middleware
-const bodyParser = require('body-parser');
-
 /**
  * Note! The benchmarks say we should use "id" as a property name.
  * However, Mongo provides a default index on "_id", so to be equivalent to the other tests, we use
@@ -53,7 +50,7 @@ if (cluster.isPrimary) {
   };
 
   // Configuration
-  app.use(bodyParser.urlencoded({extended: true}));
+  app.use(express.urlencoded({extended: true}));
 
   // Set headers for all routes
   app.use((req, res, next) => {

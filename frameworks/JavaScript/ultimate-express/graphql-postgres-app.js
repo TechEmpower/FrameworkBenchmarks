@@ -2,7 +2,6 @@ const cluster = require('cluster')
 const numCPUs = require('os').cpus().length
 const express = require('ultimate-express');
 const app = express();
-const bodyParser = require('body-parser');
 const port = 8080;
 
 if (cluster.isPrimary) {
@@ -15,8 +14,8 @@ if (cluster.isPrimary) {
     console.log('worker ' + worker.pid + ' died'));
 } else {
 
-  app.use(bodyParser.urlencoded({ extended:false }));
-  app.use(bodyParser.json());
+  app.use(express.urlencoded({ extended:false }));
+  app.use(express.json());
 
   const resolvers = require('./resolver-postgres');
 

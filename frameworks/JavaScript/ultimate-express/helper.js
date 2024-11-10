@@ -1,6 +1,6 @@
 module.exports = {
 
-    sanititizeTotal : (total) => {
+    sanitizeTotal : (total) => {
         let totalIterations;
         if (!total || typeof(total) != 'number') {
             totalIterations = 1;

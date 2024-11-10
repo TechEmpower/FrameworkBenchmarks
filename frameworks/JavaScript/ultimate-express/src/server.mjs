@@ -4,10 +4,8 @@ import {
   getQueriesCount,
   handleError,
   escape,
-  jsonSerializer,
   worldObjectSerializer,
   sortByMessage,
-  GREETING,
 } from "./utils.mjs";
 
 let db;
@@ -25,7 +23,7 @@ app.get("/plaintext", (req, res) => {
 });
 
 app.get("/json", (req, res) => {
-  res.send(jsonSerializer({ message: GREETING }));
+  res.send({ message: "Hello, World!" });
 });
 
 if (db) {

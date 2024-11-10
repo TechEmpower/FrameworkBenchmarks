@@ -32,7 +32,7 @@ async function getRandomWorld() {
 // Methods
 
 async function arrayOfRandomWorlds(totalWorldsToReturn) {
-  const totalIterations = helper.sanititizeTotal(totalWorldsToReturn);
+  const totalIterations = helper.sanitizeTotal(totalWorldsToReturn);
   const promises = [];
 
   for (let i = 1; i <= totalIterations; i++) {
@@ -57,7 +57,7 @@ async function getAndUpdateRandomWorld() {
 }
 
 async function updateRandomWorlds(totalToUpdate) {
-  const totalIterations = helper.sanititizeTotal(totalToUpdate);
+  const totalIterations = helper.sanitizeTotal(totalToUpdate);
   const promises = [];
 
   for (let i = 1; i <= totalIterations; i++) {

@@ -6,9 +6,6 @@ const cluster = require('cluster'),
   express = require('ultimate-express'),
   helper = require('./helper');
 
-// Middleware
-const bodyParser = require('body-parser');
-
 const Sequelize = require('sequelize');
 const sequelize = new Sequelize('hello_world', 'benchmarkdbuser', 'benchmarkdbpass', {
   host: 'tfb-database',
@@ -62,7 +59,12 @@ if (cluster.isPrimary) {
 } else {
   const app = module.exports = express();
 
-  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use((req, res, next) => {
+    res.setHeader("Server", "UltimateExpress");
+    return next();
+  });
+
+  app.use(express.urlencoded({ extended: true }));
 
   // Set headers for all routes
   app.use((req, res, next) => {
@@ -74,6 +76,11 @@ if (cluster.isPrimary) {
   app.set('views', __dirname + '/views');
 
   // Routes
+  app.get('/json', (req, res) => res.send({ message: 'Hello, World!' }));
+
+  app.get('/plaintext', (req, res) =>
+      res.header('Content-Type', 'text/plain').send('Hello, World!'));
+
   app.get('/db', async (req, res) => {
     let world = await randomWorldPromise();
 
