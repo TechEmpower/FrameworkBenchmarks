@@ -13,7 +13,7 @@ The Ultimate Express. Fastest http server with full Express compatibility, based
 
 ## Infrastructure Software Versions
 The tests were run with:
-* [Node.js v16.13.0](http://nodejs.org/)
+* [Node.js v20.12.2](http://nodejs.org/)
 * [µExpress / Ultimate Express 1.3.7](https://github.com/dimdenGD/ultimate-express)
 
 ## Resources
