@@ -7,7 +7,7 @@ import { sjs, attr } from 'slow-json-stringify'
 const { DATABASE } = process.env;
 const db = DATABASE ? await import(`./database/${DATABASE}.js`) : null;
 
-const jsonSerializer = sjs({ message: attr("string")}); 
+const jsonSerializer = sjs({ message: attr("string") }); 
 
 const generateRandomNumber = () => Math.floor(Math.random() * maxRows) + 1;
 
