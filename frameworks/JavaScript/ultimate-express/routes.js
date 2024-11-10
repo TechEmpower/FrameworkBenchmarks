@@ -117,7 +117,7 @@ module.exports = (app, resolvers) => {
         const responseTxt = "Hello, World!";
     
         res.setHeader('Content-Length', responseTxt.length);
-        res.setHeader('Server', 'Express-GraphQL-MySQL');
+        res.setHeader('Server', 'UltimateExpress-GraphQL-MySQL');
         res.contentType('text/plain');
         res.status(200);
     
@@ -247,7 +247,7 @@ module.exports = (app, resolvers) => {
         res.status(200);
         res.contentType('application/json', 'charset=UTF-8');
         res.setHeader('Date', dateFormat(now, "ddd, dd mmm yyyy hh:MM:ss Z"));
-        res.setHeader('Server', 'GraphQL-Express-MySQL');
+        res.setHeader('Server', 'UltimateExpress-GraphQL-MySQL');
         res.setHeader('Content-Length', jsonLength);
     };
 }

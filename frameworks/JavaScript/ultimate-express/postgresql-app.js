@@ -66,7 +66,7 @@ if (cluster.isPrimary) {
 
   // Set headers for all routes
   app.use((req, res, next) => {
-    res.setHeader("Server", "Express");
+    res.setHeader("Server", "UltimateExpress");
     return next();
   });
 
