@@ -2,8 +2,12 @@ import express from 'ultimate-express';
 import { LRUCache } from 'lru-cache';
 import cluster, { isWorker } from 'node:cluster';
 import { maxQuery, maxRows } from './config.js';
+import { sjs, attr } from 'slow-json-stringify'
+
 const { DATABASE } = process.env;
 const db = DATABASE ? await import(`./database/${DATABASE}.js`) : null;
+
+const jsonSerializer = sjs({ message: attr("string")}); 
 
 const generateRandomNumber = () => Math.floor(Math.random() * maxRows) + 1;
 
@@ -26,13 +30,13 @@ app.set("x-powered-by", false);
 app.get('/plaintext', (req, res) => {
   res.setHeader('Server', 'UltimateExpress');
   res.setHeader('Content-Type', 'text/plain');
-  res.send('Hello, World!');
+  res.end('Hello, World!');
 });
 
 app.get('/json', (req, res) => {
   res.setHeader('Server', 'UltimateExpress');
   res.setHeader('Content-Type', 'application/json');
-  res.send({ message: 'Hello, World!' });
+  res.end(jsonSerializer({ message: "Hello, World!" }));
 });
 
 if (db) {
@@ -108,7 +112,7 @@ if (db) {
 
       res
         .header('Content-Type', 'text/html; charset=utf-8')
-        .send(`<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>${html}</table></body></html>`);
+        .end(`<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>${html}</table></body></html>`);
     } catch (error) {
       throw error;
     }
