@@ -237,8 +237,10 @@ static int do_multiple_queries(bool do_update, bool use_cache, h2o_req_t *req)
 
 	const size_t num_query = get_query_number(req);
 
-	// MAX_QUERIES is a relatively small number, so assume no overflow in the following
-	// arithmetic operations.
+	// MAX_QUERIES is a relatively small number, say less than or equal to UINT16_MAX, so assume no
+	// unsigned overflow in the following arithmetic operations.
+	static_assert(MAX_QUERIES <= UINT16_MAX,
+	              "potential out-of-bounds memory accesses in the following code");
 	assert(num_query && num_query <= MAX_QUERIES);
 
 	size_t base_size = offsetof(multiple_query_ctx_t, res) + num_query * sizeof(query_result_t);
@@ -373,7 +375,7 @@ static void do_updates(multiple_query_ctx_t *query_ctx)
 	for (size_t i = 0; i < query_ctx->num_result; i++) {
 		query_ctx->res[i].id = htonl(query_ctx->res[i].id);
 		query_ctx->res[i].random_number =
-				htonl(1 + get_random_number(MAX_ID, &query_ctx->ctx->random_seed));
+			htonl(1 + get_random_number(MAX_ID, &query_ctx->ctx->random_seed));
 		paramFormats[2 * i] = 1;
 		paramFormats[2 * i + 1] = 1;
 		paramLengths[2 * i] = sizeof(query_ctx->res[i].id);

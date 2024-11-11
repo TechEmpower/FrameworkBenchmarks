@@ -10,7 +10,7 @@
     "handlebars": "4.3.0",
     "mongoose": "5.13.20",
     "mysql": "2.16.0",
-    "mysql2": "3.9.7",
+    "mysql2": "3.9.8",
     "pg": "8.5.1",
     "pg-hstore": "2.3.2",
     "sequelize": "6.29.0"

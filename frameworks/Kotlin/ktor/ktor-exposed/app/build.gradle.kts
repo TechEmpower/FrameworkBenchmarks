@@ -1,7 +1,7 @@
 plugins {
-    kotlin("jvm") version "1.8.10"
-    kotlin("plugin.serialization") version "1.8.10"
     application
+    kotlin("jvm") version "1.9.22"
+    kotlin("plugin.serialization") version "2.0.0"
     id("com.github.johnrengelman.shadow") version "8.1.0"
 }
 
@@ -9,9 +9,9 @@ repositories {
     mavenCentral()
 }
 
-val ktorVersion = "2.2.3"
-val kotlinxSerializationVersion = "1.5.0"
-val exposedVersion = "0.41.1"
+val ktorVersion = "2.3.12"
+val kotlinxSerializationVersion = "1.6.3"
+val exposedVersion = "0.56.0"
 
 dependencies {
     implementation("io.ktor:ktor-server-core:$ktorVersion")

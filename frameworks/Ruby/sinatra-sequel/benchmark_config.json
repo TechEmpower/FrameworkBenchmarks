@@ -42,26 +42,6 @@
         "versus": "rack-sequel-postgres-puma-mri",
         "notes": ""
       },
-      "passenger-mri": {
-        "db_url": "/db",
-        "query_url": "/queries?queries=",
-        "fortune_url": "/fortunes",
-        "update_url": "/updates?queries=",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Micro",
-        "database": "MySQL",
-        "framework": "sinatra",
-        "language": "Ruby",
-        "orm": "Full",
-        "platform": "Rack",
-        "webserver": "Passenger",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "sinatra-sequel-passenger-mri",
-        "versus": "rack-sequel-passenger-mri",
-        "notes": ""
-      },
       "postgres-passenger-mri": {
         "db_url": "/db",
         "query_url": "/queries?queries=",
@@ -80,26 +60,6 @@
         "database_os": "Linux",
         "display_name": "sinatra-sequel-postgres-passenger-mri",
         "versus": "rack-sequel-postgres-passenger-mri",
-        "notes": ""
-      },
-      "unicorn-mri": {
-        "db_url": "/db",
-        "query_url": "/queries?queries=",
-        "fortune_url": "/fortunes",
-        "update_url": "/updates?queries=",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Micro",
-        "database": "MySQL",
-        "framework": "sinatra",
-        "language": "Ruby",
-        "orm": "Full",
-        "platform": "Rack",
-        "webserver": "Unicorn",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "sinatra-sequel-unicorn-mri",
-        "versus": "rack-sequel-unicorn-mri",
         "notes": ""
       },
       "postgres-unicorn-mri": {

@@ -1,27 +1,4 @@
-#FROM ziglang/static-base:llvm15-aarch64-3 as build
-FROM buddyspencer/ziglang:0.11.0-r3 as build
-
-WORKDIR /zap
-
-COPY src src
-
-COPY build.zig.zon build.zig.zon
-COPY build.zig build.zig
-
-RUN apk update
-RUN apk add yaml-dev sqlite-dev
-RUN apk add bind-tools
-RUN apk add --no-cache bash
-RUN dig +short localhost | head -n 1
-RUN zig build -Doptimize=ReleaseFast --prefix-exe-dir /usr/bin
-RUN zig version
-RUN ls
-
-EXPOSE 3000
-
-CMD ["sh", "run.sh"]
-
-FROM alpine:3.19
+FROM fedora:40 AS build
 
 WORKDIR /zap
 
@@ -31,12 +8,23 @@ ENV PG_DB=hello_world
 ENV PG_HOST=tfb-database
 ENV PG_PORT=5432
 
-COPY run.sh run.sh
+COPY src src
+COPY build.zig.zon build.zig.zon
+COPY build.zig build.zig
+COPY start-servers.sh start-servers.sh
+COPY build-nginx-conf.sh build-nginx-conf.sh
+COPY nginx.conf nginx.conf
 
-RUN apk update
+RUN chmod +x start-servers.sh
+RUN chmod +x build-nginx-conf.sh
 
-COPY --from=build /usr/bin/zap /usr/bin/zap
+RUN ./build-nginx-conf.sh
 
-EXPOSE 3000
+RUN dnf install -y zig nginx
+RUN zig version
+RUN zig build -Doptimize=ReleaseFast 
+RUN cp /zap/zig-out/bin/zap /usr/local/bin
 
-CMD ["sh", "run.sh"]
+EXPOSE 8080
+
+CMD ./start-servers.sh && nginx -c /zap/nginx.conf -g "daemon off;"

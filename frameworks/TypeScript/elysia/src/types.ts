@@ -1,9 +1,9 @@
-export type Fortune = {
-  id: number;
-  message: string;
-};
+export interface Fortune {
+  id: number
+  message: string
+}
 
-export type World = {
-  id: number;
-  randomNumber: number;
-};
+export interface World {
+  id: number
+  randomNumber: number
+}

@@ -1,3 +1,4 @@
+import Foundation
 import Hummingbird
 import PostgresNIO
 
@@ -15,15 +16,21 @@ struct TechFrameworkRequestContext: RequestContext {
     static let jsonEncoder = JSONEncoder()
     static let jsonDecoder = JSONDecoder()
 
-    var coreContext: Hummingbird.CoreRequestContext
+    var coreContext: Hummingbird.CoreRequestContextStorage
 
     // Use a global JSON Encoder
     var responseEncoder: JSONEncoder { Self.jsonEncoder }
     // Use a global JSON Decoder
     var requestDecoder: JSONDecoder { Self.jsonDecoder }
 
+    init(source: ApplicationRequestContextSource) {
+        self.init(channel: source.channel, logger: source.logger)
+    }
+
     init(channel: any Channel, logger: Logger) {
-        self.coreContext = .init(allocator: channel.allocator, logger: logger)
+        self.coreContext = CoreRequestContextStorage(
+            source: ApplicationRequestContextSource(channel: channel, logger: logger)
+        )
     }
 }
 

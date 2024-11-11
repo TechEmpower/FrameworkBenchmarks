@@ -16,11 +16,13 @@ if (DATABASE) db = await import(`./database/${DATABASE}.js`);
 
 const webserver = uWebSockets.App();
 
-webserver.get("/plaintext", (response) => {
-  addBenchmarkHeaders(response);
-  response.writeHeader("Content-Type", "text/plain");
-  response.end("Hello, World!");
-});
+uWebSockets._cfg('silent');
+
+webserver.get("/plaintext", new uWebSockets.DeclarativeResponse()
+              .writeHeader("Server", "uWS")
+              .writeHeader("Content-Type", "text/plain")
+              .end("Hello, World!")
+);
 
 webserver.get("/json", (response) => {
   addBenchmarkHeaders(response);
@@ -90,7 +92,7 @@ if (db) {
       handleError(error, response);
     }
   });
-  
+
   const extra = { id: 0, message: "Additional fortune added at request time." };
 
   webserver.get("/fortunes", async (response) => {

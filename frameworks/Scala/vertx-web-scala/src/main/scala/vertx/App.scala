@@ -26,7 +26,7 @@ import scala.util.{Failure, Sorting, Success, Try}
 case class Header(name: CharSequence, value: String)
 
 class App extends ScalaVerticle {
-
+  import App._
   private val HELLO_WORLD = "Hello, world!"
   private val HELLO_WORLD_BUFFER = Buffer.buffer(HELLO_WORLD, "UTF-8")
   private val SERVER = "vert.x"
@@ -116,8 +116,7 @@ class App extends ScalaVerticle {
                 .end(World(row.getInteger(0), row.getInteger(1)).encode())
             }
           } else {
-            App.logger.error("Failed to handle request", ar.cause())
-            request.response.setStatusCode(500).end(ar.cause.getMessage)
+            sendError(request, ar.cause, "Failed to handle Db request")
           }
         }
       )
@@ -136,7 +135,7 @@ class App extends ScalaVerticle {
             if (!failed) {
               if (ar.failed) {
                 failed = true
-                request.response.setStatusCode(500).end(ar.cause.getMessage)
+                sendError(request, ar.cause, "Failed to handle Queries request")
                 return
               }
               // we need a final reference
@@ -155,11 +154,6 @@ class App extends ScalaVerticle {
   }
 
   private def handleUpdates(request: HttpServerRequest): Unit = {
-    def sendError(err: Throwable): Unit = {
-      App.logger.error("", err)
-      request.response.setStatusCode(500).end(err.getMessage)
-    }
-
     def handleUpdates(conn: SqlConnection, worlds: Array[World]): Unit = {
       Sorting.quickSort(worlds)
 
@@ -170,7 +164,7 @@ class App extends ScalaVerticle {
           batch,
           (ar: AsyncResult[RowSet[Row]]) => {
             if (ar.failed) {
-              sendError(ar.cause)
+              sendError(request, ar.cause, "handleUpdates: failed to update DB")
               return
             }
 
@@ -197,7 +191,7 @@ class App extends ScalaVerticle {
             if (!failed) {
               if (ar2.failed) {
                 failed = true
-                sendError(ar2.cause)
+                sendError(request, ar2.cause, "handleUpdates: failed to read DB")
                 return
               }
               worlds(index) = World(ar2.result.iterator.next.getInteger(0), App.randomWorld())
@@ -206,7 +200,6 @@ class App extends ScalaVerticle {
             }
           }
         )
-
       i += 1
     }
   }
@@ -230,9 +223,7 @@ class App extends ScalaVerticle {
             responseWithHeaders(request.response, contentTypeHtml)
               .end(html.fortune(fortunes).body)
           } else {
-            val err = ar.cause
-            App.logger.error("", err)
-            response.setStatusCode(500).end(err.getMessage)
+            sendError(request, ar.cause, "handleFortunes failed to update DB")
           }
         }
       )
@@ -241,9 +232,9 @@ class App extends ScalaVerticle {
 
 object App {
   val logger: Logger = Logger[App]
-
+  val defaultConfigPath = "src/main/conf/config.json"
   def main(args: Array[String]): Unit = {
-    val config = new JsonObject(Files.readString(new File(args(0)).toPath))
+    val config = new JsonObject(Files.readString(new File(if(args.length < 1) defaultConfigPath else args(0)).toPath))
     val vertx = Vertx.vertx(VertxOptions().setPreferNativeTransport(true))
 
     printConfig(vertx)
@@ -298,5 +289,10 @@ object App {
     logger.info("Vert.x: {}", version)
     logger.info("Event Loop Size: {}", JVertxOptions.DEFAULT_EVENT_LOOP_POOL_SIZE)
     logger.info("Native transport: {}", vertx.isNativeTransportEnabled)
+  }
+
+  def sendError(request: HttpServerRequest, err: Throwable, msg: String = ""): Unit = {
+    App.logger.error(msg, err)
+    request.response.setStatusCode(500).end(err.getMessage)
   }
 }

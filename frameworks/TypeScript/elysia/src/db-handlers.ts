@@ -1,84 +1,75 @@
-import Elysia from 'elysia';
-import * as postgres from './postgres';
-import { Fortune, World } from './types';
+import { Elysia, t } from "elysia";
+import * as db from "./postgres";
+import { Fortune } from "./types";
 
-const deps = new Elysia({
-  name: 'deps',
-})
-  .decorate('db', postgres)
-  .decorate('generateRandomNumber', () => Math.ceil(Math.random() * 10000))
-  .decorate('html', (fortunes: Fortune[]) => {
-    const n = fortunes.length;
+function rand() {
+  return Math.ceil(Math.random() * 10000);
+}
 
-    let html = '';
-    for (let i = 0; i < n; i++) {
-      html += `<tr><td>${fortunes[i].id}</td><td>${Bun.escapeHTML(
-        fortunes[i].message
-      )}</td></tr>`;
-    }
+function parseQueriesNumber(q?: string) {
+  return Math.min(parseInt(q || "1") || 1, 500);
+}
 
-    return `<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>${html}</table></body></html>`;
-  });
+function renderTemplate(fortunes: Fortune[]) {
+  const n = fortunes.length;
 
-const dbHandlers = new Elysia({
-  name: 'db-handlers',
-})
-  .use(deps)
-  .get(
-    '/db',
-    async ({ db, generateRandomNumber }) =>
-      await db.find(generateRandomNumber())
-  )
-  .get(
-    '/fortunes',
-    async ({ db, html }) => {
-      const fortunes = await db.fortunes();
+  let html = "";
+  for (let i = 0; i < n; i++) {
+    html += `<tr><td>${fortunes[i].id}</td><td>${Bun.escapeHTML(
+      fortunes[i].message,
+    )}</td></tr>`;
+  }
 
-      fortunes.push({
-        id: 0,
-        message: 'Additional fortune added at request time.',
-      });
+  return `<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>${html}</table></body></html>`;
+}
 
-      fortunes.sort((a, b) => (a.message < b.message ? -1 : 1));
-
-      return html(fortunes);
-    },
-    {
-      afterHandle({ set }) {
-        set.headers['content-type'] = 'text/html; charset=utf-8';
-      },
-    }
-  )
-  .derive(({ query }) => ({
-    numberOfObjects: Math.min(parseInt(query.queries || '1') || 1, 500),
-  }))
-  .get('/queries', async ({ db, generateRandomNumber, numberOfObjects }) => {
-    const worldPromises = new Array<Promise<World>>(numberOfObjects);
-
-    for (let i = 0; i < numberOfObjects; i++) {
-      worldPromises[i] = db.find(generateRandomNumber());
-    }
-
-    const worlds = await Promise.all(worldPromises);
-
-    return worlds;
+export const dbHandlers = new Elysia()
+  .headers({
+    server: "Elysia",
   })
-  .get('/updates', async ({ db, generateRandomNumber, numberOfObjects }) => {
-    const worldPromises = new Array<Promise<World>>(numberOfObjects);
+  .get("/db", () => db.find(rand()))
+  .get("/fortunes", async (c) => {
+    const fortunes = await db.fortunes();
 
-    for (let i = 0; i < numberOfObjects; i++) {
-      worldPromises[i] = db.find(generateRandomNumber());
+    fortunes.push({
+      id: 0,
+      message: "Additional fortune added at request time.",
+    });
+
+    fortunes.sort((a, b) => {
+      if (a.message < b.message) return -1;
+
+      return 1;
+    });
+
+    c.set.headers["content-type"] = "text/html; charset=utf-8";
+
+    return renderTemplate(fortunes);
+  })
+  .get("/queries", (c) => {
+    const num = parseQueriesNumber(c.query.queries);
+    const worldPromises = new Array(num);
+
+    for (let i = 0; i < num; i++) {
+      worldPromises[i] = db.find(rand());
+    }
+
+    return Promise.all(worldPromises);
+  })
+  .get("/updates", async (c) => {
+    const num = parseQueriesNumber(c.query.queries);
+    const worldPromises = new Array(num);
+
+    for (let i = 0; i < num; i++) {
+      worldPromises[i] = db.find(rand());
     }
 
     const worlds = await Promise.all(worldPromises);
 
-    for (let i = 0; i < numberOfObjects; i++) {
-      worlds[i].randomNumber = generateRandomNumber();
+    for (let i = 0; i < num; i++) {
+      worlds[i].randomNumber = rand();
     }
 
     await db.bulkUpdate(worlds);
-
     return worlds;
   });
-
-export default dbHandlers;

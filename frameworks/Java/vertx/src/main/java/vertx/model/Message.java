@@ -1,16 +1,30 @@
 package vertx.model;
 
-import io.vertx.core.json.JsonObject;
+import com.julienviet.jsonsergen.Backend;
+import com.julienviet.jsonsergen.JsonSerGen;
+import io.vertx.codegen.annotations.DataObject;
+import io.vertx.core.buffer.Buffer;
 
-public class Message extends JsonObject {
+@DataObject
+@JsonSerGen(backends = Backend.DSL_JSON)
+public class Message {
 
-  private static final String MESSAGE = "message";
+  private String message;
 
   public Message(String message) {
-    put(MESSAGE, message);
+    this.message = message;
   }
 
   public String getMessage() {
-    return getString(MESSAGE);
+    return message;
+  }
+
+  public Message setMessage(String message) {
+    this.message = message;
+    return this;
+  }
+
+  public Buffer toJson() {
+    return MessageJsonSerializer.toJsonBuffer(this);
   }
 }

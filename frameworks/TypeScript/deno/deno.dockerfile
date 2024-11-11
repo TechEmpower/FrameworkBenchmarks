@@ -1,4 +1,4 @@
-FROM denoland/deno:1.42.1
+FROM denoland/deno:1.46.1
 
 EXPOSE 8080
 
@@ -12,4 +12,4 @@ RUN deno cache main.ts
 
 EXPOSE 8080
 
-CMD ["run", "-A", "--unstable-net", "spawn.ts"]
+CMD ["deno", "serve", "--parallel", "--port", "8080", "--host", "0.0.0.0", "-A", "main.ts"]

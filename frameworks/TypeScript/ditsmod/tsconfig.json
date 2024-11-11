@@ -16,14 +16,11 @@
     "noImplicitAny": true,
     "strictPropertyInitialization": false,
     "allowJs": false,
-    "paths": {
-      "#routed/*": ["./src/app/modules/routed/*"],
-      "#service/*": ["./src/app/modules/service/*"],
-      "#utils/*": ["./src/app/utils/*"],
-    }
+    "types": ["bun-types"],
   },
   "include": [
     "src",
-    "test"
+    "test",
+    "./spawn.ts"
   ]
 }

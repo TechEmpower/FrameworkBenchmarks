@@ -60,7 +60,7 @@ pub async fn get_world(
     id: i32,
 ) -> Result<World, PgError> {
     let mut args = PgArguments::default();
-    args.add(id);
+    let _ = args.add(id);
 
     let world =
         sqlx::query_as_with("SELECT id, randomnumber FROM World WHERE id = $1", args)
@@ -86,8 +86,8 @@ pub async fn update_worlds(
 
     for w in &worlds {
         let mut args = PgArguments::default();
-        args.add(w.randomnumber);
-        args.add(w.id);
+        let _ = args.add(w.randomnumber);
+        let _ = args.add(w.id);
 
         sqlx::query_with("UPDATE World SET randomNumber = $1 WHERE id = $2", args)
             .execute(&mut *conn)
