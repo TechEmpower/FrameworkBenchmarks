@@ -1,16 +1,16 @@
 package benchmark.repository;
 
+import java.util.List;
+
 import benchmark.model.Fortune;
 import benchmark.model.World;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.mongodb.core.ReactiveMongoOperations;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import static org.springframework.data.mongodb.core.FindAndModifyOptions.options;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
 import static org.springframework.data.mongodb.core.query.Update.update;
@@ -31,12 +31,11 @@ public class MongoDbRepository implements DbRepository {
     }
 
     @Override
-    public Mono<World> findAndUpdateWorld(int id, int randomNumber) {
-        return operations.findAndModify(
-                query(where("id").is(id)),
-                update("randomNumber", randomNumber),
-                options().returnNew(true),
-                World.class);
+    public Mono<Void> updateWorlds(List<World> worlds) {
+        return Flux.fromIterable(worlds).flatMap(world -> operations.findAndModify(
+                query(where("id").is(world.id)),
+                update("randomNumber", world.randomnumber),
+                World.class)).then();
     }
 
     @Override
