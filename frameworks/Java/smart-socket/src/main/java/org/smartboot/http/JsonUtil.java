@@ -4,9 +4,9 @@ import com.jsoniter.output.JsonStream;
 import com.jsoniter.output.JsonStreamPool;
 import com.jsoniter.spi.JsonException;
 import com.jsoniter.spi.Slice;
+import jakarta.servlet.http.HttpServletResponse;
 import org.smartboot.http.server.HttpResponse;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
