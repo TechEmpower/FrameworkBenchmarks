@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include = "..\appMpower.Orm\appMpower.Orm.csproj" />
+    <PackageReference Include="RazorSlices" Version="0.8.1" />
   </ItemGroup>
 
   <PropertyGroup>
