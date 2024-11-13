@@ -10,7 +10,7 @@ RUN dotnet publish -c Release -o out /p:Database=postgresql
 FROM mcr.microsoft.com/dotnet/aspnet:9.0.0 AS runtime
 
 RUN apt-get update
-RUN apt-get install -y unixodbc odbc-postgresql
+RUN apt-get install -y unixodbc-dev unixodbc odbc-postgresql
 # unixodbc still needs to be installed even if compiled locally
 
 ENV PATH=/usr/local/unixODBC/bin:$PATH
@@ -26,6 +26,10 @@ ENV DOTNET_ReadyToRun 0
 ENV ASPNETCORE_URLS http://+:8080
 WORKDIR /app
 COPY --from=build /app/out ./
+
+#RUN cp /usr/lib/aarch64-linux-gnu/libodbc* /app
+RUN cp /usr/lib/x86_64-linux-gnu/libodbc* /app
+
 
 EXPOSE 8080
 
