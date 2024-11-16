@@ -11,7 +11,7 @@ repositories {
 
 val ktorVersion = "2.3.12"
 val kotlinxSerializationVersion = "1.6.3"
-val exposedVersion = "0.52.0"
+val exposedVersion = "0.56.0"
 
 dependencies {
     implementation("io.ktor:ktor-server-core:$ktorVersion")

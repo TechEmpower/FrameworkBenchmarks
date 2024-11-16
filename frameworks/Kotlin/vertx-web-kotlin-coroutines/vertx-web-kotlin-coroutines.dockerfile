@@ -1,4 +1,4 @@
-FROM gradle:7.6-jdk17 as gradle
+FROM gradle:8.10.2-jdk17 as gradle
 WORKDIR /vertx-web-kotlin-coroutines
 COPY src src
 COPY build.gradle.kts build.gradle.kts

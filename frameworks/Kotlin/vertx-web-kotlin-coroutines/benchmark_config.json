@@ -18,8 +18,7 @@
       "database_os": "Linux",
       "display_name": "vertx-web-kotlin-coroutines",
       "notes": "",
-      "versus": "vertx-web",
-      "tags": ["broken"]
+      "versus": "vertx-web"
     },
     "postgres": {
       "db_url": "/db",

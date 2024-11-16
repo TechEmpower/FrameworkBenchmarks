@@ -53,7 +53,6 @@ public class Program
             .AddUserSecrets<Program>()
 #endif
             .AddEnvironmentVariables()
-            .AddEnvironmentVariables()
             .AddCommandLine(args)
             .Build();
 

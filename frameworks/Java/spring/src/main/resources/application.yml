@@ -15,7 +15,7 @@ spring:
     username: ${database.username}
     password: ${database.password}
     hikari:
-      maximum-pool-size: 256
+      maximum-pool-size: 512
 database:
   name: hello_world
   host: tfb-database
