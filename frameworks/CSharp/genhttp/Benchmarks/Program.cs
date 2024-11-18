@@ -1,5 +1,6 @@
 ﻿using Benchmarks.Tests;
 using Benchmarks.Utilities;
+using GenHTTP.Engine.Kestrel;
 using GenHTTP.Modules.IO;
 using GenHTTP.Modules.Layouting;
 using GenHTTP.Modules.Webservices;
@@ -14,6 +15,6 @@ var tests = Layout.Create()
                   .AddService<CacheResource>("cached-worlds")
                   .Add(ServerHeader.Create());
 
-return await GenHTTP.Engine.Kestrel.Host.Create()
-                    .Handler(tests)
-                    .RunAsync();
+return await Host.Create()
+                 .Handler(tests)
+                 .RunAsync();
