@@ -8,10 +8,9 @@ public sealed class ServerHeaderConcern : IConcern
 
     #region Initialization
 
-    public ServerHeaderConcern(IHandler parent, Func<IHandler, IHandler> contentFactory)
+    public ServerHeaderConcern(IHandler content)
     {
-        Parent = parent;
-        Content = contentFactory(this);
+        Content = content;
     }
 
     #endregion
@@ -20,13 +19,9 @@ public sealed class ServerHeaderConcern : IConcern
 
     public IHandler Content { get; }
 
-    public IHandler Parent { get; }
-
     #endregion
 
     #region Functionality
-
-    public IAsyncEnumerable<ContentElement> GetContentAsync(IRequest request) => Content.GetContentAsync(request);
 
     public ValueTask PrepareAsync() => Content.PrepareAsync();
 

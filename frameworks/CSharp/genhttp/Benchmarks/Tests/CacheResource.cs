@@ -37,7 +37,7 @@ public sealed class CacheResource
 
         var result = new List<World>(count);
 
-        using var context = DatabaseContext.CreateNoTracking();
+        await using var context = DatabaseContext.CreateNoTracking();
 
         for (var i = 0; i < count; i++)
         {

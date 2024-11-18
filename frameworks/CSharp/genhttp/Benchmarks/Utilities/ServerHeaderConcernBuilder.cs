@@ -5,6 +5,6 @@ namespace Benchmarks.Utilities;
 public sealed class ServerHeaderConcernBuilder : IConcernBuilder
 {
 
-    public IConcern Build(IHandler parent, Func<IHandler, IHandler> contentFactory) => new ServerHeaderConcern(parent, contentFactory);
+    public IConcern Build(IHandler content) => new ServerHeaderConcern(content);
 
 }

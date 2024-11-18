@@ -1,101 +1,90 @@
-﻿using System.Web;
-using Benchmarks.Model;
+﻿using Benchmarks.Model;
+using Cottle;
 using GenHTTP.Api.Content;
-using GenHTTP.Api.Content.Templating;
 using GenHTTP.Api.Protocol;
+
 using GenHTTP.Modules.IO;
-using GenHTTP.Modules.Razor;
+using GenHTTP.Modules.Pages;
+using GenHTTP.Modules.Pages.Rendering;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace Benchmarks.Tests;
 
-    #region Factory
-
-public class FortuneHandlerBuilder : IHandlerBuilder
+public class FortuneHandler : IHandler
 {
-
-    public IHandler Build(IHandler parent) => new FortuneHandler(parent);
-}
-
-    #endregion
-
-    #region Supporting data structures
-
-public sealed class FortuneModel : BasicModel
-{
-
-    public FortuneModel(IRequest request, IHandler handler, List<Fortune> cookies) : base(request, handler)
-    {
-        Cookies = cookies;
-    }
-
-    public List<Fortune> Cookies { get; }
-}
-
-    #endregion
-
-public class FortuneHandler : IHandler, IPageRenderer
-{
-
-    #region Initialization
-
-    public FortuneHandler(IHandler parent)
-    {
-        Parent = parent;
-
-        Page = ModRazor.Page(Resource.FromAssembly("Fortunes.html"), (r, h) => GetFortunes(r, h))
-                       .Title("Fortunes")
-                       .AddAssemblyReference<HttpUtility>()
-                       .AddUsing("System.Web")
-                       .Build(this);
-
-        Template = ModRazor.Template<TemplateModel>(Resource.FromAssembly("Template.html")).Build();
-    }
-
-    #endregion
 
     #region Get-/Setters
 
-    public IHandler Parent { get; }
+    private TemplateRenderer Template { get; }
 
-    private IHandler Page { get; }
+    #endregion
 
-    private IRenderer<TemplateModel> Template { get; }
+    #region Initialization
+
+    public FortuneHandler()
+    {
+        var resource = Resource.FromAssembly("Template.html").Build();
+
+        Template = Renderer.From(resource);
+    }
 
     #endregion
 
     #region Functionality
 
-    public async ValueTask PrepareAsync()
+    public ValueTask PrepareAsync() => new();
+
+    public async ValueTask<IResponse> HandleAsync(IRequest request)
     {
-        await Page.PrepareAsync();
-        await Template.PrepareAsync();
+        var data = new Dictionary<Value, Value>
+        {
+            ["cookies"] = Value.FromEnumerable(await GetFortunes())
+        };
+
+        return request.GetPage(await Template.RenderAsync(data)).Build();
     }
 
-    public ValueTask<ulong> CalculateChecksumAsync() => new(17);
-
-    public IAsyncEnumerable<ContentElement> GetContentAsync(IRequest request) => AsyncEnumerable.Empty<ContentElement>();
-
-    public ValueTask<string> RenderAsync(TemplateModel model) => Template.RenderAsync(model);
-
-    public ValueTask RenderAsync(TemplateModel model, Stream target) => Template.RenderAsync(model, target);
-
-    public ValueTask<IResponse> HandleAsync(IRequest request) => Page.HandleAsync(request);
-
-    private static async ValueTask<FortuneModel> GetFortunes(IRequest request, IHandler handler)
+    private static async ValueTask<List<Value>> GetFortunes()
     {
-        using var context = DatabaseContext.CreateNoTracking();
+        await using var context = DatabaseContext.CreateNoTracking();
 
-        var fortunes = await context.Fortune.ToListAsync().ConfigureAwait(false);
-
-        fortunes.Add(new Fortune
+        var fortunes = new List<Fortune>
         {
-            Message = "Additional fortune added at request time."
+            new Fortune()
+            {
+                Id = 5,
+                Message = "fdg"
+            }
+        };
+
+            //await context.Fortune.ToListAsync().ConfigureAwait(false);
+
+        var result = new List<Value>(fortunes.Count + 1);
+
+        foreach (var fortune in fortunes)
+        {
+            result.Add(Value.FromDictionary(new Dictionary<Value, Value>()
+            {
+                ["id"] = fortune.Id,
+                ["message"] = fortune.Message
+            }));
+        }
+
+        result.Add(Value.FromDictionary(new Dictionary<Value, Value>()
+        {
+            ["message"] = "Additional fortune added at request time."
+        }));
+
+        result.Sort((one, two) =>
+        {
+            var firstMessage = one.Fields["message"].AsString;
+            var secondMessage = two.Fields["message"].AsString;
+
+            return string.Compare(firstMessage, secondMessage, StringComparison.Ordinal);
         });
 
-        fortunes.Sort();
-
-        return new FortuneModel(request, handler, fortunes);
+        return result;
     }
 
     #endregion

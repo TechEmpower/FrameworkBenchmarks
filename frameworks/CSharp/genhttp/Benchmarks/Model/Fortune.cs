@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Benchmarks.Model;
 
 [Table("fortune")]
-public class Fortune : IComparable<Fortune>, IComparable
+public class Fortune
 {
 
     [Column("id")]
@@ -13,9 +13,5 @@ public class Fortune : IComparable<Fortune>, IComparable
     [Column("message")]
     [StringLength(2048)]
     public string Message { get; set; }
-
-    public int CompareTo(object obj) => CompareTo((Fortune)obj);
-
-    public int CompareTo(Fortune other) => string.CompareOrdinal(Message, other.Message);
 
 }
