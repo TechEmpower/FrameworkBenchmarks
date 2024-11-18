@@ -49,16 +49,7 @@ public class FortuneHandler : IHandler
     {
         await using var context = DatabaseContext.CreateNoTracking();
 
-        var fortunes = new List<Fortune>
-        {
-            new Fortune()
-            {
-                Id = 5,
-                Message = "fdg"
-            }
-        };
-
-            //await context.Fortune.ToListAsync().ConfigureAwait(false);
+        var fortunes = await context.Fortune.ToListAsync().ConfigureAwait(false);
 
         var result = new List<Value>(fortunes.Count + 1);
 
