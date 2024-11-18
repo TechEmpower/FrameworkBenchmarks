@@ -1,4 +1,5 @@
-﻿using Benchmarks.Model;
+﻿using System.Web;
+using Benchmarks.Model;
 using Cottle;
 using GenHTTP.Api.Content;
 using GenHTTP.Api.Protocol;
@@ -58,7 +59,7 @@ public class FortuneHandler : IHandler
             result.Add(Value.FromDictionary(new Dictionary<Value, Value>()
             {
                 ["id"] = fortune.Id,
-                ["message"] = fortune.Message
+                ["message"] = HttpUtility.HtmlEncode(fortune.Message)
             }));
         }
 
