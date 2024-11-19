@@ -5,7 +5,7 @@ use std::{future::Future, io, pin::Pin, task::Context, task::Poll};
 
 use ntex::util::{ready, PoolId, Ready};
 use ntex::{fn_service, http::h1, io::Io, io::RecvError};
-use yarte::Serialize;
+use sonic_rs::Serialize;
 
 mod utils;
 
@@ -43,10 +43,13 @@ impl Future for App {
                                     buf.extend_from_slice(JSON);
                                     this.codec.set_date_header(buf);
 
-                                    Message {
-                                        message: "Hello, World!",
-                                    }
-                                    .to_bytes_mut(buf);
+                                    sonic_rs::to_writer(
+                                        utils::BytesWriter(buf),
+                                        &Message {
+                                            message: "Hello, World!",
+                                        },
+                                    )
+                                    .unwrap();
                                 }
                                 "/plaintext" => {
                                     buf.extend_from_slice(PLAIN);

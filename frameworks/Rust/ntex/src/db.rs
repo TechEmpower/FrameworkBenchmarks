@@ -6,20 +6,26 @@ use ntex::util::{BufMut, Bytes, BytesMut};
 use smallvec::SmallVec;
 use tokio_postgres::types::ToSql;
 use tokio_postgres::{connect, Client, Statement};
-use yarte::{ywrite_html, Serialize};
+use yarte::TemplateBytesTrait;
 
 use super::utils;
 
-#[derive(Copy, Clone, Serialize, Debug)]
+#[derive(Copy, Clone, Debug, sonic_rs::Serialize)]
 pub struct World {
     pub id: i32,
     pub randomnumber: i32,
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Debug, sonic_rs::Serialize)]
 pub struct Fortune {
     pub id: i32,
     pub message: Cow<'static, str>,
+}
+
+#[derive(yarte::TemplateBytes)]
+#[template(path = "fortune.hbs")]
+pub struct FortunesTemplate<'a> {
+    pub fortunes: &'a Vec<Fortune>,
 }
 
 /// Postgres interface
@@ -30,6 +36,7 @@ pub struct PgConnection {
     rng: WyRand,
     updates: Vec<Statement>,
     buf: RefCell<BytesMut>,
+    fbuf: RefCell<Vec<Fortune>>,
 }
 
 impl PgConnection {
@@ -69,6 +76,7 @@ impl PgConnection {
             updates,
             rng: WyRand::new(),
             buf: RefCell::new(BytesMut::with_capacity(10 * 1024 * 1024)),
+            fbuf: RefCell::new(Vec::with_capacity(64)),
         }
     }
 }
@@ -81,11 +89,14 @@ impl PgConnection {
 
         let mut body = self.buf.borrow_mut();
         utils::reserve(&mut body, 1024);
-        World {
-            id: row.get(0),
-            randomnumber: row.get(1),
-        }
-        .to_bytes_mut(&mut *body);
+        sonic_rs::to_writer(
+            utils::BytesWriter(&mut body),
+            &World {
+                id: row.get(0),
+                randomnumber: row.get(1),
+            },
+        )
+        .unwrap();
         body.split().freeze()
     }
 
@@ -110,7 +121,7 @@ impl PgConnection {
         utils::reserve(&mut body, 2 * 1024);
         body.put_u8(b'[');
         worlds.iter().for_each(|w| {
-            w.to_bytes_mut(&mut *body);
+            sonic_rs::to_writer(utils::BytesWriter(&mut body), w).unwrap();
             body.put_u8(b',');
         });
         let idx = body.len() - 1;
@@ -149,7 +160,7 @@ impl PgConnection {
         utils::reserve(&mut body, 2 * 1024);
         body.put_u8(b'[');
         worlds.iter().for_each(|w| {
-            w.to_bytes_mut(&mut *body);
+            sonic_rs::to_writer(utils::BytesWriter(&mut body), w).unwrap();
             body.put_u8(b',');
         });
         let idx = body.len() - 1;
@@ -160,10 +171,11 @@ impl PgConnection {
     pub async fn tell_fortune(&self) -> Bytes {
         let rows = self.cl.query_raw(&self.fortune, &[]).await.unwrap();
 
-        let mut fortunes: SmallVec<[_; 32]> = smallvec::smallvec![Fortune {
+        let mut fortunes = self.fbuf.borrow_mut();
+        fortunes.push(Fortune {
             id: 0,
             message: Cow::Borrowed("Additional fortune added at request time."),
-        }];
+        });
         fortunes.extend(rows.iter().map(|row| Fortune {
             id: row.get(0),
             message: Cow::Owned(row.get(1)),
@@ -172,7 +184,13 @@ impl PgConnection {
 
         let mut body = std::mem::replace(&mut *self.buf.borrow_mut(), BytesMut::new());
         utils::reserve(&mut body, 4 * 1024);
-        ywrite_html!(body, "{{> fortune }}");
+
+        FortunesTemplate {
+            fortunes: &*fortunes,
+        }
+        .write_call(&mut body);
+        fortunes.clear();
+
         let result = body.split().freeze();
         let _ = std::mem::replace(&mut *self.buf.borrow_mut(), body);
         result
