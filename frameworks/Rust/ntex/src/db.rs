@@ -2,8 +2,7 @@
 use std::{borrow::Cow, cell::RefCell, fmt::Write as FmtWrite};
 
 use nanorand::{Rng, WyRand};
-use ntex::util::{BufMut, Bytes, BytesMut};
-use smallvec::SmallVec;
+use ntex::util::{Bytes, BytesMut};
 use tokio_postgres::types::ToSql;
 use tokio_postgres::{connect, Client, Statement};
 use yarte::TemplateBytesTrait;
@@ -102,13 +101,13 @@ impl PgConnection {
 
     pub async fn get_worlds(&self, num: usize) -> Bytes {
         let mut rng = self.rng.clone();
-        let mut queries = SmallVec::<[_; 32]>::new();
+        let mut queries = Vec::with_capacity(num);
         (0..num).for_each(|_| {
             let w_id = (rng.generate::<u32>() % 10_000 + 1) as i32;
             queries.push(self.cl.query_one(&self.world, &[&w_id]));
         });
 
-        let mut worlds = SmallVec::<[_; 32]>::new();
+        let mut worlds = Vec::with_capacity(num);
         for fut in queries {
             let row = fut.await.unwrap();
             worlds.push(World {
@@ -119,25 +118,19 @@ impl PgConnection {
 
         let mut body = self.buf.borrow_mut();
         utils::reserve(&mut body, 2 * 1024);
-        body.put_u8(b'[');
-        worlds.iter().for_each(|w| {
-            sonic_rs::to_writer(utils::BytesWriter(&mut body), w).unwrap();
-            body.put_u8(b',');
-        });
-        let idx = body.len() - 1;
-        body[idx] = b']';
+        sonic_rs::to_writer(utils::BytesWriter(&mut body), &worlds[..]).unwrap();
         body.split().freeze()
     }
 
     pub async fn update(&self, num: usize) -> Bytes {
         let mut rng = nanorand::tls_rng();
-        let mut queries = SmallVec::<[_; 32]>::new();
+        let mut queries = Vec::with_capacity(num);
         (0..num).for_each(|_| {
             let w_id = (rng.generate::<u32>() % 10_000 + 1) as i32;
             queries.push(self.cl.query_one(&self.world, &[&w_id]));
         });
 
-        let mut worlds = SmallVec::<[_; 32]>::new();
+        let mut worlds = Vec::with_capacity(num);
         for fut in queries.into_iter() {
             let row = fut.await.unwrap();
             worlds.push(World {
@@ -158,13 +151,7 @@ impl PgConnection {
 
         let mut body = self.buf.borrow_mut();
         utils::reserve(&mut body, 2 * 1024);
-        body.put_u8(b'[');
-        worlds.iter().for_each(|w| {
-            sonic_rs::to_writer(utils::BytesWriter(&mut body), w).unwrap();
-            body.put_u8(b',');
-        });
-        let idx = body.len() - 1;
-        body[idx] = b']';
+        sonic_rs::to_writer(utils::BytesWriter(&mut body), &worlds[..]).unwrap();
         body.split().freeze()
     }
 
