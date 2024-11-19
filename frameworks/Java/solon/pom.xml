@@ -25,7 +25,7 @@
 
         <dependency>
             <groupId>org.noear</groupId>
-            <artifactId>solon-serialization-snack3</artifactId>
+            <artifactId>solon-serialization-jackson</artifactId>
         </dependency>
     </dependencies>
 

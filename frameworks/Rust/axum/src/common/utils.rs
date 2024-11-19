@@ -7,13 +7,14 @@ use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
 pub struct Params {
-    queries: Option<String>,
+    q: Option<String>,
 }
 
 #[allow(dead_code)]
+#[inline(always)]
 pub fn parse_params(params: Params) -> usize {
     params
-        .queries
+        .q
         .and_then(|q| q.parse().ok())
         .unwrap_or(1)
         .clamp(1, 500)

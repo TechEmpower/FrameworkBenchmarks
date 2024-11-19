@@ -1,6 +1,7 @@
 FROM ubuntu:24.04
 
 ENV TEST_TYPE pgsql
+ENV PROCESS_MULTIPLIER 4
 
 ARG DEBIAN_FRONTEND=noninteractive
 

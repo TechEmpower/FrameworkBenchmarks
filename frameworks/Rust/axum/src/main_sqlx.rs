@@ -1,6 +1,8 @@
 mod common;
 mod sqlx;
 
+use std::sync::Arc;
+
 use ::sqlx::PgPool;
 use axum::{
     extract::{Query, State},
@@ -56,7 +58,7 @@ async fn queries(
     let ids = random_ids(&mut rng, count);
     let mut worlds: Vec<World> = Vec::with_capacity(count);
 
-    for id in ids {
+    for id in &ids {
         let world: World = ::sqlx::query_as(common::SELECT_WORLD_BY_ID)
             .bind(id)
             .fetch_one(&mut *db.acquire().await.unwrap())
@@ -96,7 +98,7 @@ async fn cache(
 ) -> impl IntoResponse {
     let count = parse_params(params);
     let mut rng = SmallRng::from_rng(&mut thread_rng()).unwrap();
-    let mut worlds: Vec<Option<World>> = Vec::with_capacity(count);
+    let mut worlds: Vec<Option<Arc<World>>> = Vec::with_capacity(count);
 
     for id in random_ids(&mut rng, count) {
         worlds.push(cache.get(&id).await);
@@ -113,7 +115,7 @@ async fn preload_cache(AppState { db, cache }: &AppState) {
         .expect("error loading worlds");
 
     for world in worlds {
-        cache.insert(world.id, world).await;
+        cache.insert(world.id, Arc::new(world)).await;
     }
 }
 
@@ -121,7 +123,7 @@ async fn preload_cache(AppState { db, cache }: &AppState) {
 #[derive(Clone)]
 struct AppState {
     db: PgPool,
-    cache: Cache<i32, World>,
+    cache: Cache<i32, Arc<World>>,
 }
 
 #[tokio::main]
