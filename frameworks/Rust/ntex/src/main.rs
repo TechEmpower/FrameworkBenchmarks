@@ -2,7 +2,7 @@
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
 use ntex::http::header::{CONTENT_TYPE, SERVER};
-use ntex::{http, time::Seconds, util::BytesMut, util::PoolId, web};
+use ntex::{http, time::Seconds, util::BytesMut, util::PoolId, util::Ready, web};
 use yarte::Serialize;
 
 mod utils;
@@ -45,6 +45,10 @@ async fn plaintext() -> web::HttpResponse {
 async fn main() -> std::io::Result<()> {
     println!("Started http server: 127.0.0.1:8080");
 
+    let cores = core_affinity::get_core_ids().unwrap();
+    let total_cores = cores.len();
+    let cores = std::sync::Arc::new(std::sync::Mutex::new(cores));
+
     // start http server
     ntex::server::build()
         .backlog(1024)
@@ -60,7 +64,17 @@ async fn main() -> std::io::Result<()> {
                 .payload_read_rate(Seconds::ZERO, Seconds::ZERO, 0)
                 .h1(web::App::new().service(json).service(plaintext).finish())
         })?
-        .workers(num_cpus::get())
+        .configure(move |cfg| {
+            let cores = cores.clone();
+            cfg.on_worker_start(move |_| {
+                if let Some(core) = cores.lock().unwrap().pop() {
+                    core_affinity::set_for_current(core);
+                }
+                Ready::<_, &str>::Ok(())
+            });
+            Ok(())
+        })?
+        .workers(total_cores)
         .run()
         .await
 }
