@@ -1,4 +1,4 @@
-FROM crystallang/crystal:1.12.1
+FROM crystallang/crystal:1.14.0
 
 WORKDIR /lucky
 COPY shard.lock shard.lock
@@ -14,7 +14,7 @@ ENV LUCKY_ENV production
 
 RUN shards build bench --release --no-debug
 
-ENV DATABASE_URL postgres://benchmarkdbuser:benchmarkdbpass@tfb-database:5432/hello_world?initial_pool_size=56&max_idle_pool_size=56
+ENV DATABASE_URL postgres://benchmarkdbuser:benchmarkdbpass@tfb-database:5432/hello_world?initial_pool_size=10&max_idle_pool_size=10
 
 EXPOSE 8080
 

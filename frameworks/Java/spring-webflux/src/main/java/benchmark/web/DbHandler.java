@@ -1,5 +1,6 @@
 package benchmark.web;
 
+import java.util.Comparator;
 import java.util.List;
 
 import benchmark.Utils;
@@ -68,8 +69,16 @@ public class DbHandler {
         int queries = parseQueryCount(request.queryParams().getFirst("queries"));
 
         Mono<List<World>> worlds = Flux.fromStream(Utils.randomWorldNumbers().limit(queries).boxed())
-                .flatMap(i -> dbRepository.findAndUpdateWorld(i, Utils.randomWorldNumber()))
-                .collectList();
+                .flatMap(id -> dbRepository.getWorld(id).map(world -> {
+                    int randomNumber;
+                    do {
+                        randomNumber = Utils.randomWorldNumber();
+                    } while (randomNumber == world.randomnumber);
+                    world.randomnumber = randomNumber;
+                    return world;
+                }))
+                .collectSortedList(Comparator.comparingInt(w -> w.id))
+                .flatMap(list -> dbRepository.updateWorlds(list).thenReturn(list));
 
         return ServerResponse.ok()
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)

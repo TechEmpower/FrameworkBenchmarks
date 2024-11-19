@@ -81,15 +81,6 @@ public class HikariJdbcRepository implements DbRepository {
     }
 
     @Override
-    public World updateWorld(World world) {
-        try (Connection c = getConnection()) {
-            return updateWorld(world, c);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
     public List<World> updateWorlds(int count) {
         try (Connection c = getConnection()) {
             List<World> result = new ArrayList<>(count);

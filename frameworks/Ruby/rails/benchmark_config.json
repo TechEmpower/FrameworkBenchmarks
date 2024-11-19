@@ -52,6 +52,7 @@
       "fortune_url": "/fortunes",
       "update_url": "/updates?queries=",
       "plaintext_url": "/plaintext",
+      "cached_query_url": "/cached?queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
@@ -66,6 +67,29 @@
       "display_name": "rails-falcon",
       "notes": "",
       "versus": "rack-falcon-mri"
+    },
+    "agoo": {
+      "db_url": "/db",
+      "json_url": "/json",
+      "query_url": "/queries?queries=",
+      "fortune_url": "/fortunes",
+      "update_url": "/updates?queries=",
+      "plaintext_url": "/plaintext",
+      "cached_query_url": "/cached?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "Postgres",
+      "framework": "rails",
+      "language": "Ruby",
+      "orm": "Full",
+      "platform": "Rack",
+      "webserver": "Agoo",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "rails-agoo",
+      "notes": "",
+      "versus": ""
     }
   }]
 }

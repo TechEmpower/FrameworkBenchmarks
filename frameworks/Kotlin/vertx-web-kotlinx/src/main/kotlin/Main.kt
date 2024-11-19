@@ -2,10 +2,10 @@ import io.vertx.core.Vertx
 import io.vertx.core.impl.cpu.CpuCoreSensor
 import io.vertx.kotlin.core.deploymentOptionsOf
 import io.vertx.kotlin.core.vertxOptionsOf
-import io.vertx.kotlin.coroutines.await
+import io.vertx.kotlin.coroutines.coAwait
 import java.util.logging.Logger
 
-const val SERVER_NAME = "Vert.x-Web Kotlinx Benchmark"
+const val SERVER_NAME = "Vert.x-Web Kotlinx Benchmark server"
 
 val logger = Logger.getLogger("Vert.x-Web Kotlinx Benchmark")
 suspend fun main(args: Array<String>) {
@@ -19,6 +19,6 @@ suspend fun main(args: Array<String>) {
         it.printStackTrace()
     }
     vertx.deployVerticle({ MainVerticle(hasDb) }, deploymentOptionsOf(instances = CpuCoreSensor.availableProcessors()))
-        .await()
+        .coAwait()
     logger.info("$SERVER_NAME started.")
 }

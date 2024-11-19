@@ -12,7 +12,8 @@ $setting = [
     'worker_num'        => swoole_cpu_num() * ((int) getenv('CPU_MULTIPLES')),
     'log_file'          => '/dev/null',
     'enable_coroutine'  => $enableCoroutine,
-    'enable_reuse_port' => true
+    'enable_reuse_port' => true,
+    'http_compression'  => false
 ];
 
 if ($enableCoroutine) {

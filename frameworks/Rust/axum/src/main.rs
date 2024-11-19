@@ -26,9 +26,12 @@ pub async fn json() -> impl IntoResponse {
     (StatusCode::OK, Json(message))
 }
 
-#[tokio::main]
-async fn main() {
+fn main() {
     dotenv().ok();
+    server::start_tokio(serve_app)
+}
+
+async fn serve_app() {
 
     let app = Router::new()
         .route("/plaintext", get(plaintext))
