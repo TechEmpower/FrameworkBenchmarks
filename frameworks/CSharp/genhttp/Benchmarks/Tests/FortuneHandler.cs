@@ -65,6 +65,7 @@ public class FortuneHandler : IHandler
 
         result.Add(Value.FromDictionary(new Dictionary<Value, Value>()
         {
+            ["id"] = 0,
             ["message"] = "Additional fortune added at request time."
         }));
 
