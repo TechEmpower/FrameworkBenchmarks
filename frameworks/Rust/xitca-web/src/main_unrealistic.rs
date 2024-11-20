@@ -17,7 +17,6 @@ use xitca_http::{
     h1::dispatcher_unreal::{Dispatcher, Request, Response},
     http::StatusCode,
 };
-use xitca_io::net::TcpStream;
 use xitca_service::Service;
 
 use self::{
@@ -60,11 +59,9 @@ fn main() -> io::Result<()> {
                 loop {
                     match listener.accept().await {
                         Ok((stream, _)) => {
-                            let stream = stream.into_std()?;
-                            let stream = TcpStream::from_std(stream)?;
                             let service = service.clone();
                             tokio::task::spawn_local(async move {
-                                let _ = service.call(stream).await;
+                                let _ = service.call(stream.into()).await;
                             });
                         }
                         Err(e) => return Err(e),
