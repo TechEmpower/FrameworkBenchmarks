@@ -10,18 +10,18 @@ RUN apt-get update -yqq && apt-get install -yqq software-properties-common > /de
 RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php > /dev/null && \
     apt-get update -yqq > /dev/null && apt-get upgrade -yqq > /dev/null
 
-RUN apt-get install -yqq php8.3-cli php8.3-pgsql php8.3-xml > /dev/null
+RUN apt-get install -yqq php8.4-cli php8.4-pgsql php8.4-xml > /dev/null
 
 COPY --from=composer/composer:latest-bin --link /composer /usr/local/bin/composer
 
-RUN apt-get install -y php-pear php8.3-dev libevent-dev git > /dev/null && \
-    pecl install event-3.1.4 > /dev/null && echo "extension=event.so" > /etc/php/8.3/cli/conf.d/30-event.ini
+RUN apt-get install -y php-pear php8.4-dev libevent-dev git > /dev/null && \
+    pecl install event-3.1.4 > /dev/null && echo "extension=event.so" > /etc/php/8.4/cli/conf.d/30-event.ini
 
 WORKDIR /workerman
 COPY --link . .
 
 RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
-COPY php.ini /etc/php/8.3/cli/php.ini
+COPY php.ini /etc/php/8.4/cli/php.ini
 
 EXPOSE 8080
 
