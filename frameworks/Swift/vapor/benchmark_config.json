@@ -93,6 +93,29 @@
       "display_name": "Vapor",
       "notes": "",
       "versus": "None"
+    },
+    "swifql": {
+      "plaintext_url": "/plaintext",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "update_url": "/updates?queries=",
+      "fortune_url": "/fortunes",
+      "database": "Postgres",
+      "orm": "Micro",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "framework": "Vapor",
+      "language": "Swift",
+      "flavor": "None",
+      "platform": "None",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Vapor",
+      "notes": "",
+      "versus": "None"
     }
   }]
 }

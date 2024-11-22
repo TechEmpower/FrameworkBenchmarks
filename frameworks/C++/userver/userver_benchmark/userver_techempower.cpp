@@ -46,20 +46,6 @@ class NoopTracingManager final
       userver::server::http::HttpResponse&) const final {}
 };
 
-class MinimalMiddlewarePipelineBuilder final
-    : public userver::server::middlewares::PipelineBuilder {
- public:
-  static constexpr std::string_view kName{
-      "minimal-middleware-pipeline-builder"};
-  using userver::server::middlewares::PipelineBuilder::PipelineBuilder;
-
- private:
-  userver::server::middlewares::MiddlewaresList BuildPipeline(
-      userver::server::middlewares::MiddlewaresList) const override {
-    return {"userver-unknown-exceptions-handling-middleware"};
-  }
-};
-
 int Main(int argc, char* argv[]) {
   auto component_list =
       userver::components::MinimalServerComponentList()
@@ -78,10 +64,9 @@ int Main(int argc, char* argv[]) {
           .Append<cached_queries::WorldCacheComponent>()  // cache component
           .Append<cached_queries::Handler>()
           .Append<fortunes::Handler>()
-          // tracing and metrics tweaks
+          // tracing tweaks
           .Append<NoopTracingManager>()
-          .Append<MinimalMiddlewarePipelineBuilder>()
-          // bare
+          // bare (not used in the benchmark currently)
           .Append<bare::SimpleRouter>()
           .Append<bare::SimpleServer>();
 

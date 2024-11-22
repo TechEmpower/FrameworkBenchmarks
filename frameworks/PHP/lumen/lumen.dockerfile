@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -13,17 +13,18 @@ COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
 COPY deploy/conf/* /etc/php/8.3/fpm/
 
-ADD ./ /lumen
 WORKDIR /lumen
+COPY --link . .
+
 
 RUN if [ $(nproc) = 2 ]; then sed -i "s|pm.max_children = 1024|pm.max_children = 512|g" /etc/php/8.3/fpm/php-fpm.conf ; fi;
 
 RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
 
-RUN mkdir -p /lumen/storage
-RUN mkdir -p /lumen/storage/framework/sessions
-RUN mkdir -p /lumen/storage/framework/views
-RUN mkdir -p /lumen/storage/framework/cache
+RUN mkdir -p storage \
+            storage/framework/sessions \
+            storage/framework/views \
+            storage/framework/cache
 
 RUN chmod -R 777 /lumen
 

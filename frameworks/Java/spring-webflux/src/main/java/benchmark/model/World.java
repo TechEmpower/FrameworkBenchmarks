@@ -9,6 +9,7 @@ public final class World {
 
     @Id
     public int id;
+
     @Field("randomNumber")
     public int randomnumber;
 

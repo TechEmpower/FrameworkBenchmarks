@@ -7,6 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 import java.util.logging.Logger;
 
 import com.zaxxer.hikari.HikariConfig;
@@ -22,20 +24,31 @@ public class HikariJdbcRepository implements DbRepository {
     private final HikariConfig hikariConfig;
 
     public HikariJdbcRepository(Config config) {
+        // hikari connection configuration
         String url = "jdbc:postgresql://" +
                 config.get("host").asString().orElse("tfb-database") +
                 ":" + config.get("port").asString().orElse("5432") +
                 "/" + config.get("db").asString().orElse("hello_world");
-
         hikariConfig = new HikariConfig();
         hikariConfig.setJdbcUrl(url);
         hikariConfig.setUsername(config.get("username").asString().orElse("benchmarkdbuser"));
         hikariConfig.setPassword(config.get("password").asString().orElse("benchmarkdbpass"));
-        hikariConfig.addDataSourceProperty("cachePrepStmts", "true");
 
+        // hikari additional configuration
         int poolSize = config.get("sql-pool-size").asInt().orElse(64);
-        hikariConfig.addDataSourceProperty("maximumPoolSize", poolSize);
-        LOGGER.info("Db pool size is set to " + poolSize);
+        hikariConfig.setMaximumPoolSize(poolSize);
+        LOGGER.info("Hikari pool size is set to " + poolSize);
+        ThreadFactory vtThreadFactory = Thread.ofVirtual().factory();
+        hikariConfig.setThreadFactory(vtThreadFactory);
+        hikariConfig.setScheduledExecutor(Executors.newScheduledThreadPool(poolSize, vtThreadFactory));
+        LOGGER.info("Set thread factory to VTs");
+
+        // data source properties
+        hikariConfig.addDataSourceProperty("cachePrepStmts","true");
+        hikariConfig.addDataSourceProperty("prepStmtCacheSize","250");
+        hikariConfig.addDataSourceProperty("prepStmtCacheSqlLimit","2048");
+        hikariConfig.addDataSourceProperty("ssl", "false");
+        hikariConfig.addDataSourceProperty("tcpKeepAlive", "true");
     }
 
     private Connection getConnection() throws SQLException {
@@ -62,15 +75,6 @@ public class HikariJdbcRepository implements DbRepository {
                 result.add(getWorld(randomWorldNumber(), c));
             }
             return result;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public World updateWorld(World world) {
-        try (Connection c = getConnection()) {
-            return updateWorld(world, c);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

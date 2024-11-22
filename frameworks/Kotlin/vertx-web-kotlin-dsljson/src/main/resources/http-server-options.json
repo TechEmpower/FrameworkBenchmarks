@@ -1,0 +1,6 @@
+{
+  "port": 8080,
+  "tcpFastOpen": true,
+  "receiveBufferSize": 262144,
+  "sendBufferSize": 262144
+}

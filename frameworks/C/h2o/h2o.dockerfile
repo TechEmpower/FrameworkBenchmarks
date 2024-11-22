@@ -7,18 +7,27 @@ FROM "ubuntu:${UBUNTU_VERSION}" AS compile
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get -yqq update && \
     apt-get -yqq install \
+      ca-certificates \
+      curl \
+      lsb-release && \
+    install -dm755 /usr/share/postgresql-common/pgdg && \
+    curl --fail -LSso /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc \
+      "https://www.postgresql.org/media/keys/ACCC4CF8.asc" && \
+    sh -c 'echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] \
+      https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > \
+      /etc/apt/sources.list.d/pgdg.list' && \
+    apt-get -yqq update && \
+    apt-get -yqq install \
       autoconf \
       bison \
       cmake \
-      curl \
       flex \
       g++ \
       libbpfcc-dev \
       libbrotli-dev \
       libcap-dev \
-      libicu-dev \
       libnuma-dev \
-      libreadline-dev \
+      libpq-dev \
       libssl-dev \
       libtool \
       libuv1-dev \
@@ -33,7 +42,7 @@ RUN apt-get -yqq update && \
       ruby \
       systemtap-sdt-dev
 
-ARG H2O_VERSION=18b175f71ede08b50d3e5ae8303dacef3ea510fc
+ARG H2O_VERSION=c54c63285b52421da2782f028022647fc2ea3dd1
 
 WORKDIR /tmp/h2o-build
 RUN curl -LSs "https://github.com/h2o/h2o/archive/${H2O_VERSION}.tar.gz" | \
@@ -57,18 +66,6 @@ RUN curl -LSs "https://github.com/x86-64/mustache-c/archive/${MUSTACHE_C_REVISIO
     CFLAGS="-flto -march=native -mtune=native -O3" ./autogen.sh && \
     make -j "$(nproc)" install
 
-ARG POSTGRESQL_VERSION=a37bb7c13995b834095d9d064cad1023a6f99b10
-
-WORKDIR /tmp/postgresql-build
-RUN curl -LSs "https://github.com/postgres/postgres/archive/${POSTGRESQL_VERSION}.tar.gz" | \
-      tar --strip-components=1 -xz && \
-    CFLAGS="-flto -march=native -mtune=native -O3" ./configure \
-      --includedir=/usr/local/include/postgresql \
-      --prefix=/usr/local \
-      --with-ssl=openssl && \
-    make -j "$(nproc)" -C src/include install && \
-    make -j "$(nproc)" -C src/interfaces/libpq install
-
 ARG H2O_APP_PREFIX
 WORKDIR /tmp/build
 COPY CMakeLists.txt ../
@@ -85,15 +82,28 @@ RUN cmake \
 
 FROM "ubuntu:${UBUNTU_VERSION}"
 
+ARG POSTGRESQL_VERSION=17
+
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get -yqq update && \
     apt-get -yqq install \
+      ca-certificates \
+      curl \
+      lsb-release && \
+    install -dm755 /usr/share/postgresql-common/pgdg && \
+    curl --fail -LSso /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc \
+      "https://www.postgresql.org/media/keys/ACCC4CF8.asc" && \
+    sh -c 'echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] \
+      https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > \
+      /etc/apt/sources.list.d/pgdg.list' && \
+    apt-get -yqq update && \
+    apt-get -yqq install \
       libnuma1 \
-      libyajl2
+      libyajl2 \
+      "postgresql-client-${POSTGRESQL_VERSION}"
 ARG H2O_APP_PREFIX
 COPY --from=compile "${H2O_APP_PREFIX}" "${H2O_APP_PREFIX}/"
 COPY --from=compile /usr/local/lib/libmustache_c.so "${H2O_APP_PREFIX}/lib/"
-COPY --from=compile /usr/local/lib/libpq.so.5.17 "${H2O_APP_PREFIX}/lib/libpq.so.5"
 ENV LD_LIBRARY_PATH="${H2O_APP_PREFIX}/lib"
 EXPOSE 8080
 ARG BENCHMARK_ENV

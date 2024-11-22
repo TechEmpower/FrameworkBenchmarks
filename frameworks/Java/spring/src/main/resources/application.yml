@@ -1,13 +1,21 @@
+server:
+  server-header: Spring
+  servlet:
+    encoding:
+      force: true
 ---
 spring:
   config:
     activate:
-      on-profile: jdbc,jpa
+      on-profile: jdbc
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration,org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration,org.springframework.boot.autoconfigure.data.mongo.MongoRepositoriesAutoConfiguration,org.springframework.boot.autoconfigure.data.web.SpringDataWebAutoConfiguration
   datasource:
-    url: jdbc:postgresql://${database.host}:${database.port}/${database.name}
+    url: jdbc:postgresql://${database.host}:${database.port}/${database.name}?loggerLevel=OFF&disableColumnSanitiser=true&assumeMinServerVersion=16&sslmode=disable
     username: ${database.username}
     password: ${database.password}
-
+    hikari:
+      maximum-pool-size: 512
 database:
   name: hello_world
   host: tfb-database
@@ -19,16 +27,9 @@ database:
 spring:
   config:
     activate:
-      on-profile: jpa
-  jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-    open-in-view: false
-
----
-spring:
-  config:
-    activate:
       on-profile: mongo
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration,org.springframework.boot.autoconfigure.data.web.SpringDataWebAutoConfiguration
 
 spring.data.mongodb:
   host: tfb-database
@@ -39,6 +40,3 @@ spring.data.mongodb:
 spring:
   profiles:
     active: jdbc
-
-server.server-header: Spring
-server.servlet.encoding.force: true

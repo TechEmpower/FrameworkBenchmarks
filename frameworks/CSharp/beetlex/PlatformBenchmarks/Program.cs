@@ -17,7 +17,6 @@ namespace PlatformBenchmarks
             //Debug = (args != null && args.Length > 0 && args[0] == "debug");
             var data = GMTDate.Default.DATE;
             UpDB = (args != null && args.Length > 0 && args[0] == "updb");
-            UpdateCommandsCached.Init();
             //HttpServer server = new HttpServer();
             //server.StartAsync(default);
             //Console.ReadLine();

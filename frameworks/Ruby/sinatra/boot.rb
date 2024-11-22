@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 require 'bundler/setup'
 require 'time'
-require 'oj'
 
 MAX_PK = 10_000
 ID_RANGE = (1..MAX_PK).freeze
@@ -22,8 +21,6 @@ SERVER_STRING =
   end
 
 Bundler.require(:default) # Load core modules
-
-Oj.mimic_JSON
 
 def connect(dbtype)
   Bundler.require(dbtype) # Load database-specific modules
@@ -58,8 +55,18 @@ connect ENV.fetch('DBTYPE').to_sym
 class World < ActiveRecord::Base
   self.table_name = name
 
-  alias_attribute(:randomnumber, :randomNumber) \
-    if connection.adapter_name.downcase.start_with?('mysql')
+  alias_attribute(:randomNumber, :randomnumber) \
+    if connection.adapter_name.downcase.start_with?('postgres')
+
+  if connection.adapter_name.downcase.start_with?('mysql')
+    def self.upsert_all(attributes, on_duplicate: :update, update_only: nil, returning: nil, unique_by: nil, record_timestamps: nil)
+      # On MySQL Batch updates verification isn't supported yet by TechEmpower.
+      # https://github.com/TechEmpower/FrameworkBenchmarks/issues/5983
+      attributes.each do |attrs|
+        where(id: attrs[:id]).update_all(randomNumber: attrs[:randomNumber])
+      end
+    end
+  end
 end
 
 class Fortune < ActiveRecord::Base

@@ -1,8 +1,8 @@
 const std = @import("std");
+const builtin = @import("builtin");
 const zap = @import("zap");
 const pg = @import("pg");
 const regex = @import("regex");
-const dns = @import("dns");
 const pool = @import("pool.zig");
 
 const endpoints = @import("endpoints.zig");
@@ -21,16 +21,30 @@ pub fn main() !void {
         .child_allocator = gpa.allocator(),
     };
 
-    var allocator = tsa.allocator();
+    const allocator = tsa.allocator();
+
+    var zap_port: []u8 = undefined;
+    var arg_string = try std.fmt.allocPrint(allocator, "{s}", .{"0"});
+    defer allocator.free(arg_string);
+
+    var args = try std.process.argsWithAllocator(allocator);
+    defer args.deinit();
+    while (args.next()) |arg| {
+        arg_string = try std.fmt.allocPrint(allocator, "{s}", .{arg});
+
+        zap_port = arg_string; // use arg
+    }
+
+    var port = try std.fmt.parseInt(u16, zap_port, 0);
+
+    if (port == 0) {
+        port = 3000;
+    }
 
     var pg_pool = try pool.initPool(allocator);
     defer pg_pool.deinit();
 
-    var rnd = std.rand.DefaultPrng.init(blk: {
-        var seed: u64 = undefined;
-        try std.os.getrandom(std.mem.asBytes(&seed));
-        break :blk seed;
-    });
+    var prng = std.rand.DefaultPrng.init(@as(u64, @bitCast(std.time.milliTimestamp())));
 
     middleware.SharedAllocator.init(allocator);
 
@@ -66,13 +80,13 @@ pub fn main() !void {
     );
 
     var headerHandler = middleware.HeaderMiddleWare.init(dbEndpointHandler.getHandler());
-    var prngHandler = middleware.PrngMiddleWare.init(headerHandler.getHandler(), &rnd);
+    var prngHandler = middleware.RandomMiddleWare.init(headerHandler.getHandler(), &prng);
     var pgHandler = middleware.PgMiddleWare.init(prngHandler.getHandler(), pg_pool);
 
     var listener = try zap.Middleware.Listener(middleware.Context).init(
         .{
             .on_request = null, // must be null
-            .port = 3000,
+            .port = port,
             .log = false,
             .max_clients = 100000,
         },
@@ -82,14 +96,15 @@ pub fn main() !void {
     );
     try listener.listen();
 
-    const cpuCount = @as(i16, @intCast(std.Thread.getCpuCount() catch 1));
+    //const cpuCount = @as(i16, @intCast(std.Thread.getCpuCount() catch 1));
+    //const workers = if (builtin.mode == .Debug) 1 else cpuCount;
+    const threads = 128;
 
-    std.debug.print("Listening on 0.0.0.0:3000 on {d} threads\n", .{cpuCount});
+    std.debug.print("Listening at 0.0.0.0:{d} on {d} threads\n", .{port, threads});
 
     // start worker threads
     zap.start(.{
-        .threads = 16 * cpuCount,
+        .threads = threads,
         .workers = 1,
     });
 }
-

@@ -23,8 +23,7 @@
         "database_os": "Linux",
         "display_name": "Sanic",
         "notes": "",
-        "versus": "None",
-        "tags": ["broken"]
+        "versus": "None"
       }
     }
   ]

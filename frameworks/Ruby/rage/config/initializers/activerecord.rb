@@ -2,16 +2,7 @@
 
 require "etc"
 
-connection = {
-  adapter: "postgresql",
-  host: "tfb-database",
-  username: "benchmarkdbuser",
-  password: "benchmarkdbpass",
-  database: "hello_world",
-  reaping_frequency: 0,
-  pool: (2 * Math.log(256 / Etc.nprocessors)).floor
-}
+pool_size = (2 * Math.log(256 / Etc.nprocessors)).floor
+puts "ActiveRecord pool size: #{pool_size}"
 
-puts "ActiveRecord connection options: #{connection.inspect}"
-
-ActiveRecord::Base.establish_connection(connection)
+ENV["DATABASE_URL"]="postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world?pool=#{pool_size}&reaping_frequency=0"
