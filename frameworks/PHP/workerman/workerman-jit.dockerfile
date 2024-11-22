@@ -2,6 +2,7 @@ FROM ubuntu:24.04
 
 ENV TEST_TYPE default
 ENV PROCESS_MULTIPLIER 1
+ENV EVENT_LOOP Select
 
 ARG DEBIAN_FRONTEND=noninteractive
 
