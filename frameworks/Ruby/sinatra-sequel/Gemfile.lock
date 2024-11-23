@@ -1,0 +1,64 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    base64 (0.2.0)
+    bigdecimal (3.1.8)
+    json (2.8.2)
+    kgio (2.11.4)
+    mustermann (3.0.3)
+      ruby2_keywords (~> 0.0.1)
+    mysql2 (0.5.6)
+    nio4r (2.7.4)
+    passenger (6.0.23)
+      rack (>= 1.6.13)
+      rackup
+      rake (>= 12.3.3)
+    pg (1.5.8)
+    puma (6.5.0)
+      nio4r (~> 2.0)
+    rack (3.1.8)
+    rack-protection (4.0.0)
+      base64 (>= 0.1.0)
+      rack (>= 3.0.0, < 4)
+    rack-session (2.0.0)
+      rack (>= 3.0.0)
+    rackup (2.1.0)
+      rack (>= 3)
+      webrick (~> 1.8)
+    raindrops (0.20.1)
+    rake (13.2.1)
+    ruby2_keywords (0.0.5)
+    sequel (5.85.0)
+      bigdecimal
+    sequel_pg (1.17.1)
+      pg (>= 0.18.0, != 1.2.0)
+      sequel (>= 4.38.0)
+    sinatra (4.0.0)
+      mustermann (~> 3.0)
+      rack (>= 3.0.0, < 4)
+      rack-protection (= 4.0.0)
+      rack-session (>= 2.0.0, < 3)
+      tilt (~> 2.0)
+    tilt (2.4.0)
+    unicorn (6.1.0)
+      kgio (~> 2.6)
+      raindrops (~> 0.7)
+    webrick (1.8.2)
+
+PLATFORMS
+  ruby
+  x86_64-darwin-23
+
+DEPENDENCIES
+  json (~> 2.8)
+  mysql2 (~> 0.5)
+  passenger (~> 6.0)
+  pg (~> 1.5)
+  puma (~> 6.4)
+  sequel (~> 5.0)
+  sequel_pg (~> 1.6)
+  sinatra (~> 4.0)
+  unicorn (~> 6.1)
+
+BUNDLED WITH
+   2.5.16
