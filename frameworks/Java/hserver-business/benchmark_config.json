@@ -22,7 +22,7 @@
         "webserver": "hserver",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "hserver",
+        "display_name": "hserver-business",
         "notes": "",
         "versus": "hserver"
       }
