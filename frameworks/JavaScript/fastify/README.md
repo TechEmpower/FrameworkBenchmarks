@@ -19,33 +19,3 @@ Information about Fastify can be found at https://github.com/fastify/fastify
 ### JSON Encoding Test
 
 http://TFB-server:8080/json
-
-### Data-Store/Database Mapping Test
-
-MongoDB:
-http://TFB-server:8080/mongoose/
-
-MySQL:
-http://TFB-server:8080/mysql-orm/
-
-### Variable Query Test
-
-MongoDB:
-http://TFB-server:8080/mongoose/2
-
-MySQL:
-http://TFB-server:8080/mysql-orm/2
-
-### Fortune Test
-
-MySQL:
-http://TFB-server:8080/fortune
-
-### Database Update Test
-
-MongoDB:
-http://TFB-server:8080/mongoose-update/2
-
-MySQL:
-http://TFB-server:8080/mysql-orm-update/2
-
