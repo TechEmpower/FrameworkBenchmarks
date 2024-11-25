@@ -13,7 +13,7 @@ comparing a variety of web platforms.
 The tests were run with:
 
 - [Ruby 3.3](http://www.ruby-lang.org/)
-- [Rails 7.1](http://rubyonrails.org/)
+- [Rails 7.2](http://rubyonrails.org/)
 - [Puma 6.4](http://puma.io/)
 - [MySQL](https://dev.mysql.com/)
 - [PostgreSQL](https://www.postgresql.org/)
