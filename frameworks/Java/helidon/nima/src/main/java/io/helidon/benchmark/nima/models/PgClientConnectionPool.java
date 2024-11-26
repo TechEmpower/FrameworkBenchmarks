@@ -73,7 +73,7 @@ class PgClientConnectionPool implements AutoCloseable {
     public static class PgClientConnection implements AutoCloseable {
         static final int UPDATE_QUERIES = 500;
         private static String SELECT_WORLD = "SELECT id, randomnumber from WORLD where id=$1";
-        private static String SELECT_FORTUNE = "SELECT id, message from FORTUNE";
+        private static String SELECT_FORTUNE = "SELECT * from FORTUNE";
 
         private PreparedQuery<RowSet<Row>> worldQuery;
         private PreparedQuery<RowSet<Row>> fortuneQuery;
