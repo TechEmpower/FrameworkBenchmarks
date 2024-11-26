@@ -15,6 +15,7 @@ import io.vertx.sqlclient.RowSet;
 import io.vertx.sqlclient.Tuple;
 
 import static io.helidon.benchmark.nima.models.DbRepository.randomWorldNumber;
+import static io.helidon.benchmark.nima.models.PgClientConnectionPool.PgClientConnection.UPDATE_QUERIES;
 
 public class PgClientRepository implements DbRepository {
     private static final Logger LOGGER = Logger.getLogger(PgClientRepository.class.getName());
@@ -23,17 +24,24 @@ public class PgClientRepository implements DbRepository {
 
     @SuppressWarnings("unchecked")
     public PgClientRepository(Config config) {
-        Vertx vertx = Vertx.vertx(new VertxOptions().setPreferNativeTransport(true));
+        VertxOptions vertxOptions = new VertxOptions()
+                .setPreferNativeTransport(true)
+                .setBlockedThreadCheckInterval(100000);
+        Vertx vertx = Vertx.vertx(vertxOptions);
         PgConnectOptions connectOptions = new PgConnectOptions()
                 .setPort(config.get("port").asInt().orElse(5432))
-                .setCachePreparedStatements(config.get("cache-prepared-statements").asBoolean().orElse(true))
                 .setHost(config.get("host").asString().orElse("tfb-database"))
                 .setDatabase(config.get("db").asString().orElse("hello_world"))
                 .setUser(config.get("username").asString().orElse("benchmarkdbuser"))
                 .setPassword(config.get("password").asString().orElse("benchmarkdbpass"))
+                .setCachePreparedStatements(true)
+                .setPreparedStatementCacheMaxSize(UPDATE_QUERIES + 2)
+                .setPreparedStatementCacheSqlFilter(s -> true)          // cache all
+                .setTcpNoDelay(true)
+                .setTcpQuickAck(true)
+                .setTcpKeepAlive(true)
                 .setPipeliningLimit(100000);
-        int sqlPoolSize = config.get("sql-pool-size").asInt().orElse(Runtime.getRuntime().availableProcessors());
-        connectionPool = new PgClientConnectionPool(vertx, sqlPoolSize, connectOptions);
+        connectionPool = new PgClientConnectionPool(vertx, connectOptions);
     }
 
     @Override
