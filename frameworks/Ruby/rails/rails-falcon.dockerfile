@@ -23,5 +23,5 @@ COPY . /rails/
 ENV RAILS_ENV=production_postgresql
 ENV PORT=8080
 ENV REDIS_URL=redis://localhost:6379/0
-CMD service redis-server start
-CMD bundle exec falcon host
+CMD service redis-server start && \
+    bundle exec falcon host
