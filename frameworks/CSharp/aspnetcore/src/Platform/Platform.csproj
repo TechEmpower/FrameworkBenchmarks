@@ -27,6 +27,7 @@
 
   <PropertyGroup Condition="$(PublishAot) == 'true'">
     <DefaultItemExcludes>$(MSBuildThisFileDirectory)Templates/**;$(DefaultItemExcludes)</DefaultItemExcludes>
+    <RuntimeHostConfigurationOption Include="System.Threading.ThreadPool.HillClimbing.Disable" Value="true" />
   </PropertyGroup>
 
 </Project>
