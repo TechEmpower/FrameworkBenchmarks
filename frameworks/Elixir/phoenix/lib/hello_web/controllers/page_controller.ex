@@ -6,9 +6,11 @@ defmodule HelloWeb.PageController do
   alias Hello.Repo
   alias Hello.WorldCache
 
+  require Logger
+
   @random_max 10_000
 
-  plug :accepts, ~w(html json) when action == :fortunes
+  plug :accepts, ~w(html json) #when action == :fortunes
 
   def index(conn, _params) do
     json(conn, %{"TE Benchmarks\n" => "Started"})
@@ -78,10 +80,8 @@ defmodule HelloWeb.PageController do
     json(conn, world_updates)
   end
 
-   def plaintext(conn, _params) do
-    conn
-    |> put_resp_header("content-type", "text/plain")
-    |> send_resp(200, "Hello, World!")
+  def plaintext(conn, _params) do
+    text(conn, "Hello, World!")
   end
 
   def cached(conn, params) do
