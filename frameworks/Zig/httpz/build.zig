@@ -1,48 +1,23 @@
 const std = @import("std");
-const ModuleMap = std.StringArrayHashMap(*std.Build.Module);
-var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-const allocator = gpa.allocator();
 
-// Although this function looks imperative, note that its job is to
-// declaratively construct a build graph that will be executed by an external
-// runner.
 pub fn build(b: *std.Build) !void {
-    // Standard target options allows the person running `zig build` to choose
-    // what target to build for. Here we do not override the defaults, which
-    // means any target is allowed, and the default is native. Other options
-    // for restricting supported target set are available.
     const target = b.standardTargetOptions(.{});
-
-    // Standard optimization options allow the person running `zig build` to select
-    // between Debug, ReleaseSafe, ReleaseFast, and ReleaseSmall. Here we do nots
-    // set a preferred release mode, allowing the user to decide how to optimize.
     const optimize = b.standardOptimizeOption(.{});
 
     const dep_opts = .{ .target = target, .optimize = optimize };
 
     const exe = b.addExecutable(.{
         .name = "httpz",
-        // In this case the main source file is merely a path, however, in more
-        // complicated build scripts, this could be a generated file.
         .root_source_file = b.path("src/main.zig"),
         .target = target,
         .optimize = optimize,
     });
-
-    var modules = ModuleMap.init(allocator);
-    defer modules.deinit();
 
     const httpz_module = b.dependency("httpz", dep_opts).module("httpz");
     const pg_module = b.dependency("pg", dep_opts).module("pg");
     const datetimez_module = b.dependency("datetimez", dep_opts).module("zig-datetime");
     const mustache_module = b.dependency("mustache", dep_opts).module("mustache");
 
-    try modules.put("httpz", httpz_module);
-    try modules.put("pg", pg_module);
-    try modules.put("datetimez", datetimez_module);
-    try modules.put("mustache", mustache_module);
-
-    //     // Expose this as a module that others can import
     exe.root_module.addImport("httpz", httpz_module);
     exe.root_module.addImport("pg", pg_module);
     exe.root_module.addImport("datetimez", datetimez_module);
