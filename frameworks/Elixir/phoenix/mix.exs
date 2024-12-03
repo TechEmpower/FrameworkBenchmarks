@@ -30,14 +30,12 @@ defmodule Hello.Mixfile do
   defp deps do
     [
       {:bandit, "1.5.7"},
-      {:gettext, "~> 0.20"},
       {:ecto_sql, "~> 3.10"},
       {:jason, "~> 1.2"},
       {:phoenix, "~> 1.7"},
       {:phoenix_live_view, "~> 0.18"},
       {:phoenix_ecto, "~> 4.4"},
       {:phoenix_html, "~> 4.1"},
-      {:plug_cowboy, "~> 2.5"},
       {:postgrex, ">= 0.0.0"},
       {:nebulex, "~> 2.6"}
     ]

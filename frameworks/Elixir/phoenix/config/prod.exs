@@ -17,8 +17,8 @@ config :hello, HelloWeb.Endpoint,
     port: 8080,
     ip: {0, 0, 0, 0},
     http_options: [
-      compress: false
-      log_protocol_errors: false
+      compress: false,
+      # log_protocol_errors: false
     ],
   ],
   compress: false,
