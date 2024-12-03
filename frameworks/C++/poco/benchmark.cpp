@@ -6,6 +6,8 @@
 #include <Poco/Net/HTTPServerRequest.h>
 #include <Poco/Net/HTTPServerResponse.h>
 #include <Poco/Util/ServerApplication.h>
+#include <Poco/Timespan.h>
+#include <Poco/Thread.h>
 
 #include <iostream>
 #include <string>
@@ -15,7 +17,9 @@
 #define PLAIN_CONTENT_TYPE   "text/plain"
 #define RES_BODY             "Hello, World!"
 #define SERVER_NAME          "poco"
+#define MAX_CONNECTIONS      16384
 
+using namespace Poco;
 using namespace Poco::Net;
 using namespace Poco::Util;
 using namespace std;
@@ -58,7 +62,12 @@ protected:
         HTTPServerParams* hsp = new HTTPServerParams;
         hsp->setMaxThreads(stoi(args[1]));
         hsp->setKeepAlive(true);
-        HTTPServer s(new MyRequestHandlerFactory, ServerSocket(stoi(args[0]), 4000), hsp);
+        hsp->setMaxKeepAliveRequests(MAX_CONNECTIONS);
+        hsp->setMaxQueued(MAX_CONNECTIONS);
+        hsp->setThreadPriority(Thread::PRIO_HIGHEST);
+        ServerSocket socket(stoi(args[0]), MAX_CONNECTIONS);
+        socket.setBlocking(false);
+        HTTPServer s(new MyRequestHandlerFactory, socket, hsp);
         s.start();
         waitForTerminationRequest();
         s.stop();

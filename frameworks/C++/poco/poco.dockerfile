@@ -1,11 +1,11 @@
-FROM buildpack-deps:xenial
+FROM buildpack-deps:noble
 
 RUN apt-get update -yqq && apt-get install -yqq software-properties-common unzip cmake
 
-RUN apt-get install -yqq g++-4.8 libjson0-dev
-RUN update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 50
+RUN apt-get install -yqq g++-14
+RUN update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-14 50
 
-ENV POCO_VERSION 1.6.1
+ENV POCO_VERSION 1.13.3
 ENV POCO_HOME /poco
 
 WORKDIR ${POCO_HOME}
@@ -20,10 +20,10 @@ ENV LD_LIBRARY_PATH ${POCO_HOME}/lib/Linux/x86_64
 
 COPY benchmark.cpp benchmark.cpp
 
-RUN g++-4.8 \
+RUN g++-14 \
     -O3 \
     -DNDEBUG \
-    -std=c++0x \
+    -std=c++17 \
     -o \
     poco \
     benchmark.cpp \
