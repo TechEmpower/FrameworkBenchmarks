@@ -1,0 +1,27 @@
+{
+  "framework": "happyx",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "db_url": "/db",
+        "port": 5000,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "postgres",
+        "framework": "happyx",
+        "language": "Nim",
+        "flavor": "None",
+        "orm": "Full",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "HappyX",
+        "notes": "",
+        "versus": "httpbeast, jester, prologue, basolato"
+      }
+    }
+  ]
+}
