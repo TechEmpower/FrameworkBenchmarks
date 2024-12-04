@@ -32,13 +32,9 @@ class Mysql
 
     function query($request): array
     {
-        $query_count = 1;
-        $q = (int)$request->get('q');
-        if ($q > 1) {
-            $query_count = min($q, 500);
-        }
+        $count = min(max((int) $request->get('q'), 1), 500);
         $arr = [];
-        while ($query_count--) {
+        while ($count--) {
             $this->world->execute([mt_rand(1, 10000)]);
             $arr[] = $this->world->fetch();
         }
@@ -47,13 +43,9 @@ class Mysql
 
     function update($request): array
     {
-        $query_count = 1;
-        $q = (int)$request->get('q');
-        if ($q > 1) {
-            $query_count = min($q, 500);
-        }
+        $count = min(max((int) $request->get('q'), 1), 500);
         $arr = [];
-        while ($query_count--) {
+        while ($count--) {
             $id = mt_rand(1, 10000);
             $this->world->execute([$id]);
             $item = $this->world->fetch();

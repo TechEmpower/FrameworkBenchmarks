@@ -1,6 +1,11 @@
 const fastify = require("fastify")();
 const handlers = require("./handlers");
 
+fastify.setErrorHandler((error, request, reply) => {
+  console.log(error)
+  reply.status(500).send({ ok: false })
+})
+
 fastify.register(require("@fastify/view"), {
   engine: {
     handlebars: require("handlebars")
