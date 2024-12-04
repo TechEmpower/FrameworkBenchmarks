@@ -15,7 +15,7 @@ use std::thread::available_parallelism;
 use anyhow::Error;
 use diesel::prelude::*;
 use diesel::r2d2::{ConnectionManager, Pool, PoolError, PooledConnection};
-use dotenv::dotenv;
+use dotenvy::dotenv;
 use once_cell::sync::OnceCell;
 use rand::rngs::SmallRng;
 use rand::{Rng, SeedableRng};

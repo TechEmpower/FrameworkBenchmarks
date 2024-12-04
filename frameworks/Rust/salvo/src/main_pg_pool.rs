@@ -11,7 +11,7 @@ use std::thread::available_parallelism;
 use anyhow::Error;
 use bytes::Bytes;
 use deadpool_postgres::Pool;
-use dotenv::dotenv;
+use dotenvy::dotenv;
 use futures_util::{stream::FuturesUnordered, TryStreamExt};
 use once_cell::sync::OnceCell;
 use rand::rngs::SmallRng;
