@@ -10,7 +10,7 @@ use std::thread::available_parallelism;
 
 use anyhow::Error;
 use bytes::Bytes;
-use dotenv::dotenv;
+use dotenvy::dotenv;
 use lru::LruCache;
 use once_cell::sync::OnceCell;
 use rand::rngs::SmallRng;
