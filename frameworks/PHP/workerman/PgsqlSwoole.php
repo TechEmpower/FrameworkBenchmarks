@@ -23,15 +23,11 @@ class PgsqlSwoole extends MysqlSwoole
 
     function update($request): array
     {
-        $query_count = 1;
-        $q = (int)$request->get('q');
-        if ($q > 1) {
-            $query_count = min($q, 500);
-        }
+        $count = min(max((int) $request->get('q'), 1), 500);
         $worlds = [];
         $pdo = $this->pool->get();
         $random = $pdo->prepare('SELECT id,randomNumber FROM World WHERE id=?');
-        while ($query_count--) {
+        while ($count--) {
             $random->execute([mt_rand(1, 10000)]);
             $world = $random->fetch(PDO::FETCH_ASSOC);
             $world['randomNumber'] = mt_rand(1, 10000);

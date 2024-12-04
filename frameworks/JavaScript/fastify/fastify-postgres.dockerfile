@@ -1,4 +1,4 @@
-FROM node:20.12.2-alpine
+FROM node:20.16-slim
 
 COPY ./ ./
 
@@ -6,6 +6,10 @@ RUN npm install
 
 ENV NODE_ENV production
 ENV DATABASE postgres
+ENV PG_HOST tfb-database
+ENV PG_USER benchmarkdbuser
+ENV PG_PSWD benchmarkdbpass
+ENV PG_DBNAME hello_world
 
 EXPOSE 8080
 

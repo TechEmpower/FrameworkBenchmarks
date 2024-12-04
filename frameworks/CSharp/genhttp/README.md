@@ -6,11 +6,11 @@ See the [GenHTTP website](https://genhttp.org) for more information.
 
 **Language**
 
-* C# 8.0
+* C# 13.0
 
 **Platforms**
 
-* .NET Core
+* .NET 8/9
 
 **Web Servers**
 

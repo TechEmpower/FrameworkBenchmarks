@@ -31,15 +31,11 @@ class MysqlSwoole
 
     function query($request): array
     {
-        $query_count = 1;
-        $q = (int)$request->get('q');
-        if ($q > 1) {
-            $query_count = min($q, 500);
-        }
+        $count = min(max((int) $request->get('q'), 1), 500);
         $pdo = $this->pool->get();
         $stmt = $pdo->prepare('SELECT id,randomNumber FROM World WHERE id=?');
         $arr = [];
-        while ($query_count--) {
+        while ($count--) {
             $stmt->execute([mt_rand(1, 10000)]);
             $arr[] = $stmt->fetch(PDO::FETCH_ASSOC);
         }
@@ -49,16 +45,12 @@ class MysqlSwoole
 
     function update($request): array
     {
-        $query_count = 1;
-        $q = (int)$request->get('q');
-        if ($q > 1) {
-            $query_count = min($q, 500);
-        }
+        $count = min(max((int) $request->get('q'), 1), 500);
         $arr = [];
         $pdo = $this->pool->get();
         $world = $pdo->prepare('SELECT id,randomNumber FROM World WHERE id=?');
         $update = $pdo->prepare('UPDATE World SET randomNumber=? WHERE id=?');
-        while ($query_count--) {
+        while ($count--) {
             $id = mt_rand(1, 10000);
             $world->execute([$id]);
             $item = $world->fetch(PDO::FETCH_ASSOC);

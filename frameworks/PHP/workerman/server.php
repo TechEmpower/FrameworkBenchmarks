@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__.'/vendor/autoload.php';
 
+use Swoole\Coroutine;
 use Workerman\Worker;
 use Workerman\Events\Swow;
 use Workerman\Events\Swoole;
@@ -11,10 +12,11 @@ $test_type = getenv('TEST_TYPE') ?: 'default';
 $process = getenv('PROCESS_MULTIPLIER') ?: 1;
 $pool_size = getenv('POOL_SIZE') ?: 2;
 $process_count = (int) shell_exec('nproc') * $process;
+$event_loop = getenv('EVENT_LOOP');
 
 $db = $date = null;
 $http_worker = new Worker('http://0.0.0.0:8080');
-//$http_worker->reusePort = true;
+$http_worker->reusePort = true;
 $http_worker->count = $process_count;
 $http_worker->onWorkerStart = static function () use ($test_type, $pool_size, &$db, &$date) {
     $db = match ($test_type) {
@@ -28,12 +30,10 @@ $http_worker->onWorkerStart = static function () use ($test_type, $pool_size, &$
     };
     $date = new Date();
 };
-if ($test_type === 'default') {
-    Worker::$eventLoopClass = Select::class;
-} elseif (in_array($test_type, ['pgsql-swow', 'mysql-swow'])) {
-    Worker::$eventLoopClass = Swow::class;
-} elseif (in_array($test_type, ['pgsql-swoole', 'mysql-swoole'])) {
-    Worker::$eventLoopClass = Swoole::class;
+
+Worker::$eventLoopClass = "Workerman\\Events\\$event_loop";
+if ($event_loop === 'Swoole') {
+    Coroutine::set(['hook_flags' => SWOOLE_HOOK_ALL]);
 }
 
 $http_worker->onMessage = static function ($connection, $request) use (&$db, &$date) {

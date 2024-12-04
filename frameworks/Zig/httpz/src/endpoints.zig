@@ -4,7 +4,6 @@ const pg = @import("pg");
 const datetimez = @import("datetimez");
 const mustache = @import("mustache");
 
-const Allocator = std.mem.Allocator;
 const Thread = std.Thread;
 const Mutex = Thread.Mutex;
 const template = "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>{{#fortunes}}<tr><td>{{id}}</td><td>{{message}}</td></tr>{{/fortunes}}</table></body></html>";
@@ -12,12 +11,7 @@ const template = "<!DOCTYPE html><html><head><title>Fortunes</title></head><body
 pub const Global = struct {
     pool: *pg.Pool,
     prng: *std.rand.DefaultPrng,
-    allocator: Allocator,
     mutex: std.Thread.Mutex = .{},
-};
-
-const Message = struct {
-    message: []const u8,
 };
 
 const World = struct {
@@ -30,23 +24,21 @@ const Fortune = struct {
     message: []const u8,
 };
 
-pub fn plaintext(global: *Global, _: *httpz.Request, res: *httpz.Response) !void {
-    try setHeaders(global.allocator, res);
+pub fn plaintext(_: *Global, _: *httpz.Request, res: *httpz.Response) !void {
+    try setHeaders(res.arena, res);
 
     res.content_type = .TEXT;
     res.body = "Hello, World!";
 }
 
-pub fn json(global: *Global, _: *httpz.Request, res: *httpz.Response) !void {
-    try setHeaders(global.allocator, res);
+pub fn json(_: *Global, _: *httpz.Request, res: *httpz.Response) !void {
+    try setHeaders(res.arena, res);
 
-    const message = Message{ .message = "Hello, World!" };
-
-    try res.json(message, .{});
+    try res.json(.{ .message = "Hello, World!" }, .{});
 }
 
 pub fn db(global: *Global, _: *httpz.Request, res: *httpz.Response) !void {
-    try setHeaders(global.allocator, res);
+    try setHeaders(res.arena, res);
 
     global.mutex.lock();
     const random_number = 1 + (global.prng.random().uintAtMost(u32, 9999));
@@ -61,15 +53,15 @@ pub fn db(global: *Global, _: *httpz.Request, res: *httpz.Response) !void {
 }
 
 pub fn fortune(global: *Global, _: *httpz.Request, res: *httpz.Response) !void {
-    try setHeaders(global.allocator, res);
+    try setHeaders(res.arena, res);
 
-    const fortunes_html = try getFortunesHtml(global.allocator, global.pool);
+    const fortunes_html = try getFortunesHtml(res.arena, global.pool);
 
     res.header("content-type", "text/html; charset=utf-8");
     res.body = fortunes_html;
 }
 
-fn getWorld(pool: *pg.Pool, random_number: u32) !World{
+fn getWorld(pool: *pg.Pool, random_number: u32) !World {
     var conn = try pool.acquire();
     defer conn.release();
 
@@ -81,7 +73,7 @@ fn getWorld(pool: *pg.Pool, random_number: u32) !World{
     return World{ .id = row.get(i32, 0), .randomNumber = row.get(i32, 1) };
 }
 
-fn setHeaders(allocator: Allocator, res: *httpz.Response) !void {
+fn setHeaders(allocator: std.mem.Allocator, res: *httpz.Response) !void {
     res.header("Server", "Httpz");
 
     const now = datetimez.datetime.Date.now();
@@ -97,10 +89,10 @@ fn setHeaders(allocator: Allocator, res: *httpz.Response) !void {
     res.header("Date", now_str);
 }
 
-fn getFortunesHtml(allocator: Allocator, pool: *pg.Pool) ![]const u8 {
+fn getFortunesHtml(allocator: std.mem.Allocator, pool: *pg.Pool) ![]const u8 {
     const fortunes = try getFortunes(allocator, pool);
 
-    const raw = try mustache.allocRenderText(allocator, template,.{ .fortunes = fortunes });
+    const raw = try mustache.allocRenderText(allocator, template, .{ .fortunes = fortunes });
 
     // std.debug.print("mustache output {s}\n", .{raw});
 
@@ -111,7 +103,7 @@ fn getFortunesHtml(allocator: Allocator, pool: *pg.Pool) ![]const u8 {
     return html;
 }
 
-fn getFortunes(allocator: Allocator, pool: *pg.Pool) ![]const Fortune {
+fn getFortunes(allocator: std.mem.Allocator, pool: *pg.Pool) ![]const Fortune {
     var conn = try pool.acquire();
     defer conn.release();
 
@@ -139,7 +131,7 @@ fn cmpFortuneByMessage(_: void, a: Fortune, b: Fortune) bool {
     return std.mem.order(u8, a.message, b.message).compare(std.math.CompareOperator.lt);
 }
 
-fn deescapeHtml(allocator: Allocator, input: []const u8) ![]const u8 {
+fn deescapeHtml(allocator: std.mem.Allocator, input: []const u8) ![]const u8 {
     var output = std.ArrayList(u8).init(allocator);
     defer output.deinit();
 
@@ -189,4 +181,3 @@ fn deescapeHtml(allocator: Allocator, input: []const u8) ![]const u8 {
 
     return output.toOwnedSlice();
 }
-
