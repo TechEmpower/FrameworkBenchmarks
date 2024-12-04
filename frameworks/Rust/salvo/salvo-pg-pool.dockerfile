@@ -1,4 +1,4 @@
-FROM rust:1.83-buster
+FROM rust:1.83
 
 ENV TECHEMPOWER_POSTGRES_URL=postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world
 ENV TECHEMPOWER_MAX_POOL_SIZE=28
