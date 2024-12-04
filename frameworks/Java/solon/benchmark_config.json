@@ -3,16 +3,20 @@
   "tests": [
     {
       "default": {
-        "json_url": "/json",
         "plaintext_url": "/plaintext",
+        "json_url": "/json",
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
+        "update_url": "/updates?queries=",
+        "fortune_url": "/fortunes",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Fullstack",
-        "database": "None",
+        "database": "Postgres",
         "framework": "solon",
         "language": "Java",
         "flavor": "None",
-        "orm": "Full",
+        "orm": "Micro",
         "platform": "solon",
         "webserver": "smarthttp",
         "os": "Linux",
