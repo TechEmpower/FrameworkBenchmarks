@@ -81,7 +81,9 @@ defmodule HelloWeb.PageController do
   end
 
   def plaintext(conn, _params) do
-    text(conn, "Hello, World!")
+    conn
+    |> put_resp_header("content-type", "text/plain")
+    |> send_resp(200, "Hello, World!")
   end
 
   def cached(conn, params) do

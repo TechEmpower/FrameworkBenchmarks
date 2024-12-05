@@ -29,7 +29,8 @@ defmodule Hello.Mixfile do
   # Type `mix help deps` for examples and options
   defp deps do
     [
-      {:bandit, "1.5.7"},
+      {:bandit, git: "https://github.com/mtrudel/bandit.git", branch: "handle_pipelined_requests", override: true},
+      #{:bandit, "~> 1.6"},
       {:ecto_sql, "~> 3.10"},
       {:jason, "~> 1.2"},
       {:phoenix, "~> 1.7"},
