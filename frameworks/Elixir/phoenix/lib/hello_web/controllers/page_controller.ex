@@ -6,8 +6,6 @@ defmodule HelloWeb.PageController do
   alias Hello.Repo
   alias Hello.WorldCache
 
-  require Logger
-
   @random_max 10_000
 
   plug :accepts, ~w(html json) when action == :fortunes
