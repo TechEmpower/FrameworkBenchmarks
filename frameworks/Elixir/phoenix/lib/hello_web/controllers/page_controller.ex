@@ -10,7 +10,7 @@ defmodule HelloWeb.PageController do
 
   @random_max 10_000
 
-  plug :accepts, ~w(html json) #when action == :fortunes
+  plug :accepts, ~w(html json) when action == :fortunes
 
   def index(conn, _params) do
     json(conn, %{"TE Benchmarks\n" => "Started"})
