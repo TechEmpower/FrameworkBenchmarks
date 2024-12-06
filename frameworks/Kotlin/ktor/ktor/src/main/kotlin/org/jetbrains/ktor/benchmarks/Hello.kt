@@ -19,6 +19,7 @@ import org.jetbrains.ktor.benchmarks.Constants.UPDATE_QUERY
 import org.jetbrains.ktor.benchmarks.Constants.WORLD_QUERY
 import java.sql.Connection
 import java.util.concurrent.ThreadLocalRandom
+import kotlin.random.Random
 
 @Serializable
 data class Message(val message: String)
@@ -49,7 +50,7 @@ fun Application.main() {
         }
 
         get("/db") {
-            val random = ThreadLocalRandom.current()
+            val random = Random.Default
 
             val world = withContext(databaseDispatcher) {
                 pool.connection.use { connection ->
@@ -67,7 +68,7 @@ fun Application.main() {
             call.respondText(Json.encodeToString(world), ContentType.Application.Json)
         }
 
-        fun Connection.selectWorlds(queries: Int, random: ThreadLocalRandom): List<World> {
+        fun Connection.selectWorlds(queries: Int, random: Random): List<World> {
             val result = ArrayList<World>(queries)
             prepareStatement(WORLD_QUERY).use { statement ->
                 repeat(queries) {
@@ -85,7 +86,7 @@ fun Application.main() {
 
         get("/queries") {
             val queries = call.queries()
-            val random = ThreadLocalRandom.current()
+            val random = Random.Default
 
             val result = withContext(databaseDispatcher) {
                 pool.connection.use { it.selectWorlds(queries, random) }
@@ -130,7 +131,7 @@ fun Application.main() {
 
         get("/updates") {
             val queries = call.queries()
-            val random = ThreadLocalRandom.current()
+            val random = Random.Default
             val result: List<World>
 
             withContext(databaseDispatcher) {
@@ -144,9 +145,10 @@ fun Application.main() {
                             for ((id, randomNumber) in result) {
                                 updateStatement.setInt(1, randomNumber)
                                 updateStatement.setInt(2, id)
-
-                                updateStatement.executeUpdate()
+                                updateStatement.addBatch()
                             }
+
+                            updateStatement.executeBatch()
                         }
                 }
             }
