@@ -140,8 +140,7 @@ fun Application.main() {
 
                     result.forEach { it.randomNumber = random.nextInt(dbRows) + 1 }
 
-                    connection.prepareStatement(UPDATE_QUERY)
-                        .use { updateStatement ->
+                    connection.prepareStatement(UPDATE_QUERY).use { updateStatement ->
                             for ((id, randomNumber) in result) {
                                 updateStatement.setInt(1, randomNumber)
                                 updateStatement.setInt(2, id)
