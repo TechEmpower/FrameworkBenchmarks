@@ -13,6 +13,7 @@ import tech.smartboot.servlet.conf.ServletMappingInfo;
 public class Bootstrap {
 
     public static void main(String[] args) throws Throwable {
+        System.setProperty("smart-servlet-spring-boot-starter","true");
         Container containerRuntime = new Container();
         // plaintext
         ServletContextRuntime applicationRuntime = new ServletContextRuntime(null, Thread.currentThread().getContextClassLoader(), "/");
@@ -37,6 +38,7 @@ public class Bootstrap {
         containerRuntime.getConfiguration()
                 .setThreadNum(cpuNum)
                 .setReadBufferSize(1024 * 4);
+        containerRuntime.initialize();
         containerRuntime.start();
     }
 }
