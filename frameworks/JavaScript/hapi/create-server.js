@@ -13,6 +13,7 @@ const options = {
 };
 
 const server = new Hapi.server(options);
+server.listener.keepAliveTimeout = 0;
 
 const provision = async () => {
 
