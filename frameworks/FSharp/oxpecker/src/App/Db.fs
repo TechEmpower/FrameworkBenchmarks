@@ -64,7 +64,7 @@ module Db =
 
     let loadMultipleRows (count: int) =
         task {
-            use db = new NpgsqlConnection(MultiplexedConnectionString)
+            use db = new NpgsqlConnection(ConnectionString)
             do! db.OpenAsync()
             return! readMultipleRows count db
         }
