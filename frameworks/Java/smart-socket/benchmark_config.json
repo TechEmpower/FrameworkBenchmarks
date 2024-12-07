@@ -5,9 +5,6 @@
       "default": {
         "json_url": "/json",
         "plaintext_url": "/plaintext",
-        "db_url": "/db",
-        "query_url": "/queries?queries=",
-        "update_url": "/updates?queries=",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Platform",
