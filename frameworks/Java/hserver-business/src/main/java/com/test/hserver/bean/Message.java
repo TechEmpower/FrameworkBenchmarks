@@ -1,15 +1,7 @@
-package hello.model;
+package com.test.hserver.bean;
 
-/**
- * @author pmg1991
- * @version V1.0
- */
 public class Message {
-    private String message;
-
-    public Message(String message) {
-        this.message = message;
-    }
+    private String message = "Hello, World!";
 
     public String getMessage() {
         return message;

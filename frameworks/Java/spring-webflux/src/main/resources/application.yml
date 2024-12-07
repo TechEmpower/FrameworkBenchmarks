@@ -17,7 +17,7 @@ spring:
     password: ${database.password}
     url: r2dbc:postgresql://${database.host}:${database.port}/${database.name}?loggerLevel=OFF&disableColumnSanitiser=true&assumeMinServerVersion=16&sslmode=disable
     pool:
-      max-size: 512
+      max-size: 256
 
 ---
 spring:
