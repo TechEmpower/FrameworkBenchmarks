@@ -1,4 +1,4 @@
-FROM node:chakracore
+FROM node:20.16-slim
 
 COPY ./ ./
 

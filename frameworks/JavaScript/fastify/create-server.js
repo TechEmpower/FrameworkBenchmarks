@@ -1,4 +1,4 @@
-const fastify = require("fastify")();
+const fastify = require("fastify")({ logger: false, keepAliveTimeout: 0 });
 const handlers = require("./handlers");
 
 fastify.setErrorHandler((error, request, reply) => {
