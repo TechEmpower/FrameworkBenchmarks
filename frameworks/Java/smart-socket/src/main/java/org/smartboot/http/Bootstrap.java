@@ -53,9 +53,7 @@ public class Bootstrap {
                 .threadNum(cpuNum)
                 .headerLimiter(0)
                 .readBufferSize(1024 * 4)
-                .writeBufferSize(1024 * 4)
-                .readMemoryPool(16384 * 1024 * 4)
-                .writeMemoryPool(10 * 1024 * 1024 * cpuNum, cpuNum);
+                .writeBufferSize(1024 * 4);
         bootstrap.httpHandler(routeHandle).setPort(8080).start();
     }
 
