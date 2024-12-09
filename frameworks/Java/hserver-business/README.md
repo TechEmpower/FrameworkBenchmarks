@@ -1,4 +1,4 @@
-# HServer Benchmarking Test
+# hserver-business Benchmarking Test
 This is the HServer portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
 
 ### Tests

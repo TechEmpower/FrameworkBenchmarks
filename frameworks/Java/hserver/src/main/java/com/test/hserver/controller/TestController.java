@@ -33,6 +33,13 @@ public class TestController {
     @Autowired
     private DataSource dataSource;
 
+
+    @GET("/jso2n")
+    private   Message jso2n(long ud,int a,HttpResponse response) {
+        response.setHeader("Date", DateUtil.getTime());
+        return new Message();
+    }
+
     @GET("/json")
     public Message json(HttpResponse response) {
         response.setHeader("Date", DateUtil.getTime());
@@ -62,8 +69,8 @@ public class TestController {
     }
 
     @GET("/queries")
-    public void queries(HttpRequest request,HttpResponse response) throws Exception {
-        World[] result = new World[getQueries(request.query("queries"))];
+    public void queries(String queries,HttpResponse response) throws Exception {
+        World[] result = new World[getQueries(queries)];
         try (Connection conn = dataSource.getConnection()) {
             for (int i = 0; i < result.length; i++) {
                 try (final PreparedStatement statement = conn.prepareStatement(SELECT_WORLD)) {
@@ -81,8 +88,8 @@ public class TestController {
 
 
     @GET("/updates")
-    public void updates(HttpRequest request,HttpResponse response) throws Exception {
-        World[] result = new World[getQueries(request.query("queries"))];
+    public void updates(String queries,HttpResponse response) throws Exception {
+        World[] result = new World[getQueries(queries)];
         StringJoiner updateSql = new StringJoiner(
                 ", ",
                 "UPDATE world SET randomNumber = temp.randomNumber FROM (VALUES ",
