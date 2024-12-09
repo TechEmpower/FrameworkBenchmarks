@@ -1,11 +1,11 @@
 FROM ubuntu:22.04
-RUN apt-get update -yqq && apt-get install -yqq apt-utils software-properties-common wget unzip cmake git
-RUN apt-get install -yqq gcc g++ openssl libssl-dev zlib1g-dev build-essential locales
+RUN apt-get update -yqq > /dev/null && apt-get install -yqq apt-utils software-properties-common wget unzip cmake git > /dev/null
+RUN apt-get install -yqq gcc g++ openssl libssl-dev zlib1g-dev build-essential locales > /dev/null
 
-RUN apt-get -y install brotli libbrotli-dev 
-RUN apt-get -y install libreadline-dev 
-RUN apt-get -y install mysql-client
-RUN apt-get -y install libmysqlclient-dev
+RUN apt-get -y install brotli libbrotli-dev  > /dev/null
+RUN apt-get -y install libreadline-dev  > /dev/null
+RUN apt-get -y install mysql-client > /dev/null
+RUN apt-get -y install libmysqlclient-dev > /dev/null
 
 RUN locale-gen en_US.UTF-8
 ENV LANG en_US.UTF-8
