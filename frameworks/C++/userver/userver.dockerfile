@@ -1,8 +1,8 @@
 FROM ghcr.io/userver-framework/ubuntu-22.04-userver-pg AS builder
 
-RUN apt update && \
-    apt install -y lsb-release wget software-properties-common gnupg && \
-        wget https://apt.llvm.org/llvm.sh && chmod +x llvm.sh && ./llvm.sh 16
+RUN apt update > /dev/null && \
+    apt install -y lsb-release wget software-properties-common gnupg > /dev/null && \
+        wget https://apt.llvm.org/llvm.sh --quiet && chmod +x llvm.sh && ./llvm.sh 16
 
 WORKDIR /src
 RUN git clone https://github.com/userver-framework/userver.git && \
@@ -17,7 +17,7 @@ RUN mkdir build && cd build && \
           -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-march=native" -DCMAKE_C_FLAGS="-march=native" \
           -DCMAKE_CXX_COMPILER=clang++-16 -DCMAKE_C_COMPILER=clang-16 -DUSERVER_USE_LD=lld-16 \
           -DUSERVER_LTO=0 .. && \
-    make -j $(nproc)
+    make -j $(nproc) --quiet
 
 FROM builder AS runner
 WORKDIR /app
