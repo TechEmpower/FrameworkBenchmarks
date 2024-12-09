@@ -10,7 +10,7 @@ ENV POCO_HOME /poco
 
 WORKDIR ${POCO_HOME}
 RUN wget https://pocoproject.org/releases/poco-${POCO_VERSION}/poco-${POCO_VERSION}-all.zip --quiet
-RUN unzip poco-${POCO_VERSION}-all.zip
+RUN unzip poco-${POCO_VERSION}-all.zip > /dev/null
 RUN mv ./poco-${POCO_VERSION}-all/* ./
 
 RUN ./configure --no-tests --no-samples
