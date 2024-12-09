@@ -4,11 +4,11 @@ ENV DEBIAN_FRONTEND noninteractive
 ENV DEBCONF_NOWARNINGS yes
 ENV TFVER=2.8.0
 
-RUN apt-get update -yqq && apt-get upgrade -yq && \
+RUN apt-get update -yqq > /dev/null && apt-get upgrade -yq > /dev/null && \
     apt-get install -yqq --no-install-recommends software-properties-common unzip wget libjemalloc-dev \
     qmake6 qt6-base-dev qt6-base-dev-tools qt6-tools-dev-tools qt6-declarative-dev libqt6sql6-mysql \
     libqt6sql6-psql libqt6sql6-odbc libqt6sql6-sqlite libqt6core6 libqt6qml6 libqt6xml6 libpq5 libodbc1 \
-    libmongoc-dev libbson-dev gcc g++ clang make cmake pkg-config
+    libmongoc-dev libbson-dev gcc g++ clang make cmake pkg-config > /dev/null
 RUN rm -f /usr/bin/qmake; ln -sf /usr/bin/qmake6 /usr/bin/qmake
 
 WORKDIR /usr/src
@@ -17,11 +17,11 @@ RUN tar xf v${TFVER}.tar.gz
 RUN cd treefrog-framework-${TFVER} && \
     ./configure --enable-shared-mongoc --spec=linux-clang && \
     cd src && \
-    make -j4 && \
-    make install && \
+    make -j4 --quiet && \
+    make install --quiet && \
     cd ../tools && \
-    make -j4 && \
-    make install
+    make -j4 --quiet && \
+    make install --quiet
 
 WORKDIR /workspace
 COPY ./ ./
@@ -30,7 +30,7 @@ COPY ./ ./
 RUN qmake -r CONFIG+=release -spec linux-clang
 
 # 2. Compile applicaton
-RUN make
+RUN make --quiet
 RUN sed -i 's|DriverType=.*|DriverType=QMYSQL|g' config/database.ini
 RUN sed -i 's|MultiProcessingModule=.*|MultiProcessingModule=thread|g' config/application.ini
 
