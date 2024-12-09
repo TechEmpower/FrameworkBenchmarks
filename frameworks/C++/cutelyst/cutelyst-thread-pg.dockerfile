@@ -1,7 +1,7 @@
 FROM ubuntu:22.04
 
-RUN apt-get update -qq && \
-    apt-get install -yqq locales wget build-essential
+RUN apt-get update -qq > /dev/null && \
+    apt-get install -yqq locales wget build-essential > /dev/null
 
 RUN locale-gen en_US.UTF-8
 ENV LANG en_US.UTF-8
