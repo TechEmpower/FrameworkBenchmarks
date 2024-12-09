@@ -33,7 +33,7 @@ RUN git clone https://github.com/rtbtech/libsniper.git libs/core
 
 RUN cd libs/core && git checkout v1.3.1
 
-RUN mkdir build && cd /libsniper_bench/build && cmake -DCMAKE_BUILD_TYPE=Release -S .. && make --jobs=`nproc` --quiet
+RUN mkdir build && cd /libsniper_bench/build && cmake -DCMAKE_RULE_MESSAGES=OFF -DCMAKE_BUILD_TYPE=Release -S .. && make --jobs=`nproc` --quiet
 
 ARG BENCHMARK_ENV
 
