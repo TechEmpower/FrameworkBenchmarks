@@ -1,8 +1,8 @@
 FROM ubuntu:22.04
 MAINTAINER shaovie@gmail.com
 
-RUN apt-get update -yqq
-RUN apt-get install -yqq g++-11 gcc-11 make git
+RUN apt-get update -yqq > /dev/null
+RUN apt-get install -yqq g++-11 gcc-11 make git > /dev/null
 
 RUN   update-alternatives --quiet --remove-all gcc \
     ; update-alternatives --quiet --remove-all g++ \
@@ -23,7 +23,7 @@ WORKDIR /reactor-bench
 RUN git clone https://github.com/shaovie/reactor.git
 
 
-RUN cd reactor/ && make clean all
+RUN cd reactor/ && make clean all --quiet
 COPY ./techempower.cpp /reactor-bench/reactor
 
 WORKDIR /reactor-bench/reactor
