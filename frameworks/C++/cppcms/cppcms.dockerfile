@@ -12,7 +12,7 @@ ENV CPPCMS_HOME=/installs/$BACKNAME-$CPPCMS_VERSION
 ENV CPPCMSROOT=${CPPCMS_HOME}-install
 
 RUN wget -q https://download.sourceforge.net/project/cppcms/$BACKNAME/$CPPCMS_VERSION-rc1/$BACKNAME-$CPPCMS_VERSION.tar.bz2 --quiet
-RUN tar xf $BACKNAME-$CPPCMS_VERSION.tar.bz2 --quiet
+RUN tar xf $BACKNAME-$CPPCMS_VERSION.tar.bz2 > /dev/null
 
 RUN cd $BACKNAME-$CPPCMS_VERSION && \
     mkdir build && \
