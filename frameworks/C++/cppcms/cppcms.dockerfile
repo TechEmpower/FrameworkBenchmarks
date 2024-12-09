@@ -28,7 +28,7 @@ ENV CPPDB_HOME=/installs/$BACKNAME-$CPPDB_VERSION
 ENV CPPDBROOT=${CPPDB_HOME}-install
 
 RUN wget -q https://download.sourceforge.net/project/cppcms/$BACKNAME/$CPPDB_VERSION/$BACKNAME-$CPPDB_VERSION.tar.bz2 --quiet
-RUN tar xf $BACKNAME-$CPPDB_VERSION.tar.bz2 --quiet
+RUN tar xf $BACKNAME-$CPPDB_VERSION.tar.bz2 > /dev/null
 
 RUN cd $BACKNAME-$CPPDB_VERSION && \
     mkdir build && cd build && \
