@@ -5,13 +5,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.test.hserver</groupId>
-    <artifactId>hserver</artifactId>
+    <artifactId>hserver-business</artifactId>
     <version>1.0</version>
 
     <parent>
         <artifactId>hserver-parent</artifactId>
         <groupId>cn.hserver</groupId>
-        <version>3.6.0</version>
+        <version>3.6.M3</version>
     </parent>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

@@ -33,6 +33,13 @@ public class TestController {
     @Autowired
     private DataSource dataSource;
 
+
+    @GET("/jso2n")
+    private   Message jso2n(long ud,int a,HttpResponse response) {
+        response.setHeader("Date", DateUtil.getTime());
+        return new Message();
+    }
+
     @GET("/json")
     public Message json(HttpResponse response) {
         response.setHeader("Date", DateUtil.getTime());
