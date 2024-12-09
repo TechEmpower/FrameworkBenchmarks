@@ -5,13 +5,11 @@
 require_relative 'pg_db'
 require_relative 'config/auto_tune'
 require 'rack'
+require 'json'
 
 if RUBY_PLATFORM == 'java'
-  require 'json'
   DEFAULT_DATABASE_URL = 'jdbc:postgresql://tfb-database/hello_world?user=benchmarkdbuser&password=benchmarkdbpass'
 else
-  require 'oj'
-  Oj.mimic_JSON
   DEFAULT_DATABASE_URL = 'postgresql://tfb-database/hello_world?user=benchmarkdbuser&password=benchmarkdbpass'
 end
 

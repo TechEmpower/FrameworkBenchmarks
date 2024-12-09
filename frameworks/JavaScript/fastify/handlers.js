@@ -4,7 +4,7 @@ const h = require("./helper");
  * @param databaseLayer
  * @returns {{singleQuery: function(*), multipleQueries: function(*), fortunes: function(*), updates: function(*)}}
  */
-module.exports = databaseLayer => ({
+module.exports = (databaseLayer) => ({
   singleQuery: async (req, reply) => {
     const world = await databaseLayer.getWorld(h.randomTfbNumber());
 
@@ -34,29 +34,29 @@ module.exports = databaseLayer => ({
   },
 
   updates: async (req, reply) => {
-    const queries = h.getQueries(req.query.queries);
+    const num = h.getQueries(req.query.queries);
     const worldPromises = [];
 
-    for (let i = 0; i < queries; i++) {
-      worldPromises.push(databaseLayer.getWorld(h.randomTfbNumber()));
+    for (let i = 0; i < num; i++) {
+      const id = h.randomTfbNumber();
+      worldPromises.push(databaseLayer.getWorld(id));
     }
 
     const worlds = await Promise.all(worldPromises);
 
-    const worldsToUpdate = worlds.map(world => {
-      world.randomNumber = h.randomTfbNumber();
+    const worldsToUpdate = worlds.map((world) => {
+      world.randomnumber = h.randomTfbNumber();
       return world;
     });
 
-    await databaseLayer.saveWorlds(worldsToUpdate);
-
+    await databaseLayer.bulkUpdate(worldsToUpdate);
     reply.send(worldsToUpdate);
-  }
+  },
 });
 
 // faster than localeCompare
 function compare(a, b) {
-  if(a.message < b.message){
+  if (a.message < b.message) {
     return -1;
   } else if (a.message > b.message) {
     return 1;
