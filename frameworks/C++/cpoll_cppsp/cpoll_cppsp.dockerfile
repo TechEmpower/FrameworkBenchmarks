@@ -11,7 +11,7 @@ ENV VERSION=0.2.3
 ENV CPPSP_HOME=/installs/cppsp_$VERSION
 
 RUN wget -q http://downloads.sourceforge.net/project/cpollcppsp/CPPSP%200.2%20%28testing%29/cppsp_$VERSION.tar.xz
-RUN tar xf cppsp_$VERSION.tar.xz --quiet
+RUN tar xf cppsp_$VERSION.tar.xz > /dev/null
 
 RUN mv cppsp_rel$VERSION/ $CPPSP_HOME 
 
