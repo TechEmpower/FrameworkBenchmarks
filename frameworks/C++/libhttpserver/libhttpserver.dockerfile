@@ -11,7 +11,7 @@ ENV LIBHTTPSERVER_VERSION 0.17.5
 
 RUN curl https://s3.amazonaws.com/libhttpserver/libmicrohttpd_releases/libmicrohttpd-${LIBMICROHTTPD_VERSION}.tar.gz -o libmicrohttpd-${LIBMICROHTTPD_VERSION}.tar.gz > /dev/null
 RUN tar -xvzf libmicrohttpd-${LIBMICROHTTPD_VERSION}.tar.gz  > /dev/null
-RUN cd libmicrohttpd-${LIBMICROHTTPD_VERSION} && ./configure --disable-examples && make && make install
+RUN cd libmicrohttpd-${LIBMICROHTTPD_VERSION} && ./configure --disable-examples && make --quiet && make install --quiet
 RUN curl -L https://github.com/etr/libhttpserver/archive/${LIBHTTPSERVER_VERSION}.tar.gz -o libhttpserver-${LIBHTTPSERVER_VERSION}.tar.gz > /dev/null
 RUN tar -xvzf libhttpserver-${LIBHTTPSERVER_VERSION}.tar.gz > /dev/null
 RUN cd libhttpserver-${LIBHTTPSERVER_VERSION} && ./bootstrap && mkdir build && cd build && ../configure --enable-fastopen && make --quiet && make install --quiet
