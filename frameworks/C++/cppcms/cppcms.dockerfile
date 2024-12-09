@@ -33,7 +33,7 @@ RUN tar xf $BACKNAME-$CPPDB_VERSION.tar.bz2 --quiet
 RUN cd $BACKNAME-$CPPDB_VERSION && \
     mkdir build && cd build && \
     cmake -DCMAKE_INSTALL_PREFIX=${CPPDBROOT} .. && \
-    make && make install
+    make --quiet && make install --quiet
 
 ENV CPPDB_HOME=${CPPDBROOT}
 
