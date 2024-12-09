@@ -3,9 +3,9 @@ MAINTAINER oleg@romanenko.ro
 
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN apt-get -qq -y update
+RUN apt-get -qq -y update > /dev/null
 
-RUN apt-get -qq -y install --no-install-recommends git cmake libev-dev libgoogle-perftools-dev libfmt-dev make gcc-9 g++-9 libre2-dev libboost-stacktrace-dev libhttp-parser-dev libxxhash-dev
+RUN apt-get -qq -y install --no-install-recommends git cmake libev-dev libgoogle-perftools-dev libfmt-dev make gcc-9 g++-9 libre2-dev libboost-stacktrace-dev libhttp-parser-dev libxxhash-dev > /dev/null
 
 RUN   update-alternatives --quiet --remove-all gcc \
     ; update-alternatives --quiet --remove-all g++ \
@@ -33,7 +33,7 @@ RUN git clone https://github.com/rtbtech/libsniper.git libs/core
 
 RUN cd libs/core && git checkout v1.3.1
 
-RUN mkdir build && cd /libsniper_bench/build && cmake -DCMAKE_BUILD_TYPE=Release -S .. && make --jobs=`nproc`
+RUN mkdir build && cd /libsniper_bench/build && cmake -DCMAKE_BUILD_TYPE=Release -S .. && make --jobs=`nproc` --quiet
 
 ARG BENCHMARK_ENV
 
