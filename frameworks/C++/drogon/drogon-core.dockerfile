@@ -13,7 +13,7 @@ RUN  apt-get update -yqq > /dev/null && \
 	 apt-get update -yqq > /dev/null && \
 	 apt-get install -yqq gcc g++ > /dev/null
 
-RUN locale-gen en_US.UTF-8
+RUN locale-gen en_US.UTF-8  > /dev/null
 
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
