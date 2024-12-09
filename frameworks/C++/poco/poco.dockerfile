@@ -1,16 +1,16 @@
 FROM buildpack-deps:noble
 
-RUN apt-get update -yqq && apt-get install -yqq software-properties-common unzip cmake
+RUN apt-get update -yqq > /dev/null && apt-get install -yqq software-properties-common unzip cmake > /dev/null
 
-RUN apt-get install -yqq g++-14
+RUN apt-get install -yqq g++-14 > /dev/null
 RUN update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-14 50
 
 ENV POCO_VERSION 1.13.3
 ENV POCO_HOME /poco
 
 WORKDIR ${POCO_HOME}
-RUN wget https://pocoproject.org/releases/poco-${POCO_VERSION}/poco-${POCO_VERSION}-all.zip
-RUN unzip poco-${POCO_VERSION}-all.zip
+RUN wget https://pocoproject.org/releases/poco-${POCO_VERSION}/poco-${POCO_VERSION}-all.zip --quiet
+RUN unzip poco-${POCO_VERSION}-all.zip -q
 RUN mv ./poco-${POCO_VERSION}-all/* ./
 
 RUN ./configure --no-tests --no-samples
