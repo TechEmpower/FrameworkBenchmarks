@@ -35,8 +35,8 @@ echo "Download statics from $URL ..."
 wget -qO- "$URL" | tar -xz -C ./libs/mORMot/static
 
 # uncomment for fixed commit URL
-#URL=https://github.com/synopse/mORMot2/tarball/6dc09ceca456931384857b383ed61b63f11f3be7
-URL="https://api.github.com/repos/synopse/mORMot2/tarball/$USED_TAG"
+URL=https://github.com/synopse/mORMot2/tarball/29ee5335a07f5f8b8765e112d046e874a9893a41
+#URL="https://api.github.com/repos/synopse/mORMot2/tarball/$USED_TAG"
 echo "Download and unpacking mORMot sources from $URL ..."
 wget -qO- "$URL" | tar -xz -C ./libs/mORMot  --strip-components=1
 
