@@ -7,10 +7,6 @@ const pool = @import("pool.zig");
 
 const endpoints = @import("endpoints.zig");
 
-const RndGen = std.rand.DefaultPrng;
-const Allocator = std.mem.Allocator;
-const Pool = pg.Pool;
-
 var server: httpz.ServerCtx(*endpoints.Global, *endpoints.Global) = undefined;
 
 pub fn main() !void {
@@ -26,28 +22,16 @@ pub fn main() !void {
 
     var prng = std.rand.DefaultPrng.init(@as(u64, @bitCast(std.time.milliTimestamp())));
 
+    var rand = prng.random();
+
     var global = endpoints.Global{
         .pool = pg_pool,
-        .prng = &prng,
+        .rand = &rand,
     };
 
-    var httpz_port: []u8 = undefined;
-    var arg_string = try std.fmt.allocPrint(allocator, "{s}", .{"0"});
-    defer allocator.free(arg_string);
+    const args = try std.process.argsAlloc(allocator);
 
-    var args = try std.process.argsWithAllocator(allocator);
-    defer args.deinit();
-    while (args.next()) |arg| {
-        arg_string = try std.fmt.allocPrint(allocator, "{s}", .{arg});
-
-       httpz_port = arg_string; // use arg
-    }
-
-    var port = try std.fmt.parseInt(u16,httpz_port, 0);
-
-    if (port == 0) {
-        port = 3000;
-    }
+    const port: u16 = if (args.len > 1) try std.fmt.parseInt(u16, args[1], 0) else 3000;
 
     const workers = @as(u16, @intCast(16 * cpu_count));
 
@@ -100,7 +84,7 @@ pub fn main() !void {
             .buffer_size = 8192,
         },
         .request = .{
-            // Maximum request body size that we'll process. We can allocate up 
+            // Maximum request body size that we'll process. We can allocate up
             // to this much memory per request for the body. Internally, we might
             // keep this memory around for a number of requests as an optimization.
             .max_body_size = 1_048_576,
@@ -109,17 +93,17 @@ pub fn main() !void {
             // this space, else the request will be rejected.
             .buffer_size = 4_096,
 
-            // Maximum number of headers to accept. 
+            // Maximum number of headers to accept.
             // Additional headers will be silently ignored.
             .max_header_count = 32,
 
             // Maximum number of URL parameters to accept.
             // Additional parameters will be silently ignored.
-            .max_param_count = 10,
+            .max_param_count = 0,
 
             // Maximum number of query string parameters to accept.
             // Additional parameters will be silently ignored.
-            .max_query_count = 32,
+            .max_query_count = 0,
 
             // Maximum number of x-www-form-urlencoded fields to support.
             // Additional parameters will be silently ignored. This must be
@@ -132,7 +116,7 @@ pub fn main() !void {
             // set to a value greater than 0 (the default) if you're going
             // to use the req.multiFormData() method.
             .max_multiform_count = 0,
-    },
+        },
     }, &global);
     defer server.deinit();
 
