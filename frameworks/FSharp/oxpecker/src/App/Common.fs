@@ -26,9 +26,9 @@ module Common =
     }
 
     [<Literal>]
-    let ConnectionString = "Server=tfb-database;Database=hello_world;User Id=benchmarkdbuser;Password=benchmarkdbpass;Maximum Pool Size=1024;NoResetOnClose=true;Enlist=false"
+    let ConnectionString = "Server=tfb-database;Database=hello_world;User Id=benchmarkdbuser;Password=benchmarkdbpass;Maximum Pool Size=1024;NoResetOnClose=true;Enlist=false;Max Auto Prepare=4"
     [<Literal>]
-    let MultiplexedConnectionString = ConnectionString + ";Max Auto Prepare=3;Multiplexing=true"
+    let MultiplexedConnectionString = ConnectionString + ";Multiplexing=true"
 
     let FortuneComparer = {
         new IComparer<Fortune> with
