@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 
-use core::{cell::RefCell, cmp};
+use core::cell::RefCell;
 
 use xitca_http::{bytes::BytesMut, http::header::HeaderValue};
 
@@ -10,15 +10,15 @@ pub trait QueryParse {
 
 impl QueryParse for Option<&str> {
     fn parse_query(self) -> u16 {
-        let num = self
-            .and_then(|this| {
-                use atoi::FromRadix10;
-                this.find('q')
-                    .map(|pos| u16::from_radix_10(this.split_at(pos + 2).1.as_ref()).0)
-            })
-            .unwrap_or(1);
+        self.and_then(|q| q.find('q').map(|pos| q.split_at(pos + 2).1.parse_query()))
+            .unwrap_or(1)
+    }
+}
 
-        cmp::min(500, cmp::max(1, num))
+impl QueryParse for &str {
+    fn parse_query(self) -> u16 {
+        use atoi::FromRadix10;
+        u16::from_radix_10(self.as_bytes()).0.clamp(1, 500)
     }
 }
 
@@ -36,51 +36,33 @@ pub struct State<DB> {
     pub write_buf: RefCell<BytesMut>,
 }
 
+impl<DB> State<DB> {
+    pub fn new(client: DB) -> Self {
+        Self {
+            client,
+            write_buf: Default::default(),
+        }
+    }
+}
+
 #[cfg(not(target_arch = "wasm32"))]
-mod non_wasm {
-    #[derive(Default)]
-    pub struct Rand(nanorand::WyRand);
+pub mod non_wasm {
+    use rand::{rngs::SmallRng, Rng, SeedableRng};
+
+    pub struct Rand(SmallRng);
+
+    impl Default for Rand {
+        fn default() -> Self {
+            Self(SmallRng::from_entropy())
+        }
+    }
 
     impl Rand {
         #[inline]
         pub fn gen_id(&mut self) -> i32 {
-            use nanorand::Rng;
-            (self.0.generate::<u32>() % 10_000 + 1) as _
+            self.0.gen_range(1..=10000)
         }
     }
-
-    #[cfg(any(feature = "pg", feature = "pg-iou"))]
-    mod pg_state {
-        use core::{cell::RefCell, future::Future, pin::Pin};
-
-        use xitca_http::{
-            bytes::BytesMut,
-            util::middleware::context::{Context, ContextBuilder},
-        };
-
-        use crate::{
-            db::{self, Client},
-            util::{HandleResult, State},
-        };
-
-        pub type Ctx<'a, Req> = Context<'a, Req, State<Client>>;
-
-        pub fn context_mw(
-        ) -> ContextBuilder<impl Fn() -> Pin<Box<dyn Future<Output = HandleResult<State<Client>>>>>>
-        {
-            ContextBuilder::new(|| {
-                Box::pin(async {
-                    db::create().await.map(|client| State {
-                        client,
-                        write_buf: RefCell::new(BytesMut::new()),
-                    })
-                }) as _
-            })
-        }
-    }
-
-    #[cfg(any(feature = "pg", feature = "pg-iou"))]
-    pub use pg_state::*;
 }
 
 #[cfg(not(target_arch = "wasm32"))]

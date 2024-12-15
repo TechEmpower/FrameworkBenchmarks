@@ -11,7 +11,7 @@ class AbstractDatabase:
     '''
     #margin of tolerance on the results (rows read or updated only)
     margin = 1.011
-    
+
     @classmethod
     @abc.abstractmethod
     def get_connection(cls, config):
@@ -94,13 +94,13 @@ class AbstractDatabase:
             process = subprocess.run(shlex.split(
                 "siege -c %s -r %s %s -R %s/.siegerc" % (concurrency, count, url, path)),
                 stdout = subprocess.PIPE, stderr = subprocess.STDOUT, timeout=20, text=True
-            )  
+            )
         except subprocess.TimeoutExpired as e:
             print("Verification failed: %s" % (e))
         else:
             output = process.stdout
             #Search for failed transactions
-            match = re.search('Failed transactions:.*?(\d+)\n', output, re.MULTILINE)
+            match = re.search(r'Failed transactions:.*?(\d+)\n', output, re.MULTILINE)
             if match:
                 trans_failures = int(match.group(1))
                 print(output)

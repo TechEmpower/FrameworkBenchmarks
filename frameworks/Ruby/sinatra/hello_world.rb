@@ -17,9 +17,7 @@ class HelloWorld < Sinatra::Base
   helpers do
     def bounded_queries
       queries = params[:queries].to_i
-      return QUERIES_MIN if queries < QUERIES_MIN
-      return QUERIES_MAX if queries > QUERIES_MAX
-      queries
+      queries.clamp(QUERIES_MIN, QUERIES_MAX)
     end
 
     def json(data)
@@ -41,19 +39,15 @@ class HelloWorld < Sinatra::Base
     response['Server'] = SERVER_STRING
   end if SERVER_STRING
 
-  after do
-    ActiveRecord::Base.clear_active_connections!
-  end
-
   # Test type 1: JSON serialization
   get '/json' do
-     json :message=>'Hello, World!'
+     json message: 'Hello, World!'
   end
 
   # Test type 2: Single database query
   get '/db' do
     world =
-      ActiveRecord::Base.connection_pool.with_connection do
+      ActiveRecord::Base.with_connection do
         World.find(rand1).attributes
       end
 
@@ -63,43 +57,45 @@ class HelloWorld < Sinatra::Base
   # Test type 3: Multiple database queries
   get '/queries' do
     worlds =
-      ActiveRecord::Base.connection_pool.with_connection do
-        Array.new(bounded_queries) do
-          World.find(rand1)
+      ActiveRecord::Base.with_connection do
+        ALL_IDS.sample(bounded_queries).map do |id|
+          World.find(id).attributes
         end
       end
 
-    json worlds.map!(&:attributes)
+    json worlds
   end
 
   # Test type 4: Fortunes
   get '/fortunes' do
-    @fortunes = ActiveRecord::Base.connection_pool.with_connection do
+    @fortunes = ActiveRecord::Base.with_connection do
       Fortune.all
     end.to_a
     @fortunes << Fortune.new(
-      :id=>0,
-      :message=>'Additional fortune added at request time.'
+      id: 0,
+      message: 'Additional fortune added at request time.'
     )
     @fortunes.sort_by!(&:message)
 
-    erb :fortunes, :layout=>true
+    erb :fortunes, layout: true
   end
 
   # Test type 5: Database updates
   get '/updates' do
-    worlds =
-      ActiveRecord::Base.connection_pool.with_connection do
-        Array.new(bounded_queries) do
-          world = World.find(rand1)
-          new_value = rand1
-          new_value = rand1 while new_value == world.randomnumber
-          world.update(randomnumber: new_value)
-          world
-        end
+    worlds = nil
+    ActiveRecord::Base.with_connection do
+      worlds = ALL_IDS.sample(bounded_queries).map do |id|
+        world = World.find(id)
+        new_value = rand1
+        new_value = rand1 until new_value != world.randomNumber
+        { id: id, randomNumber: new_value }
       end
-
-    json worlds.map!(&:attributes)
+    end
+    worlds.sort_by!{_1[:id]}
+    ActiveRecord::Base.with_connection do
+      World.upsert_all(worlds)
+    end
+    json worlds
   end
 
   # Test type 6: Plaintext

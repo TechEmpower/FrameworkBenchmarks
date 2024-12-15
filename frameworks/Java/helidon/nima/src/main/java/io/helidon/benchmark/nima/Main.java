@@ -16,31 +16,27 @@
 
 package io.helidon.benchmark.nima;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.logging.Logger;
 
-import com.jsoniter.output.JsonStream;
-import com.jsoniter.output.JsonStreamPool;
-import com.jsoniter.spi.JsonException;
 import io.helidon.benchmark.nima.models.DbRepository;
 import io.helidon.benchmark.nima.models.HikariJdbcRepository;
 import io.helidon.benchmark.nima.models.PgClientRepository;
 import io.helidon.benchmark.nima.services.DbService;
 import io.helidon.benchmark.nima.services.FortuneHandler;
-import io.helidon.common.http.Http;
-import io.helidon.common.http.Http.Header;
-import io.helidon.common.http.Http.HeaderValue;
-import io.helidon.common.http.Http.HeaderValues;
+import io.helidon.http.Header;
+import io.helidon.http.HeaderNames;
+import io.helidon.http.HeaderValues;
 import io.helidon.config.Config;
 import io.helidon.config.ConfigException;
 import io.helidon.logging.common.LogConfig;
-import io.helidon.nima.webserver.WebServer;
-import io.helidon.nima.webserver.http.Handler;
-import io.helidon.nima.webserver.http.HttpRules;
-import io.helidon.nima.webserver.http.ServerRequest;
-import io.helidon.nima.webserver.http.ServerResponse;
+import io.helidon.webserver.WebServer;
+import io.helidon.webserver.http.Handler;
+import io.helidon.webserver.http.HttpRules;
+import io.helidon.webserver.http.ServerRequest;
+import io.helidon.webserver.http.ServerResponse;
+
+import static io.helidon.benchmark.nima.JsonSerializer.serialize;
 
 /**
  * Main class of the benchmark.
@@ -50,9 +46,9 @@ import io.helidon.nima.webserver.http.ServerResponse;
 public final class Main {
     private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
 
-    public static final Http.HeaderValue CONTENT_TYPE_HTML =
-            Http.Header.createCached(Http.Header.CONTENT_TYPE, "text/html; charset=UTF-8");
-    public static final Http.HeaderValue SERVER = Http.Header.createCached(Http.Header.SERVER, "Nima");
+    public static final Header CONTENT_TYPE_HTML =
+            HeaderValues.createCached(HeaderNames.CONTENT_TYPE, "text/html; charset=UTF-8");
+    public static final Header SERVER = HeaderValues.createCached(HeaderNames.SERVER, "Nima");
 
     private Main() {
     }
@@ -67,11 +63,14 @@ public final class Main {
         LogConfig.configureRuntime();
 
         WebServer.builder()
+                .config(Config.create().get("server"))
                 .routing(Main::routing)
+                .build()
                 .start();
     }
 
     // exposed for tests
+    @SuppressWarnings("unchecked")
     static void routing(HttpRules rules) {
         Config config = Config.create();
 
@@ -88,29 +87,14 @@ public final class Main {
 
         rules.get("/plaintext", new PlaintextHandler())
                 .get("/json", new JsonHandler())
-                .get("/10k", new JsonKHandler(10))
                 .get("/fortunes", new FortuneHandler(repository))
                 .register("/", new DbService(repository));
     }
 
-    private static byte[] serializeMsg(Message obj) {
-        JsonStream stream = JsonStreamPool.borrowJsonStream();
-        try {
-            stream.reset(null);
-            stream.writeVal(Message.class, obj);
-            return Arrays.copyOfRange(stream.buffer().data(), 0, stream.buffer().tail());
-        } catch (IOException e) {
-            throw new JsonException(e);
-        } finally {
-            JsonStreamPool.returnJsonStream(stream);
-        }
-    }
-
     static class PlaintextHandler implements Handler {
-        static final HeaderValue CONTENT_TYPE = Header.createCached(Header.CONTENT_TYPE,
-                "text/plain; charset=UTF-8");
-        static final HeaderValue CONTENT_LENGTH = Header.createCached(Header.CONTENT_LENGTH, "13");
-
+        static final Header CONTENT_TYPE = HeaderValues.createCached(HeaderNames.CONTENT_TYPE,
+                                                                     "text/plain; charset=UTF-8");
+        static final Header CONTENT_LENGTH = HeaderValues.createCached(HeaderNames.CONTENT_LENGTH, "13");
         private static final byte[] RESPONSE_BYTES = "Hello, World!".getBytes(StandardCharsets.UTF_8);
 
         @Override
@@ -124,44 +108,16 @@ public final class Main {
 
     static class JsonHandler implements Handler {
         private static final String MESSAGE = "Hello, World!";
-        private static final int JSON_LENGTH = serializeMsg(new Message(MESSAGE)).length;
-        static final HeaderValue CONTENT_LENGTH = Header.createCached(Header.CONTENT_LENGTH,
-                String.valueOf(JSON_LENGTH));
+        private static final int JSON_LENGTH = serialize(new Message(MESSAGE)).length;
+        static final Header CONTENT_LENGTH = HeaderValues.createCached(HeaderNames.CONTENT_LENGTH,
+                                                                       String.valueOf(JSON_LENGTH));
 
         @Override
         public void handle(ServerRequest req, ServerResponse res) {
             res.header(CONTENT_LENGTH);
             res.header(HeaderValues.CONTENT_TYPE_JSON);
             res.header(Main.SERVER);
-            res.send(serializeMsg(newMsg()));
-        }
-
-        private static Message newMsg() {
-            return new Message("Hello, World!");
-        }
-    }
-
-    static class JsonKHandler implements Handler {
-        private final HeaderValue contentLength;
-        private final String message;
-
-        JsonKHandler(int kilobytes) {
-            this.message = "a".repeat(1024 * kilobytes);
-            int length = serializeMsg(new Message(message)).length;
-            this.contentLength = Header.createCached(Header.CONTENT_LENGTH,
-                    String.valueOf(length));
-        }
-
-        @Override
-        public void handle(ServerRequest req, ServerResponse res) {
-            res.header(contentLength);
-            res.header(HeaderValues.CONTENT_TYPE_JSON);
-            res.header(Main.SERVER);
-            res.send(serializeMsg(newMsg()));
-        }
-
-        private Message newMsg() {
-            return new Message(message);
+            res.send(serialize(new Message(MESSAGE)));
         }
     }
 

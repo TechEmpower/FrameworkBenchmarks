@@ -25,6 +25,7 @@ class BenchmarkConfig:
         self.duration = args.duration
         self.exclude = args.exclude
         self.quiet = args.quiet
+        self.reverse_order = args.reverse_order
         self.server_host = args.server_host
         self.database_host = args.database_host
         self.client_host = args.client_host
@@ -51,6 +52,7 @@ class BenchmarkConfig:
         self.database_docker_host = None
         self.client_docker_host = None
         self.network = None
+        self.cpuset_cpus = args.cpuset_cpus
         self.test_container_memory = args.test_container_memory
         self.extra_docker_runtime_args = args.extra_docker_runtime_args
 

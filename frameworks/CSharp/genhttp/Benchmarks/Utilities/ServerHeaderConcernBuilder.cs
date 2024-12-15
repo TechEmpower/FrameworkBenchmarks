@@ -1,18 +1,10 @@
-﻿using System;
+﻿using GenHTTP.Api.Content;
 
-using GenHTTP.Api.Content;
+namespace Benchmarks.Utilities;
 
-namespace Benchmarks.Utilities
+public sealed class ServerHeaderConcernBuilder : IConcernBuilder
 {
 
-    public sealed class ServerHeaderConcernBuilder : IConcernBuilder
-    {
-
-        public IConcern Build(IHandler parent, Func<IHandler, IHandler> contentFactory)
-        {
-            return new ServerHeaderConcern(parent, contentFactory);
-        }
-
-    }
+    public IConcern Build(IHandler content) => new ServerHeaderConcern(content);
 
 }

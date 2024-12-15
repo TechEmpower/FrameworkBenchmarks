@@ -6,6 +6,7 @@ import com.hexagonkt.http.model.Header
 import com.hexagonkt.http.model.Headers
 import com.hexagonkt.http.handlers.HttpHandler
 import com.hexagonkt.http.handlers.OnHandler
+import com.hexagonkt.http.handlers.PathHandler
 import com.hexagonkt.http.server.servlet.ServletServer
 import com.hexagonkt.store.BenchmarkSqlStore
 import com.hexagonkt.templates.jte.JteAdapter
@@ -18,7 +19,7 @@ import jakarta.servlet.annotation.WebListener
     private companion object {
         val headers = Headers(Header("server", "Tomcat"))
 
-        fun createHandlers(settings: Settings): List<HttpHandler> {
+        fun createHandlers(settings: Settings): HttpHandler {
             val store = BenchmarkSqlStore("postgresql")
             val templateEngine = JteAdapter(TEXT_HTML, precompiled = true)
             val templateUrl = urlOf("classpath:fortunes.jte")
@@ -28,7 +29,7 @@ import jakarta.servlet.annotation.WebListener
                 send(headers = headers)
             }
 
-            return listOf(serverHeaderHandler, controllerPath)
+            return PathHandler(serverHeaderHandler, controllerPath)
         }
     }
 }

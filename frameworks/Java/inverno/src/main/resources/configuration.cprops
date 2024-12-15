@@ -6,7 +6,9 @@ com.techempower.inverno.benchmark.appConfiguration {
 	http_server { 
 		tls_enabled = false
 		server_port = 8080
-		h2c_enabled = false
+		h2_enabled = false
+		http1x_validate_headers = false
+		ws_enabled = false
 	}
 	db_database = "hello_world"
 	db_host = "tfb-database"

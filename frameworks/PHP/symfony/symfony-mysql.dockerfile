@@ -1,4 +1,3 @@
-FROM composer/composer:2-bin AS composer
 FROM ubuntu:22.04
 
 ARG DEBIAN_FRONTEND=noninteractive
@@ -11,23 +10,18 @@ RUN apt-get install -yqq nginx git unzip curl \
     php8.3-cli php8.3-fpm php8.3-mysql  \
     php8.3-mbstring php8.3-xml php8.3-curl php8.3-dev > /dev/null
 
-COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+COPY --from=composer/composer:latest-bin --link /composer /usr/local/bin/composer
 
-COPY deploy/conf/* /etc/php/8.3/fpm/
-
-ADD . /symfony
+COPY --link deploy/conf/* /etc/php/8.3/fpm/
 WORKDIR /symfony
+COPY --link . .
 
 RUN if [ $(nproc) = 2 ]; then sed -i "s|pm.max_children = 1024|pm.max_children = 512|g" /etc/php/8.3/fpm/php-fpm.conf ; fi;
 
-RUN mkdir -m 777 -p /symfony/var/cache/{dev,prod} /symfony/var/log
-
-ENV COMPOSER_ALLOW_SUPERUSER=1
-RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet --no-scripts
+RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --no-scripts --quiet
 RUN cp deploy/mysql/.env . && composer dump-env prod && bin/console cache:clear
 
 RUN echo "opcache.preload=/symfony/var/cache/prod/App_KernelProdContainer.preload.php" >> /etc/php/8.3/fpm/php.ini
-
 
 EXPOSE 8080
 

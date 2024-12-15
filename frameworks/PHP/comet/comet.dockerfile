@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -6,14 +6,14 @@ RUN apt-get update -yqq && apt-get install -yqq software-properties-common > /de
 RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php > /dev/null && \
     apt-get update -yqq > /dev/null && apt-get upgrade -yqq > /dev/null
 
-RUN apt-get install -yqq php8.3-cli php8.3-pgsql php8.3-xml php8.3-mbstring > /dev/null
+RUN apt-get install -yqq php8.4-cli php8.4-pgsql php8.4-xml php8.4-mbstring > /dev/null
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
-RUN apt-get install -y php-pear php8.3-dev libevent-dev git > /dev/null
-RUN pecl install event-3.0.8 > /dev/null && echo "extension=event.so" > /etc/php/8.3/cli/conf.d/event.ini
+RUN apt-get install -y php-pear php8.4-dev libevent-dev git > /dev/null
+RUN pecl install event-3.1.3 > /dev/null && echo "extension=event.so" > /etc/php/8.4/cli/conf.d/event.ini
 
-COPY php.ini /etc/php/8.3/cli/php.ini
+COPY php.ini /etc/php/8.4/cli/php.ini
 
 ADD ./ /comet
 WORKDIR /comet

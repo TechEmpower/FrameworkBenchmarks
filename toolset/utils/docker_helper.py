@@ -189,6 +189,13 @@ class DockerHelper:
                 'soft': 99
             }]
 
+            cpuset_cpus = ''
+
+            if self.benchmarker.config.cpuset_cpus is not None:
+                    cpuset_cpus = self.benchmarker.config.cpuset_cpus
+
+            log("Running docker container with cpu set: %s" %cpuset_cpus)
+
             docker_cmd = ''
             if hasattr(test, 'docker_cmd'):
                 docker_cmd = test.docker_cmd
@@ -235,6 +242,7 @@ class DockerHelper:
                 sysctls=sysctl,
                 remove=True,
                 log_config={'type': None},
+                cpuset_cpus=cpuset_cpus,
                 **extra_docker_args
                 )
 
@@ -412,15 +420,10 @@ class DockerHelper:
         except:
             return False
 
-    def benchmark(self, script, variables, raw_file):
+    def benchmark(self, script, variables):
         '''
         Runs the given remote_script on the wrk container on the client machine.
         '''
-
-        def watch_container(container):
-            with open(raw_file, 'w') as benchmark_file:
-                for line in container.logs(stream=True):
-                    log(line.decode(), file=benchmark_file)
 
         if self.benchmarker.config.network_mode is None:
             sysctl = {'net.core.somaxconn': 65535}
@@ -430,8 +433,7 @@ class DockerHelper:
 
         ulimit = [{'name': 'nofile', 'hard': 65535, 'soft': 65535}]
 
-        watch_container(
-            self.client.containers.run(
+        return self.client.containers.run(
                 "techempower/tfb.wrk",
                 "/bin/bash /%s" % script,
                 environment=variables,
@@ -442,4 +444,4 @@ class DockerHelper:
                 ulimits=ulimit,
                 sysctls=sysctl,
                 remove=True,
-                log_config={'type': None}))
+                log_config={'type': None})

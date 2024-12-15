@@ -1,8 +1,8 @@
-FROM python:3.8
+FROM python:3.12
 
 ADD ./requirements.txt /sanic/requirements.txt
 
-RUN pip3 install cython==0.29.13 && \
+RUN pip3 install cython==3.0.11 && \
     pip3 install -r /sanic/requirements.txt
 
 ADD ./ /sanic

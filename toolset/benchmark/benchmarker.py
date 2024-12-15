@@ -1,3 +1,6 @@
+import threading
+
+from docker.models.containers import Container
 from toolset.utils.output_helper import log, FNULL
 from toolset.utils.docker_helper import DockerHelper
 from toolset.utils.time_logger import TimeLogger
@@ -29,7 +32,8 @@ class Benchmarker:
 
         # a list of all tests for this run
         self.tests = self.metadata.tests_to_run()
-
+        if self.config.reverse_order:
+            self.tests.reverse()
         self.results = Results(self)
         self.docker_helper = DockerHelper(self)
 
@@ -262,12 +266,6 @@ class Benchmarker:
             log("BENCHMARKING %s ... " % test_type.upper(), file=benchmark_log)
 
             test = framework_test.runTests[test_type]
-            raw_file = self.results.get_raw_file(framework_test.name,
-                                                 test_type)
-            if not os.path.exists(raw_file):
-                # Open to create the empty file
-                with open(raw_file, 'w'):
-                    pass
 
             if not test.failed:
                 # Begin resource usage metrics collection
@@ -280,8 +278,8 @@ class Benchmarker:
                                                        framework_test.port,
                                                        test.get_url()))
 
-                self.docker_helper.benchmark(script, script_variables,
-                                             raw_file)
+                benchmark_container = self.docker_helper.benchmark(script, script_variables)
+                self.__log_container_output(benchmark_container, framework_test, test_type)
 
                 # End resource usage metrics collection
                 self.__end_logging()
@@ -321,4 +319,32 @@ class Benchmarker:
         '''
         self.subprocess_handle.terminate()
         self.subprocess_handle.communicate()
+
+    def __log_container_output(self, container: Container, framework_test, test_type) -> None:
+        def save_docker_logs(stream):
+            raw_file_path = self.results.get_raw_file(framework_test.name, test_type)
+            with open(raw_file_path, 'w') as file:
+                for line in stream:
+                    log(line.decode(), file=file)
+
+        def save_docker_stats(stream):
+            docker_file_path = self.results.get_docker_stats_file(framework_test.name, test_type)
+            with open(docker_file_path, 'w') as file:
+                file.write('[\n')
+                is_first_line = True
+                for line in stream:
+                    if is_first_line:
+                        is_first_line = False
+                    else:
+                        file.write(',')
+                    file.write(line.decode())
+                file.write(']')
+
+        threads = [
+            threading.Thread(target=lambda: save_docker_logs(container.logs(stream=True))),
+            threading.Thread(target=lambda: save_docker_stats(container.stats(stream=True)))
+        ]
+
+        [thread.start() for thread in threads]
+        [thread.join() for thread in threads]
 

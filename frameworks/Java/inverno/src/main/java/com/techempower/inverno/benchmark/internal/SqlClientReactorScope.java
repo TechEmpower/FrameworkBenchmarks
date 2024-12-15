@@ -59,6 +59,8 @@ public class SqlClientReactorScope extends ReactorScope<Mono<SqlClient>> {
 	
 	@Override
 	protected Mono<SqlClient> create() {
-		return Mono.fromCompletionStage(PgConnection.connect(this.vertx, this.connectOptions).toCompletionStage()).map(pgConn -> (SqlClient)new ConnectionSqlClient(pgConn)).cache();
+		return Mono.fromCompletionStage(() -> PgConnection.connect(this.vertx, this.connectOptions).toCompletionStage())
+			.map(pgConn -> (SqlClient)new ConnectionSqlClient(pgConn))
+			.cacheInvalidateWhen(client -> ((ConnectionSqlClient)client).onClose());
 	}
 }
