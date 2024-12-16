@@ -10,7 +10,7 @@ const template = "<!DOCTYPE html><html><head><title>Fortunes</title></head><body
 
 pub const Global = struct {
     pool: *pg.Pool,
-    prng: *std.rand.DefaultPrng,
+    rand: *std.rand.Random,
     mutex: std.Thread.Mutex = .{},
 };
 
@@ -41,7 +41,7 @@ pub fn db(global: *Global, _: *httpz.Request, res: *httpz.Response) !void {
     try setHeaders(res.arena, res);
 
     global.mutex.lock();
-    const random_number = 1 + (global.prng.random().uintAtMost(u32, 9999));
+    const random_number = 1 + (global.rand.uintAtMostBiased(u32, 9999));
     global.mutex.unlock();
 
     const world = getWorld(global.pool, random_number) catch |err| {
