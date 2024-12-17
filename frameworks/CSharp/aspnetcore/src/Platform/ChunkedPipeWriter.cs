@@ -25,6 +25,7 @@ internal sealed class ChunkedPipeWriter : PipeWriter
     private Memory<byte> _currentFullChunk;
     private Memory<byte> _currentChunk;
     private int _buffered;
+    private long _unflushedBytes;
     private bool _ended = false;
 
     public Memory<byte> Memory => _currentChunk;
@@ -37,6 +38,7 @@ internal sealed class ChunkedPipeWriter : PipeWriter
     public void SetOutput(PipeWriter output, int chunkSizeHint = DefaultChunkSizeHint)
     {
         _buffered = 0;
+        _unflushedBytes = 0;
         _chunkSizeHint = chunkSizeHint;
         _output = output;
 
@@ -47,6 +49,7 @@ internal sealed class ChunkedPipeWriter : PipeWriter
     public void Reset()
     {
         _buffered = 0;
+        _unflushedBytes = 0;
         _output = default;
         _ended = false;
         _hexFormat = DefaultHexFormat;
@@ -54,9 +57,9 @@ internal sealed class ChunkedPipeWriter : PipeWriter
         _currentChunk = default;
     }
 
-    public override bool CanGetUnflushedBytes => _output.CanGetUnflushedBytes;
+    public override bool CanGetUnflushedBytes => true;
 
-    public override long UnflushedBytes => _output.UnflushedBytes;
+    public override long UnflushedBytes => _unflushedBytes;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public override void Advance(int count)
@@ -64,6 +67,7 @@ internal sealed class ChunkedPipeWriter : PipeWriter
         ThrowIfEnded();
 
         _buffered += count;
+        _unflushedBytes += count;
         _currentChunk = _currentChunk[count..];
     }
 
@@ -96,7 +100,13 @@ internal sealed class ChunkedPipeWriter : PipeWriter
 
     public override ValueTask<FlushResult> FlushAsync(CancellationToken cancellationToken = default)
     {
-        return _output.FlushAsync(cancellationToken);
+        CommitCurrentChunk(isFinal: false);
+
+        var flushTask = _output.FlushAsync(cancellationToken);
+
+        _unflushedBytes = 0;
+
+        return flushTask;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
