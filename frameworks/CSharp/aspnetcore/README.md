@@ -6,5 +6,5 @@ See [.NET Core](http://dot.net) and [ASP.NET Core](https://github.com/dotnet/asp
 
 **Language**
 
-* C# 8.0
+* C# 13.0
 

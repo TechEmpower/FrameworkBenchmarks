@@ -1,7 +1,7 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-#if !AOT
+using System;
 using System.IO.Pipelines;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -9,7 +9,7 @@ using RazorSlices;
 
 namespace PlatformBenchmarks;
 
-public partial class BenchmarkApplication
+public sealed partial class BenchmarkApplication
 {
     private async Task FortunesRaw(PipeWriter pipeWriter)
     {
@@ -19,7 +19,7 @@ public partial class BenchmarkApplication
             FortunesTemplateFactory);
     }
 
-    private ValueTask OutputFortunes<TModel>(PipeWriter pipeWriter, TModel model, SliceFactory<TModel> templateFactory)
+    private ValueTask OutputFortunes<TModel>(PipeWriter pipeWriter, TModel model, Func<TModel, RazorSlice<TModel>> templateFactory)
     {
         // Render headers
         var preamble = """
@@ -39,7 +39,7 @@ public partial class BenchmarkApplication
         // Kestrel PipeWriter span size is 4K, headers above already written to first span & template output is ~1350 bytes,
         // so 2K chunk size should result in only a single span and chunk being used.
         var chunkedWriter = GetChunkedWriter(pipeWriter, chunkSizeHint: 2048);
-        var renderTask = template.RenderAsync(chunkedWriter, null, HtmlEncoder);
+        var renderTask = template.RenderAsync(chunkedWriter, HtmlEncoder);
 
         if (renderTask.IsCompletedSuccessfully)
         {
@@ -51,18 +51,17 @@ public partial class BenchmarkApplication
         return AwaitTemplateRenderTask(renderTask, chunkedWriter, template);
     }
 
-    private static async ValueTask AwaitTemplateRenderTask(ValueTask renderTask, ChunkedBufferWriter<WriterAdapter> chunkedWriter, RazorSlice template)
+    private static async ValueTask AwaitTemplateRenderTask(ValueTask renderTask, ChunkedPipeWriter chunkedWriter, RazorSlice template)
     {
         await renderTask;
         EndTemplateRendering(chunkedWriter, template);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static void EndTemplateRendering(ChunkedBufferWriter<WriterAdapter> chunkedWriter, RazorSlice template)
+    private static void EndTemplateRendering(ChunkedPipeWriter chunkedWriter, RazorSlice template)
     {
-        chunkedWriter.End();
+        chunkedWriter.Complete();
         ReturnChunkedWriter(chunkedWriter);
         template.Dispose();
     }
 }
-#endif

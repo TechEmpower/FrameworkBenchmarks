@@ -5,35 +5,40 @@ using System;
 using System.Buffers;
 using System.Buffers.Text;
 using System.Diagnostics;
+using System.IO.Pipelines;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace PlatformBenchmarks;
 
-internal sealed class ChunkedBufferWriter<TWriter> : IBufferWriter<byte> where TWriter : IBufferWriter<byte>
+internal sealed class ChunkedPipeWriter : PipeWriter
 {
     private const int DefaultChunkSizeHint = 2048;
     private static readonly StandardFormat DefaultHexFormat = GetHexFormat(DefaultChunkSizeHint);
     private static ReadOnlySpan<byte> ChunkTerminator => "\r\n"u8;
 
-    private TWriter _output;
+    private PipeWriter _output;
     private int _chunkSizeHint;
     private StandardFormat _hexFormat = DefaultHexFormat;
     private Memory<byte> _currentFullChunk;
     private Memory<byte> _currentChunk;
     private int _buffered;
+    private long _unflushedBytes;
     private bool _ended = false;
 
     public Memory<byte> Memory => _currentChunk;
 
-    public TWriter Output => _output;
+    public PipeWriter Output => _output;
 
     public int Buffered => _buffered;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void SetOutput(TWriter output, int chunkSizeHint = DefaultChunkSizeHint)
+    public void SetOutput(PipeWriter output, int chunkSizeHint = DefaultChunkSizeHint)
     {
         _buffered = 0;
+        _unflushedBytes = 0;
         _chunkSizeHint = chunkSizeHint;
         _output = output;
 
@@ -44,6 +49,7 @@ internal sealed class ChunkedBufferWriter<TWriter> : IBufferWriter<byte> where T
     public void Reset()
     {
         _buffered = 0;
+        _unflushedBytes = 0;
         _output = default;
         _ended = false;
         _hexFormat = DefaultHexFormat;
@@ -51,16 +57,21 @@ internal sealed class ChunkedBufferWriter<TWriter> : IBufferWriter<byte> where T
         _currentChunk = default;
     }
 
+    public override bool CanGetUnflushedBytes => true;
+
+    public override long UnflushedBytes => _unflushedBytes;
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void Advance(int count)
+    public override void Advance(int count)
     {
         ThrowIfEnded();
 
         _buffered += count;
+        _unflushedBytes += count;
         _currentChunk = _currentChunk[count..];
     }
 
-    public Memory<byte> GetMemory(int sizeHint = 0)
+    public override Memory<byte> GetMemory(int sizeHint = 0)
     {
         ThrowIfEnded();
 
@@ -71,15 +82,31 @@ internal sealed class ChunkedBufferWriter<TWriter> : IBufferWriter<byte> where T
         return _currentChunk;
     }
 
-    public Span<byte> GetSpan(int sizeHint = 0) => GetMemory(sizeHint).Span;
+    public override Span<byte> GetSpan(int sizeHint = 0) => GetMemory(sizeHint).Span;
 
-    public void End()
+    public override void CancelPendingFlush()
+    {
+        _output.CancelPendingFlush();
+    }
+
+    public override void Complete(Exception exception = null)
     {
         ThrowIfEnded();
 
         CommitCurrentChunk(isFinal: true);
 
         _ended = true;
+    }
+
+    public override ValueTask<FlushResult> FlushAsync(CancellationToken cancellationToken = default)
+    {
+        CommitCurrentChunk(isFinal: false);
+
+        var flushTask = _output.FlushAsync(cancellationToken);
+
+        _unflushedBytes = 0;
+
+        return flushTask;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
