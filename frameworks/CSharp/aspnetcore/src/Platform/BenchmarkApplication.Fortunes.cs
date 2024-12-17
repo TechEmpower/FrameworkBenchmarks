@@ -9,7 +9,7 @@ using RazorSlices;
 
 namespace PlatformBenchmarks;
 
-public partial class BenchmarkApplication
+public sealed partial class BenchmarkApplication
 {
     private async Task FortunesRaw(PipeWriter pipeWriter)
     {
