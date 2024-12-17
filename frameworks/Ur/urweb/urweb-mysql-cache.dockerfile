@@ -1,4 +1,4 @@
-FROM ubuntu:24.10
+FROM ubuntu:24.04
 
 ADD ./ /urweb
 WORKDIR /urweb
