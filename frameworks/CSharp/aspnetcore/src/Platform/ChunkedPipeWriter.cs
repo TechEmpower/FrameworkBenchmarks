@@ -54,6 +54,10 @@ internal sealed class ChunkedPipeWriter : PipeWriter
         _currentChunk = default;
     }
 
+    public override bool CanGetUnflushedBytes => _output.CanGetUnflushedBytes;
+
+    public override long UnflushedBytes => _output.UnflushedBytes;
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public override void Advance(int count)
     {
