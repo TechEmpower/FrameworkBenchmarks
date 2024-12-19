@@ -10,11 +10,11 @@ ENV LD_PRELOAD=libjemalloc.so.2
 ADD ./ /sinatra
 WORKDIR /sinatra
 
-ENV BUNDLE_WITH=mysql:puma
+ENV BUNDLE_WITH=postgresql:agoo
 RUN bundle install --jobs=4 --gemfile=/sinatra/Gemfile
 
-ENV DBTYPE=mysql
+ENV DBTYPE=postgresql
 
 EXPOSE 8080
 
-CMD bundle exec puma -C config/mri_puma.rb -b tcp://0.0.0.0:8080 -e production
+CMD RACK_ENV=production bundle exec rackup -r agoo -s agoo -p 8080 -q -O workers=$(ruby config/auto_tune.rb | grep -Eo '[0-9]+' | head -n 1)
