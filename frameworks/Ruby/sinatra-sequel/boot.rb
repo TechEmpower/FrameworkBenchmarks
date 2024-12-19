@@ -11,14 +11,13 @@ SEQUEL_NO_ASSOCIATIONS = true
 
 SERVER_STRING =
   if defined?(PhusionPassenger)
-    [
-      PhusionPassenger::SharedConstants::SERVER_TOKEN_NAME,
-      PhusionPassenger::VERSION_STRING
-    ].join('/').freeze
+    'passenger'
   elsif defined?(Puma)
-    Puma::Const::PUMA_SERVER_STRING
+    'puma'
   elsif defined?(Unicorn)
-    Unicorn::HttpParser::DEFAULTS['SERVER_SOFTWARE']
+    'unicorn'
+  elsif defined?(Agoo)
+    'agoo'
   end
 
 Bundler.require(:default) # Load core modules
