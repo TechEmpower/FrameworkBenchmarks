@@ -4,7 +4,7 @@ module_includes = ['/usr/local/include','../../src/modules/common','../../src/mo
 	'../../src/modules/ioc','../../src/modules/jobs','../../src/modules/reflection','../../src/modules/sdorm','../../src/modules/sdorm/sql','../../src/modules/sdorm/sql/libpq',
 	'../../src/modules/client-util/ssl','../../src/modules/sdorm/mongo','../../src/modules/sdorm/mongo/raw','../../src/modules/search','../../src/modules/serialization',
 	'../../src/modules/serialization/xml','../../src/modules/serialization/json','../../src/modules/server-util','../../src/modules/ssl','../../src/modules/threads',
-	'../../src/framework','include']
+	'../../src/framework','../../src/modules/sdorm/scylla/raw','include']
 module_includes += global_includes
 module_libs = [global_libs]
 
