@@ -13,9 +13,8 @@ Flight::route('/json', function() {
 // Plaintext test
 Flight::route('/plaintext', function() {
 	Flight::response()
-		->header('Content-Type', 'text/plain')
-		->write('Hello, World!')
-		->send();
+	->header('Content-Type', 'text/plain');
+	echo 'Hello, World!';
 });
 
 // DB test
