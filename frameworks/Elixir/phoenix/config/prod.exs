@@ -8,7 +8,10 @@ config :hello, HelloWeb.Endpoint,
     http_options: [
       compress: false,
       log_protocol_errors: false
-    ]
+    ],
+    thousand_island_options: [
+      transport_options: [ backlog: 8192 ]
+    ],
   ],
   compress: false,
   check_origin: false,

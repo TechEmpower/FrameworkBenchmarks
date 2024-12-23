@@ -1,7 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'oj', '~> 3.16'
-gem 'rails', '~> 7.2.0'
+gem 'rails', '~> 8.0.0'
 gem 'redis', '~> 5.0'
 gem 'tzinfo-data'
 
@@ -19,10 +18,6 @@ end
 
 group :puma do
   gem 'puma', '~> 6.4', require: false
-end
-
-group :unicorn do
-  gem 'unicorn', '~> 6.1', require: false
 end
 
 group :agoo do

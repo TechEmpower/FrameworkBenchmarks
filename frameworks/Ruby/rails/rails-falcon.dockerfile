@@ -15,7 +15,7 @@ ENV LD_PRELOAD=libjemalloc.so.2
 COPY ./Gemfile* /rails/
 
 ENV BUNDLE_FORCE_RUBY_PLATFORM=true
-ENV BUNDLE_WITHOUT=mysql
+ENV BUNDLE_WITHOUT=mysql:agoo:puma
 RUN bundle install --jobs=8
 
 COPY . /rails/
@@ -23,4 +23,5 @@ COPY . /rails/
 ENV RAILS_ENV=production_postgresql
 ENV PORT=8080
 ENV REDIS_URL=redis://localhost:6379/0
-CMD bundle exec falcon host
+CMD service redis-server start && \
+    bundle exec falcon host

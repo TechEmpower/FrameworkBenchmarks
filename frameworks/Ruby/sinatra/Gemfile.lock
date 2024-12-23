@@ -1,0 +1,89 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    activemodel (7.2.1.1)
+      activesupport (= 7.2.1.1)
+    activerecord (7.2.1.1)
+      activemodel (= 7.2.1.1)
+      activesupport (= 7.2.1.1)
+      timeout (>= 0.4.0)
+    activesupport (7.2.1.1)
+      base64
+      bigdecimal
+      concurrent-ruby (~> 1.0, >= 1.3.1)
+      connection_pool (>= 2.2.5)
+      drb
+      i18n (>= 1.6, < 2)
+      logger (>= 1.4.2)
+      minitest (>= 5.1)
+      securerandom (>= 0.3)
+      tzinfo (~> 2.0, >= 2.0.5)
+    agoo (2.15.13)
+    base64 (0.2.0)
+    bigdecimal (3.1.8)
+    concurrent-ruby (1.3.4)
+    connection_pool (2.4.1)
+    drb (2.2.1)
+    i18n (1.14.6)
+      concurrent-ruby (~> 1.0)
+    json (2.8.1)
+    kgio (2.11.4)
+    logger (1.6.1)
+    minitest (5.25.1)
+    mustermann (3.0.3)
+      ruby2_keywords (~> 0.0.1)
+    mysql2 (0.5.6)
+    nio4r (2.7.4)
+    passenger (6.0.23)
+      rack (>= 1.6.13)
+      rackup
+      rake (>= 12.3.3)
+    pg (1.5.8)
+    puma (6.5.0)
+      nio4r (~> 2.0)
+    rack (3.1.8)
+    rack-protection (4.0.0)
+      base64 (>= 0.1.0)
+      rack (>= 3.0.0, < 4)
+    rack-session (2.0.0)
+      rack (>= 3.0.0)
+    rackup (2.1.0)
+      rack (>= 3)
+      webrick (~> 1.8)
+    raindrops (0.20.1)
+    rake (13.2.1)
+    ruby2_keywords (0.0.5)
+    securerandom (0.3.1)
+    sinatra (4.0.0)
+      mustermann (~> 3.0)
+      rack (>= 3.0.0, < 4)
+      rack-protection (= 4.0.0)
+      rack-session (>= 2.0.0, < 3)
+      tilt (~> 2.0)
+    tilt (2.4.0)
+    timeout (0.4.1)
+    tzinfo (2.0.6)
+      concurrent-ruby (~> 1.0)
+    unicorn (6.1.0)
+      kgio (~> 2.6)
+      raindrops (~> 0.7)
+    webrick (1.8.2)
+
+PLATFORMS
+  ruby
+  x86_64-darwin-23
+
+DEPENDENCIES
+  activerecord (~> 7.2)
+  agoo
+  json (~> 2.8)
+  mysql2 (~> 0.5)
+  passenger (~> 6.0)
+  pg (~> 1.5)
+  puma (~> 6.4)
+  rackup
+  sinatra (~> 4.0)
+  unicorn (~> 6.1)
+
+BUNDLED WITH
+   2.5.16
