@@ -53,7 +53,7 @@ GEM
     io-endpoint (0.14.0)
     io-event (1.7.3)
     io-stream (0.6.1)
-    json (2.8.2)
+    json (2.9.1)
     kgio (2.11.4)
     language_server-protocol (3.17.0.3)
     localhost (1.3.1)
