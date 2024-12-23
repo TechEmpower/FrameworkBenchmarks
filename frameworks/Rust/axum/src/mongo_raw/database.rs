@@ -48,7 +48,7 @@ pub async fn find_world_by_id(db: Database, id: i32) -> Result<World, MongoError
     let filter = doc! { "_id": id as f32 };
 
     let raw: RawDocumentBuf = world_collection
-        .find_one(Some(filter), None)
+        .find_one(filter)
         .await
         .unwrap()
         .expect("expected world, found none");
@@ -93,8 +93,7 @@ pub async fn update_worlds(
     }
 
     db.run_command(
-        doc! {"update": "world", "updates": updates, "ordered": false},
-        None,
+        doc! {"update": "world", "updates": updates, "ordered": false}
     )
     .await
     .expect("could not update worlds");

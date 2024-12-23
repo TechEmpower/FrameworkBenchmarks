@@ -45,7 +45,7 @@ pub async fn find_world_by_id(db: Database, id: i32) -> Result<World, MongoError
     let filter = doc! { "_id": id as f32 };
 
     let world: World = world_collection
-        .find_one(Some(filter), None)
+        .find_one(filter)
         .await
         .unwrap()
         .expect("expected world, found none");
@@ -67,7 +67,7 @@ pub async fn fetch_fortunes(db: Database) -> Result<Vec<Fortune>, MongoError> {
     let fortune_collection = db.collection::<Fortune>("fortune");
 
     let mut fortune_cursor = fortune_collection
-        .find(None, None)
+        .find(doc! {})
         .await
         .expect("fortunes could not be loaded");
 
@@ -99,8 +99,7 @@ pub async fn update_worlds(
     }
 
     db.run_command(
-        doc! {"update": "world", "updates": updates, "ordered": false},
-        None,
+        doc! {"update": "world", "updates": updates, "ordered": false}
     )
     .await
     .expect("could not update worlds");
