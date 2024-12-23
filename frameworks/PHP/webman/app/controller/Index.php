@@ -9,7 +9,7 @@ use PDO;
 
 class Index
 {
-    public function plaintext($request)
+    public function plaintext()
     {
         return new Response(200, [
             'Content-Type' => 'text/plain',
@@ -18,7 +18,7 @@ class Index
     }
 
 
-    public function json($request)
+    public function json()
     {
         return new Response(200, [
             'Content-Type' => 'application/json',
@@ -26,7 +26,7 @@ class Index
         ], json_encode(['message' => 'Hello, World!']));
     }
 
-    public function db($request)
+    public function db()
     {
         $statement = Db::$random;
         $statement->execute([\mt_rand(1, 10000)]);
@@ -37,7 +37,7 @@ class Index
         ], json_encode($statement->fetch()));
     }
 
-    public function fortunes($request)
+    public function fortunes()
     {
         $fortune = Db::$fortune;
 
@@ -59,7 +59,7 @@ class Index
         );
     }
 
-    public function queries($request, $q = 1)
+    public function queries(Request $request, $q = 1)
     {
         $statement = Db::$random;
 
@@ -80,7 +80,7 @@ class Index
         ], json_encode($arr));
     }
 
-    public function updates($request, $q = 1)
+    public function updates(Request $request, $q = 1)
     {
         $random = Db::$random;
 

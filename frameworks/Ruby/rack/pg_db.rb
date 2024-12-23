@@ -19,11 +19,7 @@ class PgDb
 
   def initialize(connection_string = nil, max_connections = 512)
     @connection = Sequel.connect(connection_string, max_connections: max_connections, sql_log_level: :warning)
-    if defined?(Falcon)
-      Sequel.extension :fiber_concurrency if defined?(Falcon)
-    else
-      @connection.extension :async_thread_pool
-    end
+    Sequel.extension :fiber_concurrency if defined?(Falcon)
 
     prepare_statements
   end

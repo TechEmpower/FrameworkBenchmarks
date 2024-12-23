@@ -5,14 +5,9 @@
       "default": {
         "json_url": "/json",
         "plaintext_url": "/plaintext",
-        "db_url": "/db",
-        "query_url": "/queries?queries=",
-        "fortune_url": "/fortunes",
-        "update_url": "/updates?queries=",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Micro",
-        "database": "MongoDB",
         "framework": "fastify",
         "language": "JavaScript",
         "flavor": "NodeJS",
@@ -42,7 +37,7 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "fastify",
+        "display_name": "fastify [mysql]",
         "notes": "",
         "versus": "nodejs"
       },
@@ -63,7 +58,7 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "fastify",
+        "display_name": "fastify [postgres]",
         "notes": "",
         "versus": "nodejs"
       }

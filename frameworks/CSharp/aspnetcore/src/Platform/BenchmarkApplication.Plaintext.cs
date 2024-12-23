@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PlatformBenchmarks;
 
-public partial class BenchmarkApplication
+public sealed partial class BenchmarkApplication
 {
     private static ReadOnlySpan<byte> _plaintextPreamble =>
         "HTTP/1.1 200 OK\r\n"u8 +

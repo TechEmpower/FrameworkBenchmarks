@@ -11,7 +11,7 @@ pub fn initPool(allocator: Allocator) !*pg.Pool {
     //std.debug.print("Connection: {s}:{s}@{s}:{d}/{s}\n", .{ info.username, info.password, info.hostname, info.port, info.database });
 
     const pg_pool = try Pool.init(allocator, .{
-        .size = 28,
+        .size = 56,
         .connect = .{
             .port = info.port,
             .host = info.hostname,

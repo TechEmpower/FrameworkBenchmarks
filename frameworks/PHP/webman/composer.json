@@ -25,9 +25,10 @@
   },
   "require": {
     "php": ">=7.2",
-    "workerman/webman-framework": "^1.0",
+    "workerman/webman-framework": "dev-master",
     "monolog/monolog": "^2.0",
-    "vlucas/phpdotenv": ">=4.1,<6.0"
+    "vlucas/phpdotenv": ">=4.1,<6.0",
+    "workerman/workerman": "dev-master"
   },
   "suggest": {
     "ext-event": "For better performance. "
@@ -51,5 +52,6 @@
     "pre-package-uninstall": [
       "support\\Plugin::uninstall"
     ]
-  }
+  },
+  "minimum-stability": "dev"
 }

@@ -1,13 +1,12 @@
 #[cfg(not(target_os = "macos"))]
 #[global_allocator]
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
-// static GLOBAL: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
 
 use ntex::http::header::{CONTENT_TYPE, SERVER};
 use ntex::http::{HttpService, KeepAlive, Request, Response, StatusCode};
 use ntex::service::{Service, ServiceCtx, ServiceFactory};
 use ntex::web::{Error, HttpResponse};
-use ntex::{time::Seconds, util::PoolId};
+use ntex::{time::Seconds, util::PoolId, util::Ready};
 
 mod db;
 mod utils;
@@ -83,6 +82,10 @@ impl ServiceFactory<Request> for AppFactory {
 async fn main() -> std::io::Result<()> {
     println!("Starting http server: 127.0.0.1:8080");
 
+    let cores = core_affinity::get_core_ids().unwrap();
+    let total_cores = cores.len();
+    let cores = std::sync::Arc::new(std::sync::Mutex::new(cores));
+
     ntex::server::build()
         .backlog(1024)
         .bind("techempower", "0.0.0.0:8080", |cfg| {
@@ -97,7 +100,17 @@ async fn main() -> std::io::Result<()> {
                 .payload_read_rate(Seconds::ZERO, Seconds::ZERO, 0)
                 .h1(AppFactory)
         })?
-        .workers(num_cpus::get())
+        .configure(move |cfg| {
+            let cores = cores.clone();
+            cfg.on_worker_start(move |_| {
+                if let Some(core) = cores.lock().unwrap().pop() {
+                    core_affinity::set_for_current(core);
+                }
+                Ready::<_, &str>::Ok(())
+            });
+            Ok(())
+        })?
+        .workers(total_cores)
         .run()
         .await
 }

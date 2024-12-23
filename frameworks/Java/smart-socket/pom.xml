@@ -11,7 +11,7 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <log4j.version>2.17.1</log4j.version>
-        <smartservlet.version>1.5-SNAPSHOT</smartservlet.version>
+        <smartservlet.version>2.5</smartservlet.version>
         <hikaricp.version>5.0.0</hikaricp.version>
         <jsoniter.version>0.9.23</jsoniter.version>
     </properties>
@@ -23,7 +23,7 @@
             <version>0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>org.smartboot.servlet</groupId>
+            <groupId>tech.smartboot.servlet</groupId>
             <artifactId>servlet-core</artifactId>
             <version>${smartservlet.version}</version>
         </dependency>

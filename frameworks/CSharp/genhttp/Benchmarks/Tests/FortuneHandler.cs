@@ -1,116 +1,85 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Linq;
-using System.Web;
-using System.IO;
-
-using Microsoft.EntityFrameworkCore;
-
+﻿using System.Web;
+using Benchmarks.Model;
+using Cottle;
 using GenHTTP.Api.Content;
-using GenHTTP.Api.Content.Templating;
 using GenHTTP.Api.Protocol;
 
 using GenHTTP.Modules.IO;
-using GenHTTP.Modules.Razor;
+using GenHTTP.Modules.Pages;
+using GenHTTP.Modules.Pages.Rendering;
 
-using Benchmarks.Model;
+using Microsoft.EntityFrameworkCore;
 
-namespace Benchmarks.Tests
+namespace Benchmarks.Tests;
+
+public class FortuneHandler : IHandler
 {
 
-    #region Factory
+    #region Get-/Setters
 
-    public class FortuneHandlerBuilder : IHandlerBuilder
+    private TemplateRenderer Template { get; }
+
+    #endregion
+
+    #region Initialization
+
+    public FortuneHandler()
     {
+        var resource = Resource.FromAssembly("Template.html").Build();
 
-        public IHandler Build(IHandler parent)
-        {
-            return new FortuneHandler(parent);
-        }
-
+        Template = Renderer.From(resource);
     }
 
     #endregion
 
-    #region Supporting data structures
+    #region Functionality
 
-    public sealed class FortuneModel : BasicModel
+    public ValueTask PrepareAsync() => new();
+
+    public async ValueTask<IResponse> HandleAsync(IRequest request)
     {
-
-        public List<Fortune> Cookies { get; }
-
-        public FortuneModel(IRequest request, IHandler handler, List<Fortune> cookies) : base(request, handler)
+        var data = new Dictionary<Value, Value>
         {
-            Cookies = cookies;
+            ["cookies"] = Value.FromEnumerable(await GetFortunes())
+        };
+
+        return request.GetPage(await Template.RenderAsync(data)).Build();
+    }
+
+    private static async ValueTask<List<Value>> GetFortunes()
+    {
+        await using var context = DatabaseContext.CreateNoTracking();
+
+        var fortunes = await context.Fortune.ToListAsync().ConfigureAwait(false);
+
+        var result = new List<Value>(fortunes.Count + 1);
+
+        foreach (var fortune in fortunes)
+        {
+            result.Add(Value.FromDictionary(new Dictionary<Value, Value>()
+            {
+                ["id"] = fortune.Id,
+                ["message"] = HttpUtility.HtmlEncode(fortune.Message)
+            }));
         }
 
+        result.Add(Value.FromDictionary(new Dictionary<Value, Value>()
+        {
+            ["id"] = 0,
+            ["message"] = "Additional fortune added at request time."
+        }));
+
+        result.Sort((one, two) =>
+        {
+            var firstMessage = one.Fields["message"].AsString;
+            var secondMessage = two.Fields["message"].AsString;
+
+            return string.Compare(firstMessage, secondMessage, StringComparison.Ordinal);
+        });
+
+        return result;
     }
 
     #endregion
-
-    public class FortuneHandler : IHandler, IPageRenderer
-    {
-
-        #region Get-/Setters
-
-        public IHandler Parent { get; }
-
-        private IHandler Page { get; }
-
-        private IRenderer<TemplateModel> Template { get; }
-
-        #endregion
-
-        #region Initialization
-
-        public FortuneHandler(IHandler parent)
-        {
-            Parent = parent;
-
-            Page = ModRazor.Page(Resource.FromAssembly("Fortunes.html"), (r, h) => GetFortunes(r, h))
-                           .Title("Fortunes")
-                           .AddAssemblyReference<HttpUtility>()
-                           .AddUsing("System.Web")
-                           .Build(this);
-
-            Template = ModRazor.Template<TemplateModel>(Resource.FromAssembly("Template.html")).Build();
-        }
-
-        #endregion
-
-        #region Functionality
-
-        public async ValueTask PrepareAsync()
-        {
-            await Page.PrepareAsync();
-            await Template.PrepareAsync();
-        }
-
-        public ValueTask<ulong> CalculateChecksumAsync() => new(17);
-
-        public IAsyncEnumerable<ContentElement> GetContentAsync(IRequest request) => AsyncEnumerable.Empty<ContentElement>();
-
-        public ValueTask<string> RenderAsync(TemplateModel model) => Template.RenderAsync(model);
-
-        public ValueTask RenderAsync(TemplateModel model, Stream target) => Template.RenderAsync(model, target);
-
-        public ValueTask<IResponse> HandleAsync(IRequest request) => Page.HandleAsync(request);
-
-        private static async ValueTask<FortuneModel> GetFortunes(IRequest request, IHandler handler)
-        {
-            using var context = DatabaseContext.CreateNoTracking();
-
-            var fortunes = await context.Fortune.ToListAsync().ConfigureAwait(false);
-
-            fortunes.Add(new Fortune() { Message = "Additional fortune added at request time." });
-
-            fortunes.Sort();
-
-            return new FortuneModel(request, handler, fortunes);
-        }
-
-        #endregion
-
-    }
 
 }

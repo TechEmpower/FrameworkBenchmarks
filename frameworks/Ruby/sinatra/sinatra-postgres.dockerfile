@@ -10,6 +10,7 @@ ENV LD_PRELOAD=libjemalloc.so.2
 ADD ./ /sinatra
 WORKDIR /sinatra
 
+ENV BUNDLE_WITH=postgresql:puma
 RUN bundle install --jobs=4 --gemfile=/sinatra/Gemfile
 
 ENV DBTYPE=postgresql
