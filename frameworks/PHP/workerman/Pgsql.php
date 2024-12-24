@@ -31,10 +31,11 @@ class Pgsql extends Mysql
         $queries = $request->get('q');
         $worlds = $keys = $values = [];
         $count = min(max((int) $queries, 1), 500);
+        $random = $this->random;
         for ($i = 0; $i < $count; ++ $i) {
             $values[] = $keys[] = $id = mt_rand(1, 10000);
-            $this->random->execute([$id]);
-            $row = $this->random->fetch();
+            $random->execute([$id]);
+            $row = $random->fetch();
             $values[] = $row['randomNumber'] = mt_rand(1, 10000);
             $worlds[] = $row;
         }
