@@ -62,6 +62,7 @@ class BenchmarkSqlStore(
 
     override fun replaceWorlds(worlds: List<World>) {
         dataSource.connection.use { con: Connection ->
+            con.autoCommit = false
             val stmtSelect = con.prepareStatement(SELECT_WORLD)
             val stmtUpdate = con.prepareStatement(UPDATE_WORLD)
 
@@ -76,8 +77,11 @@ class BenchmarkSqlStore(
 
                 stmtUpdate.setInt(1, newRandomNumber)
                 stmtUpdate.setInt(2, worldId)
-                stmtUpdate.executeUpdate()
+//                stmtUpdate.executeUpdate()
+                stmtUpdate.addBatch()
             }
+            stmtUpdate.executeBatch()
+            con.commit()
         }
     }
 
