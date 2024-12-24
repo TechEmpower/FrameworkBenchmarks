@@ -1,4 +1,5 @@
-import { AnyObj, controller, RequestContext, SingletonRequestContext, route } from '@ditsmod/core';
+import { AnyObj, controller, RequestContext, SingletonRequestContext, optional } from '@ditsmod/core';
+import { route } from '@ditsmod/routing';
 import Handlebars from 'handlebars';
 
 import { DbService } from './db.service.js';
@@ -27,9 +28,9 @@ const tmpl = Handlebars.compile(
   ].join(''),
 );
 
-@controller({ isSingleton: true })
+@controller({ scope: 'module' })
 export class OneController {
-  constructor(private dbService: DbService) {}
+  constructor(@optional() private dbService: DbService) {}
 
   @route('GET', 'db')
   async getSingleQuery(ctx: RequestContext) {
@@ -61,28 +62,24 @@ export class OneController {
     const fortunes = await this.dbService.findAllFortunes();
     fortunes.push(additionalFortune);
     fortunes.sort(compare);
-    ctx.nodeRes.setHeader('Server', 'Ditsmod');
-    ctx.nodeRes.setHeader('Content-Type', 'text/html; charset=utf-8');
-    ctx.nodeRes.end(tmpl({ fortunes }));
+    ctx.rawRes.setHeader('Server', 'Ditsmod');
+    ctx.rawRes.setHeader('Content-Type', 'text/html; charset=utf-8');
+    ctx.rawRes.end(tmpl({ fortunes }));
   }
 
   @route('GET', 'plaintext')
   getHello(ctx: SingletonRequestContext) {
-    ctx.nodeRes.setHeader('Server', 'Ditsmod');
-    ctx.nodeRes.setHeader('Content-Type', 'text/plain; charset=utf-8');
-    ctx.nodeRes.end('Hello, World!');
+    ctx.rawRes.setHeader('Server', 'Ditsmod');
+    ctx.rawRes.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    ctx.rawRes.end('Hello, World!');
   }
 
   @route('GET', 'json')
   getJson(ctx: SingletonRequestContext) {
-    ctx.nodeRes.setHeader('Server', 'Ditsmod');
-    ctx.nodeRes.setHeader('Content-Type', 'application/json; charset=utf-8');
-    ctx.nodeRes.end(JSON.stringify({ message: 'Hello, World!' }));
+    this.sendJson(ctx, { message: 'Hello, World!' });
   }
 
   protected sendJson(ctx: RequestContext, value: AnyObj) {
-    ctx.nodeRes.setHeader('Server', 'Ditsmod');
-    ctx.nodeRes.setHeader('Content-Type', 'application/json; charset=utf-8');
-    ctx.nodeRes.end(JSON.stringify(value));
+    ctx.setHeader('Server', 'Ditsmod').sendJson(value);
   }
 }
