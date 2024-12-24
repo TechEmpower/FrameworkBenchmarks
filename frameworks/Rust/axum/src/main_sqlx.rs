@@ -12,7 +12,7 @@ use axum::{
     Router,
 };
 use dotenv::dotenv;
-use moka::future::Cache;
+use quick_cache::sync::Cache;
 use rand::{rngs::SmallRng, thread_rng, SeedableRng};
 use sqlx::models::World;
 use yarte::Template;
@@ -98,10 +98,10 @@ async fn cache(
 ) -> impl IntoResponse {
     let count = parse_params(params);
     let mut rng = SmallRng::from_rng(&mut thread_rng()).unwrap();
-    let mut worlds: Vec<Option<Arc<World>>> = Vec::with_capacity(count);
+    let mut worlds: Vec<Option<World>> = Vec::with_capacity(count);
 
     for id in random_ids(&mut rng, count) {
-        worlds.push(cache.get(&id).await);
+        worlds.push(cache.get(&id));
     }
 
     (StatusCode::OK, Json(worlds))
@@ -115,7 +115,7 @@ async fn preload_cache(AppState { db, cache }: &AppState) {
         .expect("error loading worlds");
 
     for world in worlds {
-        cache.insert(world.id, Arc::new(world)).await;
+        cache.insert(world.id, world);
     }
 }
 
@@ -123,7 +123,7 @@ async fn preload_cache(AppState { db, cache }: &AppState) {
 #[derive(Clone)]
 struct AppState {
     db: PgPool,
-    cache: Cache<i32, Arc<World>>,
+    cache: Arc<Cache<i32, World>>,
 }
 
 #[tokio::main]
@@ -136,10 +136,7 @@ async fn main() {
 
     let state = AppState {
         db: create_pool(database_url, max_pool_size, min_pool_size).await,
-        cache: Cache::builder()
-        .initial_capacity(10000)
-        .max_capacity(10000)
-        .build()
+        cache: Arc::new(Cache::new(10_000))
     };
 
     // Prime the cache with CachedWorld objects

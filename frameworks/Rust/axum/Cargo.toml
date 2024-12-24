@@ -77,10 +77,10 @@ axum-core = { version = "0.4.5", optional = true }
 mime = { version = "0.3.17", optional = true }
 bytes = { version = "1.9.0", optional = true }
 serde_path_to_error = { version = "0.1.16", optional = true }
-moka = { version = "0.12.8", features = ["future"] }
 socket2 = "0.5.8"
 hyper = { version = "1.5", features = ["server", "http1"] }
 hyper-util = { version = "0.1", features = ["tokio", "server-auto", "http1"] }
+quick_cache = "0.6.9"
 
 
 [profile.release]
