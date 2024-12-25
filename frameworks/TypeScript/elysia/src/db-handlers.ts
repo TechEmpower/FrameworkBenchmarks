@@ -8,7 +8,7 @@ export function rand() {
 
 function parseQueriesNumber(q?: string) {
 	// NaN is falsy, fallback to one.
-	return Math.min(+(q as string) || 1, 500);
+	return Math.min(+q! || 1, 500);
 }
 
 export const dbHandlers = new Elysia()
