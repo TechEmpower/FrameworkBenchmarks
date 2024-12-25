@@ -58,7 +58,7 @@ async fn queries(
     let ids = random_ids(&mut rng, count);
     let mut worlds: Vec<World> = Vec::with_capacity(count);
 
-    for id in ids {
+    for id in &ids {
         let world: World = ::sqlx::query_as(common::SELECT_WORLD_BY_ID)
             .bind(id)
             .fetch_one(&mut *db.acquire().await.unwrap())
@@ -119,6 +119,7 @@ async fn preload_cache(AppState { db, cache }: &AppState) {
     }
 }
 
+/// Application state
 #[derive(Clone)]
 struct AppState {
     db: PgPool,
@@ -135,7 +136,10 @@ async fn main() {
 
     let state = AppState {
         db: create_pool(database_url, max_pool_size, min_pool_size).await,
-        cache: Cache::new(10000),
+        cache: Cache::builder()
+        .initial_capacity(10000)
+        .max_capacity(10000)
+        .build()
     };
 
     // Prime the cache with CachedWorld objects

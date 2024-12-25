@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require 'oj'
-Oj.mimic_JSON
-
 # Our Rack application to be executed by rackup
 class HelloWorld
   DEFAULT_HEADERS = {}.tap do |h|

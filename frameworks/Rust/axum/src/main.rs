@@ -11,11 +11,13 @@ use axum::Json;
 use common::simd_json::Json;
 
 /// Return a plaintext static string.
-pub async fn plaintext() -> impl IntoResponse {
-    (StatusCode::OK, "Hello, World!")
+#[inline(always)]
+pub async fn plaintext() -> &'static str {
+    "Hello, World!"
 }
 
 /// Return a JSON message.
+#[inline(always)]
 pub async fn json() -> impl IntoResponse {
     let message = Message {
         message: "Hello, World!",
@@ -24,9 +26,12 @@ pub async fn json() -> impl IntoResponse {
     (StatusCode::OK, Json(message))
 }
 
-#[tokio::main]
-async fn main() {
+fn main() {
     dotenv().ok();
+    server::start_tokio(serve_app)
+}
+
+async fn serve_app() {
 
     let app = Router::new()
         .route("/plaintext", get(plaintext))

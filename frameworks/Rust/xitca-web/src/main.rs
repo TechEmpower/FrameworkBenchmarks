@@ -5,18 +5,22 @@ mod util;
 use xitca_http::{
     h1::RequestBody,
     http::{header::SERVER, StatusCode},
-    util::service::{
-        route::get,
-        router::{Router, RouterError},
+    util::{
+        middleware::context::{Context, ContextBuilder},
+        service::{
+            route::get,
+            router::{Router, RouterError},
+        },
     },
     HttpServiceBuilder,
 };
 use xitca_service::{fn_service, Service, ServiceExt};
 
+use db::Client;
 use ser::{error_response, IntoResponse, Message, Request, Response};
-use util::{context_mw, HandleResult, QueryParse, SERVER_HEADER_VALUE};
+use util::{HandleResult, QueryParse, State, SERVER_HEADER_VALUE};
 
-type Ctx<'a> = util::Ctx<'a, Request<RequestBody>>;
+type Ctx<'a> = Context<'a, Request<RequestBody>, State<Client>>;
 
 fn main() -> std::io::Result<()> {
     let service = Router::new()
@@ -27,7 +31,7 @@ fn main() -> std::io::Result<()> {
         .insert("/queries", get(fn_service(queries)))
         .insert("/updates", get(fn_service(updates)))
         .enclosed_fn(middleware)
-        .enclosed(context_mw())
+        .enclosed(ContextBuilder::new(|| async { db::create().await.map(State::new) }))
         .enclosed(HttpServiceBuilder::h1().io_uring());
     xitca_server::Builder::new()
         .bind("xitca-web", "0.0.0.0:8080", service)?
@@ -47,14 +51,12 @@ where
 #[cold]
 #[inline(never)]
 fn error_handler(e: RouterError<util::Error>) -> Response {
-    match e {
-        RouterError::Match(_) => error_response(StatusCode::NOT_FOUND),
-        RouterError::NotAllowed(_) => error_response(StatusCode::METHOD_NOT_ALLOWED),
-        RouterError::Service(e) => {
-            println!("{e}");
-            error_response(StatusCode::INTERNAL_SERVER_ERROR)
-        }
-    }
+    let status = match e {
+        RouterError::Match(_) => StatusCode::NOT_FOUND,
+        RouterError::NotAllowed(_) => StatusCode::METHOD_NOT_ALLOWED,
+        RouterError::Service(_) => StatusCode::INTERNAL_SERVER_ERROR,
+    };
+    error_response(status)
 }
 
 async fn plain_text(ctx: Ctx<'_>) -> HandleResult<Response> {

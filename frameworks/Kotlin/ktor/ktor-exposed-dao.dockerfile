@@ -1,9 +1,9 @@
-FROM gradle:jdk17
+FROM gradle:jdk21
 
 WORKDIR /ktor-exposed
 COPY ktor-exposed/settings.gradle.kts settings.gradle.kts
 COPY ktor-exposed/app app
-RUN gradle shadowJar
+RUN gradle --no-daemon shadowJar
 
 EXPOSE 8080
 

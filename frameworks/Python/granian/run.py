@@ -10,8 +10,8 @@ if __name__ == '__main__':
     workers = multiprocessing.cpu_count()
 
     if interface == "rsgi":
-        #: split cores between the two loops
-        workers = round(workers / 2)
+        #: leave 25% cpu to the Rust runtime
+        workers = round(workers * 0.75)
 
     blocking_threads = None
     if interface == "wsgi":

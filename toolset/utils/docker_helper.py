@@ -420,15 +420,10 @@ class DockerHelper:
         except:
             return False
 
-    def benchmark(self, script, variables, raw_file):
+    def benchmark(self, script, variables):
         '''
         Runs the given remote_script on the wrk container on the client machine.
         '''
-
-        def watch_container(container):
-            with open(raw_file, 'w') as benchmark_file:
-                for line in container.logs(stream=True):
-                    log(line.decode(), file=benchmark_file)
 
         if self.benchmarker.config.network_mode is None:
             sysctl = {'net.core.somaxconn': 65535}
@@ -438,8 +433,7 @@ class DockerHelper:
 
         ulimit = [{'name': 'nofile', 'hard': 65535, 'soft': 65535}]
 
-        watch_container(
-            self.client.containers.run(
+        return self.client.containers.run(
                 "techempower/tfb.wrk",
                 "/bin/bash /%s" % script,
                 environment=variables,
@@ -450,4 +444,4 @@ class DockerHelper:
                 ulimits=ulimit,
                 sysctls=sysctl,
                 remove=True,
-                log_config={'type': None}))
+                log_config={'type': None})

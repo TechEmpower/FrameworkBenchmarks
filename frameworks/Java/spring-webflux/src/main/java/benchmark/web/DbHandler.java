@@ -1,25 +1,27 @@
 package benchmark.web;
 
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
+import benchmark.Utils;
 import benchmark.model.Fortune;
 import benchmark.model.World;
 import benchmark.repository.DbRepository;
+import io.jstach.jstachio.JStachio;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
-import static java.util.Comparator.comparing;
-
 @Component
 public class DbHandler {
+
+    private static final String CONTENT_TYPE_VALUE = "text/html; charset=utf-8";
 
     private final DbRepository dbRepository;
 
@@ -28,24 +30,24 @@ public class DbHandler {
     }
 
     public Mono<ServerResponse> db(ServerRequest request) {
-        int id = randomWorldNumber();
+        int id = Utils.randomWorldNumber();
         Mono<World> world = dbRepository.getWorld(id)
                 .switchIfEmpty(Mono.error(new Exception("No World found with Id: " + id)));
 
         return ServerResponse.ok()
-                .contentType(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .body(world, World.class);
     }
 
     public Mono<ServerResponse> queries(ServerRequest request) {
         int queries = parseQueryCount(request.queryParams().getFirst("queries"));
 
-        Mono<List<World>> worlds = Flux.range(0, queries)
-                .flatMap(i -> dbRepository.getWorld(randomWorldNumber()))
+        Mono<List<World>> worlds = Flux.fromStream(Utils.randomWorldNumbers().limit(queries).boxed())
+                .flatMap(dbRepository::getWorld)
                 .collectList();
 
         return ServerResponse.ok()
-                .contentType(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .body(worlds, new ParameterizedTypeReference<List<World>>() {
                 });
     }
@@ -66,28 +68,32 @@ public class DbHandler {
     public Mono<ServerResponse> updates(ServerRequest request) {
         int queries = parseQueryCount(request.queryParams().getFirst("queries"));
 
-        Mono<List<World>> worlds = Flux.range(0, queries)
-                .flatMap(i -> dbRepository.findAndUpdateWorld(randomWorldNumber(), randomWorldNumber()))
-                .collectList();
+        Mono<List<World>> worlds = Flux.fromStream(Utils.randomWorldNumbers().limit(queries).boxed())
+                .flatMap(id -> dbRepository.getWorld(id).map(world -> {
+                    int randomNumber;
+                    do {
+                        randomNumber = Utils.randomWorldNumber();
+                    } while (randomNumber == world.randomnumber);
+                    world.randomnumber = randomNumber;
+                    return world;
+                }))
+                .collectSortedList(Comparator.comparingInt(w -> w.id))
+                .flatMap(list -> dbRepository.updateWorlds(list).thenReturn(list));
 
         return ServerResponse.ok()
-                .contentType(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .body(worlds, new ParameterizedTypeReference<List<World>>() {
                 });
     }
 
     public Mono<ServerResponse> fortunes(ServerRequest request) {
-        Mono<List<Fortune>> result = dbRepository.fortunes().collectList().flatMap(fortunes -> {
-            fortunes.add(new Fortune(0, "Additional fortune added at request time."));
-            fortunes.sort(comparing(fortune -> fortune.message));
-            return Mono.just(fortunes);
-        });
-
-        return ServerResponse.ok()
-                .render("fortunes", Collections.singletonMap("fortunes", result));
+        return dbRepository.fortunes()
+                .concatWith(Mono.just(new Fortune(0, "Additional fortune added at request time.")))
+                .collectSortedList()
+                .flatMap(fortunes ->
+                        ServerResponse.ok()
+                                .header(HttpHeaders.CONTENT_TYPE, CONTENT_TYPE_VALUE)
+                                .bodyValue(JStachio.render(new Fortunes(fortunes))));
     }
 
-    private static int randomWorldNumber() {
-        return 1 + ThreadLocalRandom.current().nextInt(10000);
-    }
 }

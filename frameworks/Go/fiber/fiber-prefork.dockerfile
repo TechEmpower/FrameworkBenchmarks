@@ -1,14 +1,18 @@
-FROM docker.io/golang:1.23
+FROM golang:1.23-alpine as builder
 
 WORKDIR /fiber
 
 COPY ./src /fiber
 
-RUN go mod download
+RUN go mod download && \
+    go generate -x ./templates && \
+    GOAMD64=v3 go build -ldflags="-s -w" -o app .
 
-RUN go generate -x ./templates
+FROM alpine:latest
 
-RUN GOAMD64=v3 go build -ldflags="-s -w" -o app .
+WORKDIR /fiber
+
+COPY --from=builder /fiber/app .
 
 EXPOSE 8080
 

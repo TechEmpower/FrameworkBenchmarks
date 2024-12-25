@@ -2,13 +2,21 @@ namespace App
 
 open System
 open Oxpecker
-open System.Runtime.InteropServices
 
 [<RequireQualifiedAccess>]
-module HtmlViews =
+module HttpHandlers =
+    open System.Text
+    open Microsoft.AspNetCore.Http
+    open SpanJson
     open Oxpecker.ViewEngine
 
-    let private head, tail =
+    let private extra =
+        {
+            id = 0
+            message = "Additional fortune added at request time."
+        }
+
+    let private fortunesHeadAndTail =
         (fun (content: HtmlElement) ->
             html() {
                 head() {
@@ -26,32 +34,11 @@ module HtmlViews =
             } :> HtmlElement
         ) |> RenderHelpers.prerender
 
-    let fortunes (fortunesData: ResizeArray<Fortune>) =
-        let fragment = __()
-        for fortune in CollectionsMarshal.AsSpan fortunesData do
-            tr() {
-                td() { raw <| string fortune.id }
-                td() { fortune.message }
-            }
-            |> fragment.AddChild
-        RenderHelpers.combine head tail fragment
-
-[<RequireQualifiedAccess>]
-module HttpHandlers =
-    open System.Text
-    open Microsoft.AspNetCore.Http
-    open SpanJson
-
-    let private extra =
-        {
-            id      = 0
-            message = "Additional fortune added at request time."
-        }
-
     let rec private renderFortunes (ctx: HttpContext) (data: ResizeArray<Fortune>) =
         data.Add extra
         data.Sort FortuneComparer
-        data |> HtmlViews.fortunes |> ctx.WriteHtmlViewChunked
+        RenderHelpers.CombinedElement(fortunesHeadAndTail, data)
+        |> ctx.WriteHtmlViewChunked
 
     let fortunes : EndpointHandler =
         fun ctx ->

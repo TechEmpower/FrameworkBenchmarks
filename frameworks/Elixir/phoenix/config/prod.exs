@@ -8,7 +8,10 @@ config :hello, HelloWeb.Endpoint,
     http_options: [
       compress: false,
       log_protocol_errors: false
-    ]
+    ],
+    thousand_island_options: [
+      transport_options: [ backlog: 8192 ]
+    ],
   ],
   compress: false,
   check_origin: false,
@@ -21,7 +24,8 @@ config :hello, Hello.Repo,
   password: "benchmarkdbpass",
   database: "hello_world",
   hostname: "tfb-database",
-  pool_size: 50,
+  pool_count: 56,
+  pool_size: 15,
   queue_target: 5000,
   log: false
 
@@ -33,17 +37,3 @@ config :logger,
   ],
   level: :error,
   backends: []
-
-# ## SSL Support
-#
-# To get SSL working, you will need to add the `https` key
-# to the previous section:
-#
-#  config:hello, Hello.Endpoint,
-#    ...
-#    https: [port: 443,
-#            keyfile: System.get_env("SOME_APP_SSL_KEY_PATH"),
-#            certfile: System.get_env("SOME_APP_SSL_CERT_PATH")]
-#
-# Where those two env variables point to a file on
-# disk for the key and cert.

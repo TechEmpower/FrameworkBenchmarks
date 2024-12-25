@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PlatformBenchmarks;
 
-public partial class BenchmarkApplication
+public sealed partial class BenchmarkApplication
 {
     private static async Task Updates(PipeWriter pipeWriter, int count)
     {

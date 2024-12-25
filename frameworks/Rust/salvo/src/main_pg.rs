@@ -9,7 +9,7 @@ use std::thread::available_parallelism;
 
 use async_trait::async_trait;
 use bytes::Bytes;
-use dotenv::dotenv;
+use dotenvy::dotenv;
 use salvo::conn::tcp::TcpAcceptor;
 use salvo::http::header::{self, HeaderValue};
 use salvo::http::ResBody;

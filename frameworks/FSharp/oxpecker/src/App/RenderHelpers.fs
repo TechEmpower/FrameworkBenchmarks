@@ -1,7 +1,26 @@
 ﻿module RenderHelpers
 
     open System.Text
+    open App
     open Oxpecker.ViewEngine
+
+    type HeadAndTail =
+        {
+            Head: string
+            Tail: string
+        }
+
+    [<Struct>]
+    type CombinedElement(ht: HeadAndTail, fortunesData: ResizeArray<Fortune>) =
+        interface HtmlElement with
+            member this.Render(sb) =
+                sb.Append(ht.Head) |> ignore
+                for fortune in fortunesData do
+                    (tr() {
+                        td() { raw <| string fortune.id }
+                        td() { fortune.message }
+                    }).Render(sb)
+                sb.Append(ht.Tail) |> ignore
 
     let prerender (view: HtmlElement -> HtmlElement) =
         let sb = StringBuilder()
@@ -13,12 +32,4 @@
                  sb.Clear() |> ignore }
         let readyView = view fakeHole
         readyView.Render(sb)
-        (head, sb.ToString())
-
-    let inline combine (head: string) (tail: string) (hole: HtmlElement) =
-        { new HtmlElement with
-            member this.Render(sb) =
-                sb.Append(head) |> ignore
-                hole.Render(sb)
-                sb.Append(tail) |> ignore
-        }
+        { Head = head; Tail = sb.ToString() }
