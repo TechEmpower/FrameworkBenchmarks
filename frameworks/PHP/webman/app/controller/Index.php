@@ -5,7 +5,10 @@ use support\Request;
 use support\bootstrap\Date;
 use support\bootstrap\db\Raw as Db;
 use support\Response;
-use PDO;
+use function json_encode;
+use function max;
+use function min;
+use function mt_rand;
 
 class Index
 {
@@ -29,7 +32,7 @@ class Index
     public function db()
     {
         $statement = Db::$random;
-        $statement->execute([\mt_rand(1, 10000)]);
+        $statement->execute([mt_rand(1, 10000)]);
 
         return new Response(200, [
             'Content-Type' => 'application/json',
@@ -63,14 +66,11 @@ class Index
     {
         $statement = Db::$random;
 
-        $query_count = 1;
-        if ((int) $q > 1) {
-            $query_count = \min($q, 500);
-        }
+        $query_count = min(max((int) $q, 1), 500);
 
         $arr = [];
         while ($query_count--) {
-            $statement->execute([\mt_rand(1, 10000)]);
+            $statement->execute([mt_rand(1, 10000)]);
             $arr[] = $statement->fetch();
         }
 
@@ -82,29 +82,31 @@ class Index
 
     public function updates(Request $request, $q = 1)
     {
+        static $updates = [];
+
         $random = Db::$random;
+        $pdo = Db::$pdo;
+        $count = min(max((int) $q, 1), 500);
 
-        $query_count = 1;
-        if ((int) $q > 1) {
-            $query_count = \min($q, 500);
+        $worlds = $keys = $values = [];
+        for ($i = 0; $i < $count; ++ $i) {
+            $values[] = $keys[] = $id = mt_rand(1, 10000);
+            $random->execute([$id]);
+            $row = $random->fetch();
+            $values[] = $row['randomNumber'] = mt_rand(1, 10000);
+            $worlds[] = $row;
         }
-
-        $worlds = [];
-
-        while ($query_count--) {
-            $random->execute([\mt_rand(1, 10000)]);
-            $world = $random->fetch();
-            $world['randomNumber'] = \mt_rand(1, 10000);
-
-            $worlds[] = $world;
+        if (!isset($updates[$count])) {
+            $sql = 'UPDATE World SET randomNumber = CASE id' . str_repeat(' WHEN ?::INTEGER THEN ?::INTEGER ', $count) . 'END WHERE id IN (' . str_repeat('?::INTEGER,', $count - 1) . '?::INTEGER)';
+            $updates[$count] = $pdo->prepare($sql);
         }
-
-        Db::update($worlds);
+        $updates[$count]->execute([...$values, ...$keys]);
 
         return new Response(200, [
             'Content-Type' => 'application/json',
             'Date'         => Date::$date
-        ], \json_encode($worlds));
+        ], json_encode($worlds));
+
     }
 
 

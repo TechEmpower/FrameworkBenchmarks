@@ -1,6 +1,6 @@
 
 {
-  "framework": "hserver",
+  "framework": "hserver-business",
   "tests": [
     {
       "default": {
@@ -14,17 +14,17 @@
         "approach": "Realistic",
         "classification": "Fullstack",
         "database": "Postgres",
-        "framework": "hserver",
+        "framework": "hserver-business",
         "language": "Java",
         "flavor": "None",
         "orm": "Full",
-        "platform": "hserver",
-        "webserver": "hserver",
+        "platform": "hserver-business",
+        "webserver": "hserver-business",
         "os": "Linux",
         "database_os": "Linux",
         "display_name": "hserver-business",
         "notes": "",
-        "versus": "hserver"
+        "versus": "hserver-business"
       }
     }
   ]

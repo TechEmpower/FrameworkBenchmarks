@@ -11,7 +11,7 @@
     <parent>
         <artifactId>hserver-parent</artifactId>
         <groupId>cn.hserver</groupId>
-        <version>3.6.0</version>
+        <version>3.6.M3</version>
     </parent>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

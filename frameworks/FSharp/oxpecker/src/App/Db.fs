@@ -14,7 +14,6 @@ module Db =
             use db = new NpgsqlConnection(ConnectionString)
             use cmd = db.CreateCommand(CommandText = "SELECT id, message FROM fortune")
             do! db.OpenAsync()
-            do! cmd.PrepareAsync()
             use! rdr = cmd.ExecuteReaderAsync(CommandBehavior.CloseConnection)
             while! rdr.ReadAsync() do
                 result.Add { id = rdr.GetInt32(0); message = rdr.GetString(1) }
@@ -46,7 +45,6 @@ module Db =
             let struct(cmd', _) = createReadCommand db
             use cmd = cmd'
             do! db.OpenAsync()
-            do! cmd.PrepareAsync()
             return! readSingleRow cmd
         }
 
@@ -64,7 +62,7 @@ module Db =
 
     let loadMultipleRows (count: int) =
         task {
-            use db = new NpgsqlConnection(MultiplexedConnectionString)
+            use db = new NpgsqlConnection(ConnectionString)
             do! db.OpenAsync()
             return! readMultipleRows count db
         }
