@@ -77,7 +77,7 @@
         <dependency>
           <groupId>ch.qos.logback</groupId>
           <artifactId>logback-classic</artifactId>
-          <version>1.2.3</version>
+          <version>1.2.13</version>
         </dependency>
       </dependencies>
     </profile>
@@ -89,7 +89,7 @@
         <dependency>
           <groupId>ch.qos.logback</groupId>
           <artifactId>logback-classic</artifactId>
-          <version>1.2.3</version>
+          <version>1.2.13</version>
         </dependency>
       </dependencies>
       <build>
@@ -121,7 +121,7 @@
         <dependency>
           <groupId>ch.qos.logback</groupId>
           <artifactId>logback-classic</artifactId>
-          <version>1.2.3</version>
+          <version>1.2.13</version>
         </dependency>
       </dependencies>
       <build>
