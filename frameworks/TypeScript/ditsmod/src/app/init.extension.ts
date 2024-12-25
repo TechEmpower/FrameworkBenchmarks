@@ -5,18 +5,12 @@ import { ModelService } from './types.js';
 
 @injectable()
 export class InitExtension implements Extension<void> {
-  #inited: boolean;
-
   constructor(
     private perAppService: PerAppService,
     private logger: Logger,
   ) {}
 
-  async init(): Promise<void> {
-    if (this.#inited) {
-      return;
-    }
-
+  async stage1(): Promise<void> {
     const dbType = process.env.DATABASE as 'mysql' | 'postgres';
 
     if (dbType == 'mysql') {
@@ -28,13 +22,13 @@ export class InitExtension implements Extension<void> {
     } else {
       this.logger.log('warn', `Unknown database "${dbType}"`);
     }
-
-    this.#inited = true;
   }
 
   protected async setDbService(useClass: Class) {
-    const injector = this.perAppService.injector.resolveAndCreateChild([{ token: ModelService, useClass }]);
-    const dbService = injector.pull(DbService) as DbService;
+    const dbService = this.perAppService.injector
+      .resolveAndCreateChild([DbService, { token: ModelService, useClass }])
+      .get(DbService) as DbService;
+
     await dbService.setWorldsToCache();
     this.perAppService.providers.push({ token: DbService, useValue: dbService });
   }
