@@ -28,7 +28,11 @@ export const findThenRand = (id: number) =>
 export const bulkUpdate = (worlds: World[]) =>
 	sql`UPDATE world SET randomNumber = (update_data.randomNumber)::int
 	FROM (VALUES ${worlds
-		.sort((a, b) => (a.id < b.id ? -1 : 1))
+		.sort((a, b) => {
+			if (a.id < b.id) return -1;
+
+			return 1;
+		})
 		.map((world) => [
 			world.id,
 			world.randomNumber,
