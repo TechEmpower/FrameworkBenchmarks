@@ -26,7 +26,7 @@ GEM
     drb (2.2.1)
     i18n (1.14.6)
       concurrent-ruby (~> 1.0)
-    json (2.8.1)
+    json (2.9.1)
     kgio (2.11.4)
     logger (1.6.1)
     minitest (5.25.1)
