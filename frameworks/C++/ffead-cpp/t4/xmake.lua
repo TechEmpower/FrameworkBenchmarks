@@ -1,6 +1,6 @@
 add_includedirs("include/")
 
-local bindir = "$(projectdir)/ffead-cpp-6.0-bin"
+local bindir = "$(projectdir)/ffead-cpp-7.0-bin"
 
 target("t4")
 	set_languages("c++17")
