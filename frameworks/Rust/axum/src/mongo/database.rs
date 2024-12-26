@@ -3,8 +3,9 @@ use std::{convert::Infallible, io};
 use axum::{async_trait, extract::FromRequestParts, http::request::Parts};
 use futures_util::{stream::FuturesUnordered, StreamExt, TryStreamExt};
 use mongodb::{bson::doc, Database};
+use rand::rngs::SmallRng;
 
-use crate::common::models::{Fortune, World};
+use crate::common::{models::{Fortune, World}, random_ids};
 
 pub struct DatabaseConnection(pub Database);
 
@@ -52,10 +53,10 @@ pub async fn find_world_by_id(db: Database, id: i32) -> Result<World, MongoError
     Ok(world)
 }
 
-pub async fn find_worlds(db: Database, ids: Vec<i32>) -> Result<Vec<World>, MongoError> {
+pub async fn find_worlds(db: Database, rng: &mut SmallRng, count: usize) -> Result<Vec<World>, MongoError> {
     let future_worlds = FuturesUnordered::new();
 
-    for id in ids {
+    for id in random_ids(rng, count) {
         future_worlds.push(find_world_by_id(db.clone(), id));
     }
 

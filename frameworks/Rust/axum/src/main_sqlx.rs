@@ -55,10 +55,9 @@ async fn queries(
 ) -> impl IntoResponse {
     let mut rng = SmallRng::from_rng(&mut thread_rng()).unwrap();
     let count = parse_params(params);
-    let ids = random_ids(&mut rng, count);
     let mut worlds: Vec<World> = Vec::with_capacity(count);
 
-    for id in &ids {
+    for id in random_ids(&mut rng, count) {
         let world: World = ::sqlx::query_as(common::SELECT_WORLD_BY_ID)
             .bind(id)
             .fetch_one(&mut *db.acquire().await.unwrap())

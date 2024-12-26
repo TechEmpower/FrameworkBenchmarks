@@ -27,10 +27,11 @@ built with Tokio, Tower, and Hyper.
 ## Notable Points (both performance and build)
 
 - Use of `async`.
-- Use of most recent versions of Rust, `axum` and dependencies.
+- Use of the most recent versions of Rust, `axum` and dependencies.
 - (Disabled by default) Compile-time swap-in of `simd-json` instead of `serde_json` for faster JSON serialization.
 - Release binaries are stripped and compiled with CPU native.
 - Sockets configured with `TCP_NODELAY` and to support an increased number of pending connections.
+- For very simple benchmarks, use of a separate, single-threaded Tokio runtime for each thread.
 - Server configured to serve HTTP/1 only, with no need for websockets.
 - Separation of build and deployment containers using multi-stage builds.
 - Deployment into Google's minimal `distroless-cc` container.

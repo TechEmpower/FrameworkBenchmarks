@@ -2,7 +2,7 @@ mod common;
 mod mongo_raw;
 mod server;
 
-use common::{models::World, random_id, random_ids};
+use common::{models::World, random_id};
 use mongo_raw::database::{
     find_world_by_id, find_worlds, update_worlds, DatabaseConnection,
 };
@@ -27,7 +27,7 @@ use mongodb::{
     options::{ClientOptions, Compressor},
     Client,
 };
-use rand::{rngs::SmallRng, thread_rng, Rng, SeedableRng};
+use rand::{rngs::SmallRng, thread_rng, SeedableRng};
 
 async fn db(DatabaseConnection(db): DatabaseConnection) -> impl IntoResponse {
     let mut rng = SmallRng::from_rng(&mut thread_rng()).unwrap();
@@ -48,9 +48,7 @@ async fn queries(
     let q = parse_params(params);
 
     let mut rng = SmallRng::from_rng(&mut thread_rng()).unwrap();
-    let ids = random_ids(&mut rng, q);
-
-    let worlds = find_worlds(db, ids).await;
+    let worlds = find_worlds(db, &mut rng, q).await;
     let results = worlds.expect("worlds could not be retrieved");
 
     (StatusCode::OK, Json(results))
@@ -64,16 +62,13 @@ async fn updates(
 
     let mut rng = SmallRng::from_rng(&mut thread_rng()).unwrap();
 
-    let ids = random_ids(&mut rng, q);
-    let worlds = find_worlds(db.clone(), ids)
+    let worlds = find_worlds(db.clone(), &mut rng, q)
         .await
         .expect("worlds could not be retrieved");
     let mut updated_worlds: Vec<World> = Vec::with_capacity(q);
 
     for mut world in worlds {
-        let random_number = (rng.gen::<u32>() % 10_000 + 1) as i32;
-
-        world.random_number = random_number;
+        world.random_number = random_id(&mut rng);
         updated_worlds.push(world);
     }
 
