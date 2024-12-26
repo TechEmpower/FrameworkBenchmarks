@@ -4,5 +4,5 @@
 
 GET     /db                             controllers.Application.db
 GET     /queries                        controllers.Application.queries(queries: String ?= "1")
-GET     /fortunes                       controllers.Application.fortunes
+GET     /fortunes                       controllers.Application.fortunes()
 GET     /update                         controllers.Application.update(queries: String ?= "1")
