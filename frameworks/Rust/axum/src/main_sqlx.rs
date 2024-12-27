@@ -16,6 +16,10 @@ use quick_cache::sync::Cache;
 use rand::{rngs::SmallRng, thread_rng, SeedableRng};
 use sqlx::models::World;
 use yarte::Template;
+use mimalloc::MiMalloc;
+
+#[global_allocator]
+static GLOBAL: MiMalloc = MiMalloc;
 
 #[cfg(not(feature = "simd-json"))]
 use axum::Json;
@@ -98,7 +102,7 @@ async fn cache(
     let count = parse_params(params);
     let mut rng = SmallRng::from_rng(&mut thread_rng()).unwrap();
     let mut worlds: Vec<Option<World>> = Vec::with_capacity(count);
-
+    
     for id in random_ids(&mut rng, count) {
         worlds.push(cache.get(&id));
     }

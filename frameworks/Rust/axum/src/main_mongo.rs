@@ -23,6 +23,10 @@ use mongodb::{
 };
 use rand::{rngs::SmallRng, thread_rng, Rng, SeedableRng};
 use yarte::Template;
+use mimalloc::MiMalloc;
+
+#[global_allocator]
+static GLOBAL: MiMalloc = MiMalloc;
 
 use common::{
     get_env,
