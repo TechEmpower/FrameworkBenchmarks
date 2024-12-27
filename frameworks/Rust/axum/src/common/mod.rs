@@ -18,7 +18,7 @@ pub const SELECT_ALL_CACHED_WORLDS: &str =
     "SELECT id, randomnumber FROM world ORDER BY id";
 #[allow(dead_code)]
 pub const UPDATE_WORLDS: &str = r#"UPDATE world SET randomnumber = new.rnum FROM
-    (SELECT * FROM UNNEST($1::int[], $2::int[]) AS v(id, rnum)) AS new
+    (SELECT * FROM UNNEST($1::int[], $2::int[]) AS v(id, rnum) ORDER BY 1) AS new
 WHERE world.id = new.id"#;
 
 /// Return the value of an environment variable.
