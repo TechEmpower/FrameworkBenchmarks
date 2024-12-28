@@ -13,7 +13,7 @@
     "compile": "bun build --compile --minify --target bun --outfile server src/index.ts"
   },
   "dependencies": {
-    "elysia": "^1.2.6",
+    "elysia": "^1.2.9",
     "postgres": "^3.4.5"
   }
 }

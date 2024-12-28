@@ -25,16 +25,14 @@ export const findThenRand = (id: number) =>
 		},
 	);
 
-export const bulkUpdate = (worlds: World[]) =>
-	sql`UPDATE world SET randomNumber = (update_data.randomNumber)::int
-	FROM (VALUES ${worlds
-		.sort((a, b) => {
-			if (a.id < b.id) return -1;
+export const bulkUpdate = (worlds: World[]) => {
+	const sorted = worlds.toSorted((a, b) => a.id - b.id);
 
-			return 1;
-		})
-		.map((world) => [
-			world.id,
-			world.randomNumber,
-		])}) AS update_data (id, randomNumber)
-	WHERE world.id = (update_data.id)::int`;
+	const values = new Array(sorted.length);
+	for (let i = 0; i < sorted.length; i++)
+		values[i] = [sorted[i].id, sorted[i].randomNumber];
+
+	sql`UPDATE world SET randomNumber = (update_data.randomNumber)::int
+		FROM (VALUES ${values}) AS update_data (id, randomNumber)
+		WHERE world.id = (update_data.id)::int`;
+};
