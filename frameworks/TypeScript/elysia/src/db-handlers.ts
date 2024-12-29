@@ -58,12 +58,9 @@ export const dbHandlers = new Elysia()
 		const worldPromises = new Array(num);
 
 		for (let i = 0; i < num; i++)
-			worldPromises[i] = db.find(rand());
+			worldPromises[i] = db.findThenRand(rand());
 
 		const worlds = await Promise.all(worldPromises);
-
-		for (let i = 0; i < num; i++)
-			worldPromises[i].randomNumber = rand();
 
 		await db.bulkUpdate(worlds);
 		return worlds;
