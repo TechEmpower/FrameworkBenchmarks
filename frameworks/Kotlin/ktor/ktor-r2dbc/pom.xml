@@ -18,9 +18,12 @@
         <serialization.version>1.7.3</serialization.version>
         <kotlinx.html.version>0.11.0</kotlinx.html.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <logback.version>1.2.13</logback.version>
+        <logback.version>1.5.12</logback.version>
+        <reactor.version>3.7.1</reactor.version>
         <postgresql.version>42.7.4</postgresql.version>
         <r2dbc.version>1.0.7.RELEASE</r2dbc.version>
+        <r2dbc.pool.version>1.0.2.RELEASE</r2dbc.pool.version>
+
     </properties>
 
     <dependencies>
@@ -64,13 +67,21 @@
             <artifactId>ktor-server-html-builder-jvm</artifactId>
             <version>${ktor.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>r2dbc-postgresql</artifactId>
             <version>${r2dbc.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>io.r2dbc</groupId>
+            <artifactId>r2dbc-pool</artifactId>
+            <version>${r2dbc.pool.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.projectreactor</groupId>
+            <artifactId>reactor-core</artifactId>
+            <version>${reactor.version}</version>
+        </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>

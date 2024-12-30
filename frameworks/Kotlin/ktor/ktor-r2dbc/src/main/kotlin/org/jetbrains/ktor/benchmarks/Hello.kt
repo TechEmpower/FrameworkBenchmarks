@@ -8,6 +8,14 @@ import io.ktor.server.html.*
 import io.ktor.server.plugins.defaultheaders.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.r2dbc.pool.ConnectionPool
+import io.r2dbc.pool.ConnectionPoolConfiguration
+import io.r2dbc.pool.PoolingConnectionFactoryProvider
+import io.r2dbc.postgresql.PostgresqlConnectionConfiguration
+import io.r2dbc.postgresql.PostgresqlConnectionFactory
+import io.r2dbc.postgresql.PostgresqlConnectionFactoryProvider
+import io.r2dbc.postgresql.client.SSLMode
+import io.r2dbc.spi.Connection
 import io.r2dbc.spi.ConnectionFactories
 import io.r2dbc.spi.ConnectionFactory
 import io.r2dbc.spi.ConnectionFactoryOptions
@@ -25,6 +33,8 @@ import org.jetbrains.ktor.benchmarks.models.Message
 import org.jetbrains.ktor.benchmarks.models.World
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
+import reactor.netty.resources.LoopResources
+import java.time.Duration
 import kotlin.random.Random
 
 fun Application.main() {
@@ -125,7 +135,7 @@ fun Application.main() {
                             connection.createStatement(UPDATE_QUERY).bind(0, world.randomNumber).bind(1, world.id)
                                 .execute()
                         ).flatMap { Mono.from(it.rowsUpdated) }
-                    }, { connection -> connection.close() })
+                    }, Connection::close)
                 }
 
                 Flux.merge(updateRequests).collectList().awaitFirstOrNull()
@@ -147,23 +157,38 @@ private fun getWorld(
             )
         })
     }
-}, { connection -> connection.close() })
+}, Connection::close)
 
 private fun configurePostgresR2DBC(config: ApplicationConfig): ConnectionFactory {
-    val options = ConnectionFactoryOptions.builder().option(ConnectionFactoryOptions.DRIVER, "database.driver")
-        .option(ConnectionFactoryOptions.DATABASE, config.property("database.url").getString())
-        .option(ConnectionFactoryOptions.USER, config.property("database.user").getString())
-        .option(ConnectionFactoryOptions.PASSWORD, config.property("database.password").getString()).build()
+    val cfo = PostgresqlConnectionConfiguration.builder()
+        .host(config.property("db.host").getString())
+        .port(config.property("db.port").getString().toInt())
+        .database(config.property("db.database").getString())
+        .username(config.property("db.username").getString())
+        .password(config.property("db.password").getString())
+        .loopResources { NioClientEventLoopResources(Runtime.getRuntime().availableProcessors()).cacheLoops() }
+        .sslMode(SSLMode.DISABLE)
+        .tcpKeepAlive(true)
+        .tcpNoDelay(true)
+        .build()
 
-    return ConnectionFactories.get(options)
+    val cf = PostgresqlConnectionFactory(cfo)
+
+    val cp = ConnectionPoolConfiguration.builder(cf)
+        .initialSize(config.property("db.initPoolSize").getString().toInt())
+        .maxSize(config.property("db.maxPoolSize").getString().toInt())
+        //.maxLifeTime(Duration.ofMillis(Long.MAX_VALUE))
+        .build()
+
+    return ConnectionPool(cp)
 }
 
 private fun ApplicationCall.queries() = request.queryParameters["queries"]?.toIntOrNull()?.coerceIn(1, 500) ?: 1
 
 
 object Constants {
-    const val WORLD_QUERY = "SELECT id, randomNumber FROM World WHERE id = ?"
+    const val WORLD_QUERY = "SELECT id, randomnumber FROM world WHERE id = $1"
     const val FORTUNES_QUERY = "SELECT id, message FROM fortune"
-    const val UPDATE_QUERY = "UPDATE World SET randomNumber = ? WHERE id = ?"
+    const val UPDATE_QUERY = "UPDATE world SET randomnumber = $1 WHERE id = $2"
     const val DB_ROWS = 10000
 }
