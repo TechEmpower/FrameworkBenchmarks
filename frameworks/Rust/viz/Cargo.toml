@@ -24,13 +24,16 @@ path = "src/main_diesel.rs"
 required-features = ["diesel", "diesel-async", "sailfish"]
 
 [dependencies]
-viz = "0.9"
-hyper = "1.4"
+viz = "0.10"
+hyper = "1.5"
 hyper-util = "0.1"
+http-body-util = "0.1"
 atoi = "2.0"
 serde = { version = "1.0", features = ["derive"] }
+serde_json = "1"
+mime = "0.3"
 rand = { version = "0.8", features = ["small_rng"] }
-thiserror = "1.0"
+thiserror = "2.0"
 futures-util = "0.3"
 
 [target.'cfg(not(unix))'.dependencies]
@@ -50,7 +53,7 @@ sqlx = { version = "0.8", features = [
 diesel = { version = "2.2", default-features = false, features = [
   "i-implement-a-third-party-backend-and-opt-into-breaking-changes",
 ], optional = true }
-diesel-async = { git = "https://github.com/weiznich/diesel_async.git", rev = "74867bd", version = "0.4", default-features = false, features = [
+diesel-async = { version = "0.5", default-features = false, features = [
   "postgres",
   "bb8",
 ], optional = true }
