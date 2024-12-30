@@ -5,18 +5,13 @@ import benchmark.model.World;
 import benchmark.repository.FortuneRepository;
 import benchmark.repository.WorldRepository;
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.QueryValue;
-import views.fortunes;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
-
-import static java.util.Comparator.comparing;
 
 @Requires(beans = {WorldRepository.class, FortuneRepository.class})
 @Controller
@@ -56,14 +51,8 @@ public class BenchmarkController extends AbstractBenchmarkController {
 
     // https://github.com/TechEmpower/FrameworkBenchmarks/wiki/Project-Information-Framework-Tests-Overview#fortunes
     @Get(value = "/fortunes", produces = "text/html;charset=utf-8")
-    public HttpResponse<String> fortune() {
-        Collection<Fortune> all = fortuneRepository.findAll();
-        List<Fortune> fortunesList = new ArrayList<>(all.size() + 1);
-        fortunesList.add(new Fortune(0, "Additional fortune added at request time."));
-        fortunesList.addAll(all);
-        fortunesList.sort(comparing(Fortune::message));
-        String body = fortunes.template(fortunesList).render().toString();
-        return HttpResponse.ok(body).contentType("text/html;charset=utf-8");
+    public List<Fortune> fortune() {
+        return prepareFortunes(fortuneRepository.findAll());
     }
 
     // https://github.com/TechEmpower/FrameworkBenchmarks/wiki/Project-Information-Framework-Tests-Overview#database-updates
@@ -77,5 +66,5 @@ public class BenchmarkController extends AbstractBenchmarkController {
         worldRepository.updateAll(worldList);
         return worldList;
     }
-    
+
 }

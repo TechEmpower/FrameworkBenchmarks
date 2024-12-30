@@ -5,13 +5,13 @@ More information is available at [ktor.io](http://ktor.io).
 
 # Setup
 
-* Java 8
+* Java 17
 * MySQL server
 
 # Requirements
 
 * Maven 3
-* JDK 8
+* JDK 17
 * Kotlin
 * ktor
 * netty 

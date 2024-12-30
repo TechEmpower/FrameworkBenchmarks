@@ -57,17 +57,18 @@
 // MAX_UPDATE_QUERY_LEN must be updated whenever UPDATE_QUERY_BEGIN, UPDATE_QUERY_ELEM,
 // UPDATE_QUERY_MIDDLE, UPDATE_QUERY_ELEM2, and UPDATE_QUERY_END are changed.
 #define UPDATE_QUERY_BEGIN "UPDATE " WORLD_TABLE_NAME " SET randomNumber = CASE id "
-#define UPDATE_QUERY_ELEM "WHEN %" PRIu32 " THEN %" PRIu32 " "
-#define UPDATE_QUERY_MIDDLE "ELSE randomNumber END WHERE id IN (%" PRIu32
-#define UPDATE_QUERY_ELEM2 ",%" PRIu32
+#define UPDATE_QUERY_ELEM "WHEN $%zu::integer THEN $%zu::integer "
+#define UPDATE_QUERY_MIDDLE "ELSE randomNumber END WHERE id IN ($1::integer"
+#define UPDATE_QUERY_ELEM2 ",$%zu::integer"
 #define UPDATE_QUERY_END ");"
 
 #define MAX_UPDATE_QUERY_LEN(n) \
 	(sizeof(UPDATE_QUERY_BEGIN) + sizeof(UPDATE_QUERY_MIDDLE) + \
 	 sizeof(UPDATE_QUERY_END) - 1 - sizeof(UPDATE_QUERY_ELEM2) + \
 	 (n) * (sizeof(UPDATE_QUERY_ELEM) - 1 + sizeof(UPDATE_QUERY_ELEM2) - 1 + \
-	        3 * (sizeof(MKSTR(MAX_ID)) - 1) - 3 * (sizeof(PRIu32) - 1) - 3))
+	        3 * sizeof(MKSTR(MAX_QUERIES)) - 3 * (sizeof("%zu") - 1)))
 
+#define UPDATE_QUERY_NAME_PREFIX WORLD_TABLE_NAME "Update"
 #define USE_CACHE 2
 #define WORLD_QUERY "SELECT * FROM " WORLD_TABLE_NAME " WHERE id = $1::integer;"
 
@@ -236,8 +237,10 @@ static int do_multiple_queries(bool do_update, bool use_cache, h2o_req_t *req)
 
 	const size_t num_query = get_query_number(req);
 
-	// MAX_QUERIES is a relatively small number, so assume no overflow in the following
-	// arithmetic operations.
+	// MAX_QUERIES is a relatively small number, say less than or equal to UINT16_MAX, so assume no
+	// unsigned overflow in the following arithmetic operations.
+	static_assert(MAX_QUERIES <= UINT16_MAX,
+	              "potential out-of-bounds memory accesses in the following code");
 	assert(num_query && num_query <= MAX_QUERIES);
 
 	size_t base_size = offsetof(multiple_query_ctx_t, res) + num_query * sizeof(query_result_t);
@@ -259,11 +262,16 @@ static int do_multiple_queries(bool do_update, bool use_cache, h2o_req_t *req)
 	size_t sz = base_size + num_query_in_progress * sizeof(query_param_t);
 
 	if (do_update) {
-		const size_t reuse_size = (num_query_in_progress - 1) * sizeof(query_param_t);
-		const size_t update_query_len = MAX_UPDATE_QUERY_LEN(num_query);
+		size_t s = base_size + sizeof(query_param_t);
 
-		if (update_query_len > reuse_size)
-			sz += update_query_len - reuse_size;
+		s = (s + _Alignof(const char *) - 1) / _Alignof(const char *);
+		s = s * _Alignof(const char *) + 2 * num_query * sizeof(const char *);
+		s = (s + _Alignof(int) - 1) / _Alignof(int);
+		s = s * _Alignof(int) + 4 * num_query * sizeof(int);
+		s += sizeof(UPDATE_QUERY_NAME_PREFIX MKSTR(MAX_QUERIES));
+
+		if (s > sz)
+			sz = s;
 	}
 
 	multiple_query_ctx_t * const query_ctx = h2o_mem_alloc(sz);
@@ -332,65 +340,57 @@ static int do_multiple_queries(bool do_update, bool use_cache, h2o_req_t *req)
 
 static void do_updates(multiple_query_ctx_t *query_ctx)
 {
-	char *iter = (char *) (query_ctx->query_param + 1);
-	size_t sz = MAX_UPDATE_QUERY_LEN(query_ctx->num_result);
+	size_t offset =
+		offsetof(multiple_query_ctx_t, res) + query_ctx->num_result * sizeof(*query_ctx->res);
 
+	offset = ((offset + _Alignof(query_param_t) - 1) / _Alignof(query_param_t));
+	offset = offset * _Alignof(query_param_t) + sizeof(query_param_t);
+	offset = (offset + _Alignof(const char *) - 1) / _Alignof(const char *);
+	offset *= _Alignof(const char *);
+
+	const char ** const paramValues = (const char **) ((char *) query_ctx + offset);
+	const size_t nParams = query_ctx->num_result * 2;
+
+	offset += nParams * sizeof(*paramValues);
+	offset = (offset + _Alignof(int) - 1) / _Alignof(int);
+	offset *= _Alignof(int);
+
+	int * const paramFormats = (int *) ((char *) query_ctx + offset);
+	int * const paramLengths = paramFormats + nParams;
+	char * const command = (char *) (paramLengths + nParams);
+	const size_t command_size =
+		sizeof(UPDATE_QUERY_NAME_PREFIX MKSTR(MAX_QUERIES)) - sizeof(UPDATE_QUERY_NAME_PREFIX) + 1;
+	const int c = snprintf(command + sizeof(UPDATE_QUERY_NAME_PREFIX) - 1,
+	                       command_size,
+	                       "%zu",
+	                       query_ctx->num_result);
+
+	if ((size_t) c >= command_size)
+		goto error;
+
+	memcpy(command, UPDATE_QUERY_NAME_PREFIX, sizeof(UPDATE_QUERY_NAME_PREFIX) - 1);
 	// Sort the results to avoid database deadlock.
 	qsort(query_ctx->res, query_ctx->num_result, sizeof(*query_ctx->res), compare_items);
-	query_ctx->query_param->param.command = iter;
-	query_ctx->query_param->param.nParams = 0;
-	query_ctx->query_param->param.on_result = on_update_result;
-	query_ctx->query_param->param.paramFormats = NULL;
-	query_ctx->query_param->param.paramLengths = NULL;
-	query_ctx->query_param->param.paramValues = NULL;
-	query_ctx->query_param->param.flags = 0;
-
-	int c = snprintf(iter, sz, UPDATE_QUERY_BEGIN);
-
-	if ((size_t) c >= sz)
-		goto error;
-
-	iter += c;
-	sz -= c;
 
 	for (size_t i = 0; i < query_ctx->num_result; i++) {
-		query_ctx->res[i].random_number = 1 + get_random_number(MAX_ID,
-		                                                        &query_ctx->ctx->random_seed);
-		c = snprintf(iter,
-		             sz,
-		             UPDATE_QUERY_ELEM,
-		             query_ctx->res[i].id,
-		             query_ctx->res[i].random_number);
-
-		if ((size_t) c >= sz)
-			goto error;
-
-		iter += c;
-		sz -= c;
+		query_ctx->res[i].id = htonl(query_ctx->res[i].id);
+		query_ctx->res[i].random_number =
+			htonl(1 + get_random_number(MAX_ID, &query_ctx->ctx->random_seed));
+		paramFormats[2 * i] = 1;
+		paramFormats[2 * i + 1] = 1;
+		paramLengths[2 * i] = sizeof(query_ctx->res[i].id);
+		paramLengths[2 * i + 1] = sizeof(query_ctx->res[i].random_number);
+		paramValues[2 * i] = (const char *) &query_ctx->res[i].id;
+		paramValues[2 * i + 1] = (const char *) &query_ctx->res[i].random_number;
 	}
 
-	c = snprintf(iter, sz, UPDATE_QUERY_MIDDLE, query_ctx->res->id);
-
-	if ((size_t) c >= sz)
-		goto error;
-
-	iter += c;
-	sz -= c;
-
-	for (size_t i = 1; i < query_ctx->num_result; i++) {
-		c = snprintf(iter, sz, UPDATE_QUERY_ELEM2, query_ctx->res[i].id);
-
-		if ((size_t) c >= sz)
-			goto error;
-
-		iter += c;
-		sz -= c;
-	}
-
-	c = snprintf(iter, sz, UPDATE_QUERY_END);
-
-	if ((size_t) c >= sz)
-		goto error;
+	query_ctx->query_param->param.command = command;
+	query_ctx->query_param->param.flags = IS_PREPARED;
+	query_ctx->query_param->param.nParams = nParams;
+	query_ctx->query_param->param.on_result = on_update_result;
+	query_ctx->query_param->param.paramFormats = paramFormats;
+	query_ctx->query_param->param.paramLengths = paramLengths;
+	query_ctx->query_param->param.paramValues = paramValues;
 
 	if (execute_database_query(&query_ctx->ctx->request_handler_data.hello_world_db,
 	                           &query_ctx->query_param->param)) {
@@ -726,8 +726,14 @@ static result_return_t on_update_result(db_query_param_t *param, PGresult *resul
 		query_ctx->gen = get_json_generator(&query_ctx->ctx->json_generator,
 		                                    &query_ctx->ctx->json_generator_num);
 
-		if (query_ctx->gen)
+		if (query_ctx->gen) {
+			for (size_t i = 0; i < query_ctx->num_result; i++) {
+				query_ctx->res[i].id = ntohl(query_ctx->res[i].id);
+				query_ctx->res[i].random_number = ntohl(query_ctx->res[i].random_number);
+			}
+
 			serialize_items(query_ctx->res, query_ctx->num_result, &query_ctx->gen, query_ctx->req);
+		}
 		else
 			send_error(INTERNAL_SERVER_ERROR, REQ_ERROR, query_ctx->req);
 	}
@@ -887,6 +893,57 @@ void initialize_world_handlers(h2o_hostconf_t *hostconf,
                                h2o_access_log_filehandle_t *log_handle,
                                request_handler_data_t *data)
 {
+	char name[sizeof(UPDATE_QUERY_NAME_PREFIX MKSTR(MAX_QUERIES))];
+	char query[MAX_UPDATE_QUERY_LEN(MAX_QUERIES)];
+	const size_t name_size = sizeof(name) - sizeof(UPDATE_QUERY_NAME_PREFIX) + 1;
+
+	assert(sizeof(name) >= sizeof(UPDATE_QUERY_NAME_PREFIX));
+	memcpy(name, UPDATE_QUERY_NAME_PREFIX, sizeof(UPDATE_QUERY_NAME_PREFIX) - 1);
+	assert(sizeof(query) >= sizeof(UPDATE_QUERY_BEGIN));
+	memcpy(query, UPDATE_QUERY_BEGIN, sizeof(UPDATE_QUERY_BEGIN) - 1);
+
+	for (size_t i = 0; i < MAX_QUERIES; i++) {
+		char *iter = query + sizeof(UPDATE_QUERY_BEGIN) - 1;
+		size_t sz = sizeof(query) - sizeof(UPDATE_QUERY_BEGIN) + 1;
+		int c = snprintf(name + sizeof(UPDATE_QUERY_NAME_PREFIX) - 1, name_size, "%zu", i + 1);
+
+		if ((size_t) c >= name_size)
+			continue;
+
+		for (size_t j = 0; j <= i; j++) {
+			c = snprintf(iter,
+			             sz,
+			             UPDATE_QUERY_ELEM,
+			             2 * j + 1,
+			             2 * j + 2);
+
+			if ((size_t) c >= sz)
+				continue;
+
+			iter += c;
+			sz -= c;
+		}
+
+		assert(sz >= sizeof(UPDATE_QUERY_MIDDLE));
+		memcpy(iter, UPDATE_QUERY_MIDDLE, sizeof(UPDATE_QUERY_MIDDLE) - 1);
+		iter += sizeof(UPDATE_QUERY_MIDDLE) - 1;
+		sz -= sizeof(UPDATE_QUERY_MIDDLE) - 1;
+
+		for (size_t j = 1; j <= i; j++) {
+			c = snprintf(iter, sz, UPDATE_QUERY_ELEM2, 2 * j + 1);
+
+			if ((size_t) c >= sz)
+				continue;
+
+			iter += c;
+			sz -= c;
+		}
+
+		assert(sz >= sizeof(UPDATE_QUERY_END));
+		memcpy(iter, UPDATE_QUERY_END, sizeof(UPDATE_QUERY_END));
+		add_prepared_statement(name, query, &data->prepared_statements);
+	}
+
 	add_prepared_statement(WORLD_TABLE_NAME, WORLD_QUERY, &data->prepared_statements);
 	register_request_handler("/cached-worlds", cached_queries, hostconf, log_handle);
 	register_request_handler("/db", single_query, hostconf, log_handle);

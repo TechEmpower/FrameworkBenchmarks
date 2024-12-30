@@ -33,7 +33,7 @@ fun main(args: Array<String>) {
   runApp(args, EVENT_LOOP) {
 
     /** Template engine: */
-    install(RockerModule().reuseBuffer(true))
+    install(RockerModule())
 
     /** JSON: */
     install(JacksonModule())

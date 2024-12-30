@@ -1,25 +1,25 @@
 FROM dunglas/frankenphp
  
 RUN install-php-extensions \
-    pcntl \
+    intl \
+	opcache \
+	pcntl \
     pdo_mysql \
-	intl \
-	zip \
-	opcache > /dev/null
+	zip > /dev/null
  
-COPY . /app
+COPY --link . /app/
 
-COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+COPY --from=composer --link /usr/bin/composer /usr/local/bin/composer
 
-RUN mkdir -p /app/bootstrap/cache /app/storage/logs /app/storage/framework/sessions /app/storage/framework/views /app/storage/framework/cache
-RUN chmod -R 777 /app
+RUN mkdir -p bootstrap/cache \
+            storage/logs \
+            storage/framework/sessions \
+            storage/framework/views \
+            storage/framework/cache
 
-COPY deploy/conf/php.ini  /usr/local/etc/php
+COPY --link deploy/conf/php.ini  /usr/local/etc/php
 
-RUN composer require laravel/octane guzzlehttp/guzzle
-
-RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
-
+RUN composer require laravel/octane guzzlehttp/guzzle --update-no-dev --no-scripts --quiet
 RUN php artisan optimize
 
 RUN frankenphp -v

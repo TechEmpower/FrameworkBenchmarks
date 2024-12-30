@@ -1,4 +1,4 @@
-# [ohkami](https://github.com/kana-rus/ohkami) - Intuitive and Declarative Web Framework for Rust
+# [Ohkami](https://github.com/kana-rus/ohkami) - Intuitive and Declarative Web Framework for Rust
 
 ## Description
 

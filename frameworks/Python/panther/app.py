@@ -1,11 +1,12 @@
 import multiprocessing
-import os
+from pathlib import Path
 from random import randint, sample
 
 import asyncpg
 import jinja2
 from panther import Panther
 from panther.app import API
+from panther.events import Event
 from panther.request import Request
 from panther.response import Response, PlainTextResponse, HTMLResponse
 
@@ -18,6 +19,7 @@ MIN_POOL_SIZE = max(int(MAX_POOL_SIZE / 2), 1)
 pool = None
 
 
+@Event.startup
 async def create_db_pool():
     global pool
     pool = await asyncpg.create_pool(
@@ -31,18 +33,13 @@ async def create_db_pool():
     )
 
 
+@Event.shutdown
 async def clean_db_pool():
     await pool.close()
 
 
-def load_fortunes_template():
-    path = os.path.join('templates', 'fortune.html')
-    with open(path, 'r') as template_file:
-        template_text = template_file.read()
-        return jinja2.Template(template_text)
-
-
-fortune_template = load_fortunes_template()
+with Path('templates/fortune.html').open() as f:
+    fortune_template = jinja2.Template(f.read())
 
 
 def get_num_queries(request):
@@ -99,17 +96,16 @@ async def fortunes():
 @API()
 async def database_updates(request: Request):
     num_queries = get_num_queries(request)
-    ids = sorted(sample(range(1, 10000 + 1), num_queries))
-    numbers = sorted(sample(range(1, 10000), num_queries))
-    updates = list(zip(ids, numbers))
+    updates = list(zip(
+        sample(range(1, 10000), num_queries),
+        sorted(sample(range(1, 10000), num_queries))
+    ))
 
-    worlds = [
-        {'id': row_id, 'randomNumber': number} for row_id, number in updates
-    ]
+    worlds = [{'id': row_id, 'randomNumber': number} for row_id, number in updates]
 
     async with pool.acquire() as connection:
         statement = await connection.prepare(READ_ROW_SQL)
-        for row_id, _ in updates:
+        for _, row_id in updates:
             await statement.fetchval(row_id)
         await connection.executemany(WRITE_ROW_SQL, updates)
     return Response(data=worlds)
@@ -129,4 +125,4 @@ url_routing = {
     'plaintext': plaintext,
 }
 
-app = Panther(__name__, configs=__name__, urls=url_routing, startup=create_db_pool, shutdown=clean_db_pool)
+app = Panther(__name__, configs=__name__, urls=url_routing)

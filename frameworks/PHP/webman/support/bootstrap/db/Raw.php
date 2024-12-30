@@ -32,11 +32,6 @@ class Raw implements Bootstrap
     public static PDOStatement $random;
 
     /**
-     * @var PDOStatement[]
-     */
-    public static array $update;
-
-    /**
      * @param Worker $worker
      *
      * @return void
@@ -53,32 +48,4 @@ class Raw implements Bootstrap
         self::$pdo = $pdo;
     }
 
-    /**
-     * Postgres bulk update
-     *
-     * @param array $worlds
-     * @return void
-     */
-    public static function update(array $worlds)
-    {
-        $rows = count($worlds);
-
-        if (!isset(self::$update[$rows])) {
-            $sql = 'UPDATE world SET randomNumber = CASE id'
-                . str_repeat(' WHEN ?::INTEGER THEN ?::INTEGER ', $rows)
-                . 'END WHERE id IN ('
-                . str_repeat('?::INTEGER,', $rows - 1) . '?::INTEGER)';
-
-            self::$update[$rows] = self::$pdo->prepare($sql);
-        }
-
-        $val = [];
-        $keys = [];
-        foreach ($worlds as $world) {
-            $val[] = $keys[] = $world['id'];
-            $val[] = $world['randomNumber'];
-        }
-
-        self::$update[$rows]->execute([...$val, ...$keys]);
-    }
 }

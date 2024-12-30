@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace PlatformBenchmarks;
 
-public partial class BenchmarkApplication
+public sealed partial class BenchmarkApplication
 {
     private readonly static uint _jsonPayloadSize = (uint)JsonSerializer.SerializeToUtf8Bytes(
         new JsonMessage { message = "Hello, World!" },

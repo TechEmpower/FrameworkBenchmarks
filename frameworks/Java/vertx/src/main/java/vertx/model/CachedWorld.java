@@ -1,8 +1,17 @@
 package vertx.model;
 
+import com.julienviet.jsonsergen.Backend;
+import com.julienviet.jsonsergen.JsonSerGen;
+import io.vertx.codegen.annotations.DataObject;
+import io.vertx.core.buffer.Buffer;
+
+import java.util.List;
+
 /**
  * The model for the "world" database table.
  */
+@DataObject
+@JsonSerGen(backends = Backend.DSL_JSON)
 public final class CachedWorld implements Comparable<CachedWorld> {
 
   private final int id;
@@ -30,5 +39,9 @@ public final class CachedWorld implements Comparable<CachedWorld> {
   @Override
   public int compareTo(CachedWorld o) {
     return Integer.compare(id, o.id);
+  }
+
+  public static Buffer toJson(List<CachedWorld> worlds) {
+    return CachedWorldJsonSerializer.toJsonBuffer(worlds);
   }
 }

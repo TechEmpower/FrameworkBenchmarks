@@ -1,12 +1,8 @@
 source 'https://rubygems.org'
 
-gem 'oj'
-gem 'passenger', '~> 6.0', :platforms=>[:ruby, :mswin], :require=>false
-gem 'puma', '~> 6.4', :require=>false
+gem 'json', '~> 2.8'
 gem 'sequel', '~> 5.0'
-gem 'sinatra', '~> 3.0', :require=>'sinatra/base'
-gem 'slim', '~> 3.0'
-gem 'unicorn', '~> 6.1', :platforms=>[:ruby, :mswin], :require=>false
+gem 'sinatra', '~> 4.0', :require=>'sinatra/base'
 
 group :mysql do
   gem 'mysql2', '~> 0.5', :platforms=>[:ruby, :mswin]
@@ -15,4 +11,16 @@ end
 group :postgresql do
   gem 'pg', '~> 1.5', :platforms=>[:ruby, :mswin]
   gem 'sequel_pg', '~> 1.6', :platforms=>:ruby, :require=>false
+end
+
+group :passenger do
+  gem 'passenger', '~> 6.0', platforms: [:ruby, :mswin], require: false
+end
+
+group :puma do
+  gem 'puma', '~> 6.4', require: false
+end
+
+group :unicorn do
+  gem 'unicorn', '~> 6.1', platforms: [:ruby, :mswin], require: false
 end
