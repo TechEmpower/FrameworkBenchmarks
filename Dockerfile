@@ -13,6 +13,7 @@ RUN apt-get -yqq update && \
       gcc \
       git-core \
       gosu \
+      iproute2 \
       # Needed for mysqlclient
       libmysqlclient-dev \
       libpq-dev \
