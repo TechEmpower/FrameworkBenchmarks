@@ -63,26 +63,22 @@ class BenchmarkSqlStore(
 
     override fun replaceWorlds(worlds: List<World>) {
         dataSource.connection.use { con: Connection ->
-            con.autoCommit = false
             val stmtSelect = con.prepareStatement(SELECT_WORLD)
-            val stmtUpdate = con.prepareStatement(UPDATE_WORLD)
-
             worlds.forEach {
-                val worldId = it.id
-                val newRandomNumber = it.randomNumber
-
-                stmtSelect.setInt(1, worldId)
+                stmtSelect.setInt(1, it.id)
                 val rs = stmtSelect.executeQuery()
                 rs.next()
                 rs.getInt(2) // Read 'randomNumber' to comply with Test type 5, point 6
-
-                stmtUpdate.setInt(1, newRandomNumber)
-                stmtUpdate.setInt(2, worldId)
-//                stmtUpdate.executeUpdate()
-                stmtUpdate.addBatch()
             }
-            stmtUpdate.executeBatch()
-            con.commit()
+
+            val stmtUpdate = con.prepareStatement(UPDATE_WORLD)
+            worlds.forEach {
+                stmtUpdate.setInt(1, it.randomNumber)
+                stmtUpdate.setInt(2, it.id)
+                stmtUpdate.executeUpdate()
+//                stmtUpdate.addBatch()
+            }
+//            stmtUpdate.executeBatch()
         }
     }
 
