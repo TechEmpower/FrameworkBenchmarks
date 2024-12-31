@@ -16,9 +16,10 @@ class BenchmarkSqlStore(
 ) : BenchmarkStore(settings) {
 
     companion object {
-        private const val SELECT_WORLD: String = "select * from world where id = ?"
+        private const val LOAD_WORLDS: String = "select id, randomNumber from world"
+        private const val SELECT_WORLD: String = "select id, randomNumber from world where id = ?"
         private const val UPDATE_WORLD: String = "update world set randomNumber = ? where id = ?"
-        private const val SELECT_ALL_FORTUNES: String = "select * from fortune"
+        private const val SELECT_ALL_FORTUNES: String = "select id, message from fortune"
     }
 
     private val dataSource: HikariDataSource by lazy {
@@ -87,7 +88,7 @@ class BenchmarkSqlStore(
 
     override fun initWorldsCache(cache: Cache<Int, CachedWorld>) {
         dataSource.connection.use { con: Connection ->
-            val stmtSelect = con.prepareStatement("select * from world")
+            val stmtSelect = con.prepareStatement(LOAD_WORLDS)
             val rs = stmtSelect.executeQuery()
 
             while (rs.next()) {
