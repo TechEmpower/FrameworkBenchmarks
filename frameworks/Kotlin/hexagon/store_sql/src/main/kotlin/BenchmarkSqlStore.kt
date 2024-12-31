@@ -76,9 +76,7 @@ class BenchmarkSqlStore(
                 stmtUpdate.setInt(1, it.randomNumber)
                 stmtUpdate.setInt(2, it.id)
                 stmtUpdate.executeUpdate()
-//                stmtUpdate.addBatch()
             }
-//            stmtUpdate.executeBatch()
         }
     }
 
