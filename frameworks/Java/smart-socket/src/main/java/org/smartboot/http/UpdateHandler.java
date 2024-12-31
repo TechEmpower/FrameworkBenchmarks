@@ -1,9 +1,10 @@
 package org.smartboot.http;
 
-import org.smartboot.http.common.utils.NumberUtils;
-import org.smartboot.http.server.HttpRequest;
-import org.smartboot.http.server.HttpResponse;
-import org.smartboot.http.server.HttpServerHandler;
+
+import tech.smartboot.feat.core.common.utils.NumberUtils;
+import tech.smartboot.feat.core.server.HttpRequest;
+import tech.smartboot.feat.core.server.HttpResponse;
+import tech.smartboot.feat.core.server.HttpServerHandler;
 
 import javax.sql.DataSource;
 import java.io.IOException;

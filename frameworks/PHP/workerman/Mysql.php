@@ -34,9 +34,10 @@ class Mysql
     {
         $count = min(max((int) $request->get('q'), 1), 500);
         $arr = [];
+        $world = $this->world;
         while ($count--) {
-            $this->world->execute([mt_rand(1, 10000)]);
-            $arr[] = $this->world->fetch();
+            $world->execute([mt_rand(1, 10000)]);
+            $arr[] = $world->fetch();
         }
         return $arr;
     }
@@ -45,11 +46,13 @@ class Mysql
     {
         $count = min(max((int) $request->get('q'), 1), 500);
         $arr = [];
+        $world = $this->world;
+        $update = $this->update;
         while ($count--) {
             $id = mt_rand(1, 10000);
-            $this->world->execute([$id]);
-            $item = $this->world->fetch();
-            $this->update->execute(
+            $world->execute([$id]);
+            $item = $world->fetch();
+            $update->execute(
                 [$item['randomNumber'] = mt_rand(1, 10000), $id]
             );
             $arr[] = $item;
