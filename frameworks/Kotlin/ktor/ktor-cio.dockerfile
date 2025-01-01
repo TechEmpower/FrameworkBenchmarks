@@ -10,4 +10,4 @@ COPY --from=maven /ktor/target/tech-empower-framework-benchmark-1.0-SNAPSHOT-cio
 
 EXPOSE 9090
 
-CMD ["java", "-jar", "app.jar"]
+CMD ["java", "-server","-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AlwaysPreTouch", "-jar", "app.jar"]

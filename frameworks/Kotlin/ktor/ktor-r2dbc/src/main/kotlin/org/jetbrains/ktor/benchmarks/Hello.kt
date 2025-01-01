@@ -10,18 +10,13 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.r2dbc.pool.ConnectionPool
 import io.r2dbc.pool.ConnectionPoolConfiguration
-import io.r2dbc.pool.PoolingConnectionFactoryProvider
 import io.r2dbc.postgresql.PostgresqlConnectionConfiguration
 import io.r2dbc.postgresql.PostgresqlConnectionFactory
-import io.r2dbc.postgresql.PostgresqlConnectionFactoryProvider
 import io.r2dbc.postgresql.client.SSLMode
 import io.r2dbc.spi.Connection
-import io.r2dbc.spi.ConnectionFactories
 import io.r2dbc.spi.ConnectionFactory
-import io.r2dbc.spi.ConnectionFactoryOptions
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.reactive.asFlow
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.reactive.awaitFirst
 import kotlinx.coroutines.reactive.awaitFirstOrNull
 import kotlinx.html.*
@@ -36,8 +31,6 @@ import org.jetbrains.ktor.benchmarks.models.Message
 import org.jetbrains.ktor.benchmarks.models.World
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
-import reactor.netty.resources.LoopResources
-import java.time.Duration
 import kotlin.random.Random
 
 fun Application.main() {
