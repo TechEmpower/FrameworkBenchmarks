@@ -1,4 +1,4 @@
-FROM maven:3.9.7-amazoncorretto-17-debian
+FROM maven:3.9.9-amazoncorretto-21-debian-bookworm as maven
 WORKDIR /app
 COPY ktor-asyncdb/gradle gradle
 COPY ktor-asyncdb/build.gradle.kts build.gradle.kts
@@ -10,4 +10,4 @@ RUN /app/gradlew --no-daemon shadowJar
 
 EXPOSE 9090
 
-CMD ["java", "-server", "-XX:+UseParallelGC", "-Xms2G","-Xmx2G", "-jar", "/app/build/libs/bench.jar", "jasync-sql"]
+CMD ["java", "-server","-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AlwaysPreTouch", "/app/build/libs/bench.jar", "jasync-sql"]
