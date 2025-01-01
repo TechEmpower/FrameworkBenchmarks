@@ -28,14 +28,14 @@ RUN rm -Rf ./paozhu/common
 
 
 
-COPY ./paozhu_benchmark/controller ./paozhu/
-COPY ./paozhu_benchmark/libs ./paozhu/
-COPY ./paozhu_benchmark/view ./paozhu/
-COPY ./paozhu_benchmark/viewsrc ./paozhu/
+# COPY ./paozhu_benchmark/controller ./paozhu/
+# COPY ./paozhu_benchmark/libs ./paozhu/
+# COPY ./paozhu_benchmark/view ./paozhu/
+# COPY ./paozhu_benchmark/viewsrc ./paozhu/
 
-COPY ./paozhu_benchmark/orm ./paozhu/
-COPY ./paozhu_benchmark/models ./paozhu/
-COPY ./paozhu_benchmark/common ./paozhu/
+# COPY ./paozhu_benchmark/orm ./paozhu/
+# COPY ./paozhu_benchmark/models ./paozhu/
+# COPY ./paozhu_benchmark/common ./paozhu/
 
 RUN ls -l ./paozhu
 
