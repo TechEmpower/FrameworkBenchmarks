@@ -20,23 +20,40 @@ RUN git clone https://github.com/hggq/paozhu
 # RUN unzip benchmark.zip
 RUN rm -Rf ./paozhu/controller
 RUN rm -Rf ./paozhu/libs
-RUN mkdir ./paozhu/libs
-RUN mkdir ./paozhu/libs/types
+RUN rm -Rf ./paozhu/view
+RUN rm -Rf ./paozhu/viewsrc
+RUN rm -Rf ./paozhu/orm
+RUN rm -Rf ./paozhu/models
+RUN rm -Rf ./paozhu/common
 
-RUN mkdir ./paozhu/controller
-RUN mkdir ./paozhu/controller/include
-RUN mkdir ./paozhu/controller/src
 
-COPY ./paozhu_benchmark/controller/include/techempower.h ./paozhu/controller/include/
-COPY ./paozhu_benchmark/controller/src/techempower.cpp ./paozhu/controller/src/
+COPY ./paozhu_benchmark/controller ./paozhu/
+COPY ./paozhu_benchmark/libs ./paozhu/
+COPY ./paozhu_benchmark/view ./paozhu/
+COPY ./paozhu_benchmark/viewsrc ./paozhu/
 
-COPY ./paozhu_benchmark/libs/types/techempower_json.h ./paozhu/libs/types/
-COPY ./paozhu_benchmark/libs/types/techempower_json_jsonreflect.cpp ./paozhu/libs/types/
+COPY ./paozhu_benchmark/orm ./paozhu/
+COPY ./paozhu_benchmark/models ./paozhu/
+COPY ./paozhu_benchmark/common ./paozhu/
 
-COPY ./paozhu_benchmark/common/autocontrolmethod.hpp ./paozhu/common/
-COPY ./paozhu_benchmark/common/reghttpmethod_pre.hpp ./paozhu/common/
-COPY ./paozhu_benchmark/common/reghttpmethod.hpp ./paozhu/common/
-COPY ./paozhu_benchmark/common/json_reflect_headers.h ./paozhu/common/
+
+# RUN mkdir ./paozhu/libs
+# RUN mkdir ./paozhu/libs/types
+
+# RUN mkdir ./paozhu/controller
+# RUN mkdir ./paozhu/controller/include
+# RUN mkdir ./paozhu/controller/src
+
+# COPY ./paozhu_benchmark/controller/include/techempower.h ./paozhu/controller/include/
+# COPY ./paozhu_benchmark/controller/src/techempower.cpp ./paozhu/controller/src/
+
+# COPY ./paozhu_benchmark/libs/types/techempower_json.h ./paozhu/libs/types/
+# COPY ./paozhu_benchmark/libs/types/techempower_json_jsonreflect.cpp ./paozhu/libs/types/
+
+# COPY ./paozhu_benchmark/common/autocontrolmethod.hpp ./paozhu/common/
+# COPY ./paozhu_benchmark/common/reghttpmethod_pre.hpp ./paozhu/common/
+# COPY ./paozhu_benchmark/common/reghttpmethod.hpp ./paozhu/common/
+# COPY ./paozhu_benchmark/common/json_reflect_headers.h ./paozhu/common/
 
 COPY ./paozhu_benchmark/conf/server.conf ./paozhu/conf/server.conf
 COPY ./paozhu_benchmark/conf/orm.conf ./paozhu/conf/orm.conf
