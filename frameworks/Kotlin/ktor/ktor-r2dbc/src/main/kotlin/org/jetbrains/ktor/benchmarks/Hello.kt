@@ -124,30 +124,25 @@ fun Application.main() {
             val queries = call.queries()
             val random = Random.Default
 
-            val result = coroutineScope {
-                val worlds = selectWorlds(queries, random)
+            val worlds = selectWorlds(queries, random)
 
-                val worldsUpdated = buildList {
-                    worlds.collect {
-                        it.randomNumber = random.nextInt(DB_ROWS) + 1
-                        add(it)
-                    }
-                }
+            val worldsUpdated = buildList {
+                worlds.collect { world ->
+                    world.randomNumber = random.nextInt(DB_ROWS) + 1
+                    add(world)
 
-                val updateRequests = worldsUpdated.map { world ->
                     Mono.usingWhen(dbConnFactory.create(), { connection ->
                         Mono.from(
-                            connection.createStatement(UPDATE_QUERY).bind(0, world.randomNumber).bind(1, world.id)
+                            connection.createStatement(UPDATE_QUERY)
+                                .bind(0, world.randomNumber)
+                                .bind(1, world.id)
                                 .execute()
                         ).flatMap { Mono.from(it.rowsUpdated) }
-                    }, Connection::close)
+                    }, Connection::close).awaitFirstOrNull()
                 }
-
-                Flux.merge(updateRequests).collectList().awaitFirst()
-                worldsUpdated
             }
 
-            call.respondText(Json.encodeToString(result), ContentType.Application.Json)
+            call.respondText(Json.encodeToString(worldsUpdated), ContentType.Application.Json)
         }
     }
 }
@@ -182,7 +177,6 @@ private fun configurePostgresR2DBC(config: ApplicationConfig): ConnectionFactory
     val cp = ConnectionPoolConfiguration.builder(cf)
         .initialSize(config.property("db.initPoolSize").getString().toInt())
         .maxSize(config.property("db.maxPoolSize").getString().toInt())
-        //.maxLifeTime(Duration.ofMillis(Long.MAX_VALUE))
         .build()
 
     return ConnectionPool(cp)
