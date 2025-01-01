@@ -1,0 +1,5 @@
+<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr><%c
+    for(auto &a:obj["list"].as_array()){
+%><tr><td><%c echo<<a.second["id"].to_string(); %></td><td><%c echo<<a.second["message"].to_string(); %></td></tr><%c
+    }
+%></table></body></html>
