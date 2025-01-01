@@ -189,6 +189,7 @@ include_sub_directories_recursively(${CMAKE_CURRENT_SOURCE_DIR}/models)
 include_sub_directories_recursively(${CMAKE_CURRENT_SOURCE_DIR}/controller/include)
 include_sub_directories_recursively(${CMAKE_CURRENT_SOURCE_DIR}/libs)
 include_sub_directories_recursively(${CMAKE_CURRENT_SOURCE_DIR}/include)
+include_sub_directories_recursively(${CMAKE_CURRENT_SOURCE_DIR}/common)
 
 add_executable(paozhu_cli ${CMAKE_CURRENT_SOURCE_DIR}/vendor/httpcli/http_cli.cpp)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)
