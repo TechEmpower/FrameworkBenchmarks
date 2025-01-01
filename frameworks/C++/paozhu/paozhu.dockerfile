@@ -36,7 +36,7 @@ COPY ./paozhu_benchmark/orm ./paozhu/
 COPY ./paozhu_benchmark/models ./paozhu/
 COPY ./paozhu_benchmark/common ./paozhu/
 
-
+RUN ls -l ./paozhu/common
 # RUN mkdir ./paozhu/libs
 # RUN mkdir ./paozhu/libs/types
 
@@ -54,6 +54,7 @@ COPY ./paozhu_benchmark/common ./paozhu/
 # COPY ./paozhu_benchmark/common/reghttpmethod_pre.hpp ./paozhu/common/
 # COPY ./paozhu_benchmark/common/reghttpmethod.hpp ./paozhu/common/
 # COPY ./paozhu_benchmark/common/json_reflect_headers.h ./paozhu/common/
+COPY ./paozhu_benchmark/common/cost_define.h ./paozhu/common/
 
 COPY ./paozhu_benchmark/conf/server.conf ./paozhu/conf/server.conf
 COPY ./paozhu_benchmark/conf/orm.conf ./paozhu/conf/orm.conf
