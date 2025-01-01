@@ -7,6 +7,10 @@ use axum::{
 use dotenv::dotenv;
 use rand::{rngs::SmallRng, thread_rng, SeedableRng};
 use yarte::Template;
+use mimalloc::MiMalloc;
+
+#[global_allocator]
+static GLOBAL: MiMalloc = MiMalloc;
 
 #[cfg(not(feature = "simd-json"))]
 use axum::Json;

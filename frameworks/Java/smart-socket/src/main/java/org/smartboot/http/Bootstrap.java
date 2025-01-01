@@ -11,11 +11,11 @@ package org.smartboot.http;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.smartboot.Message;
-import org.smartboot.http.server.HttpBootstrap;
-import org.smartboot.http.server.HttpRequest;
-import org.smartboot.http.server.HttpResponse;
-import org.smartboot.http.server.HttpServerHandler;
-import org.smartboot.http.server.handler.HttpRouteHandler;
+import tech.smartboot.feat.core.server.HttpRequest;
+import tech.smartboot.feat.core.server.HttpResponse;
+import tech.smartboot.feat.core.server.HttpServer;
+import tech.smartboot.feat.core.server.HttpServerHandler;
+import tech.smartboot.feat.core.server.handler.HttpRouteHandler;
 
 import javax.sql.DataSource;
 
@@ -25,9 +25,9 @@ public class Bootstrap {
     public static void main(String[] args) {
         int cpuNum = Runtime.getRuntime().availableProcessors();
         // 定义服务器接受的消息类型以及各类消息对应的处理器
-        HttpBootstrap bootstrap = new HttpBootstrap();
+        HttpServer bootstrap = new HttpServer();
         bootstrap.configuration()
-                .threadNum(cpuNum)
+                .threadNum(cpuNum + 1)
                 .headerLimiter(0)
                 .readBufferSize(1024 * 4)
                 .writeBufferSize(1024 * 4);
