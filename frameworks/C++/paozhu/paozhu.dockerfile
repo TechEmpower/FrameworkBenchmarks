@@ -105,6 +105,8 @@ RUN unzip asio.zip
 RUN cmake . -B build -DCMAKE_BUILD_TYPE=Release 
 RUN cmake --build build
 
+RUN cmake . -B build -DCMAKE_BUILD_TYPE=Release 
+RUN cmake --build build
 
 EXPOSE 8888
 
