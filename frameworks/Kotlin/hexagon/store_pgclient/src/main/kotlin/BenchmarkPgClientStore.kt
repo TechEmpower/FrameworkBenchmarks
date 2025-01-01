@@ -19,9 +19,10 @@ class BenchmarkPgClientStore(
 ) : BenchmarkStore(settings) {
 
     companion object {
-        private const val SELECT_WORLD: String = "select * from world where id = $1"
+        private const val LOAD_WORLDS: String = "select id, randomNumber from world"
+        private const val SELECT_WORLD: String = "select id, randomNumber from world where id = $1"
         private const val UPDATE_WORLD: String = "update world set randomNumber = $1 where id = $2"
-        private const val SELECT_ALL_FORTUNES: String = "select * from fortune"
+        private const val SELECT_ALL_FORTUNES: String = "select id, message from fortune"
     }
 
     private val connectOptions: PgConnectOptions by lazy {
@@ -81,13 +82,12 @@ class BenchmarkPgClientStore(
                 .toCompletionStage()
                 .toCompletableFuture()
                 .get()
-
         }
     }
 
     override fun initWorldsCache(cache: Cache<Int, CachedWorld>) {
         dataSource
-            .preparedQuery("select * from world")
+            .preparedQuery(LOAD_WORLDS)
             .execute()
             .map { rowSet ->
                 rowSet.map { row ->

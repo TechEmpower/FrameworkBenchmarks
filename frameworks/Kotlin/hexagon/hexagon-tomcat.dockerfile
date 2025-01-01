@@ -12,7 +12,7 @@ RUN ./gradlew --quiet -x test war
 #
 # RUNTIME
 #
-FROM docker.io/tomcat:11.0.0-jre21-temurin-noble
+FROM docker.io/tomcat:11-jre21-temurin-noble
 ARG MODULE=/hexagon/hexagon_tomcat_postgresql
 
 ENV POSTGRESQL_DB_HOST tfb-database
