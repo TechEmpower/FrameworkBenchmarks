@@ -1,4 +1,4 @@
-FROM maven:3.9.9-amazoncorretto-21-debian-bookworm as build
+FROM gradle:jdk21 as build
 WORKDIR /app
 COPY ktor-pgclient/gradle gradle
 COPY ktor-pgclient/build.gradle.kts build.gradle.kts
