@@ -53,6 +53,7 @@ GEM
     io-endpoint (0.14.0)
     io-event (1.7.3)
     io-stream (0.6.1)
+    iodine (0.7.58)
     json (2.9.1)
     kgio (2.11.4)
     language_server-protocol (3.17.0.3)
@@ -127,6 +128,7 @@ PLATFORMS
 DEPENDENCIES
   connection_pool (~> 2.4)
   falcon (~> 0.47)
+  iodine (~> 0.7)
   jdbc-postgres (~> 42.2)
   json (~> 2.8)
   pg (~> 1.5)

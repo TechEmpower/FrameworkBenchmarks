@@ -29,6 +29,8 @@ class HelloWorld
                     'Passenger'
                   elsif defined?(Puma)
                     'Puma'
+                  elsif defined?(Iodine)
+                    'Iodine'
                   elsif defined?(Unicorn)
                     'Unicorn'
                   elsif defined?(Falcon)
