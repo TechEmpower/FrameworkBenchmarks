@@ -23,6 +23,27 @@
         "display_name": "rack-puma-mri-sequel-raw",
         "notes": ""
       },
+      "iodine": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
+        "fortune_url": "/fortunes",
+        "update_url": "/updates?queries=",
+        "port": 8080,
+        "approach": "Stripped",
+        "classification": "Micro",
+        "orm": "raw",
+        "database": "Postgres",
+        "framework": "rack",
+        "language": "Ruby",
+        "platform": "Mri",
+        "webserver": "Iodine",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "rack-iodine-mri-sequel-raw",
+        "notes": ""
+      },
       "unicorn": {
         "json_url": "/json",
         "plaintext_url": "/plaintext",
