@@ -1,4 +1,4 @@
-FROM ruby:3.4-rc
+FROM ruby:3.4
 
 RUN apt-get update -yqq && apt-get install -yqq --no-install-recommends redis-server
 
@@ -15,7 +15,7 @@ ENV LD_PRELOAD=libjemalloc.so.2
 COPY ./Gemfile* /rails/
 
 ENV BUNDLE_FORCE_RUBY_PLATFORM=true
-ENV BUNDLE_WITH=postgresql:falcon
+ENV BUNDLE_WITH=postgresql:iodine
 RUN bundle install --jobs=8
 
 COPY . /rails/
@@ -24,4 +24,4 @@ ENV RAILS_ENV=production_postgresql
 ENV PORT=8080
 ENV REDIS_URL=redis://localhost:6379/0
 CMD service redis-server start && \
-    bundle exec falcon host
+    bundle exec iodine
