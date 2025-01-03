@@ -136,6 +136,7 @@ GEM
     io-endpoint (0.14.0)
     io-event (1.7.3)
     io-stream (0.6.1)
+    iodine (0.7.58)
     irb (1.14.1)
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
@@ -269,6 +270,7 @@ PLATFORMS
 DEPENDENCIES
   agoo
   falcon (~> 0.47)
+  iodine (~> 0.7)
   pg (~> 1.5)
   puma (~> 6.4)
   rackup
