@@ -108,6 +108,4 @@ RUN cmake --build build
 
 EXPOSE 8888
 
-# CMD ./bin/paozhu 
-CMD /paozhu/bin/paozhu
-RUN ps aux
+CMD ./bin/paozhu

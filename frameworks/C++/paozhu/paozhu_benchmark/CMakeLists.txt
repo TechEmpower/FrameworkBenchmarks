@@ -196,7 +196,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 
 
 if(${mode} AND (CMAKE_BUILD_TYPE STREQUAL "Release"))
-  add_executable(paozhu ${CMAKE_CURRENT_SOURCE_DIR}/test/testdaemon.cpp ${common_list} ${viewsrc_list} ${FRAMEWORK_CPP_PATH} ${orm_list} ${reflect_list} ${src_list} ${source_list} ${controller_list})
+  add_executable(paozhu ${CMAKE_CURRENT_SOURCE_DIR}/test/testbenchmark.cpp ${common_list} ${viewsrc_list} ${FRAMEWORK_CPP_PATH} ${orm_list} ${reflect_list} ${src_list} ${source_list} ${controller_list})
 else()
   add_executable(paozhu ${CMAKE_CURRENT_SOURCE_DIR}/test/test.cpp ${common_list} ${viewsrc_list} ${FRAMEWORK_CPP_PATH} ${orm_list} ${reflect_list} ${src_list} ${source_list} ${controller_list})
 endif()
