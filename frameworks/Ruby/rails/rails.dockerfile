@@ -15,7 +15,7 @@ ENV LD_PRELOAD=libjemalloc.so.2
 COPY ./Gemfile* /rails/
 
 ENV BUNDLE_FORCE_RUBY_PLATFORM=true
-ENV BUNDLE_WITHOUT=mysql:agoo:falcon
+ENV BUNDLE_WITH=postgresql:puma
 RUN bundle install --jobs=8
 
 COPY . /rails/
