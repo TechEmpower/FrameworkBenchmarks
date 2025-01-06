@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 RUN apt-get update -yqq && apt-get install -yqq apt-utils software-properties-common wget unzip cmake git
 RUN apt-get install -yqq gcc g++ openssl libssl-dev zlib1g-dev build-essential locales
 
@@ -6,6 +6,7 @@ RUN apt-get -y install brotli libbrotli-dev
 RUN apt-get -y install libreadline-dev 
 RUN apt-get -y install mysql-client
 RUN apt-get -y install libmysqlclient-dev
+RUN apt-get -y install pstree
 
 RUN locale-gen en_US.UTF-8
 ENV LANG en_US.UTF-8
