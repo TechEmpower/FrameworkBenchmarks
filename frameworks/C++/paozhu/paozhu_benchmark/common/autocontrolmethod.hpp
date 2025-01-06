@@ -44,6 +44,16 @@ namespace http
 
 
     }
+    
+    void _initauto_domain_httpmethodregto(std::map<std::string, std::map<std::string, regmethold_t>> &domain_methodcallback)
+    {
+        struct regmethold_t temp;
+        std::map<std::string, regmethold_t> methodcallback;
+        std::map<std::string, std::map<std::string, regmethold_t>>::iterator domain_iterator;
+    
+
+    }
+    
 }
 
 #endif
