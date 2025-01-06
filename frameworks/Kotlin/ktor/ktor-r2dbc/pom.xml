@@ -13,14 +13,17 @@
 
     <properties>
         <kotlin.version>2.0.21</kotlin.version>
+        <kotlin.coroutines.version>1.10.1</kotlin.coroutines.version>
         <ktor.version>3.0.3</ktor.version>
         <serialization.version>1.7.3</serialization.version>
         <kotlinx.html.version>0.11.0</kotlinx.html.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <hikaricp.version>5.1.0</hikaricp.version>
-        <logback.version>1.2.13</logback.version>
-        <mysql.version>8.0.33</mysql.version>
+        <logback.version>1.5.12</logback.version>
+        <reactor.version>3.7.1</reactor.version>
         <postgresql.version>42.7.4</postgresql.version>
+        <r2dbc.version>1.0.7.RELEASE</r2dbc.version>
+        <r2dbc.pool.version>1.0.2.RELEASE</r2dbc.pool.version>
+
     </properties>
 
     <dependencies>
@@ -45,6 +48,16 @@
             <version>${kotlinx.html.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.jetbrains.kotlinx</groupId>
+            <artifactId>kotlinx-coroutines-core</artifactId>
+            <version>${kotlin.coroutines.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlinx</groupId>
+            <artifactId>kotlinx-coroutines-reactor</artifactId>
+            <version>${kotlin.coroutines.version}</version>
+        </dependency>
+        <dependency>
             <groupId>io.ktor</groupId>
             <artifactId>ktor-server-default-headers-jvm</artifactId>
             <version>${ktor.version}</version>
@@ -55,23 +68,20 @@
             <version>${ktor.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.zaxxer</groupId>
-            <artifactId>HikariCP</artifactId>
-            <version>${hikaricp.version}</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>${postgresql.version}</version>
+            <artifactId>r2dbc-postgresql</artifactId>
+            <version>${r2dbc.version}</version>
         </dependency>
-
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>${mysql.version}</version>
+            <groupId>io.r2dbc</groupId>
+            <artifactId>r2dbc-pool</artifactId>
+            <version>${r2dbc.pool.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>io.projectreactor</groupId>
+            <artifactId>reactor-core</artifactId>
+            <version>${reactor.version}</version>
+        </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
@@ -80,16 +90,6 @@
         <dependency>
             <groupId>io.ktor</groupId>
             <artifactId>ktor-server-netty-jvm</artifactId>
-            <version>${ktor.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.ktor</groupId>
-            <artifactId>ktor-server-jetty-jvm</artifactId>
-            <version>${ktor.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.ktor</groupId>
-            <artifactId>ktor-server-cio-jvm</artifactId>
             <version>${ktor.version}</version>
         </dependency>
     </dependencies>
@@ -149,25 +149,6 @@
 
                 <executions>
                     <execution>
-                        <id>cio</id>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-
-                        <phase>package</phase>
-
-                        <configuration>
-                            <descriptors>
-                                <descriptor>src/main/assembly/cio-bundle.xml</descriptor>
-                            </descriptors>
-                            <archive>
-                                <manifest>
-                                    <mainClass>io.ktor.server.cio.EngineMain</mainClass>
-                                </manifest>
-                            </archive>
-                        </configuration>
-                    </execution>
-                    <execution>
                         <id>netty</id>
                         <goals>
                             <goal>single</goal>
@@ -182,25 +163,6 @@
                             <archive>
                                 <manifest>
                                     <mainClass>io.ktor.server.netty.EngineMain</mainClass>
-                                </manifest>
-                            </archive>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>jetty</id>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-
-                        <phase>package</phase>
-
-                        <configuration>
-                            <descriptors>
-                                <descriptor>src/main/assembly/jetty-bundle.xml</descriptor>
-                            </descriptors>
-                            <archive>
-                                <manifest>
-                                    <mainClass>io.ktor.server.jetty.EngineMain</mainClass>
                                 </manifest>
                             </archive>
                         </configuration>

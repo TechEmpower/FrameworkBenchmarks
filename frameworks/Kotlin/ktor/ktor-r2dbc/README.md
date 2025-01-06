@@ -14,8 +14,8 @@ More information is available at [ktor.io](http://ktor.io).
 * JDK 21
 * Kotlin
 * ktor
-* netty 
-* hikariCP
+* netty
+* R2DBC
 
 Maven is downloaded automatically via Maven Wrapper script (`mvnw`), add dependencies are specified in `pom.xml` so will be downloaded automatically from maven central and jcenter repositories.
 
@@ -41,7 +41,9 @@ Please note that the server holds tty so you may need nohup. See `setup.sh` for 
 
 [Sergey Mashkov](https://github.com/cy6erGn0m)
 
-[Ilya Ryzhenkov](https://github.com/orangy) 
+[Ilya Ryzhenkov](https://github.com/orangy)
+
+[Ilya Nemtsev](https://github.com/inemtsev)
 
 Slack ktor channel https://kotlinlang.slack.com/messages/ktor (you need an [invite](http://slack.kotlinlang.org/) to join)
 
