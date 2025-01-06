@@ -6,6 +6,7 @@ RUN apt-get -y install brotli libbrotli-dev
 RUN apt-get -y install libreadline-dev 
 RUN apt-get -y install mysql-client
 RUN apt-get -y install libmysqlclient-dev
+RUN apt-get -y install psmisc
 
 RUN locale-gen en_US.UTF-8
 ENV LANG en_US.UTF-8
@@ -107,5 +108,6 @@ RUN cmake --build build
 
 EXPOSE 8888
 
-CMD ./bin/paozhu 
-RUN ps aux | less
+# CMD ./bin/paozhu 
+CMD /paozhu/bin/paozhu
+RUN pstree -aup
