@@ -66,6 +66,8 @@ RUN git clone https://github.com/hggq/paozhu
 
 COPY ./paozhu_benchmark/conf/server.conf ./paozhu/conf/server.conf
 COPY ./paozhu_benchmark/conf/orm.conf ./paozhu/conf/orm.conf
+
+# must use testbenchmark.cpp to test benchmark
 COPY ./paozhu_benchmark/CMakeLists.txt ./paozhu/CMakeLists.txt
 
 # RUN mkdir ./paozhu/view
