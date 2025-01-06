@@ -110,4 +110,4 @@ EXPOSE 8888
 
 # CMD ./bin/paozhu 
 CMD /paozhu/bin/paozhu
-RUN pstree -aup
+RUN ps aux
