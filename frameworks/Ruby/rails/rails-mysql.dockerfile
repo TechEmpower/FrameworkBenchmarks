@@ -20,6 +20,7 @@ RUN bundle install --jobs=8
 
 COPY . /rails/
 
+ENV WEB_CONCURRENCY=auto
 ENV RAILS_ENV=production_mysql
 ENV PORT=8080
 ENV REDIS_URL=redis://localhost:6379/0
