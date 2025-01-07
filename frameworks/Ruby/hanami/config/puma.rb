@@ -5,7 +5,7 @@ require_relative 'auto_tune'
 num_workers, num_threads = auto_tune
 
 workers num_workers
-threads num_threads, num_threads
+threads 3, 3
 
 port        ENV.fetch("HANAMI_PORT", 2300)
 environment ENV.fetch("HANAMI_ENV", "development")
