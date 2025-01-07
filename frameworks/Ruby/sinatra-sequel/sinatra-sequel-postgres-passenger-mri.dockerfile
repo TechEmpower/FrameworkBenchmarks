@@ -10,7 +10,7 @@ ENV LD_PRELOAD=libjemalloc.so.2
 ADD ./ /sinatra-sequel
 WORKDIR /sinatra-sequel
 
-ENV BUNDLE_WITHOUT=mysql:puma:unicorn
+ENV BUNDLE_WITH=postgresql:passenger
 RUN bundle install --jobs=4 --gemfile=/sinatra-sequel/Gemfile
 
 # TODO: https://github.com/phusion/passenger/issues/1916

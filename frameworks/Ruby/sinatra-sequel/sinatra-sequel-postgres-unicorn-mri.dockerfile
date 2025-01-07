@@ -10,7 +10,7 @@ ENV LD_PRELOAD=libjemalloc.so.2
 ADD ./ /sinatra-sequel
 WORKDIR /sinatra-sequel
 
-ENV BUNDLE_WITHOUT=mysql:passenger:puma
+ENV BUNDLE_WITH=postgresql:unicorn
 RUN bundle install --jobs=4 --gemfile=/sinatra-sequel/Gemfile
 
 ENV DBTYPE=postgresql

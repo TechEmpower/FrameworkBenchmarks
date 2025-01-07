@@ -4,23 +4,28 @@ gem 'json', '~> 2.8'
 gem 'sequel', '~> 5.0'
 gem 'sinatra', '~> 4.0', :require=>'sinatra/base'
 
-group :mysql do
+group :mysql, optional: true do
   gem 'mysql2', '~> 0.5', :platforms=>[:ruby, :mswin]
 end
 
-group :postgresql do
+group :postgresql, optional: true do
   gem 'pg', '~> 1.5', :platforms=>[:ruby, :mswin]
   gem 'sequel_pg', '~> 1.6', :platforms=>:ruby, :require=>false
 end
 
-group :passenger do
+
+group :iodine, optional: true do
+  gem 'iodine', '~> 0.7', platforms: [:ruby, :mswin], require: false
+end
+
+group :passenger, optional: true do
   gem 'passenger', '~> 6.0', platforms: [:ruby, :mswin], require: false
 end
 
-group :puma do
+group :puma, optional: true do
   gem 'puma', '~> 6.4', require: false
 end
 
-group :unicorn do
+group :unicorn, optional: true do
   gem 'unicorn', '~> 6.1', platforms: [:ruby, :mswin], require: false
 end
