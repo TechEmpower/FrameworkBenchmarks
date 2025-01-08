@@ -22,9 +22,15 @@ private def random_world
   {id: id, randomNumber: random_number}
 end
 
-private def set_world(world)
-  APPDB.exec("UPDATE world SET randomNumber = $1 WHERE id = $2", world[:randomNumber], world[:id])
-  world
+private def update_worlds(worlds)
+  ids = [] of Int32
+  sql = "UPDATE world SET randomnumber = CASE id "
+  worlds.each do |world|
+    sql += "when #{world[:id]} then #{world[:randomNumber]} "
+    ids << world[:id]
+  end
+  sql += "ELSE randomnumber END WHERE id IN ( #{ids.join(',')})"
+  APPDB.exec(sql)
 end
 
 private def fortunes
@@ -123,8 +129,10 @@ end
 # Postgres Test 5: Database Updates
 get "/updates" do |env|
   updated = (1..sanitized_query_count(env)).map do
-    set_world({id: random_world[:id], randomNumber: rand(1..ID_MAXIMUM)})
+    {id: random_world[:id], randomNumber: rand(1..ID_MAXIMUM)}
   end
+
+  update_worlds(updated)
 
   env.response.content_type = CONTENT::JSON
   updated.to_json
