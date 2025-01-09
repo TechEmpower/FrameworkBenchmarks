@@ -28,7 +28,8 @@ module Hello
     # Common ones are `templates`, `generators`, or `middleware`, for example.
     config.autoload_lib(ignore: %w[assets tasks])
 
-    config.action_dispatch.default_headers.merge!('Server' => 'WebServer')
+    # Only use headers required by TechEmpower.
+    config.action_dispatch.default_headers = {'Server' => 'Rails'}
 
     config.api_only = true
 
