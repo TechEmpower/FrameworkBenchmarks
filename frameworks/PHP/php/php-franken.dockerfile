@@ -1,4 +1,4 @@
-FROM dunglas/frankenphp:1.4-php8.4
+FROM dunglas/frankenphp
 
 WORKDIR /app
 
