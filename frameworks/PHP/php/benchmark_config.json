@@ -162,16 +162,16 @@
       "versus": "php"
     },
     "franken": {
-      "json_url": "/json.php",
-      "plaintext_url": "/plaintext.php",
-      "db_url": "/dbraw.php",
-      "query_url": "/dbquery.php?queries=",
-      "fortune_url": "/fortune.php",
-      "update_url": "/updateraw.php?queries=",
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "db_url": "/db",
+      "query_url": "/query?queries=",
+      "fortune_url": "/fortunes",
+      "update_url": "/update?queries=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
-      "database": "MySQL",
+      "database": "Postgres",
       "framework": "PHP",
       "language": "PHP",
       "flavor": "PHP8",
@@ -181,7 +181,7 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "PHP-frankenphp",
-      "notes": "",
+      "notes": "worker mode",
       "versus": "php"
     },
     "workerman": {

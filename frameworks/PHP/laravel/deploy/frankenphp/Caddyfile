@@ -1,0 +1,14 @@
+{
+	frankenphp {
+		worker "/app/public/frankenphp-worker.php"
+	}
+}
+
+:8080 {
+	route {
+        rewrite frankenphp-worker.php
+        php {
+            root /app/public
+        }
+	}
+}
