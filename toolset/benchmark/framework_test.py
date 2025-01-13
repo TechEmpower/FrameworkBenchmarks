@@ -74,7 +74,7 @@ class FrameworkTest:
 
         url = "http://%s:%s%s" % (self.benchmarker.config.server_host,
                                   self.port,
-                                  self.runTests[test_type].get_url())
+                                  self.runTests["plaintext"].get_url())
 
         return self.benchmarker.docker_helper.test_client_connection(url)
 
