@@ -17,7 +17,7 @@
         <hikaricp.version>5.0.1</hikaricp.version>
         <postgresql.version>42.7.2</postgresql.version>
         <mongodb.version>4.7.2</mongodb.version>
-        <jte.version>2.2.3</jte.version>
+        <jte.version>3.1.16</jte.version>
     </properties>
 
     <dependencies>
