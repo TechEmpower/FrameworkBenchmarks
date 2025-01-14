@@ -22,7 +22,7 @@ COPY deploy/conf/* /etc/php/8.4/cli/conf.d/
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
-RUN composer install --prefer-dist --optimize-autoloader --no-dev 
+RUN composer install --prefer-dist --optimize-autoloader --no-dev --quiet
 
 EXPOSE 8080
 
