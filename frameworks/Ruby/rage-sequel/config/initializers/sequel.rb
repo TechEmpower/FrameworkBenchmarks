@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 
-require "etc"
-
 SEQUEL_NO_ASSOCIATIONS = true
 Sequel.extension :fiber_concurrency
 
 # Determine thread pool size and timeout
 opts = {
-  max_connections: (2 * Math.log(256 / Etc.nprocessors)).floor,
+  max_connections: 512,
   pool_timeout: 10
 }
 
