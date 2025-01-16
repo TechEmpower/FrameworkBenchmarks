@@ -1,12 +1,12 @@
 [framework]
-name = "smart-socket"
+name = "feat"
 
 [main]
 urls.plaintext = "/plaintext"
 urls.json = "/json"
-urls.db = "/db"
-urls.query = "/queries?queries="
-urls.update = "/updates?queries="
+#urls.db = "/db"
+#urls.query = "/queries?queries="
+#urls.update = "/updates?queries="
 approach = "Realistic"
 classification = "Platform"
 database = "Postgres"
@@ -15,7 +15,7 @@ os = "Linux"
 orm = "Raw"
 platform = "smartboot"
 webserver = "None"
-versus = "smart-socket"
+versus = "feat"
 
 [smart-servlet]
 urls.plaintext = "/plaintext"
