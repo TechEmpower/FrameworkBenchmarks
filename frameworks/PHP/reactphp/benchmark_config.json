@@ -3,10 +3,6 @@
   "tests": [{
     "default": {
       "json_url": "/json",
-      "db_url": "/db",
-      "query_url": "/query?q=",
-      "fortune_url": "/fortunes",
-      "update_url": "/update?q=",
       "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
