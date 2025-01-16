@@ -19,4 +19,4 @@ COPY . .
 
 EXPOSE 8080
 
-CMD bundle exec iodine -p 8080
+CMD bundle exec iodine -p 8080 -w $(ruby config/auto_tune.rb | grep -Eo '[0-9]+' | head -n 1)
