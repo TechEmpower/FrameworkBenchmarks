@@ -1,4 +1,4 @@
-FROM phpswoole/swoole:5.1.3-php8.3
+FROM phpswoole/swoole:php8.4
 
 RUN apt-get update -yqq && \
     apt-get install -yqq libpq-dev libicu-dev > /dev/null && \

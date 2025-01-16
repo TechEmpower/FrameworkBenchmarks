@@ -1,0 +1,30 @@
+{
+  "framework": "nextjs",
+  "tests": [
+    {
+      "default": {
+        "display_name": "Next.js",
+        "versus": "nodejs",
+        "classification": "Platform",
+        "language": "TypeScript",
+        "platform": "nodejs",
+        "framework": "nextjs",
+        "os": "Linux",
+        "webserver": "None",
+        "database": "postgres",
+        "database_os": "Linux",
+        "orm": "Micro",
+        "approach": "Realistic",
+        "notes": "",
+        "port": 3000,
+        "json_url": "/json",
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
+        "TEMPORARILY DISABLED fortune_url": "/fortunes",
+        "update_url": "/updates?queries=",
+        "plaintext_url": "/plaintext",
+        "cached_query_url": "/cached-queries?queries="
+      }
+    }
+  ]
+}

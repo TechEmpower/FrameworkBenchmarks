@@ -13,7 +13,7 @@
 
     <properties>
         <kotlin.version>2.0.21</kotlin.version>
-        <ktor.version>3.0.2</ktor.version>
+        <ktor.version>3.0.3</ktor.version>
         <serialization.version>1.7.3</serialization.version>
         <kotlinx.html.version>0.11.0</kotlinx.html.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

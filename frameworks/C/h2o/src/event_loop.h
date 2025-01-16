@@ -27,6 +27,8 @@
 
 #include "global_data.h"
 
+#define CONN_NUM_SAMPLES 512
+
 typedef enum {
 	SHUTDOWN,
 	TASK
@@ -41,6 +43,9 @@ typedef struct {
 	h2o_accept_ctx_t h2o_accept_ctx;
 	h2o_context_t h2o_ctx;
 	h2o_linklist_t local_messages;
+	size_t accepted_conn_num;
+	size_t conn_num_sample[CONN_NUM_SAMPLES];
+	size_t conn_num_sample_idx;
 } event_loop_t;
 
 typedef struct {
