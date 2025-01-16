@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Oracle and/or its affiliates.
+ * Copyright (c) 2022, 2025 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,16 +19,18 @@ package io.helidon.benchmark.nima;
 import java.nio.charset.StandardCharsets;
 import java.util.logging.Logger;
 
+import com.jsoniter.output.JsonStream;
+import com.jsoniter.output.JsonStreamPool;
 import io.helidon.benchmark.nima.models.DbRepository;
 import io.helidon.benchmark.nima.models.HikariJdbcRepository;
 import io.helidon.benchmark.nima.models.PgClientRepository;
 import io.helidon.benchmark.nima.services.DbService;
 import io.helidon.benchmark.nima.services.FortuneHandler;
+import io.helidon.config.Config;
+import io.helidon.config.ConfigException;
 import io.helidon.http.Header;
 import io.helidon.http.HeaderNames;
 import io.helidon.http.HeaderValues;
-import io.helidon.config.Config;
-import io.helidon.config.ConfigException;
 import io.helidon.logging.common.LogConfig;
 import io.helidon.webserver.WebServer;
 import io.helidon.webserver.http.Handler;
@@ -93,7 +95,7 @@ public final class Main {
 
     static class PlaintextHandler implements Handler {
         static final Header CONTENT_TYPE = HeaderValues.createCached(HeaderNames.CONTENT_TYPE,
-                                                                     "text/plain; charset=UTF-8");
+                "text/plain; charset=UTF-8");
         static final Header CONTENT_LENGTH = HeaderValues.createCached(HeaderNames.CONTENT_LENGTH, "13");
         private static final byte[] RESPONSE_BYTES = "Hello, World!".getBytes(StandardCharsets.UTF_8);
 
@@ -110,14 +112,20 @@ public final class Main {
         private static final String MESSAGE = "Hello, World!";
         private static final int JSON_LENGTH = serialize(new Message(MESSAGE)).length;
         static final Header CONTENT_LENGTH = HeaderValues.createCached(HeaderNames.CONTENT_LENGTH,
-                                                                       String.valueOf(JSON_LENGTH));
+                String.valueOf(JSON_LENGTH));
 
         @Override
         public void handle(ServerRequest req, ServerResponse res) {
-            res.header(CONTENT_LENGTH);
-            res.header(HeaderValues.CONTENT_TYPE_JSON);
-            res.header(Main.SERVER);
-            res.send(serialize(new Message(MESSAGE)));
+            JsonStream stream = JsonStreamPool.borrowJsonStream();
+            try {
+                res.header(CONTENT_LENGTH);
+                res.header(HeaderValues.CONTENT_TYPE_JSON);
+                res.header(Main.SERVER);
+                serialize(new Message(MESSAGE), stream);
+                res.send(stream.buffer().data(), 0, stream.buffer().tail());
+            } finally {
+                JsonStreamPool.returnJsonStream(stream);
+            }
         }
     }
 
