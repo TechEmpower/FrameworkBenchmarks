@@ -1,5 +1,6 @@
 {
   "framework": "reactphp",
+  "maintainers": ["WyriHaximus"],
   "tests": [{
     "default": {
       "json_url": "/json",
