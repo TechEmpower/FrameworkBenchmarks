@@ -8,14 +8,6 @@ class BenchmarksController < ApplicationController
     headers["server"] = "rage"
   end
 
-  def json
-    render json: { message: "Hello, World!" }
-  end
-
-  def plaintext
-    render plain: "Hello, World!"
-  end
-
   def db
     render json: World.with_pk(random_id).values
   end
