@@ -42,12 +42,7 @@ asio::awaitable<std::string> techempowerdb(std::shared_ptr<httppeer> peer)
     unsigned int rd_num = rand_range(1, 10000);
     myworld.where("id", rd_num);
     myworld.limit(1);
-    std::size_t n = co_await myworld.async_fetch_one();
-    if (n == 0)
-    {
-        n = co_await myworld.async_fetch_one();
-    }
-
+    co_await myworld.async_fetch_one();
     peer->output = myworld.data_tojson();
     co_return "";
 }
@@ -74,11 +69,7 @@ asio::awaitable<std::string> techempowerqueries(std::shared_ptr<httppeer> peer)
         myworld.wheresql.clear();
         unsigned int rd_num = rand_range(1, 10000);
         myworld.where("id", rd_num);
-        std::size_t n = co_await myworld.async_fetch_append();
-        if (n == 0)
-        {
-            n = co_await myworld.async_fetch_append();
-        }
+        co_await myworld.async_fetch_append();
     }
 
     peer->output = myworld.to_json();
@@ -92,12 +83,7 @@ asio::awaitable<std::string> techempowerfortunes(std::shared_ptr<httppeer> peer)
     peer->set_header("Date", get_gmttime());
 
     auto myfortune = orm::Fortune();
-    std::size_t n  = co_await myfortune.async_fetch();
-    if (n == 0)
-    {
-        n = co_await myfortune.async_fetch();
-    }
-
+    co_await myfortune.async_fetch();
     myfortune.data.id      = 0;
     myfortune.data.message = "Additional fortune added at request time.";
     myfortune.record.push_back(myfortune.data);
@@ -144,22 +130,13 @@ asio::awaitable<std::string> techempowerupdates(std::shared_ptr<httppeer> peer)
     {
         myworld.wheresql.clear();
         myworld.where("id", rand_range(1, 10000));
-        std::size_t n = co_await myworld.async_fetch_append();
-        if (n == 0)
-        {
-            n = co_await myworld.async_fetch_append();
-        }
+        co_await myworld.async_fetch_append();
         if (myworld.effect() > 0)
         {
             unsigned int j                 = myworld.record.size() - 1;
             myworld.data.randomnumber      = rand_range(1, 10000);
             myworld.record[j].randomnumber = myworld.data.randomnumber;
-
-            n = co_await myworld.async_update("randomnumber");
-            if (n == 0)
-            {
-                n = co_await myworld.async_update("randomnumber");
-            }
+            co_await myworld.async_update("randomnumber");
         }
     }
     peer->output = myworld.to_json();
