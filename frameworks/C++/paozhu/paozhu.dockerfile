@@ -39,29 +39,29 @@ COPY ./paozhu_benchmark/common ./paozhu/
 
 # RUN ls -l ./paozhu
 # RUN pwd
-# RUN mkdir ./paozhu/common
-# RUN mkdir ./paozhu/libs
-# RUN mkdir ./paozhu/libs/types
-# COPY ./paozhu_benchmark/libs/types/techempower_json.h ./paozhu/libs/types/
-# COPY ./paozhu_benchmark/libs/types/techempower_json_jsonreflect.cpp ./paozhu/libs/types/
+RUN mkdir ./paozhu/common
+RUN mkdir ./paozhu/libs
+RUN mkdir ./paozhu/libs/types
+COPY ./paozhu_benchmark/libs/types/techempower_json.h ./paozhu/libs/types/
+COPY ./paozhu_benchmark/libs/types/techempower_json_jsonreflect.cpp ./paozhu/libs/types/
 
-# RUN mkdir ./paozhu/controller
-# RUN mkdir ./paozhu/controller/include
-# RUN mkdir ./paozhu/controller/src
+RUN mkdir ./paozhu/controller
+RUN mkdir ./paozhu/controller/include
+RUN mkdir ./paozhu/controller/src
 
-# COPY ./paozhu_benchmark/controller/include/techempower.h ./paozhu/controller/include/
-# COPY ./paozhu_benchmark/controller/src/techempower.cpp ./paozhu/controller/src/
+COPY ./paozhu_benchmark/controller/include/techempower.h ./paozhu/controller/include/
+COPY ./paozhu_benchmark/controller/src/techempower.cpp ./paozhu/controller/src/
 
 
-# COPY ./paozhu_benchmark/common/autocontrolmethod.hpp ./paozhu/common/
-# COPY ./paozhu_benchmark/common/reghttpmethod_pre.hpp ./paozhu/common/
-# COPY ./paozhu_benchmark/common/reghttpmethod.hpp ./paozhu/common/
-# COPY ./paozhu_benchmark/common/json_reflect_headers.h ./paozhu/common/
+COPY ./paozhu_benchmark/common/autocontrolmethod.hpp ./paozhu/common/
+COPY ./paozhu_benchmark/common/reghttpmethod_pre.hpp ./paozhu/common/
+COPY ./paozhu_benchmark/common/reghttpmethod.hpp ./paozhu/common/
+COPY ./paozhu_benchmark/common/json_reflect_headers.h ./paozhu/common/
 
-# COPY ./paozhu_benchmark/common/cost_define.h ./paozhu/common/
-# COPY ./paozhu_benchmark/common/autorestfulpaths.hpp ./paozhu/common/
-# COPY ./paozhu_benchmark/common/websockets_method_reg.hpp ./paozhu/common/
-# COPY ./paozhu_benchmark/common/httphook.cpp ./paozhu/common/
+COPY ./paozhu_benchmark/common/cost_define.h ./paozhu/common/
+COPY ./paozhu_benchmark/common/autorestfulpaths.hpp ./paozhu/common/
+COPY ./paozhu_benchmark/common/websockets_method_reg.hpp ./paozhu/common/
+COPY ./paozhu_benchmark/common/httphook.cpp ./paozhu/common/
 
 COPY ./paozhu_benchmark/conf/server.conf ./paozhu/conf/server.conf
 COPY ./paozhu_benchmark/conf/orm.conf ./paozhu/conf/orm.conf
@@ -69,37 +69,37 @@ COPY ./paozhu_benchmark/conf/orm.conf ./paozhu/conf/orm.conf
 # must use testbenchmark.cpp to test benchmark
 COPY ./paozhu_benchmark/CMakeLists.txt ./paozhu/CMakeLists.txt
 
-# RUN mkdir ./paozhu/view
-# RUN mkdir ./paozhu/view/techempower
+RUN mkdir ./paozhu/view
+RUN mkdir ./paozhu/view/techempower
 
-# COPY ./paozhu_benchmark/view/techempower/fortunes.html ./paozhu/view/techempower/
+COPY ./paozhu_benchmark/view/techempower/fortunes.html ./paozhu/view/techempower/
 
-# RUN mkdir ./paozhu/viewsrc
-# RUN mkdir ./paozhu/viewsrc/include
-# RUN mkdir ./paozhu/viewsrc/view
-# RUN mkdir ./paozhu/viewsrc/view/techempower
+RUN mkdir ./paozhu/viewsrc
+RUN mkdir ./paozhu/viewsrc/include
+RUN mkdir ./paozhu/viewsrc/view
+RUN mkdir ./paozhu/viewsrc/view/techempower
 
-# COPY ./paozhu_benchmark/viewsrc/view/techempower/fortunes.cpp ./paozhu/viewsrc/view/techempower/
-# COPY ./paozhu_benchmark/viewsrc/include/viewsrc.h ./paozhu/viewsrc/include/
-# COPY ./paozhu_benchmark/viewsrc/include/regviewmethod.hpp ./paozhu/viewsrc/include/
-
-
-
-# RUN mkdir ./paozhu/orm
-# RUN mkdir ./paozhu/orm/include
+COPY ./paozhu_benchmark/viewsrc/view/techempower/fortunes.cpp ./paozhu/viewsrc/view/techempower/
+COPY ./paozhu_benchmark/viewsrc/include/viewsrc.h ./paozhu/viewsrc/include/
+COPY ./paozhu_benchmark/viewsrc/include/regviewmethod.hpp ./paozhu/viewsrc/include/
 
 
-# COPY ./paozhu_benchmark/orm/orm.h ./paozhu/orm/
-# COPY ./paozhu_benchmark/orm/include/fortunebase.h ./paozhu/orm/include/
-# COPY ./paozhu_benchmark/orm/include/worldbase.h ./paozhu/orm/include/
 
-# RUN mkdir ./paozhu/models
-# RUN mkdir ./paozhu/models/include
+RUN mkdir ./paozhu/orm
+RUN mkdir ./paozhu/orm/include
 
-# COPY ./paozhu_benchmark/models/include/Fortune.h ./paozhu/models/include/
-# COPY ./paozhu_benchmark/models/include/World.h ./paozhu/models/include/
-# COPY ./paozhu_benchmark/models/World.cpp ./paozhu/models/
-# COPY ./paozhu_benchmark/models/Fortune.cpp ./paozhu/models/
+
+COPY ./paozhu_benchmark/orm/orm.h ./paozhu/orm/
+COPY ./paozhu_benchmark/orm/include/fortunebase.h ./paozhu/orm/include/
+COPY ./paozhu_benchmark/orm/include/worldbase.h ./paozhu/orm/include/
+
+RUN mkdir ./paozhu/models
+RUN mkdir ./paozhu/models/include
+
+COPY ./paozhu_benchmark/models/include/Fortune.h ./paozhu/models/include/
+COPY ./paozhu_benchmark/models/include/World.h ./paozhu/models/include/
+COPY ./paozhu_benchmark/models/World.cpp ./paozhu/models/
+COPY ./paozhu_benchmark/models/Fortune.cpp ./paozhu/models/
 
 WORKDIR /paozhu
 RUN unzip asio.zip
