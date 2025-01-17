@@ -20,7 +20,7 @@ RUN git clone https://github.com/hggq/paozhu
 # RUN unzip benchmark.zip
 RUN rm -Rf ./paozhu/controller
 RUN rm -Rf ./paozhu/libs
-RUN rm -Rf ./paozhu/view
+# RUN rm -Rf ./paozhu/view
 RUN rm -Rf ./paozhu/viewsrc
 RUN rm -Rf ./paozhu/orm
 RUN rm -Rf ./paozhu/models
@@ -28,14 +28,14 @@ RUN rm -Rf ./paozhu/common
 
 
 
-COPY ./paozhu_benchmark/controller ./paozhu/
-COPY ./paozhu_benchmark/libs ./paozhu/
-COPY ./paozhu_benchmark/view ./paozhu/
-COPY ./paozhu_benchmark/viewsrc ./paozhu/
+# COPY ./paozhu_benchmark/controller ./paozhu/
+# COPY ./paozhu_benchmark/libs ./paozhu/
+# COPY ./paozhu_benchmark/view ./paozhu/
+# COPY ./paozhu_benchmark/viewsrc ./paozhu/
 
-COPY ./paozhu_benchmark/orm ./paozhu/
-COPY ./paozhu_benchmark/models ./paozhu/
-COPY ./paozhu_benchmark/common ./paozhu/
+# COPY ./paozhu_benchmark/orm ./paozhu/
+# COPY ./paozhu_benchmark/models ./paozhu/
+# COPY ./paozhu_benchmark/common ./paozhu/
 
 # RUN ls -l ./paozhu
 # RUN pwd
@@ -69,10 +69,10 @@ COPY ./paozhu_benchmark/conf/orm.conf ./paozhu/conf/orm.conf
 # must use testbenchmark.cpp to test benchmark
 COPY ./paozhu_benchmark/CMakeLists.txt ./paozhu/CMakeLists.txt
 
-RUN mkdir ./paozhu/view
-RUN mkdir ./paozhu/view/techempower
+# RUN mkdir ./paozhu/view
+# RUN mkdir ./paozhu/view/techempower
 
-COPY ./paozhu_benchmark/view/techempower/fortunes.html ./paozhu/view/techempower/
+# COPY ./paozhu_benchmark/view/techempower/fortunes.html ./paozhu/view/techempower/
 
 RUN mkdir ./paozhu/viewsrc
 RUN mkdir ./paozhu/viewsrc/include
