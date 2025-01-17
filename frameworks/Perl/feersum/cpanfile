@@ -1,4 +1,4 @@
-requires 'Feersum', '== 1.503';
+requires 'Feersum', '== 1.504';
 requires 'JSON::XS', '== 4.03';
 requires 'DBD::MariaDB', '== 1.23';
 requires 'DBD::Pg', '== 3.18.0';
