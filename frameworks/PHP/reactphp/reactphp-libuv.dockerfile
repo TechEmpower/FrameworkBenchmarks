@@ -11,14 +11,14 @@ RUN apt-get update -yqq > /dev/null && \
 # An extension is required!
 # We deal with concurrencies over 1k, which stream_select doesn't support.
 # libuv
-# RUN apt-get install -yqq libuv1-dev > /dev/null \
-#     && pecl install uv-beta > /dev/null \
-#     && echo "extension=uv.so" > /etc/php/8.4/cli/conf.d/uv.ini
+RUN apt-get install -yqq libuv1-dev > /dev/null \
+     && pecl install uv-beta > /dev/null \
+     && echo "extension=uv.so" > /etc/php/8.4/cli/conf.d/uv.ini
 
 # libevent
-RUN apt-get install -y libevent-dev > /dev/null \
-    && pecl install event-3.1.4 > /dev/null \
-    && echo "extension=event.so" > /etc/php/8.4/cli/conf.d/event.ini
+# RUN apt-get install -y libevent-dev > /dev/null \
+#    && pecl install event-3.1.4 > /dev/null \
+#    && echo "extension=event.so" > /etc/php/8.4/cli/conf.d/event.ini
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
