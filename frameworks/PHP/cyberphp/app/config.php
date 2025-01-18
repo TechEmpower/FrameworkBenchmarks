@@ -16,9 +16,9 @@ return [
     ],
     'orm' => 'pdo',
     'pdo' => [
-        'dsn' => 'mysql:host=127.0.0.1;dbname=hello_world',
-        'username' => 'root',
-        'password' => 'root',
+        'dsn' => 'pgsql:host=tfb-database;dbname=hello_world',
+        'username' => 'benchmarkdbuser',
+        'password' => 'benchmarkdbpass',
         'options' => [
             PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
