@@ -91,16 +91,22 @@ class App
         $requestMiddlewares = $this->getConfig('request_middleware');
         
         /* Execute request object middleware */
-        $this->request = $this->middleware->handleRequest($requestMiddlewares);
+        if(!empty($requestMiddlewares)){
+            $this->request = $this->middleware->handleRequest($requestMiddlewares);
+        }
         
         /* Parse route and return the closure to be executed */
         $handleRoute = $this->route->handleRoute();
         /* Middleware list */
         $Middlewares = $this->getConfig('middleware');
         /* Execute middleware */
-        $response = $this->middleware->handle($Middlewares,function() use ($handleRoute) {
-            return $handleRoute;
-        });
+        if(!empty($Middlewares)){
+            $response = $this->middleware->handle($Middlewares,function() use ($handleRoute) {
+                return $handleRoute;
+            });
+        }else{
+            $response =  $handleRoute;
+        }
         /* Return response */
         return $response;
     }

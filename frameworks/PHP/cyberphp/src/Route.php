@@ -40,14 +40,14 @@ class Route
         } elseif ($routeInfo[0] == 1) {
             $handler = $routeInfo[1];
             $vars = $routeInfo[2];
-            $parameters = [$request, ...array_values($vars)];
+            $parameters = [...array_values($vars)];
 
             // Create a closure to pass to your middleware to execute the final handler
             $finalHandler = function() use ($handler, $parameters, $container) {
                 // If handler is a string (controller@method)
                 if (is_string($handler)) {
                     list($controller, $method) = explode('@', $handler);
-                    $class = $container->get($controller);
+                    $class = new $controller();
                     return $class->$method(...$parameters);
                 } elseif (is_callable($handler)) {
                     return $handler(...$parameters);

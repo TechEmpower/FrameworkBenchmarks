@@ -38,10 +38,10 @@ class Index {
         return Response::html("<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>$html</table></body></html>");
     }
 
-    public function queries($q = 1)
+    public function queries($q=1)
     {
         $statement = app()->db->prepare('SELECT id,randomNumber FROM World WHERE id=?');
-        $query_count = min(max((int) $q, 1), 500);
+        $query_count = max(min(intval($q), 500), 1);
         $arr = [];
         while ($query_count--) {
             $statement->execute([mt_rand(1, 10000)]);
@@ -50,12 +50,12 @@ class Index {
         return Response::json($arr);
     }
 
-    public function updates($q = 1)
+    public function updates($q=1)
     {
         static $updates = [];
 
         $random = app()->db->prepare('SELECT id,randomNumber FROM World WHERE id=?');
-        $count = min(max((int) $q, 1), 500);
+        $count = max(min(intval($q), 500), 1);
 
         $worlds = $keys = $values = [];
         for ($i = 0; $i < $count; ++ $i) {

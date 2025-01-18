@@ -15,11 +15,11 @@ http://localhost:8080/db
 
 ### QUERY
 
-http://localhost:8080/query/[count]
+http://localhost:8080/queries/[count]
 
 ### UPDATE
 
-http://localhost:8080/update/[count]
+http://localhost:8080/updates/[count]
 
 ### FORTUNES
 
