@@ -3,9 +3,6 @@ namespace app\controller;
 
 use Cyber\Response;
 class Index {
-    public function hello() {
-        return 'Hello, CyberPHP';
-    }
 
     public function json()
     {
