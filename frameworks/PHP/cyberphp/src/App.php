@@ -10,8 +10,6 @@ use Cyber\Response;
 use Cyber\Middleware;
 use Cyber\Utility;
 use PDO;
-use Illuminate\Database\Capsule\Manager as EloquentDb;
-use think\facade\Db as ThinkormDb;
 
 class App
 {
@@ -28,16 +26,18 @@ class App
     public Response $response;
     /** Middleware */
     public Middleware $middleware;
-    
+
     /** Route configuration */
     public array $routes;
     /** Route manager */
     public Route $route;
-    
+
     /** Application name */
     public string $appName;
     public $db;
-    
+    public $dbWorld;
+    public $dbFortune;
+
     public $start_time;
     public $timestamps;
     /**
@@ -47,33 +47,28 @@ class App
     public function __construct($containerConfig = null)
     {
         $this->start_time = time();
-        /* Check PHP environment version | extension */
-        Utility::checkPHPenv();
-        
+
         /* Build container instance */
         $this->container = new Container($containerConfig);
-        
+
         /* Load route configuration */
-        $routes = require_once $this->container->get('route_path');
+        $routes = require $this->container->get('route_path');
         /* Create route manager */
         $this->route = $this->container->get('Route');
         /* Call route dispatcher */
         $this->route->dispatcher($routes);
-        
+
         /* Configuration */
         $this->config = $this->container->get('config');
         /* Request object */
         $this->request = $this->container->get('Request');
-        
-        /* Response object */
-        $this->response = $this->container->get('Response');
-        
-        /* Middleware */
-        $this->middleware = $this->container->get('Middleware');
-        
+
         /* Database */
-        $this->db = $this->setDb();
-        
+        $pdo =  new PDO(...$this->getConfig('pdo'));
+        $this->db = $pdo;
+        $this->dbWorld = $pdo->prepare('SELECT id,randomNumber FROM World WHERE id=?');
+        $this->dbFortune = $pdo->prepare('SELECT id,message FROM Fortune');
+
     }
     /**
     * Run application
@@ -82,66 +77,18 @@ class App
     {
         $this->timestamps = time();
         /* cli mode maintains database connection */
-        $this->cliMaintainDatabaseConnection($this->getConfig('orm'));
-        
-        /* Get application name */
-        $this->appName = $this->request->getAppName();
-        
-        /* Request object middleware list */
-        $requestMiddlewares = $this->getConfig('request_middleware');
-        
-        /* Execute request object middleware */
-        if(!empty($requestMiddlewares)){
-            $this->request = $this->middleware->handleRequest($requestMiddlewares);
-        }
-        
-        /* Parse route and return the closure to be executed */
-        $handleRoute = $this->route->handleRoute();
-        /* Middleware list */
-        $Middlewares = $this->getConfig('middleware');
-        /* Execute middleware */
-        if(!empty($Middlewares)){
-            $response = $this->middleware->handle($Middlewares,function() use ($handleRoute) {
-                return $handleRoute;
-            });
-        }else{
-            $response =  $handleRoute;
-        }
-        /* Return response */
-        return $response;
-    }
-    
-    // cli mode maintains database connection every 600 seconds
-    public function cliMaintainDatabaseConnection($ormName)
-    {
-        if (php_sapi_name() === 'cli' and time() - $this->start_time > 600) {
+        if (php_sapi_name() === 'cli' and time() - $this->start_time > 1) {
             $this->start_time = time();
-            if($ormName=='pdo'){
-                // Close the existing connection and recreate the PDO instance
-                $this->db = null;
-                $this->db = new PDO(...$this->getConfig('pdo'));
-            }elseif($ormName=='thinkorm'){
-                // Close the existing connection and reconnect to Thinkorm
-                $this->db::close();
-                $this->db::connect('mysql',true);
-            }
+            $pdo =  new PDO(...$this->getConfig('pdo'));
+            $this->db = $pdo;
+            $this->dbWorld = $pdo->prepare('SELECT id,randomNumber FROM World WHERE id=?');
+            $this->dbFortune = $pdo->prepare('SELECT id,message FROM Fortune');
         }
+
+        /* Return response */
+        return $this->route->handleRoute();
     }
-    public function setDb()
-    {
-        if($this->getConfig('orm')=='pdo'){
-            return new PDO(...$this->getConfig('pdo'));
-        }elseif($this->getConfig('orm')=='eloquent'){
-            $EloquentDb = new EloquentDb;
-            $EloquentDb->addConnection($this->getConfig('eloquent'));
-            $EloquentDb->setAsGlobal();
-            $EloquentDb->bootEloquent();
-            return $EloquentDb;
-        }elseif($this->getConfig('orm')=='thinkorm'){
-            ThinkormDb::setConfig($this->getConfig('thinkorm'));
-            return ThinkormDb::class;
-        }
-    }
+
     /**
     * Get the current application configuration
     * $app->getConfig();                         // Returns the entire configuration content of the current application

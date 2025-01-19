@@ -47,8 +47,8 @@ class Route
                 // If handler is a string (controller@method)
                 if (is_string($handler)) {
                     list($controller, $method) = explode('@', $handler);
-                    $class = new $controller();
-                    return $class->$method(...$parameters);
+                    $ctrl = $container->get($controller);
+                    return $ctrl->$method(...$parameters);
                 } elseif (is_callable($handler)) {
                     return $handler(...$parameters);
                 } else {

@@ -19,11 +19,7 @@ return [
         'dsn' => 'pgsql:host=tfb-database;dbname=hello_world',
         'username' => 'benchmarkdbuser',
         'password' => 'benchmarkdbpass',
-        'options' => [
-            PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-            PDO::ATTR_EMULATE_PREPARES   => false,
-        ]
+        'options' => [PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,PDO::ATTR_EMULATE_PREPARES    => false]
     ],
     'eloquent' => [
         'driver' => 'mysql',

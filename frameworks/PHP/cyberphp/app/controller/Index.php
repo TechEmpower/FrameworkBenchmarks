@@ -16,13 +16,14 @@ class Index {
 
     public function db()
     {
-        $prepare = app()->db->prepare('SELECT id,randomNumber FROM World WHERE id=?');
+        $prepare = app()->dbWorld;
         $prepare->execute([mt_rand(1, 10000)]);
-        return Response::json($prepare->fetch());
+        $data = $prepare->fetch();
+        return Response::json($data);
     }
     public function fortunes()
     {
-        $fortune = app()->db->prepare('SELECT id,message FROM Fortune');
+        $fortune = app()->dbFortune;
         $fortune->execute();
         $arr    = $fortune->fetchAll(\PDO::FETCH_KEY_PAIR);
         $arr[0] = 'Additional fortune added at request time.';
@@ -37,7 +38,7 @@ class Index {
 
     public function queries($q=1)
     {
-        $statement = app()->db->prepare('SELECT id,randomNumber FROM World WHERE id=?');
+        $statement = app()->dbWorld;
         $query_count = max(min(intval($q), 500), 1);
         $arr = [];
         while ($query_count--) {
@@ -51,7 +52,7 @@ class Index {
     {
         static $updates = [];
 
-        $random = app()->db->prepare('SELECT id,randomNumber FROM World WHERE id=?');
+        $random = app()->dbWorld;
         $count = max(min(intval($q), 500), 1);
 
         $worlds = $keys = $values = [];
