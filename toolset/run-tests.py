@@ -10,8 +10,8 @@ from toolset.utils.benchmark_config import BenchmarkConfig
 from toolset.utils.output_helper import log
 
 # Enable cross-platform colored output
-from colorama import init, Fore
-init()
+from colorama import Fore, just_fix_windows_console
+just_fix_windows_console()
 
 
 class StoreSeqAction(argparse.Action):
@@ -67,6 +67,11 @@ def main(argv=None):
         ''')
 
     # Suite options
+    # CPU set  options
+    parser.add_argument(
+        '--cpuset-cpus',
+        default=None,
+        help='The cpu set to run framework container on')
     parser.add_argument(
         '--audit',
         action='store_true',

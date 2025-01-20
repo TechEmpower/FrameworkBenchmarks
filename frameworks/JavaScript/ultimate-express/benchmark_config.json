@@ -1,0 +1,70 @@
+{
+  "framework": "ultimate-express",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "None",
+        "framework": "ultimate-express",
+        "language": "JavaScript",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "NodeJS",
+        "webserver": "µws",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "ultimate-express",
+        "notes": "",
+        "versus": "nodejs"
+      },
+      "postgres": {
+        "db_url": "/db",
+        "fortune_url": "/fortunes",
+        "query_url": "/queries?queries=",
+        "update_url": "/updates?queries=",
+        "cached_query_url": "/cached-worlds?count=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "Postgres",
+        "framework": "ultimate-express",
+        "language": "JavaScript",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "NodeJS",
+        "webserver": "µws",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "ultimate-express-postgres",
+        "notes": "",
+        "versus": "nodejs"
+      },
+      "mysql": {
+        "db_url": "/db",
+        "fortune_url": "/fortunes",
+        "query_url": "/queries?queries=",
+        "update_url": "/updates?queries=",
+        "cached_query_url": "/cached-worlds?count=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "MySQL",
+        "framework": "ultimate-express",
+        "language": "JavaScript",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "NodeJS",
+        "webserver": "µws",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "ultimate-express-mysql",
+        "notes": "",
+        "versus": "nodejs"
+      }
+    }
+  ]
+}

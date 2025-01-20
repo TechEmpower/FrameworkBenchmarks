@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
+
+    <!--
+    <Content Include="../appMpower.Orm/bin/Release/net8.0/appMpower.Orm.dll">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content> 
+    -->
+    <!--TODOLOCAL-->
+    <!--
+    <Content Include="../appMpower.Orm/bin/Release/net8.0/osx-arm64/native/appMpower.Orm.dylib">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content> 
+    -->
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include = "..\appMpower.Orm\appMpower.Orm.csproj" />
+    <PackageReference Include="RazorSlices" Version="0.8.1" />
+  </ItemGroup>
+
+  <PropertyGroup>
+      <DefineConstants Condition=" '$(Driver)' == 'odbc' ">$(DefineConstants);ODBC</DefineConstants>
+      <DefineConstants Condition=" '$(Database)' == 'postgresql' ">$(DefineConstants);POSTGRESQL</DefineConstants>
+      <DefineConstants Condition=" '$(Database)' == 'mysql' ">$(DefineConstants);MYSQL</DefineConstants>
+  </PropertyGroup>
+
+</Project>

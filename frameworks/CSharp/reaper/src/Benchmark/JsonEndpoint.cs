@@ -11,9 +11,10 @@ public class JsonResponse
 [ReaperRoute(HttpVerbs.Get, "/json")]
 public class JsonEndpoint : ReaperEndpointXR<JsonResponse>
 {
-    public override Task<JsonResponse> HandleAsync()
+    public override Task ExecuteAsync()
     {
         Context.Response.ContentLength = 27;
-        return Task.FromResult(new JsonResponse { Message = "Hello, World!" });
+        Result = new JsonResponse { Message = "Hello, World!" };
+        return Task.CompletedTask;
     }
 }

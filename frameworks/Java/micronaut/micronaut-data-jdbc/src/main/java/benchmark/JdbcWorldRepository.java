@@ -2,6 +2,7 @@ package benchmark;
 
 import benchmark.model.World;
 import benchmark.repository.WorldRepository;
+import io.micronaut.data.connection.annotation.Connectable;
 import io.micronaut.data.jdbc.annotation.JdbcRepository;
 import io.micronaut.data.model.query.builder.sql.Dialect;
 import io.micronaut.data.repository.GenericRepository;
@@ -20,6 +21,7 @@ public interface JdbcWorldRepository extends GenericRepository<World, Integer>, 
 
     void saveAll(Collection<World> worlds);
 
+    @Connectable
     @Override
     default List<World> findByIds(List<Integer> ids) {
         return WorldRepository.super.findByIds(ids);

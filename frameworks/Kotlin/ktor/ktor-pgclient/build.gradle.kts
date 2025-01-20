@@ -1,8 +1,8 @@
 plugins {
     application
-    kotlin("jvm") version "1.6.10"
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.6.21"
-    id("com.github.johnrengelman.shadow") version "7.1.2"
+    kotlin("jvm") version "2.0.21"
+    kotlin("plugin.serialization") version "2.0.0"
+    id("com.github.johnrengelman.shadow") version "8.1.0"
 }
 
 group = "org.jetbrains.ktor"
@@ -16,19 +16,23 @@ application {
     mainClass.set("MainKt")
 }
 
+val ktor_version = "2.3.12"
+val vertx_version = "4.5.11"
+
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
-    implementation("io.ktor:ktor-server-netty:2.0.1")
-    implementation("io.ktor:ktor-server-html-builder-jvm:2.0.1")
-    implementation("io.ktor:ktor-server-default-headers-jvm:2.0.1")
-    implementation("io.vertx:vertx-pg-client:4.2.3")
-    implementation("io.vertx:vertx-lang-kotlin:4.2.3")
-    implementation("io.vertx:vertx-lang-kotlin-coroutines:4.2.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
+    implementation("io.ktor:ktor-server-netty:$ktor_version")
+    implementation("io.ktor:ktor-server-html-builder-jvm:$ktor_version")
+    implementation("io.ktor:ktor-server-default-headers-jvm:$ktor_version")
+    implementation("io.vertx:vertx-pg-client:$vertx_version")
+    implementation("io.vertx:vertx-lang-kotlin:$vertx_version")
+    implementation("io.vertx:vertx-lang-kotlin-coroutines:$vertx_version")
 }
 
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-    kotlinOptions.jvmTarget = "11"
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
 }
 
 tasks.shadowJar {

@@ -1,0 +1,5 @@
+(executable
+ (public_name dream_test)
+ (name main)
+ (preprocess (pps lwt_ppx ppx_yojson_conv))
+ (libraries dream_test dream ppx_yojson_conv calendar))

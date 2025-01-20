@@ -12,10 +12,9 @@ comparing a variety of web servers.
 The tests were run with:
 
 * [Ruby 3.3](http://www.ruby-lang.org/)
-* [Grape 1.6.2](http://www.ruby-grape.org/)
-* [Rack 2.2.3.1](https://rack.github.io/)
+* [Grape 2.0.0](http://www.ruby-grape.org/)
 * [Unicorn 6.1.0](https://yhbt.net/unicorn/)
-* [Puma 5.6.4](https://puma.io/)
+* [Puma 6.4](https://puma.io/)
 
 ## Paths & Source for Tests
 

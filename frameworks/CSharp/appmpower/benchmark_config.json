@@ -39,11 +39,11 @@
         "webserver": "Kestrel",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "appMpower [aot-no-reflection,odbc]",
+        "display_name": "appMpower [aot-no-reflection,pg,odbc]",
         "notes": "",
         "versus": "aspnetcore-minimal"
       },
-      "ado-pg": {
+      "odbc-my": {
         "db_url": "/db",
         "query_url": "/queries?c=",
         "update_url": "/updates?c=",
@@ -52,7 +52,7 @@
         "port": 8080,
         "approach": "Realistic",
         "classification": "Platform",
-        "database": "Postgres",
+        "database": "MySQL",
         "framework": "appmpower",
         "language": "C#",
         "orm": "Raw",
@@ -61,7 +61,7 @@
         "webserver": "Kestrel",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "appMpower [aot-no-reflection,ado]",
+        "display_name": "appMpower [aot-no-reflection,my,odbc]",
         "notes": "",
         "versus": "aspnetcore-minimal"
       }

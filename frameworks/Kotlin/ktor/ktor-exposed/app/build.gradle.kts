@@ -1,7 +1,7 @@
 plugins {
-    kotlin("jvm") version "1.8.10"
-    kotlin("plugin.serialization") version "1.8.10"
     application
+    kotlin("jvm") version "2.0.21"
+    kotlin("plugin.serialization") version "2.0.0"
     id("com.github.johnrengelman.shadow") version "8.1.0"
 }
 
@@ -9,9 +9,9 @@ repositories {
     mavenCentral()
 }
 
-val ktorVersion = "2.2.3"
-val kotlinxSerializationVersion = "1.5.0"
-val exposedVersion = "0.41.1"
+val ktorVersion = "3.0.3"
+val kotlinxSerializationVersion = "1.7.3"
+val exposedVersion = "0.56.0"
 
 dependencies {
     implementation("io.ktor:ktor-server-core:$ktorVersion")
@@ -25,8 +25,8 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
 
-    implementation("org.postgresql:postgresql:42.5.4")
-    implementation("com.zaxxer:HikariCP:5.0.1")
+    implementation("org.postgresql:postgresql:42.7.4")
+    implementation("com.zaxxer:HikariCP:5.1.0")
     runtimeOnly("org.slf4j:slf4j-simple:1.7.36")
 }
 

@@ -1,6 +1,6 @@
 const h = require('../helper');
 const async = require('async');
-const mysql = require('mysql');
+const mysql = require('mysql2');
 const connection = mysql.createConnection({
   host: 'tfb-database',
   user: 'benchmarkdbuser',

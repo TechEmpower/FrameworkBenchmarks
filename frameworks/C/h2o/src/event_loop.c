@@ -32,13 +32,16 @@
 #include <netinet/tcp.h>
 #include <openssl/ssl.h>
 #include <sys/socket.h>
+#include <sys/syscall.h>
 #include <sys/types.h>
 
 #include "error.h"
 #include "event_loop.h"
 #include "global_data.h"
 #include "thread.h"
+#include "utility.h"
 
+#define CONN_NUM_SAMPLE_PERIOD 2500
 #define DEFAULT_TCP_FASTOPEN_QUEUE_LEN 4096
 
 static void accept_connection(h2o_socket_t *listener, const char *err);
@@ -72,6 +75,7 @@ static void accept_connection(h2o_socket_t *listener, const char *err)
 				if (!sock)
 					break;
 
+				ctx->event_loop.accepted_conn_num++;
 				ctx->event_loop.conn_num++;
 				sock->on_close.cb = on_close_connection;
 				sock->on_close.data = &ctx->event_loop.conn_num;
@@ -277,11 +281,36 @@ static void start_accept_polling(const config_t *config,
 
 void event_loop(struct thread_context_t *ctx)
 {
+	uint64_t last_sample = 0;
+
 	while (!ctx->shutdown || ctx->event_loop.conn_num) {
 		h2o_evloop_run(ctx->event_loop.h2o_ctx.loop, INT32_MAX);
 		process_messages(&ctx->global_thread_data->h2o_receiver,
 		                 &ctx->event_loop.local_messages);
+
+		const uint64_t now = h2o_now(ctx->event_loop.h2o_ctx.loop);
+
+		if (now - last_sample > CONN_NUM_SAMPLE_PERIOD || last_sample > now) {
+			const size_t i = ctx->event_loop.conn_num_sample_idx;
+
+			ctx->event_loop.conn_num_sample[i] = ctx->event_loop.conn_num;
+			ctx->event_loop.conn_num_sample_idx =
+				(i + 1) % ARRAY_SIZE(ctx->event_loop.conn_num_sample);
+			last_sample = now;
+		}
 	}
+
+	flockfile(stdout);
+	printf("Thread %ld statistics:\nAccepted connections: %zu\nConnection number samples: %zu",
+	       syscall(SYS_gettid),
+	       ctx->event_loop.accepted_conn_num,
+	       *ctx->event_loop.conn_num_sample);
+
+	for (size_t i = 1; i < ARRAY_SIZE(ctx->event_loop.conn_num_sample); i++)
+		printf(",%zu", ctx->event_loop.conn_num_sample[i]);
+
+	putc_unlocked('\n', stdout);
+	funlockfile(stdout);
 }
 
 void free_event_loop(event_loop_t *event_loop, h2o_multithread_receiver_t *h2o_receiver)

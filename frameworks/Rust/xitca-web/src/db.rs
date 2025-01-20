@@ -1,107 +1,61 @@
-use std::{collections::HashMap, fmt::Write};
+#[path = "./db_util.rs"]
+mod db_util;
 
-use xitca_postgres::{
-    pipeline::Pipeline, statement::Statement, AsyncLendingIterator, SharedClient,
-};
-use xitca_unsafe_collection::no_hash::NoHashBuilder;
+use core::cell::RefCell;
+
+use xitca_postgres::{iter::AsyncLendingIterator, pipeline::Pipeline, pool::Pool, statement::Statement, Execute};
 
 use super::{
     ser::{Fortune, Fortunes, World},
-    util::{HandleResult, Rand, DB_URL},
+    util::{HandleResult, DB_URL},
 };
 
+use db_util::{not_found, sort_update_params, update_query_from_num, Shared, FORTUNE_STMT, WORLD_STMT};
+
 pub struct Client {
-    client: SharedClient,
-    #[cfg(not(feature = "pg-sync"))]
-    rng: std::cell::RefCell<Rand>,
-    #[cfg(feature = "pg-sync")]
-    rng: std::sync::Mutex<Rand>,
-    fortune: Statement,
-    world: Statement,
-    updates: HashMap<u16, Statement, NoHashBuilder>,
+    pool: Pool,
+    shared: RefCell<Shared>,
+    updates: Box<[Box<str>]>,
 }
 
 pub async fn create() -> HandleResult<Client> {
-    let mut client = SharedClient::new(DB_URL.to_string()).await?;
-
-    let fortune = client.prepare_cached("SELECT * FROM fortune", &[]).await?;
-
-    let world = client
-        .prepare_cached("SELECT * FROM world WHERE id=$1", &[])
-        .await?;
-
-    let mut updates = HashMap::default();
-
-    for num in 1..=500u16 {
-        let mut pl = 1;
-        let mut q = String::new();
-        q.push_str("UPDATE world SET randomnumber = CASE id ");
-        for _ in 1..=num {
-            let _ = write!(&mut q, "when ${} then ${} ", pl, pl + 1);
-            pl += 2;
-        }
-        q.push_str("ELSE randomnumber END WHERE id IN (");
-        for _ in 1..=num {
-            let _ = write!(&mut q, "${},", pl);
-            pl += 1;
-        }
-        q.pop();
-        q.push(')');
-
-        let st = client.prepare_cached(&q, &[]).await?;
-        updates.insert(num, st);
-    }
-
     Ok(Client {
-        client,
-        #[cfg(not(feature = "pg-sync"))]
-        rng: std::cell::RefCell::new(Rand::default()),
-        #[cfg(feature = "pg-sync")]
-        rng: std::sync::Mutex::new(Rand::default()),
-        fortune,
-        world,
-        updates,
+        pool: Pool::builder(DB_URL).capacity(1).build()?,
+        shared: Default::default(),
+        updates: core::iter::once(Box::from(""))
+            .chain((1..=500).map(update_query_from_num))
+            .collect(),
     })
 }
 
 impl Client {
-    #[cfg(not(feature = "pg-sync"))]
-    fn borrow_rng_mut(&self) -> std::cell::RefMut<'_, Rand> {
-        self.rng.borrow_mut()
-    }
-
-    #[cfg(feature = "pg-sync")]
-    fn borrow_rng_mut(&self) -> std::sync::MutexGuard<'_, Rand> {
-        self.rng.lock().unwrap()
-    }
-
     pub async fn get_world(&self) -> HandleResult<World> {
-        let id = self.borrow_rng_mut().gen_id();
-        self.client
-            .query_raw(&self.world, [id])
-            .await?
-            .try_next()
-            .await?
-            .map(|row| World::new(row.get_raw(0), row.get_raw(1)))
-            .ok_or_else(|| "World does not exist".into())
+        let mut conn = self.pool.get().await?;
+        let stmt = WORLD_STMT.execute(&mut conn).await?;
+        let id = self.shared.borrow_mut().0.gen_id();
+        let mut res = stmt.bind([id]).query(&conn.consume()).await?;
+        let row = res.try_next().await?.ok_or_else(not_found)?;
+        Ok(World::new(row.get(0), row.get(1)))
     }
 
     pub async fn get_worlds(&self, num: u16) -> HandleResult<Vec<World>> {
-        let mut pipe = Pipeline::new();
+        let len = num as usize;
 
-        {
-            let mut rng = self.borrow_rng_mut();
-            (0..num).try_for_each(|_| pipe.query_raw(&self.world, [rng.gen_id()]))?;
-        }
+        let mut conn = self.pool.get().await?;
+        let stmt = WORLD_STMT.execute(&mut conn).await?;
 
-        let mut worlds = Vec::new();
-        worlds.reserve(num as usize);
+        let mut res = {
+            let (ref mut rng, ref mut buf) = *self.shared.borrow_mut();
+            let mut pipe = Pipeline::with_capacity_from_buf(len, buf);
+            (0..num).try_for_each(|_| stmt.bind([rng.gen_id()]).query(&mut pipe))?;
+            pipe.query(&conn.consume())?
+        };
 
-        let mut res = self.client.pipeline(pipe).await?;
+        let mut worlds = Vec::with_capacity(len);
+
         while let Some(mut item) = res.try_next().await? {
-            while let Some(row) = item.try_next().await? {
-                worlds.push(World::new(row.get_raw(0), row.get_raw(1)))
-            }
+            let row = item.try_next().await?.ok_or_else(not_found)?;
+            worlds.push(World::new(row.get(0), row.get(1)));
         }
 
         Ok(worlds)
@@ -110,34 +64,34 @@ impl Client {
     pub async fn update(&self, num: u16) -> HandleResult<Vec<World>> {
         let len = num as usize;
 
-        let mut params = Vec::new();
-        params.reserve(len * 3);
+        let update = self.updates.get(len).ok_or("request num is out of range")?;
+        let mut conn = self.pool.get().await?;
+        let world_stmt = WORLD_STMT.execute(&mut conn).await?;
+        let update_stmt = Statement::named(update, &[]).execute(&mut conn).await?;
 
-        let mut pipe = Pipeline::new();
+        let mut params = Vec::with_capacity(len);
 
-        {
-            let mut rng = self.borrow_rng_mut();
+        let mut res = {
+            let (ref mut rng, ref mut buf) = *self.shared.borrow_mut();
+            let mut pipe = Pipeline::with_capacity_from_buf(len + 1, buf);
             (0..num).try_for_each(|_| {
                 let w_id = rng.gen_id();
                 let r_id = rng.gen_id();
-                params.extend([w_id, r_id]);
-                pipe.query_raw(&self.world, [w_id])
+                params.push([w_id, r_id]);
+                world_stmt.bind([w_id]).query(&mut pipe)
             })?;
-        }
+            update_stmt.bind(sort_update_params(&params)).query(&mut pipe)?;
+            pipe.query(&conn.consume())?
+        };
 
-        params.extend_from_within(..len);
-        let st = self.updates.get(&num).unwrap();
-        pipe.query_raw(st, &params)?;
+        let mut worlds = Vec::with_capacity(len);
 
-        let mut worlds = Vec::new();
-        worlds.reserve(len);
-        let mut r_ids = params.into_iter().skip(1).step_by(2);
+        let mut r_ids = params.into_iter();
 
-        let mut res = self.client.pipeline(pipe).await?;
         while let Some(mut item) = res.try_next().await? {
             while let Some(row) = item.try_next().await? {
-                let r_id = r_ids.next().unwrap();
-                worlds.push(World::new(row.get_raw(0), r_id))
+                let r_id = r_ids.next().unwrap()[1];
+                worlds.push(World::new(row.get(0), r_id))
             }
         }
 
@@ -148,10 +102,14 @@ impl Client {
         let mut items = Vec::with_capacity(32);
         items.push(Fortune::new(0, "Additional fortune added at request time."));
 
-        let mut stream = self.client.query_raw::<[i32; 0]>(&self.fortune, []).await?;
-        while let Some(row) = stream.try_next().await? {
-            items.push(Fortune::new(row.get_raw(0), row.get_raw::<String>(1)));
+        let mut conn = self.pool.get().await?;
+        let stmt = FORTUNE_STMT.execute(&mut conn).await?;
+        let mut res = stmt.query(&conn.consume()).await?;
+
+        while let Some(row) = res.try_next().await? {
+            items.push(Fortune::new(row.get(0), row.get::<String>(1)));
         }
+
         items.sort_by(|it, next| it.message.cmp(&next.message));
 
         Ok(Fortunes::new(items))

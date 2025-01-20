@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-# Configure Slim templating engine
-Slim::Engine.set_options :format=>:html, :sort_attrs=>false
-
 # Our Rack application to be executed by rackup
 class HelloWorld < Sinatra::Base
   configure do
@@ -25,7 +22,7 @@ class HelloWorld < Sinatra::Base
 
     def json(data)
       content_type :json
-      JSON.fast_generate(data)
+      data.to_json
     end
 
     # Return a random number between 1 and MAX_PK
@@ -56,8 +53,8 @@ class HelloWorld < Sinatra::Base
   get '/queries' do
     worlds =
       DB.synchronize do
-        Array.new(bounded_queries) do
-          World.with_pk(rand1)
+        ALL_IDS.sample(bounded_queries).map do |id|
+          World.with_pk(id)
         end
       end
 
@@ -73,21 +70,23 @@ class HelloWorld < Sinatra::Base
     )
     @fortunes.sort_by!(&:message)
 
-    slim :fortunes
+    erb :fortunes, :layout=>true
   end
 
   # Test type 5: Database updates
   get '/updates' do
-    worlds =
-      DB.synchronize do
-        Array.new(bounded_queries) do
-          world = World.with_pk(rand1)
+    worlds = nil
+    DB.synchronize do
+      worlds =
+        ALL_IDS.sample(bounded_queries).map do |id|
+          world = World.with_pk(id)
           new_value = rand1
           new_value = rand1 while new_value == world.randomnumber
-          world.update(randomnumber: new_value)
+          world.randomnumber = new_value
           world
         end
-      end
+      World.batch_update(worlds)
+    end
 
     json worlds.map!(&:values)
   end
