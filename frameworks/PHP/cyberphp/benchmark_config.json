@@ -1,0 +1,30 @@
+{
+  "framework": "cyberphp",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "db_url": "/db",
+        "query_url": "/queries/",
+        "fortune_url": "/fortunes",
+        "update_url": "/updates/",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "Postgres",
+        "framework": "cyberphp",
+        "language": "PHP",
+        "flavor": "PHP8",
+        "orm": "Raw",
+        "platform": "workerman",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "cyberphp",
+        "notes": "",
+        "versus": "workerman"
+      }
+    }
+  ]
+}
