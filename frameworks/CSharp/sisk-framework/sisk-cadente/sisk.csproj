@@ -9,7 +9,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="Sisk.HttpServer" Version="0.16.2" />
+	  <PackageReference Include="Sisk.Cadente" Version="0.1.42-alpha1" />
 	</ItemGroup>
 
 </Project>
