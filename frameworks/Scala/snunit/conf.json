@@ -1,0 +1,20 @@
+{
+  "listeners": {
+    "*:8080": {
+      "pass": "applications/example"
+    }
+  },
+  "applications": {
+    "example": {
+      "type": "external",
+      "processes": {
+        "spare": 2,
+        "max": 20
+      },
+      "executable": "/app/example",
+      "environment": {
+        "SCALANATIVE_GC_THREADS": "2"
+      }
+    }
+  }
+}

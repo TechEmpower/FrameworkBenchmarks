@@ -11,12 +11,13 @@
   <name>jooby</name>
 
   <properties>
-    <jooby.version>3.0.8</jooby.version>
+    <jooby.version>3.4.0</jooby.version>
+    <netty.version>4.1.113.Final</netty.version>
     <dsl-json.version>2.0.2</dsl-json.version>
-    <postgresql.version>42.7.2</postgresql.version>
+    <postgresql.version>42.7.4</postgresql.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>21</maven.compiler.source>
-    <maven.compiler.target>21</maven.compiler.target>
+    <maven.compiler.source>22</maven.compiler.source>
+    <maven.compiler.target>22</maven.compiler.target>
 
     <!-- Startup class -->
     <application.class>com.techempower.App</application.class>
@@ -41,9 +42,8 @@
     <dependency>
       <groupId>com.mysql</groupId>
       <artifactId>mysql-connector-j</artifactId>
-      <version>8.3.0</version>
+      <version>8.4.0</version>
     </dependency>
-
 
     <!-- postgresql -->
     <dependency>
@@ -55,7 +55,7 @@
     <dependency>
       <groupId>io.vertx</groupId>
       <artifactId>vertx-pg-client</artifactId>
-      <version>4.5.4</version>
+      <version>4.5.7</version>
     </dependency>
 
     <!-- json -->
@@ -72,7 +72,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
-        <version>3.5.0</version>
+        <version>3.6.0</version>
         <executions>
           <execution>
             <id>add-source</id>
@@ -110,7 +110,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.12.1</version>
+        <version>3.13.0</version>
         <configuration>
           <annotationProcessorPaths>
             <path>
@@ -130,7 +130,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>3.5.2</version>
+        <version>3.6.0</version>
         <executions>
           <execution>
             <id>uber-jar</id>
@@ -167,6 +167,25 @@
 
   <profiles>
     <profile>
+      <id>mac</id>
+      <activation>
+        <os>
+          <family>mac</family>
+        </os>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>com.ongres.scram</groupId>
+          <artifactId>client</artifactId>
+          <version>2.1</version>
+        </dependency>
+        <dependency>
+          <groupId>io.netty</groupId>
+          <artifactId>netty-resolver-dns-native-macos</artifactId>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
       <id>undertow</id>
       <dependencies>
         <dependency>
@@ -202,6 +221,14 @@
 
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-bom</artifactId>
+        <version>${netty.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
       <dependency>
         <groupId>io.jooby</groupId>
         <artifactId>jooby-bom</artifactId>

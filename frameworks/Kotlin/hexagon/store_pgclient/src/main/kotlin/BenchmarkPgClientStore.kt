@@ -6,8 +6,10 @@ import com.hexagonkt.model.CachedWorld
 import com.hexagonkt.model.Fortune
 import com.hexagonkt.model.World
 import io.vertx.core.Future
+import io.vertx.core.Vertx
+import io.vertx.core.VertxOptions
+import io.vertx.pgclient.PgBuilder
 import io.vertx.pgclient.PgConnectOptions
-import io.vertx.pgclient.PgPool
 import io.vertx.sqlclient.*
 import org.cache2k.Cache
 
@@ -17,9 +19,10 @@ class BenchmarkPgClientStore(
 ) : BenchmarkStore(settings) {
 
     companion object {
-        private const val SELECT_WORLD: String = "select * from world where id = $1"
+        private const val LOAD_WORLDS: String = "select id, randomNumber from world"
+        private const val SELECT_WORLD: String = "select id, randomNumber from world where id = $1"
         private const val UPDATE_WORLD: String = "update world set randomNumber = $1 where id = $2"
-        private const val SELECT_ALL_FORTUNES: String = "select * from fortune"
+        private const val SELECT_ALL_FORTUNES: String = "select id, message from fortune"
     }
 
     private val connectOptions: PgConnectOptions by lazy {
@@ -35,11 +38,15 @@ class BenchmarkPgClientStore(
     private val poolOptions: PoolOptions by lazy {
         PoolOptions().apply {
             val environment = Jvm.systemSettingOrNull<String>("BENCHMARK_ENV")?.lowercase()
-            maxSize = 8 + if (environment == "citrine") Jvm.cpuCount else Jvm.cpuCount * 2
+            val poolSize = 8 + if (environment == "citrine") Jvm.cpuCount else Jvm.cpuCount * 2
+            maxSize = Jvm.systemSettingOrNull(Int::class, "maximumPoolSize") ?: poolSize
         }
     }
 
-    private val dataSource: SqlClient by lazy { PgPool.client(connectOptions, poolOptions) }
+    private val dataSource: SqlClient by lazy {
+        val vertx = Vertx.vertx(VertxOptions().setPreferNativeTransport(true))
+        PgBuilder.client().using(vertx).connectingTo(connectOptions).with(poolOptions).build()
+    }
 
     override fun findAllFortunes(): List<Fortune> =
         dataSource.preparedQuery(SELECT_ALL_FORTUNES)
@@ -75,13 +82,12 @@ class BenchmarkPgClientStore(
                 .toCompletionStage()
                 .toCompletableFuture()
                 .get()
-
         }
     }
 
     override fun initWorldsCache(cache: Cache<Int, CachedWorld>) {
         dataSource
-            .preparedQuery("select * from world")
+            .preparedQuery(LOAD_WORLDS)
             .execute()
             .map { rowSet ->
                 rowSet.map { row ->

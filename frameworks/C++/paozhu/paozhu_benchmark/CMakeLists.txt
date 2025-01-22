@@ -7,21 +7,27 @@ set(ENABLE_BOOST OFF CACHE BOOL "choose ON to enable")
 set(ENABLE_GD OFF CACHE BOOL "choose ON to enable")
 set(ENABLE_WIN_VCPKG OFF CACHE BOOL "choose ON to enable")
 
-if (ENABLE_GD STREQUAL "ON")
-    list(FIND VCPKG_MANIFEST_FEATURES "gd" index)
-    if (index EQUAL -1)
-        message(STATUS "Auto append features: gd")
-        list(APPEND VCPKG_MANIFEST_FEATURES "gd")
-    endif ()
-endif ()
+if(ENABLE_VCPKG)
+    set(vcpkg_root $ENV{VCPKG_ROOT})
+    if(NOT DEFINED CMAKE_TOOLCHAIN_FILE AND vcpkg_root)
+        set(CMAKE_TOOLCHAIN_FILE "${vcpkg_root}/scripts/buildsystems/vcpkg.cmake")
+    endif()
+endif()
 
-if (ENABLE_BOOST STREQUAL "ON")
-    list(FIND VCPKG_MANIFEST_FEATURES "boost" index)
-    if (index EQUAL -1)
-        message(STATUS "Auto append features: boost")
-        list(APPEND VCPKG_MANIFEST_FEATURES "boost")
-    endif ()
-endif ()
+macro(auto_enable_vcpkg_feature opt feature)
+    if(${opt})
+        list(FIND VCPKG_MANIFEST_FEATURES ${feature} index)
+        if(index EQUAL -1)
+            message(STATUS "Auto append features: ${feature}")
+            list(APPEND VCPKG_MANIFEST_FEATURES ${feature})
+        endif()
+    endif()
+endmacro()
+
+if(ENABLE_VCPKG)
+  auto_enable_vcpkg_feature(ENABLE_GD "gd")
+  auto_enable_vcpkg_feature(ENABLE_BOOST "boost")
+endif()
 
 PROJECT(Paozhu_web_framework)
 set(CMAKE_CXX_STANDARD 20)
@@ -59,7 +65,7 @@ endif ()
 if(${mode} AND (CMAKE_BUILD_TYPE STREQUAL "Debug"))
 
     if(CMAKE_SYSTEM_NAME MATCHES "Windows")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DASIO_STANDALONE -DDEBUG ${BOOST_OPEN} ${GD_OPEN}")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DASIO_STANDALONE -DBENCHMARK -DDEBUG ${BOOST_OPEN} ${GD_OPEN}")
         if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
             set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /fsanitize=address")
         elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
@@ -67,20 +73,20 @@ if(${mode} AND (CMAKE_BUILD_TYPE STREQUAL "Debug"))
         endif ()
     else()
         set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Wextra")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pthread -g -fsanitize=address -DASIO_STANDALONE -DDEBUG ${BOOST_OPEN} ${GD_OPEN} -I/usr/local/include -I/usr/local/mysql/include   -I/usr/include -I/usr/include/mysql " )
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pthread -g -fsanitize=address -DASIO_STANDALONE -DBENCHMARK -DDEBUG ${BOOST_OPEN} ${GD_OPEN} -I/usr/local/include -I/usr/local/mysql/include   -I/usr/include -I/usr/include/mysql " )
     endif ()
     message("Debug mode:${CMAKE_CXX_FLAGS_DEBUG}")
 
 elseif(${mode} AND (CMAKE_BUILD_TYPE STREQUAL "Release"))
 
     if (CMAKE_SYSTEM_NAME MATCHES "Windows")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DASIO_STANDALONE ${BOOST_OPEN} ${GD_OPEN} -O3")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DASIO_STANDALONE ${BOOST_OPEN} ${GD_OPEN} -DBENCHMARK  -O3")
         if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
             set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pthread")
         endif ()
     else ()
         set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall -Wextra -O3")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread  -DASIO_STANDALONE ${BOOST_OPEN} ${GD_OPEN}  -I/usr/local/include -I/usr/local/mysql/include -I/usr/include -I/usr/include/mysql  " )
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread  -DASIO_STANDALONE ${BOOST_OPEN} ${GD_OPEN} -DBENCHMARK -I/usr/local/include -I/usr/local/mysql/include -I/usr/include -I/usr/include/mysql  " )
         file(MAKE_DIRECTORY /usr/local/etc/paozhu)
         file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/conf/ DESTINATION /usr/local/etc/paozhu/)
     endif ()
@@ -89,7 +95,7 @@ elseif(${mode} AND (CMAKE_BUILD_TYPE STREQUAL "Release"))
 else()
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Wextra")
     message("Debug mode:${CMAKE_CXX_FLAGS_DEBUG}")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pthread  -g -fsanitize=address  -DASIO_STANDALONE -DDEBUG ${BOOST_OPEN} ${GD_OPEN} -I/usr/local/include -I/usr/local/mysql/include   -I/usr/include  -I/usr/include/mysql  " )
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pthread  -g -fsanitize=address  -DASIO_STANDALONE -DBENCHMARK -DDEBUG ${BOOST_OPEN} ${GD_OPEN} -I/usr/local/include -I/usr/local/mysql/include   -I/usr/include  -I/usr/include/mysql  " )
 
     if(NOT CMAKE_SYSTEM_NAME MATCHES "Windows")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address")
@@ -117,13 +123,11 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/viewsrc/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/websockets/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/bin/paozhu_empty)
-  file(REMOVE_RECURSE ${CMAKE_CURRENT_SOURCE_DIR}/bin/paozhu_empty)
-endif ()
-#EXECUTE_PROCESS(COMMAND rm ${CMAKE_CURRENT_SOURCE_DIR}/bin/paozhu_empty)
+if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/bin/paozhu_pre)
+  file(REMOVE_RECURSE ${CMAKE_CURRENT_SOURCE_DIR}/bin/paozhu_pre)
+endif()
 set(PAOZHU_PRE paozhu_pre)
 add_executable(${PAOZHU_PRE} ${CMAKE_CURRENT_SOURCE_DIR}/vendor/httpcli/autopickmethod.cpp ${CMAKE_CURRENT_SOURCE_DIR}/vendor/httpserver/src/md5.cpp)
-add_executable(paozhu_empty ${CMAKE_CURRENT_SOURCE_DIR}/vendor/httpcli/autoemptymethod.cpp)
 
 
 
@@ -138,6 +142,22 @@ file(GLOB_RECURSE src_list ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
 
 foreach(cppfile IN LISTS controller_list)
   string(REGEX REPLACE "${CMAKE_CURRENT_SOURCE_DIR}/controller/src/" "" cppfilename ${cppfile})
+  string(FIND ${cppfilename} "/" strpos)
+  if(${strpos} GREATER_EQUAL "0" )
+      string(REGEX MATCHALL "([A-Za-z0-9._-]+)/" npaths ${cppfilename} )
+      set(fullpaths "")
+      string(APPEND fullpaths "${CMAKE_CURRENT_SOURCE_DIR}/controller/include/")
+      foreach(onepathname ${npaths})
+            string(REPLACE "/" "" toucpath ${onepathname})
+            string(APPEND fullpaths ${toucpath})
+            if (IS_DIRECTORY "${fullpaths}") 
+            else()
+                  message("mkdir ${fullpaths}") 
+                  file(MAKE_DIRECTORY "${fullpaths}")
+            endif()
+            string(APPEND fullpaths "/")
+      endforeach()
+  endif()
   string(REGEX REPLACE ".cpp" "" cppbasename ${cppfilename})
 #  message(${cppbasename})
   if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/controller/include/${cppbasename}.h")
@@ -169,6 +189,7 @@ include_sub_directories_recursively(${CMAKE_CURRENT_SOURCE_DIR}/models)
 include_sub_directories_recursively(${CMAKE_CURRENT_SOURCE_DIR}/controller/include)
 include_sub_directories_recursively(${CMAKE_CURRENT_SOURCE_DIR}/libs)
 include_sub_directories_recursively(${CMAKE_CURRENT_SOURCE_DIR}/include)
+include_sub_directories_recursively(${CMAKE_CURRENT_SOURCE_DIR}/common)
 
 add_executable(paozhu_cli ${CMAKE_CURRENT_SOURCE_DIR}/vendor/httpcli/http_cli.cpp)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)
@@ -181,15 +202,12 @@ else()
 endif()
 
 if (ENABLE_WIN_VCPKG STREQUAL "ON")
-else ()
+else()
 add_custom_command(
-    TARGET paozhu_empty paozhu
-    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/bin/paozhu_pre
-    PRE_BUILD
+    TARGET paozhu_pre POST_BUILD
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/
     COMMAND echo "-- controls method --"
     COMMAND ${PAOZHU_PRE} ${CMAKE_CURRENT_SOURCE_DIR}/
-    COMMAND ${CMAKE_COMMAND} -E remove ${CMAKE_CURRENT_SOURCE_DIR}/bin/paozhu_empty
     )
 endif()
 
@@ -265,7 +283,7 @@ else ()
 
 if(USE_STANDALONE_ASIO)
 if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
-set(ASIO_PATH "/usr/local/opt/asio/include" "/usr/local/include")
+set(ASIO_PATH "/usr/local/opt/asio/include" "/usr/local/include" "/opt/homebrew/opt/asio" ${CMAKE_CURRENT_SOURCE_DIR}/asio)
 else()
 set(ASIO_PATH ${CMAKE_CURRENT_SOURCE_DIR}/asio "/usr/include")
 endif()
@@ -324,19 +342,54 @@ if(ZLIB_FOUND)
   target_link_libraries(paozhu z)
 endif()
 
-find_path(MYSQL_ROOT_DIR mysql)
+
+if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
+  if (IS_DIRECTORY "/usr/local/mysql/include")
+  MESSAGE( STATUS "/usr/local/mysql")
+      set(MYSQL_INCLUDE_DIR "/usr/local/mysql/include")
+      include_sub_directories_recursively(/usr/local/mysql/include)
+  endif()
+ 
+  if (IS_DIRECTORY "/usr/local/opt/mysql-client")
+        MESSAGE( STATUS "/usr/local/opt/mysql-client")
+      set(MYSQL_INCLUDE_DIR "/usr/local/opt/mysql-client/include")
+      include_sub_directories_recursively(/usr/local/opt/mysql-client/include)
+  endif()
+  
+  if (IS_DIRECTORY "/opt/homebrew/opt/mysql")
+        MESSAGE( STATUS "/opt/homebrew/opt/mysql")
+      set(MYSQL_INCLUDE_DIR "/opt/homebrew/opt/mysql/include")
+      include_sub_directories_recursively(/opt/homebrew/opt/mysql/include)
+  endif()
+  
+  
+  if (IS_DIRECTORY "/opt/homebrew/opt/mysql-client")
+        MESSAGE( STATUS "/opt/homebrew/opt/mysql-client")
+      set(MYSQL_INCLUDE_DIR "/opt/homebrew/opt/mysql-client/include")
+      include_sub_directories_recursively(/opt/homebrew/opt/mysql-client/include)
+  endif()
+  MESSAGE( STATUS "MYSQL_ROOT_DIR = ${MYSQL_ROOT_DIR} ")
+else()  
+ find_path(MYSQL_ROOT_DIR mysql)
+endif()
+
+
+FIND_PATH(MYSQL_INCLUDE_DIR NAMES mysql.h
+  PATHS /usr/local/include/mysql /usr/include/mysql /opt/homebrew/opt/mysql/include /usr/local/opt/mysql-client/include /opt/homebrew/opt/mysql-client/include
+)
+
 MESSAGE( STATUS "MYSQL_ROOT_DIR = ${MYSQL_ROOT_DIR} ")
 find_package_handle_standard_args(mysql REQUIRED_VARS MYSQL_ROOT_DIR)
 
-FIND_PATH(MYSQL_INCLUDE_DIR mysql.h
-  /usr/local/include/mysql
-  /usr/include/mysql
-  /usr/local/mysql/include
-)
+
+if(NOT MYSQL_INCLUDE_DIR)
+  message(STATUS "Could not find \"mysql.h\" from searching ")
+endif()
+
 SET(MYSQL_NAMES mysqlclient)
 FIND_LIBRARY(MYSQL_LIBRARY
   NAMES ${MYSQL_NAMES}
-  PATHS /usr/lib /usr/local/lib /usr/local/mysql/lib
+  PATHS /usr/lib /usr/local/lib /usr/local/mysql/lib /usr/local/opt/mysql/lib /opt/homebrew/opt/mysql/lib /opt/homebrew/opt/mysql-client/lib
   PATH_SUFFIXES mysql
 )
 
@@ -371,7 +424,17 @@ if(ENABLE_GD STREQUAL "ON")
 message("---ENABLE_GD-----")
 
 if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
-  set(GD_ROOT_DIR "/usr/local/opt/gd/lib")
+  
+  if (IS_DIRECTORY "/usr/local/opt/gd/lib")
+        MESSAGE( STATUS "/usr/local/opt/gd/lib")
+      set(GD_ROOT_DIR "/usr/local/opt/gd/lib")
+      include_sub_directories_recursively(/usr/local/opt/gd/include)
+  endif()
+  if (IS_DIRECTORY "/opt/homebrew/opt/gd/lib")
+        MESSAGE( STATUS "/opt/homebrew/opt/gd/lib")
+      set(GD_ROOT_DIR "/opt/homebrew/opt/gd/lib")
+      include_sub_directories_recursively(/opt/homebrew/opt/gd/include)
+  endif()
 else()
   set(GD_ROOT_DIR "${sys_so_path}")
 endif()
@@ -393,7 +456,18 @@ endif()
 message(STATUS "GD Graphics Library  at: ${GD_LIB_DIR}")
 
 if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
-set(QR_ROOT_DIR "/usr/local/opt/qrencode/lib")
+
+  if (IS_DIRECTORY "/usr/local/opt/qrencode/lib")
+        MESSAGE( STATUS "/usr/local/opt/qrencode/lib")
+      set(QR_ROOT_DIR "/usr/local/opt/qrencode/lib")
+      include_sub_directories_recursively(/usr/local/opt/qrencode/include)
+  endif()
+  if (IS_DIRECTORY "/opt/homebrew/opt/qrencode/lib")
+        MESSAGE( STATUS "/opt/homebrew/opt/qrencode/lib")
+      set(QR_ROOT_DIR "/opt/homebrew/opt/qrencode/lib")
+      include_sub_directories_recursively(/opt/homebrew/opt/qrencode/include)
+  endif()
+  
 else()
 set(QR_ROOT_DIR "${sys_so_path}")
 endif()
@@ -422,7 +496,18 @@ target_link_libraries(paozhu ${GD_LIB_DIR})
 target_link_libraries(paozhu ${QR_LIB_DIR})
 
 if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
-set(PNG_ROOT_DIR "/usr/local/opt/libpng/lib")
+
+  if (IS_DIRECTORY "/usr/local/opt/libpng/lib")
+        MESSAGE( STATUS "/usr/local/opt/libpng/lib")
+      set(PNG_ROOT_DIR "/usr/local/opt/libpng/lib")
+      include_sub_directories_recursively(/usr/local/opt/libpng/include)
+  endif()
+  if (IS_DIRECTORY "/opt/homebrew/opt/libpng/lib")
+        MESSAGE( STATUS "/opt/homebrew/opt/libpng/lib")
+      set(PNG_ROOT_DIR "/opt/homebrew/opt/libpng/lib")
+      include_sub_directories_recursively(/opt/homebrew/opt/libpng/include)
+  endif()
+  
 else()
 set(PNG_ROOT_DIR "${sys_so_path}")
 endif()
@@ -435,7 +520,18 @@ find_library(PNG_LIB_DIR
 target_link_libraries(paozhu ${PNG_LIB_DIR})
 
 if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
-  set(FREETYPE_ROOT_DIR "/usr/local/opt/freetype/lib")
+  
+    if (IS_DIRECTORY "/usr/local/opt/freetype/lib")
+        MESSAGE( STATUS "/usr/local/opt/freetype/lib")
+      set(FREETYPE_ROOT_DIR "/usr/local/opt/freetype/lib")
+      include_sub_directories_recursively(/usr/local/opt/freetype/include)
+  endif()
+  if (IS_DIRECTORY "/opt/homebrew/opt/freetype/lib")
+        MESSAGE( STATUS "/opt/homebrew/opt/freetype/lib")
+      set(FREETYPE_ROOT_DIR "/opt/homebrew/opt/freetype/lib")
+      include_sub_directories_recursively(/opt/homebrew/opt/freetype/include)
+  endif()
+  
 else()
   set(FREETYPE_ROOT_DIR "${sys_so_path}")
 endif()
@@ -450,7 +546,15 @@ target_link_libraries(paozhu ${FREETYPE_LIB_DIR})
 endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
-  set(BROTLI_ROOT_DIR "/usr/local/opt/brotli/lib")
+  if (IS_DIRECTORY "/usr/local/opt/brotli/lib")
+      set(BROTLI_ROOT_DIR "/usr/local/opt/brotli/lib")
+      INCLUDE_DIRECTORIES("/usr/local/opt/brotli/include")
+  endif()
+#  set(BROTLI_ROOT_DIR "/usr/local/opt/brotli/lib")
+  if (IS_DIRECTORY "/opt/homebrew/opt/brotli/lib")
+      set(BROTLI_ROOT_DIR "/opt/homebrew/opt/brotli/lib")
+      INCLUDE_DIRECTORIES("/opt/homebrew/opt/brotli/include")
+  endif()
 else()
   set(BROTLI_ROOT_DIR "${sys_so_path}")
 endif()

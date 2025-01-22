@@ -1,4 +1,4 @@
-FROM oven/bun:1.0
+FROM oven/bun:1.1
 
 EXPOSE 8080
 
@@ -10,4 +10,4 @@ RUN bun install --production
 
 RUN bun run build
 
-CMD ["bun", "spawn.ts"]
+CMD ["bun", "./dist/index.js"]

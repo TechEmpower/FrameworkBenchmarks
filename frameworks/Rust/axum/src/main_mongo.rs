@@ -1,11 +1,20 @@
+mod common;
+mod mongo;
+mod server;
+//mod mongo_raw;
+
 use std::time::Duration;
 
 use axum::{
-    extract::Query,
-    http::{header, HeaderValue, StatusCode},
-    response::IntoResponse,
-    routing::get,
-    Json, Router,
+    extract::Query, http::StatusCode, response::IntoResponse, routing::get, Router,
+};
+
+#[cfg(not(feature = "simd-json"))]
+use axum::Json;
+#[cfg(feature = "simd-json")]
+use common::simd_json::Json;
+use common::{
+    models::{FortuneInfo, World}, random_id
 };
 use dotenv::dotenv;
 use mongodb::{
@@ -13,21 +22,18 @@ use mongodb::{
     Client,
 };
 use rand::{rngs::SmallRng, thread_rng, Rng, SeedableRng};
-use tower_http::set_header::SetResponseHeaderLayer;
 use yarte::Template;
+use mimalloc::MiMalloc;
 
-mod database_mongo;
-mod models_common;
-mod models_mongo;
-mod server;
-mod utils;
+#[global_allocator]
+static GLOBAL: MiMalloc = MiMalloc;
 
-use self::{
-    database_mongo::{
-        fetch_fortunes, find_world_by_id, find_worlds, update_worlds, DatabaseConnection,
-    },
-    models_mongo::{Fortune, FortuneInfo, World},
-    utils::{get_environment_variable, parse_params, Params, Utf8Html},
+use common::{
+    get_env,
+    utils::{parse_params, Params, Utf8Html},
+};
+use mongo::database::{
+    fetch_fortunes, find_world_by_id, find_worlds, update_worlds, DatabaseConnection,
 };
 
 #[derive(Template)]
@@ -55,15 +61,7 @@ async fn queries(
     let q = parse_params(params);
 
     let mut rng = SmallRng::from_rng(&mut thread_rng()).unwrap();
-    let mut ids: Vec<i32> = Vec::with_capacity(q as usize);
-
-    for _ in 0..q {
-        let random_id = (rng.gen::<u32>() % 10_000 + 1) as i32;
-
-        ids.push(random_id);
-    }
-
-    let worlds = find_worlds(db, ids).await;
+    let worlds = find_worlds(db, &mut rng, q).await;
     let results = worlds.expect("worlds could not be retrieved");
 
     (StatusCode::OK, Json(results))
@@ -76,23 +74,14 @@ async fn updates(
     let q = parse_params(params);
 
     let mut rng = SmallRng::from_rng(&mut thread_rng()).unwrap();
-    let mut ids: Vec<i32> = Vec::with_capacity(q as usize);
 
-    for _ in 0..q {
-        let random_id = (rng.gen::<u32>() % 10_000 + 1) as i32;
-
-        ids.push(random_id);
-    }
-
-    let worlds = find_worlds(db.clone(), ids)
+    let worlds = find_worlds(db.clone(), &mut  rng, q)
         .await
         .expect("worlds could not be retrieved");
-    let mut updated_worlds: Vec<World> = Vec::with_capacity(q as usize);
+    let mut updated_worlds: Vec<World> = Vec::with_capacity(q);
 
     for mut world in worlds {
-        let random_number = (rng.gen::<u32>() % 10_000 + 1) as i32;
-
-        world.random_number = random_number;
+        world.random_number = random_id(&mut rng);
         updated_worlds.push(world);
     }
 
@@ -125,28 +114,13 @@ async fn fortunes(DatabaseConnection(db): DatabaseConnection) -> impl IntoRespon
 
 fn main() {
     dotenv().ok();
-
-    let rt = tokio::runtime::Builder::new_current_thread()
-        .enable_all()
-        .build()
-        .unwrap();
-
-    for _ in 1..num_cpus::get() {
-        std::thread::spawn(move || {
-            let rt = tokio::runtime::Builder::new_current_thread()
-                .enable_all()
-                .build()
-                .unwrap();
-            rt.block_on(serve());
-        });
-    }
-    rt.block_on(serve());
+    server::start_tokio(serve_app)
 }
 
-async fn serve() {
-    let database_url: String = get_environment_variable("AXUM_TECHEMPOWER_MONGODB_URL");
-    let max_pool_size: u32 = get_environment_variable("AXUM_TECHEMPOWER_MAX_POOL_SIZE");
-    let min_pool_size: u32 = get_environment_variable("AXUM_TECHEMPOWER_MIN_POOL_SIZE");
+async fn serve_app() {
+    let database_url: String = get_env("MONGODB_URL");
+    let max_pool_size: u32 = get_env("MONGODB_MAX_POOL_SIZE");
+    let min_pool_size: u32 = get_env("MONGODB_MIN_POOL_SIZE");
 
     let mut client_options = ClientOptions::parse(database_url).await.unwrap();
 
@@ -168,21 +142,13 @@ async fn serve() {
 
     let client = Client::with_options(client_options).unwrap();
     let database = client.database("hello_world");
-    let server_header_value = HeaderValue::from_static("Axum");
 
     let app = Router::new()
         .route("/fortunes", get(fortunes))
         .route("/db", get(db))
         .route("/queries", get(queries))
         .route("/updates", get(updates))
-        .with_state(database)
-        .layer(SetResponseHeaderLayer::if_not_present(
-            header::SERVER,
-            server_header_value,
-        ));
+        .with_state(database);
 
-    server::builder()
-        .serve(app.into_make_service())
-        .await
-        .unwrap();
+    server::serve(app, Some(8000)).await
 }

@@ -45,7 +45,8 @@
       "database_os": "Linux",
       "display_name": "Bottle",
       "notes": "PyPy2",
-      "versus": "wsgi"
+      "versus": "wsgi",
+      "tags": ["broken"]
     },
     "raw": {
       "db_url": "/raw-db",

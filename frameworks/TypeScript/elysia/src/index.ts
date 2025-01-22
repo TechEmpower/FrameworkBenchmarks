@@ -1,25 +1,20 @@
-import { Elysia } from 'elysia';
-import dbHandlers from './db-handlers';
+import cluster from "node:cluster";
+import os from "node:os";
+import process from "node:process";
 
-const app = new Elysia({
-  serve: {
-    // @ts-ignore
-    reusePort: true,
-  },
-})
-  .onAfterHandle(({ set }) => {
-    set.headers['server'] = 'Elysia';
-  })
-  .decorate('HELLO_WORLD_STR', 'Hello, World!')
-  .get('/plaintext', ({ HELLO_WORLD_STR }) => HELLO_WORLD_STR)
-  .get('/json', ({ HELLO_WORLD_STR }) => ({ message: HELLO_WORLD_STR }));
+if (cluster.isPrimary) {
+  console.log(`Primary ${process.pid} is running`);
 
-if (process.env.DATABASE) {
-  app.use(dbHandlers);
+  const numCPUs = os.availableParallelism();
+  for (let i = 0; i < numCPUs; i++) {
+    cluster.fork();
+  }
+
+  cluster.on("exit", (worker) => {
+    console.log(`worker ${worker.process.pid} died`);
+    process.exit(1);
+  });
+} else {
+  await import("./server");
+  console.log(`Worker ${process.pid} started`);
 }
-
-app.listen(8080);
-
-console.info(
-  `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`
-);

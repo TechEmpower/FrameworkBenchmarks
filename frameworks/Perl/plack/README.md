@@ -9,4 +9,5 @@ Plack
 * Twiggy::Prefork
 * JSON::XS
 * AnyEvent::DBI
-* DBD::mysql
+* DBD::MariaDB
+

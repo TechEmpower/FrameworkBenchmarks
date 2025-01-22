@@ -1,4 +1,4 @@
-FROM postgres:16-bookworm
+FROM postgres:17-bookworm
 
 ENV PGDATA=/ssd/postgresql \
     POSTGRES_DB=hello_world \
@@ -7,8 +7,6 @@ ENV PGDATA=/ssd/postgresql \
     POSTGRES_PASSWORD=benchmarkdbpass \
     POSTGRES_USER=benchmarkdbuser
 
-COPY postgresql.conf /tmp/
-
+COPY 60-postgresql-shm.conf /etc/sysctl.d/
 COPY config.sh create-postgres.sql /docker-entrypoint-initdb.d/
-
-COPY 60-postgresql-shm.conf /etc/sysctl.d/60-postgresql-shm.conf
+COPY postgresql.conf /tmp/

@@ -1,33 +1,25 @@
 package hello.model;
 
-import jakarta.persistence.Entity;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 @Document
-@Entity
-public final class Fortune {
-	@Id
-	@jakarta.persistence.Id
-	public int id;
-	@Field("message")
-	public String message;
+public final class Fortune implements Comparable<Fortune>{
 
-	protected Fortune() {
-	}
+	@Id
+	public final int id;
+
+	@Field("message")
+	public final String message;
 
 	public Fortune(int id, String message) {
 		this.id = id;
 		this.message = message;
 	}
 
-	public int getId() {
-		return id;
-	}
-
-	public String getMessage() {
-		return message;
+	@Override
+	public int compareTo(final Fortune other) {
+		return message.compareTo(other.message);
 	}
 }

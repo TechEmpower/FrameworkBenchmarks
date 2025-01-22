@@ -1,13 +1,11 @@
 source "https://rubygems.org"
 
+gem 'base64' # required by passenger on Ruby 3.4
 gem "erubi", "~> 1.12"
-gem "passenger", "~> 6.0", platforms: %i[ruby mswin], require: false
-gem "puma", "~> 6.2", require: false
+gem "json", "~> 2.8"
 gem "sequel", "~> 5.67"
 gem "roda", "~> 3.66"
 gem "tilt", "~> 2.1", require: "tilt/erb"
-gem "unicorn", "~> 6.1", platforms: %i[ruby mswin], require: false
-gem "oj", "~> 3.14"
 
 group :mysql do
   gem "mysql2", "~> 0.5", platforms: %i[ruby mswin]
@@ -16,4 +14,16 @@ end
 group :postgresql do
   gem "pg", "~> 1.4", platforms: %i[ruby mswin]
   gem "sequel_pg", "~> 1.17", platforms: :ruby, require: false
+end
+
+group :iodine, optional: true do
+  gem "iodine", "~> 0.7", require: false
+end
+
+group :puma, optional: true do
+  gem "puma", "~> 6.2", require: false
+end
+
+group :unicorn, optional: true do
+  gem "unicorn", "~> 6.1", platforms: %i[ruby mswin], require: false
 end

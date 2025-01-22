@@ -129,6 +129,6 @@ class App < Toro::Router
 end
 
 # Start the app on port 8080.
-App.run(8080) do |server|
+App.run do |server|
   server.listen("0.0.0.0", 8080, reuse_port: true)
 end

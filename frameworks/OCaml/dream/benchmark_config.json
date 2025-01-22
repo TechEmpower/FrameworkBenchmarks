@@ -1,0 +1,26 @@
+{
+  "framework": "dream",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "postgres",
+        "framework": "Dream",
+        "language": "OCaml",
+        "flavor": "None",
+        "orm": "Micro",
+        "platform": "http/af",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Dream",
+        "notes": "",
+        "versus": "httpaf"
+      }
+    }
+  ]
+}

@@ -4,24 +4,18 @@ import static com.techempower.Util.randomWorld;
 import static io.jooby.ExecutionMode.EVENT_LOOP;
 import static io.jooby.MediaType.JSON;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import com.fizzed.rocker.RockerOutputFactory;
-import io.jooby.Context;
-import io.jooby.Jooby;
-import io.jooby.MediaType;
-import io.jooby.ServerOptions;
-import io.jooby.rocker.ByteBufferOutput;
+import com.techempower.rocker.BufferRockerOutput;
+import io.jooby.*;
+import io.jooby.rocker.DataBufferOutput;
 import io.jooby.rocker.RockerModule;
 import io.vertx.sqlclient.Row;
 import io.vertx.sqlclient.RowIterator;
 import io.vertx.sqlclient.Tuple;
 
 public class ReactivePg extends Jooby {
-
   {
     /** Reduce the number of resources due we do reactive processing. */
     setServerOptions(
@@ -34,7 +28,7 @@ public class ReactivePg extends Jooby {
     PgClient client = new PgClient(getConfig().getConfig("db"));
 
     /** Template engine: */
-    install(new RockerModule().reuseBuffer(true));
+    install(new RockerModule());
 
     /** Single query: */
     get("/db", ctx -> {
@@ -87,14 +81,7 @@ public class ReactivePg extends Jooby {
               selectCallback.result().iterator().next().getInteger(0),
               randomWorld());
           if (index == queries - 1) {
-            // Sort results... avoid dead locks
-            Arrays.sort(result);
-            List<Tuple> batch = new ArrayList<>(queries);
-            for (World world : result) {
-              batch.add(Tuple.of(world.getRandomNumber(), world.getId()));
-            }
-
-            client.updateWorld(batch, updateCallback -> {
+            client.updateWorld(result, updateCallback -> {
               if (updateCallback.failed()) {
                 sendError(ctx, updateCallback.cause());
               } else {
@@ -109,7 +96,7 @@ public class ReactivePg extends Jooby {
     }).setNonBlocking(true);
 
     /** Fortunes: */
-    RockerOutputFactory<ByteBufferOutput> factory = require(RockerOutputFactory.class);
+    var factory = BufferRockerOutput.factory();
     get("/fortunes", ctx -> {
       client.fortunes(rsp -> {
         if (rsp.succeeded()) {

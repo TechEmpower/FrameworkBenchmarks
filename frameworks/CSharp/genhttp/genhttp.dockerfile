@@ -1,19 +1,19 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:9.0-alpine AS build
+WORKDIR /source
+
+# copy csproj and restore as distinct layers
+COPY Benchmarks/*.csproj .
+RUN dotnet restore -r linux-musl-x64
+
+# copy and publish app and libraries
+COPY Benchmarks/ .
+RUN dotnet publish -c release -o /app -r linux-musl-x64 --no-restore --self-contained
+
+# final stage/image
+FROM mcr.microsoft.com/dotnet/runtime-deps:9.0-alpine
 WORKDIR /app
-COPY Benchmarks .
-RUN dotnet publish -c Release -o out
+COPY --from=build /app .
 
-FROM mcr.microsoft.com/dotnet/runtime:8.0 AS runtime
-ENV DOTNET_SYSTEM_NET_SOCKETS_INLINE_COMPLETIONS 1
-
-# Full PGO
-ENV DOTNET_TieredPGO 1 
-ENV DOTNET_TC_QuickJitForLoops 1 
-ENV DOTNET_ReadyToRun 0
-
-WORKDIR /app
-COPY --from=build /app/out ./
+ENTRYPOINT ["./Benchmarks"]
 
 EXPOSE 8080
-
-ENTRYPOINT ["dotnet", "Benchmarks.dll"]

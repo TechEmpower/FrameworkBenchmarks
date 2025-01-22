@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>io.inverno.dist</groupId>
 		<artifactId>inverno-parent</artifactId>
-		<version>1.9.0</version>
+		<version>1.12.0</version>
 	</parent>
 	<groupId>com.techempower</groupId>
 	<artifactId>inverno-benchmark</artifactId>
@@ -47,11 +47,16 @@
 			<groupId>io.inverno.mod</groupId>
 			<artifactId>inverno-sql-vertx</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.unbescape</groupId>
 			<artifactId>unbescape</artifactId>
 			<version>1.1.6.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>com.dslplatform</groupId>
+			<artifactId>dsl-json</artifactId>
+			<version>2.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>io.vertx</groupId>
@@ -82,7 +87,52 @@
 			<artifactId>log4j-core</artifactId>
 		</dependency>
 	</dependencies>
-	
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>default-compile</id>
+						<configuration>
+							<annotationProcessorPaths combine.children="append">
+								<path>
+									<groupId>com.dslplatform</groupId>
+									<artifactId>dsl-json</artifactId>
+									<version>2.0.2</version>
+								</path>
+							</annotationProcessorPaths>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>io.inverno.tool</groupId>
+					<artifactId>inverno-maven-plugin</artifactId>
+					<configuration>
+						<moduleOverrides combine.children="append">
+							<module>
+								<name>com.dslplatform.dsl.json</name>
+								<uses>
+									<use>
+										<type>com.dslplatform.json.Configuration</type>
+									</use>
+								</uses>
+							</module>
+						</moduleOverrides>
+						<vmOptions>-Dlog4j2.simplelogLevel=INFO -Dlog4j2.level=INFO --add-reads com.techempower.inverno.benchmark=com.dslplatform.dsl.json --add-opens com.techempower.inverno.benchmark/com.techempower.inverno.benchmark.model=com.dslplatform.dsl.json</vmOptions>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
 	<profiles>
 		<profile>
 			<id>io.inverno.epoll</id>
@@ -110,7 +160,7 @@
 									<launchers>
 										<launcher>
 											<name>inverno-benchmark</name>
-											<vmOptions>-Xms2g -Xmx2g -server -XX:+UseNUMA -XX:+UseParallelGC -Dio.netty.leakDetection.level=disabled -Dio.netty.buffer.checkBounds=false -Dio.netty.buffer.checkBounds=false -Dvertx.disableHttpHeadersValidation=true -Dvertx.disableMetrics=true -Dvertx.disableH2c=true -Dvertx.disableWebsockets=true -Dvertx.flashPolicyHandler=false -Dvertx.threadChecks=false -Dvertx.disableContextTimings=true -Dvertx.disableTCCL=true --add-modules io.netty.transport.unix.common,io.netty.transport.classes.epoll,io.netty.transport.epoll.linux.x86_64</vmOptions>
+											<vmOptions>-Xms2g -Xmx2g -server -XX:+UseNUMA -XX:+UseParallelGC -Dlog4j2.level=OFF -Dio.netty.leakDetection.level=disabled -Dio.netty.buffer.checkBounds=false -Dio.netty.buffer.checkAccessible=false -Dvertx.disableHttpHeadersValidation=true -Dvertx.disableMetrics=true -Dvertx.disableH2c=true -Dvertx.disableWebsockets=true -Dvertx.flashPolicyHandler=false -Dvertx.threadChecks=false -Dvertx.disableContextTimings=true -Dvertx.disableTCCL=true --add-modules io.netty.transport.unix.common,io.netty.transport.classes.epoll,io.netty.transport.epoll.linux.x86_64 --add-reads com.techempower.inverno.benchmark=com.dslplatform.dsl.json --add-opens com.techempower.inverno.benchmark/com.techempower.inverno.benchmark.model=com.dslplatform.dsl.json</vmOptions>
 										</launcher>
 									</launchers>
 									<archiveFormats>
@@ -119,9 +169,6 @@
 								</configuration>
 							</execution>
 						</executions>
-						<configuration>
-							<vmOptions>--add-modules io.netty.transport.unix.common,io.netty.transport.classes.epoll,io.netty.transport.epoll.linux.x86_64</vmOptions>
-						</configuration>
 					</plugin>
 				</plugins>
 			</build>
@@ -157,7 +204,7 @@
 									<launchers>
 										<launcher>
 											<name>inverno-benchmark</name>
-											<vmOptions>-Xms2g -Xmx2g -server -XX:+UseNUMA -XX:+UseParallelGC -Dio.netty.leakDetection.level=disabled -Dio.netty.buffer.checkBounds=false -Dio.netty.buffer.checkBounds=false -Dvertx.disableHttpHeadersValidation=true -Dvertx.disableMetrics=true -Dvertx.disableH2c=true -Dvertx.disableWebsockets=true -Dvertx.flashPolicyHandler=false -Dvertx.threadChecks=false -Dvertx.disableContextTimings=true -Dvertx.disableTCCL=true --add-modules io.netty.transport.unix.common,io.netty.incubator.transport.classes.io_uring,io.netty.incubator.transport.io_uring.linux.x86_64</vmOptions>
+											<vmOptions>-Xms2g -Xmx2g -server -XX:+UseNUMA -XX:+UseParallelGC -Dlog4j2.level=OFF -Dio.netty.leakDetection.level=disabled -Dio.netty.buffer.checkBounds=false -Dio.netty.buffer.checkAccessible=false -Dvertx.disableHttpHeadersValidation=true -Dvertx.disableMetrics=true -Dvertx.disableH2c=true -Dvertx.disableWebsockets=true -Dvertx.flashPolicyHandler=false -Dvertx.threadChecks=false -Dvertx.disableContextTimings=true -Dvertx.disableTCCL=true --add-modules io.netty.transport.unix.common,io.netty.incubator.transport.classes.io_uring,io.netty.incubator.transport.io_uring.linux.x86_64 --add-reads com.techempower.inverno.benchmark=com.dslplatform.dsl.json --add-opens com.techempower.inverno.benchmark/com.techempower.inverno.benchmark.model=com.dslplatform.dsl.json</vmOptions>
 										</launcher>
 									</launchers>
 									<archiveFormats>
@@ -166,9 +213,6 @@
 								</configuration>
 							</execution>
 						</executions>
-						<configuration>
-							<vmOptions>--add-modules io.netty.transport.unix.common,io.netty.incubator.transport.classes.io_uring,io.netty.incubator.transport.io_uring.linux.x86_64</vmOptions>
-						</configuration>
 					</plugin>
 				</plugins>
 			</build>
