@@ -1,0 +1,2 @@
+@param java.util.List<io.helidon.benchmark.nima.models.Fortune> fortunes
+<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>@for(io.helidon.benchmark.nima.models.Fortune fortune : fortunes)<tr><td>${fortune.getId()}</td><td>${fortune.getMessage()}</td></tr>@endfor</table></body></html>

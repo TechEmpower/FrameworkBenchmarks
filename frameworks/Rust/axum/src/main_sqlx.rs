@@ -1,6 +1,8 @@
 mod common;
 mod sqlx;
 
+use std::sync::Arc;
+
 use ::sqlx::PgPool;
 use axum::{
     extract::{Query, State},
@@ -10,10 +12,14 @@ use axum::{
     Router,
 };
 use dotenv::dotenv;
-use moka::future::Cache;
+use quick_cache::sync::Cache;
 use rand::{rngs::SmallRng, thread_rng, SeedableRng};
 use sqlx::models::World;
 use yarte::Template;
+use mimalloc::MiMalloc;
+
+#[global_allocator]
+static GLOBAL: MiMalloc = MiMalloc;
 
 #[cfg(not(feature = "simd-json"))]
 use axum::Json;
@@ -53,10 +59,9 @@ async fn queries(
 ) -> impl IntoResponse {
     let mut rng = SmallRng::from_rng(&mut thread_rng()).unwrap();
     let count = parse_params(params);
-    let ids = random_ids(&mut rng, count);
     let mut worlds: Vec<World> = Vec::with_capacity(count);
 
-    for id in ids {
+    for id in random_ids(&mut rng, count) {
         let world: World = ::sqlx::query_as(common::SELECT_WORLD_BY_ID)
             .bind(id)
             .fetch_one(&mut *db.acquire().await.unwrap())
@@ -97,9 +102,9 @@ async fn cache(
     let count = parse_params(params);
     let mut rng = SmallRng::from_rng(&mut thread_rng()).unwrap();
     let mut worlds: Vec<Option<World>> = Vec::with_capacity(count);
-
+    
     for id in random_ids(&mut rng, count) {
-        worlds.push(cache.get(&id).await);
+        worlds.push(cache.get(&id));
     }
 
     (StatusCode::OK, Json(worlds))
@@ -113,7 +118,7 @@ async fn preload_cache(AppState { db, cache }: &AppState) {
         .expect("error loading worlds");
 
     for world in worlds {
-        cache.insert(world.id, world).await;
+        cache.insert(world.id, world);
     }
 }
 
@@ -121,7 +126,7 @@ async fn preload_cache(AppState { db, cache }: &AppState) {
 #[derive(Clone)]
 struct AppState {
     db: PgPool,
-    cache: Cache<i32, World>,
+    cache: Arc<Cache<i32, World>>,
 }
 
 #[tokio::main]
@@ -134,10 +139,7 @@ async fn main() {
 
     let state = AppState {
         db: create_pool(database_url, max_pool_size, min_pool_size).await,
-        cache: Cache::builder()
-        .initial_capacity(10000)
-        .max_capacity(10000)
-        .build()
+        cache: Arc::new(Cache::new(10_000))
     };
 
     // Prime the cache with CachedWorld objects

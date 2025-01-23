@@ -1,4 +1,4 @@
-FROM ruby:3.4-rc
+FROM ruby:3.4
 
 ADD ./ /roda-sequel
 WORKDIR /roda-sequel
@@ -11,6 +11,7 @@ RUN apt-get update && \
 ENV LD_PRELOAD=libjemalloc.so.2
 
 ENV BUNDLE_FORCE_RUBY_PLATFORM=true
+RUN bundle config set with 'unicorn'
 RUN bundle install --jobs=8
 
 ENV DBTYPE=postgresql

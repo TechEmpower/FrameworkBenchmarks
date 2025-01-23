@@ -5,13 +5,13 @@ More information is available at [ktor.io](http://ktor.io).
 
 # Setup
 
-* Java 17
-* MySQL server
+* Java 21
+* Postgres server
 
 # Requirements
 
 * Maven 3
-* JDK 17
+* JDK 21
 * Kotlin
 * ktor
 * netty 

@@ -1,6 +1,6 @@
 
 plugins {
-    id "org.jetbrains.kotlin.jvm" version "2.0.21" apply false
+    id "org.jetbrains.kotlin.jvm" version "2.1.0" apply false
     id "org.graalvm.buildtools.native" version "0.10.3" apply false
 }
 
@@ -10,12 +10,12 @@ group = "com.hexagontk"
 
 ext {
     hexagonVersion = "4.0.0-A6"
-    jettyVersion = "12.0.14"
-    nettyVersion = "4.1.114.Final"
+    jettyVersion = "12.0.16"
+    nettyVersion = "4.1.117.Final"
 
-    hikariVersion = "6.0.0"
-    postgresqlVersion = "42.7.4"
-    vertxVersion = "4.5.10"
+    hikariVersion = "6.2.1"
+    postgresqlVersion = "42.7.5"
+    vertxVersion = "4.5.12"
     cache2kVersion = "2.6.1.Final"
 
     applicationClass = "com.hexagontk.BenchmarkKt"

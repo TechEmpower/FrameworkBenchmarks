@@ -18,7 +18,7 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "ditsmod",
+        "display_name": "ditsmod v3.0",
         "notes": "Simplified use of Dependency Injection (no request level injector).",
         "versus": "nodejs"
       },
@@ -41,7 +41,7 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "ditsmod [postgres]",
+        "display_name": "ditsmod v3.0 [postgres]",
         "notes": "Simplified use of Dependency Injection (no request level injector).",
         "versus": "nodejs"
       },
@@ -64,7 +64,7 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "ditsmod [mysql]",
+        "display_name": "ditsmod v3.0 [mysql]",
         "notes": "Simplified use of Dependency Injection (no request level injector).",
         "versus": "nodejs"
       },
@@ -84,7 +84,7 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "ditsmod on bun",
+        "display_name": "ditsmod-bun v3.0",
         "notes": "Simplified use of Dependency Injection (no request level injector).",
         "versus": "bun"
       },
@@ -107,7 +107,7 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "ditsmod on bun [postgres]",
+        "display_name": "ditsmod-bun v3.0 [postgres]",
         "notes": "Simplified use of Dependency Injection (no request level injector).",
         "versus": "bun"
       },
@@ -130,7 +130,7 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "ditsmod on bun [mysql]",
+        "display_name": "ditsmod-bun v3.0 [mysql]",
         "notes": "Simplified use of Dependency Injection (no request level injector).",
         "versus": "bun"
       }

@@ -17,10 +17,9 @@ pub const SELECT_WORLD_BY_ID: &str =
 pub const SELECT_ALL_CACHED_WORLDS: &str =
     "SELECT id, randomnumber FROM world ORDER BY id";
 #[allow(dead_code)]
-pub const UPDATE_WORLDS: &str = "WITH vals AS (SELECT * FROM UNNEST($1::int[], $2::int[]) AS v(id, rnum))
-    UPDATE world SET randomnumber = new.rnum FROM
-  (SELECT w.id, v.rnum FROM world w INNER JOIN vals v ON v.id = w.id ORDER BY w.id FOR UPDATE) AS new
-  WHERE world.id = new.id";
+pub const UPDATE_WORLDS: &str = r#"UPDATE world SET randomnumber = new.rnum FROM
+    (SELECT * FROM UNNEST($1::int[], $2::int[]) AS v(id, rnum) ORDER BY 1) AS new
+WHERE world.id = new.id"#;
 
 /// Return the value of an environment variable.
 #[allow(dead_code)]
@@ -36,16 +35,15 @@ where
 
 /// Generate a single integer in the range 1 to 10,000 (inclusive)
 #[allow(dead_code)]
-#[inline]
+#[inline(always)]
 pub fn random_id(rng: &mut SmallRng) -> i32 {
     rng.gen_range(1..10_001)
 }
 
-/// Generate vector of integers in the range 1 to 10,000 (inclusive)
+/// Generate an iterator of integers in the range 1 to 10,000 (inclusive)
 #[allow(dead_code)]
-#[inline]
-pub fn random_ids(rng: &mut SmallRng, count: usize) -> Vec<i32> {
+#[inline(always)]
+pub fn random_ids(rng: &mut SmallRng, count: usize) -> impl Iterator<Item = i32> + use<'_> {
     rng.sample_iter(Uniform::new(1, 10_001))
         .take(count)
-        .collect()
 }
