@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
@@ -9,7 +9,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Sisk.HttpServer" Version="1.4.0-beta3" />
+	  <PackageReference Include="Sisk.Cadente" Version="0.1.42-alpha1" />
 	</ItemGroup>
 
 </Project>
