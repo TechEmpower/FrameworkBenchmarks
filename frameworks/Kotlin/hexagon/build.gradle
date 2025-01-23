@@ -1,7 +1,7 @@
 
 plugins {
     id "org.jetbrains.kotlin.jvm" version "2.1.0" apply false
-    id "org.graalvm.buildtools.native" version "0.10.3" apply false
+    id "org.graalvm.buildtools.native" version "0.10.4" apply false
 }
 
 version = "1.0.0"
