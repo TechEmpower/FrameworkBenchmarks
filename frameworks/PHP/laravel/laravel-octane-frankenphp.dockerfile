@@ -1,7 +1,6 @@
 FROM dunglas/frankenphp
  
 RUN install-php-extensions \
-    intl \
 	opcache \
 	pcntl \
     pdo_mysql \
@@ -26,4 +25,4 @@ RUN frankenphp -v
 
 EXPOSE 8080
 
-ENTRYPOINT ["php", "artisan", "octane:frankenphp", "--port=8080"]
+ENTRYPOINT ["php", "artisan", "octane:frankenphp", "--port=8080", "--caddyfile=/app/deploy/franken/Caddyfile"]

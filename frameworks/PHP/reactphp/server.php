@@ -8,6 +8,9 @@ require __DIR__ . '/vendor/autoload.php';
 require_once __DIR__.'/app.php';
 
 $server = new HttpServer(requestHandler());
+$server->on('error', function (\Throwable $error) {
+    echo $error->getMessage(), PHP_EOL;
+});
 $socket = new SocketServer('0.0.0.0:8080');
 $server->listen($socket);
 

@@ -1,16 +1,21 @@
 
 package io.helidon.benchmark.nima.services;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Comparator;
 import java.util.List;
 
-import com.fizzed.rocker.runtime.ArrayOfByteArraysOutput;
+import gg.jte.TemplateOutput;
 import io.helidon.benchmark.nima.models.DbRepository;
 import io.helidon.benchmark.nima.models.Fortune;
 import io.helidon.webserver.http.Handler;
 import io.helidon.webserver.http.ServerRequest;
 import io.helidon.webserver.http.ServerResponse;
-import views.fortunes;
+
+import gg.jte.html.OwaspHtmlTemplateOutput;
+import gg.jte.generated.precompiled.JtefortunesGenerated;
 
 import static io.helidon.benchmark.nima.Main.CONTENT_TYPE_HTML;
 import static io.helidon.benchmark.nima.Main.SERVER;
@@ -33,8 +38,38 @@ public class FortuneHandler implements Handler {
         List<Fortune> fortuneList = repository.getFortunes();
         fortuneList.add(ADDITIONAL_FORTUNE);
         fortuneList.sort(Comparator.comparing(Fortune::getMessage));
-        res.send(fortunes.template(fortuneList)
-                .render(ArrayOfByteArraysOutput.FACTORY)
-                .toByteArray());
+        try (OutputStream os = res.outputStream()) {
+            JtefortunesGenerated.render(new OwaspHtmlTemplateOutput(new HelidonTemplateOutput(os)),
+                    null, fortuneList);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
+
+    static class HelidonTemplateOutput implements TemplateOutput{
+        private final OutputStream os;
+
+        HelidonTemplateOutput(OutputStream os) {
+            this.os = os;
+        }
+
+        @Override
+        public void writeContent(String value) {
+            writeBinaryContent(value.getBytes(StandardCharsets.UTF_8));
+        }
+
+        @Override
+        public void writeContent(String value, int beginIndex, int endIndex) {
+            writeBinaryContent(value.substring(beginIndex, endIndex).getBytes(StandardCharsets.UTF_8));
+        }
+
+        @Override
+        public void writeBinaryContent(byte[] value) {
+            try {
+                os.write(value);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    };
 }

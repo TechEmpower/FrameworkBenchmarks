@@ -24,4 +24,4 @@ ENV RAILS_ENV=production_postgresql
 ENV PORT=8080
 ENV REDIS_URL=redis://localhost:6379/0
 CMD service redis-server start && \
-    bundle exec iodine
+    bundle exec iodine -w $(ruby config/auto_tune.rb | grep -Eo '[0-9]+' | head -n 1)
