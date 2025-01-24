@@ -5,9 +5,9 @@ plugins {
 
 dependencies {
     api(project(":model"))
-    api("com.hexagontk:http_server:$hexagonVersion")
-    api("com.hexagontk:templates_jte:$hexagonVersion")
-    api("com.hexagontk:serialization_jackson_json:$hexagonVersion")
+    api("com.hexagontk.http:http_server:$hexagonVersion")
+    api("com.hexagontk.templates:templates_jte:$hexagonVersion")
+    api("com.hexagontk.serialization:serialization_jackson_json:$hexagonVersion")
     api("org.cache2k:cache2k-core:$cache2kVersion")
 
     jteGenerate("gg.jte:jte-native-resources:3.1.13")

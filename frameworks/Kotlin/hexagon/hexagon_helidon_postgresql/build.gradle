@@ -3,5 +3,5 @@ apply(from: "$gradleScripts/application.gradle")
 
 dependencies {
     api(project(":store_sql"))
-    api("com.hexagontk:http_server_helidon:$hexagonVersion")
+    api("com.hexagontk.http:http_server_helidon:$hexagonVersion")
 }

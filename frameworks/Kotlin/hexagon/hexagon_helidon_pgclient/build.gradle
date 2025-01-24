@@ -4,5 +4,5 @@ apply(from: "$gradleScripts/native.gradle")
 
 dependencies {
     api(project(":store_pgclient"))
-    api("com.hexagontk:http_server_helidon:$hexagonVersion")
+    api("com.hexagontk.http:http_server_helidon:$hexagonVersion")
 }

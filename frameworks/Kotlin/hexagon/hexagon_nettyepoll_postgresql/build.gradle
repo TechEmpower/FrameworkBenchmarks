@@ -3,6 +3,6 @@ apply(from: "$gradleScripts/application.gradle")
 
 dependencies {
     api(project(":store_sql"))
-    api("com.hexagontk:http_server_netty_epoll:$hexagonVersion")
+    api("com.hexagontk.http:http_server_netty_epoll:$hexagonVersion")
     api("io.netty:netty-transport-native-epoll:$nettyVersion:linux-x86_64")
 }
