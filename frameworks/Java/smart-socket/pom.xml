@@ -18,6 +18,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>tech.smartboot.feat</groupId>
+            <artifactId>feat-restful</artifactId>
+            <version>0.5</version>
+        </dependency>
+        <dependency>
             <groupId>io.edap</groupId>
             <artifactId>edapx-json</artifactId>
             <version>0.1-SNAPSHOT</version>
@@ -26,6 +31,12 @@
             <groupId>tech.smartboot.servlet</groupId>
             <artifactId>servlet-core</artifactId>
             <version>${smartservlet.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>tech.smartboot.feat</groupId>
+                    <artifactId>feat-restful</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.zaxxer</groupId>
