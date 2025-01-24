@@ -18,7 +18,7 @@ public class FeatController {
 
     @RequestMapping("/json")
     public Message json(HttpResponse response) {
-        response.setContentType(HeaderValueEnum.ContentType.TEXT_PLAIN_UTF8);
+        response.setContentType(HeaderValueEnum.ContentType.APPLICATION_JSON_UTF8);
         return new Message("Hello, World!");
     }
 }
