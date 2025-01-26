@@ -25,7 +25,7 @@
             }
         },
         {
-            "default": {
+            "rt_async-std": {
                 "dockerfile":     "rt_async-std.dockerfile",
                 "display_name":   "Ohkami [async-std]",
                 "framework":      "Ohkami",
@@ -48,7 +48,7 @@
             }
         },
         {
-            "default": {
+            "rt_smol": {
                 "dockerfile":     "rt_smol.dockerfile",
                 "display_name":   "Ohkami [smol]",
                 "framework":      "Ohkami",
@@ -67,7 +67,7 @@
             }
         },
         {
-            "default": {
+            "rt_glommio": {
                 "dockerfile":     "rt_glommio.dockerfile",
                 "display_name":   "Ohkami [glommio]",
                 "framework":      "Ohkami",
@@ -86,7 +86,7 @@
             }
         },
         {
-            "default": {
+            "rt_nio": {
                 "dockerfile":     "rt_nio.dockerfile",
                 "display_name":   "Ohkami [nio]",
                 "framework":      "Ohkami",

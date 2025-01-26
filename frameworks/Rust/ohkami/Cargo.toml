@@ -15,6 +15,6 @@ sqlx         = { optional = true, version = "0.8", features = ["postgres", "tls-
 db           = ["yarte", "futures-util", "rand", "sqlx"]
 rt_tokio     = ["ohkami/rt_tokio",     "db", "sqlx/runtime-tokio"]
 rt_async-std = ["ohkami/rt_async-std", "db", "sqlx/runtime-async-std"]
-rt_smol      = ["ohkami/rt_smol"   ]
+rt_smol      = ["ohkami/rt_smol"]
 rt_glommio   = ["ohkami/rt_glommio"]
-rt_nio       = ["ohkami/rt_nio"    ]
+rt_nio       = ["ohkami/rt_nio"]
