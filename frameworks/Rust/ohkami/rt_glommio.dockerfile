@@ -4,7 +4,10 @@ RUN apt update && apt install -y --no-install-recommends \
     libpq-dev pkg-config libssl-dev \
     && rm -rf /var/lib/apt/lists/*
 
-COPY ./rt_glommio ./Cargo.toml ./Cargo.lock ./src /build/
+COPY ./Cargo.toml  /build/
+COPY ./Cargo.lock  /build/
+COPY ./src/        /build/src/
+COPY ./rt_glommio/ /build/rt_glommio/
 
 WORKDIR /build/rt_glommio
 RUN RUSTFLAGS="-C target-cpu=native" cargo build --release

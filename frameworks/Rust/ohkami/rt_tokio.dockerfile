@@ -4,8 +4,11 @@ RUN apt update && apt install -y --no-install-recommends \
     libpq-dev pkg-config libssl-dev \
     && rm -rf /var/lib/apt/lists/*
 
-COPY ./rt_tokio ./Cargo.toml ./Cargo.lock ./src /build/
-
+COPY ./Cargo.toml /build/
+COPY ./Cargo.lock /build/
+COPY ./src/       /build/src/
+COPY ./rt_tokio/  /build/rt_tokio/
+    
 WORKDIR /build/rt_tokio
 RUN RUSTFLAGS="-C target-cpu=native" cargo build --release
 
