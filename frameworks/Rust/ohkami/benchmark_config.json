@@ -63,10 +63,6 @@
                 "database_os":    "Linux",
                 "port":           8000,
                 "json_url":       "/json",
-                "db_url":         "/db",
-                "query_url":      "/queries?q=",
-                "fortune_url":    "/fortunes",
-                "update_url":     "/updates?q=",
                 "plaintext_url":  "/plaintext"
             }
         },
@@ -86,10 +82,6 @@
                 "database_os":    "Linux",
                 "port":           8000,
                 "json_url":       "/json",
-                "db_url":         "/db",
-                "query_url":      "/queries?q=",
-                "fortune_url":    "/fortunes",
-                "update_url":     "/updates?q=",
                 "plaintext_url":  "/plaintext"
             }
         },
@@ -109,10 +101,6 @@
                 "database_os":    "Linux",
                 "port":           8000,
                 "json_url":       "/json",
-                "db_url":         "/db",
-                "query_url":      "/queries?q=",
-                "fortune_url":    "/fortunes",
-                "update_url":     "/updates?q=",
                 "plaintext_url":  "/plaintext"
             }
         }

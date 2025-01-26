@@ -1,7 +1,8 @@
 FROM rust:1.84-slim-bookworm AS builder
 
 RUN apt update && apt install -y --no-install-recommends \
-    libpq-dev pkg-config libssl-dev \
+    pkg-config \
+    libpq-dev libssl-dev \
     && rm -rf /var/lib/apt/lists/*
 
 COPY ./Cargo.toml /build/
