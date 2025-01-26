@@ -22,4 +22,4 @@ EXPOSE 8000
 ENV DATABASE_URL=postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world
 ENV MAX_CONNECTIONS=56
 ENV MIN_CONNECTIONS=56
-CMD /app/framework_benchmarks-nio
+CMD [ "/app/framework_benchmarks-nio" ]
