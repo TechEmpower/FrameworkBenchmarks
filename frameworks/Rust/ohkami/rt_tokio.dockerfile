@@ -5,7 +5,6 @@ RUN apt update && apt install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 COPY ./Cargo.toml /build/
-COPY ./Cargo.lock /build/
 COPY ./src/       /build/src/
 COPY ./rt_tokio/  /build/rt_tokio/
     
