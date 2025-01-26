@@ -10,7 +10,8 @@ COPY ./src/       /build/src/
 COPY ./rt_tokio/  /build/rt_tokio/
     
 WORKDIR /build/rt_tokio
-RUN RUSTFLAGS="-C target-cpu=native" cargo build --release
+ENV RUSTFLAGS="-C target-cpu=native"
+RUN cargo build --release
 
 ##########################################################
 

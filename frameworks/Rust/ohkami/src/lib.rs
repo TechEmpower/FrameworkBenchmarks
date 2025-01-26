@@ -1,27 +1,41 @@
 mod fangs;
-use fangs::SetServer;
-
 mod models;
-use models::{Fortune, Message, World, WorldsMeta};
+#[cfg(feature = "db")] mod postgres;
+#[cfg(feature = "db")] mod templates;
 
-mod postgres;
-use postgres::Postgres;
-
-mod templates;
-use templates::FortunesTemplate;
-
-use ohkami::prelude::*;
-use ohkami::format::{JSON, Query};
+use {
+    fangs::SetServer,
+    models::Message,
+    ohkami::prelude::*,
+    ohkami::format::JSON,
+};
+#[cfg(feature = "db")] use {
+    models::{Fortune, World, WorldsMeta},
+    postgres::Postgres,
+    templates::FortunesTemplate,
+    ohkami::format::Query,
+};
 
 pub async fn ohkami() -> Ohkami {
-    Ohkami::new((SetServer, Postgres::init().await,
-        "/json"     .GET(json_serialization),
-        "/db"       .GET(single_database_query),
-        "/queries"  .GET(multiple_database_query),
-        "/fortunes" .GET(fortunes),
-        "/updates"  .GET(database_updates),
-        "/plaintext".GET(plaintext),
-    ))
+    #[cfg(feature = "db")] {
+        Ohkami::new((
+            SetServer,
+            Postgres::init().await,
+            "/json"     .GET(json_serialization),
+            "/db"       .GET(single_database_query),
+            "/queries"  .GET(multiple_database_query),
+            "/fortunes" .GET(fortunes),
+            "/updates"  .GET(database_updates),
+            "/plaintext".GET(plaintext),
+        ))
+    }
+    #[cfg(not(feature = "db"))] {
+        Ohkami::new((
+            SetServer,
+            "/json"     .GET(json_serialization),
+            "/plaintext".GET(plaintext),
+        ))
+    }
 }
 
 async fn json_serialization() -> JSON<Message> {
@@ -30,6 +44,7 @@ async fn json_serialization() -> JSON<Message> {
     })
 }
 
+#[cfg(feature = "db")]
 async fn single_database_query(
     Context(db): Context<'_, Postgres>,
 ) -> JSON<World> {
@@ -37,6 +52,7 @@ async fn single_database_query(
     JSON(world)
 }
 
+#[cfg(feature = "db")]
 async fn multiple_database_query(
     Query(q): Query<WorldsMeta<'_>>,
     Context(db): Context<'_, Postgres>,
@@ -46,6 +62,7 @@ async fn multiple_database_query(
     JSON(worlds)
 }
 
+#[cfg(feature = "db")]
 async fn fortunes(
     Context(db): Context<'_, Postgres>,
 ) -> FortunesTemplate {
@@ -58,6 +75,7 @@ async fn fortunes(
     FortunesTemplate { fortunes }
 }
 
+#[cfg(feature = "db")]
 async fn database_updates(
     Query(q): Query<WorldsMeta<'_>>,
     Context(db): Context<'_, Postgres>,

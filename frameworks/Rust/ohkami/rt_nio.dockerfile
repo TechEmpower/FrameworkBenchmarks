@@ -10,7 +10,8 @@ COPY ./src/       /build/src/
 COPY ./rt_nio/    /build/rt_nio/
     
 WORKDIR /build/rt_nio
-RUN RUSTFLAGS="-C target-cpu=native" cargo build --release
+ENV RUSTFLAGS="-C target-cpu=native"
+RUN cargo build --release
 
 ##########################################################
 

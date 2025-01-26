@@ -5,12 +5,12 @@ RUN apt update && apt install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 COPY ./Cargo.toml    /build/
-COPY ./Cargo.lock    /build/
 COPY ./src/          /build/src/
 COPY ./rt_async-std/ /build/rt_async-std/
     
 WORKDIR /build/rt_async-std
-RUN RUSTFLAGS="-C target-cpu=native" cargo build --release
+ENV RUSTFLAGS="-C target-cpu=native"
+RUN cargo build --release
 
 ##########################################################
 

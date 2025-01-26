@@ -1,7 +1,7 @@
 FROM rust:1.84-slim-bookworm AS builder
 
 RUN apt update && apt install -y --no-install-recommends \
-    libpq-dev pkg-config libssl-dev \
+    libpq-dev pkg-config libssl-dev git \
     && rm -rf /var/lib/apt/lists/*
 
 COPY ./Cargo.toml  /build/
@@ -10,7 +10,8 @@ COPY ./src/        /build/src/
 COPY ./rt_glommio/ /build/rt_glommio/
 
 WORKDIR /build/rt_glommio
-RUN RUSTFLAGS="-C target-cpu=native" cargo build --release
+ENV RUSTFLAGS="-C target-cpu=native"
+RUN cargo build --release
 
 ##########################################################
 

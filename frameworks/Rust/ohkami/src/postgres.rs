@@ -1,3 +1,5 @@
+#![cfg(feature = "db")]
+
 use futures_util::{stream::FuturesUnordered, TryStreamExt};
 use rand::{rngs::SmallRng, SeedableRng, Rng, thread_rng};
 use crate::models::{World, Fortune};

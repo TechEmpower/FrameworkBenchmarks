@@ -10,7 +10,8 @@ COPY ./src/       /build/src/
 COPY ./rt_smol/   /build/rt_smol/
     
 WORKDIR /build/rt_smol
-RUN RUSTFLAGS="-C target-cpu=native" cargo build --release
+ENV RUSTFLAGS="-C target-cpu=native"
+RUN cargo build --release
 
 ##########################################################
 

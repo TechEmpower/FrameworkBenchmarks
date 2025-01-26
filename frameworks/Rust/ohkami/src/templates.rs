@@ -1,3 +1,5 @@
+#![cfg(feature = "db")]
+
 use ohkami::{IntoResponse, Response};
 use yarte::Template;
 use crate::models::Fortune;
