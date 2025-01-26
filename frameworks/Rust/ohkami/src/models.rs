@@ -1,6 +1,5 @@
 use ohkami::serde::{Serialize, Deserialize};
 
-
 #[derive(Serialize)]
 pub struct Message {
     pub message: &'static str,
@@ -14,17 +13,18 @@ pub struct Fortune {
 
 #[derive(sqlx::FromRow)]
 #[derive(Serialize)]
+#[allow(non_snake_case)]
 pub struct World {
     pub id:           i32,
-    #[serde(rename="randomNumber")]
+    #[serde(rename = "randomNumber")]
     pub randomnumber: i32,
 }
 
 #[derive(Deserialize)]
-pub struct WorldsQuery<'q> {
-    q: Option<&'q str>,
+pub struct WorldsMeta<'req> {
+    q: Option<&'req str>,
 }
-impl WorldsQuery<'_> {
+impl WorldsMeta<'_> {
     #[inline(always)]
     pub fn parse(self) -> usize {
         match self.q.unwrap_or("1").parse::<usize>().unwrap_or(1) {
