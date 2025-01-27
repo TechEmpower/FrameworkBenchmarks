@@ -16,22 +16,22 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <None Remove="Resources\Fortunes.html"/>
-        <None Remove="Resources\Template.html"/>
+        <None Remove="Resources\Fortunes.html" />
+        <None Remove="Resources\Template.html" />
     </ItemGroup>
 
     <ItemGroup>
-        <EmbeddedResource Include="Resources\Template.html"/>
+        <EmbeddedResource Include="Resources\Template.html" />
     </ItemGroup>
 
     <ItemGroup>
 
-        <PackageReference Include="GenHTTP.Core.Kestrel" Version="9.0.0" />
+        <PackageReference Include="GenHTTP.Core" Version="9.6.0" />
         <PackageReference Include="GenHTTP.Modules.Razor" Version="8.6.0" />
-        <PackageReference Include="GenHTTP.Modules.Webservices" Version="9.0.0" />
+        <PackageReference Include="GenHTTP.Modules.Webservices" Version="9.6.0" />
 
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
-        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.1" />
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.3" />
 
     </ItemGroup>
 
