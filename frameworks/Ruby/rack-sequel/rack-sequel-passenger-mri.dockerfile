@@ -11,7 +11,7 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends libjemalloc2
 ENV LD_PRELOAD=libjemalloc.so.2
 
-RUN bundle config set without 'postgresql puma unicorn'
+RUN bundle config set with 'mysql passenger'
 RUN bundle install --jobs=4 --gemfile=/rack-sequel/Gemfile
 
 # TODO: https://github.com/phusion/passenger/issues/1916
