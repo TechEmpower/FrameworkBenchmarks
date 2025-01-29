@@ -36,24 +36,6 @@
                 "database_os": "Linux",
                 "display_name": "Sisk Framework (Cadente)"
             }
-        },
-        {
-            "cadente-aot": {
-                "plaintext_url": "/plaintext",
-                "json_url": "/json",
-                "port": 8080,
-                "approach": "Realistic",
-                "classification": "Platform",
-                "database": "None",
-                "framework": "Sisk",
-                "language": "C#",
-                "orm": "Raw",
-                "platform": ".NET",
-                "webserver": "Cadente",
-                "os": "Linux",
-                "database_os": "Linux",
-                "display_name": "Sisk Framework (Cadente, Aot)"
-            }
         }
     ]
 }
