@@ -33,14 +33,13 @@ RUN mkdir -p bootstrap/cache \
             storage/framework/views \
             storage/framework/cache
 
-RUN echo "PRP_HTTP_LISTEN=http://0.0.0.0:8080" >> .env
-RUN echo "PRP_HTTP_WORKERS=64" >> .env
-RUN echo "PRP_HTTP_RELOAD=0" >> .env
-RUN echo "PRP_HTTP_SANDBOX=1" >> .env
+RUN echo "RIP_HTTP_LISTEN=http://0.0.0.0:8080" >> .env
+RUN echo "RIP_HTTP_WORKERS=64" >> .env
+RUN echo "RIP_HTTP_RELOAD=0" >> .env
 
 # Configure
 RUN composer install --quiet
-RUN composer require cloudtay/ripple-driver --quiet
+RUN composer require cloudtay/laravel-ripple --quiet
 RUN php artisan vendor:publish --tag=ripple-config
 RUN php artisan optimize
 
