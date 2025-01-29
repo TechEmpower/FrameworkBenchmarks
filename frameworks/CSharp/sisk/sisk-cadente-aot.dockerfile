@@ -1,4 +1,6 @@
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+RUN apt-get update
+RUN apt-get -yqq install clang zlib1g-dev
 WORKDIR /source
 
 # copy csproj and restore as distinct layers
