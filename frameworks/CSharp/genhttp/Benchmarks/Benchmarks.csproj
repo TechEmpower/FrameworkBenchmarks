@@ -26,9 +26,8 @@
 
     <ItemGroup>
 
-        <PackageReference Include="GenHTTP.Core" Version="9.6.0" />
-        <PackageReference Include="GenHTTP.Modules.Razor" Version="8.6.0" />
-        <PackageReference Include="GenHTTP.Modules.Webservices" Version="9.6.0" />
+        <PackageReference Include="GenHTTP.Core" Version="9.6.2" />
+        <PackageReference Include="GenHTTP.Modules.Webservices" Version="9.6.2" />
 
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.1" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.3" />
