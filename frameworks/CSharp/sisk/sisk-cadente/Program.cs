@@ -25,16 +25,16 @@ void Host_ContextCreated ( HttpHost sender, HttpHostContext session ) {
 
 static void SerializePlainTextResponse ( HttpHostContext.HttpResponse response ) {
 
-    var messageBytes = Encoding.UTF8.GetBytes ( "Hello, world!" );
+    var messageBytes = Encoding.UTF8.GetBytes ( "Hello, World!" );
 
-    response.Headers.Add ( new HttpHeader ( "Content-Type", "text/plain" ) );
+    response.Headers.Add ( new HttpHeader ( "Content-Type", "text/plain; charset=UTF-8" ) );
     response.ResponseStream = new MemoryStream ( messageBytes );
 }
 
 static void SerializeJsonResponse ( HttpHostContext.HttpResponse response ) {
 
     var contentBytes = JsonSerializer.SerializeToUtf8Bytes ( new {
-        message = "Hello, world!"
+        message = "Hello, World!"
     } );
 
     response.Headers.Add ( new HttpHeader ( "Content-Type", "application/json" ) );
