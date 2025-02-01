@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "module": "src/index.js",
   "devDependencies": {
-    "@types/bun": "^1.1.14",
+    "@types/bun": "^1.2.2",
     "typescript": "^5.7.2"
   },
   "scripts": {
