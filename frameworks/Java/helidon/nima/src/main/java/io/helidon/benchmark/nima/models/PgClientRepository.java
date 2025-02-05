@@ -38,7 +38,7 @@ public class PgClientRepository implements DbRepository {
                 .setTcpQuickAck(true)
                 .setTcpKeepAlive(true)
                 .setPipeliningLimit(100000);
-        connectionPool = PgClientConnectionPool.create(vertx, connectOptions);
+        connectionPool = PgClientConnectionPool.create(vertx, connectOptions, config);
     }
 
     @Override

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.locks.ReentrantLock;
 
+import io.helidon.config.Config;
 import io.vertx.core.Vertx;
 import io.vertx.pgclient.PgConnectOptions;
 
@@ -13,8 +14,8 @@ class PgClientConnectionPoolMap extends PgClientConnectionPool {
     private final ReentrantLock lock = new ReentrantLock();
     private final Map<String, PgClientConnection> connectionMap = new HashMap<>();
 
-    PgClientConnectionPoolMap(Vertx vertx, PgConnectOptions options) {
-        super(vertx, options);
+    PgClientConnectionPoolMap(Vertx vertx, PgConnectOptions options, Config config) {
+        super(vertx, options, config);
     }
 
     @Override

@@ -3,17 +3,23 @@ package io.helidon.benchmark.nima.models;
 
 import java.util.concurrent.locks.ReentrantLock;
 
+import io.helidon.config.Config;
 import io.vertx.core.Vertx;
 import io.vertx.pgclient.PgConnectOptions;
 
 class PgClientConnectionPoolArray extends PgClientConnectionPool {
 
+    private final int connections;
+    private final PgClientConnection[] connectionArray;
     private final ReentrantLock lock = new ReentrantLock();
-    private final int connections = Runtime.getRuntime().availableProcessors() * 2;
-    private final PgClientConnection[] connectionArray = new PgClientConnection[connections];
 
-    PgClientConnectionPoolArray(Vertx vertx, PgConnectOptions options) {
-        super(vertx, options);
+    PgClientConnectionPoolArray(Vertx vertx, PgConnectOptions options, Config config) {
+        super(vertx, options, config);
+        double sizeFactor = config.get("pgclient-connection-pool.size-factor")
+                .asDouble()
+                .orElse(1.0);
+        connections = (int) (Runtime.getRuntime().availableProcessors() * sizeFactor);
+        connectionArray = new PgClientConnection[connections];
     }
 
     @Override
