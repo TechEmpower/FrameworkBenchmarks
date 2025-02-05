@@ -3,6 +3,8 @@ using System.Text;
 using System.Text.Json;
 using Sisk.Cadente;
 
+HttpHost.QueueSize = 4096;
+
 var host = new HttpHost ( new IPEndPoint ( IPAddress.Any, 8080 ) );
 host.ContextCreated += Host_ContextCreated;
 
