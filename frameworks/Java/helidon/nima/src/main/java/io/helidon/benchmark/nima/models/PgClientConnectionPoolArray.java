@@ -19,7 +19,6 @@ class PgClientConnectionPoolArray extends PgClientConnectionPool {
     @Override
     public PgClientConnection clientConnection() {
         int index = Thread.currentThread().hashCode() % connections;
-        System.out.println("### index = " + index);
         PgClientConnection connection = connectionArray[index];
         if (connection == null) {
             try {
