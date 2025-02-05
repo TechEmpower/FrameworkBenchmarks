@@ -38,5 +38,5 @@ username: benchmarkdbuser
 password: benchmarkdbpass
 db-repository: "pgclient"     # "pgclient" (default) or "hikari"
 pgclient-connection-pool:
-  size-factor: 2.0            # size = available-processors * size-factor
+  size-factor: 1.0            # size = available-processors * size-factor
 

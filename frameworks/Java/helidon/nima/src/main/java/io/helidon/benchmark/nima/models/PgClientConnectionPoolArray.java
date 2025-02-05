@@ -2,12 +2,14 @@
 package io.helidon.benchmark.nima.models;
 
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Logger;
 
 import io.helidon.config.Config;
 import io.vertx.core.Vertx;
 import io.vertx.pgclient.PgConnectOptions;
 
 class PgClientConnectionPoolArray extends PgClientConnectionPool {
+    private static final Logger LOGGER = Logger.getLogger(PgClientConnectionPoolArray.class.getName());
 
     private final int connections;
     private final PgClientConnection[] connectionArray;
@@ -20,6 +22,8 @@ class PgClientConnectionPoolArray extends PgClientConnectionPool {
                 .orElse(1.0);
         connections = (int) (Runtime.getRuntime().availableProcessors() * sizeFactor);
         connectionArray = new PgClientConnection[connections];
+        LOGGER.info("Connection pool is " + getClass().getSimpleName());
+        LOGGER.info("Size of connection pool is " + connections);
     }
 
     @Override
