@@ -24,10 +24,6 @@ abstract class PgClientConnectionPool implements AutoCloseable {
 
     abstract PgClientConnection clientConnection();
 
-    protected Config config() {
-        return config;
-    }
-
     protected PgClientConnection newConnection() {
         try {
             PgConnection conn = PgConnection.connect(vertx, options)
