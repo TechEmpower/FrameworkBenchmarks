@@ -1453,7 +1453,7 @@ dependencies = [
 [[package]]
 name = "xitca-codegen"
 version = "0.4.0"
-source = "git+http://github.com/HFQR/xitca-web?rev=2ec8407#2ec8407591403544a7518c04d9e1dd2b31c84d99"
+source = "git+http://github.com/HFQR/xitca-web?rev=bc460ee#bc460eed21cae75239f4f998ffbfd0c233653b09"
 dependencies = [
  "quote",
  "syn",
@@ -1462,7 +1462,7 @@ dependencies = [
 [[package]]
 name = "xitca-http"
 version = "0.7.0"
-source = "git+http://github.com/HFQR/xitca-web?rev=2ec8407#2ec8407591403544a7518c04d9e1dd2b31c84d99"
+source = "git+http://github.com/HFQR/xitca-web?rev=bc460ee#bc460eed21cae75239f4f998ffbfd0c233653b09"
 dependencies = [
  "futures-core",
  "http",
@@ -1512,7 +1512,7 @@ dependencies = [
 [[package]]
 name = "xitca-postgres"
 version = "0.3.0"
-source = "git+http://github.com/HFQR/xitca-web?rev=2ec8407#2ec8407591403544a7518c04d9e1dd2b31c84d99"
+source = "git+http://github.com/HFQR/xitca-web?rev=bc460ee#bc460eed21cae75239f4f998ffbfd0c233653b09"
 dependencies = [
  "fallible-iterator",
  "futures-core",
@@ -1550,7 +1550,7 @@ dependencies = [
 [[package]]
 name = "xitca-server"
 version = "0.5.0"
-source = "git+http://github.com/HFQR/xitca-web?rev=2ec8407#2ec8407591403544a7518c04d9e1dd2b31c84d99"
+source = "git+http://github.com/HFQR/xitca-web?rev=bc460ee#bc460eed21cae75239f4f998ffbfd0c233653b09"
 dependencies = [
  "socket2 0.5.8",
  "tokio",
@@ -1564,7 +1564,7 @@ dependencies = [
 [[package]]
 name = "xitca-service"
 version = "0.3.0"
-source = "git+http://github.com/HFQR/xitca-web?rev=2ec8407#2ec8407591403544a7518c04d9e1dd2b31c84d99"
+source = "git+http://github.com/HFQR/xitca-web?rev=bc460ee#bc460eed21cae75239f4f998ffbfd0c233653b09"
 
 [[package]]
 name = "xitca-unsafe-collection"
@@ -1608,7 +1608,7 @@ dependencies = [
 [[package]]
 name = "xitca-web"
 version = "0.7.0"
-source = "git+http://github.com/HFQR/xitca-web?rev=2ec8407#2ec8407591403544a7518c04d9e1dd2b31c84d99"
+source = "git+http://github.com/HFQR/xitca-web?rev=bc460ee#bc460eed21cae75239f4f998ffbfd0c233653b09"
 dependencies = [
  "futures-core",
  "pin-project-lite",
