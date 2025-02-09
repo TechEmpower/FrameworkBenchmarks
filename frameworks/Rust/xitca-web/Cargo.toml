@@ -104,9 +104,9 @@ xitca-postgres-diesel = { git = "https://github.com/fakeshadow/xitca-postgres-di
 diesel-async = { git = "https://github.com/weiznich/diesel_async", rev = "5b8262b" }
 mio = { git = "https://github.com/fakeshadow/mio", rev = "9bae6012b7ecfc6083350785f71a5e8265358178" }
 
-xitca-codegen = { git = "http://github.com/HFQR/xitca-web", rev = "0a0b82a" }
-xitca-http = { git = "http://github.com/HFQR/xitca-web", rev = "0a0b82a" }
-xitca-postgres = { git = "http://github.com/HFQR/xitca-web", rev = "0a0b82a" }
-xitca-server = { git = "http://github.com/HFQR/xitca-web", rev = "0a0b82a" }
-xitca-service = { git = "http://github.com/HFQR/xitca-web", rev = "0a0b82a" }
-xitca-web = { git = "http://github.com/HFQR/xitca-web", rev = "0a0b82a" }
+xitca-codegen = { git = "http://github.com/HFQR/xitca-web", rev = "2ec8407" }
+xitca-http = { git = "http://github.com/HFQR/xitca-web", rev = "2ec8407" }
+xitca-postgres = { git = "http://github.com/HFQR/xitca-web", rev = "2ec8407" }
+xitca-server = { git = "http://github.com/HFQR/xitca-web", rev = "2ec8407" }
+xitca-service = { git = "http://github.com/HFQR/xitca-web", rev = "2ec8407" }
+xitca-web = { git = "http://github.com/HFQR/xitca-web", rev = "2ec8407" }
