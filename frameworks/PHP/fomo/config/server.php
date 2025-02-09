@@ -39,13 +39,9 @@ return [
      * The following services are created for better performance in the program, only one object is created from them and they can be used throughout the program
      */
     'services' => [
-        Fomo\Services\Auth::class ,
         Fomo\Services\Cache::class ,
         Fomo\Services\Database::class ,
-        Fomo\Services\Elasticsearch::class ,
         Fomo\Services\Language::class ,
-        Fomo\Services\Mail::class ,
-        Fomo\Services\Redis::class ,
         Fomo\Services\Response::class ,
         Fomo\Services\Validation::class ,
     ] ,
