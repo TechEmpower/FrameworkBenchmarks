@@ -53,14 +53,14 @@ pub mod non_wasm {
 
     impl Default for Rand {
         fn default() -> Self {
-            Self(SmallRng::from_entropy())
+            Self(SmallRng::from_os_rng())
         }
     }
 
     impl Rand {
         #[inline]
         pub fn gen_id(&mut self) -> i32 {
-            self.0.gen_range(1..=10000)
+            self.0.random_range(1..=10000)
         }
     }
 }

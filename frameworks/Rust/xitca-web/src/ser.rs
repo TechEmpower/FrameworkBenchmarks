@@ -19,6 +19,7 @@ use crate::util::{Error, State};
 const HELLO: &str = "Hello, World!";
 const HELLO_BYTES: &[u8] = HELLO.as_bytes();
 
+#[cfg_attr(feature = "perf", derive(simd_json_derive::Serialize))]
 #[derive(Clone)]
 pub struct Message {
     message: &'static str,
@@ -34,6 +35,7 @@ impl Message {
 pub struct Num(pub u16);
 
 #[cfg_attr(any(feature = "pg-orm", feature = "pg-orm-async"), derive(diesel::Queryable))]
+#[cfg_attr(feature = "perf", derive(simd_json_derive::Serialize))]
 pub struct World {
     pub id: i32,
     pub randomnumber: i32,
