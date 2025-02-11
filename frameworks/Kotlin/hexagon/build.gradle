@@ -1,7 +1,7 @@
 
 plugins {
     id "org.jetbrains.kotlin.jvm" version "2.1.0" apply false
-    id "org.graalvm.buildtools.native" version "0.10.4" apply false
+    id "org.graalvm.buildtools.native" version "0.10.5" apply false
 }
 
 version = "1.0.0"
@@ -9,7 +9,7 @@ description = "TFB benchmark"
 group = "com.hexagontk"
 
 ext {
-    hexagonVersion = "4.0.0-B2"
+    hexagonVersion = "4.0.0-B4"
     jettyVersion = "12.0.16"
     nettyVersion = "4.1.117.Final"
 
