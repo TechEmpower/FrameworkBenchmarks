@@ -2,6 +2,7 @@ FROM dunglas/frankenphp
 
 # add additional extensions here:
 RUN install-php-extensions \
+    apcu \
     opcache \
     pdo_pgsql \
     zip > /dev/null
@@ -20,8 +21,11 @@ COPY --link . .
 ENV FRANKENPHP_CONFIG="worker /symfony/public/runtime.php"
 ENV APP_RUNTIME="Runtime\FrankenPhpSymfony\Runtime"
 #ENV CADDY_DEBUG=debug
-RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --no-scripts --quiet
-RUN cp deploy/postgresql/.env . && composer dump-env prod && bin/console cache:clear
+RUN composer install --no-dev --no-scripts --quiet
+RUN cp deploy/postgresql/.env . \
+    && composer dump-env prod \
+    && bin/console cache:clear \
+    && composer dump-autoload --classmap-authoritative
 
 EXPOSE 8080
 

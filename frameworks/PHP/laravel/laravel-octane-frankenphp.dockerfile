@@ -19,10 +19,11 @@ RUN mkdir -p bootstrap/cache \
 COPY --link deploy/conf/php.ini  /usr/local/etc/php
 
 RUN composer require laravel/octane guzzlehttp/guzzle --update-no-dev --no-scripts --quiet
-RUN php artisan optimize
+RUN php artisan optimize && \
+    composer dump-autoload --classmap-authoritative
 
 RUN frankenphp -v
 
 EXPOSE 8080
 
-ENTRYPOINT ["php", "artisan", "octane:frankenphp", "--port=8080", "--caddyfile=/app/deploy/franken/Caddyfile"]
+ENTRYPOINT ["php", "artisan", "octane:frankenphp", "--port=8080", "--caddyfile=/app/deploy/franken/Caddyfile", "--quiet"]
