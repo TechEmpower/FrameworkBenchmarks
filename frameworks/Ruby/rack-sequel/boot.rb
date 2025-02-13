@@ -1,31 +1,7 @@
 # frozen_string_literal: true
 require 'bundler/setup'
-require 'time'
 
-MAX_PK = 10_000
-ID_RANGE = (1..10_000).freeze
-ALL_IDS = ID_RANGE.to_a
-QUERIES_MIN = 1
-QUERIES_MAX = 500
 SEQUEL_NO_ASSOCIATIONS = true
-CONTENT_TYPE = 'Content-Type'
-JSON_TYPE = 'application/json'
-HTML_TYPE = 'text/html; charset=utf-8'
-PLAINTEXT_TYPE = 'text/plain'
-DATE_HEADER = 'Date'
-SERVER_HEADER = 'Server'
-
-SERVER_STRING =
-  if defined?(PhusionPassenger)
-    [
-      PhusionPassenger::SharedConstants::SERVER_TOKEN_NAME,
-      PhusionPassenger::VERSION_STRING
-    ].join('/').freeze
-  elsif defined?(Puma)
-    Puma::Const::PUMA_SERVER_STRING
-  elsif defined?(Unicorn)
-    Unicorn::HttpParser::DEFAULTS['SERVER_SOFTWARE']
-  end
 
 Bundler.require(:default) # Load core modules
 
