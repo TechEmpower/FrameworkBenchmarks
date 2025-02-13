@@ -15,5 +15,6 @@ EOF
 
 clace server start &
 sleep 2
+clace app create --auth=none --approve /clace /
 clace app create --auth=none --approve /clace tfb-server:/
 tail -f /dev/null
