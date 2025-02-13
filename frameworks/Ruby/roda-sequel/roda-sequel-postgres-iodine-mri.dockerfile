@@ -11,7 +11,7 @@ RUN apt-get update && \
 ENV LD_PRELOAD=libjemalloc.so.2
 
 ENV BUNDLE_FORCE_RUBY_PLATFORM=true
-RUN bundle config set with 'iodine'
+RUN bundle config set with 'postgresql iodine'
 RUN bundle install --jobs=8
 
 ENV DBTYPE=postgresql

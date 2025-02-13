@@ -11,7 +11,7 @@ RUN apt-get update && \
 ENV LD_PRELOAD=libjemalloc.so.2
 
 ENV BUNDLE_FORCE_RUBY_PLATFORM=true
-RUN bundle config set with 'unicorn'
+RUN bundle config set with 'postgresql unicorn'
 RUN bundle install --jobs=8
 
 ENV DBTYPE=postgresql
