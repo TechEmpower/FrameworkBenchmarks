@@ -8,8 +8,17 @@ from toolset.utils.output_helper import log
 
 
 class FortuneHTMLParser(HTMLParser):
+    IGNORED_TAGS = (
+        "<meta>", "</meta>",
+        "<link>", "</link>",
+        "<script>", "</script>",
+        "<thead>", "</thead>",
+        "<tbody>", "</tbody>",
+    )
+
     def __init__(self):
         HTMLParser.__init__(self, convert_charrefs=False)
+        self.ignore_content = False
         self.body = []
 
     valid_fortune = '''<!doctype html><html>
@@ -41,7 +50,7 @@ class FortuneHTMLParser(HTMLParser):
         # and since we did not specify xml compliance (where
         # incorrect casing would throw a syntax error), we must
         # allow all casings. We will lower for our normalization.
-        self.body.append("<!{d}>".format(d=decl.lower()))
+        self.append("<!{d}>".format(d=decl.lower()))
 
     def handle_charref(self, name):
         '''
@@ -63,37 +72,37 @@ class FortuneHTMLParser(HTMLParser):
         # equality.
         if val == "34" or val == "034" or val == "x22":
             # Append our normalized entity reference to our body.
-            self.body.append("&quot;")
+            self.append("&quot;")
         # "&#39;" is a valid escaping of "-", but it is not
         # required, so we normalize for equality checking.
         if val == "39" or val == "039" or val == "x27":
-            self.body.append("&apos;")
+            self.append("&apos;")
         # Again, "&#43;" is a valid escaping of the "+", but
         # it is not required, so we need to normalize for out
         # final parse and equality check.
         if val == "43" or val == "043" or val == "x2b":
-            self.body.append("+")
+            self.append("+")
         # Again, "&#62;" is a valid escaping of ">", but we
         # need to normalize to "&gt;" for equality checking.
         if val == "62" or val == "062" or val == "x3e":
-            self.body.append("&gt;")
+            self.append("&gt;")
         # Again, "&#60;" is a valid escaping of "<", but we
         # need to normalize to "&lt;" for equality checking.
         if val == "60" or val == "060" or val == "x3c":
-            self.body.append("&lt;")
+            self.append("&lt;")
         # Not sure why some are escaping '/'
         if val == "47" or val == "047" or val == "x2f":
-            self.body.append("/")
+            self.append("/")
         # "&#40;" is a valid escaping of "(", but
         # it is not required, so we need to normalize for out
         # final parse and equality check.
         if val == "40" or val == "040" or val == "x28":
-            self.body.append("(")
+            self.append("(")
         # "&#41;" is a valid escaping of ")", but
         # it is not required, so we need to normalize for out
         # final parse and equality check.
         if val == "41" or val == "041" or val == "x29":
-            self.body.append(")")
+            self.append(")")
 
     def handle_entityref(self, name):
         '''
@@ -101,20 +110,20 @@ class FortuneHTMLParser(HTMLParser):
         need to normalize to "—" for equality checking.
         '''
         if name == "mdash":
-            self.body.append("—")
+            self.append("—")
         else:
-            self.body.append("&{n};".format(n=name))
+            self.append("&{n};".format(n=name))
 
     def handle_starttag(self, tag, attrs):
         '''
         This is called every time a tag is opened. We append
         each one wrapped in "<" and ">".
         '''
-        self.body.append("<{t}>".format(t=tag))
+        self.append("<{t}>".format(t=tag))
 
         # Append a newline after the <table> and <html>
         if tag.lower() == 'table' or tag.lower() == 'html':
-            self.body.append(os.linesep)
+            self.append(os.linesep)
 
     def handle_data(self, data):
         '''
@@ -146,18 +155,24 @@ class FortuneHTMLParser(HTMLParser):
             data = data.replace('"', '&quot;')
             data = data.replace('>', '&gt;')
 
-            self.body.append("{d}".format(d=data))
+            self.append("{d}".format(d=data))
 
     def handle_endtag(self, tag):
         '''
         This is called every time a tag is closed. We append
         each one wrapped in "</" and ">".
         '''
-        self.body.append("</{t}>".format(t=tag))
+        self.append("</{t}>".format(t=tag))
 
         # Append a newline after each </tr> and </head>
         if tag.lower() == 'tr' or tag.lower() == 'head':
-            self.body.append(os.linesep)
+            self.append(os.linesep)
+
+    def append(self, item):
+        self.ignore_content = item == "<script>" or (self.ignore_content and item != "</script>")
+
+        if not (self.ignore_content or item in self.IGNORED_TAGS):
+            self.body.append(item)
 
     def isValidFortune(self, name, out):
         '''
