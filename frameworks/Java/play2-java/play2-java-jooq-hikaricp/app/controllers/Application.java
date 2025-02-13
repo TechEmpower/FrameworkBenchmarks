@@ -11,7 +11,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ThreadLocalRandom;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.jooq.DSLContext;
 import org.jooq.JSONFormat;
@@ -29,7 +29,7 @@ import utils.DatabaseExecutionContext;
 
 public class Application extends Controller {
 
-    private static final SQLDialect DIALECT = SQLDialect.MYSQL_5_7;
+    private static final SQLDialect DIALECT = SQLDialect.MYSQL;
     private static final JSONFormat JSON_FORMAT = JSONFormat.DEFAULT_FOR_RECORDS.recordFormat(RecordFormat.OBJECT);
 
     private final Database db;
