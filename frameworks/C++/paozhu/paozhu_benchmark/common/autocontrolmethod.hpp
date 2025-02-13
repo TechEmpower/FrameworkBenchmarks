@@ -9,14 +9,21 @@
 #include "httppeer.h" 
 
 #include "techempower.h"
-
-
+ 
 namespace http
-{
-  void _initauto_control_httpmethodregto(std::map<std::string, regmethold_t> &methodcallback)
-  {
-    struct regmethold_t temp;
+{ 
+     
+    void _initauto_control_httpmethodregto(std::map<std::string, regmethold_t> &methodcallback)
+    {
+        struct regmethold_t temp;
 
+
+
+    }
+    
+    void _initauto_co_control_httpmethodregto(std::map<std::string, regmethold_co_t> &methodcallback)
+    {
+        struct regmethold_co_t temp;
 		temp.pre = nullptr;
 		temp.regfun = techempowerplaintext;
 		methodcallback.emplace("plaintext",temp);
@@ -54,8 +61,16 @@ namespace http
 
     }
     
-}
+    void _initauto_co_domain_httpmethodregto(std::map<std::string, std::map<std::string, regmethold_co_t>> &domain_methodcallback)
+    {
+        struct regmethold_co_t temp;
+        std::map<std::string, regmethold_co_t> methodcallback;
+        std::map<std::string, std::map<std::string, regmethold_co_t>>::iterator domain_iterator;
+    
 
+    }
+        
+}    
 #endif
 
     
