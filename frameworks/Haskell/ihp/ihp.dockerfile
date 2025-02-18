@@ -1,7 +1,7 @@
 FROM nixos/nix
 
 # Add build dependencies
-RUN nix-env -i cachix
+RUN nix-env -f https://github.com/NixOS/nixpkgs/archive/54b4bb956f9891b872904abdb632cea85a033ff2.tar.gz -iA cachix
 RUN cachix use digitallyinduced
 
 COPY ./src /ihp
