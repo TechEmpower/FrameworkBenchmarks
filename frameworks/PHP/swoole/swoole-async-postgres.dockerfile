@@ -1,6 +1,5 @@
 FROM ubuntu:24.04
 
-ENV SWOOLE_VERSION 6.0.0
 ENV ENABLE_COROUTINE 1
 ENV CPU_MULTIPLES 1
 ENV DATABASE_DRIVER pgsql
@@ -11,9 +10,9 @@ RUN apt update -yqq > /dev/null \
     && apt install -yqq software-properties-common > /dev/null \
     && LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php > /dev/null \
     && apt update -yqq > /dev/null \
-    && apt install libbrotli-dev php8.4-cli php8.4-pdo-pgsql php8.4-dev libpq-dev -y > /dev/null \
-    && cd /tmp && curl -sSL "https://github.com/swoole/swoole-src/archive/v${SWOOLE_VERSION}.tar.gz" | tar xzf - \
-    && cd /tmp/swoole-src-${SWOOLE_VERSION} \
+    && apt install git libbrotli-dev php8.4-cli php8.4-pdo-pgsql php8.4-dev libpq-dev -y > /dev/null \
+    && cd /tmp && git clone https://github.com/swoole/swoole-src.git \
+    && cd /tmp/swoole-src/ && git checkout feat_llhttp \
     && phpize > /dev/null \
     && ./configure --enable-swoole-pgsql > /dev/null \
     && make -j "$(nproc)" > /dev/null \
