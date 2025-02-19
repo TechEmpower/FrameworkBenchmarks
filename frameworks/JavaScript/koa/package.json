@@ -7,7 +7,7 @@
   "dependencies": {
     "bluebird": "3.5.1",
     "handlebars": "4.3.0",
-    "koa": "2.5.0",
+    "koa": "2.15.4",
     "koa-bodyparser": "4.2.0",
     "koa-hbs": "1.0.0",
     "koa-router": "7.4.0",
