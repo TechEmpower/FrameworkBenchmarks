@@ -1,18 +1,18 @@
-package com.hexagonkt
+package com.hexagontk
 
-import com.hexagonkt.core.Jvm.systemSettingOrNull
-import com.hexagonkt.core.media.TEXT_HTML
-import com.hexagonkt.core.urlOf
-import com.hexagonkt.http.server.helidon.HelidonServerAdapter
-import com.hexagonkt.store.BenchmarkPgClientStore
-import com.hexagonkt.templates.jte.JteAdapter
+import com.hexagontk.core.Platform.systemSettingOrNull
+import com.hexagontk.core.media.TEXT_HTML
+import com.hexagontk.core.urlOf
+import com.hexagontk.http.server.helidon.HelidonHttpServer
+import com.hexagontk.store.BenchmarkPgClientStore
+import com.hexagontk.templates.jte.Jte
 import java.time.Duration
 
 fun main() {
     val store = BenchmarkPgClientStore("postgresql")
-    val templateEngine = JteAdapter(TEXT_HTML, precompiled = true)
+    val templateEngine = Jte(TEXT_HTML, precompiled = true)
     val templateUrl = urlOf("classpath:fortunes.jte")
-    val engine = HelidonServerAdapter(
+    val engine = HelidonHttpServer(
         backlog = systemSettingOrNull("backlog") ?: (8 * 1024),
         writeQueueLength = systemSettingOrNull("writeQueueLength") ?: (8 * 1024),
         readTimeout = Duration.parse(systemSettingOrNull("readTimeout") ?: "PT0S"),

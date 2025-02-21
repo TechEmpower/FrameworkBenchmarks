@@ -1,10 +1,10 @@
-package com.hexagonkt
+package com.hexagontk
 
-import com.hexagonkt.http.server.HttpServer
-import com.hexagonkt.http.server.HttpServerPort
-import com.hexagonkt.http.server.HttpServerSettings
-import com.hexagonkt.store.BenchmarkStore
-import com.hexagonkt.templates.TemplatePort
+import com.hexagontk.http.server.HttpServer
+import com.hexagontk.http.server.HttpServerPort
+import com.hexagontk.http.server.HttpServerSettings
+import com.hexagontk.store.BenchmarkStore
+import com.hexagontk.templates.TemplatePort
 import java.net.InetAddress
 import java.net.URL
 

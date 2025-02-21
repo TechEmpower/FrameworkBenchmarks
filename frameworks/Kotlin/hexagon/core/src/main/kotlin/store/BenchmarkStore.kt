@@ -1,9 +1,9 @@
-package com.hexagonkt.store
+package com.hexagontk.store
 
-import com.hexagonkt.model.CachedWorld
-import com.hexagonkt.model.Fortune
-import com.hexagonkt.Settings
-import com.hexagonkt.model.World
+import com.hexagontk.model.CachedWorld
+import com.hexagontk.model.Fortune
+import com.hexagontk.Settings
+import com.hexagontk.model.World
 import org.cache2k.Cache
 import org.cache2k.Cache2kBuilder
 

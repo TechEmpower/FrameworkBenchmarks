@@ -48,7 +48,7 @@
                 "notes": "http://hexagonkt.com",
                 "versus": "servlet"
             },
-            "jettyloom": {
+            "jdk": {
                 "json_url": "/json",
                 "db_url": "/db",
                 "query_url": "/query?queries=",
@@ -67,11 +67,11 @@
                 "webserver": "None",
                 "os": "Linux",
                 "database_os": "Linux",
-                "display_name": "Hexagon Jetty Loom PostgreSQL",
+                "display_name": "Hexagon JDK PostgreSQL",
                 "notes": "http://hexagonkt.com",
                 "versus": "servlet"
             },
-            "jettyloom-pgclient": {
+            "jdk-pgclient": {
                 "json_url": "/json",
                 "db_url": "/db",
                 "query_url": "/query?queries=",
@@ -90,7 +90,7 @@
                 "webserver": "None",
                 "os": "Linux",
                 "database_os": "Linux",
-                "display_name": "Hexagon Jetty Loom PgClient",
+                "display_name": "Hexagon JDK PgClient",
                 "notes": "http://hexagonkt.com",
                 "versus": "servlet"
             },
