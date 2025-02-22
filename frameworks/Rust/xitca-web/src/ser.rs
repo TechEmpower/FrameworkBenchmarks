@@ -2,15 +2,14 @@
 
 use std::borrow::Cow;
 
-use serde::{ser::SerializeStruct, Deserialize, Deserializer, Serialize, Serializer};
+use serde::{Deserialize, Deserializer, Serialize, Serializer, ser::SerializeStruct};
 use xitca_http::{
     body::Once,
     bytes::{BufMutWriter, Bytes},
     http::{
-        self,
+        self, IntoResponse as _, RequestExt, StatusCode,
         const_header_value::{JSON, TEXT_HTML_UTF8, TEXT_UTF8},
         header::CONTENT_TYPE,
-        IntoResponse as _, RequestExt, StatusCode,
     },
 };
 
@@ -126,7 +125,7 @@ impl<'de> Deserialize<'de> for Num {
             {
                 struct FieldVisitor;
 
-                impl<'de> Visitor<'de> for FieldVisitor {
+                impl Visitor<'_> for FieldVisitor {
                     type Value = Field;
 
                     fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {

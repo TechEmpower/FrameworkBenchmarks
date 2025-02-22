@@ -1,7 +1,7 @@
 [package]
 name = "xitca-web"
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
 
 [[bin]]
 name = "xitca-web"
@@ -89,7 +89,7 @@ simd-json-derive =  { version = "0.15", default-features = false, optional = tru
 # stuff can not be used or not needed in wasi target
 [target.'cfg(not(target_family = "wasm"))'.dependencies]
 futures-core = { version = "0.3", default-features = false }
-rand = { version = "0.9", features = ["small_rng"] }
+rand = { version = "0.9", features = ["small_rng"], default-features = false }
 tokio = "1.41"
 
 [profile.release]
@@ -104,9 +104,9 @@ xitca-postgres-diesel = { git = "https://github.com/fakeshadow/xitca-postgres-di
 diesel-async = { git = "https://github.com/weiznich/diesel_async", rev = "5b8262b" }
 mio = { git = "https://github.com/fakeshadow/mio", rev = "9bae6012b7ecfc6083350785f71a5e8265358178" }
 
-xitca-codegen = { git = "http://github.com/HFQR/xitca-web", rev = "bc460ee" }
-xitca-http = { git = "http://github.com/HFQR/xitca-web", rev = "bc460ee" }
-xitca-postgres = { git = "http://github.com/HFQR/xitca-web", rev = "bc460ee" }
-xitca-server = { git = "http://github.com/HFQR/xitca-web", rev = "bc460ee" }
-xitca-service = { git = "http://github.com/HFQR/xitca-web", rev = "bc460ee" }
-xitca-web = { git = "http://github.com/HFQR/xitca-web", rev = "bc460ee" }
+xitca-codegen = { git = "http://github.com/HFQR/xitca-web", rev = "c2de532" }
+xitca-http = { git = "http://github.com/HFQR/xitca-web", rev = "c2de532" }
+xitca-postgres = { git = "http://github.com/HFQR/xitca-web", rev = "c2de532" }
+xitca-server = { git = "http://github.com/HFQR/xitca-web", rev = "c2de532" }
+xitca-service = { git = "http://github.com/HFQR/xitca-web", rev = "c2de532" }
+xitca-web = { git = "http://github.com/HFQR/xitca-web", rev = "c2de532" }

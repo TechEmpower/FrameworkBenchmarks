@@ -4,10 +4,10 @@ mod util;
 use std::os::wasi::io::FromRawFd;
 
 use xitca_web::{
-    handler::{json::Json, text::Text},
-    http::{header::SERVER, WebResponse},
-    route::get,
     App,
+    handler::{json::Json, text::Text},
+    http::{WebResponse, header::SERVER},
+    route::get,
 };
 
 fn main() -> std::io::Result<()> {
