@@ -89,7 +89,7 @@ simd-json-derive =  { version = "0.15", default-features = false, optional = tru
 # stuff can not be used or not needed in wasi target
 [target.'cfg(not(target_family = "wasm"))'.dependencies]
 futures-core = { version = "0.3", default-features = false }
-rand = { version = "0.9", features = ["small_rng"], default-features = false }
+rand = { version = "0.9", features = ["os_rng", "small_rng"], default-features = false }
 tokio = "1.41"
 
 [profile.release]
