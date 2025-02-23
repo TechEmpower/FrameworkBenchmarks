@@ -13,7 +13,7 @@ Thread.Sleep ( Timeout.Infinite );
 
 void Host_ContextCreated ( HttpHost sender, HttpHostContext session ) {
     var request = session.Request;
-
+    
     if (request.Path == "/plaintext") {
         SerializePlainTextResponse ( session.Response );
     }
@@ -38,7 +38,7 @@ static void SerializeJsonResponse ( HttpHostContext.HttpResponse response ) {
     var contentBytes = JsonSerializer.SerializeToUtf8Bytes ( new {
         message = "Hello, World!"
     } );
-
+    
     response.Headers.Add ( new HttpHeader ( "Content-Type", "application/json" ) );
     response.ResponseStream = new MemoryStream ( contentBytes );
 }
