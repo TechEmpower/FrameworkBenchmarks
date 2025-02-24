@@ -1,12 +1,9 @@
-import postgres from "postgres";
+import { SQL } from "bun";
 import { rand } from "./db-handlers";
 import type { Fortune, World } from "./types";
 
-const sql = postgres({
-	host: "tfb-database",
-	user: "benchmarkdbuser",
-	password: "benchmarkdbpass",
-	database: "hello_world",
+const sql = new SQL({
+	url: "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database:5432/hello_world",
 	max: 1,
 });
 
