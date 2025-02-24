@@ -2,7 +2,7 @@
 
 # https://github.com/rbjorklin/techempower-ocaml-image
 # Use pre-built image with all dependencies for faster test times
-FROM rbjorklin/techempower-ocaml-image:5.1.1-b58c72ee
+FROM rbjorklin/techempower-ocaml-image:5.3.0-e8949511
 
 # https://caml.inria.fr/pub/docs/manual-ocaml/libref/Gc.html
 # https://linux.die.net/man/1/ocamlrun
