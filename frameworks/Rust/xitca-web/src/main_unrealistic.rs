@@ -18,6 +18,9 @@ use xitca_http::{
     http::StatusCode,
 };
 use xitca_service::Service;
+// simd-json crate is realistic approach to json serializer.
+// That said xitca-web by default utilize serde-json as serializer making it an unrealistic representation of framework performance
+use simd_json_derive::Serialize;
 
 use self::{
     ser::Message,
@@ -106,7 +109,7 @@ async fn handler<'h>(req: Request<'h, State<db::Client>>, res: Response<'h>) -> 
             .header("server", "X")
             // unrealistic content length header.
             .header("content-length", "27")
-            .body_writer(|buf| serde_json::to_writer(BufMutWriter(buf), &Message::new()).unwrap()),
+            .body_writer(|buf| Message::new().json_write(&mut BufMutWriter(buf)).unwrap()),
 
         // all database related categories are unrealistic. please reference db_unrealistic module for detail.
         "/fortunes" => {
@@ -139,10 +142,10 @@ async fn handler<'h>(req: Request<'h, State<db::Client>>, res: Response<'h>) -> 
 
 fn json_response<'r, DB, T>(res: Response<'r>, state: &State<DB>, val: &T) -> Response<'r, 3>
 where
-    T: serde::Serialize,
+    T: Serialize,
 {
     let buf = &mut *state.write_buf.borrow_mut();
-    serde_json::to_writer(BufMutWriter(buf), val).unwrap();
+    val.json_write(&mut BufMutWriter(buf)).unwrap();
     let res = res
         .status(StatusCode::OK)
         .header("content-type", "application/json")

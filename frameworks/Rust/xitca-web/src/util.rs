@@ -47,20 +47,20 @@ impl<DB> State<DB> {
 
 #[cfg(not(target_arch = "wasm32"))]
 pub mod non_wasm {
-    use rand::{rngs::SmallRng, Rng, SeedableRng};
+    use rand::{Rng, SeedableRng, rngs::SmallRng};
 
     pub struct Rand(SmallRng);
 
     impl Default for Rand {
         fn default() -> Self {
-            Self(SmallRng::from_entropy())
+            Self(SmallRng::from_os_rng())
         }
     }
 
     impl Rand {
         #[inline]
         pub fn gen_id(&mut self) -> i32 {
-            self.0.gen_range(1..=10000)
+            self.0.random_range(1..=10000)
         }
     }
 }
