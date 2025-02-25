@@ -195,6 +195,6 @@ $worker  = new class() extends \Ripple\Worker {
     }
 };
 
-$manager->addWorker($worker);
+$manager->add($worker);
 $manager->run();
 wait();
