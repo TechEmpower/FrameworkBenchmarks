@@ -1,5 +1,5 @@
 from toolset.test_types.abstract_test_type import AbstractTestType
-from toolset.test_types.verifications import verify_query_cases
+from toolset.test_types.verifications import verify_query_cases, verify_status, verify_headers
 
 
 class TestType(AbstractTestType):
@@ -37,6 +37,10 @@ class TestType(AbstractTestType):
                 ("fail",
                  "Route for update must be at least 8 characters, found '{}' instead".format(self.update_url),
                  url))
+
+        headers, body, status = self.request_headers_and_body_and_status(url)
+        problems += verify_status(self.request_headers_and_body_and_status, status, url)
+        problems += verify_headers(self.request_headers_and_body_and_status, headers, url, should_be='json')
 
         if len(problems) == 0:
             return [('pass', '', url + case) for (case, _) in cases]
