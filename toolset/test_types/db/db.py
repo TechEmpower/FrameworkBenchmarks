@@ -1,5 +1,5 @@
 from toolset.test_types.abstract_test_type import AbstractTestType
-from toolset.test_types.verifications import basic_body_verification, verify_headers, verify_randomnumber_object, verify_queries_count
+from toolset.test_types.verifications import basic_body_verification, verify_status, verify_headers, verify_randomnumber_object, verify_queries_count
 
 
 class TestType(AbstractTestType):
@@ -28,7 +28,7 @@ class TestType(AbstractTestType):
         expected_queries = repetitions * concurrency
 
         url = base_url + self.db_url
-        headers, body = self.request_headers_and_body(url)
+        headers, body, status = self.request_headers_and_body_and_status(url)
 
         response, problems = basic_body_verification(body, url)
 
@@ -62,7 +62,8 @@ class TestType(AbstractTestType):
 
         # Verify response content
         problems += verify_randomnumber_object(response, url)
-        problems += verify_headers(self.request_headers_and_body, headers, url, should_be='json')
+        problems += verify_status(self.request_headers_and_body_and_status, status, url)
+        problems += verify_headers(self.request_headers_and_body_and_status, headers, url, should_be='json')
 
         if len(problems) == 0:
             problems += verify_queries_count(self, "World", url, concurrency, repetitions, expected_queries, expected_queries)
