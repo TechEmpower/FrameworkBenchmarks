@@ -16,4 +16,4 @@ COPY --from=builder /app/target/tio-http-server-benchmark-1.0.jar /app/target/ti
 
 EXPOSE 8080
 
-CMD ["java","-jar", "/app/target/tio-http-server-benchmark-1.0.jar"]
+CMD ["java", "-Xms1G", "-Xmx1G", "-XX:+UseNUMA", "-XX:+UseParallelGC","-jar", "/app/target/tio-http-server-benchmark-1.0.jar"]

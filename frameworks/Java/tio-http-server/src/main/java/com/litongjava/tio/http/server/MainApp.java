@@ -9,7 +9,7 @@ import com.litongjava.tio.http.server.controller.CacheController;
 import com.litongjava.tio.http.server.controller.DbController;
 import com.litongjava.tio.http.server.controller.IndexController;
 import com.litongjava.tio.http.server.handler.DefaultHttpRequestDispatcher;
-import com.litongjava.tio.http.server.router.DefaultHttpReqeustRouter;
+import com.litongjava.tio.http.server.router.DefaultHttpRequestRouter;
 import com.litongjava.tio.http.server.router.HttpRequestRouter;
 import com.litongjava.tio.server.ServerTioConfig;
 import com.litongjava.tio.utils.environment.EnvUtils;
@@ -18,11 +18,12 @@ public class MainApp {
 
   public static void main(String[] args) {
     long start = System.currentTimeMillis();
+    EnvUtils.buildCmdArgsMap(args);
     EnvUtils.load();
     // add route
     IndexController controller = new IndexController();
 
-    HttpRequestRouter simpleHttpRoutes = new DefaultHttpReqeustRouter();
+    HttpRequestRouter simpleHttpRoutes = new DefaultHttpRequestRouter();
     simpleHttpRoutes.add("/", controller::index);
     simpleHttpRoutes.add("/plaintext", controller::plaintext);
     simpleHttpRoutes.add("/json", controller::json);
@@ -49,9 +50,16 @@ public class MainApp {
     // close Heartbeat
     serverTioConfig.setHeartbeatTimeout(0);
     serverTioConfig.statOn = false;
+    boolean db = EnvUtils.getBoolean("db", true);
+    if (db) {
+      try {
+        new MysqlDbConfig().init();
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
     // start server
     try {
-      new MysqlDbConfig().init();
       new EnjoyEngineConfig().engine();
       new EhCachePluginConfig().ehCachePlugin();
       httpServerStarter.start();
