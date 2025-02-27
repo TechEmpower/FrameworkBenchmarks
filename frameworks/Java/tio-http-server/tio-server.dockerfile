@@ -12,8 +12,9 @@ FROM litongjava/jre:8u391-stable-slim
 
 WORKDIR /app
 
-COPY --from=builder /app/target/tio-http-server-benchmark-1.0.jar /app/target/tio-http-server-benchmark-1.0.jar
+COPY --from=builder /app/target/tio-http-server-benchmark-1.0-jar-with-dependencies.jar /app/tio-http-server-benchmark-1.0.jar
 
 EXPOSE 8080
 
-CMD ["java", "-Xms1G", "-Xmx1G", "-XX:+UseNUMA", "-XX:+UseParallelGC","-jar", "/app/target/tio-http-server-benchmark-1.0.jar"]
+# java --server -XX:+UseNUMA XX:+UseParallelGC -cp target/tio-http-server-benchmark-1.0-jar-with-dependencies.jar com.litongjava.tio.http.server.MainApp
+CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC","-cp", "/app/tio-http-server-benchmark-1.0.jar","com.litongjava.tio.http.server.MainApp"]
