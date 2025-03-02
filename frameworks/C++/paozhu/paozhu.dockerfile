@@ -4,8 +4,8 @@ RUN apt-get install -yqq gcc g++ openssl libssl-dev zlib1g-dev build-essential l
 
 RUN apt-get -y install brotli libbrotli-dev 
 RUN apt-get -y install libreadline-dev 
-RUN apt-get -y install mysql-client
-RUN apt-get -y install libmysqlclient-dev
+# RUN apt-get -y install mysql-client
+# RUN apt-get -y install libmysqlclient-dev
 
 RUN locale-gen en_US.UTF-8
 ENV LANG en_US.UTF-8
