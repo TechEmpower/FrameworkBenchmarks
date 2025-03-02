@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>An Error Occurred</title>
+    <style>
+        body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;line-height:1.6;margin:0;padding:0;background:#f8f9fa;color:#343a40}
+        pre{margin:0;padding:0;}
+        .container{max-width:80%;margin:50px auto;padding:20px;background:#fff;border-radius:8px;box-shadow:0 2px 4px rgba(0,0,0,0.1)}
+        .error-code{font-size:72px;font-weight:bold;color:#dc3545;margin:0;line-height:1}
+        .error-title{font-size:24px;color:#495057;margin:20px 0}
+        .error-message{font-size:16px;color:#6c757d;margin-bottom:30px;padding:15px;background:#f8f9fa;border-radius:4px;border-left:4px solid #dc3545}
+        .back-link{display:inline-block;margin-top:20px;padding:10px 20px;background:#007bff;color:#fff;text-decoration:none;border-radius:4px;transition:background-color 0.2s}
+        .back-link:hover{background:#0056b3}
+
+        .source-box{margin:10px 0;padding:0px;}
+        .source-box a{color:#369;font-weight:900;}
+        .source-file{padding:5px 10px;background:#f8f9fa;}
+        .source-code{padding:4px 0px;border: 0px solid #ddd;background: #f1f2f3;overflow-x: auto;}
+        .source-code ol,.source-code ul{margin: 0;color: #555;font-size:14px;}
+        .source-code code{border-left: 1px solid #ccc;padding-left:5px;font-family: "Consolas";}
+        .source-error{color:#000;background:#dc354533!important}
+        .source-error code{font-weight:900;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="error-code">Error <?php echo htmlspecialchars($code); ?></h1>
+        <h2 class="error-title">Sorry, an error occurred</h2>
+        <div class="error-message"><?php echo htmlspecialchars($message); ?></div>
+        <!-- <?php echo htmlspecialchars($error); ?> -->
+        <?php if (isset($trace)) { ?>
+            <?php foreach ($trace as $k => $v) { ?>
+                <div class="source-box">
+                    <div class="source-file">#<?= $k ?> <a href="view-source:file:///<?php echo $v['file']; ?>"><?php echo $v['file']; ?></a> Line <?php echo $v['line']; ?></div>
+                    <div class="source-code">
+                        <pre><?php
+                        if (!empty($v['source0'])) {
+                            echo '<ol start="0"><li><code>'.htmlentities($v['source0'][0]).'</code></li></ol>';
+                        }
+                        if (!empty($v['source'])) {
+                            echo '<ol start="'.htmlentities($v['source']['startline']).'">';
+                            foreach ((array) $v['source']['content'] as $key => $value) {
+                                if (($key + $v['source']['startline']) == $v['line']) {
+                                    echo '<li class="source-error"><code>'.htmlentities($value).'</code></li>';
+                                } else {
+                                    echo '<li><code>'.htmlentities($value).'</code></li>';
+                                }
+                            }
+                            echo '</ol>';
+                        }
+                        ?></pre>
+                    </div>
+                </div>
+            <?php } ?>
+        <?php } ?>
+        <a href="/" class="back-link">Return to Home</a>
+</body>
+
+</html>

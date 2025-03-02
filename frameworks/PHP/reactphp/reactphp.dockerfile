@@ -27,7 +27,7 @@ COPY --link deploy/conf/* /etc/php/8.4/cli/conf.d/
 WORKDIR /reactphp
 COPY --link . .
 
-RUN composer install --prefer-dist --optimize-autoloader --no-dev
+RUN composer install --prefer-dist --optimize-autoloader --no-dev --quiet
 
 EXPOSE 8080
 
