@@ -1,22 +1,23 @@
 package com.hexagontk
 
-import com.hexagontk.core.Platform.systemFlag
 import com.hexagontk.core.media.TEXT_HTML
 import com.hexagontk.core.urlOf
-import com.hexagontk.http.server.jetty.JettyServletHttpServer
+import com.hexagontk.http.server.jdk.JdkHttpServer
 import com.hexagontk.store.BenchmarkSqlStore
 import com.hexagontk.templates.jte.Jte
+import java.util.concurrent.Executors.newVirtualThreadPerTaskExecutor
 
 fun main() {
+    System.setProperty("sun.net.httpserver.idleInterval", "5")
+    System.setProperty("sun.net.httpserver.maxIdleConnections", "400")
+
     val settings = Settings()
     val store = BenchmarkSqlStore("postgresql")
     val templateEngine = Jte(TEXT_HTML, precompiled = true)
     val templateUrl = urlOf("classpath:fortunes.jte")
-    val engine = JettyServletHttpServer(
-        sendDateHeader = settings.sendDateHeader,
-        sendServerVersion = settings.sendServerVersion,
-        sendXPoweredBy = settings.sendXPoweredBy,
-        useVirtualThreads = systemFlag("virtualThreads"),
+    val engine = JdkHttpServer(
+        executor = newVirtualThreadPerTaskExecutor(),
+        backlog = 2_048
     )
 
     val benchmark = Benchmark(engine, store, templateEngine, templateUrl, settings)
