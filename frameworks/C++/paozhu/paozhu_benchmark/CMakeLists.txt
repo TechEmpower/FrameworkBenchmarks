@@ -73,7 +73,7 @@ if(${mode} AND (CMAKE_BUILD_TYPE STREQUAL "Debug"))
         endif ()
     else()
         set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Wextra")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pthread -g -fsanitize=address -DASIO_STANDALONE -DBENCHMARK -DDEBUG ${BOOST_OPEN} ${GD_OPEN} -I/usr/local/include -I/usr/local/mysql/include   -I/usr/include -I/usr/include/mysql " )
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pthread -g -fsanitize=address -DASIO_STANDALONE -DBENCHMARK -DDEBUG ${BOOST_OPEN} ${GD_OPEN} -I/usr/local/include -I/usr/include " )
     endif ()
     message("Debug mode:${CMAKE_CXX_FLAGS_DEBUG}")
 
@@ -86,7 +86,7 @@ elseif(${mode} AND (CMAKE_BUILD_TYPE STREQUAL "Release"))
         endif ()
     else ()
         set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall -Wextra -O3")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread  -DASIO_STANDALONE ${BOOST_OPEN} ${GD_OPEN} -DBENCHMARK -I/usr/local/include -I/usr/local/mysql/include -I/usr/include -I/usr/include/mysql  " )
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread  -DASIO_STANDALONE ${BOOST_OPEN} ${GD_OPEN} -DBENCHMARK -I/usr/local/include -I/usr/include  " )
         file(MAKE_DIRECTORY /usr/local/etc/paozhu)
         file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/conf/ DESTINATION /usr/local/etc/paozhu/)
     endif ()
@@ -95,7 +95,7 @@ elseif(${mode} AND (CMAKE_BUILD_TYPE STREQUAL "Release"))
 else()
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Wextra")
     message("Debug mode:${CMAKE_CXX_FLAGS_DEBUG}")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pthread  -g -fsanitize=address  -DASIO_STANDALONE -DBENCHMARK -DDEBUG ${BOOST_OPEN} ${GD_OPEN} -I/usr/local/include -I/usr/local/mysql/include   -I/usr/include  -I/usr/include/mysql  " )
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pthread  -g -fsanitize=address  -DASIO_STANDALONE -DBENCHMARK -DDEBUG ${BOOST_OPEN} ${GD_OPEN} -I/usr/local/include -I/usr/include " )
 
     if(NOT CMAKE_SYSTEM_NAME MATCHES "Windows")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address")
@@ -122,6 +122,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/vendor/httpcli)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/viewsrc/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/websockets/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/orm)
 
 if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/bin/paozhu_pre)
   file(REMOVE_RECURSE ${CMAKE_CURRENT_SOURCE_DIR}/bin/paozhu_pre)
@@ -191,7 +192,7 @@ include_sub_directories_recursively(${CMAKE_CURRENT_SOURCE_DIR}/libs)
 include_sub_directories_recursively(${CMAKE_CURRENT_SOURCE_DIR}/include)
 include_sub_directories_recursively(${CMAKE_CURRENT_SOURCE_DIR}/common)
 
-add_executable(paozhu_cli ${CMAKE_CURRENT_SOURCE_DIR}/vendor/httpcli/http_cli.cpp)
+add_executable(paozhu_cli ${CMAKE_CURRENT_SOURCE_DIR}/vendor/httpcli/http_cli.cpp ${CMAKE_CURRENT_SOURCE_DIR}/vendor/httpserver/src/mysql_conn.cpp ${CMAKE_CURRENT_SOURCE_DIR}/vendor/httpserver/src/mysql_conn_pool.cpp ${CMAKE_CURRENT_SOURCE_DIR}/vendor/httpserver/src/clientdatacache.cpp)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 
 
@@ -230,14 +231,17 @@ if (ENABLE_VCPKG)
     target_link_libraries(paozhu ZLIB::ZLIB)
 
     # find_package(libmysql REQUIRED)
-    find_package(unofficial-libmariadb CONFIG REQUIRED)
-    find_path(MYSQL_ROOT_DIR mysql)
+    # find_package(unofficial-libmariadb CONFIG REQUIRED)
+    # find_path(MYSQL_ROOT_DIR mysql)
     # target_link_libraries(paozhu ${MYSQL_LIBRARIES})
     # target_link_libraries(paozhu_cli ${MYSQL_LIBRARIES})
-    target_link_libraries(paozhu unofficial::libmariadb)
-    target_link_libraries(paozhu_cli unofficial::libmariadb)
-    target_include_directories(paozhu PUBLIC ${MYSQL_ROOT_DIR}/mysql)
-    target_include_directories(paozhu_cli PUBLIC ${MYSQL_ROOT_DIR}/mysql)
+    # target_link_libraries(paozhu unofficial::libmariadb)
+    # target_link_libraries(paozhu_cli unofficial::libmariadb)
+    # target_include_directories(paozhu PUBLIC ${MYSQL_ROOT_DIR}/mysql)
+    # target_include_directories(paozhu_cli PUBLIC ${MYSQL_ROOT_DIR}/mysql)
+
+    target_link_libraries(paozhu_cli asio::asio)
+    target_link_libraries(paozhu_cli OpenSSL::Crypto OpenSSL::SSL)
 
     if (ENABLE_GD STREQUAL "ON")
         find_package(PkgConfig)
@@ -331,6 +335,9 @@ if(OPENSSL_FOUND)
   INCLUDE_DIRECTORIES("${OPENSSL_INCLUDE_DIR}")
   target_link_libraries (paozhu ${OPENSSL_SSL_LIBRARY})
   target_link_libraries (paozhu ${OPENSSL_CRYPTO_LIBRARY})
+  
+  target_link_libraries (paozhu_cli ${OPENSSL_SSL_LIBRARY})
+  target_link_libraries (paozhu_cli ${OPENSSL_CRYPTO_LIBRARY})
 endif()
 
 
@@ -343,80 +350,80 @@ if(ZLIB_FOUND)
 endif()
 
 
-if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
-  if (IS_DIRECTORY "/usr/local/mysql/include")
-  MESSAGE( STATUS "/usr/local/mysql")
-      set(MYSQL_INCLUDE_DIR "/usr/local/mysql/include")
-      include_sub_directories_recursively(/usr/local/mysql/include)
-  endif()
- 
-  if (IS_DIRECTORY "/usr/local/opt/mysql-client")
-        MESSAGE( STATUS "/usr/local/opt/mysql-client")
-      set(MYSQL_INCLUDE_DIR "/usr/local/opt/mysql-client/include")
-      include_sub_directories_recursively(/usr/local/opt/mysql-client/include)
-  endif()
-  
-  if (IS_DIRECTORY "/opt/homebrew/opt/mysql")
-        MESSAGE( STATUS "/opt/homebrew/opt/mysql")
-      set(MYSQL_INCLUDE_DIR "/opt/homebrew/opt/mysql/include")
-      include_sub_directories_recursively(/opt/homebrew/opt/mysql/include)
-  endif()
-  
-  
-  if (IS_DIRECTORY "/opt/homebrew/opt/mysql-client")
-        MESSAGE( STATUS "/opt/homebrew/opt/mysql-client")
-      set(MYSQL_INCLUDE_DIR "/opt/homebrew/opt/mysql-client/include")
-      include_sub_directories_recursively(/opt/homebrew/opt/mysql-client/include)
-  endif()
-  MESSAGE( STATUS "MYSQL_ROOT_DIR = ${MYSQL_ROOT_DIR} ")
-else()  
- find_path(MYSQL_ROOT_DIR mysql)
-endif()
-
-
-FIND_PATH(MYSQL_INCLUDE_DIR NAMES mysql.h
-  PATHS /usr/local/include/mysql /usr/include/mysql /opt/homebrew/opt/mysql/include /usr/local/opt/mysql-client/include /opt/homebrew/opt/mysql-client/include
-)
-
-MESSAGE( STATUS "MYSQL_ROOT_DIR = ${MYSQL_ROOT_DIR} ")
-find_package_handle_standard_args(mysql REQUIRED_VARS MYSQL_ROOT_DIR)
-
-
-if(NOT MYSQL_INCLUDE_DIR)
-  message(STATUS "Could not find \"mysql.h\" from searching ")
-endif()
-
-SET(MYSQL_NAMES mysqlclient)
-FIND_LIBRARY(MYSQL_LIBRARY
-  NAMES ${MYSQL_NAMES}
-  PATHS /usr/lib /usr/local/lib /usr/local/mysql/lib /usr/local/opt/mysql/lib /opt/homebrew/opt/mysql/lib /opt/homebrew/opt/mysql-client/lib
-  PATH_SUFFIXES mysql
-)
-
-IF (MYSQL_INCLUDE_DIR AND MYSQL_LIBRARY)
-  SET(MYSQL_FOUND TRUE)
-  SET( MYSQL_LIBRARIES ${MYSQL_LIBRARY} )
-ELSE (MYSQL_INCLUDE_DIR AND MYSQL_LIBRARY)
-  SET(MYSQL_FOUND FALSE)
-  SET( MYSQL_LIBRARIES )
-ENDIF (MYSQL_INCLUDE_DIR AND MYSQL_LIBRARY)
-
-IF (MYSQL_FOUND)
-  IF (NOT MYSQL_FIND_QUIETLY)
-    MESSAGE(STATUS "Found MySQL: ${MYSQL_LIBRARY}")
-  ENDIF (NOT MYSQL_FIND_QUIETLY)
-ELSE (MYSQL_FOUND)
-  IF (MYSQL_FIND_REQUIRED)
-    MESSAGE(STATUS "Looked for MySQL libraries named ${MYSQL_NAMES}.")
-    MESSAGE(FATAL_ERROR "Could NOT find MySQL library")
-  ENDIF (MYSQL_FIND_REQUIRED)
-ENDIF (MYSQL_FOUND)
-
-target_include_directories(paozhu PUBLIC ${MYSQL_INCLUDE_DIR})
-target_link_libraries(paozhu ${MYSQL_LIBRARY})
-
-target_include_directories(paozhu_cli PUBLIC ${MYSQL_INCLUDE_DIR})
-target_link_libraries(paozhu_cli ${MYSQL_LIBRARY})
+#if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
+#  if (IS_DIRECTORY "/usr/local/mysql/include")
+# MESSAGE( STATUS "/usr/local/mysql")
+#     set(MYSQL_INCLUDE_DIR "/usr/local/mysql/include")
+#     include_sub_directories_recursively(/usr/local/mysql/include)
+# endif()
+#
+# if (IS_DIRECTORY "/usr/local/opt/mysql-client")
+#       MESSAGE( STATUS "/usr/local/opt/mysql-client")
+#     set(MYSQL_INCLUDE_DIR "/usr/local/opt/mysql-client/include")
+#     include_sub_directories_recursively(/usr/local/opt/mysql-client/include)
+# endif()
+# 
+# if (IS_DIRECTORY "/opt/homebrew/opt/mysql")
+#       MESSAGE( STATUS "/opt/homebrew/opt/mysql")
+#     set(MYSQL_INCLUDE_DIR "/opt/homebrew/opt/mysql/include")
+#     include_sub_directories_recursively(/opt/homebrew/opt/mysql/include)
+# endif()
+#   
+#   
+#   if (IS_DIRECTORY "/opt/homebrew/opt/mysql-client")
+#         MESSAGE( STATUS "/opt/homebrew/opt/mysql-client")
+#       set(MYSQL_INCLUDE_DIR "/opt/homebrew/opt/mysql-client/include")
+#       include_sub_directories_recursively(/opt/homebrew/opt/mysql-client/include)
+#   endif()
+#   MESSAGE( STATUS "MYSQL_ROOT_DIR = ${MYSQL_ROOT_DIR} ")
+#else()  
+#  find_path(MYSQL_ROOT_DIR mysql)
+#endif()
+# 
+# 
+# FIND_PATH(MYSQL_INCLUDE_DIR NAMES mysql.h
+#   PATHS /usr/local/include/mysql /usr/include/mysql /opt/homebrew/opt/mysql/include /usr/local/opt/mysql-client/include /opt/homebrew/opt/mysql-client/include
+# )
+# 
+# MESSAGE( STATUS "MYSQL_ROOT_DIR = ${MYSQL_ROOT_DIR} ")
+# find_package_handle_standard_args(mysql REQUIRED_VARS MYSQL_ROOT_DIR)
+# 
+# 
+# if(NOT MYSQL_INCLUDE_DIR)
+#   message(STATUS "Could not find \"mysql.h\" from searching ")
+# endif()
+# 
+# SET(MYSQL_NAMES mysqlclient)
+# FIND_LIBRARY(MYSQL_LIBRARY
+#   NAMES ${MYSQL_NAMES}
+#   PATHS /usr/lib /usr/local/lib /usr/local/mysql/lib /usr/local/opt/mysql/lib /opt/homebrew/opt/mysql/lib /opt/homebrew/opt/mysql-client/lib
+#   PATH_SUFFIXES mysql
+# )
+# 
+# IF (MYSQL_INCLUDE_DIR AND MYSQL_LIBRARY)
+#   SET(MYSQL_FOUND TRUE)
+#   SET( MYSQL_LIBRARIES ${MYSQL_LIBRARY} )
+# ELSE (MYSQL_INCLUDE_DIR AND MYSQL_LIBRARY)
+#   SET(MYSQL_FOUND FALSE)
+#   SET( MYSQL_LIBRARIES )
+# ENDIF (MYSQL_INCLUDE_DIR AND MYSQL_LIBRARY)
+# 
+# IF (MYSQL_FOUND)
+#   IF (NOT MYSQL_FIND_QUIETLY)
+#     MESSAGE(STATUS "Found MySQL: ${MYSQL_LIBRARY}")
+#   ENDIF (NOT MYSQL_FIND_QUIETLY)
+# ELSE (MYSQL_FOUND)
+#   IF (MYSQL_FIND_REQUIRED)
+#     MESSAGE(STATUS "Looked for MySQL libraries named ${MYSQL_NAMES}.")
+#     MESSAGE(FATAL_ERROR "Could NOT find MySQL library")
+#   ENDIF (MYSQL_FIND_REQUIRED)
+# ENDIF (MYSQL_FOUND)
+# 
+# target_include_directories(paozhu PUBLIC ${MYSQL_INCLUDE_DIR})
+# target_link_libraries(paozhu ${MYSQL_LIBRARY})
+# 
+# target_include_directories(paozhu_cli PUBLIC ${MYSQL_INCLUDE_DIR})
+# target_link_libraries(paozhu_cli ${MYSQL_LIBRARY})
 
 
 
