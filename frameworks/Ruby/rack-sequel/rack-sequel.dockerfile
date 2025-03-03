@@ -11,7 +11,7 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends libjemalloc2
 ENV LD_PRELOAD=libjemalloc.so.2
 
-RUN bundle config set without 'postgresql passenger unicorn'
+RUN bundle config set with 'mysql puma'
 RUN bundle install --jobs=4 --gemfile=/rack-sequel/Gemfile
 
 ENV DBTYPE=mysql
