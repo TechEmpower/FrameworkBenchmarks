@@ -1,0 +1,8 @@
+{
+    "name": "aroma.js",
+    "dependencies": {
+      "aroma.js": "1.0.8"
+    },
+    "main": "app.js"
+  }
+  
