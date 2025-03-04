@@ -8,7 +8,7 @@
     ],
     "license": "MIT",
     "require": {
-        "laravel/framework": "^11"
+        "laravel/framework": "^12"
     },
     "config": {
         "optimize-autoloader": true,

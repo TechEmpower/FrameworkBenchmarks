@@ -41,8 +41,23 @@ def basic_body_verification(body, url, is_json_check=True):
     # they do not need or expect a dict back
     return None, []
 
+def verify_status(request_headers_and_body_and_status, status, url, expected_status=200):
+    '''
+    Verifies the status code of a framework response
+    '''
 
-def verify_headers(request_headers_and_body, headers, url, should_be='json'):
+    problems = []
+
+    if status is not expected_status:
+        problems.append((
+            'fail',
+            'Invalid response status, found \"%s\", did not match \"%s\"'
+            % (status, expected_status), url))
+
+    return problems
+
+
+def verify_headers(request_headers_and_body_and_status, headers, url, should_be='json'):
     '''
     Verifies the headers of a framework response
     param `should_be` is a switch for the three acceptable content types
@@ -76,7 +91,7 @@ def verify_headers(request_headers_and_body, headers, url, should_be='json'):
     # Verify response content
     # Make sure that the date object isn't cached
     sleep(3)
-    second_headers, body2 = request_headers_and_body(url)
+    second_headers, body2, status2 = request_headers_and_body_and_status(url)
     second_date = second_headers.get('Date')
 
     date2 = second_headers.get('Date')
@@ -349,7 +364,7 @@ def verify_query_cases(self, cases, url, check_updates=False):
 
     for q, max_infraction in cases:
         case_url = url + q
-        headers, body = self.request_headers_and_body(case_url)
+        headers, body, status = self.request_headers_and_body_and_status(case_url)
 
         try:
             queries = int(q)  # drops down for 'foo' and ''
@@ -363,7 +378,7 @@ def verify_query_cases(self, cases, url, check_updates=False):
 
             problems += verify_randomnumber_list(expected_len, headers, body,
                                                  case_url, max_infraction)
-            problems += verify_headers(self.request_headers_and_body, headers, case_url)
+            problems += verify_headers(self.request_headers_and_body_and_status, headers, case_url)
 
             # Only check update changes if we are doing an Update verification and if we're testing
             # the highest number of queries, to ensure that we don't accidentally FAIL for a query
@@ -393,7 +408,7 @@ def verify_query_cases(self, cases, url, check_updates=False):
                 # parameter input
                 problems += verify_randomnumber_list(
                     expected_len, headers, body, case_url, max_infraction)
-                problems += verify_headers(self.request_headers_and_body, headers, case_url)
+                problems += verify_headers(self.request_headers_and_body_and_status, headers, case_url)
 
     if hasattr(self, 'database'):
         # verify the number of queries and rows read for 20 queries, with a concurrency level of 512, with 2 repetitions

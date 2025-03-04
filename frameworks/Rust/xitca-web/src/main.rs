@@ -3,8 +3,9 @@ mod ser;
 mod util;
 
 use xitca_http::{
+    HttpServiceBuilder,
     h1::RequestBody,
-    http::{header::SERVER, StatusCode},
+    http::{StatusCode, header::SERVER},
     util::{
         middleware::context::{Context, ContextBuilder},
         service::{
@@ -12,13 +13,12 @@ use xitca_http::{
             router::{Router, RouterError},
         },
     },
-    HttpServiceBuilder,
 };
-use xitca_service::{fn_service, Service, ServiceExt};
+use xitca_service::{Service, ServiceExt, fn_service};
 
 use db::Client;
-use ser::{error_response, IntoResponse, Message, Request, Response};
-use util::{HandleResult, QueryParse, State, SERVER_HEADER_VALUE};
+use ser::{IntoResponse, Message, Request, Response, error_response};
+use util::{HandleResult, QueryParse, SERVER_HEADER_VALUE, State};
 
 type Ctx<'a> = Context<'a, Request<RequestBody>, State<Client>>;
 
@@ -30,8 +30,12 @@ fn main() -> std::io::Result<()> {
         .insert("/fortunes", get(fn_service(fortunes)))
         .insert("/queries", get(fn_service(queries)))
         .insert("/updates", get(fn_service(updates)))
-        .enclosed_fn(middleware)
         .enclosed(ContextBuilder::new(|| async { db::create().await.map(State::new) }))
+        .enclosed_fn(async |service, req| {
+            let mut res = service.call(req).await.unwrap_or_else(error_handler);
+            res.headers_mut().insert(SERVER, SERVER_HEADER_VALUE);
+            Ok::<_, core::convert::Infallible>(res)
+        })
         .enclosed(HttpServiceBuilder::h1().io_uring());
     xitca_server::Builder::new()
         .bind("xitca-web", "0.0.0.0:8080", service)?
@@ -39,24 +43,14 @@ fn main() -> std::io::Result<()> {
         .wait()
 }
 
-async fn middleware<S>(service: &S, req: Ctx<'_>) -> Result<Response, core::convert::Infallible>
-where
-    S: for<'c> Service<Ctx<'c>, Response = Response, Error = RouterError<util::Error>>,
-{
-    let mut res = service.call(req).await.unwrap_or_else(error_handler);
-    res.headers_mut().insert(SERVER, SERVER_HEADER_VALUE);
-    Ok(res)
-}
-
 #[cold]
 #[inline(never)]
 fn error_handler(e: RouterError<util::Error>) -> Response {
-    let status = match e {
+    error_response(match e {
         RouterError::Match(_) => StatusCode::NOT_FOUND,
         RouterError::NotAllowed(_) => StatusCode::METHOD_NOT_ALLOWED,
         RouterError::Service(_) => StatusCode::INTERNAL_SERVER_ERROR,
-    };
-    error_response(status)
+    })
 }
 
 async fn plain_text(ctx: Ctx<'_>) -> HandleResult<Response> {

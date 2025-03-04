@@ -5,8 +5,8 @@ use std::{io, sync::Mutex};
 
 use diesel::prelude::*;
 use diesel_async::{
-    pooled_connection::{bb8, AsyncDieselConnectionManager},
     RunQueryDsl,
+    pooled_connection::{AsyncDieselConnectionManager, bb8},
 };
 use futures_util::{
     future::join,
@@ -16,7 +16,7 @@ use xitca_postgres_diesel::AsyncPgConnection;
 
 use crate::{
     ser::{Fortune, Fortunes, World},
-    util::{HandleResult, Rand, DB_URL},
+    util::{DB_URL, HandleResult, Rand},
 };
 
 use db_util::{not_found, update_query_from_ids};
