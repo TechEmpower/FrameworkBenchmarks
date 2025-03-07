@@ -12,15 +12,14 @@ import com.alibaba.fastjson2.JSON;
 import com.jfinal.template.Engine;
 import com.jfinal.template.Template;
 import com.litongjava.db.activerecord.Db;
-import com.litongjava.db.activerecord.Record;
-import com.litongjava.ehcache.EhCache;
+import com.litongjava.db.activerecord.Row;
+import com.litongjava.ehcache.EhCacheKit;
 import com.litongjava.tio.http.common.HeaderName;
 import com.litongjava.tio.http.common.HeaderValue;
 import com.litongjava.tio.http.common.HttpRequest;
 import com.litongjava.tio.http.common.HttpResponse;
 import com.litongjava.tio.http.server.model.Fortune;
 import com.litongjava.tio.http.server.util.Resps;
-import com.litongjava.tio.http.server.utils.BeanConverterUtils;
 import com.litongjava.tio.http.server.utils.RandomUtils;
 
 public class DbController {
@@ -37,7 +36,7 @@ public class DbController {
     // int id = 11;
     // String sql="SELECT id, randomNumber FROM world WHERE id = ?";
 
-    Record recored = Db.findById("world", id);
+    Row recored = Db.findById("world", id);
     if (recored != null) {
       httpResponse.setBody(JSON.toJSONBytes(recored.toMap()));
     } else {
@@ -57,7 +56,7 @@ public class DbController {
         .limit(RandomUtils.parseQueryCount(queries)) // 限制查询数量
         .mapToObj(id -> Db.findById("world", id)) // 使用 mapToObj 将 int 映射为对象
         .filter(Objects::nonNull) // 过滤掉 null 值
-        .map(Record::toMap) // 将每个 Record 对象转换为 Map
+        .map(Row::toMap) // 将每个 Record 对象转换为 Map
         .collect(Collectors.toList()); // 收集到 List
 
     HttpResponse httpResponse = new HttpResponse(request);
@@ -66,11 +65,11 @@ public class DbController {
     return httpResponse;
   }
 
-//@GetMapping("/updates")
+  //@GetMapping("/updates")
   public HttpResponse updates(HttpRequest request) {
     String queries = request.getParam("queries");
 
-    EhCache.removeAll("world");
+    EhCacheKit.removeAll("world");
 
     List<Map<String, Object>> updatedRecords = RandomUtils.randomWorldNumbers()// random numbers
         // limit
@@ -90,7 +89,7 @@ public class DbController {
           return record;
         })
         // tomap
-        .map(Record::toMap)
+        .map(Row::toMap)
         // to List
         .collect(Collectors.toList());
 
@@ -101,11 +100,11 @@ public class DbController {
   }
 
   public HttpResponse fortunes(HttpRequest request) throws IllegalAccessException, InstantiationException {
-    List<Record> records = Db.find("SELECT * FROM fortune"); 
+    List<Row> records = Db.find("SELECT * FROM fortune");
 
     List<Fortune> fortunes = new ArrayList<>(records.size());
-    for (Record record : records) {
-      fortunes.add(BeanConverterUtils.toBean(record.toMap(), Fortune.class));
+    for (Row record : records) {
+      fortunes.add(record.toBean(Fortune.class));
     }
     // 添加额外的 Fortune
     fortunes.add(new Fortune(0L, "Additional fortune added at request time."));

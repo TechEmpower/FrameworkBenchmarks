@@ -1,0 +1,14 @@
+[package]
+name    = "framework_benchmarks-nio"
+version = "0.0.0"
+edition = "2021"
+authors = ["kanarus <kanarus786@gmail.com>"]
+
+[profile.release]
+lto           = true
+panic         = "abort"
+codegen-units = 1
+
+[dependencies]
+framework_benchmarks = { path = "..", features = ["rt_nio"] }
+nio                  = { version = "0.0" }

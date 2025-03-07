@@ -13,6 +13,7 @@
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <tio-boot.version>1.9.3</tio-boot.version>
 
+
     <main.class>com.litongjava.tio.http.server.MainApp</main.class>
   </properties>
   <dependencies>
@@ -26,6 +27,7 @@
       <groupId>com.litongjava</groupId>
       <artifactId>java-db</artifactId>
       <version>1.5.0</version>
+
     </dependency>
     <dependency>
       <groupId>junit</groupId>

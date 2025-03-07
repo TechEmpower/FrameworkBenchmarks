@@ -1,4 +1,5 @@
-#include "mysqlmodel.hpp" 
+
+#include "world_mysql.h"
 #include "worldbase.h"
 #include "World.h"
 
@@ -8,9 +9,8 @@
 	 
  namespace orm{
  
-
-			 World::World(std::string dbtag):mysqlclientDB(dbtag){}
-			 World::World():mysqlclientDB(){}
+			 World::World(std::string dbtag):world_mysql(dbtag){ mod=this; }
+			 World::World():world_mysql(){ mod=this; }
 
 
 	  }
