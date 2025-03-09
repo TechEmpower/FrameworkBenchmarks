@@ -20,7 +20,7 @@ group :iodine, optional: true do
 end
 
 group :puma, optional: true do
-  gem 'puma', '~> 6.4'
+  gem 'puma', '~> 6.5'
 end
 
 group :unicorn, optional: true do
