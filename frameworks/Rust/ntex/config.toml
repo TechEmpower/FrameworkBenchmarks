@@ -27,7 +27,7 @@ platform = "None"
 webserver = "ntex"
 versus = ""
 
-[default]
+[default-rt]
 urls.plaintext = "/plaintext"
 urls.json = "/json"
 approach = "Realistic"
