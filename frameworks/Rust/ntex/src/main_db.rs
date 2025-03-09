@@ -6,7 +6,7 @@ use ntex::http::header::{CONTENT_TYPE, SERVER};
 use ntex::http::{HttpService, KeepAlive, Request, Response, StatusCode};
 use ntex::service::{Service, ServiceCtx, ServiceFactory};
 use ntex::web::{Error, HttpResponse};
-use ntex::{time::Seconds, util::PoolId, util::Ready};
+use ntex::{time::Seconds, util::PoolId};
 
 mod db;
 mod utils;

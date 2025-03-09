@@ -2,7 +2,7 @@
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
 use ntex::http::header::{CONTENT_TYPE, SERVER};
-use ntex::{http, time::Seconds, util::BytesMut, util::PoolId, util::Ready, web};
+use ntex::{http, time::Seconds, util::BytesMut, util::PoolId, web};
 use sonic_rs::Serialize;
 
 mod utils;

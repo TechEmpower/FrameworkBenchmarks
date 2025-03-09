@@ -1,10 +1,9 @@
 #[global_allocator]
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
-use std::{future::Future, io, pin::Pin, task::Context, task::Poll};
+use std::{future::Future, io, pin::Pin, task::ready, task::Context, task::Poll};
 
-use ntex::util::{ready, PoolId, Ready};
-use ntex::{fn_service, http::h1, io::Io, io::RecvError};
+use ntex::{fn_service, http::h1, io::Io, io::RecvError, util::PoolId};
 use sonic_rs::Serialize;
 
 mod utils;
