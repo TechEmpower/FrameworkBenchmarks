@@ -12,6 +12,10 @@ name = "ntex-compio"
 path = "src/main.rs"
 
 [[bin]]
+name = "ntex-default"
+path = "src/main.rs"
+
+[[bin]]
 name = "ntex-db"
 path = "src/main_db.rs"
 
@@ -20,11 +24,19 @@ name = "ntex-db-compio"
 path = "src/main_db.rs"
 
 [[bin]]
+name = "ntex-db-default"
+path = "src/main_db.rs"
+
+[[bin]]
 name = "ntex-plt"
 path = "src/main_plt.rs"
 
 [[bin]]
 name = "ntex-plt-compio"
+path = "src/main_plt.rs"
+
+[[bin]]
+name = "ntex-plt-default"
 path = "src/main_plt.rs"
 
 [features]
@@ -36,8 +48,11 @@ tokio = ["ntex/tokio"]
 # compio runtime
 compio = ["ntex/compio"]
 
+# default-rt runtime
+default-rt = ["ntex/default-rt"]
+
 [dependencies]
-ntex = "2.8"
+ntex = "2.12"
 ntex-compio = "0.2"
 ntex-bytes = { version = "0.1.21", features=["simd"] }
 mimalloc = { version = "0.1.25", default-features = false }
@@ -47,7 +62,6 @@ buf-min = { version = "0.7", features = ["ntex-bytes"] }
 env_logger = "0.11"
 nanorand = { version = "0.7", default-features = false, features = ["std", "wyrand", "tls"] }
 atoi = "2.0"
-core_affinity = "0.8"
 futures = "0.3"
 sonic-rs = "0.3.16"
 serde = { version = "1", features = ["derive"] }
@@ -58,6 +72,14 @@ tokio-postgres = { git="https://github.com/fafhrd91/postgres.git", branch="ntex-
 
 [target.'cfg(target_os = "linux")'.dependencies]
 compio-driver = { version = "*", features = ["io-uring"]}
+
+[patch.crates-io]
+ntex = { git = "https://github.com/ntex-rs/ntex.git" }
+ntex-io = { git = "https://github.com/ntex-rs/ntex.git" }
+ntex-iodriver = { git = "https://github.com/ntex-rs/ntex.git" }
+ntex-net = { git = "https://github.com/ntex-rs/ntex.git" }
+ntex-rt = { git = "https://github.com/ntex-rs/ntex.git" }
+ntex-runtime = { git = "https://github.com/ntex-rs/ntex.git" }
 
 [profile.release]
 opt-level = 3

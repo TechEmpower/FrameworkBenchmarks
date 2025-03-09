@@ -37,6 +37,24 @@
         "notes": "",
         "versus": ""
     },
+    "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "Postgres",
+        "framework": "ntex",
+        "language": "Rust",
+        "orm": "Raw",
+        "platform": "None",
+        "webserver": "ntex",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "ntex [default]",
+        "notes": "",
+        "versus": ""
+    },
     "db": {
         "fortune_url": "/fortunes",
         "db_url": "/db",
@@ -77,6 +95,26 @@
         "notes": "",
         "versus": ""
     },
+    "db-default": {
+        "fortune_url": "/fortunes",
+        "db_url": "/db",
+        "query_url": "/query?q=",
+        "update_url": "/update?q=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "Postgres",
+        "framework": "ntex",
+        "language": "Rust",
+        "orm": "Raw",
+        "platform": "None",
+        "webserver": "ntex",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "ntex [default,db]",
+        "notes": "",
+        "versus": ""
+    },
     "plt": {
         "json_url": "/json",
         "plaintext_url": "/plaintext",
@@ -110,6 +148,24 @@
         "os": "Linux",
         "database_os": "Linux",
         "display_name": "ntex [compio,platform]",
+        "notes": "",
+        "versus": ""
+    },
+    "plt-default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "Postgres",
+        "framework": "ntex",
+        "language": "Rust",
+        "orm": "Raw",
+        "platform": "None",
+        "webserver": "ntex",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "ntex [default,platform]",
         "notes": "",
         "versus": ""
     }
