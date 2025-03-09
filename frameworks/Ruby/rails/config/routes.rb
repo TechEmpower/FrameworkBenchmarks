@@ -46,7 +46,7 @@ Rails.application.routes.draw do
   get "json", to: JsonApp
   get "db", to: "hello_world#db"
   get "queries", to: "hello_world#query"
-  get "fortunes", to: "hello_world#fortune"
+  get "fortunes", to: "fortunes#index"
   get "updates", to: "hello_world#update"
   get "plaintext", to: PlaintextApp
   get "cached", to: "hello_world#cached_query"
