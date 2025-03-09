@@ -14,12 +14,12 @@
   "author": "Костя Третяк",
   "license": "MIT",
   "dependencies": {
-    "@ditsmod/core": "~2.55.0",
-    "@ditsmod/routing": "~2.3.0",
+    "@ditsmod/core": "3.0.0-alpha.3",
+    "@ditsmod/routing": "3.0.0-alpha.3",
     "handlebars": "^4.7.8",
-    "lru-cache": "^11.0.0",
-    "mariadb": "^3.3.1",
-    "postgres": "^3.4.4"
+    "lru-cache": "^11.0.2",
+    "mariadb": "^3.4.0",
+    "postgres": "^3.4.5"
   },
   "devDependencies": {
     "@types/eslint": "^8.44.2",

@@ -1,4 +1,4 @@
-FROM ruby:3.4-rc
+FROM ruby:3.4
 
 ENV RUBY_YJIT_ENABLE=1
 ENV RUBY_MN_THREADS=1
@@ -13,7 +13,7 @@ WORKDIR /rack
 COPY Gemfile ./
 
 ENV BUNDLE_FORCE_RUBY_PLATFORM=true
-RUN bundle config set without 'development test falcon unicorn'
+RUN bundle config set with 'puma'
 RUN bundle install --jobs=8
 
 COPY . .

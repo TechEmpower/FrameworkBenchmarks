@@ -7,7 +7,7 @@
     "dateformat": "3.0.3",
     "escape-html": "1.0.3",
     "express": "4.18.2",
-    "mongoose": "8.3.2",
+    "mongoose": "8.9.5",
     "mysql2": "3.9.8",
     "pg": "8.5.0",
     "pg-promise": "10.7.3",

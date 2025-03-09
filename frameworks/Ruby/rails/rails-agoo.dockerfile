@@ -1,4 +1,4 @@
-FROM ruby:3.4-rc
+FROM ruby:3.4
 
 RUN apt-get update -yqq && apt-get install -yqq --no-install-recommends redis-server
 
@@ -15,7 +15,7 @@ ENV LD_PRELOAD=libjemalloc.so.2
 COPY ./Gemfile* /rails/
 
 ENV BUNDLE_FORCE_RUBY_PLATFORM=true
-ENV BUNDLE_WITHOUT=trilogy
+ENV BUNDLE_WITH=postgresql:agoo
 RUN bundle install --jobs=8
 
 COPY . /rails/
@@ -23,5 +23,5 @@ COPY . /rails/
 ENV RAILS_ENV=production_postgresql
 ENV PORT=8080
 ENV REDIS_URL=redis://localhost:6379/0
-CMD service redis-server start
-CMD RACK_ENV=production bundle exec rackup -r agoo -s agoo -p 8080 -q -O workers=$(ruby config/auto_tune.rb | grep -Eo '[0-9]+' | head -n 1)
+CMD service redis-server start && \
+    RACK_ENV=production bundle exec rackup -r agoo -s agoo -p 8080 -q -O workers=$(ruby config/auto_tune.rb | grep -Eo '[0-9]+' | head -n 1)

@@ -44,11 +44,13 @@
         "versus": "rack-sequel-postgres-puma-mri",
         "notes": ""
       },
-      "postgres-passenger-mri": {
+      "postgres-iodine-mri": {
+        "json_url": "/json",
         "db_url": "/db",
         "query_url": "/queries?queries=",
         "fortune_url": "/fortunes",
         "update_url": "/updates?queries=",
+        "plaintext_url": "/plaintext",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Micro",
@@ -57,11 +59,11 @@
         "language": "Ruby",
         "orm": "Full",
         "platform": "Rack",
-        "webserver": "Passenger",
+        "webserver": "Iodine",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "roda-sequel-postgres-passenger-mri",
-        "versus": "rack-sequel-postgres-passenger-mri",
+        "display_name": "roda-sequel-postgres-iodine-mri",
+        "versus": "rack-sequel-postgres-iodine-mri",
         "notes": ""
       },
       "postgres-unicorn-mri": {

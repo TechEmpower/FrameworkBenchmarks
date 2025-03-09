@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.test.hserver</groupId>
+    <artifactId>hserver-business</artifactId>
+    <version>1.0</version>
+
+    <parent>
+        <artifactId>hserver-parent</artifactId>
+        <groupId>cn.hserver</groupId>
+        <version>3.6.M3</version>
+    </parent>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <version.hikaricp>3.3.1</version.hikaricp>
+        <version.postgres>42.7.2</version.postgres>
+    </properties>
+
+    <dependencies>
+        <!--    核心依赖-->
+        <dependency>
+            <artifactId>hserver</artifactId>
+            <groupId>cn.hserver</groupId>
+        </dependency>
+        <!--    web框架 -->
+        <dependency>
+            <artifactId>hserver-plugin-web</artifactId>
+            <groupId>cn.hserver</groupId>
+        </dependency>
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>${version.hikaricp}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${version.postgres}</version>
+        </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>hserver-plugin-maven</artifactId>
+                <groupId>cn.hserver</groupId>
+            </plugin>
+        </plugins>
+    </build>
+</project>

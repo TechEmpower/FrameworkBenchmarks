@@ -8,7 +8,7 @@ using System.Text.Json.Serialization.Metadata;
 
 namespace PlatformBenchmarks;
 
-public partial class BenchmarkApplication
+public sealed partial class BenchmarkApplication
 {
     private static async Task MultipleQueries(PipeWriter pipeWriter, int count)
     {

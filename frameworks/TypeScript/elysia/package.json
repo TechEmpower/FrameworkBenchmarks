@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "module": "src/index.js",
   "devDependencies": {
-    "typescript": "^5.5.4"
+    "@types/bun": "^1.1.14",
+    "typescript": "^5.7.2"
   },
   "scripts": {
     "dev": "bun run --watch src/index.ts",
@@ -12,7 +13,7 @@
     "compile": "bun build --compile --minify --target bun --outfile server src/index.ts"
   },
   "dependencies": {
-    "elysia": "^1.1.16",
-    "postgres": "^3.4.4"
+    "elysia": "^1.2.9",
+    "postgres": "^3.4.5"
   }
 }

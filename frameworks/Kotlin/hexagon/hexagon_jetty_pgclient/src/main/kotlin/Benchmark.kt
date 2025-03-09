@@ -1,18 +1,18 @@
-package com.hexagonkt
+package com.hexagontk
 
-import com.hexagonkt.core.Jvm.systemFlag
-import com.hexagonkt.core.media.TEXT_HTML
-import com.hexagonkt.core.urlOf
-import com.hexagonkt.http.server.jetty.JettyServletAdapter
-import com.hexagonkt.store.BenchmarkPgClientStore
-import com.hexagonkt.templates.jte.JteAdapter
+import com.hexagontk.core.Platform.systemFlag
+import com.hexagontk.core.media.TEXT_HTML
+import com.hexagontk.core.urlOf
+import com.hexagontk.http.server.jetty.JettyServletHttpServer
+import com.hexagontk.store.BenchmarkPgClientStore
+import com.hexagontk.templates.jte.Jte
 
 fun main() {
     val settings = Settings()
     val store = BenchmarkPgClientStore("postgresql")
-    val templateEngine = JteAdapter(TEXT_HTML, precompiled = true)
+    val templateEngine = Jte(TEXT_HTML, precompiled = true)
     val templateUrl = urlOf("classpath:fortunes.jte")
-    val engine = JettyServletAdapter(
+    val engine = JettyServletHttpServer(
         sendDateHeader = settings.sendDateHeader,
         sendServerVersion = settings.sendServerVersion,
         sendXPoweredBy = settings.sendXPoweredBy,

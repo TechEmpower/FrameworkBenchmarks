@@ -28,37 +28,22 @@ class Pgsql extends Mysql
 
     function update($request): array
     {
-        $query_count = 1;
-        $q = (int)$request->get('q');
-        if ($q > 1) {
-            $query_count = min($q, 500);
+        $queries = $request->get('q');
+        $worlds = $keys = $values = [];
+        $count = min(max((int) $queries, 1), 500);
+        $random = $this->random;
+        for ($i = 0; $i < $count; ++ $i) {
+            $values[] = $keys[] = $id = mt_rand(1, 10000);
+            $random->execute([$id]);
+            $row = $random->fetch();
+            $values[] = $row['randomNumber'] = mt_rand(1, 10000);
+            $worlds[] = $row;
         }
-        $worlds = [];
-        while ($query_count--) {
-            $this->random->execute([\mt_rand(1, 10000)]);
-            $world = $this->random->fetch();
-            $world['randomNumber'] = \mt_rand(1, 10000);
-            $worlds[] = $world;
+        if (!isset($this->updates[$count])) {
+            $sql = 'UPDATE World SET randomNumber = CASE id' . str_repeat(' WHEN ?::INTEGER THEN ?::INTEGER ', $count) . 'END WHERE id IN (' . str_repeat('?::INTEGER,', $count - 1) . '?::INTEGER)';
+            $this->updates[$count] = $this->pdo->prepare($sql);
         }
-        $rows = count($worlds);
-
-        if (!isset($this->updates[$rows])) {
-            $sql = 'UPDATE world SET randomNumber = CASE id'
-                . str_repeat(' WHEN ?::INTEGER THEN ?::INTEGER ', $rows)
-                . 'END WHERE id IN ('
-                . str_repeat('?::INTEGER,', $rows - 1) . '?::INTEGER)';
-
-            $this->updates[$rows] = $this->pdo->prepare($sql);
-        }
-
-        $val = [];
-        $keys = [];
-        foreach ($worlds as $world) {
-            $val[] = $keys[] = $world['id'];
-            $val[] = $world['randomNumber'];
-        }
-
-        $this->updates[$rows]->execute([...$val, ...$keys]);
+        $this->updates[$count]->execute([...$values, ...$keys]);
         return $worlds;
     }
 

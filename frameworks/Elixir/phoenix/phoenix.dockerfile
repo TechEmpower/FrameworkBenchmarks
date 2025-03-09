@@ -9,6 +9,8 @@ FROM ${BUILDER_IMAGE} AS builder
 
 ARG MIX_ENV="prod"
 
+RUN apk add --no-cache git
+
 RUN mix local.hex --force && \
     mix local.rebar --force
 

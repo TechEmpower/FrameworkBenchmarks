@@ -1,8 +1,9 @@
 package org.smartboot.http;
 
-import org.smartboot.http.server.HttpRequest;
-import org.smartboot.http.server.HttpResponse;
-import org.smartboot.http.server.HttpServerHandler;
+
+import tech.smartboot.feat.core.server.HttpRequest;
+import tech.smartboot.feat.core.server.HttpResponse;
+import tech.smartboot.feat.core.server.handler.BaseHttpHandler;
 
 import javax.sql.DataSource;
 import java.io.IOException;
@@ -17,7 +18,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * @author 三刀
  * @version V1.0 , 2020/6/16
  */
-public class SingleQueryHandler extends HttpServerHandler {
+public class SingleQueryHandler extends BaseHttpHandler {
     private DataSource dataSource;
 
     public SingleQueryHandler(DataSource dataSource) {
@@ -25,7 +26,8 @@ public class SingleQueryHandler extends HttpServerHandler {
     }
 
     @Override
-    public void handle(HttpRequest httpRequest, HttpResponse response, CompletableFuture<Object> completableFuture) throws IOException {
+    public void handle(HttpRequest httpRequest, CompletableFuture<Object> completableFuture) throws IOException {
+        HttpResponse response = httpRequest.getResponse();
         Thread.startVirtualThread(() -> {
             try {
                 World world = new World();

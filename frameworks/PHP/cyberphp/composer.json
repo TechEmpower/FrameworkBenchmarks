@@ -1,0 +1,29 @@
+{
+    "name": "eoioer/cyberphp",
+    "authors": [
+        {
+            "name": "eoioer",
+            "email": "eoioer@qq.com"
+        }
+    ],
+    "type": "project",
+    "description": "The Fastest and Smallest PHP Framework",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.3",
+        "php-di/php-di": "^7.0",
+        "nikic/fast-route": "^1.3",
+        "workerman/workerman": "^4.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "app\\": "app/",
+            "Cyber\\": "src/"
+        },
+		"files": [
+			"app/helpers.php"
+		]
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

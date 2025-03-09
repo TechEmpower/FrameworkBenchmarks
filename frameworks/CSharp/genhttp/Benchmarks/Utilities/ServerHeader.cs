@@ -1,11 +1,7 @@
-﻿namespace Benchmarks.Utilities
+﻿namespace Benchmarks.Utilities;
+
+public static class ServerHeader
 {
 
-    public static class ServerHeader
-    {
-
-        public static ServerHeaderConcernBuilder Create() => new ServerHeaderConcernBuilder();
-
-    }
-
+    public static ServerHeaderConcernBuilder Create() => new();
 }

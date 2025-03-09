@@ -3,6 +3,7 @@ require_once 'vendor/autoload.php';
 
 error_reporting(-1);
 
+Flight::set('flight.content_length', false);
 Flight::register('db', PDO::class, [ 'mysql:host=tfb-database;port=3306;dbname=hello_world', 'benchmarkdbuser', 'benchmarkdbpass', [ \PDO::ATTR_PERSISTENT => TRUE ] ]);
 
 // JSON test
@@ -13,9 +14,8 @@ Flight::route('/json', function() {
 // Plaintext test
 Flight::route('/plaintext', function() {
 	Flight::response()
-		->header('Content-Type', 'text/plain')
-		->write('Hello, World!')
-		->send();
+	->header('Content-Type', 'text/plain');
+	echo 'Hello, World!';
 });
 
 // DB test
@@ -103,4 +103,13 @@ Flight::route('/fortunes', function() {
     Flight::render('fortunes.php', [ 'fortunes' => $fortunes ]);
 });
 
-Flight::start();
+Flight::start() ;
+
+// Workerman
+function run()
+{
+    ob_start();
+    Flight::start();
+    header(HeaderDate::$date); // To pass the bench, nginx auto add it
+    return ob_get_clean();
+}

@@ -15,20 +15,30 @@ class HelloWorld < Roda
     rand(MAX_PK) + 1
   end
 
+  if defined?(Puma)
+    def set_default_headers(response)
+      response[DATE_HEADER] = Time.now.httpdate
+      response[SERVER_HEADER] = SERVER_STRING
+    end
+  else
+    def set_default_headers(response)
+      response[SERVER_HEADER] = SERVER_STRING
+    end
+  end
+
   route do |r|
-    response[DATE_HEADER] = Time.now.httpdate
-    response[SERVER_HEADER] = SERVER_STRING if SERVER_STRING
+    set_default_headers(response)
 
     # Test type 1: JSON serialization
     r.is "json" do
       response[CONTENT_TYPE] = JSON_TYPE
-      RapidJSON.encode({ message: "Hello, World!" })
+      { message: "Hello, World!" }.to_json
     end
 
     # Test type 2: Single database query
     r.is "db" do
       response[CONTENT_TYPE] = JSON_TYPE
-      RapidJSON.encode(World.with_pk(rand1).values)
+      World.with_pk(rand1).values.to_json
     end
 
     # Test type 3: Multiple database queries
@@ -40,7 +50,7 @@ class HelloWorld < Roda
             World.with_pk(id).values
           end
         end
-      RapidJSON.encode(worlds)
+      worlds.to_json
     end
 
     # Test type 4: Fortunes
@@ -70,7 +80,7 @@ class HelloWorld < Roda
           end
         World.batch_update(worlds)
       end
-      RapidJSON.encode(worlds.map!(&:values))
+      worlds.map!(&:values).to_json
     end
 
     # Test type 6: Plaintext
