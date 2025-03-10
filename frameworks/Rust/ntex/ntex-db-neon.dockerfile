@@ -9,8 +9,8 @@ ADD ./ /ntex
 WORKDIR /ntex
 
 RUN cargo clean
-RUN RUSTFLAGS="-C target-cpu=native" cargo build --release --features="default-rt"
+RUN RUSTFLAGS="-C target-cpu=native" cargo build --release --features="neon"
 
 EXPOSE 8080
 
-CMD ./target/release/ntex-default
+CMD ./target/release/ntex-db-neon

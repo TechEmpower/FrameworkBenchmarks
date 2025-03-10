@@ -27,7 +27,7 @@ platform = "None"
 webserver = "ntex"
 versus = ""
 
-[default-rt]
+[neon]
 urls.plaintext = "/plaintext"
 urls.json = "/json"
 approach = "Realistic"
@@ -70,7 +70,7 @@ platform = "None"
 webserver = "ntex"
 versus = ""
 
-[db-default]
+[db-neon]
 urls.db = "/db"
 urls.query = "/query?q="
 urls.update = "/update?q="
@@ -111,7 +111,7 @@ platform = "None"
 webserver = "ntex"
 versus = ""
 
-[plt-default]
+[plt-neon]
 urls.plaintext = "/plaintext"
 urls.json = "/json"
 approach = "Realistic"

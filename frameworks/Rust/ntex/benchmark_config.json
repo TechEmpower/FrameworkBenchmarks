@@ -37,7 +37,7 @@
         "notes": "",
         "versus": ""
     },
-    "default-rt": {
+    "neon": {
         "json_url": "/json",
         "plaintext_url": "/plaintext",
         "port": 8080,
@@ -51,7 +51,7 @@
         "webserver": "ntex",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "ntex [default]",
+        "display_name": "ntex [neon]",
         "notes": "",
         "versus": ""
     },
@@ -95,7 +95,7 @@
         "notes": "",
         "versus": ""
     },
-    "db-default": {
+    "db-neon": {
         "fortune_url": "/fortunes",
         "db_url": "/db",
         "query_url": "/query?q=",
@@ -111,7 +111,7 @@
         "webserver": "ntex",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "ntex [default,db]",
+        "display_name": "ntex [neon,db]",
         "notes": "",
         "versus": ""
     },
@@ -151,7 +151,7 @@
         "notes": "",
         "versus": ""
     },
-    "plt-default": {
+    "plt-neon": {
         "json_url": "/json",
         "plaintext_url": "/plaintext",
         "port": 8080,
@@ -165,7 +165,7 @@
         "webserver": "ntex",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "ntex [default,platform]",
+        "display_name": "ntex [neon,platform]",
         "notes": "",
         "versus": ""
     }
