@@ -8,7 +8,7 @@
         "postgres": "^3.4.5",
       },
       "devDependencies": {
-        "@types/bun": "^1.2.2",
+        "@types/bun": "^1.2.4",
         "typescript": "^5.7.2",
       },
     },

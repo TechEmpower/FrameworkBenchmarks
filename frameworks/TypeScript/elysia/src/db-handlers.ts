@@ -51,8 +51,8 @@ export const dbHandlers = new Elysia()
 	// ? Mark as async for Promise result to prevent double Elysia's mapResponse execution
 	.get("/queries", async (c) => {
 		const num = parseQueriesNumber(c.query.queries);
-		const worldPromises = new Array(num);
 
+		const worldPromises = new Array(num);
 		for (let i = 0; i < num; i++) worldPromises[i] = find(rand());
 
 		return Promise.all(worldPromises);
