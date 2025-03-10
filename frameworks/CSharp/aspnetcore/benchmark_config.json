@@ -1,5 +1,6 @@
 {
   "framework": "aspnetcore",
+  "maintainers": ["DamianEdwards", "sebastienros"],
   "tests": [
     {
       "default": {
