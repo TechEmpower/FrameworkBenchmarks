@@ -1,7 +1,7 @@
 import { Elysia } from "elysia";
 import { dbHandlers } from "./db-handlers";
 
-const app = new Elysia({ precompile: true })
+const app = new Elysia()
   .headers({
     server: "Elysia",
   })
@@ -16,7 +16,5 @@ const app = new Elysia({ precompile: true })
     return app;
   })
   .listen(8080);
-
-console.log(app.routes[5].composed.toString())
 
 console.info(`🦊 Elysia is running at ${app.server!.url}`);
