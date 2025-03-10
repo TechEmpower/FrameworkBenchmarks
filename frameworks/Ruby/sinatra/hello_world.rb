@@ -33,7 +33,7 @@ class HelloWorld < Sinatra::Base
 
   after do
     response['Date'] = Time.now.httpdate
-  end
+  end if defined?(Falcon) || defined?(Puma) || defined?(Agoo)
 
   after do
     response['Server'] = SERVER_STRING
