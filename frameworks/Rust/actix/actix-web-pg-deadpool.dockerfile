@@ -1,4 +1,4 @@
-FROM rust:1.57.0
+FROM rust:1.85
 
 RUN apt-get update -yqq && apt-get install -yqq cmake g++
 
