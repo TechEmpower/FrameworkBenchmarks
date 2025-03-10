@@ -38,7 +38,7 @@ fun Application.main() {
 
     install(DefaultHeaders)
 
-    val helloWorldContent = TextContent("Hello, World!", ContentType.Text.Plain).also { it.contentLength }
+    val helloWorldContent = TextContent("Hello, World!", ContentType.Text.Plain)
 
     routing {
         get("/plaintext") {

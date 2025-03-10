@@ -1,36 +1,32 @@
-import postgres from "postgres";
+import { SQL } from "bun";
 import { rand } from "./db-handlers";
 import type { Fortune, World } from "./types";
 
-const sql = postgres({
-	host: "tfb-database",
-	user: "benchmarkdbuser",
-	password: "benchmarkdbpass",
-	database: "hello_world",
+const sql = new SQL({
+	url: "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database:5432/hello_world",
 	max: 1,
 });
 
-export const fortunes = () => sql<Fortune[]>`SELECT id, message FROM fortune`;
+export const fortunes = () =>
+	sql`SELECT id, message FROM fortune` as Promise<Fortune>;
 
 export const find = (id: number) =>
-	sql<World[]>`SELECT id, randomNumber FROM world WHERE id = ${id}`.then(
+	sql`SELECT id, randomNumber FROM world WHERE id = ${id}`.then(
 		(arr) => arr[0],
-	);
+	) as Promise<World[]>;
 
 export const findThenRand = (id: number) =>
-	sql<World[]>`SELECT id, randomNumber FROM world WHERE id = ${id}`.then(
-		(arr) => {
-			arr[0].randomNumber = rand();
-			return arr[0];
-		},
-	);
+	sql`SELECT id, randomNumber FROM world WHERE id = ${id}`.then((arr) => {
+		arr[0].randomNumber = rand();
+		return arr[0];
+	}) as Promise<World[]>;
 
 export const bulkUpdate = (worlds: World[]) => {
 	const values = new Array(worlds.length);
 	for (let i = 0; i < worlds.length; i++)
 		values[i] = [+worlds[i].id, +worlds[i].randomNumber];
 
-	return sql`UPDATE world SET randomNumber = (update_data.randomNumber)::int
+	return sql`UPDATE world SET randomNumber = update_data.randomNumber
 		FROM (VALUES ${sql(values)}) AS update_data (id, randomNumber)
-		WHERE world.id = (update_data.id)::int`;
+		WHERE world.id = update_data.id`;
 };

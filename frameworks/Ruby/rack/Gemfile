@@ -11,19 +11,23 @@ gem 'sequel'
 gem 'sequel_pg', platforms: %i[ruby mswin]
 gem 'tzinfo-data', '1.2023.3'
 
-group :falcon do
+group :falcon, optional: true do
   gem 'falcon', '~> 0.47', platforms: %i[ruby mswin]
 end
 
-group :puma do
-  gem 'puma', '~> 6.4'
+group :iodine, optional: true do
+  gem 'iodine', '~> 0.7', platforms: %i[ruby mswin]
 end
 
-group :unicorn do
+group :puma, optional: true do
+  gem 'puma', '~> 6.5'
+end
+
+group :unicorn, optional: true do
   gem 'unicorn', '~> 6.1', platforms: %i[ruby mswin]
 end
 
-group :development do
+group :development, optional: true do
   gem 'rack-test'
   gem 'rubocop', platforms: %i[ruby mswin]
 end

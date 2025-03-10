@@ -3,7 +3,7 @@
 use serde::Serialize;
 use viz::{
     header::{HeaderValue, SERVER},
-    Error, Request, Response, ResponseExt, Result, Router,
+    Bytes, Error, Request, Response, ResponseExt, Result, Router,
 };
 
 mod server;
@@ -22,9 +22,15 @@ async fn plaintext(_: Request) -> Result<Response> {
 }
 
 async fn json(_: Request) -> Result<Response> {
-    let mut res = Response::json(Message {
-        message: "Hello, World!",
-    })?;
+    let mut res = Response::with(
+        http_body_util::Full::new(Bytes::from(
+            serde_json::to_vec(&Message {
+                message: "Hello, World!",
+            })
+            .unwrap(),
+        )),
+        mime::APPLICATION_JSON.as_ref(),
+    );
     res.headers_mut()
         .insert(SERVER, HeaderValue::from_static("Viz"));
     Ok(res)

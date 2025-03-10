@@ -22,7 +22,7 @@ class HelloWorld < Sinatra::Base
 
     def json(data)
       content_type :json
-      JSON.fast_generate(data)
+      data.to_json
     end
 
     # Return a random number between 1 and MAX_PK
@@ -33,7 +33,7 @@ class HelloWorld < Sinatra::Base
 
   after do
     response['Date'] = Time.now.httpdate
-  end
+  end if defined?(Falcon) || defined?(Puma) || defined?(Agoo)
 
   after do
     response['Server'] = SERVER_STRING

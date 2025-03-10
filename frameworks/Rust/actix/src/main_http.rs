@@ -23,6 +23,7 @@ use crate::{
     utils::Writer,
 };
 
+#[allow(dead_code)]
 #[derive(Debug)]
 enum Error {
     Pg(PgError),
@@ -134,7 +135,7 @@ impl Service<Request> for App {
             }
 
             _ => Box::pin(ok(Response::with_body(
-                http::StatusCode::NOT_FOUND,
+                StatusCode::NOT_FOUND,
                 Bytes::new(),
             ))),
         }

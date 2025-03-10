@@ -11,11 +11,14 @@
 :8080
 
 route {
-    root * /php
 
     # FrankenPHP!
+    # disable static files for this benchmark
+    # by using php instead of php_server
     @phpFiles path *.php
-    php @phpFiles
+    php @phpFiles {
+        root /php
+    }
 
     respond 404
 }

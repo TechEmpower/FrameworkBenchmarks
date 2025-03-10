@@ -19,7 +19,7 @@ platform = "Servlet"
 webserver = "None"
 versus = "servlet"
 
-[jettyloom]
+[jdk]
 urls.plaintext = "/plaintext"
 urls.json = "/json"
 urls.db = "/db"
@@ -37,7 +37,7 @@ platform = "Servlet"
 webserver = "None"
 versus = "servlet"
 
-[jettyloom-pgclient]
+[jdk-pgclient]
 urls.plaintext = "/plaintext"
 urls.json = "/json"
 urls.db = "/db"
