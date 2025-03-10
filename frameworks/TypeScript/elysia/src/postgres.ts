@@ -24,8 +24,6 @@ export const findThenRand = (id: number) =>
 		}) as Promise<World[]>;
 
 export const bulkUpdate = (worlds: World[]) => {
-	worlds = worlds.toSorted((a, b) => a.id - b.id);
-
 	const values = new Array(worlds.length);
 	for (let i = 0; i < worlds.length; i++)
 		values[i] = [worlds[i].id, worlds[i].randomNumber];

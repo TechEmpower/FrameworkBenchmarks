@@ -55,7 +55,7 @@ export const dbHandlers = new Elysia()
 		const worldPromises = new Array(num);
 		for (let i = 0; i < num; i++) worldPromises[i] = find(rand());
 
-		return Promise.all(worldPromises);
+		return await Promise.all(worldPromises);
 	})
 	.get("/updates", async (c) => {
 		const num = parseQueriesNumber(c.query.queries);
