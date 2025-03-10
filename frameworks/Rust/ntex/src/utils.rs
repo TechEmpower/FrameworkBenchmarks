@@ -34,7 +34,7 @@ pub fn reserve(buf: &mut BytesMut, lw: usize) {
 
 pub struct BytesWriter<'a>(pub &'a mut BytesMut);
 
-impl<'a> Write for BytesWriter<'a> {
+impl Write for BytesWriter<'_> {
     fn write(&mut self, src: &[u8]) -> Result<usize, io::Error> {
         self.0.extend_from_slice(src);
         Ok(src.len())
@@ -45,7 +45,7 @@ impl<'a> Write for BytesWriter<'a> {
     }
 }
 
-impl<'a> WriteExt for BytesWriter<'a> {
+impl WriteExt for BytesWriter<'_> {
     #[inline(always)]
     fn reserve_with(&mut self, additional: usize) -> Result<&mut [MaybeUninit<u8>], io::Error> {
         self.0.reserve(additional);
