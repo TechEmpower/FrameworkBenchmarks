@@ -16,7 +16,7 @@ PostgreSQL.
 ```sh
 docker build -t hyperlane_techempower -f hyperlane.dockerfile .;
 # Replace DBHOST with the database host address
-docker run --name hyperlane_techempower --network=host -e DBHOST=127.0.0.1 -d hyperlane_techempower;
+docker run --name hyperlane_techempower --ulimit nofile=1024000:1024000 --network=host -e DBHOST=127.0.0.1 -d hyperlane_techempower;
 ```
 
 ## Test URLs
