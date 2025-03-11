@@ -24,10 +24,14 @@ RUN rm -Rf ./paozhu/libs
 RUN rm -Rf ./paozhu/viewsrc
 RUN rm -Rf ./paozhu/orm
 RUN rm -Rf ./paozhu/models
-RUN rm -Rf ./paozhu/common
-
-
-
+#RUN rm -Rf ./paozhu/common
+RUN rm -Rf ./paozhu/common/autocontrolmethod.hpp
+RUN rm -Rf ./paozhu/common/autorestfulpaths.hpp
+RUN rm -Rf ./paozhu/common/json_reflect_headers.h
+RUN rm -Rf ./paozhu/common/reghttpmethod_pre.hpp
+RUN rm -Rf ./paozhu/common/reghttpmethod.hpp
+RUN rm -Rf ./paozhu/common/websockets_method_reg.hpp
+RUN rm -Rf ./paozhu/common/httphook.cpp
 # COPY ./paozhu_benchmark/controller ./paozhu/
 # COPY ./paozhu_benchmark/libs ./paozhu/
 # COPY ./paozhu_benchmark/view ./paozhu/
@@ -39,7 +43,7 @@ RUN rm -Rf ./paozhu/common
 
 # RUN ls -l ./paozhu
 # RUN pwd
-RUN mkdir ./paozhu/common
+#RUN mkdir ./paozhu/common
 RUN mkdir ./paozhu/libs
 RUN mkdir ./paozhu/libs/types
 COPY ./paozhu_benchmark/libs/types/techempower_json.h ./paozhu/libs/types/
@@ -58,7 +62,7 @@ COPY ./paozhu_benchmark/common/reghttpmethod_pre.hpp ./paozhu/common/
 COPY ./paozhu_benchmark/common/reghttpmethod.hpp ./paozhu/common/
 COPY ./paozhu_benchmark/common/json_reflect_headers.h ./paozhu/common/
 
-COPY ./paozhu_benchmark/common/cost_define.h ./paozhu/common/
+#COPY ./paozhu_benchmark/common/cost_define.h ./paozhu/common/
 COPY ./paozhu_benchmark/common/autorestfulpaths.hpp ./paozhu/common/
 COPY ./paozhu_benchmark/common/websockets_method_reg.hpp ./paozhu/common/
 COPY ./paozhu_benchmark/common/httphook.cpp ./paozhu/common/
