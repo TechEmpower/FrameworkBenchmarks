@@ -11,6 +11,14 @@ PostgreSQL.
 - url: postgres://benchmarkdbuser:benchmarkdbpass@tfb-database:5432/hello_world
 - tfb-database read from env DBHOST
 
+## Docker file
+
+```sh
+docker build -t hyperlane_techempower -f hyperlane.dockerfile .;
+# Replace DBHOST with the database host address
+docker run --name hyperlane_techempower --network=host -e DBHOST=127.0.0.1 -d hyperlane_techempower;
+```
+
 ## Test URLs
 
 ### Test 1: JSON Encoding
