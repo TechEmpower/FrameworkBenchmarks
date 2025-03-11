@@ -3,7 +3,7 @@ pub(crate) mod db;
 pub(crate) mod lazy;
 pub(crate) mod request_middleware;
 pub(crate) mod response_middleware;
-pub(crate) mod router;
+pub(crate) mod route;
 pub(crate) mod server;
 pub(crate) mod r#type;
 
@@ -22,7 +22,7 @@ pub(crate) use r#type::*;
 pub(crate) use rand::Rng;
 pub(crate) use request_middleware::*;
 pub(crate) use response_middleware::*;
-pub(crate) use router::*;
+pub(crate) use route::*;
 pub(crate) use server::*;
 pub(crate) use std::{io, sync::Arc};
 pub(crate) use tokio_postgres::{Config, NoTls, Row, Statement};
