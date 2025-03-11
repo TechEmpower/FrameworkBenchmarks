@@ -471,9 +471,9 @@ checksum = "ce9eb07f0cbd4a9832e9c5158a08bcfbcea832c3a69d0872c31f1a2be0f92f26"
 
 [[package]]
 name = "http-type"
-version = "3.20.2"
+version = "3.21.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "81bdf14cea97c9fd74e3e4cac42d9659beaf583e0233cec0ea30bfb17c0648c9"
+checksum = "66532d9dfd4e12d5b04efb888dada57deedbdc521a84c777caaa15d4cb1f6536"
 dependencies = [
  "hex",
  "http-compress",
@@ -489,9 +489,9 @@ dependencies = [
 
 [[package]]
 name = "hyperlane"
-version = "4.29.0"
+version = "4.30.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a738f244c96d7c30150d53a9a78a90abb8126696f82c9c2a29582a204ae2a1a8"
+checksum = "1ec04344054243f2d53b32f621d3b600b16682c1d92db140a63b8f497590b108"
 dependencies = [
  "async-func",
  "clonelicious",
