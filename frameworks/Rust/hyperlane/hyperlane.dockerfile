@@ -1,6 +1,6 @@
 FROM rust:1.85
 
-RUN apt-get update -yqq && apt-get install -yqq cmake g++
+ENV POSTGRES_URL=postgres://benchmarkdbuser:benchmarkdbpass@tfb-database:5432/hello_world
 
 ADD ./ /hyperlane_techempower
 WORKDIR /hyperlane_techempower
@@ -8,6 +8,6 @@ WORKDIR /hyperlane_techempower
 RUN cargo clean
 RUN RUSTFLAGS="-C target-cpu=native" cargo build --release
 
-EXPOSE 60000
+EXPOSE 8080
 
 CMD ./target/release/hyperlane_techempower

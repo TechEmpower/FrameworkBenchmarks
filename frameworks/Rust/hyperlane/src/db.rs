@@ -87,19 +87,18 @@ pub async fn insert_records() {
 }
 
 pub async fn init_db() {
-    let dbhost: &str = match option_env!("DBHOST") {
+    let db_url: &str = match option_env!("POSTGRES_URL") {
         Some(it) => it,
-        _ => DATABASE_HOST,
+        _ => &format!(
+            "{}://{}:{}@{}:{}/{}",
+            DATABASE_TYPE,
+            DATABASE_USER_NAME,
+            DATABASE_USER_PASSWORD,
+            DATABASE_HOST,
+            DATABASE_PORT,
+            DATABASE_NAME
+        ),
     };
-    let db_url: String = format!(
-        "{}://{}:{}@{}:{}/{}",
-        DATABASE_TYPE,
-        DATABASE_USER_NAME,
-        DATABASE_USER_PASSWORD,
-        dbhost,
-        DATABASE_PORT,
-        DATABASE_NAME
-    );
     println_warning!("db url: ", db_url);
     let config: Config = db_url.parse::<Config>().unwrap();
     let db_manager: PostgresConnectionManager<NoTls> =

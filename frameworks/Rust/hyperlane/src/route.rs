@@ -26,7 +26,7 @@ pub async fn db(controller_data: ControllerData) {
 
 pub async fn queries(controller_data: ControllerData) {
     let queries: Queries = controller_data
-        .get_request_query("queries")
+        .get_request_query("q")
         .await
         .map(|queries| queries.parse::<Queries>().unwrap_or_default())
         .unwrap_or(0)
