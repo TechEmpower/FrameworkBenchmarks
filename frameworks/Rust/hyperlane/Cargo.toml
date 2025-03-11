@@ -1,0 +1,45 @@
+[package]
+name = "hyperlane_techempower"
+version = "0.0.1"
+edition = "2021"
+authors = ["ltpp-universe <root@ltpp.vip>"] 
+license = "MIT"
+description = """Hyperlane is a lightweight and high-performance Rust HTTP server library designed to simplify network service development. It supports HTTP request parsing, response building, TCP communication, and redirection features, making it ideal for building modern web services."""
+keywords = ["http", "request", "response", "tcp", "redirect"]
+repository = "https://github.com/ltpp-universe/hyperlane.git"
+categories = ["network-programming", "web-programming"]
+exclude = [
+    "target",
+    "Cargo.lock",
+    "sh",
+    ".github",
+    "logs",
+    "**/*.log"
+]
+
+[dependencies]
+hyperlane = "4.29.0"
+bb8 = "0.9.0"
+bb8-postgres = "0.9.0"
+rand = "0.9.0"
+tokio-postgres = { version = "0.7.13", features = ["with-uuid-0_8"] }
+
+[profile.dev]
+incremental = false
+opt-level = 3
+lto = true
+panic = "unwind"
+debug = false
+codegen-units = 1
+strip = "debuginfo"
+backtrace = "off"
+
+[profile.release]
+incremental = false
+opt-level = 3
+lto = true
+panic = "unwind"
+debug = false
+codegen-units = 1
+strip = "debuginfo"
+backtrace = "off"
