@@ -28,7 +28,7 @@ pub async fn queries(controller_data: ControllerData) {
     let queries: Queries = controller_data
         .get_request_query("q")
         .await
-        .map(|queries| queries.parse::<Queries>().unwrap_or_default())
+        .and_then(|queries| queries.parse::<Queries>().ok())
         .unwrap_or(1)
         .min(ROW_LIMIT as usize);
     let mut data: Vec<QueryRow> = Vec::with_capacity(queries);
