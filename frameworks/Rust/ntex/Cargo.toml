@@ -16,6 +16,10 @@ name = "ntex-neon"
 path = "src/main.rs"
 
 [[bin]]
+name = "ntex-neon-uring"
+path = "src/main.rs"
+
+[[bin]]
 name = "ntex-db"
 path = "src/main_db.rs"
 
@@ -25,6 +29,10 @@ path = "src/main_db.rs"
 
 [[bin]]
 name = "ntex-db-neon"
+path = "src/main_db.rs"
+
+[[bin]]
+name = "ntex-db-neon-uring"
 path = "src/main_db.rs"
 
 [[bin]]
@@ -39,6 +47,10 @@ path = "src/main_plt.rs"
 name = "ntex-plt-neon"
 path = "src/main_plt.rs"
 
+[[bin]]
+name = "ntex-plt-neon-uring"
+path = "src/main_plt.rs"
+
 [features]
 default = []
 
@@ -50,6 +62,9 @@ compio = ["ntex/compio"]
 
 # neon runtime
 neon = ["ntex/neon"]
+
+# neon runtime
+neon-uring = ["ntex/neon-uring"]
 
 [dependencies]
 ntex = "2.12"
@@ -78,7 +93,6 @@ ntex = { git = "https://github.com/ntex-rs/ntex.git" }
 ntex-io = { git = "https://github.com/ntex-rs/ntex.git" }
 ntex-net = { git = "https://github.com/ntex-rs/ntex.git" }
 ntex-rt = { git = "https://github.com/ntex-rs/ntex.git" }
-ntex-neon = { git = "https://github.com/ntex-rs/ntex.git" }
 
 [profile.release]
 opt-level = 3
