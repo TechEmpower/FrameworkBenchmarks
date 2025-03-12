@@ -585,6 +585,7 @@ dependencies = [
  "chrono",
  "hyperlane",
  "rand",
+ "serde",
  "tokio-postgres",
 ]
 

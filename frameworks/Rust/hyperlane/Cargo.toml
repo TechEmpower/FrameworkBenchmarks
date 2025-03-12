@@ -24,6 +24,7 @@ bb8-postgres = "0.9.0"
 rand = "0.9.0"
 tokio-postgres = { version = "0.7.13", features = ["with-uuid-0_8"] }
 chrono = "0.4.40"
+serde = "1.0.219"
 
 [profile.dev]
 incremental = false

@@ -129,7 +129,7 @@ pub async fn random_world_row() -> Result<QueryRow, Box<dyn std::error::Error>> 
     if let Some(rows) = connection.query_opt(&stmt, &[&random_id]).await? {
         let id: i32 = rows.get(0);
         let random_number: i32 = rows.get(1);
-        return Ok((id, random_number));
+        return Ok(QueryRow::new(id, random_number));
     }
-    return Ok((0, 0));
+    return Ok(QueryRow::new(0, 0));
 }
