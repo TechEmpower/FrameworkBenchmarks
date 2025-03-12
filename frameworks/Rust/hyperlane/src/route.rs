@@ -11,7 +11,7 @@ pub async fn json(controller_data: ControllerData) {
 
 pub async fn plaintext(controller_data: ControllerData) {
     let _ = controller_data
-        .set_request_header(CONTENT_TYPE, TEXT_PLAIN)
+        .set_response_header(CONTENT_TYPE, TEXT_PLAIN)
         .await
         .set_response_body(RESPONSEDATA)
         .await;
@@ -29,7 +29,7 @@ pub async fn queries(controller_data: ControllerData) {
         .get_request_query("q")
         .await
         .map(|queries| queries.parse::<Queries>().unwrap_or_default())
-        .unwrap_or(0)
+        .unwrap_or(1)
         .min(ROW_LIMIT as usize);
     let mut data: Vec<QueryRow> = Vec::with_capacity(queries);
     for _ in 0..queries {
