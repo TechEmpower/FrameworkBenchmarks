@@ -6,6 +6,8 @@ pub async fn request(controller_data: ControllerData) {
         .await
         .set_request_header(CONTENT_TYPE, APPLICATION_JSON)
         .await
+        .set_response_header(SERVER, HYPERLANE)
+        .await
         .set_response_status_code(200)
         .await;
 }
