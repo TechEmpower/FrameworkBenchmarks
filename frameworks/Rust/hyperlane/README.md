@@ -8,15 +8,6 @@ Hyperlane is a lightweight and high-performance Rust HTTP server library designe
 
 PostgreSQL.
 
-## Dev shell for me
-
-```sh
-docker network create tfb-network;
-docker run --rm -d --name tfb-database --network tfb-network -e POSTGRES_USER=benchmarkdbuser -e POSTGRES_PASSWORD=benchmarkdbpass -e POSTGRES_DB=hello_world postgres:latest;
-docker build -t hyperlane_techempower -f hyperlane.dockerfile .;
-docker run --rm --network tfb-network hyperlane_techempower;
-```
-
 ## Test URLs
 
 ### Test 1: JSON Encoding
