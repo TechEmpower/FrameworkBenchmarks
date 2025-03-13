@@ -1,0 +1,14 @@
+package build
+
+import mill._
+import mill.scalalib._
+
+object `package` extends RootModule with ScalaModule {
+  def scalaVersion = "3.6.2"
+  def ivyDeps = Agg(
+    ivy"ba.sake::sharaf:0.8.1",
+    ivy"ba.sake::squery:0.6.4",
+    ivy"org.postgresql:postgresql:42.6.0",
+    ivy"com.zaxxer:HikariCP:5.0.1"
+  )
+}
