@@ -6,7 +6,7 @@ Hyperlane is a lightweight and high-performance Rust HTTP server library designe
 
 ## Database
 
-PostgreSQL.
+PostgreSQL
 
 ## Test URLs
 
