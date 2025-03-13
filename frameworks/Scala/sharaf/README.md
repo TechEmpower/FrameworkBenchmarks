@@ -1,6 +1,8 @@
 
 # Sharaf Benchmarking Test
 
+[Sharaf](https://sake92.github.io/sharaf/) is a minimalistic Scala 3 web framework.
+
 ### Test Type Implementation Source Code
 
 * [JSON](src/routes.scala)
