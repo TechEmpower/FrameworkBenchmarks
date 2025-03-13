@@ -10,6 +10,9 @@ class HelloWorld < Sinatra::Base
     # XSS, CSRF, IP spoofing, etc. protection are not explicitly required
     disable :protection
 
+    # disable host_authorization for all environments
+    set :host_authorization, { permitted_hosts: [] }
+
     # Only add the charset parameter to specific content types per the requirements
     set :add_charset, [mime_type(:html)]
   end
