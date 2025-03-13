@@ -18,7 +18,7 @@ exclude = [
 ]
 
 [dependencies]
-hyperlane = "4.31.0"
+hyperlane = "4.31.1"
 bb8 = "0.9.0"
 bb8-postgres = "0.9.0"
 rand = "0.9.0"
