@@ -140,29 +140,30 @@ namespace orm
                 {
                     return 0;
                 }
-                auto conn = conn_obj->get_select_conn();
-
-                // unsigned int querysql_len = countsql.length() + 1;
-
-                // conn->send_data.clear();
-                // conn->send_data.push_back((querysql_len & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 8 & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 16 & 0xFF));
-                // conn->send_data.push_back(0x00);
-                // conn->send_data.push_back(0x03);
-                // conn->send_data.append(countsql);
-
-                if(conn->isdebug)
+                //auto conn = conn_obj->get_select_conn();
+                if(islock_conn)
                 {
-                    conn->begin_time();
+                    if(!select_conn)
+                    {
+                        select_conn = conn_obj->get_select_conn();
+                    }
                 }
-                std::size_t n = conn->write_sql(countsql);
+                else
+                {
+                    select_conn = conn_obj->get_select_conn();
+                } 
+
+                if(select_conn->isdebug)
+                {
+                    select_conn->begin_time();
+                }
+                std::size_t n = select_conn->write_sql(countsql);
                 if(n==0)
                 {
-                    error_msg = conn->error_msg;
+                    error_msg = select_conn->error_msg;
+                    select_conn.reset();
                     return 0;
                 }
-                //std::size_t n = asio::write(*conn->socket, asio::buffer(conn->send_data), conn->ec);
 
                 pack_info_t temp_pack_data;
                 temp_pack_data.seq_id = 1;
@@ -176,25 +177,27 @@ namespace orm
 
                 for (; is_sql_item == false;)
                 {
-                    n      = conn->read_loop();
+                    n      = select_conn->read_loop();
                     offset = 0;
                     if(n==0)
                     {
-                        error_msg = conn->error_msg;
+                        error_msg = select_conn->error_msg;
+                        select_conn.reset();
                         return 0;
                     }
                     for (; offset < n;)
                     {
-                        conn->read_field_pack(conn->_cache_data, n, offset, temp_pack_data);
+                        select_conn->read_field_pack(select_conn->_cache_data, n, offset, temp_pack_data);
                         if(temp_pack_data.error > 0)
                         {
                             iserror = true;
                             error_msg =temp_pack_data.data;
+                            select_conn.reset();
                             return 0;
                         }
                         if (temp_pack_data.length == temp_pack_data.current_length && temp_pack_data.current_length > 0)
                         {
-                            if (conn->pack_eof_check(temp_pack_data))
+                            if (select_conn->pack_eof_check(temp_pack_data))
                             {
                                 is_sql_item = true;
                                 break;
@@ -211,7 +214,7 @@ namespace orm
                             else if (action_setup == 1)
                             {
                                 field_info_t temp_filed_col;
-                                conn->read_col_info(temp_pack_data.data, temp_filed_col);
+                                select_conn->read_col_info(temp_pack_data.data, temp_filed_col);
 
                                 column_num--;
                                 if (column_num == 0)
@@ -223,7 +226,7 @@ namespace orm
                             {
                                 unsigned int tempnum = 0;
 
-                                unsigned int name_length = conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], tempnum);
+                                unsigned int name_length = select_conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], tempnum);
 
                                 querysql_len = 0;
                                 for (unsigned int ik = 0; ik < name_length; ik++)
@@ -249,14 +252,18 @@ namespace orm
                     }
                 }
 
-                if(conn->isdebug)
+                if(select_conn->isdebug)
                 {
-                    conn->finish_time();
+                    select_conn->finish_time();
                     auto &conn_mar = get_orm_connect_mar();
-                    long long du_time= conn->count_time();
+                    long long du_time= select_conn->count_time();
                     conn_mar.push_log(countsql,std::to_string(du_time));
                 }
-                conn_obj->back_select_conn(conn);
+
+                if(!islock_conn)
+                {
+                    conn_obj->back_select_conn(std::move(select_conn));
+                }
 
                 if (iscache)
                 {
@@ -370,26 +377,28 @@ namespace orm
                 {
                     co_return 0;
                 }
-                auto conn = co_await conn_obj->async_get_select_conn();
-
-                // unsigned int querysql_len = countsql.length() + 1;
-
-                // conn->send_data.clear();
-                // conn->send_data.push_back((querysql_len & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 8 & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 16 & 0xFF));
-                // conn->send_data.push_back(0x00);
-                // conn->send_data.push_back(0x03);
-                // conn->send_data.append(countsql);
-
-                if(conn->isdebug)
+                //auto conn = co_await conn_obj->async_get_select_conn();
+                if(islock_conn)
                 {
-                    conn->begin_time();
+                    if(!select_conn)
+                    {
+                        select_conn = co_await conn_obj->async_get_select_conn();
+                    }
                 }
-                std::size_t n = co_await conn->async_write_sql(countsql);
+                else
+                {
+                    select_conn = co_await conn_obj->async_get_select_conn();
+                }
+
+                if(select_conn->isdebug)
+                {
+                    select_conn->begin_time();
+                }
+                std::size_t n = co_await select_conn->async_write_sql(countsql);
                 if(n==0)
                 {
-                    error_msg = conn->error_msg;
+                    error_msg = select_conn->error_msg;
+                    select_conn.reset();
                     co_return 0;
                 }
                 //std::size_t n = co_await asio::async_write(*conn->socket, asio::buffer(conn->send_data), asio::use_awaitable);
@@ -407,24 +416,26 @@ namespace orm
 
                 for (; is_sql_item == false;)
                 {
-                    n      = co_await conn->async_read_loop();
+                    n      = co_await select_conn->async_read_loop();
                     offset = 0;
                     if (n==0)
                     {
+                        select_conn.reset();
                         co_return 0;
                     }
                     for (; offset < n;)
                     {
-                        conn->read_field_pack(conn->_cache_data, n, offset, temp_pack_data);
+                        select_conn->read_field_pack(select_conn->_cache_data, n, offset, temp_pack_data);
                         if(temp_pack_data.error > 0)
                         {
                             iserror = true;
                             error_msg =temp_pack_data.data;
+                            select_conn.reset();
                             co_return 0;
                         }
                         if (temp_pack_data.length == temp_pack_data.current_length && temp_pack_data.current_length > 0)
                         {
-                            if (conn->pack_eof_check(temp_pack_data))
+                            if (select_conn->pack_eof_check(temp_pack_data))
                             {
                                 is_sql_item = true;
                                 break;
@@ -441,7 +452,7 @@ namespace orm
                             else if (action_setup == 1)
                             {
                                 field_info_t temp_filed_col;
-                                conn->read_col_info(temp_pack_data.data, temp_filed_col);
+                                select_conn->read_col_info(temp_pack_data.data, temp_filed_col);
 
                                 column_num--;
                                 if (column_num == 0)
@@ -453,7 +464,7 @@ namespace orm
                             {
                                 unsigned int tempnum = 0;
 
-                                unsigned int name_length = conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], tempnum);
+                                unsigned int name_length = select_conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], tempnum);
 
                                 querysql_len = 0;
                                 for (unsigned int ik = 0; ik < name_length; ik++)
@@ -479,15 +490,17 @@ namespace orm
                     }
                 }
 
-                if(conn->isdebug)
+                if(select_conn->isdebug)
                 {
-                    conn->finish_time();
+                    select_conn->finish_time();
                     auto &conn_mar = get_orm_connect_mar();
-                    long long du_time= conn->count_time();
+                    long long du_time= select_conn->count_time();
                     conn_mar.push_log(countsql,std::to_string(du_time));
                 }
-                conn_obj->back_select_conn(conn);
-
+                if(!islock_conn)
+                {
+                    conn_obj->back_select_conn(std::move(select_conn));
+                }
                 if (iscache)
                 {
                     if (exptime > 0)
@@ -640,48 +653,50 @@ namespace orm
                 {
                     return 0;
                 }
-                auto conn = conn_obj->get_edit_conn();
+                //auto conn = conn_obj->get_edit_conn();
 
-                // unsigned int querysql_len = countsql.length() + 1;
-
-                // conn->send_data.clear();
-                // conn->send_data.push_back((querysql_len & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 8 & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 16 & 0xFF));
-                // conn->send_data.push_back(0x00);
-                // conn->send_data.push_back(0x03);
-                // conn->send_data.append(countsql);
-
-                if(conn->isdebug)
+                if(islock_conn)
                 {
-                    conn->begin_time();
+                    if(!edit_conn)
+                    {
+                        edit_conn = conn_obj->get_edit_conn();
+                    }
                 }
-                std::size_t n = conn->write_sql(countsql);
+                else
+                {
+                    edit_conn = conn_obj->get_edit_conn();
+                }
+
+                if(edit_conn->isdebug)
+                {
+                    edit_conn->begin_time();
+                }
+                std::size_t n = edit_conn->write_sql(countsql);
                 if(n==0)
                 {
-                    error_msg = conn->error_msg;
+                    error_msg = edit_conn->error_msg;
+                    edit_conn.reset();
                     return 0;
                 }
-                // std::size_t n = asio::write(*conn->socket, asio::buffer(conn->send_data), conn->ec);
 
                 unsigned int offset = 0;
-                n                   = conn->read_loop();
+                n                   = edit_conn->read_loop();
                 if(n==0)
                 {
-                    error_msg = conn->error_msg;
+                    error_msg = edit_conn->error_msg;
+                    edit_conn.reset();
                     return 0;
                 }
                 pack_info_t temp_pack_data;
                 temp_pack_data.seq_id = 1;
-                conn->read_field_pack(conn->_cache_data, n, offset, temp_pack_data);
-                if(conn->isdebug)
+                edit_conn->read_field_pack(edit_conn->_cache_data, n, offset, temp_pack_data);
+                if(edit_conn->isdebug)
                 {
-                    conn->finish_time();
+                    edit_conn->finish_time();
                     auto &conn_mar = get_orm_connect_mar();
-                    long long du_time= conn->count_time();
+                    long long du_time= edit_conn->count_time();
                     conn_mar.push_log(countsql,std::to_string(du_time));
                 }
-                conn_obj->back_edit_conn(conn);
 
                 if ((unsigned char)temp_pack_data.data[0] == 0xFF)
                 {
@@ -691,12 +706,14 @@ namespace orm
                 {
 
                     unsigned int d_offset = 1;
-                    effect_num            = conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);
-                    //insertid      = pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);
-                    return effect_num;
+                    effect_num            = edit_conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);
+                    
                 }
-
-                return 0;
+                if(!islock_conn)
+                {
+                    conn_obj->back_edit_conn(std::move(edit_conn));
+                }
+                return effect_num;
             }
             catch (const std::exception &e)
             {
@@ -789,47 +806,48 @@ namespace orm
                 {
                     co_return 0;
                 }
-                auto conn = co_await conn_obj->async_get_edit_conn();
 
-                // unsigned int querysql_len = countsql.length() + 1;
-
-                // conn->send_data.clear();
-                // conn->send_data.push_back((querysql_len & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 8 & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 16 & 0xFF));
-                // conn->send_data.push_back(0x00);
-                // conn->send_data.push_back(0x03);
-                // conn->send_data.append(countsql);
-
-                if(conn->isdebug)
+                if(islock_conn)
                 {
-                    conn->begin_time();
+                    if(!edit_conn)
+                    {
+                        edit_conn = co_await conn_obj->async_get_edit_conn();
+                    }
                 }
-                std::size_t n = co_await conn->async_write_sql(countsql);
+                else
+                {
+                    edit_conn = co_await conn_obj->async_get_edit_conn();
+                }
+
+                if(edit_conn->isdebug)
+                {
+                    edit_conn->begin_time();
+                }
+                std::size_t n = co_await edit_conn->async_write_sql(countsql);
                 if(n==0)
                 {
-                    error_msg = conn->error_msg;
+                    error_msg = edit_conn->error_msg;
+                    edit_conn.reset();
                     co_return 0;
                 }
-                //std::size_t n = co_await asio::async_write(*conn->socket, asio::buffer(conn->send_data), asio::use_awaitable);
 
                 unsigned int offset = 0;
-                n                   = co_await conn->async_read_loop();
+                n                   = co_await edit_conn->async_read_loop();
                 if (n==0)
                 {
+                    edit_conn.reset();
                     co_return 0;
                 }
                 pack_info_t temp_pack_data;
                 temp_pack_data.seq_id = 1;
-                conn->read_field_pack(conn->_cache_data, n, offset, temp_pack_data);
-                if(conn->isdebug)
+                edit_conn->read_field_pack(edit_conn->_cache_data, n, offset, temp_pack_data);
+                if(edit_conn->isdebug)
                 {
-                    conn->finish_time();
+                    edit_conn->finish_time();
                     auto &conn_mar = get_orm_connect_mar();
-                    long long du_time= conn->count_time();
+                    long long du_time= edit_conn->count_time();
                     conn_mar.push_log(countsql,std::to_string(du_time));
                 }
-                conn_obj->back_edit_conn(conn);
 
                 if ((unsigned char)temp_pack_data.data[0] == 0xFF)
                 {
@@ -839,12 +857,13 @@ namespace orm
                 {
 
                     unsigned int d_offset = 1;
-                    effect_num            = conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);
-                    //insertid      = pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);
-                    co_return effect_num;
+                    effect_num            = edit_conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);
                 }
-
-                co_return 0;
+                if(!islock_conn)
+                {
+                    conn_obj->back_edit_conn(std::move(edit_conn));
+                }   
+                co_return effect_num;
             }
             catch (const std::exception &e)
             {
@@ -926,50 +945,51 @@ namespace orm
                 {
                     return 0;
                 }
-                auto conn = conn_obj->get_edit_conn();
+                //auto conn = conn_obj->get_edit_conn();
 
-                // unsigned int querysql_len = countsql.length() + 1;
-
-                // conn->send_data.clear();
-                // conn->send_data.push_back((querysql_len & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 8 & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 16 & 0xFF));
-                // conn->send_data.push_back(0x00);
-                // conn->send_data.push_back(0x03);
-                // conn->send_data.append(countsql);
-
-                if(conn->isdebug)
+                if(islock_conn)
                 {
-                    conn->begin_time();
+                    if(!edit_conn)
+                    {
+                        edit_conn = conn_obj->get_edit_conn();
+                    }
+                }
+                else
+                {
+                    edit_conn = conn_obj->get_edit_conn();
                 }
 
-                std::size_t n = conn->write_sql(countsql);
+                if(edit_conn->isdebug)
+                {
+                    edit_conn->begin_time();
+                }
+
+                std::size_t n = edit_conn->write_sql(countsql);
                 if(n==0)
                 {
-                    error_msg = conn->error_msg;
+                    error_msg = edit_conn->error_msg;
+                    edit_conn.reset();
                     return 0;
                 }
 
-                // std::size_t n = asio::write(*conn->socket, asio::buffer(conn->send_data), conn->ec);
-
                 unsigned int offset = 0;
-                n                   = conn->read_loop();
+                n                   = edit_conn->read_loop();
                 if(n==0)
                 {
-                    error_msg = conn->error_msg;
+                    error_msg = edit_conn->error_msg;
+                    edit_conn.reset();
                     return 0;
                 }
                 pack_info_t temp_pack_data;
                 temp_pack_data.seq_id = 1;
-                conn->read_field_pack(conn->_cache_data, n, offset, temp_pack_data);
-                if(conn->isdebug)
+                edit_conn->read_field_pack(edit_conn->_cache_data, n, offset, temp_pack_data);
+                if(edit_conn->isdebug)
                 {
-                    conn->finish_time();
+                    edit_conn->finish_time();
                     auto &conn_mar = get_orm_connect_mar();
-                    long long du_time= conn->count_time();
+                    long long du_time= edit_conn->count_time();
                     conn_mar.push_log(countsql,std::to_string(du_time));
                 }
-                conn_obj->back_edit_conn(conn);
 
                 if ((unsigned char)temp_pack_data.data[0] == 0xFF)
                 {
@@ -979,12 +999,13 @@ namespace orm
                 {
 
                     unsigned int d_offset = 1;
-                    effect_num            = conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);
-                    //insertid      = pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);
-                    return effect_num;
+                    effect_num            = edit_conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);
                 }
-
-                return 0;
+                if(!islock_conn)
+                {
+                    conn_obj->back_edit_conn(std::move(edit_conn));
+                }
+                return effect_num;
             }
             catch (const std::exception &e)
             {
@@ -5147,38 +5168,31 @@ M_MODEL& or_leMessage(T val)
                 {
                     return temprecord;
                 }
-                auto conn = conn_obj->get_select_conn();
-
-                // unsigned int querysql_len = sqlstring.length() + 1;
-
-                // conn->send_data.clear();
-                // conn->send_data.push_back((querysql_len & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 8 & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 16 & 0xFF));
-                // conn->send_data.push_back(0x00);
-                // conn->send_data.push_back(0x03);
-                // conn->send_data.append(sqlstring);
-
-                if(conn->isdebug)
+                //auto conn = conn_obj->get_select_conn();
+                if(islock_conn)
                 {
-                    conn->begin_time();
+                    if(!select_conn)
+                    {
+                        select_conn = conn_obj->get_select_conn();
+                    }
+                }
+                else
+                {
+                    select_conn = conn_obj->get_select_conn();
+                } 
+
+                if(select_conn->isdebug)
+                {
+                    select_conn->begin_time();
                 }
 
-                std::size_t n = conn->write_sql(sqlstring);
+                std::size_t n = select_conn->write_sql(sqlstring);
                 if(n==0)
                 {
-                    error_msg = conn->error_msg;
+                    error_msg = select_conn->error_msg;
+                    select_conn.reset();
                     return temprecord;
                 }
-                // std::size_t n = asio::write(*conn->socket, asio::buffer(conn->send_data), conn->ec);
-                                
-                // if(conn->ec)
-                // {
-                //     error_msg = conn->ec.message();
-                //     iserror   = true;
-                //     return temprecord;
-                // }
-
                 
                 pack_info_t temp_pack_data;
                 temp_pack_data.seq_id = 1;
@@ -5192,25 +5206,27 @@ M_MODEL& or_leMessage(T val)
 
                 for (; is_sql_item == false;)
                 {
-                    n      = conn->read_loop();
+                    n      = select_conn->read_loop();
                     offset = 0;
                     if(n==0)
                     {
-                        error_msg = conn->error_msg;
+                        error_msg = select_conn->error_msg;
+                        select_conn.reset();
                         return temprecord;
                     }
                     for (; offset < n;)
                     {
-                        conn->read_field_pack(conn->_cache_data, n, offset, temp_pack_data);
+                        select_conn->read_field_pack(select_conn->_cache_data, n, offset, temp_pack_data);
                         if(temp_pack_data.error > 0)
                         {
                             iserror = true;
                             error_msg =temp_pack_data.data;
+                            select_conn.reset();
                             return temprecord;
                         }
                         if (temp_pack_data.length == temp_pack_data.current_length && temp_pack_data.current_length > 0)
                         {
-                            if (conn->pack_eof_check(temp_pack_data))
+                            if (select_conn->pack_eof_check(temp_pack_data))
                             {
                                 is_sql_item = true;
                                 break;
@@ -5227,7 +5243,7 @@ M_MODEL& or_leMessage(T val)
                             else if (action_setup == 1)
                             {
                                 field_info_t temp_filed_col;
-                                conn->read_col_info(temp_pack_data.data, temp_filed_col);
+                                select_conn->read_col_info(temp_pack_data.data, temp_filed_col);
 
                                 field_array.emplace_back(std::move(temp_filed_col));
                                 column_num--;
@@ -5249,7 +5265,7 @@ M_MODEL& or_leMessage(T val)
                                 for (unsigned int ij = 0; ij < column_num; ij++)
                                 {
                                     unsigned long long name_length = 0;
-                                    name_length                    = conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], tempnum);
+                                    name_length                    = select_conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], tempnum);
 
                                     std::string temp_str;
                                     temp_str.resize(name_length);
@@ -5280,14 +5296,18 @@ M_MODEL& or_leMessage(T val)
                         }
                     }
                 }
-                if(conn->isdebug)
+                if(select_conn->isdebug)
                 {
-                    conn->finish_time();
+                    select_conn->finish_time();
                     auto &conn_mar = get_orm_connect_mar();
-                    long long du_time= conn->count_time();
+                    long long du_time= select_conn->count_time();
                     conn_mar.push_log(sqlstring,std::to_string(du_time));
                 }
-                conn_obj->back_select_conn(conn);
+
+                if(!islock_conn)
+                {
+                    conn_obj->back_select_conn(std::move(select_conn));
+                }
 
                 if (iscache)
                 {
@@ -5387,40 +5407,32 @@ M_MODEL& or_leMessage(T val)
                 {
                     return std::make_tuple(table_fieldname, table_fieldmap, temprecord);
                 }
-                auto conn = conn_obj->get_select_conn();
-
-                // unsigned int querysql_len = sqlstring.length() + 1;
-
-                // conn->send_data.clear();
-
-                // conn->send_data.push_back((querysql_len & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 8 & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 16 & 0xFF));
-                // conn->send_data.push_back(0x00);
-                // conn->send_data.push_back(0x03);
-                // conn->send_data.append(sqlstring);
-
-                if(conn->isdebug)
+                //auto conn = conn_obj->get_select_conn();
+                if(islock_conn)
                 {
-                    conn->begin_time();
+                    if(!select_conn)
+                    {
+                        select_conn = conn_obj->get_select_conn();
+                    }
+                }
+                else
+                {
+                    select_conn = conn_obj->get_select_conn();
+                } 
+
+                if(select_conn->isdebug)
+                {
+                    select_conn->begin_time();
                 }
 
-                std::size_t n = conn->write_sql(sqlstring);
+                std::size_t n = select_conn->write_sql(sqlstring);
                 if(n==0)
                 {
-                    error_msg = conn->error_msg;
+                    error_msg = select_conn->error_msg;
+                    select_conn.reset();
                     return std::make_tuple(table_fieldname, table_fieldmap, temprecord);
                 }
 
-                // std::size_t n = asio::write(*conn->socket, asio::buffer(conn->send_data), conn->ec);
-                
-                // if(conn->ec)
-                // {
-                //     error_msg = conn->ec.message();
-                //     iserror   = true;
-                //     return std::make_tuple(table_fieldname, table_fieldmap, temprecord);
-                // }
-                
                 pack_info_t temp_pack_data;
                 temp_pack_data.seq_id = 1;
                 bool is_sql_item      = false;
@@ -5436,25 +5448,27 @@ M_MODEL& or_leMessage(T val)
 
                 for (; is_sql_item == false;)
                 {
-                    n      = conn->read_loop();
+                    n      = select_conn->read_loop();
                     offset = 0;
                     if(n==0)
                     {
-                        error_msg = conn->error_msg;
+                        error_msg = select_conn->error_msg;
+                        select_conn.reset();
                         return std::make_tuple(table_fieldname, table_fieldmap, temprecord);
                     }
                     for (; offset < n;)
                     {
-                        conn->read_field_pack(conn->_cache_data, n, offset, temp_pack_data);
+                        select_conn->read_field_pack(select_conn->_cache_data, n, offset, temp_pack_data);
                         if(temp_pack_data.error > 0)
                         {
                             iserror = true;
                             error_msg =temp_pack_data.data;
+                            select_conn.reset();
                             return std::make_tuple(table_fieldname, table_fieldmap, temprecord);
                         }
                         if (temp_pack_data.length == temp_pack_data.current_length && temp_pack_data.current_length > 0)
                         {
-                            if (conn->pack_eof_check(temp_pack_data))
+                            if (select_conn->pack_eof_check(temp_pack_data))
                             {
                                 is_sql_item = true;
                                 break;
@@ -5471,7 +5485,7 @@ M_MODEL& or_leMessage(T val)
                             else if (action_setup == 1)
                             {
                                 field_info_t temp_filed_col;
-                                conn->read_col_info(temp_pack_data.data, temp_filed_col);
+                                select_conn->read_col_info(temp_pack_data.data, temp_filed_col);
 
                                 field_array.emplace_back(std::move(temp_filed_col));
                                 column_num--;
@@ -5495,7 +5509,7 @@ M_MODEL& or_leMessage(T val)
                                 for (unsigned int ij = 0; ij < column_num; ij++)
                                 {
                                     unsigned long long name_length = 0;
-                                    name_length                    = conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], tempnum);
+                                    name_length                    = select_conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], tempnum);
                                     std::string tempstr;
                                     tempstr.resize(name_length);
                                     std::memcpy(tempstr.data(), (unsigned char *)&temp_pack_data.data[tempnum], name_length);
@@ -5517,14 +5531,18 @@ M_MODEL& or_leMessage(T val)
                         }
                     }
                 }
-                if(conn->isdebug)
+                if(select_conn->isdebug)
                 {
-                    conn->finish_time();
+                    select_conn->finish_time();
                     auto &conn_mar = get_orm_connect_mar();
-                    long long du_time= conn->count_time();
+                    long long du_time= select_conn->count_time();
                     conn_mar.push_log(sqlstring,std::to_string(du_time));
                 }
-                conn_obj->back_select_conn(conn);
+
+                if(!islock_conn)
+                {
+                    conn_obj->back_select_conn(std::move(select_conn));
+                }
 
                 if (iscache)
                 {
@@ -5626,39 +5644,30 @@ M_MODEL& or_leMessage(T val)
                 {
                     return *mod;
                 }
-                auto conn = conn_obj->get_select_conn();
-                
-                if(conn->isdebug)
+                //auto conn = conn_obj->get_select_conn();
+                if(islock_conn)
                 {
-                    conn->begin_time();
+                    if(!select_conn)
+                    {
+                        select_conn = conn_obj->get_select_conn();
+                    }
+                }
+                else
+                {
+                    select_conn = conn_obj->get_select_conn();
+                } 
+                if(select_conn->isdebug)
+                {
+                    select_conn->begin_time();
                 }
 
-                std::size_t n = conn->write_sql(sqlstring);
+                std::size_t n = select_conn->write_sql(sqlstring);
                 if(n==0)
                 {
-                    error_msg = conn->error_msg;
+                    error_msg = select_conn->error_msg;
+                    select_conn.reset();
                     return *mod;
                 }
-
-                //unsigned int querysql_len = sqlstring.length() + 1;
-
-                // conn->send_data.clear();
-
-                // conn->send_data.push_back((querysql_len & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 8 & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 16 & 0xFF));
-                // conn->send_data.push_back(0x00);
-                // conn->send_data.push_back(0x03);
-                // conn->send_data.append(sqlstring);
-
-                // std::size_t n = asio::write(*conn->socket, asio::buffer(conn->send_data), conn->ec);
-                
-                // if(conn->ec)
-                // {
-                //     error_msg = conn->ec.message();
-                //     iserror   = true;
-                //     return *mod;
-                // }
                 
                 pack_info_t temp_pack_data;
                 temp_pack_data.seq_id = 1;
@@ -5674,26 +5683,28 @@ M_MODEL& or_leMessage(T val)
 
                 for (; is_sql_item == false;)
                 {
-                    n      = conn->read_loop();
+                    n      = select_conn->read_loop();
                     offset = 0;
                     if(n==0)
                     {
                         iserror = true;
-                        error_msg = conn->error_msg;
+                        error_msg = select_conn->error_msg;
+                        select_conn.reset();
                         return *mod;
                     }
                     for (; offset < n;)
                     {
-                        conn->read_field_pack(conn->_cache_data, n, offset, temp_pack_data);
+                        select_conn->read_field_pack(select_conn->_cache_data, n, offset, temp_pack_data);
                         if(temp_pack_data.error > 0)
                         {
                             iserror = true;
                             error_msg =temp_pack_data.data;
+                            select_conn.reset();
                             return *mod;
                         }
                         if (temp_pack_data.length == temp_pack_data.current_length && temp_pack_data.current_length > 0)
                         {
-                            if (conn->pack_eof_check(temp_pack_data))
+                            if (select_conn->pack_eof_check(temp_pack_data))
                             {
                                 is_sql_item = true;
                                 break;
@@ -5710,7 +5721,7 @@ M_MODEL& or_leMessage(T val)
                             else if (action_setup == 1)
                             {
                                 field_info_t temp_filed_col;
-                                conn->read_col_info(temp_pack_data.data, temp_filed_col);
+                                select_conn->read_col_info(temp_pack_data.data, temp_filed_col);
 
                                 field_array.emplace_back(std::move(temp_filed_col));
                                 column_num--;
@@ -5732,7 +5743,7 @@ M_MODEL& or_leMessage(T val)
                                 for (unsigned int ij = 0; ij < column_num; ij++)
                                 {
                                     unsigned long long name_length = 0;
-                                    name_length                    = conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], tempnum);
+                                    name_length                    = select_conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], tempnum);
 
                                     assign_field_value(field_pos[ij], (unsigned char *)&temp_pack_data.data[tempnum], name_length, data_temp);
                                     tempnum = tempnum + name_length;
@@ -5752,14 +5763,18 @@ M_MODEL& or_leMessage(T val)
                         }
                     }
                 }
-                if(conn->isdebug)
+                if(select_conn->isdebug)
                 {
-                    conn->finish_time();
+                    select_conn->finish_time();
                     auto &conn_mar = get_orm_connect_mar();
-                    long long du_time= conn->count_time();
+                    long long du_time= select_conn->count_time();
                     conn_mar.push_log(sqlstring,std::to_string(du_time));
                 }
-                conn_obj->back_select_conn(conn);
+
+                if(!islock_conn)
+                {
+                    conn_obj->back_select_conn(std::move(select_conn));
+                }
 
                 if (iscache)
                 {
@@ -5847,34 +5862,31 @@ M_MODEL& or_leMessage(T val)
                 {
                     co_return 0;
                 }
-                auto conn = co_await conn_obj->async_get_select_conn();
-
-                if(conn->isdebug)
+                //auto conn = co_await conn_obj->async_get_select_conn();
+                if(islock_conn)
                 {
-                    conn->begin_time();
+                    if(!select_conn)
+                    {
+                        select_conn = co_await conn_obj->async_get_select_conn();
+                    }
+                }
+                else
+                {
+                    select_conn = co_await conn_obj->async_get_select_conn();
+                }
+                if(select_conn->isdebug)
+                {
+                    select_conn->begin_time();
                 }
 
-                std::size_t n = co_await conn->async_write_sql(sqlstring);
+                std::size_t n = co_await select_conn->async_write_sql(sqlstring);
                 
                 if(n==0)
                 {
-                    error_msg = conn->error_msg;
+                    error_msg = select_conn->error_msg;
+                    select_conn.reset();
                     co_return 0;
                 }
-
-                // unsigned int querysql_len = sqlstring.length() + 1;
-
-                // conn->send_data.clear();
-
-                // conn->send_data.push_back((querysql_len & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 8 & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 16 & 0xFF));
-                // conn->send_data.push_back(0x00);
-                // conn->send_data.push_back(0x03);
-                // conn->send_data.append(sqlstring);
-
-                // std::size_t n = co_await asio::async_write(*conn->socket, asio::buffer(conn->send_data), asio::use_awaitable);
-
                 
                 pack_info_t temp_pack_data;
                 temp_pack_data.seq_id = 1;
@@ -5890,24 +5902,26 @@ M_MODEL& or_leMessage(T val)
 
                 for (; is_sql_item == false;)
                 {
-                    n      = co_await conn->async_read_loop();
+                    n      = co_await select_conn->async_read_loop();
                     offset = 0;
                     if (n==0)
                     {
+                        select_conn.reset();
                         co_return 0;
                     }
                     for (; offset < n;)
                     {
-                        conn->read_field_pack(conn->_cache_data, n, offset, temp_pack_data);
+                        select_conn->read_field_pack(select_conn->_cache_data, n, offset, temp_pack_data);
                         if(temp_pack_data.error > 0)
                         {
                             iserror = true;
                             error_msg =temp_pack_data.data;
+                            select_conn.reset();
                             co_return 0;
                         }
                         if (temp_pack_data.length == temp_pack_data.current_length && temp_pack_data.current_length > 0)
                         {
-                            if (conn->pack_eof_check(temp_pack_data))
+                            if (select_conn->pack_eof_check(temp_pack_data))
                             {
                                 is_sql_item = true;
                                 break;
@@ -5924,7 +5938,7 @@ M_MODEL& or_leMessage(T val)
                             else if (action_setup == 1)
                             {
                                 field_info_t temp_filed_col;
-                                conn->read_col_info(temp_pack_data.data, temp_filed_col);
+                                select_conn->read_col_info(temp_pack_data.data, temp_filed_col);
 
                                 field_array.emplace_back(std::move(temp_filed_col));
                                 column_num--;
@@ -5946,7 +5960,7 @@ M_MODEL& or_leMessage(T val)
                                 for (unsigned int ij = 0; ij < column_num; ij++)
                                 {
                                     unsigned long long name_length = 0;
-                                    name_length                    = conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], tempnum);
+                                    name_length                    = select_conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], tempnum);
 
                                     assign_field_value(field_pos[ij], (unsigned char *)&temp_pack_data.data[tempnum], name_length, data_temp);
                                     tempnum = tempnum + name_length;
@@ -5966,15 +5980,17 @@ M_MODEL& or_leMessage(T val)
                         }
                     }
                 }
-                if(conn->isdebug)
+                if(select_conn->isdebug)
                 {
-                    conn->finish_time();
+                    select_conn->finish_time();
                     auto &conn_mar = get_orm_connect_mar();
-                    long long du_time= conn->count_time();
+                    long long du_time= select_conn->count_time();
                     conn_mar.push_log(sqlstring,std::to_string(du_time));
                 }
-                conn_obj->back_select_conn(conn);
-
+                if(!islock_conn)
+                {
+                    conn_obj->back_select_conn(std::move(select_conn));
+                }    
                 if (iscache)
                 {
                     if (exptime > 0)
@@ -6060,37 +6076,30 @@ M_MODEL& or_leMessage(T val)
                 {
                     return 0;
                 }
-                auto conn = conn_obj->get_select_conn();
-
-                // unsigned int querysql_len = sqlstring.length() + 1;
-
-                // conn->send_data.clear();
-
-                // conn->send_data.push_back((querysql_len & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 8 & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 16 & 0xFF));
-                // conn->send_data.push_back(0x00);
-                // conn->send_data.push_back(0x03);
-                // conn->send_data.append(sqlstring);
-
-                if(conn->isdebug)
+                //auto conn = conn_obj->get_select_conn();
+                if(islock_conn)
                 {
-                    conn->begin_time();
+                    if(!select_conn)
+                    {
+                        select_conn = conn_obj->get_select_conn();
+                    }
                 }
-                std::size_t n = conn->write_sql(sqlstring);
+                else
+                {
+                    select_conn = conn_obj->get_select_conn();
+                } 
+
+                if(select_conn->isdebug)
+                {
+                    select_conn->begin_time();
+                }
+                std::size_t n = select_conn->write_sql(sqlstring);
                 if(n==0)
                 {
-                    error_msg = conn->error_msg;
+                    error_msg = select_conn->error_msg;
+                    select_conn.reset();
                     return 0;
                 }
-                // std::size_t n = asio::write(*conn->socket, asio::buffer(conn->send_data), conn->ec);
-                
-                // if(conn->ec)
-                // {
-                //     error_msg = conn->ec.message();
-                //     iserror   = true;
-                //     return 0;
-                // }
                 
                 pack_info_t temp_pack_data;
                 temp_pack_data.seq_id = 1;
@@ -6106,25 +6115,27 @@ M_MODEL& or_leMessage(T val)
 
                 for (; is_sql_item == false;)
                 {
-                    n      = conn->read_loop();
+                    n      = select_conn->read_loop();
                     offset = 0;
                     if(n==0)
                     {
-                        error_msg = conn->error_msg;
+                        error_msg = select_conn->error_msg;
+                        select_conn.reset();
                         return 0;
                     }
                     for (; offset < n;)
                     {
-                        conn->read_field_pack(conn->_cache_data, n, offset, temp_pack_data);
+                        select_conn->read_field_pack(select_conn->_cache_data, n, offset, temp_pack_data);
                         if(temp_pack_data.error > 0)
                         {
                             iserror = true;
                             error_msg =temp_pack_data.data;
+                            select_conn.reset();
                             return 0;
                         }
                         if (temp_pack_data.length == temp_pack_data.current_length && temp_pack_data.current_length > 0)
                         {
-                            if (conn->pack_eof_check(temp_pack_data))
+                            if (select_conn->pack_eof_check(temp_pack_data))
                             {
                                 is_sql_item = true;
                                 break;
@@ -6141,7 +6152,7 @@ M_MODEL& or_leMessage(T val)
                             else if (action_setup == 1)
                             {
                                 field_info_t temp_filed_col;
-                                conn->read_col_info(temp_pack_data.data, temp_filed_col);
+                                select_conn->read_col_info(temp_pack_data.data, temp_filed_col);
 
                                 field_array.emplace_back(std::move(temp_filed_col));
                                 column_num--;
@@ -6163,7 +6174,7 @@ M_MODEL& or_leMessage(T val)
                                 for (unsigned int ij = 0; ij < column_num; ij++)
                                 {
                                     unsigned long long name_length = 0;
-                                    name_length                    = conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], tempnum);
+                                    name_length                    = select_conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], tempnum);
 
                                     assign_field_value(field_pos[ij], (unsigned char *)&temp_pack_data.data[tempnum], name_length, data_temp);
                                     tempnum = tempnum + name_length;
@@ -6183,14 +6194,18 @@ M_MODEL& or_leMessage(T val)
                         }
                     }
                 }
-                if(conn->isdebug)
+                if(select_conn->isdebug)
                 {
-                    conn->finish_time();
+                    select_conn->finish_time();
                     auto &conn_mar = get_orm_connect_mar();
-                    long long du_time= conn->count_time();
+                    long long du_time= select_conn->count_time();
                     conn_mar.push_log(sqlstring,std::to_string(du_time));
                 }
-                conn_obj->back_select_conn(conn);
+
+                if(!islock_conn)
+                {
+                    conn_obj->back_select_conn(std::move(select_conn));
+                }
                 
                 if (iscache)
                 {
@@ -6279,33 +6294,30 @@ M_MODEL& or_leMessage(T val)
                 {
                     co_return 0;
                 }
-                auto conn = co_await conn_obj->async_get_select_conn();
-
-                // unsigned int querysql_len = sqlstring.length() + 1;
-
-                // conn->send_data.clear();
-
-                // conn->send_data.push_back((querysql_len & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 8 & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 16 & 0xFF));
-                // conn->send_data.push_back(0x00);
-                // conn->send_data.push_back(0x03);
-                // conn->send_data.append(sqlstring);
-
-                if(conn->isdebug)
+                //auto conn = co_await conn_obj->async_get_select_conn();
+                if(islock_conn)
                 {
-                    conn->begin_time();
+                    if(!select_conn)
+                    {
+                        select_conn = co_await conn_obj->async_get_select_conn();
+                    }
                 }
-                std::size_t n = co_await conn->async_write_sql(sqlstring);
+                else
+                {
+                    select_conn = co_await conn_obj->async_get_select_conn();
+                }
+
+                if(select_conn->isdebug)
+                {
+                    select_conn->begin_time();
+                }
+                std::size_t n = co_await select_conn->async_write_sql(sqlstring);
                 if(n==0)
                 {
-                    error_msg = conn->error_msg;
+                    error_msg = select_conn->error_msg;
+                    select_conn.reset();
                     co_return 0;
                 }
-                //std::size_t n = co_await asio::async_write(*conn->socket, asio::buffer(conn->send_data), asio::use_awaitable);
-
-                // asio::error_code ec;
-
                 
                 pack_info_t temp_pack_data;
                 temp_pack_data.seq_id = 1;
@@ -6323,26 +6335,26 @@ M_MODEL& or_leMessage(T val)
 
                 for (; is_sql_item == false;)
                 {
-                    // std::memset(result_data, 0x00, 4096);
-                    // n      = co_await conn->socket->async_read_some(asio::buffer(result_data), asio::use_awaitable);
-                    n      = co_await conn->async_read_loop();
+                    n      = co_await select_conn->async_read_loop();
                     offset = 0;
                     if (n==0)
                     {
+                        select_conn.reset();
                         co_return 0;
                     }
                     for (; offset < n;)
                     {
-                        conn->read_field_pack(conn->_cache_data, n, offset, temp_pack_data);
+                        select_conn->read_field_pack(select_conn->_cache_data, n, offset, temp_pack_data);
                         if(temp_pack_data.error > 0)
                         {
                             iserror = true;
                             error_msg =temp_pack_data.data;
+                            select_conn.reset();
                             co_return 0;
                         }
                         if (temp_pack_data.length == temp_pack_data.current_length && temp_pack_data.current_length > 0)
                         {
-                            if (conn->pack_eof_check(temp_pack_data))
+                            if (select_conn->pack_eof_check(temp_pack_data))
                             {
                                 is_sql_item = true;
                                 break;
@@ -6359,7 +6371,7 @@ M_MODEL& or_leMessage(T val)
                             else if (action_setup == 1)
                             {
                                 field_info_t temp_filed_col;
-                                conn->read_col_info(temp_pack_data.data, temp_filed_col);
+                                select_conn->read_col_info(temp_pack_data.data, temp_filed_col);
 
                                 field_array.emplace_back(std::move(temp_filed_col));
                                 column_num--;
@@ -6381,7 +6393,7 @@ M_MODEL& or_leMessage(T val)
                                 for (unsigned int ij = 0; ij < column_num; ij++)
                                 {
                                     unsigned long long name_length = 0;
-                                    name_length                    = conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], tempnum);
+                                    name_length                    = select_conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], tempnum);
 
                                     assign_field_value(field_pos[ij], (unsigned char *)&temp_pack_data.data[tempnum], name_length, data_temp);
                                     tempnum = tempnum + name_length;
@@ -6401,15 +6413,17 @@ M_MODEL& or_leMessage(T val)
                         }
                     }
                 }
-                if(conn->isdebug)
+                if(select_conn->isdebug)
                 {
-                    conn->finish_time();
+                    select_conn->finish_time();
                     auto &conn_mar = get_orm_connect_mar();
-                    long long du_time= conn->count_time();
+                    long long du_time= select_conn->count_time();
                     conn_mar.push_log(sqlstring,std::to_string(du_time));
                 }
-                conn_obj->back_select_conn(conn);
-
+                if(!islock_conn)
+                {
+                    conn_obj->back_select_conn(std::move(select_conn));
+                }    
                 if (iscache)
                 {
                     if (exptime > 0)
@@ -6494,39 +6508,31 @@ M_MODEL& or_leMessage(T val)
                 {
                     return 0;
                 }
-                auto conn = conn_obj->get_select_conn();
-
-                if(conn->isdebug)
+                //auto conn = conn_obj->get_select_conn();
+                if(islock_conn)
                 {
-                    conn->begin_time();
+                    if(!select_conn)
+                    {
+                        select_conn = conn_obj->get_select_conn();
+                    }
+                }
+                else
+                {
+                    select_conn = conn_obj->get_select_conn();
+                } 
+
+                if(select_conn->isdebug)
+                {
+                    select_conn->begin_time();
                 }
 
-                std::size_t n = conn->write_sql(sqlstring);
+                std::size_t n = select_conn->write_sql(sqlstring);
                 if(n==0)
                 {
-                    error_msg = conn->error_msg;
+                    error_msg = select_conn->error_msg;
+                    select_conn.reset();
                     return 0;
                 }
-
-                // unsigned int querysql_len = sqlstring.length() + 1;
-
-                // conn->send_data.clear();
-                // conn->send_data.push_back((querysql_len & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 8 & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 16 & 0xFF));
-                // conn->send_data.push_back(0x00);
-                // conn->send_data.push_back(0x03);
-                // conn->send_data.append(sqlstring);
-
-                // std::size_t n = asio::write(*conn->socket, asio::buffer(conn->send_data), conn->ec);
-                
-                // if(conn->ec)
-                // {
-                //     error_msg = conn->ec.message();
-                //     iserror   = true;
-                //     return 0;
-                // }
-
                 
                 pack_info_t temp_pack_data;
                 temp_pack_data.seq_id = 1;
@@ -6540,25 +6546,27 @@ M_MODEL& or_leMessage(T val)
 
                 for (; is_sql_item == false;)
                 {
-                    n      = conn->read_loop();
+                    n      = select_conn->read_loop();
                     offset = 0;
                     if(n==0)
                     {
-                        error_msg = conn->error_msg;
+                        error_msg = select_conn->error_msg;
+                        select_conn.reset();
                         return 0;
                     }
                     for (; offset < n;)
                     {
-                        conn->read_field_pack(conn->_cache_data, n, offset, temp_pack_data);
+                        select_conn->read_field_pack(select_conn->_cache_data, n, offset, temp_pack_data);
                         if(temp_pack_data.error > 0)
                         {
                             iserror = true;
                             error_msg =temp_pack_data.data;
+                            select_conn.reset();
                             return 0;
                         }
                         if (temp_pack_data.length == temp_pack_data.current_length && temp_pack_data.current_length > 0)
                         {
-                            if (conn->pack_eof_check(temp_pack_data))
+                            if (select_conn->pack_eof_check(temp_pack_data))
                             {
                                 is_sql_item = true;
                                 break;
@@ -6575,7 +6583,7 @@ M_MODEL& or_leMessage(T val)
                             else if (action_setup == 1)
                             {
                                 field_info_t temp_filed_col;
-                                conn->read_col_info(temp_pack_data.data, temp_filed_col);
+                                select_conn->read_col_info(temp_pack_data.data, temp_filed_col);
 
                                 field_array.emplace_back(std::move(temp_filed_col));
                                 column_num--;
@@ -6599,7 +6607,7 @@ M_MODEL& or_leMessage(T val)
                                     for (unsigned int ij = 0; ij < column_num; ij++)
                                     {
                                         unsigned long long name_length = 0;
-                                        name_length                    = conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], tempnum);
+                                        name_length                    = select_conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], tempnum);
 
                                         assign_field_value(field_pos[ij], (unsigned char *)&temp_pack_data.data[tempnum], name_length, data_temp);
                                         tempnum = tempnum + name_length;
@@ -6612,7 +6620,7 @@ M_MODEL& or_leMessage(T val)
                                     for (unsigned int ij = 0; ij < column_num; ij++)
                                     {
                                         unsigned long long name_length = 0;
-                                        name_length                    = conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], tempnum);
+                                        name_length                    = select_conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], tempnum);
 
                                         assign_field_value(field_pos[ij], (unsigned char *)&temp_pack_data.data[tempnum], name_length, B_BASE::data);
                                         tempnum = tempnum + name_length;
@@ -6632,14 +6640,18 @@ M_MODEL& or_leMessage(T val)
                         }
                     }
                 }
-                if(conn->isdebug)
+                if(select_conn->isdebug)
                 {
-                    conn->finish_time();
+                    select_conn->finish_time();
                     auto &conn_mar = get_orm_connect_mar();
-                    long long du_time= conn->count_time();
+                    long long du_time= select_conn->count_time();
                     conn_mar.push_log(sqlstring,std::to_string(du_time));
                 }
-                conn_obj->back_select_conn(conn);
+
+                if(!islock_conn)
+                {
+                    conn_obj->back_select_conn(std::move(select_conn));
+                }
 
                 if (iscache)
                 {
@@ -6727,39 +6739,36 @@ M_MODEL& or_leMessage(T val)
                 {
                     co_return 0;
                 }
-                auto conn = co_await conn_obj->async_get_select_conn();
-
-                if(conn->isdebug)
+                //auto conn = co_await conn_obj->async_get_select_conn();
+                if(islock_conn)
                 {
-                    conn->begin_time();
+                    if(!select_conn)
+                    {
+                        select_conn = co_await conn_obj->async_get_select_conn();
+                    }
+                }
+                else
+                {
+                    select_conn = co_await conn_obj->async_get_select_conn();
+                }
+                if(select_conn->isdebug)
+                {
+                    select_conn->begin_time();
                 }
 
-                std::size_t n = co_await conn->async_write_sql(sqlstring);
+                std::size_t n = co_await select_conn->async_write_sql(sqlstring);
                 
                 if (n==0)
                 {
-                    error_msg = conn->error_msg;
+                    error_msg = select_conn->error_msg;
+                    select_conn.reset();
                     co_return 0;
                 }
-
-                // unsigned int querysql_len = sqlstring.length() + 1;
-
-                // conn->send_data.clear();
-                // conn->send_data.push_back((querysql_len & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 8 & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 16 & 0xFF));
-                // conn->send_data.push_back(0x00);
-                // conn->send_data.push_back(0x03);
-                // conn->send_data.append(sqlstring);
-
-                // std::size_t n = co_await asio::async_write(*conn->socket, asio::buffer(conn->send_data), asio::use_awaitable);
-
                 
                 pack_info_t temp_pack_data;
                 temp_pack_data.seq_id = 1;
                 bool is_sql_item      = false;
                 std::vector<field_info_t> field_array;
-                // std::vector<std::vector<std::string>> field_value;
 
                 unsigned char action_setup = 0;
                 unsigned int column_num    = 0;
@@ -6767,28 +6776,29 @@ M_MODEL& or_leMessage(T val)
                 unsigned int offset = 0;
 
                 std::vector<unsigned char> field_pos;
-                // std::map<unsigned char, std::string> other_col;
 
                 for (; is_sql_item == false;)
                 {
-                    n      = co_await conn->async_read_loop();
+                    n      = co_await select_conn->async_read_loop();
                     offset = 0;
                     if (n==0)
                     {
+                        select_conn.reset();
                         co_return 0;
                     }
                     for (; offset < n;)
                     {
-                        conn->read_field_pack(conn->_cache_data, n, offset, temp_pack_data);
+                        select_conn->read_field_pack(select_conn->_cache_data, n, offset, temp_pack_data);
                         if(temp_pack_data.error > 0)
                         {
                             iserror = true;
                             error_msg =temp_pack_data.data;
+                            select_conn.reset();
                             co_return 0;
                         }
                         if (temp_pack_data.length == temp_pack_data.current_length && temp_pack_data.current_length > 0)
                         {
-                            if (conn->pack_eof_check(temp_pack_data))
+                            if (select_conn->pack_eof_check(temp_pack_data))
                             {
                                 is_sql_item = true;
                                 break;
@@ -6805,7 +6815,7 @@ M_MODEL& or_leMessage(T val)
                             else if (action_setup == 1)
                             {
                                 field_info_t temp_filed_col;
-                                conn->read_col_info(temp_pack_data.data, temp_filed_col);
+                                select_conn->read_col_info(temp_pack_data.data, temp_filed_col);
 
                                 field_array.emplace_back(std::move(temp_filed_col));
                                 column_num--;
@@ -6829,7 +6839,7 @@ M_MODEL& or_leMessage(T val)
                                     for (unsigned int ij = 0; ij < column_num; ij++)
                                     {
                                         unsigned long long name_length = 0;
-                                        name_length                    = conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], tempnum);
+                                        name_length                    = select_conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], tempnum);
 
                                         assign_field_value(field_pos[ij], (unsigned char *)&temp_pack_data.data[tempnum], name_length, data_temp);
                                         tempnum = tempnum + name_length;
@@ -6842,7 +6852,7 @@ M_MODEL& or_leMessage(T val)
                                     for (unsigned int ij = 0; ij < column_num; ij++)
                                     {
                                         unsigned long long name_length = 0;
-                                        name_length                    = conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], tempnum);
+                                        name_length                    = select_conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], tempnum);
 
                                         assign_field_value(field_pos[ij], (unsigned char *)&temp_pack_data.data[tempnum], name_length, B_BASE::data);
                                         tempnum = tempnum + name_length;
@@ -6862,15 +6872,17 @@ M_MODEL& or_leMessage(T val)
                         }
                     }
                 }
-                if(conn->isdebug)
+                if(select_conn->isdebug)
                 {
-                    conn->finish_time();
+                    select_conn->finish_time();
                     auto &conn_mar = get_orm_connect_mar();
-                    long long du_time= conn->count_time();
+                    long long du_time= select_conn->count_time();
                     conn_mar.push_log(sqlstring,std::to_string(du_time));
                 }
-                conn_obj->back_select_conn(conn);
-
+                if(!islock_conn)
+                {
+                    conn_obj->back_select_conn(std::move(select_conn));
+                }    
                 if (iscache)
                 {
                     if (exptime > 0)
@@ -7062,39 +7074,31 @@ M_MODEL& or_leMessage(T val)
                 {
                     return 0;
                 }
-                auto conn = conn_obj->get_select_conn();
-
-                // unsigned int querysql_len = sqlstring.length() + 1;
-
-                // conn->send_data.clear();
-
-                // conn->send_data.push_back((querysql_len & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 8 & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 16 & 0xFF));
-                // conn->send_data.push_back(0x00);
-                // conn->send_data.push_back(0x03);
-                // conn->send_data.append(sqlstring);
-
-                if(conn->isdebug)
+                //auto conn = conn_obj->get_select_conn();
+                if(islock_conn)
                 {
-                    conn->begin_time();
+                    if(!select_conn)
+                    {
+                        select_conn = conn_obj->get_select_conn();
+                    }
+                }
+                else
+                {
+                    select_conn = conn_obj->get_select_conn();
+                } 
+
+                if(select_conn->isdebug)
+                {
+                    select_conn->begin_time();
                 }
 
-                std::size_t n = conn->write_sql(sqlstring);
+                std::size_t n = select_conn->write_sql(sqlstring);
                 if(n==0)
                 {
-                    error_msg = conn->error_msg;
+                    error_msg = select_conn->error_msg;
+                    select_conn.reset();
                     return 0;
                 }
-
-                // std::size_t n = asio::write(*conn->socket, asio::buffer(conn->send_data), conn->ec);
-                
-                // if(conn->ec)
-                // {
-                //     error_msg = conn->ec.message();
-                //     iserror   = true;
-                //     return 0;
-                // }
                 
                 pack_info_t temp_pack_data;
                 temp_pack_data.seq_id = 1;
@@ -7109,25 +7113,27 @@ M_MODEL& or_leMessage(T val)
 
                 for (; is_sql_item == false;)
                 {
-                    n      = conn->read_loop();
+                    n      = select_conn->read_loop();
                     offset = 0;
                     if(n==0)
                     {
-                        error_msg = conn->error_msg;
+                        error_msg = select_conn->error_msg;
+                        select_conn.reset();
                         return 0;
                     }
                     for (; offset < n;)
                     {
-                        conn->read_field_pack(conn->_cache_data, n, offset, temp_pack_data);
+                        select_conn->read_field_pack(select_conn->_cache_data, n, offset, temp_pack_data);
                         if(temp_pack_data.error > 0)
                         {
                             iserror = true;
                             error_msg =temp_pack_data.data;
+                            select_conn.reset();
                             return 0;
                         }
                         if (temp_pack_data.length == temp_pack_data.current_length && temp_pack_data.current_length > 0)
                         {
-                            if (conn->pack_eof_check(temp_pack_data))
+                            if (select_conn->pack_eof_check(temp_pack_data))
                             {
                                 is_sql_item = true;
                                 break;
@@ -7144,7 +7150,7 @@ M_MODEL& or_leMessage(T val)
                             else if (action_setup == 1)
                             {
                                 field_info_t temp_filed_col;
-                                conn->read_col_info(temp_pack_data.data, temp_filed_col);
+                                select_conn->read_col_info(temp_pack_data.data, temp_filed_col);
 
                                 field_array.emplace_back(std::move(temp_filed_col));
                                 column_num--;
@@ -7162,7 +7168,7 @@ M_MODEL& or_leMessage(T val)
                                 for (unsigned int ij = 0; ij < column_num; ij++)
                                 {
                                     unsigned long long name_length = 0;
-                                    name_length                    = conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], tempnum);
+                                    name_length                    = select_conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], tempnum);
 
                                     std::string temp_str;    
                                     temp_str.resize(name_length);
@@ -7193,14 +7199,17 @@ M_MODEL& or_leMessage(T val)
                         }
                     }
                 }
-                if(conn->isdebug)
+                if(select_conn->isdebug)
                 {
-                    conn->finish_time();
+                    select_conn->finish_time();
                     auto &conn_mar = get_orm_connect_mar();
-                    long long du_time= conn->count_time();
+                    long long du_time= select_conn->count_time();
                     conn_mar.push_log(sqlstring,std::to_string(du_time));
                 }
-                conn_obj->back_select_conn(conn);
+                if(!islock_conn)
+                {
+                    conn_obj->back_select_conn(std::move(select_conn));
+                }
 
             }
             catch (const std::exception &e)
@@ -7269,31 +7278,31 @@ M_MODEL& or_leMessage(T val)
                 {
                     co_return valuetemp;
                 }
-                auto conn = co_await conn_obj->async_get_select_conn();
-
-                // unsigned int querysql_len = sqlstring.length() + 1;
-                // conn->send_data.clear();
-
-                // conn->send_data.push_back((querysql_len & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 8 & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 16 & 0xFF));
-                // conn->send_data.push_back(0x00);
-                // conn->send_data.push_back(0x03);
-                // conn->send_data.append(sqlstring);
-
-                if(conn->isdebug)
+                //auto conn = co_await conn_obj->async_get_select_conn();
+                if(islock_conn)
                 {
-                    conn->begin_time();
+                    if(!select_conn)
+                    {
+                        select_conn = co_await conn_obj->async_get_select_conn();
+                    }
                 }
-                std::size_t n = co_await conn->async_write_sql(sqlstring);
+                else
+                {
+                    select_conn = co_await conn_obj->async_get_select_conn();
+                }    
+
+                if(select_conn->isdebug)
+                {
+                    select_conn->begin_time();
+                }
+                std::size_t n = co_await select_conn->async_write_sql(sqlstring);
                 if(n==0)
                 {
-                    error_msg = conn->error_msg;
+                    error_msg = select_conn->error_msg;
+                    select_conn.reset();
                     co_return valuetemp;
                 }
-                //std::size_t n = co_await asio::async_write(*conn->socket, asio::buffer(conn->send_data), asio::use_awaitable);
-                
-                
+ 
                 pack_info_t temp_pack_data;
                 temp_pack_data.seq_id = 1;
                 bool is_sql_item      = false;
@@ -7307,24 +7316,26 @@ M_MODEL& or_leMessage(T val)
 
                 for (; is_sql_item == false;)
                 {
-                    n      = co_await conn->async_read_loop();
+                    n      = co_await select_conn->async_read_loop();
                     offset = 0;
                     if (n==0)
                     {
+                        select_conn.reset();
                         co_return valuetemp;
                     }
                     for (; offset < n;)
                     {
-                        conn->read_field_pack(conn->_cache_data, n, offset, temp_pack_data);
+                        select_conn->read_field_pack(select_conn->_cache_data, n, offset, temp_pack_data);
                         if(temp_pack_data.error > 0)
                         {
                             iserror = true;
                             error_msg =temp_pack_data.data;
+                            select_conn.reset();
                             co_return 0;
                         }
                         if (temp_pack_data.length == temp_pack_data.current_length && temp_pack_data.current_length > 0)
                         {
-                            if (conn->pack_eof_check(temp_pack_data))
+                            if (select_conn->pack_eof_check(temp_pack_data))
                             {
                                 is_sql_item = true;
                                 break;
@@ -7341,7 +7352,7 @@ M_MODEL& or_leMessage(T val)
                             else if (action_setup == 1)
                             {
                                 field_info_t temp_filed_col;
-                                conn->read_col_info(temp_pack_data.data, temp_filed_col);
+                                select_conn->read_col_info(temp_pack_data.data, temp_filed_col);
 
                                 field_array.emplace_back(std::move(temp_filed_col));
                                 column_num--;
@@ -7359,7 +7370,7 @@ M_MODEL& or_leMessage(T val)
                                 for (unsigned int ij = 0; ij < column_num; ij++)
                                 {
                                     unsigned long long name_length = 0;
-                                    name_length                    = conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], tempnum);
+                                    name_length                    = select_conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], tempnum);
 
                                     std::string temp_str;    
                                     temp_str.resize(name_length);
@@ -7390,14 +7401,17 @@ M_MODEL& or_leMessage(T val)
                         }
                     }
                 }
-                if(conn->isdebug)
+                if(select_conn->isdebug)
                 {
-                    conn->finish_time();
+                    select_conn->finish_time();
                     auto &conn_mar = get_orm_connect_mar();
-                    long long du_time= conn->count_time();
+                    long long du_time= select_conn->count_time();
                     conn_mar.push_log(sqlstring,std::to_string(du_time));
                 }
-                conn_obj->back_select_conn(conn);
+                if(!islock_conn)
+                {
+                    conn_obj->back_select_conn(std::move(select_conn));
+                }
 
             }
             catch (const std::exception &e)
@@ -7458,40 +7472,32 @@ M_MODEL& or_leMessage(T val)
                 {
                     return 0;
                 }
-                auto conn = conn_obj->get_select_conn();
-
-                // unsigned int querysql_len = sqlstring.length() + 1;
-
-                // conn->send_data.clear();
-
-                // conn->send_data.push_back((querysql_len & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 8 & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 16 & 0xFF));
-                // conn->send_data.push_back(0x00);
-                // conn->send_data.push_back(0x03);
-                // conn->send_data.append(sqlstring);
-
-                if(conn->isdebug)
+                //auto conn = conn_obj->get_select_conn();
+                if(islock_conn)
                 {
-                    conn->begin_time();
+                    if(!select_conn)
+                    {
+                        select_conn = conn_obj->get_select_conn();
+                    }
+                }
+                else
+                {
+                    select_conn = conn_obj->get_select_conn();
+                }  
+
+                if(select_conn->isdebug)
+                {
+                    select_conn->begin_time();
                 }
 
 
-                std::size_t n = conn->write_sql(sqlstring);
+                std::size_t n = select_conn->write_sql(sqlstring);
                 if(n==0)
                 {
-                    error_msg = conn->error_msg;
+                    error_msg = select_conn->error_msg;
+                    select_conn.reset();
                     return 0;
                 }
-
-                // std::size_t n = asio::write(*conn->socket, asio::buffer(conn->send_data), conn->ec);
-                
-                // if(conn->ec)
-                // {
-                //     error_msg = conn->ec.message();
-                //     iserror   = true;
-                //     return 0;
-                // }
                 
                 pack_info_t temp_pack_data;
                 temp_pack_data.seq_id = 1;
@@ -7507,25 +7513,27 @@ M_MODEL& or_leMessage(T val)
 
                 for (; is_sql_item == false;)
                 {
-                    n      = conn->read_loop();
+                    n      = select_conn->read_loop();
                     offset = 0;
                     if(n==0)
                     {
-                        error_msg = conn->error_msg;
+                        error_msg = select_conn->error_msg;
+                        select_conn.reset();
                         return 0;
                     }
                     for (; offset < n;)
                     {
-                        conn->read_field_pack(conn->_cache_data, n, offset, temp_pack_data);
+                        select_conn->read_field_pack(select_conn->_cache_data, n, offset, temp_pack_data);
                         if(temp_pack_data.error > 0)
                         {
                             iserror = true;
                             error_msg =temp_pack_data.data;
+                            select_conn.reset();
                             return 0;
                         }
                         if (temp_pack_data.length == temp_pack_data.current_length && temp_pack_data.current_length > 0)
                         {
-                            if (conn->pack_eof_check(temp_pack_data))
+                            if (select_conn->pack_eof_check(temp_pack_data))
                             {
                                 is_sql_item = true;
                                 break;
@@ -7542,7 +7550,7 @@ M_MODEL& or_leMessage(T val)
                             else if (action_setup == 1)
                             {
                                 field_info_t temp_filed_col;
-                                conn->read_col_info(temp_pack_data.data, temp_filed_col);
+                                select_conn->read_col_info(temp_pack_data.data, temp_filed_col);
 
                                 field_array.emplace_back(std::move(temp_filed_col));
                                 column_num--;
@@ -7563,7 +7571,7 @@ M_MODEL& or_leMessage(T val)
                                 for (unsigned int ij = 0; ij < column_num; ij++)
                                 {
                                     unsigned long long name_length = 0;
-                                    name_length                    = conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], tempnum);
+                                    name_length                    = select_conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], tempnum);
 
                                     assign_field_value(field_pos[ij], (unsigned char *)&temp_pack_data.data[tempnum], name_length, B_BASE::data);
                                     tempnum = tempnum + name_length;
@@ -7583,15 +7591,17 @@ M_MODEL& or_leMessage(T val)
                         }
                     }
                 }
-                if(conn->isdebug)
+                if(select_conn->isdebug)
                 {
-                    conn->finish_time();
+                    select_conn->finish_time();
                     auto &conn_mar = get_orm_connect_mar();
-                    long long du_time= conn->count_time();
+                    long long du_time= select_conn->count_time();
                     conn_mar.push_log(sqlstring,std::to_string(du_time));
                 }
-                conn_obj->back_select_conn(conn);               
-
+                if(!islock_conn)
+                {
+                    conn_obj->back_select_conn(std::move(select_conn));               
+                }
                 if (iscache)
                 {
                     if (exptime > 0)
@@ -7662,32 +7672,31 @@ M_MODEL& or_leMessage(T val)
                 {
                     co_return 0;
                 }
-                auto conn = co_await conn_obj->async_get_select_conn();
-
-                // unsigned int querysql_len = sqlstring.length() + 1;
-
-                // conn->send_data.clear();
-
-                // conn->send_data.push_back((querysql_len & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 8 & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 16 & 0xFF));
-                // conn->send_data.push_back(0x00);
-                // conn->send_data.push_back(0x03);
-                // conn->send_data.append(sqlstring);
-
-                if(conn->isdebug)
+                //auto conn = co_await conn_obj->async_get_select_conn();
+                if(islock_conn)
                 {
-                    conn->begin_time();
+                    if(!select_conn)
+                    {
+                        select_conn = co_await conn_obj->async_get_select_conn();
+                    }
                 }
-                std::size_t n = co_await conn->async_write_sql(sqlstring);
+                else
+                {
+                    select_conn = co_await conn_obj->async_get_select_conn();
+                }
+
+                if(select_conn->isdebug)
+                {
+                    select_conn->begin_time();
+                }
+                std::size_t n = co_await select_conn->async_write_sql(sqlstring);
                 if(n==0)
                 {
-                    error_msg = conn->error_msg;
+                    error_msg = select_conn->error_msg;
+                    select_conn.reset();
                     co_return 0;
                 }
-                //std::size_t n = co_await asio::async_write(*conn->socket, asio::buffer(conn->send_data), asio::use_awaitable);
-                
-                
+ 
                 pack_info_t temp_pack_data;
                 temp_pack_data.seq_id = 1;
                 bool is_sql_item      = false;
@@ -7702,24 +7711,26 @@ M_MODEL& or_leMessage(T val)
 
                 for (; is_sql_item == false;)
                 {
-                    n      = co_await conn->async_read_loop();
+                    n      = co_await select_conn->async_read_loop();
                     offset = 0;
                     if (n==0)
                     {
+                        select_conn.reset();
                         co_return 0;
                     }
                     for (; offset < n;)
                     {
-                        conn->read_field_pack(conn->_cache_data, n, offset, temp_pack_data);
+                        select_conn->read_field_pack(select_conn->_cache_data, n, offset, temp_pack_data);
                         if(temp_pack_data.error > 0)
                         {
                             iserror = true;
                             error_msg =temp_pack_data.data;
+                            select_conn.reset();
                             co_return 0;
                         }
                         if (temp_pack_data.length == temp_pack_data.current_length && temp_pack_data.current_length > 0)
                         {
-                            if (conn->pack_eof_check(temp_pack_data))
+                            if (select_conn->pack_eof_check(temp_pack_data))
                             {
                                 is_sql_item = true;
                                 break;
@@ -7736,7 +7747,7 @@ M_MODEL& or_leMessage(T val)
                             else if (action_setup == 1)
                             {
                                 field_info_t temp_filed_col;
-                                conn->read_col_info(temp_pack_data.data, temp_filed_col);
+                                select_conn->read_col_info(temp_pack_data.data, temp_filed_col);
 
                                 field_array.emplace_back(std::move(temp_filed_col));
                                 column_num--;
@@ -7757,7 +7768,7 @@ M_MODEL& or_leMessage(T val)
                                 for (unsigned int ij = 0; ij < column_num; ij++)
                                 {
                                     unsigned long long name_length = 0;
-                                    name_length                    = conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], tempnum);
+                                    name_length                    = select_conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], tempnum);
 
                                     assign_field_value(field_pos[ij], (unsigned char *)&temp_pack_data.data[tempnum], name_length, B_BASE::data);
                                     tempnum = tempnum + name_length;
@@ -7777,15 +7788,17 @@ M_MODEL& or_leMessage(T val)
                         }
                     }
                 }
-                if(conn->isdebug)
+                if(select_conn->isdebug)
                 {
-                    conn->finish_time();
+                    select_conn->finish_time();
                     auto &conn_mar = get_orm_connect_mar();
-                    long long du_time= conn->count_time();
+                    long long du_time= select_conn->count_time();
                     conn_mar.push_log(sqlstring,std::to_string(du_time));
                 }
-                conn_obj->back_select_conn(conn);               
-
+                if(!islock_conn)
+                {
+                    conn_obj->back_select_conn(std::move(select_conn));               
+                }
                 if (iscache)
                 {
                     if (exptime > 0)
@@ -7872,58 +7885,52 @@ M_MODEL& or_leMessage(T val)
                 {
                     return 0;
                 }
-                auto conn = conn_obj->get_edit_conn();
+                //auto conn = conn_obj->get_edit_conn();
 
-                // unsigned int querysql_len = sqlstring.length() + 1;
-
-                // conn->send_data.clear();
-                // conn->send_data.push_back((querysql_len & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 8 & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 16 & 0xFF));
-                // conn->send_data.push_back(0x00);
-                // conn->send_data.push_back(0x03);
-                // conn->send_data.append(sqlstring);
-
-                if(conn->isdebug)
+                if(islock_conn)
                 {
-                    conn->begin_time();
+                    if(!edit_conn)
+                    {
+                        edit_conn = conn_obj->get_edit_conn();
+                    }
+                }
+                else
+                {
+                    edit_conn = conn_obj->get_edit_conn();
                 }
 
-                std::size_t n = conn->write_sql(sqlstring);
+                if(edit_conn->isdebug)
+                {
+                    edit_conn->begin_time();
+                }
+
+                std::size_t n = edit_conn->write_sql(sqlstring);
                 if(n==0)
                 {
-                    error_msg = conn->error_msg;
+                    error_msg = edit_conn->error_msg;
+                    edit_conn.reset();
                     return 0;
                 }
 
-                // std::size_t n = asio::write(*conn->socket, asio::buffer(conn->send_data), conn->ec);
-                
-                // if(conn->ec)
-                // {
-                //     error_msg = conn->ec.message();
-                //     iserror   = true;
-                //     return 0;
-                // }
-
                 unsigned int offset = 0;
-                n                   = conn->read_loop();
+                n                   = edit_conn->read_loop();
                 if(n==0)
                 {
-                    error_msg = conn->error_msg;
+                    error_msg = edit_conn->error_msg;
+                    edit_conn.reset();
                     return 0;
                 }    
                 pack_info_t temp_pack_data;
                 temp_pack_data.seq_id = 1;
-                conn->read_field_pack(conn->_cache_data, n, offset, temp_pack_data);
+                edit_conn->read_field_pack(edit_conn->_cache_data, n, offset, temp_pack_data);
 
-                if(conn->isdebug)
+                if(edit_conn->isdebug)
                 {
-                    conn->finish_time();
+                    edit_conn->finish_time();
                     auto &conn_mar = get_orm_connect_mar();
-                    long long du_time= conn->count_time();
+                    long long du_time= edit_conn->count_time();
                     conn_mar.push_log(sqlstring,std::to_string(du_time));
                 }
-                conn_obj->back_edit_conn(conn);
 
                 if ((unsigned char)temp_pack_data.data[0] == 0xFF)
                 {
@@ -7933,10 +7940,13 @@ M_MODEL& or_leMessage(T val)
                 {
 
                     unsigned int d_offset = 1;
-                    effect_num            = conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);
-                    return effect_num;
+                    effect_num            = edit_conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);
                 }
-                return 0;
+                if(!islock_conn)
+                {
+                    conn_obj->back_edit_conn(std::move(edit_conn));
+                }
+                return effect_num;
             }
             catch (const std::exception &e)
             {
@@ -8015,58 +8025,50 @@ M_MODEL& or_leMessage(T val)
                 {
                     return 0;
                 }
-                auto conn = conn_obj->get_edit_conn();
-
-                if(conn->isdebug)
+                //auto conn = conn_obj->get_edit_conn();
+                if(islock_conn)
                 {
-                    conn->begin_time();
+                    if(!edit_conn)
+                    {
+                        edit_conn = conn_obj->get_edit_conn();
+                    }
+                }
+                else
+                {
+                    edit_conn = conn_obj->get_edit_conn();
+                }
+                if(edit_conn->isdebug)
+                {
+                    edit_conn->begin_time();
                 }
 
-                std::size_t n = conn->write_sql(sqlstring);
+                std::size_t n = edit_conn->write_sql(sqlstring);
                 if(n==0)
                 {
-                    error_msg = conn->error_msg;
+                    error_msg = edit_conn->error_msg;
+                    edit_conn.reset();
                     return 0;
                 }
 
-                // unsigned int querysql_len = sqlstring.length() + 1;
-
-                // conn->send_data.clear();
-                // conn->send_data.push_back((querysql_len & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 8 & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 16 & 0xFF));
-                // conn->send_data.push_back(0x00);
-                // conn->send_data.push_back(0x03);
-                // conn->send_data.append(sqlstring);
-
-                // std::size_t n = asio::write(*conn->socket, asio::buffer(conn->send_data), conn->ec);
-                
-                // if(conn->ec)
-                // {
-                //     error_msg = conn->ec.message();
-                //     iserror   = true;
-                //     return 0;
-                // }
-
                 unsigned int offset = 0;
-                n                   = conn->read_loop();
+                n                   = edit_conn->read_loop();
                 if(n==0)
                 {
-                    error_msg = conn->error_msg;
+                    error_msg = edit_conn->error_msg;
+                    edit_conn.reset();
                     return 0;
                 }
                 pack_info_t temp_pack_data;
                 temp_pack_data.seq_id = 1;
-                conn->read_field_pack(conn->_cache_data, n, offset, temp_pack_data);
+                edit_conn->read_field_pack(edit_conn->_cache_data, n, offset, temp_pack_data);
 
-                if(conn->isdebug)
+                if(edit_conn->isdebug)
                 {
-                    conn->finish_time();
+                    edit_conn->finish_time();
                     auto &conn_mar = get_orm_connect_mar();
-                    long long du_time= conn->count_time();
+                    long long du_time= edit_conn->count_time();
                     conn_mar.push_log(sqlstring,std::to_string(du_time));
                 }
-                conn_obj->back_edit_conn(conn);
 
                 if ((unsigned char)temp_pack_data.data[0] == 0xFF)
                 {
@@ -8076,10 +8078,13 @@ M_MODEL& or_leMessage(T val)
                 {
 
                     unsigned int d_offset = 1;
-                    effect_num            = conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);
-                    return effect_num;
+                    effect_num            = edit_conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);
                 }
-                return 0;
+                if(!islock_conn)
+                {
+                    conn_obj->back_edit_conn(std::move(edit_conn));
+                }
+                return effect_num;
             }
             catch (const std::exception &e)
             {
@@ -8159,48 +8164,49 @@ M_MODEL& or_leMessage(T val)
                 {
                     co_return 0;
                 }
-                auto conn = co_await conn_obj->async_get_edit_conn();
 
-                // unsigned int querysql_len = sqlstring.length() + 1;
-
-                // conn->send_data.clear();
-                // conn->send_data.push_back((querysql_len & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 8 & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 16 & 0xFF));
-                // conn->send_data.push_back(0x00);
-                // conn->send_data.push_back(0x03);
-                // conn->send_data.append(sqlstring);
-
-                if(conn->isdebug)
+                if(islock_conn)
                 {
-                    conn->begin_time();
+                    if(!edit_conn)
+                    {
+                        edit_conn = co_await conn_obj->async_get_edit_conn();
+                    }
                 }
-                std::size_t n = co_await conn->async_write_sql(sqlstring);
+                else
+                {
+                    edit_conn = co_await conn_obj->async_get_edit_conn();
+                }
+
+                if(edit_conn->isdebug)
+                {
+                    edit_conn->begin_time();
+                }
+                std::size_t n = co_await edit_conn->async_write_sql(sqlstring);
                 if(n==0)
                 {
-                    error_msg = conn->error_msg;
+                    error_msg = edit_conn->error_msg;
+                    edit_conn.reset();
                     co_return 0;
                 }
-                //std::size_t n = co_await asio::async_write(*conn->socket, asio::buffer(conn->send_data), asio::use_awaitable);
 
                 unsigned int offset = 0;
-                n                   = co_await conn->async_read_loop();
+                n                   = co_await edit_conn->async_read_loop();
                 if (n==0)
                 {
+                    edit_conn.reset();
                     co_return 0;
                 }
                 pack_info_t temp_pack_data;
                 temp_pack_data.seq_id = 1;
-                conn->read_field_pack(conn->_cache_data, n, offset, temp_pack_data);
-                if(conn->isdebug)
+                edit_conn->read_field_pack(edit_conn->_cache_data, n, offset, temp_pack_data);
+                if(edit_conn->isdebug)
                 {
-                    conn->finish_time();
+                    edit_conn->finish_time();
                     auto &conn_mar = get_orm_connect_mar();
-                    long long du_time= conn->count_time();
+                    long long du_time= edit_conn->count_time();
                     conn_mar.push_log(sqlstring,std::to_string(du_time));
                 }
-                conn_obj->back_edit_conn(conn);
-
+   
                 if ((unsigned char)temp_pack_data.data[0] == 0xFF)
                 {
                     error_msg = temp_pack_data.data.substr(3);
@@ -8210,11 +8216,13 @@ M_MODEL& or_leMessage(T val)
                 {
 
                     unsigned int d_offset = 1;
-                    effect_num            = conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);
-
-                    co_return effect_num;
+                    effect_num            = edit_conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);
                 }
-                co_return 0;
+                if(!islock_conn)
+                {
+                    conn_obj->back_edit_conn(std::move(edit_conn));
+                } 
+                co_return effect_num;
             }
             catch (const std::exception &e)
             {
@@ -8293,47 +8301,48 @@ M_MODEL& or_leMessage(T val)
                 {
                     co_return 0;
                 }
-                auto conn = co_await conn_obj->async_get_edit_conn();
 
-                // unsigned int querysql_len = sqlstring.length() + 1;
-
-                // conn->send_data.clear();
-                // conn->send_data.push_back((querysql_len & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 8 & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 16 & 0xFF));
-                // conn->send_data.push_back(0x00);
-                // conn->send_data.push_back(0x03);
-                // conn->send_data.append(sqlstring);
-
-                if(conn->isdebug)
+                if(islock_conn)
                 {
-                    conn->begin_time();
+                    if(!edit_conn)
+                    {
+                        edit_conn = co_await conn_obj->async_get_edit_conn();
+                    }
                 }
-                std::size_t n = co_await conn->async_write_sql(sqlstring);
+                else
+                {
+                    edit_conn = co_await conn_obj->async_get_edit_conn();
+                }
+
+                if(edit_conn->isdebug)
+                {
+                    edit_conn->begin_time();
+                }
+                std::size_t n = co_await edit_conn->async_write_sql(sqlstring);
                 if(n==0)
                 {
-                    error_msg = conn->error_msg;
+                    error_msg = edit_conn->error_msg;
+                    edit_conn.reset();
                     co_return 0;
                 }
-                //std::size_t n = co_await asio::async_write(*conn->socket, asio::buffer(conn->send_data), asio::use_awaitable);
 
                 unsigned int offset = 0;
-                n                   = co_await conn->async_read_loop();
+                n                   = co_await edit_conn->async_read_loop();
                 if (n==0)
                 {
+                    edit_conn.reset();
                     co_return 0;
                 }
                 pack_info_t temp_pack_data;
                 temp_pack_data.seq_id = 1;
-                conn->read_field_pack(conn->_cache_data, n, offset, temp_pack_data);
-                if(conn->isdebug)
+                edit_conn->read_field_pack(edit_conn->_cache_data, n, offset, temp_pack_data);
+                if(edit_conn->isdebug)
                 {
-                    conn->finish_time();
+                    edit_conn->finish_time();
                     auto &conn_mar = get_orm_connect_mar();
-                    long long du_time= conn->count_time();
+                    long long du_time= edit_conn->count_time();
                     conn_mar.push_log(sqlstring,std::to_string(du_time));
                 }
-                conn_obj->back_edit_conn(conn);
 
                 if ((unsigned char)temp_pack_data.data[0] == 0xFF)
                 {
@@ -8344,11 +8353,13 @@ M_MODEL& or_leMessage(T val)
                 {
 
                     unsigned int d_offset = 1;
-                    effect_num            = conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);
-
-                    co_return effect_num;
+                    effect_num            = edit_conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);
                 }
-                co_return 0;
+                if(!islock_conn)
+                {
+                    conn_obj->back_edit_conn(std::move(edit_conn));
+                } 
+                co_return effect_num;
             }
             catch (const std::exception &e)
             {
@@ -8393,55 +8404,50 @@ M_MODEL& or_leMessage(T val)
                 {
                     return 0;
                 }
-                auto conn = conn_obj->get_edit_conn();
+                //auto conn = conn_obj->get_edit_conn();
 
-                // unsigned int querysql_len = sqlstring.length() + 1;
-
-                // conn->send_data.clear();
-                // conn->send_data.push_back((querysql_len & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 8 & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 16 & 0xFF));
-                // conn->send_data.push_back(0x00);
-                // conn->send_data.push_back(0x03);
-                // conn->send_data.append(sqlstring);
-
-                if(conn->isdebug)
+                if(islock_conn)
                 {
-                    conn->begin_time();
+                    if(!edit_conn)
+                    {
+                        edit_conn = conn_obj->get_edit_conn();
+                    }
                 }
-                std::size_t n = conn->write_sql(sqlstring);
+                else
+                {
+                    edit_conn = conn_obj->get_edit_conn();
+                }
+
+                if(edit_conn->isdebug)
+                {
+                    edit_conn->begin_time();
+                }
+                std::size_t n = edit_conn->write_sql(sqlstring);
                 if(n==0)
                 {
-                    error_msg = conn->error_msg;
+                    error_msg = edit_conn->error_msg;
+                    edit_conn.reset();
                     return 0;
                 }
-                // std::size_t n = asio::write(*conn->socket, asio::buffer(conn->send_data), conn->ec);
-                
-                // if(conn->ec)
-                // {
-                //     error_msg = conn->ec.message();
-                //     iserror   = true;
-                //     return 0;
-                // }
 
                 unsigned int offset = 0;
-                n                   = conn->read_loop();
+                n                   = edit_conn->read_loop();
                 if(n==0)
                 {
-                    error_msg = conn->error_msg;
+                    error_msg = edit_conn->error_msg;
+                    edit_conn.reset();
                     return 0;
                 }
                 pack_info_t temp_pack_data;
                 temp_pack_data.seq_id = 1;
-                conn->read_field_pack(conn->_cache_data, n, offset, temp_pack_data);
-                if(conn->isdebug)
+                edit_conn->read_field_pack(edit_conn->_cache_data, n, offset, temp_pack_data);
+                if(edit_conn->isdebug)
                 {
-                    conn->finish_time();
+                    edit_conn->finish_time();
                     auto &conn_mar = get_orm_connect_mar();
-                    long long du_time= conn->count_time();
+                    long long du_time= edit_conn->count_time();
                     conn_mar.push_log(sqlstring,std::to_string(du_time));
                 }
-                conn_obj->back_edit_conn(conn);
 
                 if ((unsigned char)temp_pack_data.data[0] == 0xFF)
                 {
@@ -8451,10 +8457,13 @@ M_MODEL& or_leMessage(T val)
                 {
 
                     unsigned int d_offset = 1;
-                    effect_num            = conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);
-                    return effect_num;
+                    effect_num            = edit_conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);
                 }
-                return 0;
+                if(!islock_conn)
+                {
+                    conn_obj->back_edit_conn(std::move(edit_conn));
+                }
+                return effect_num;
             }
             catch (const std::exception &e)
             {
@@ -8534,55 +8543,49 @@ M_MODEL& or_leMessage(T val)
                 {
                     return 0;
                 }
-                auto conn = conn_obj->get_edit_conn();
-
-                // unsigned int querysql_len = sqlstring.length() + 1;
-
-                // conn->send_data.clear();
-                // conn->send_data.push_back((querysql_len & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 8 & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 16 & 0xFF));
-                // conn->send_data.push_back(0x00);
-                // conn->send_data.push_back(0x03);
-                // conn->send_data.append(sqlstring);
-
-                if(conn->isdebug)
+                //auto conn = conn_obj->get_edit_conn();
+                if(islock_conn)
                 {
-                    conn->begin_time();
+                    if(!edit_conn)
+                    {
+                        edit_conn = conn_obj->get_edit_conn();
+                    }
                 }
-                std::size_t n = conn->write_sql(sqlstring);
+                else
+                {
+                    edit_conn = conn_obj->get_edit_conn();
+                }
+
+                if(edit_conn->isdebug)
+                {
+                    edit_conn->begin_time();
+                }
+                std::size_t n = edit_conn->write_sql(sqlstring);
                 if(n==0)
                 {
-                    error_msg = conn->error_msg;
+                    error_msg = edit_conn->error_msg;
+                    edit_conn.reset();
                     return 0;
                 }
-                // std::size_t n = asio::write(*conn->socket, asio::buffer(conn->send_data), conn->ec);
-                
-                // if(conn->ec)
-                // {
-                //     error_msg = conn->ec.message();
-                //     iserror   = true;
-                //     return 0;
-                // }
 
                 unsigned int offset = 0;
-                n                   = conn->read_loop();
+                n                   = edit_conn->read_loop();
                 if(n==0)
                 {
-                    error_msg = conn->error_msg;
+                    error_msg = edit_conn->error_msg;
+                    edit_conn.reset();
                     return 0;
                 }
                 pack_info_t temp_pack_data;
                 temp_pack_data.seq_id = 1;
-                conn->read_field_pack(conn->_cache_data, n, offset, temp_pack_data);
-                if(conn->isdebug)
+                edit_conn->read_field_pack(edit_conn->_cache_data, n, offset, temp_pack_data);
+                if(edit_conn->isdebug)
                 {
-                    conn->finish_time();
+                    edit_conn->finish_time();
                     auto &conn_mar = get_orm_connect_mar();
-                    long long du_time= conn->count_time();
+                    long long du_time= edit_conn->count_time();
                     conn_mar.push_log(sqlstring,std::to_string(du_time));
                 }
-                conn_obj->back_edit_conn(conn);
 
                 if ((unsigned char)temp_pack_data.data[0] == 0xFF)
                 {
@@ -8592,10 +8595,13 @@ M_MODEL& or_leMessage(T val)
                 {
 
                     unsigned int d_offset = 1;
-                    effect_num            = conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);
-                    return effect_num;
+                    effect_num            = edit_conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);
                 }
-                return 0;
+                if(!islock_conn)
+                {
+                    conn_obj->back_edit_conn(std::move(edit_conn));
+                }
+                return effect_num;
             }
             catch (const std::exception &e)
             {
@@ -8676,47 +8682,48 @@ M_MODEL& or_leMessage(T val)
                 {
                     co_return 0;
                 }
-                auto conn = co_await conn_obj->async_get_edit_conn();
 
-                // unsigned int querysql_len = sqlstring.length() + 1;
-
-                // conn->send_data.clear();
-                // conn->send_data.push_back((querysql_len & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 8 & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 16 & 0xFF));
-                // conn->send_data.push_back(0x00);
-                // conn->send_data.push_back(0x03);
-                // conn->send_data.append(sqlstring);
-
-                if(conn->isdebug)
+                if(islock_conn)
                 {
-                    conn->begin_time();
+                    if(!edit_conn)
+                    {
+                        edit_conn = co_await conn_obj->async_get_edit_conn();
+                    }
                 }
-                std::size_t n = co_await conn->async_write_sql(sqlstring);
+                else
+                {
+                    edit_conn = co_await conn_obj->async_get_edit_conn();
+                }
+
+                if(edit_conn->isdebug)
+                {
+                    edit_conn->begin_time();
+                }
+                std::size_t n = co_await edit_conn->async_write_sql(sqlstring);
                 if(n==0)
                 {
-                    error_msg = conn->error_msg;
+                    error_msg = edit_conn->error_msg;
+                    edit_conn.reset();
                     co_return 0;
                 }
-                //std::size_t n = co_await asio::async_write(*conn->socket, asio::buffer(conn->send_data), asio::use_awaitable);
                 
                 unsigned int offset = 0;
-                n                   = co_await conn->async_read_loop();
+                n                   = co_await edit_conn->async_read_loop();
                 if (n==0)
                 {
+                    edit_conn.reset();
                     co_return 0;
                 }
                 pack_info_t temp_pack_data;
                 temp_pack_data.seq_id = 1;
-                conn->read_field_pack(conn->_cache_data, n, offset, temp_pack_data);
-                if(conn->isdebug)
+                edit_conn->read_field_pack(edit_conn->_cache_data, n, offset, temp_pack_data);
+                if(edit_conn->isdebug)
                 {
-                    conn->finish_time();
+                    edit_conn->finish_time();
                     auto &conn_mar = get_orm_connect_mar();
-                    long long du_time= conn->count_time();
+                    long long du_time= edit_conn->count_time();
                     conn_mar.push_log(sqlstring,std::to_string(du_time));
                 }
-                conn_obj->back_edit_conn(conn);
 
                 if ((unsigned char)temp_pack_data.data[0] == 0xFF)
                 {
@@ -8726,10 +8733,13 @@ M_MODEL& or_leMessage(T val)
                 {
 
                     unsigned int d_offset = 1;
-                    effect_num            = conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);
-                    co_return effect_num;
+                    effect_num            = edit_conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);
                 }
-                co_return 0;
+                if(!islock_conn)
+                {
+                    conn_obj->back_edit_conn(std::move(edit_conn));
+                } 
+                co_return effect_num;
             }
             catch (const std::exception &e)
             {
@@ -8775,55 +8785,49 @@ M_MODEL& or_leMessage(T val)
                 {
                     return 0;
                 }
-                auto conn = conn_obj->get_edit_conn();
-
-                // unsigned int querysql_len = sqlstring.length() + 1;
-
-                // conn->send_data.clear();
-                // conn->send_data.push_back((querysql_len & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 8 & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 16 & 0xFF));
-                // conn->send_data.push_back(0x00);
-                // conn->send_data.push_back(0x03);
-                // conn->send_data.append(sqlstring);
-
-                if(conn->isdebug)
+                //auto conn = conn_obj->get_edit_conn();
+                if(islock_conn)
                 {
-                    conn->begin_time();
+                    if(!edit_conn)
+                    {
+                        edit_conn = conn_obj->get_edit_conn();
+                    }
                 }
-                std::size_t n = conn->write_sql(sqlstring);
+                else
+                {
+                    edit_conn = conn_obj->get_edit_conn();
+                }
+
+                if(edit_conn->isdebug)
+                {
+                    edit_conn->begin_time();
+                }
+                std::size_t n = edit_conn->write_sql(sqlstring);
                 if(n==0)
                 {
-                    error_msg = conn->error_msg;
+                    error_msg = edit_conn->error_msg;
+                    edit_conn.reset();
                     return 0;
                 }
-                // std::size_t n = asio::write(*conn->socket, asio::buffer(conn->send_data), conn->ec);
-                
-                // if(conn->ec)
-                // {
-                //     error_msg = conn->ec.message();
-                //     iserror   = true;
-                //     return 0;
-                // }
 
                 unsigned int offset = 0;
-                n                   = conn->read_loop();
+                n                   = edit_conn->read_loop();
                 if(n==0)
                 {
-                    error_msg = conn->error_msg;
+                    error_msg = edit_conn->error_msg;
+                    edit_conn.reset();
                     return 0;
                 }
                 pack_info_t temp_pack_data;
                 temp_pack_data.seq_id = 1;
-                conn->read_field_pack(conn->_cache_data, n, offset, temp_pack_data);
-                if(conn->isdebug)
+                edit_conn->read_field_pack(edit_conn->_cache_data, n, offset, temp_pack_data);
+                if(edit_conn->isdebug)
                 {
-                    conn->finish_time();
+                    edit_conn->finish_time();
                     auto &conn_mar = get_orm_connect_mar();
-                    long long du_time= conn->count_time();
+                    long long du_time= edit_conn->count_time();
                     conn_mar.push_log(sqlstring,std::to_string(du_time));
                 }
-                conn_obj->back_edit_conn(conn);
 
                 if ((unsigned char)temp_pack_data.data[0] == 0xFF)
                 {
@@ -8833,10 +8837,13 @@ M_MODEL& or_leMessage(T val)
                 {
 
                     unsigned int d_offset = 1;
-                    effect_num            = conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);
-                    return effect_num;
+                    effect_num            = edit_conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);
                 }
-                return 0;
+                if(!islock_conn)
+                {
+                    conn_obj->back_edit_conn(std::move(edit_conn));
+                }
+                return effect_num;
             }
             catch (const std::exception &e)
             {
@@ -8882,47 +8889,48 @@ M_MODEL& or_leMessage(T val)
                 {
                     co_return 0;
                 }
-                auto conn = co_await conn_obj->async_get_edit_conn();
 
-                // unsigned int querysql_len = sqlstring.length() + 1;
-
-                // conn->send_data.clear();
-                // conn->send_data.push_back((querysql_len & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 8 & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 16 & 0xFF));
-                // conn->send_data.push_back(0x00);
-                // conn->send_data.push_back(0x03);
-                // conn->send_data.append(sqlstring);
-
-                if(conn->isdebug)
+                if(islock_conn)
                 {
-                    conn->begin_time();
+                    if(!edit_conn)
+                    {
+                        edit_conn = co_await conn_obj->async_get_edit_conn();
+                    }
                 }
-                std::size_t n = co_await conn->async_write_sql(sqlstring);
+                else
+                {
+                    edit_conn = co_await conn_obj->async_get_edit_conn();
+                }
+
+                if(edit_conn->isdebug)
+                {
+                    edit_conn->begin_time();
+                }
+                std::size_t n = co_await edit_conn->async_write_sql(sqlstring);
                 if(n==0)
                 {
-                    error_msg = conn->error_msg;
+                    error_msg = edit_conn->error_msg;
+                    edit_conn.reset();
                     co_return 0;
                 }
-                //std::size_t n = co_await asio::async_write(*conn->socket, asio::buffer(conn->send_data), asio::use_awaitable);
                 
                 unsigned int offset = 0;
-                n                   = co_await conn->async_read_loop();
+                n                   = co_await edit_conn->async_read_loop();
                 if (n==0)
                 {
+                    edit_conn.reset();
                     co_return 0;
                 }
                 pack_info_t temp_pack_data;
                 temp_pack_data.seq_id = 1;
-                conn->read_field_pack(conn->_cache_data, n, offset, temp_pack_data);
-                if(conn->isdebug)
+                edit_conn->read_field_pack(edit_conn->_cache_data, n, offset, temp_pack_data);
+                if(edit_conn->isdebug)
                 {
-                    conn->finish_time();
+                    edit_conn->finish_time();
                     auto &conn_mar = get_orm_connect_mar();
-                    long long du_time= conn->count_time();
+                    long long du_time= edit_conn->count_time();
                     conn_mar.push_log(sqlstring,std::to_string(du_time));
                 }
-                conn_obj->back_edit_conn(conn);
 
                 if ((unsigned char)temp_pack_data.data[0] == 0xFF)
                 {
@@ -8932,10 +8940,14 @@ M_MODEL& or_leMessage(T val)
                 {
 
                     unsigned int d_offset = 1;
-                    effect_num            = conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);
-                    co_return effect_num;
+                    effect_num            = edit_conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);
+                    
                 }
-                co_return 0;
+                if(!islock_conn)
+                {
+                    conn_obj->back_edit_conn(std::move(edit_conn));
+                } 
+                co_return effect_num;
             }
             catch (const std::exception &e)
             {
@@ -9019,55 +9031,49 @@ M_MODEL& or_leMessage(T val)
                 {
                     return 0;
                 }
-                auto conn = conn_obj->get_edit_conn();
-
-                // unsigned int querysql_len = sqlstring.length() + 1;
-
-                // conn->send_data.clear();
-                // conn->send_data.push_back((querysql_len & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 8 & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 16 & 0xFF));
-                // conn->send_data.push_back(0x00);
-                // conn->send_data.push_back(0x03);
-                // conn->send_data.append(sqlstring);
-
-                if(conn->isdebug)
+                //auto conn = conn_obj->get_edit_conn();
+                if(islock_conn)
                 {
-                    conn->begin_time();
+                    if(!edit_conn)
+                    {
+                        edit_conn = conn_obj->get_edit_conn();
+                    }
                 }
-                std::size_t n = conn->write_sql(sqlstring);
+                else
+                {
+                    edit_conn = conn_obj->get_edit_conn();
+                }
+
+                if(edit_conn->isdebug)
+                {
+                    edit_conn->begin_time();
+                }
+                std::size_t n = edit_conn->write_sql(sqlstring);
                 if(n==0)
                 {
-                    error_msg = conn->error_msg;
+                    error_msg = edit_conn->error_msg;
+                    edit_conn.reset();
                     return 0;
                 }
-                // std::size_t n = asio::write(*conn->socket, asio::buffer(conn->send_data), conn->ec);
-                
-                // if(conn->ec)
-                // {
-                //     error_msg = conn->ec.message();
-                //     iserror   = true;
-                //     return 0;
-                // }
 
                 unsigned int offset = 0;
-                n                   = conn->read_loop();
+                n                   = edit_conn->read_loop();
                 if(n==0)
                 {
-                    error_msg = conn->error_msg;
+                    error_msg = edit_conn->error_msg;
+                    edit_conn.reset();
                     return 0;
                 }
                 pack_info_t temp_pack_data;
                 temp_pack_data.seq_id = 1;
-                conn->read_field_pack(conn->_cache_data, n, offset, temp_pack_data);
-                if(conn->isdebug)
+                edit_conn->read_field_pack(edit_conn->_cache_data, n, offset, temp_pack_data);
+                if(edit_conn->isdebug)
                 {
-                    conn->finish_time();
+                    edit_conn->finish_time();
                     auto &conn_mar = get_orm_connect_mar();
-                    long long du_time= conn->count_time();
+                    long long du_time= edit_conn->count_time();
                     conn_mar.push_log(sqlstring,std::to_string(du_time));
                 }
-                conn_obj->back_edit_conn(conn);
 
                 if ((unsigned char)temp_pack_data.data[0] == 0xFF)
                 {
@@ -9077,10 +9083,14 @@ M_MODEL& or_leMessage(T val)
                 {
 
                     unsigned int d_offset = 1;
-                    effect_num            = conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);
-                    return effect_num;
+                    effect_num            = edit_conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);
+                    
                 }
-                return 0;
+                if(!islock_conn)
+                {
+                    conn_obj->back_edit_conn(std::move(edit_conn));
+                }
+                return effect_num;
             }
             catch (const std::exception &e)
             {
@@ -9171,56 +9181,51 @@ M_MODEL& or_leMessage(T val)
                 {
                     return 0;
                 }
-                auto conn = conn_obj->get_edit_conn();
+                //auto conn = conn_obj->get_edit_conn();
 
-                // unsigned int querysql_len = sqlstring.length() + 1;
-
-                // conn->send_data.clear();
-                // conn->send_data.push_back((querysql_len & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 8 & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 16 & 0xFF));
-                // conn->send_data.push_back(0x00);
-                // conn->send_data.push_back(0x03);
-                // conn->send_data.append(sqlstring);
-
-                if(conn->isdebug)
+                if(islock_conn)
                 {
-                    conn->begin_time();
+                    if(!edit_conn)
+                    {
+                        edit_conn = conn_obj->get_edit_conn();
+                    }
                 }
-                std::size_t n = conn->write_sql(sqlstring);
+                else
+                {
+                    edit_conn = conn_obj->get_edit_conn();
+                }
+
+                if(edit_conn->isdebug)
+                {
+                    edit_conn->begin_time();
+                }
+                std::size_t n = edit_conn->write_sql(sqlstring);
                 if(n==0)
                 {
-                    error_msg = conn->error_msg;
+                    error_msg = edit_conn->error_msg;
+                    edit_conn.reset();
                     return 0;
                 }
-                // std::size_t n = asio::write(*conn->socket, asio::buffer(conn->send_data), conn->ec);
-                
-                // if(conn->ec)
-                // {
-                //     error_msg = conn->ec.message();
-                //     iserror   = true;
-                //     return 0;
-                // }
 
                 unsigned int offset = 0;
-                n                   = conn->read_loop();
+                n                   = edit_conn->read_loop();
                 if(n==0)
                 {
-                    error_msg = conn->error_msg;
+                    error_msg = edit_conn->error_msg;
+                    edit_conn.reset();
                     return 0;
                 }
                 pack_info_t temp_pack_data;
                 temp_pack_data.seq_id = 1;
-                conn->read_field_pack(conn->_cache_data, n, offset, temp_pack_data);
-                if(conn->isdebug)
+                edit_conn->read_field_pack(edit_conn->_cache_data, n, offset, temp_pack_data);
+                if(edit_conn->isdebug)
                 {
-                    conn->finish_time();
+                    edit_conn->finish_time();
                     auto &conn_mar = get_orm_connect_mar();
-                    long long du_time= conn->count_time();
+                    long long du_time= edit_conn->count_time();
                     conn_mar.push_log(sqlstring,std::to_string(du_time));
                 }
-                conn_obj->back_edit_conn(conn);
-
+                
                 if ((unsigned char)temp_pack_data.data[0] == 0xFF)
                 {
                     error_msg = temp_pack_data.data.substr(3);
@@ -9229,10 +9234,13 @@ M_MODEL& or_leMessage(T val)
                 {
 
                     unsigned int d_offset = 1;
-                    effect_num            = conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);
-                    return effect_num;
+                    effect_num            = edit_conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);
                 }
-                return 0;
+                if(!islock_conn)
+                {
+                    conn_obj->back_edit_conn(std::move(edit_conn));
+                }
+                return effect_num;
             }
             catch (const std::exception &e)
             {
@@ -9270,56 +9278,52 @@ M_MODEL& or_leMessage(T val)
                 {
                     return 0;
                 }
-                auto conn = conn_obj->get_edit_conn();
+                //auto conn = conn_obj->get_edit_conn();
 
-                // unsigned int querysql_len = sqlstring.length() + 1;
-
-                // conn->send_data.clear();
-                // conn->send_data.push_back((querysql_len & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 8 & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 16 & 0xFF));
-                // conn->send_data.push_back(0x00);
-                // conn->send_data.push_back(0x03);
-                // conn->send_data.append(sqlstring);
-
-                if(conn->isdebug)
+                if(islock_conn)
                 {
-                    conn->begin_time();
+                    if(!edit_conn)
+                    {
+                        edit_conn = conn_obj->get_edit_conn();
+                    }
                 }
-                std::size_t n = conn->write_sql(sqlstring);
+                else
+                {
+                    edit_conn = conn_obj->get_edit_conn();
+                }
+
+                if(edit_conn->isdebug)
+                {
+                    edit_conn->begin_time();
+                }
+                std::size_t n = edit_conn->write_sql(sqlstring);
                 if(n==0)
                 {
-                    error_msg = conn->error_msg;
+                    error_msg = edit_conn->error_msg;
+                    edit_conn.reset();
                     return 0;
                 }
-                // std::size_t n = asio::write(*conn->socket, asio::buffer(conn->send_data), conn->ec);
-                
-                // if(conn->ec)
-                // {
-                //     error_msg = conn->ec.message();
-                //     iserror   = true;
-                //     return 0;
-                // }
 
                 unsigned int offset = 0;
-                n                   = conn->read_loop();
+                n                   = edit_conn->read_loop();
                 if(n==0)
                 {
-                    error_msg = conn->error_msg;
+                    error_msg = edit_conn->error_msg;
+                    edit_conn.reset();
                     return 0;
                 }
                 pack_info_t temp_pack_data;
                 temp_pack_data.seq_id = 1;
-                conn->read_field_pack(conn->_cache_data, n, offset, temp_pack_data);
-                if(conn->isdebug)
+                edit_conn->read_field_pack(edit_conn->_cache_data, n, offset, temp_pack_data);
+                if(edit_conn->isdebug)
                 {
-                    conn->finish_time();
+                    edit_conn->finish_time();
                     auto &conn_mar = get_orm_connect_mar();
-                    long long du_time= conn->count_time();
+                    long long du_time= edit_conn->count_time();
                     conn_mar.push_log(sqlstring,std::to_string(du_time));
                 }
-                conn_obj->back_edit_conn(conn);
 
+                long long insert_last_id = 0;
                 if ((unsigned char)temp_pack_data.data[0] == 0xFF)
                 {
                     error_msg = temp_pack_data.data.substr(3);
@@ -9328,12 +9332,14 @@ M_MODEL& or_leMessage(T val)
                 {
 
                     unsigned int d_offset = 1;
-                    effect_num      = conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);
-                    long long   insert_last_id= conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);    
-
-                    return insert_last_id;
+                    effect_num      = edit_conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);
+                    insert_last_id = edit_conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);    
                 }
-                return 0;
+                if(!islock_conn)
+                {
+                    conn_obj->back_edit_conn(std::move(edit_conn));
+                }
+                return insert_last_id;
             }
             catch (const std::exception &e)
             {
@@ -9370,49 +9376,50 @@ M_MODEL& or_leMessage(T val)
                 {
                     co_return 0;
                 }
-                auto conn = co_await conn_obj->async_get_edit_conn();
 
-                // unsigned int querysql_len = sqlstring.length() + 1;
-
-                // conn->send_data.clear();
-                // conn->send_data.push_back((querysql_len & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 8 & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 16 & 0xFF));
-                // conn->send_data.push_back(0x00);
-                // conn->send_data.push_back(0x03);
-                // conn->send_data.append(sqlstring);
-
-                if(conn->isdebug)
+                if(islock_conn)
                 {
-                    conn->begin_time();
+                    if(!edit_conn)
+                    {
+                        edit_conn = co_await conn_obj->async_get_edit_conn();
+                    }
                 }
-                std::size_t n = co_await conn->async_write_sql(sqlstring);
+                else
+                {
+                    edit_conn = co_await conn_obj->async_get_edit_conn();
+                }
+
+                if(edit_conn->isdebug)
+                {
+                    edit_conn->begin_time();
+                }
+                std::size_t n = co_await edit_conn->async_write_sql(sqlstring);
                 if(n==0)
                 {
-                    error_msg = conn->error_msg;
+                    error_msg = edit_conn->error_msg;
+                    edit_conn.reset();
                     co_return 0;
                 }
-
-                //std::size_t n = co_await asio::async_write(*conn->socket, asio::buffer(conn->send_data), asio::use_awaitable);
                 
                 unsigned int offset = 0;
-                n                   = co_await conn->async_read_loop();
+                n                   = co_await edit_conn->async_read_loop();
                 if (n==0)
                 {
+                    edit_conn.reset();
                     co_return 0;
                 }
                 pack_info_t temp_pack_data;
                 temp_pack_data.seq_id = 1;
-                conn->read_field_pack(conn->_cache_data, n, offset, temp_pack_data);
-                if(conn->isdebug)
+                edit_conn->read_field_pack(edit_conn->_cache_data, n, offset, temp_pack_data);
+                if(edit_conn->isdebug)
                 {
-                    conn->finish_time();
+                    edit_conn->finish_time();
                     auto &conn_mar = get_orm_connect_mar();
-                    long long du_time= conn->count_time();
+                    long long du_time= edit_conn->count_time();
                     conn_mar.push_log(sqlstring,std::to_string(du_time));
                 }
-                conn_obj->back_edit_conn(conn);
 
+                long long insert_last_id = 0;
                 if ((unsigned char)temp_pack_data.data[0] == 0xFF)
                 {
                     error_msg = temp_pack_data.data.substr(3);
@@ -9421,12 +9428,14 @@ M_MODEL& or_leMessage(T val)
                 {
 
                     unsigned int d_offset = 1;
-                    effect_num      = conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);
-                    long long   insert_last_id= conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);    
-
-                    co_return insert_last_id;
+                    effect_num      = edit_conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);
+                    insert_last_id  = edit_conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);    
                 }
-                co_return 0;
+                if(!islock_conn)
+                {
+                    conn_obj->back_edit_conn(std::move(edit_conn));
+                } 
+                co_return insert_last_id;
             }
             catch (const std::exception &e)
             {
@@ -9463,56 +9472,51 @@ M_MODEL& or_leMessage(T val)
                 {
                     return 0;
                 }
-                auto conn = conn_obj->get_edit_conn();
-
-                // unsigned int querysql_len = sqlstring.length() + 1;
-
-                // conn->send_data.clear();
-                // conn->send_data.push_back((querysql_len & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 8 & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 16 & 0xFF));
-                // conn->send_data.push_back(0x00);
-                // conn->send_data.push_back(0x03);
-                // conn->send_data.append(sqlstring);
-
-                if(conn->isdebug)
+                //auto conn = conn_obj->get_edit_conn();
+                if(islock_conn)
                 {
-                    conn->begin_time();
+                    if(!edit_conn)
+                    {
+                        edit_conn = conn_obj->get_edit_conn();
+                    }
                 }
-                std::size_t n = conn->write_sql(sqlstring);
+                else
+                {
+                    edit_conn = conn_obj->get_edit_conn();
+                }
+
+                if(edit_conn->isdebug)
+                {
+                    edit_conn->begin_time();
+                }
+                std::size_t n = edit_conn->write_sql(sqlstring);
                 if(n==0)
                 {
-                    error_msg = conn->error_msg;
+                    error_msg = edit_conn->error_msg;
+                    edit_conn.reset();
                     return 0;
                 }
-                // std::size_t n = asio::write(*conn->socket, asio::buffer(conn->send_data), conn->ec);
-                
-                // if(conn->ec)
-                // {
-                //     error_msg = conn->ec.message();
-                //     iserror   = true;
-                //     return 0;
-                // }
 
                 unsigned int offset = 0;
-                n                   = conn->read_loop();
+                n                   = edit_conn->read_loop();
                 if(n==0)
                 {
-                    error_msg = conn->error_msg;
+                    error_msg = edit_conn->error_msg;
+                    edit_conn.reset();
                     return 0;
                 }
                 pack_info_t temp_pack_data;
                 temp_pack_data.seq_id = 1;
-                conn->read_field_pack(conn->_cache_data, n, offset, temp_pack_data);
-                if(conn->isdebug)
+                edit_conn->read_field_pack(edit_conn->_cache_data, n, offset, temp_pack_data);
+                if(edit_conn->isdebug)
                 {
-                    conn->finish_time();
+                    edit_conn->finish_time();
                     auto &conn_mar = get_orm_connect_mar();
-                    long long du_time= conn->count_time();
+                    long long du_time= edit_conn->count_time();
                     conn_mar.push_log(sqlstring,std::to_string(du_time));
                 }
-                conn_obj->back_edit_conn(conn);
 
+                long long insert_last_id = 0;
                 if ((unsigned char)temp_pack_data.data[0] == 0xFF)
                 {
                     error_msg = temp_pack_data.data.substr(3);
@@ -9521,12 +9525,14 @@ M_MODEL& or_leMessage(T val)
                 {
 
                     unsigned int d_offset = 1;
-                    effect_num      = conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);
-                    long long   insert_last_id= conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);    
-
-                    return insert_last_id;
+                    effect_num      = edit_conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);
+                    insert_last_id = edit_conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);    
                 }
-                return 0;
+                if(!islock_conn)
+                {
+                    conn_obj->back_edit_conn(std::move(edit_conn));
+                }
+                return insert_last_id;
             }
             catch (const std::exception &e)
             {
@@ -9563,62 +9569,65 @@ M_MODEL& or_leMessage(T val)
                 {
                     co_return 0;
                 }
-                auto conn = co_await conn_obj->async_get_edit_conn();
 
-                // unsigned int querysql_len = sqlstring.length() + 1;
-
-                // conn->send_data.clear();
-                // conn->send_data.push_back((querysql_len & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 8 & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 16 & 0xFF));
-                // conn->send_data.push_back(0x00);
-                // conn->send_data.push_back(0x03);
-                // conn->send_data.append(sqlstring);
-
-                if(conn->isdebug)
+                if(islock_conn)
                 {
-                    conn->begin_time();
+                    if(!edit_conn)
+                    {
+                        edit_conn = co_await conn_obj->async_get_edit_conn();
+                    }
                 }
-                std::size_t n = co_await conn->async_write_sql(sqlstring);
+                else
+                {
+                    edit_conn = co_await conn_obj->async_get_edit_conn();
+                }
+
+                if(edit_conn->isdebug)
+                {
+                    edit_conn->begin_time();
+                }
+                std::size_t n = co_await edit_conn->async_write_sql(sqlstring);
                 if(n==0)
                 {
-                    error_msg = conn->error_msg;
+                    error_msg = edit_conn->error_msg;
+                    edit_conn.reset();
                     co_return 0;
                 }
-                //std::size_t n = co_await asio::async_write(*conn->socket, asio::buffer(conn->send_data), asio::use_awaitable);
                 
                 unsigned int offset = 0;
-                n                   = co_await conn->async_read_loop();
+                n                   = co_await edit_conn->async_read_loop();
                 if (n==0)
                 {
+                    edit_conn.reset();
                     co_return 0;
                 }
                 pack_info_t temp_pack_data;
                 temp_pack_data.seq_id = 1;
-                conn->read_field_pack(conn->_cache_data, n, offset, temp_pack_data);
-                if(conn->isdebug)
+                edit_conn->read_field_pack(edit_conn->_cache_data, n, offset, temp_pack_data);
+                if(edit_conn->isdebug)
                 {
-                    conn->finish_time();
+                    edit_conn->finish_time();
                     auto &conn_mar = get_orm_connect_mar();
-                    long long du_time= conn->count_time();
+                    long long du_time= edit_conn->count_time();
                     conn_mar.push_log(sqlstring,std::to_string(du_time));
                 }
-                conn_obj->back_edit_conn(conn);
 
+                long long insert_last_id = 0;
                 if ((unsigned char)temp_pack_data.data[0] == 0xFF)
                 {
                     error_msg = temp_pack_data.data.substr(3);
                 }
                 else if ((unsigned char)temp_pack_data.data[0] == 0x00)
                 {
-
                     unsigned int d_offset = 1;
-                    effect_num      = conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);
-                    long long   insert_last_id= conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);    
-
-                    co_return insert_last_id;
+                    effect_num      = edit_conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);
+                    insert_last_id  = edit_conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);    
                 }
-                co_return 0;
+                if(!islock_conn)
+                {
+                    conn_obj->back_edit_conn(std::move(edit_conn));
+                } 
+                co_return insert_last_id;
             }
             catch (const std::exception &e)
             {
@@ -9655,56 +9664,51 @@ M_MODEL& or_leMessage(T val)
                 {
                     return 0;
                 }
-                auto conn = conn_obj->get_edit_conn();
-
-                // unsigned int querysql_len = sqlstring.length() + 1;
-
-                // conn->send_data.clear();
-                // conn->send_data.push_back((querysql_len & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 8 & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 16 & 0xFF));
-                // conn->send_data.push_back(0x00);
-                // conn->send_data.push_back(0x03);
-                // conn->send_data.append(sqlstring);
-
-                if(conn->isdebug)
+                //auto conn = conn_obj->get_edit_conn();
+                if(islock_conn)
                 {
-                    conn->begin_time();
+                    if(!edit_conn)
+                    {
+                        edit_conn = conn_obj->get_edit_conn();
+                    }
                 }
-                std::size_t n = conn->write_sql(sqlstring);
+                else
+                {
+                    edit_conn = conn_obj->get_edit_conn();
+                }
+
+                if(edit_conn->isdebug)
+                {
+                    edit_conn->begin_time();
+                }
+                std::size_t n = edit_conn->write_sql(sqlstring);
                 if(n==0)
                 {
-                    error_msg = conn->error_msg;
+                    error_msg = edit_conn->error_msg;
+                    edit_conn.reset();
                     return 0;
                 }
-                // std::size_t n = asio::write(*conn->socket, asio::buffer(conn->send_data), conn->ec);
-                
-                // if(conn->ec)
-                // {
-                //     error_msg = conn->ec.message();
-                //     iserror   = true;
-                //     return 0;
-                // }
 
                 unsigned int offset = 0;
-                n                   = conn->read_loop();
+                n                   = edit_conn->read_loop();
                 if(n==0)
                 {
-                    error_msg = conn->error_msg;
+                    error_msg = edit_conn->error_msg;
+                    edit_conn.reset();
                     return 0;
                 }
                 pack_info_t temp_pack_data;
                 temp_pack_data.seq_id = 1;
-                conn->read_field_pack(conn->_cache_data, n, offset, temp_pack_data);
-                if(conn->isdebug)
+                edit_conn->read_field_pack(edit_conn->_cache_data, n, offset, temp_pack_data);
+                if(edit_conn->isdebug)
                 {
-                    conn->finish_time();
+                    edit_conn->finish_time();
                     auto &conn_mar = get_orm_connect_mar();
-                    long long du_time= conn->count_time();
+                    long long du_time= edit_conn->count_time();
                     conn_mar.push_log(sqlstring,std::to_string(du_time));
                 }
-                conn_obj->back_edit_conn(conn);
 
+                long long insert_last_id = 0;
                 if ((unsigned char)temp_pack_data.data[0] == 0xFF)
                 {
                     error_msg = temp_pack_data.data.substr(3);
@@ -9712,12 +9716,14 @@ M_MODEL& or_leMessage(T val)
                 else if ((unsigned char)temp_pack_data.data[0] == 0x00)
                 {
                     unsigned int d_offset = 1;
-                    effect_num      = conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);
-                    long long   insert_last_id= conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);    
-
-                    return insert_last_id;
+                    effect_num      = edit_conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);
+                    insert_last_id  = edit_conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);    
                 }
-                return 0;
+                if(!islock_conn)
+                {
+                    conn_obj->back_edit_conn(std::move(edit_conn));
+                } 
+                return insert_last_id;
             }
             catch (const std::exception &e)
             {
@@ -9754,48 +9760,50 @@ M_MODEL& or_leMessage(T val)
                 {
                     co_return 0;
                 }
-                auto conn = co_await conn_obj->async_get_edit_conn();
 
-                // unsigned int querysql_len = sqlstring.length() + 1;
-
-                // conn->send_data.clear();
-                // conn->send_data.push_back((querysql_len & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 8 & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 16 & 0xFF));
-                // conn->send_data.push_back(0x00);
-                // conn->send_data.push_back(0x03);
-                // conn->send_data.append(sqlstring);
-
-                if(conn->isdebug)
+                if(islock_conn)
                 {
-                    conn->begin_time();
+                    if(!edit_conn)
+                    {
+                        edit_conn = co_await conn_obj->async_get_edit_conn();
+                    }
                 }
-                std::size_t n = co_await conn->async_write_sql(sqlstring);
+                else
+                {
+                    edit_conn = co_await conn_obj->async_get_edit_conn();
+                }
+
+                if(edit_conn->isdebug)
+                {
+                    edit_conn->begin_time();
+                }
+                std::size_t n = co_await edit_conn->async_write_sql(sqlstring);
                 if(n==0)
                 {
-                    error_msg = conn->error_msg;
+                    error_msg = edit_conn->error_msg;
+                    edit_conn.reset();
                     co_return 0;
                 }
-                //std::size_t n = co_await asio::async_write(*conn->socket, asio::buffer(conn->send_data), asio::use_awaitable);
                 
                 unsigned int offset = 0;
-                n                   = co_await conn->async_read_loop();
+                n                   = co_await edit_conn->async_read_loop();
                 if (n==0)
                 {
+                    edit_conn.reset();
                     co_return 0;
                 }
                 pack_info_t temp_pack_data;
                 temp_pack_data.seq_id = 1;
-                conn->read_field_pack(conn->_cache_data, n, offset, temp_pack_data);
-                if(conn->isdebug)
+                edit_conn->read_field_pack(edit_conn->_cache_data, n, offset, temp_pack_data);
+                if(edit_conn->isdebug)
                 {
-                    conn->finish_time();
+                    edit_conn->finish_time();
                     auto &conn_mar = get_orm_connect_mar();
-                    long long du_time= conn->count_time();
+                    long long du_time= edit_conn->count_time();
                     conn_mar.push_log(sqlstring,std::to_string(du_time));
                 }
-                conn_obj->back_edit_conn(conn);
 
+                long long insert_last_id = 0;
                 if ((unsigned char)temp_pack_data.data[0] == 0xFF)
                 {
                     error_msg = temp_pack_data.data.substr(3);
@@ -9804,12 +9812,14 @@ M_MODEL& or_leMessage(T val)
                 {
 
                     unsigned int d_offset = 1;
-                    effect_num      = conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);
-                    long long   insert_last_id= conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);    
-
-                    co_return insert_last_id;
+                    effect_num      = edit_conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);
+                    insert_last_id  = edit_conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);    
                 }
-                co_return 0;
+                if(!islock_conn)
+                {
+                    conn_obj->back_edit_conn(std::move(edit_conn));
+                } 
+                co_return insert_last_id;
             }
             catch (const std::exception &e)
             {
@@ -9877,56 +9887,50 @@ M_MODEL& or_leMessage(T val)
                 {
                     return 0;
                 }
-                auto conn = conn_obj->get_edit_conn();
-
-                // unsigned int querysql_len = sqlstring.length() + 1;
-
-                // conn->send_data.clear();
-                // conn->send_data.push_back((querysql_len & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 8 & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 16 & 0xFF));
-                // conn->send_data.push_back(0x00);
-                // conn->send_data.push_back(0x03);
-                // conn->send_data.append(sqlstring);
-
-                if(conn->isdebug)
+                //auto conn = conn_obj->get_edit_conn();
+                if(islock_conn)
                 {
-                    conn->begin_time();
+                    if(!edit_conn)
+                    {
+                        edit_conn = conn_obj->get_edit_conn();
+                    }
                 }
-                std::size_t n = conn->write_sql(sqlstring);
+                else
+                {
+                    edit_conn = conn_obj->get_edit_conn();
+                }
+
+                if(edit_conn->isdebug)
+                {
+                    edit_conn->begin_time();
+                }
+                std::size_t n = edit_conn->write_sql(sqlstring);
                 if(n==0)
                 {
-                    error_msg = conn->error_msg;
+                    error_msg = edit_conn->error_msg;
+                    edit_conn.reset();
                     return 0;
                 }
-                // std::size_t n = asio::write(*conn->socket, asio::buffer(conn->send_data), conn->ec);
-                
-                // if(conn->ec)
-                // {
-                //     error_msg = conn->ec.message();
-                //     iserror   = true;
-                //     return 0;
-                // }
 
                 unsigned int offset = 0;
-                n                   = conn->read_loop();
+                n                   = edit_conn->read_loop();
                 if(n==0)
                 {
-                    error_msg = conn->error_msg;
+                    error_msg = edit_conn->error_msg;
+                    edit_conn.reset();
                     return 0;
                 }
                 pack_info_t temp_pack_data;
                 temp_pack_data.seq_id = 1;
-                conn->read_field_pack(conn->_cache_data, n, offset, temp_pack_data);
-                if(conn->isdebug)
+                edit_conn->read_field_pack(edit_conn->_cache_data, n, offset, temp_pack_data);
+                if(edit_conn->isdebug)
                 {
-                    conn->finish_time();
+                    edit_conn->finish_time();
                     auto &conn_mar = get_orm_connect_mar();
-                    long long du_time= conn->count_time();
+                    long long du_time= edit_conn->count_time();
                     conn_mar.push_log(sqlstring,std::to_string(du_time));
                 }
-                conn_obj->back_edit_conn(conn);
-
+                
                 if ((unsigned char)temp_pack_data.data[0] == 0xFF)
                 {
                     error_msg = temp_pack_data.data.substr(3);
@@ -9935,10 +9939,14 @@ M_MODEL& or_leMessage(T val)
                 {
 
                     unsigned int d_offset = 1;
-                    effect_num      = conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);
-                    return effect_num;
+                    effect_num      = edit_conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);
+                    
                 }
-                return 0;
+                if(!islock_conn)
+                {
+                    conn_obj->back_edit_conn(std::move(edit_conn));
+                }
+                return effect_num;
             }
             else
             {
@@ -9947,56 +9955,51 @@ M_MODEL& or_leMessage(T val)
                 {
                     return 0;
                 }
-                auto conn = conn_obj->get_edit_conn();
-
-                // unsigned int querysql_len = sqlstring.length() + 1;
-
-                // conn->send_data.clear();
-                // conn->send_data.push_back((querysql_len & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 8 & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 16 & 0xFF));
-                // conn->send_data.push_back(0x00);
-                // conn->send_data.push_back(0x03);
-                // conn->send_data.append(sqlstring);
-
-                if(conn->isdebug)
+                //auto conn = conn_obj->get_edit_conn();
+                if(islock_conn)
                 {
-                    conn->begin_time();
+                    if(!edit_conn)
+                    {
+                        edit_conn = conn_obj->get_edit_conn();
+                    }
                 }
-                std::size_t n = conn->write_sql(sqlstring);
+                else
+                {
+                    edit_conn = conn_obj->get_edit_conn();
+                }
+
+                if(edit_conn->isdebug)
+                {
+                    edit_conn->begin_time();
+                }
+                std::size_t n = edit_conn->write_sql(sqlstring);
                 if(n==0)
                 {
-                    error_msg = conn->error_msg;
+                    error_msg = edit_conn->error_msg;
+                    edit_conn.reset();
                     return 0;
                 }
-                // std::size_t n = asio::write(*conn->socket, asio::buffer(conn->send_data), conn->ec);
-                
-                // if(conn->ec)
-                // {
-                //     error_msg = conn->ec.message();
-                //     iserror   = true;
-                //     return 0;
-                // }
 
                 unsigned int offset = 0;
-                n                   = conn->read_loop();
+                n                   = edit_conn->read_loop();
                 if(n==0)
                 {
-                    error_msg = conn->error_msg;
+                    error_msg = edit_conn->error_msg;
+                    edit_conn.reset();
                     return 0;
                 }
                 pack_info_t temp_pack_data;
                 temp_pack_data.seq_id = 1;
-                conn->read_field_pack(conn->_cache_data, n, offset, temp_pack_data);
-                if(conn->isdebug)
+                edit_conn->read_field_pack(edit_conn->_cache_data, n, offset, temp_pack_data);
+                if(edit_conn->isdebug)
                 {
-                    conn->finish_time();
+                    edit_conn->finish_time();
                     auto &conn_mar = get_orm_connect_mar();
-                    long long du_time= conn->count_time();
+                    long long du_time= edit_conn->count_time();
                     conn_mar.push_log(sqlstring,std::to_string(du_time));
                 }
-                conn_obj->back_edit_conn(conn);
-
+                
+                long long insert_last_id = 0;
                 if ((unsigned char)temp_pack_data.data[0] == 0xFF)
                 {
                     error_msg = temp_pack_data.data.substr(3);
@@ -10005,12 +10008,14 @@ M_MODEL& or_leMessage(T val)
                 {
 
                     unsigned int d_offset = 1;
-                    effect_num      = conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);
-                    long long   insert_last_id= conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);    
-
-                    return insert_last_id;
+                    effect_num      = edit_conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);
+                    insert_last_id  = edit_conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);    
                 }
-                return 0;
+                if(!islock_conn)
+                {
+                    conn_obj->back_edit_conn(std::move(edit_conn));
+                }
+                return insert_last_id;
             }
             return 0;
         }
@@ -10069,47 +10074,48 @@ M_MODEL& or_leMessage(T val)
                     {
                         co_return 0;
                     }
-                    auto conn = co_await conn_obj->async_get_edit_conn();
 
-                    // unsigned int querysql_len = sqlstring.length() + 1;
-
-                    // conn->send_data.clear();
-                    // conn->send_data.push_back((querysql_len & 0xFF));
-                    // conn->send_data.push_back((querysql_len >> 8 & 0xFF));
-                    // conn->send_data.push_back((querysql_len >> 16 & 0xFF));
-                    // conn->send_data.push_back(0x00);
-                    // conn->send_data.push_back(0x03);
-                    // conn->send_data.append(sqlstring);
-
-                    if(conn->isdebug)
+                    if(islock_conn)
                     {
-                        conn->begin_time();
+                        if(!edit_conn)
+                        {
+                            edit_conn = co_await conn_obj->async_get_edit_conn();
+                        }
                     }
-                    std::size_t n = co_await conn->async_write_sql(sqlstring);
+                    else
+                    {
+                        edit_conn = co_await conn_obj->async_get_edit_conn();
+                    }
+
+                    if(edit_conn->isdebug)
+                    {
+                        edit_conn->begin_time();
+                    }
+                    std::size_t n = co_await edit_conn->async_write_sql(sqlstring);
                     if(n==0)
                     {
-                        error_msg = conn->error_msg;
+                        error_msg = edit_conn->error_msg;
+                        edit_conn.reset();
                         co_return 0;
                     }
-                    //std::size_t n = co_await asio::async_write(*conn->socket, asio::buffer(conn->send_data), asio::use_awaitable);
 
                     unsigned int offset = 0;
-                    n                   = co_await conn->async_read_loop();
+                    n                   = co_await edit_conn->async_read_loop();
                     if (n==0)
                     {
+                        edit_conn.reset();
                         co_return 0;
                     }
                     pack_info_t temp_pack_data;
                     temp_pack_data.seq_id = 1;
-                    conn->read_field_pack(conn->_cache_data, n, offset, temp_pack_data);
-                    if(conn->isdebug)
+                    edit_conn->read_field_pack(edit_conn->_cache_data, n, offset, temp_pack_data);
+                    if(edit_conn->isdebug)
                     {
-                        conn->finish_time();
+                        edit_conn->finish_time();
                         auto &conn_mar = get_orm_connect_mar();
-                        long long du_time= conn->count_time();
+                        long long du_time= edit_conn->count_time();
                         conn_mar.push_log(sqlstring,std::to_string(du_time));
-                    }
-                    conn_obj->back_edit_conn(conn);
+                    } 
 
                     if ((unsigned char)temp_pack_data.data[0] == 0xFF)
                     {
@@ -10120,11 +10126,13 @@ M_MODEL& or_leMessage(T val)
                     {
 
                         unsigned int d_offset = 1;
-                        effect_num            = conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);
-
-                        co_return effect_num;
+                        effect_num            = edit_conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);
                     }
-                    co_return 0;
+                    if(!islock_conn)
+                    {
+                        conn_obj->back_edit_conn(std::move(edit_conn));
+                    }
+                    co_return effect_num;
                 }
                 catch (const std::exception &e)
                 {
@@ -10150,48 +10158,49 @@ M_MODEL& or_leMessage(T val)
                     {
                         co_return 0;
                     }
-                    auto conn = co_await conn_obj->async_get_edit_conn();
-
-                    // unsigned int querysql_len = sqlstring.length() + 1;
-
-                    // conn->send_data.clear();
-                    // conn->send_data.push_back((querysql_len & 0xFF));
-                    // conn->send_data.push_back((querysql_len >> 8 & 0xFF));
-                    // conn->send_data.push_back((querysql_len >> 16 & 0xFF));
-                    // conn->send_data.push_back(0x00);
-                    // conn->send_data.push_back(0x03);
-                    // conn->send_data.append(sqlstring);
-
-                    if(conn->isdebug)
+                    if(islock_conn)
                     {
-                        conn->begin_time();
+                        if(!edit_conn)
+                        {
+                            edit_conn = co_await conn_obj->async_get_edit_conn();
+                        }
                     }
-                    std::size_t n = co_await conn->async_write_sql(sqlstring);
+                    else
+                    {
+                        edit_conn = co_await conn_obj->async_get_edit_conn();
+                    }
+
+                    if(edit_conn->isdebug)
+                    {
+                        edit_conn->begin_time();
+                    }
+                    std::size_t n = co_await edit_conn->async_write_sql(sqlstring);
                     if(n==0)
                     {
-                        error_msg = conn->error_msg;
+                        error_msg = edit_conn->error_msg;
+                        edit_conn.reset();
                         co_return 0;
                     }
-                    //std::size_t n = co_await asio::async_write(*conn->socket, asio::buffer(conn->send_data), asio::use_awaitable);
-                    
+
                     unsigned int offset = 0;
-                    n                   = co_await conn->async_read_loop();
+                    n                   = co_await edit_conn->async_read_loop();
                     if (n==0)
                     {
+                        edit_conn.reset();
                         co_return 0;
                     }
                     pack_info_t temp_pack_data;
                     temp_pack_data.seq_id = 1;
-                    conn->read_field_pack(conn->_cache_data, n, offset, temp_pack_data);
-                    if(conn->isdebug)
+                    edit_conn->read_field_pack(edit_conn->_cache_data, n, offset, temp_pack_data);
+                    if(edit_conn->isdebug)
                     {
-                        conn->finish_time();
+                        edit_conn->finish_time();
                         auto &conn_mar = get_orm_connect_mar();
-                        long long du_time= conn->count_time();
+                        long long du_time= edit_conn->count_time();
                         conn_mar.push_log(sqlstring,std::to_string(du_time));
                     }
-                    conn_obj->back_edit_conn(conn);
 
+                    long long insert_last_id = 0;
                     if ((unsigned char)temp_pack_data.data[0] == 0xFF)
                     {
                         error_msg = temp_pack_data.data.substr(3);
@@ -10200,12 +10209,14 @@ M_MODEL& or_leMessage(T val)
                     {
 
                         unsigned int d_offset = 1;
-                        effect_num      = conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);
-                        long long   insert_last_id= conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);    
-
-                        co_return insert_last_id;
+                        effect_num      = edit_conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);
+                        insert_last_id  = edit_conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], d_offset);    
                     }
-                    co_return 0;
+                    if(!islock_conn)
+                    {
+                        conn_obj->back_edit_conn(std::move(edit_conn));
+                    } 
+                    co_return insert_last_id;
                 }
                 catch (const std::exception &e)
                 {
@@ -10270,38 +10281,30 @@ M_MODEL& or_leMessage(T val)
                 {
                     return std::make_tuple(table_fieldname, table_fieldmap, temprecord);
                 }
-                auto conn = conn_obj->get_select_conn();
-
-                // unsigned int querysql_len = rawsql.length() + 1;
-
-                // conn->send_data.clear();
-
-                // conn->send_data.push_back((querysql_len & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 8 & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 16 & 0xFF));
-                // conn->send_data.push_back(0x00);
-                // conn->send_data.push_back(0x03);
-                // conn->send_data.append(rawsql);
-
-                if(conn->isdebug)
+                //auto conn = conn_obj->get_select_conn();
+                if(islock_conn)
                 {
-                    conn->begin_time();
+                    if(!select_conn)
+                    {
+                        select_conn = conn_obj->get_select_conn();
+                    }
                 }
-                std::size_t n = conn->write_sql(rawsql);
+                else
+                {
+                    select_conn = conn_obj->get_select_conn();
+                }  
+
+                if(select_conn->isdebug)
+                {
+                    select_conn->begin_time();
+                }
+                std::size_t n = select_conn->write_sql(rawsql);
                 if(n==0)
                 {
-                    error_msg = conn->error_msg;
+                    error_msg = select_conn->error_msg;
+                    select_conn.reset();
                     return std::make_tuple(table_fieldname, table_fieldmap, temprecord);
                 }
-
-                // std::size_t n = asio::write(*conn->socket, asio::buffer(conn->send_data), conn->ec);
-                
-                // if(conn->ec)
-                // {
-                //     error_msg = conn->ec.message();
-                //     iserror   = true;
-                //     return std::make_tuple(table_fieldname, table_fieldmap, temprecord);
-                // }
                 
                 pack_info_t temp_pack_data;
                 temp_pack_data.seq_id = 1;
@@ -10317,25 +10320,27 @@ M_MODEL& or_leMessage(T val)
 
                 for (; is_sql_item == false;)
                 {
-                    n      = conn->read_loop();
+                    n      = select_conn->read_loop();
                     offset = 0;
                     if(n==0)
                     {
-                        error_msg = conn->error_msg;
+                        error_msg = select_conn->error_msg;
+                        select_conn.reset();
                         return std::make_tuple(table_fieldname, table_fieldmap, temprecord);
                     }
                     for (; offset < n;)
                     {
-                        conn->read_field_pack(conn->_cache_data, n, offset, temp_pack_data);
+                        select_conn->read_field_pack(select_conn->_cache_data, n, offset, temp_pack_data);
                         if(temp_pack_data.error > 0)
                         {
                             iserror = true;
                             error_msg =temp_pack_data.data;
+                            select_conn.reset();
                             return std::make_tuple(table_fieldname, table_fieldmap, temprecord);
                         }
                         if (temp_pack_data.length == temp_pack_data.current_length && temp_pack_data.current_length > 0)
                         {
-                            if (conn->pack_eof_check(temp_pack_data))
+                            if (select_conn->pack_eof_check(temp_pack_data))
                             {
                                 is_sql_item = true;
                                 break;
@@ -10352,7 +10357,7 @@ M_MODEL& or_leMessage(T val)
                             else if (action_setup == 1)
                             {
                                 field_info_t temp_filed_col;
-                                conn->read_col_info(temp_pack_data.data, temp_filed_col);
+                                select_conn->read_col_info(temp_pack_data.data, temp_filed_col);
 
                                 field_array.emplace_back(std::move(temp_filed_col));
                                 column_num--;
@@ -10376,7 +10381,7 @@ M_MODEL& or_leMessage(T val)
                                 for (unsigned int ij = 0; ij < column_num; ij++)
                                 {
                                     unsigned long long name_length = 0;
-                                    name_length                    = conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], tempnum);
+                                    name_length                    = select_conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], tempnum);
                                     std::string tempstr;
                                     tempstr.resize(name_length);
                                     std::memcpy(tempstr.data(), (unsigned char *)&temp_pack_data.data[tempnum], name_length);
@@ -10398,15 +10403,17 @@ M_MODEL& or_leMessage(T val)
                         }
                     }
                 }
-                if(conn->isdebug)
+                if(select_conn->isdebug)
                 {
-                    conn->finish_time();
+                    select_conn->finish_time();
                     auto &conn_mar = get_orm_connect_mar();
-                    long long du_time= conn->count_time();
+                    long long du_time= select_conn->count_time();
                     conn_mar.push_log(rawsql,std::to_string(du_time));
                 }
-                conn_obj->back_select_conn(conn);
-
+                if(!islock_conn)
+                {
+                    conn_obj->back_select_conn(std::move(select_conn));
+                }
                 return std::make_tuple(std::move(table_fieldname), std::move(table_fieldmap), std::move(temprecord));
             }
             catch (const std::exception &e)
@@ -10470,32 +10477,30 @@ M_MODEL& or_leMessage(T val)
                 {
                     co_return std::make_tuple(table_fieldname, table_fieldmap, temprecord);
                 }
-                auto conn = co_await conn_obj->async_get_select_conn();
-
-                // unsigned int querysql_len = rawsql.length() + 1;
-
-                // conn->send_data.clear();
-
-                // conn->send_data.push_back((querysql_len & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 8 & 0xFF));
-                // conn->send_data.push_back((querysql_len >> 16 & 0xFF));
-                // conn->send_data.push_back(0x00);
-                // conn->send_data.push_back(0x03);
-                // conn->send_data.append(rawsql);
-
-                if(conn->isdebug)
+                if(islock_conn)
                 {
-                    conn->begin_time();
+                    if(!select_conn)
+                    {
+                        select_conn = co_await conn_obj->async_get_select_conn();
+                    }
                 }
-                std::size_t n = co_await conn->async_write_sql(rawsql);
+                else
+                {
+                    select_conn = co_await conn_obj->async_get_select_conn();
+                }                
+
+                if(select_conn->isdebug)
+                {
+                    select_conn->begin_time();
+                }
+                std::size_t n = co_await select_conn->async_write_sql(rawsql);
                 if(n==0)
                 {
-                    error_msg = conn->error_msg;
+                    error_msg = select_conn->error_msg;
+                    select_conn.reset();
                     co_return std::make_tuple(table_fieldname, table_fieldmap, temprecord);
                 }
-                //std::size_t n = co_await asio::async_write(*conn->socket, asio::buffer(conn->send_data), asio::use_awaitable);
-                
-                
+                                
                 pack_info_t temp_pack_data;
                 temp_pack_data.seq_id = 1;
                 bool is_sql_item      = false;
@@ -10510,24 +10515,26 @@ M_MODEL& or_leMessage(T val)
 
                 for (; is_sql_item == false;)
                 {
-                    n      = co_await conn->async_read_loop();
+                    n      = co_await select_conn->async_read_loop();
                     offset = 0;
                     if (n==0)
                     {
+                        select_conn.reset();
                         co_return std::make_tuple(table_fieldname, table_fieldmap, temprecord);
                     }
                     for (; offset < n;)
                     {
-                        conn->read_field_pack(conn->_cache_data, n, offset, temp_pack_data);
+                        select_conn->read_field_pack(select_conn->_cache_data, n, offset, temp_pack_data);
                         if(temp_pack_data.error > 0)
                         {
                             iserror = true;
                             error_msg =temp_pack_data.data;
+                            select_conn.reset();
                             co_return std::make_tuple(table_fieldname, table_fieldmap, temprecord);
                         }
                         if (temp_pack_data.length == temp_pack_data.current_length && temp_pack_data.current_length > 0)
                         {
-                            if (conn->pack_eof_check(temp_pack_data))
+                            if (select_conn->pack_eof_check(temp_pack_data))
                             {
                                 is_sql_item = true;
                                 break;
@@ -10544,7 +10551,7 @@ M_MODEL& or_leMessage(T val)
                             else if (action_setup == 1)
                             {
                                 field_info_t temp_filed_col;
-                                conn->read_col_info(temp_pack_data.data, temp_filed_col);
+                                select_conn->read_col_info(temp_pack_data.data, temp_filed_col);
 
                                 field_array.emplace_back(std::move(temp_filed_col));
                                 column_num--;
@@ -10568,7 +10575,7 @@ M_MODEL& or_leMessage(T val)
                                 for (unsigned int ij = 0; ij < column_num; ij++)
                                 {
                                     unsigned long long name_length = 0;
-                                    name_length                    = conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], tempnum);
+                                    name_length                    = select_conn->pack_real_num((unsigned char *)&temp_pack_data.data[0], tempnum);
                                     std::string tempstr;
                                     tempstr.resize(name_length);
                                     std::memcpy(tempstr.data(), (unsigned char *)&temp_pack_data.data[tempnum], name_length);
@@ -10590,15 +10597,17 @@ M_MODEL& or_leMessage(T val)
                         }
                     }
                 }
-                if(conn->isdebug)
+                if(select_conn->isdebug)
                 {
-                    conn->finish_time();
+                    select_conn->finish_time();
                     auto &conn_mar = get_orm_connect_mar();
-                    long long du_time= conn->count_time();
+                    long long du_time= select_conn->count_time();
                     conn_mar.push_log(rawsql,std::to_string(du_time));
                 }
-                conn_obj->back_select_conn(conn);
-
+                if(!islock_conn)
+                {
+                    conn_obj->back_select_conn(std::move(select_conn));
+                }        
                 co_return std::make_tuple(std::move(table_fieldname), std::move(table_fieldmap), std::move(temprecord));
             }
             catch (const std::exception &e)
@@ -10695,7 +10704,25 @@ M_MODEL& or_leMessage(T val)
             iserror   = true;
             return true;
         }
-
+        void lock_conn()
+        {
+            islock_conn = true; 
+        }
+        void unlock_conn()
+        {
+            islock_conn = false; 
+            if (conn_obj)
+            {
+                if(select_conn)
+                {
+                    conn_obj->back_select_conn(std::move(select_conn));
+                }
+                if(edit_conn)
+                {
+                    conn_obj->back_edit_conn(std::move(edit_conn));
+                }
+            }
+        }
       public:
         std::string selectsql;
         std::string wheresql;
@@ -10713,6 +10740,7 @@ M_MODEL& or_leMessage(T val)
         bool ishascontent       = false;
         bool iscache            = false;
         bool iserror            = false;
+        bool islock_conn        = false;
         int exptime             = 0;
         unsigned int effect_num = 0;
 
