@@ -18,7 +18,7 @@ from pprint import pprint
 
 from colorama import Fore
 import numbers
-
+from collections import defaultdict
 
 class Benchmarker:
     def __init__(self, config):
@@ -36,6 +36,8 @@ class Benchmarker:
             self.tests.reverse()
         self.results = Results(self)
         self.docker_helper = DockerHelper(self)
+        self.max_framework_test_count = 10
+        self.framework_test_count = defaultdict(lambda: 0)
 
         self.last_test = False
 
@@ -130,6 +132,19 @@ class Benchmarker:
         if self.config.exclude and test.name in self.config.exclude:
             message = "Test {name} has been added to the excludes list. Skipping.".format(
                 name=test.name)
+            self.results.write_intermediate(test.name, message)
+            self.results.upload()
+            return self.__exit_test(
+                success=False,
+                message=message,
+                prefix=log_prefix,
+                file=benchmark_log)
+
+        # Each framework has maximum number of tests
+        self.framework_test_count[test.framework] += 1
+        if self.framework_test_count[test.framework] > self.max_framework_test_count:
+            message = "Framework {framework} has run the maximum of {max} tests. Skipping {name}.".format(
+                name=test.name, framework=test.framework, max=self.max_framework_test_count)
             self.results.write_intermediate(test.name, message)
             self.results.upload()
             return self.__exit_test(
