@@ -29,6 +29,7 @@ GEM
     drb (2.2.1)
     i18n (1.14.7)
       concurrent-ruby (~> 1.0)
+    iodine (0.7.58)
     json (2.10.1)
     kgio (2.11.4)
     logger (1.6.6)
@@ -81,6 +82,7 @@ PLATFORMS
 DEPENDENCIES
   activerecord (~> 8.0)
   agoo
+  iodine (~> 0.7)
   json (~> 2.8)
   mysql2 (~> 0.5)
   passenger (~> 6.0)
