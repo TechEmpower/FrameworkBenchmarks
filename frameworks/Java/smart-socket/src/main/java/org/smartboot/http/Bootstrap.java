@@ -8,31 +8,14 @@
 
 package org.smartboot.http;
 
-import tech.smartboot.feat.restful.RestFeat;
+
+import tech.smartboot.feat.cloud.FeatCloud;
 
 public class Bootstrap {
-    static byte[] body = "Hello, World!".getBytes();
 
     public static void main(String[] args) {
         int cpuNum = Runtime.getRuntime().availableProcessors();
-        // 定义服务器接受的消息类型以及各类消息对应的处理器
-//        Feat.createHttpServer(options -> {
-//            options.threadNum(cpuNum + 1)
-//                    .headerLimiter(0)
-//                    .readBufferSize(1024 * 4)
-//                    .writeBufferSize(1024 * 4);
-//        }).httpHandler(request -> {
-//            HttpResponse response = request.getResponse();
-//            if ("/plaintext".equals(request.getRequestURI())) {
-//                response.setContentLength(body.length);
-//                response.setContentType(HeaderValueEnum.ContentType.TEXT_PLAIN_UTF8);
-//                response.write(body);
-//            } else if ("/json".equals(request.getRequestURI())) {
-//                response.setContentType("application/json");
-//                JsonUtil.writeJsonBytes(response, new Message("Hello, World!"));
-//            }
-//        }).listen(8080);
-        RestFeat.createServer(options -> {
+        FeatCloud.cloudServer(options -> {
             options.threadNum(cpuNum + 1)
                     .headerLimiter(0)
                     .readBufferSize(1024 * 4)
