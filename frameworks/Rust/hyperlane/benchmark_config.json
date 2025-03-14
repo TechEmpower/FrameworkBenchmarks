@@ -1,0 +1,26 @@
+{
+  "framework": "hyperlane",
+  "tests": [
+    {
+      "default": {
+        "dockerfile": "hyperlane.dockerfile",
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "db_url": "/db",
+        "query_url": "/queries?q=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "Postgres",
+        "framework": "hyperlane",
+        "language": "Rust",
+        "orm": "raw",
+        "platform": "Rust",
+        "webserver": "hyperlane",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "hyperlane"
+      }
+    }
+  ]
+}

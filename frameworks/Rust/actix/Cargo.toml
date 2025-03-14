@@ -1,7 +1,7 @@
 [package]
 name = "tfb-actix"
-version = "3.0.0"
-edition = "2018"
+version = "4.0.0"
+edition = "2024"
 
 [[bin]]
 name = "tfb-web"
@@ -28,41 +28,40 @@ name = "tfb-web-pg-deadpool"
 path = "src/main_pg_deadpool.rs"
 
 [dependencies]
-anyhow = "1"
-actix = "0.13"
-actix-web = "4.3.1"
-actix-http = "3.3.1"
-actix-rt = "2"
-actix-codec = "0.4"
+anyhow = "1.0.96"
+actix = "0.13.5"
+actix-web = "4.9.0"
+actix-http = "3.9.0"
+actix-rt = "2.10.0"
+actix-codec = "0.5"
 actix-server = "2"
 actix-service = "2"
 
-askama = "0.11"
+askama = "0.12"
 bytes = "1"
-diesel = { version = "1.4", features = ["postgres"] }
-env_logger = "0.9"
-futures = "0.3.7"
-http = "0.2"
+diesel = { version = "2.2.7", features = ["postgres"] }
+env_logger = "0.11"
+futures = "0.3.31"
 log = { version = "0.4", features = ["release_max_level_debug"] }
 num_cpus = "1.13"
-rand = { version = "0.8", features = ["small_rng"] }
+rand = { version = "0.9", features = ["small_rng"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
-simd-json = "0.4"
-simd-json-derive = "0.12"
-snmalloc-rs = "0.2.6"
+simd-json = "0.14"
+simd-json-derive = "0.15"
+snmalloc-rs = "0.3.8"
 tokio = { version = "1", features = ["full"] }
-tokio-util = "0.7.8"
-tokio-postgres = "0.7.5"
-deadpool-postgres = "0.10.1"
-mongodb = "2.2.0"
-url = "2.1"
-v_htmlescape = "0.14"
+tokio-util = "0.7.13"
+tokio-postgres = "0.7.13"
+deadpool-postgres = "0.14.1"
+mongodb = "3.2.1"
+url = "2.5"
+v_htmlescape = "0.15"
 yarte = { version = "0.15", features = ["bytes-buf"] }
 
 [build-dependencies]
-askama = "0.11"
-bindgen = "0.59"
+askama = "0.12"
+bindgen = "0.71"
 
 [profile.release]
 lto = true

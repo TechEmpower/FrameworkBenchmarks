@@ -2,7 +2,7 @@
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
 use ntex::http::header::{CONTENT_TYPE, SERVER};
-use ntex::{http, time::Seconds, util::BytesMut, util::PoolId, util::Ready, web};
+use ntex::{http, time::Seconds, util::BytesMut, util::PoolId, web};
 use sonic_rs::Serialize;
 
 mod utils;
@@ -48,13 +48,10 @@ async fn plaintext() -> web::HttpResponse {
 async fn main() -> std::io::Result<()> {
     println!("Started http server: 127.0.0.1:8080");
 
-    let cores = core_affinity::get_core_ids().unwrap();
-    let total_cores = cores.len();
-    let cores = std::sync::Arc::new(std::sync::Mutex::new(cores));
-
     // start http server
     ntex::server::build()
         .backlog(1024)
+        .enable_affinity()
         .bind("techempower", "0.0.0.0:8080", |cfg| {
             cfg.memory_pool(PoolId::P1);
             PoolId::P1.set_read_params(65535, 2048);
@@ -67,17 +64,6 @@ async fn main() -> std::io::Result<()> {
                 .payload_read_rate(Seconds::ZERO, Seconds::ZERO, 0)
                 .h1(web::App::new().service(json).service(plaintext).finish())
         })?
-        .configure(move |cfg| {
-            let cores = cores.clone();
-            cfg.on_worker_start(move |_| {
-                if let Some(core) = cores.lock().unwrap().pop() {
-                    core_affinity::set_for_current(core);
-                }
-                Ready::<_, &str>::Ok(())
-            });
-            Ok(())
-        })?
-        .workers(total_cores)
         .run()
         .await
 }

@@ -22,9 +22,7 @@
                 "fortune_url":    "/fortunes",
                 "update_url":     "/updates?q=",
                 "plaintext_url":  "/plaintext"
-            }
-        },
-        {
+            },
             "rt_async-std": {
                 "dockerfile":     "rt_async-std.dockerfile",
                 "display_name":   "Ohkami [async-std]",
@@ -45,9 +43,7 @@
                 "fortune_url":    "/fortunes",
                 "update_url":     "/updates?q=",
                 "plaintext_url":  "/plaintext"
-            }
-        },
-        {
+            },
             "rt_smol": {
                 "dockerfile":     "rt_smol.dockerfile",
                 "display_name":   "Ohkami [smol]",
@@ -64,9 +60,7 @@
                 "port":           8000,
                 "json_url":       "/json",
                 "plaintext_url":  "/plaintext"
-            }
-        },
-        {
+            },
             "rt_glommio": {
                 "dockerfile":     "rt_glommio.dockerfile",
                 "display_name":   "Ohkami [glommio]",
@@ -83,9 +77,7 @@
                 "port":           8000,
                 "json_url":       "/json",
                 "plaintext_url":  "/plaintext"
-            }
-        },
-        {
+            },
             "rt_nio": {
                 "dockerfile":     "rt_nio.dockerfile",
                 "display_name":   "Ohkami [nio]",

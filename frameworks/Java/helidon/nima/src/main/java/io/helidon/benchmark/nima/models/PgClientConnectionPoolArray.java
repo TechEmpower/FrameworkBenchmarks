@@ -1,7 +1,8 @@
 
 package io.helidon.benchmark.nima.models;
 
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Logger;
 
 import io.helidon.config.Config;
@@ -13,7 +14,7 @@ class PgClientConnectionPoolArray extends PgClientConnectionPool {
 
     private final int connections;
     private final PgClientConnection[] connectionArray;
-    private final ReentrantLock lock = new ReentrantLock();
+    private final ReadWriteLock lock = new ReentrantReadWriteLock();
 
     PgClientConnectionPoolArray(Vertx vertx, PgConnectOptions options, Config config) {
         super(vertx, options, config);
@@ -29,20 +30,23 @@ class PgClientConnectionPoolArray extends PgClientConnectionPool {
     @Override
     public PgClientConnection clientConnection() {
         int index = Thread.currentThread().hashCode() % connections;
-        PgClientConnection connection = connectionArray[index];
-        if (connection == null) {
-            try {
-                lock.lock();
-                connection = connectionArray[index];
-                if (connection == null) {
-                    connection = newConnection();
-                    connectionArray[index] = connection;
+        if (connectionArray[index] == null) {
+            lock.readLock().lock();
+            if (connectionArray[index] == null) {
+                lock.readLock().unlock();
+                lock.writeLock().lock();
+                try {
+                    if (connectionArray[index] == null) {
+                        connectionArray[index] = newConnection();
+                    }
+                } finally {
+                    lock.writeLock().unlock();
                 }
-            } finally {
-                lock.unlock();
+            } else {
+                lock.readLock().unlock();
             }
         }
-        return connection;
+        return connectionArray[index];
     }
 
     @Override

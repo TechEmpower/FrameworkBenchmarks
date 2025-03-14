@@ -15,6 +15,8 @@ SERVER_STRING =
     'puma'
   elsif defined?(Unicorn)
     'unicorn'
+  elsif defined?(Iodine)
+    'iodine'
   elsif defined?(Agoo)
     'agoo'
   end
