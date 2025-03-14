@@ -8,7 +8,7 @@ module HelloWorld
         include Deps["persistence.rom"]
 
         def handle(*, response)
-          world = rom.relations[:World].where(id: random_id).one
+          world = rom.relations[:World].by_pk(random_id).one
           response.headers['Server'] = 'hanami'
           response.headers['Date'] = Time.now.httpdate
           response.format = :json

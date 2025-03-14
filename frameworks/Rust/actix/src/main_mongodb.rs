@@ -28,12 +28,12 @@ async fn find_random_world(data: web::Data<Data>) -> Result<World> {
     let runtime = data.tokio_runtime.clone();
     runtime
         .spawn(async move {
-            let mut rng = SmallRng::from_entropy();
-            let id = (rng.gen::<u32>() % 10_000 + 1) as i32;
+            let mut rng = SmallRng::from_os_rng();
+            let id = (rng.random::<u32>() % 10_000 + 1) as i32;
 
             let coll = data.client.database("hello_world").collection("world");
             let world = coll
-                .find_one(doc! { "id": id as f32 }, None)
+                .find_one(doc! { "id": id as f32 })
                 .await?
                 .expect("should find world");
             Ok(world)
@@ -101,10 +101,10 @@ async fn updates(
 
     let mut worlds = find_random_worlds(data, query.q).await?;
 
-    let mut rng = SmallRng::from_entropy();
+    let mut rng = SmallRng::from_os_rng();
     let mut updates = Vec::new();
     for world in worlds.iter_mut() {
-        let new_random_number = (rng.gen::<u32>() % 10_000 + 1) as i32;
+        let new_random_number = (rng.random::<u32>() % 10_000 + 1) as i32;
         updates.push(doc! {
             "q": { "id": world.id }, "u": { "$set": { "randomNumber": new_random_number }}
         });
@@ -121,7 +121,6 @@ async fn updates(
                         "updates": updates,
                         "ordered": false,
                     },
-                    None,
                 )
                 .await
         })
@@ -145,7 +144,7 @@ async fn fortune(data: web::Data<Data>) -> Result<HttpResponse<Vec<u8>>> {
         let fortunes_cursor = client
             .database("hello_world")
             .collection::<Fortune>("fortune")
-            .find(None, None)
+            .find(doc! {})
             .await?;
 
         let mut fortunes: Vec<Fortune> = fortunes_cursor.try_collect().await?;

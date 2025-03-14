@@ -2,9 +2,9 @@ package org.smartboot.http;
 
 
 import tech.smartboot.feat.core.common.utils.NumberUtils;
+import tech.smartboot.feat.core.server.HttpHandler;
 import tech.smartboot.feat.core.server.HttpRequest;
 import tech.smartboot.feat.core.server.HttpResponse;
-import tech.smartboot.feat.core.server.handler.BaseHttpHandler;
 
 import javax.sql.DataSource;
 import java.io.IOException;
@@ -19,7 +19,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * @author 三刀
  * @version V1.0 , 2020/6/16
  */
-public class MultipleQueriesHandler extends BaseHttpHandler {
+public class MultipleQueriesHandler implements HttpHandler {
     private DataSource dataSource;
 
     public MultipleQueriesHandler(DataSource dataSource) {
@@ -56,6 +56,11 @@ public class MultipleQueriesHandler extends BaseHttpHandler {
                 completableFuture.complete(null);
             }
         });
+
+    }
+
+    @Override
+    public void handle(HttpRequest request) throws Throwable {
 
     }
 

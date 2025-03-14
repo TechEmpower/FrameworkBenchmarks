@@ -21,7 +21,6 @@ QUERIES_MIN = 1
 QUERIES_MAX = 500
 
 CONTENT_TYPE = 'Content-Type'
-CONTENT_LENGTH = 'Content-Length'
 DATE = 'Date'
 SERVER = 'Server'
 SERVER_STRING = 'Agoo'
