@@ -1,9 +1,9 @@
 package org.smartboot.http;
 
 
+import tech.smartboot.feat.core.server.HttpHandler;
 import tech.smartboot.feat.core.server.HttpRequest;
 import tech.smartboot.feat.core.server.HttpResponse;
-import tech.smartboot.feat.core.server.handler.BaseHttpHandler;
 
 import javax.sql.DataSource;
 import java.io.IOException;
@@ -18,7 +18,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * @author 三刀
  * @version V1.0 , 2020/6/16
  */
-public class SingleQueryHandler extends BaseHttpHandler {
+public class SingleQueryHandler implements HttpHandler {
     private DataSource dataSource;
 
     public SingleQueryHandler(DataSource dataSource) {
@@ -46,6 +46,11 @@ public class SingleQueryHandler extends BaseHttpHandler {
                 completableFuture.complete(null);
             }
         });
+
+    }
+
+    @Override
+    public void handle(HttpRequest request) throws Throwable {
 
     }
 
