@@ -54,9 +54,10 @@ class HelloWorld < Sinatra::Base
 
   # Test type 3: Multiple database queries
   get '/queries' do
+    ids = ALL_IDS.sample(bounded_queries)
     worlds =
       DB.synchronize do
-        ALL_IDS.sample(bounded_queries).map do |id|
+        ids.map do |id|
           World.with_pk(id)
         end
       end
@@ -79,9 +80,10 @@ class HelloWorld < Sinatra::Base
   # Test type 5: Database updates
   get '/updates' do
     worlds = nil
+    ids = ALL_IDS.sample(bounded_queries)
     DB.synchronize do
       worlds =
-        ALL_IDS.sample(bounded_queries).map do |id|
+        ids.map do |id|
           world = World.with_pk(id)
           new_value = rand1
           new_value = rand1 while new_value == world.randomnumber
