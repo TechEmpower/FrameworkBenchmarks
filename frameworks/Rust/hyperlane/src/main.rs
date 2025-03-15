@@ -30,6 +30,7 @@ pub(crate) use route::*;
 pub(crate) use server::*;
 pub(crate) use std::{
     borrow::Cow,
+    collections::HashMap,
     error::Error,
     fmt::{self, Write},
     io,

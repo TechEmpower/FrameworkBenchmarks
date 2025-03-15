@@ -85,6 +85,7 @@ pub async fn init_db() {
         create_table().await;
         insert_records().await;
     }
+    init_update_state().await;
 }
 
 #[inline]
@@ -135,43 +136,55 @@ pub async fn random_world_row(db_pool: &DbPoolConnection) -> Result<QueryRow, Bo
 }
 
 #[inline]
+pub async fn init_update_state() {
+    let db_pool: DbPoolConnection = get_db_connection().await;
+    let connection: DbConnection = db_pool
+        .get()
+        .await
+        .map_err(|e| io::Error::new(io::ErrorKind::Other, format!("timeout: {}", e)))
+        .unwrap();
+    let mut update_state: RwLockWriteGuard<'_, HashMap<usize, Statement>> =
+        UPDATE_STATE.write().await;
+    let mut update_query: RwLockWriteGuard<'_, HashMap<usize, Vec<QueryRow>>> =
+        UPDATE_QUERY.write().await;
+    for limit in 1..=ROW_LIMIT {
+        let limit: usize = limit as usize;
+        let mut query_res_list: Vec<QueryRow> = Vec::with_capacity(limit);
+        let rows: Vec<Row> = get_some_row_id(limit, &db_pool).await.unwrap_or_default();
+        let mut query = format!("UPDATE {} SET randomNumber = CASE id ", TABLE_NAME);
+        let mut id_list: Vec<i32> = Vec::with_capacity(limit);
+        let mut value_list = String::new();
+        let mut id_in_clause = String::new();
+        for (i, row) in rows.iter().enumerate() {
+            let new_random_number: i32 = rand::rng().random_range(1..RANDOM_MAX);
+            let id: i32 = row.get(0);
+            id_list.push(id);
+            value_list.push_str(&format!("WHEN {} THEN {} ", id, new_random_number));
+            if i > 0 {
+                id_in_clause.push_str(", ");
+            }
+            id_in_clause.push_str(&id.to_string());
+            query_res_list.push(QueryRow::new(id, new_random_number));
+        }
+        update_query.insert(limit, query_res_list);
+        query.push_str(&value_list);
+        query.push_str(&format!("END WHERE id IN ({})", id_in_clause));
+        let stmt: Statement = connection.prepare(&query).await.unwrap();
+        update_state.insert(limit, stmt);
+    }
+}
+
+#[inline]
 pub async fn update_world_rows(limit: usize) -> Result<Vec<QueryRow>, Box<dyn Error>> {
+    let stmt: Statement = UPDATE_STATE.read().await.get(&limit).unwrap().clone();
     let db_pool: DbPoolConnection = get_db_connection().await;
     let connection: DbConnection = db_pool
         .get()
         .await
         .map_err(|e| io::Error::new(io::ErrorKind::Other, format!("timeout: {}", e)))?;
-    let mut id_list: Vec<QueryRow> = Vec::with_capacity(limit);
-    let mut params: Vec<Box<DynToSqlSyncSend>> = Vec::with_capacity(limit * 2);
-    let rows: Vec<Row> = get_some_row_id(limit, &db_pool).await.unwrap_or_default();
-    for row in rows {
-        let new_random_number: i32 = rand::rng().random_range(1..RANDOM_MAX);
-        let id: i32 = row.get(0);
-        id_list.push(QueryRow::new(id, new_random_number));
-        params.push(Box::new(new_random_number));
-        params.push(Box::new(id));
-    }
-    let mut query: String = format!("UPDATE {} SET randomNumber = CASE id ", TABLE_NAME);
-    for i in 0..limit {
-        query.push_str(&format!(
-            "WHEN ${}::INTEGER THEN ${}::INTEGER ",
-            i * 2 + 2,
-            i * 2 + 1
-        ));
-    }
-    query.push_str("END WHERE id IN (");
-    for i in 0..limit {
-        if i > 0 {
-            query.push_str(", ");
-        }
-        query.push_str(&format!("${}::INTEGER", i * 2 + 2));
-    }
-    query.push(')');
-    let stmt: Statement = connection.prepare(&query).await?;
-    let params_refs: Vec<&DynToSqlSync> =
-        params.iter().map(|p| p.as_ref() as &DynToSqlSync).collect();
-    connection.execute(&stmt, &params_refs).await?;
-    Ok(id_list)
+    connection.execute(&stmt, &[]).await?;
+    let list: Vec<QueryRow> = UPDATE_QUERY.read().await.get(&limit).cloned().unwrap();
+    Ok(list)
 }
 
 #[inline]
