@@ -13,7 +13,6 @@ pub(crate) use bb8_postgres::PostgresConnectionManager;
 pub(crate) use chrono::{DateTime, Utc};
 pub(crate) use constant::*;
 pub(crate) use db::*;
-pub(crate) use html_escape::encode_text;
 pub(crate) use hyperlane::{
     once_cell::sync::Lazy,
     serde::*,
@@ -29,7 +28,6 @@ pub(crate) use response_middleware::*;
 pub(crate) use route::*;
 pub(crate) use server::*;
 pub(crate) use std::{
-    borrow::Cow,
     error::Error,
     fmt::{self, Write},
     io,
