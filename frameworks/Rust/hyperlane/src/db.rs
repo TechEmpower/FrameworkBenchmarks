@@ -7,6 +7,7 @@ pub async fn get_db_connection() -> DbPoolConnection {
 }
 
 #[inline]
+#[cfg(feature = "dev")]
 pub async fn create_batabase() {
     let db_pool: DbPoolConnection = get_db_connection().await;
     let connection: DbConnection = db_pool.get().await.unwrap();
@@ -27,6 +28,7 @@ pub async fn create_batabase() {
 }
 
 #[inline]
+#[cfg(feature = "dev")]
 pub async fn create_table() {
     let db_pool: DbPoolConnection = get_db_connection().await;
     let connection: DbConnection = db_pool.get().await.unwrap();
@@ -43,6 +45,7 @@ pub async fn create_table() {
 }
 
 #[inline]
+#[cfg(feature = "dev")]
 pub async fn insert_records() {
     let db_pool: DbPoolConnection = get_db_connection().await;
     let connection: DbConnection = db_pool.get().await.unwrap();
@@ -76,9 +79,12 @@ pub async fn init_db() {
         let mut db_pool_lock: RwLockWriteGuard<'_, Option<DbPoolConnection>> = DB.write().await;
         *db_pool_lock = Some(connection_db().await);
     }
-    create_batabase().await;
-    create_table().await;
-    insert_records().await;
+    #[cfg(feature = "dev")]
+    {
+        create_batabase().await;
+        create_table().await;
+        insert_records().await;
+    }
 }
 
 #[inline]

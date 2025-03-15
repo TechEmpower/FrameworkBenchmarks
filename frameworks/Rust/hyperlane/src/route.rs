@@ -60,15 +60,15 @@ pub async fn fortunes(controller_data: ControllerData) {
             Fortunes::new(id, message)
         })
         .collect();
+    fortunes_list.push(Fortunes::new(
+        0,
+        "Additional fortune added at request time.".to_owned(),
+    ));
     fortunes_list.sort_by(|a, b| {
         let message_a: &String = &a.message;
         let message_b: &String = &b.message;
         message_a.cmp(message_b)
     });
-    fortunes_list.push(Fortunes::new(
-        0,
-        "Additional fortune added at request time.".to_owned(),
-    ));
     let mut res: String = String::with_capacity(20480);
     let _ = write!(&mut res, "{}", FortunesTemplate::new(fortunes_list));
     controller_data
