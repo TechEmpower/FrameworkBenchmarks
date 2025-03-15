@@ -108,7 +108,12 @@ pub async fn init_db() {
     let config: Config = db_url.parse::<Config>().unwrap();
     let db_manager: PostgresConnectionManager<NoTls> =
         PostgresConnectionManager::new(config, NoTls);
-    let db_pool: DbPoolConnection = Pool::builder().build(db_manager).await.unwrap();
+    let db_pool: DbPoolConnection = Pool::builder()
+        .max_size(1_000)
+        .max_lifetime(Some(std::time::Duration::from_secs(u64::MAX)))
+        .build(db_manager)
+        .await
+        .unwrap();
     {
         let mut db_pool_lock: RwLockWriteGuard<'_, Option<DbPoolConnection>> = DB.write().await;
         *db_pool_lock = Some(db_pool.clone());
