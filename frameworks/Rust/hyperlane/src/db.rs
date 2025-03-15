@@ -71,7 +71,7 @@ pub async fn insert_records() {
     let mut rng: rand::prelude::ThreadRng = rand::rng();
     let mut values: Vec<String> = Vec::new();
     for _ in 0..missing_count {
-        let random_number: i32 = rng.random_range(1..=10000);
+        let random_number: i32 = rng.random_range(1..=RANDOM_MAX);
         values.push(format!("(DEFAULT, {})", random_number));
     }
     let query: String = format!(
@@ -143,7 +143,7 @@ pub async fn update_world_rows(times: usize) -> Result<Vec<QueryRow>, Box<dyn Er
     let mut params: Vec<Box<DynToSqlSyncSend>> = Vec::with_capacity(times * 2);
     for id in 0..times {
         let id: i32 = id as i32;
-        let new_random_number: i32 = rand::rng().random_range(1..ROW_LIMIT);
+        let new_random_number: i32 = rand::rng().random_range(1..RANDOM_MAX);
         id_list.push(QueryRow::new(id, new_random_number));
         params.push(Box::new(new_random_number));
         params.push(Box::new(id));
@@ -178,10 +178,7 @@ pub async fn all_world_row() -> Result<Vec<Row>, Box<dyn Error>> {
         .await
         .map_err(|e| io::Error::new(io::ErrorKind::Other, format!("timeout: {}", e)))?;
     let stmt: Statement = connection
-        .prepare(&format!(
-            "SELECT id, randomNumber FROM {} ORDER BY randomNumber ASC",
-            TABLE_NAME
-        ))
+        .prepare(&format!("SELECT id, randomNumber FROM {}", TABLE_NAME))
         .await?;
     let rows: Vec<Row> = connection.query(&stmt, &[]).await?;
     return Ok(rows);

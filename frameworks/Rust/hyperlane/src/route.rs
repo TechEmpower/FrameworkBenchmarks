@@ -54,6 +54,7 @@ pub async fn fortunes(controller_data: ControllerData) {
             Fortunes::new(id, message)
         })
         .collect();
+    fortunes_list.sort_by(|a, b| a.message.cmp(&b.message));
     fortunes_list.push(Fortunes::new(
         0,
         "Additional fortune added at request time.".to_owned(),
@@ -62,13 +63,10 @@ pub async fn fortunes(controller_data: ControllerData) {
     let mut handlebars: Handlebars<'_> = Handlebars::new();
     let _ = handlebars.register_template_string("fortunes", template);
     let res: String = handlebars
-        .render(
-            "fortunes",
-            &serde_json::json!({ "fortunes": fortunes_list }),
-        )
+        .render("fortunes", &json!({ "fortunes": fortunes_list }))
         .unwrap_or_default();
     controller_data
-        .set_response_header(CONTENT_TYPE, TEXT_HTML)
+        .set_response_header(CONTENT_TYPE, format!("{}; {}", TEXT_HTML, CHARSET_UTF_8))
         .await
         .set_response_body(res)
         .await;

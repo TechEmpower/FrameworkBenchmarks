@@ -24,8 +24,8 @@ impl QueryRow {
 
 #[derive(Serialize)]
 pub struct Fortunes {
-    id: i32,
-    message: String,
+    pub id: i32,
+    pub message: String,
 }
 
 impl Fortunes {
