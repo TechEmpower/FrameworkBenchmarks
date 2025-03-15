@@ -175,7 +175,7 @@ pub async fn update_world_rows(limit: Queries) -> Result<Vec<QueryRow>, Box<dyn 
 #[inline]
 pub async fn all_world_row() -> Vec<PgRow> {
     let db_pool: DbPoolConnection = get_db_connection().await;
-    let query_all_sql: String = format!("SELECT id, randomNumber FROM {}", TABLE_NAME_FORTUNE);
+    let query_all_sql: String = format!("SELECT id, message FROM {}", TABLE_NAME_FORTUNE);
     let sql: String = query_all_sql.clone();
     let res: Vec<PgRow> = sqlx::query(&sql)
         .fetch_all(&db_pool)
