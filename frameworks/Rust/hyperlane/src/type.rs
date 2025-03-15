@@ -3,6 +3,7 @@ use crate::*;
 pub type DbPoolConnection = bb8::Pool<PostgresConnectionManager<NoTls>>;
 pub type DbConnection<'a> = PooledConnection<'a, PostgresConnectionManager<NoTls>>;
 pub type Queries = usize;
+pub type DynToSqlSync = dyn ToSql + Sync;
 
 #[allow(bad_style)]
 #[derive(Serialize)]

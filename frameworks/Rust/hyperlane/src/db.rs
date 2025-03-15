@@ -141,36 +141,18 @@ pub async fn update_world_rows(times: usize) -> Result<Vec<QueryRow>, Box<dyn Er
         .await
         .map_err(|e| io::Error::new(io::ErrorKind::Other, format!("timeout: {}", e)))?;
     let mut random_id_list: Vec<QueryRow> = Vec::with_capacity(times);
-    let mut params: Vec<Box<dyn ToSql + Send + Sync>> = Vec::with_capacity(times * 2);
     for _ in 0..times {
         let random_id: i32 = rand::rng().random_range(1..ROW_LIMIT);
         let new_random_number: i32 = rand::rng().random_range(1..ROW_LIMIT);
         random_id_list.push(QueryRow::new(random_id, new_random_number));
-        params.push(Box::new(new_random_number));
-        params.push(Box::new(random_id));
+        let query = format!("UPDATE {} SET randomNumber = $1 WHERE id = $2", TABLE_NAME);
+        let stmt: Statement = connection.prepare(&query).await?;
+        let params_refs: Vec<&DynToSqlSync> = vec![
+            &new_random_number as &DynToSqlSync,
+            &random_id as &DynToSqlSync,
+        ];
+        connection.execute(&stmt, &params_refs).await?;
     }
-    let mut query: String = format!("UPDATE {} SET randomNumber = CASE id ", TABLE_NAME);
-    for i in 0..times {
-        query.push_str(&format!(
-            "WHEN ${}::INTEGER THEN ${}::INTEGER ",
-            i * 2 + 2,
-            i * 2 + 1
-        ));
-    }
-    query.push_str("END WHERE id IN (");
-    for i in 0..times {
-        if i > 0 {
-            query.push_str(", ");
-        }
-        query.push_str(&format!("${}::INTEGER", i * 2 + 2));
-    }
-    query.push(')');
-    let stmt: Statement = connection.prepare(&query).await?;
-    let params_refs: Vec<&(dyn bb8_postgres::tokio_postgres::types::ToSql + Sync)> = params
-        .iter()
-        .map(|p| p.as_ref() as &(dyn ToSql + Sync))
-        .collect();
-    connection.execute(&stmt, &params_refs).await?;
     Ok(random_id_list)
 }
 
