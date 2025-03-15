@@ -45,14 +45,19 @@ pub async fn queries(controller_data: ControllerData) {
 
 pub async fn fortunes(controller_data: ControllerData) {
     let all_rows: Vec<Row> = all_world_row().await.unwrap_or_default();
-    let fortune_list: Vec<Fortune> = all_rows
+    let mut fortune_list: Vec<Fortune> = all_rows
         .iter()
         .map(|row| {
             let id: i32 = row.get(0);
             let message: i32 = row.get(1);
+            let message: String = message.to_string();
             Fortune::new(id, message)
         })
         .collect();
+    fortune_list.push(Fortune::new(
+        0,
+        "Additional fortune added at request time.".to_owned(),
+    ));
     let template: &str = include_str!("../templates/fortune.hbs");
     let mut handlebars: Handlebars<'_> = Handlebars::new();
     let _ = handlebars.register_template_string("fortunes", template);
