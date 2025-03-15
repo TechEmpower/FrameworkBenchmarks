@@ -9,8 +9,8 @@ pub type DynToSqlSyncSend = dyn ToSql + Sync + Send;
 #[allow(bad_style)]
 #[derive(Serialize)]
 pub struct QueryRow {
-    id: i32,
-    randomNumber: i32,
+    pub id: i32,
+    pub randomNumber: i32,
 }
 
 impl QueryRow {
@@ -33,5 +33,29 @@ impl Fortunes {
     #[inline]
     pub fn new(id: i32, message: String) -> Self {
         Self { id, message }
+    }
+}
+
+pub struct FortunesTemplate {
+    pub fortunes_list: Vec<Fortunes>,
+}
+
+impl FortunesTemplate {
+    pub fn new(fortunes_list: Vec<Fortunes>) -> Self {
+        Self { fortunes_list }
+    }
+}
+
+impl fmt::Display for FortunesTemplate {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>")?;
+        for fortunes in &self.fortunes_list {
+            write!(
+                f,
+                "<tr><td>{}</td><td>{}</td></tr>",
+                fortunes.id, fortunes.message
+            )?;
+        }
+        write!(f, "</table></body></html>")
     }
 }

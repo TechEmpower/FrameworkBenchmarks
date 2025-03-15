@@ -13,7 +13,6 @@ pub(crate) use bb8_postgres::PostgresConnectionManager;
 pub(crate) use chrono::{DateTime, Utc};
 pub(crate) use constant::*;
 pub(crate) use db::*;
-pub(crate) use handlebars::{Context, Handlebars, Helper, HelperResult, RenderContext};
 pub(crate) use hyperlane::{
     once_cell::sync::Lazy,
     serde::*,
@@ -28,9 +27,13 @@ pub(crate) use request_middleware::*;
 pub(crate) use response_middleware::*;
 pub(crate) use route::*;
 pub(crate) use server::*;
-pub(crate) use std::error::Error;
-pub(crate) use std::time::SystemTime;
-pub(crate) use std::{io, sync::Arc};
+pub(crate) use std::{
+    error::Error,
+    fmt::{self, Write},
+    io,
+    sync::Arc,
+    time::SystemTime,
+};
 pub(crate) use tokio_postgres::{types::ToSql, Config, NoTls, Row, Statement};
 pub(crate) use utils::*;
 

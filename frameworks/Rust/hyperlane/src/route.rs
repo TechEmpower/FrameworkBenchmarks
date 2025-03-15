@@ -49,7 +49,12 @@ pub async fn queries(controller_data: ControllerData) {
 
 #[inline]
 pub async fn fortunes(controller_data: ControllerData) {
-    let all_rows: Vec<Row> = all_world_row().await.unwrap_or_default();
+    let mut all_rows: Vec<Row> = all_world_row().await.unwrap_or_default();
+    all_rows.sort_by(|a, b| {
+        let message_a: i32 = a.get(1);
+        let message_b: i32 = b.get(1);
+        message_a.cmp(&message_b)
+    });
     let mut fortunes_list: Vec<Fortunes> = all_rows
         .iter()
         .map(|row| {
@@ -59,18 +64,12 @@ pub async fn fortunes(controller_data: ControllerData) {
             Fortunes::new(id, message)
         })
         .collect();
-    fortunes_list.sort_by(|a, b| a.message.cmp(&b.message));
     fortunes_list.push(Fortunes::new(
         0,
         "Additional fortune added at request time.".to_owned(),
     ));
-    let template: &str = include_str!("../templates/fortune.hbs");
-    let mut handlebars: Handlebars<'_> = Handlebars::new();
-    handlebars.register_helper("raw", Box::new(raw_helper));
-    let _ = handlebars.register_template_string("fortunes", template);
-    let res: String = handlebars
-        .render("fortunes", &json!({ "fortunes": fortunes_list }))
-        .unwrap_or_default();
+    let mut res: String = String::with_capacity(2048);
+    let _ = write!(&mut res, "{}", FortunesTemplate::new(fortunes_list));
     controller_data
         .set_response_header(CONTENT_TYPE, format!("{}; {}", TEXT_HTML, CHARSET_UTF_8))
         .await
@@ -78,6 +77,7 @@ pub async fn fortunes(controller_data: ControllerData) {
         .await;
 }
 
+#[inline]
 pub async fn updates(controller_data: ControllerData) {
     let queries: Queries = controller_data
         .get_request_query("q")
