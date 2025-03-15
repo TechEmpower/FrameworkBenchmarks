@@ -21,7 +21,7 @@ pub async fn create_table() {
     let db_pool: DbPoolConnection = get_db_connection().await;
     let _ = sqlx::query(&format!(
         "CREATE TABLE IF NOT EXISTS {} (
-            id SERIAL PRIMARY KEY, randomNumber INTEGER NOT NULL
+            id SERIAL PRIMARY KEY, randomNumber VARCHAR NOT NULL
         );",
         TABLE_NAME
     ))
@@ -103,7 +103,7 @@ pub async fn get_update_data(limit: Queries) -> (String, Vec<QueryRow>) {
     let mut value_list: String = String::new();
     let mut id_in_clause: String = String::new();
     for (i, row) in rows.iter().enumerate() {
-        let new_random_number: i32 = rand::rng().random_range(1..RANDOM_MAX);
+        let new_random_number: String = rand::rng().random_range(1..RANDOM_MAX).to_string();
         let id: i32 = row.get(KEY_ID);
         id_list.push(id);
         value_list.push_str(&format!("WHEN {} THEN {} ", id, new_random_number));
@@ -139,10 +139,10 @@ pub async fn random_world_row(db_pool: &DbPoolConnection) -> Result<QueryRow, Bo
     let sql: String = QUERY_SQL.read().await.get(&random_id).cloned().unwrap();
     if let Ok(rows) = sqlx::query(&sql).fetch_one(db_pool).await {
         let id: i32 = rows.get(KEY_ID);
-        let random_number: i32 = rows.get(KEY_RANDOM_NUMBER);
+        let random_number: String = rows.get(KEY_RANDOM_NUMBER);
         return Ok(QueryRow::new(id, random_number));
     }
-    return Ok(QueryRow::new(1, 1));
+    return Ok(QueryRow::new(1, 1.to_string()));
 }
 
 #[inline]

@@ -78,8 +78,7 @@ pub async fn fortunes(controller_data: ControllerData) {
         .iter()
         .map(|row| {
             let id: i32 = row.get(0);
-            let message: i32 = row.get(1);
-            let message: String = message.to_string();
+            let message: String = row.get(1);
             Fortunes::new(id, message)
         })
         .collect();
