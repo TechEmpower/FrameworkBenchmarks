@@ -68,7 +68,7 @@ pub async fn fortunes(controller_data: ControllerData) {
         0,
         "Additional fortune added at request time.".to_owned(),
     ));
-    let mut res: String = String::with_capacity(2048);
+    let mut res: String = String::with_capacity(20480);
     let _ = write!(&mut res, "{}", FortunesTemplate::new(fortunes_list));
     controller_data
         .set_response_header(CONTENT_TYPE, format!("{}; {}", TEXT_HTML, CHARSET_UTF_8))
