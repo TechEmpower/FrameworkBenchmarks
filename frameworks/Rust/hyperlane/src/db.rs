@@ -149,12 +149,21 @@ pub async fn update_world_rows(times: usize) -> Result<Vec<QueryRow>, Box<dyn Er
         .map_err(|e| io::Error::new(io::ErrorKind::Other, format!("timeout: {}", e)))?;
     let mut id_list: Vec<QueryRow> = Vec::with_capacity(times);
     let mut params: Vec<Box<DynToSqlSyncSend>> = Vec::with_capacity(times * 2);
-    for id in 0..times {
-        let id: i32 = id as i32;
+    let mut cnt: usize = 0;
+    loop {
+        if cnt >= times {
+            break;
+        }
         let new_random_number: i32 = rand::rng().random_range(1..RANDOM_MAX);
-        id_list.push(QueryRow::new(id, new_random_number));
-        params.push(Box::new(new_random_number));
-        params.push(Box::new(id));
+        if let Ok(row) = random_world_row().await {
+            let id: i32 = row.id;
+            id_list.push(QueryRow::new(id, new_random_number));
+            params.push(Box::new(new_random_number));
+            params.push(Box::new(id));
+            cnt += 1;
+        } else {
+            continue;
+        }
     }
     let mut query: String = format!("UPDATE {} SET randomNumber = CASE id ", TABLE_NAME);
     for i in 0..times {

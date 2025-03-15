@@ -7,7 +7,7 @@ pub type DynToSqlSync = dyn ToSql + Sync;
 pub type DynToSqlSyncSend = dyn ToSql + Sync + Send;
 
 #[allow(bad_style)]
-#[derive(Serialize)]
+#[derive(Serialize, Default)]
 pub struct QueryRow {
     pub id: i32,
     pub randomNumber: i32,
