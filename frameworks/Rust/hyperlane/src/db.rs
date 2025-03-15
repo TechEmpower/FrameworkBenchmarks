@@ -93,7 +93,6 @@ pub async fn connection_db() -> DbPoolConnection {
     let db_pool: DbPoolConnection = Pool::builder()
         .max_size(DB_POOL_SIZE)
         .max_lifetime(Some(Duration::from_secs(u64::MAX)))
-        .connection_timeout(Duration::from_secs(u64::MAX))
         .build(db_manager)
         .await
         .unwrap();
@@ -130,10 +129,10 @@ pub async fn init_update_state() {
         let limit: Queries = limit as Queries;
         let mut query_res_list: Vec<QueryRow> = Vec::with_capacity(limit as usize);
         let rows: Vec<Row> = get_some_row_id(limit, &db_pool).await.unwrap_or_default();
-        let mut query = format!("UPDATE {} SET randomNumber = CASE id ", TABLE_NAME);
+        let mut query: String = format!("UPDATE {} SET randomNumber = CASE id ", TABLE_NAME);
         let mut id_list: Vec<i32> = Vec::with_capacity(limit as usize);
-        let mut value_list = String::new();
-        let mut id_in_clause = String::new();
+        let mut value_list: String = String::new();
+        let mut id_in_clause: String = String::new();
         for (i, row) in rows.iter().enumerate() {
             let new_random_number: i32 = rand::rng().random_range(1..RANDOM_MAX);
             let id: i32 = row.get(0);
