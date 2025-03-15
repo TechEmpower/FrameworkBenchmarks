@@ -1,5 +1,6 @@
 {
   "framework": "aspnetcore",
+  "maintainers": ["DamianEdwards", "sebastienros"],
   "tests": [
     {
       "default": {
@@ -14,7 +15,7 @@
         "approach": "Realistic",
         "classification": "Platform",
         "database": "Postgres",
-        "framework": "ASP.NET Core",
+        "framework": "ASP.NET Core [Platform]",
         "language": "C#",
         "orm": "Raw",
         "platform": ".NET",
@@ -22,7 +23,7 @@
         "webserver": "Kestrel",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "ASP.NET Core [Platform, Pg]",
+        "display_name": "ASP.NET Core [Platform]",
         "notes": ""
       },
       "aot": {
@@ -37,7 +38,7 @@
         "approach": "Realistic",
         "classification": "Platform",
         "database": "Postgres",
-        "framework": "ASP.NET Core",
+        "framework": "ASP.NET Core [Platform]",
         "language": "C#",
         "orm": "Raw",
         "platform": ".NET",
@@ -45,7 +46,7 @@
         "webserver": "Kestrel",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "ASP.NET Core [Platform, Pg, AOT]",
+        "display_name": "ASP.NET Core [Platform, AOT]",
         "notes": ""
       },
       "minimal": {
@@ -67,7 +68,7 @@
         "webserver": "Kestrel",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "ASP.NET Core [Minimal APIs, Pg, Dapper]",
+        "display_name": "ASP.NET Core [Minimal APIs]",
         "notes": "",
         "versus": "aspnetcore"
       },
@@ -89,7 +90,7 @@
         "webserver": "Kestrel",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "ASP.NET Core [MVC, Pg, EF]",
+        "display_name": "ASP.NET Core [MVC]",
         "notes": "",
         "versus": "aspnetcore"
       },
@@ -103,7 +104,7 @@
         "approach": "Realistic",
         "classification": "Platform",
         "database": "MySQL",
-        "framework": "ASP.NET Core",
+        "framework": "ASP.NET Core [Platform]",
         "language": "C#",
         "orm": "Raw",
         "platform": ".NET",
@@ -111,8 +112,9 @@
         "webserver": "Kestrel",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "ASP.NET Core [Platform, My]",
-        "notes": ""
+        "display_name": "ASP.NET Core [Platform, MySQL]",
+        "notes": "",
+        "versus": "aspnetcore"
       }
     }
   ]
