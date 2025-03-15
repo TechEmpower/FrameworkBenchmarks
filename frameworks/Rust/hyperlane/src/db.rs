@@ -1,10 +1,12 @@
 use crate::*;
 
+#[inline]
 pub async fn get_db_connection() -> DbPoolConnection {
     let db_pool: DbPoolConnection = DB.read().await.clone().unwrap();
     db_pool
 }
 
+#[inline]
 pub async fn create_batabase() {
     let db_pool: DbPoolConnection = get_db_connection().await;
     let connection: DbConnection = db_pool.get().await.unwrap();
@@ -31,6 +33,7 @@ pub async fn create_batabase() {
     println_success!("database `", DATABASE_NAME, "` ready");
 }
 
+#[inline]
 pub async fn create_table() {
     let db_pool: DbPoolConnection = get_db_connection().await;
     let connection: DbConnection = db_pool.get().await.unwrap();
@@ -47,6 +50,7 @@ pub async fn create_table() {
     println_success!("table `", TABLE_NAME, "` ready");
 }
 
+#[inline]
 pub async fn insert_records() {
     let db_pool: DbPoolConnection = get_db_connection().await;
     let connection: DbConnection = db_pool.get().await.unwrap();
@@ -86,6 +90,7 @@ pub async fn insert_records() {
     ));
 }
 
+#[inline]
 pub async fn init_db() {
     let db_url: &str = match option_env!("POSTGRES_URL") {
         Some(it) => it,
@@ -113,6 +118,7 @@ pub async fn init_db() {
     insert_records().await;
 }
 
+#[inline]
 pub async fn random_world_row() -> Result<QueryRow, Box<dyn Error>> {
     let random_id: i32 = rand::rng().random_range(1..ROW_LIMIT);
     let db_pool: DbPoolConnection = get_db_connection().await;
@@ -133,6 +139,8 @@ pub async fn random_world_row() -> Result<QueryRow, Box<dyn Error>> {
     }
     return Ok(QueryRow::new(1, 1));
 }
+
+#[inline]
 pub async fn update_world_rows(times: usize) -> Result<Vec<QueryRow>, Box<dyn Error>> {
     let db_pool: DbPoolConnection = get_db_connection().await;
     let connection: DbConnection = db_pool
@@ -171,6 +179,7 @@ pub async fn update_world_rows(times: usize) -> Result<Vec<QueryRow>, Box<dyn Er
     Ok(id_list)
 }
 
+#[inline]
 pub async fn all_world_row() -> Result<Vec<Row>, Box<dyn Error>> {
     let db_pool: DbPoolConnection = get_db_connection().await;
     let connection: DbConnection = db_pool

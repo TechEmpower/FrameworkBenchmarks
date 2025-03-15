@@ -1,5 +1,6 @@
 use crate::*;
 
+#[inline]
 pub async fn json(controller_data: ControllerData) {
     let json: serde_json::Value = json!({
         "message": RESPONSEDATA
@@ -9,6 +10,7 @@ pub async fn json(controller_data: ControllerData) {
         .await;
 }
 
+#[inline]
 pub async fn plaintext(controller_data: ControllerData) {
     let _ = controller_data
         .set_response_header(CONTENT_TYPE, TEXT_PLAIN)
@@ -17,6 +19,7 @@ pub async fn plaintext(controller_data: ControllerData) {
         .await;
 }
 
+#[inline]
 pub async fn db(controller_data: ControllerData) {
     let query_row: QueryRow = random_world_row().await.unwrap();
     let _ = controller_data
@@ -24,6 +27,7 @@ pub async fn db(controller_data: ControllerData) {
         .await;
 }
 
+#[inline]
 pub async fn queries(controller_data: ControllerData) {
     let queries: Queries = controller_data
         .get_request_query("q")
@@ -43,6 +47,7 @@ pub async fn queries(controller_data: ControllerData) {
         .await;
 }
 
+#[inline]
 pub async fn fortunes(controller_data: ControllerData) {
     let all_rows: Vec<Row> = all_world_row().await.unwrap_or_default();
     let mut fortunes_list: Vec<Fortunes> = all_rows
@@ -61,6 +66,7 @@ pub async fn fortunes(controller_data: ControllerData) {
     ));
     let template: &str = include_str!("../templates/fortune.hbs");
     let mut handlebars: Handlebars<'_> = Handlebars::new();
+    handlebars.register_helper("raw", Box::new(raw_helper));
     let _ = handlebars.register_template_string("fortunes", template);
     let res: String = handlebars
         .render("fortunes", &json!({ "fortunes": fortunes_list }))

@@ -14,6 +14,7 @@ pub struct QueryRow {
 }
 
 impl QueryRow {
+    #[inline]
     pub fn new(id: i32, random_number: i32) -> Self {
         Self {
             id,
@@ -29,6 +30,7 @@ pub struct Fortunes {
 }
 
 impl Fortunes {
+    #[inline]
     pub fn new(id: i32, message: String) -> Self {
         Self { id, message }
     }

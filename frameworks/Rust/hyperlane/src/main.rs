@@ -13,7 +13,7 @@ pub(crate) use bb8_postgres::PostgresConnectionManager;
 pub(crate) use chrono::{DateTime, Utc};
 pub(crate) use constant::*;
 pub(crate) use db::*;
-pub(crate) use handlebars::Handlebars;
+pub(crate) use handlebars::{Context, Handlebars, Helper, HelperResult, RenderContext};
 pub(crate) use hyperlane::{
     once_cell::sync::Lazy,
     serde::*,
