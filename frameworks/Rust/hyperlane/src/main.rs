@@ -11,7 +11,7 @@ pub(crate) mod utils;
 pub(crate) use chrono::{DateTime, Utc};
 pub(crate) use constant::*;
 pub(crate) use db::*;
-pub(crate) use html_escape::encode_text;
+pub(crate) use handlebars::Handlebars;
 pub(crate) use hyperlane::{
     once_cell::sync::Lazy,
     serde::*,
@@ -33,14 +33,7 @@ pub(crate) use sqlx::{
     postgres::{PgPoolOptions, PgRow},
     Error as SqlxError, Pool, Postgres, Row,
 };
-pub(crate) use std::{
-    borrow::Cow,
-    collections::HashMap,
-    error::Error,
-    fmt::{self, Write},
-    sync::Arc,
-    time::SystemTime,
-};
+pub(crate) use std::{collections::HashMap, error::Error, sync::Arc, time::SystemTime};
 pub(crate) use utils::*;
 
 #[tokio::main]

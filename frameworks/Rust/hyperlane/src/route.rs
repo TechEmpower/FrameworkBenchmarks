@@ -70,12 +70,18 @@ pub async fn fortunes(controller_data: ControllerData) {
         let message_b: &String = &b.message;
         message_a.cmp(message_b)
     });
-    let mut res: String = String::with_capacity(20480);
-    let _ = write!(&mut res, "{}", FortunesTemplate::new(fortunes_list));
+    let template: &str = include_str!("../templates/fortune.hbs");
+    let mut handlebars: Handlebars<'_> = Handlebars::new();
+    handlebars
+        .register_template_string("fortunes", template)
+        .unwrap();
+    let mut data: HashMap<&str, Vec<Fortunes>> = HashMap::new();
+    data.insert("fortunes", fortunes_list);
+    let result: String = handlebars.render("fortunes", &data).unwrap();
     controller_data
         .set_response_header(CONTENT_TYPE, format!("{}; {}", TEXT_HTML, CHARSET_UTF_8))
         .await
-        .set_response_body(res)
+        .set_response_body(result)
         .await;
 }
 

@@ -32,28 +32,3 @@ impl Fortunes {
         Self { id, message }
     }
 }
-
-pub struct FortunesTemplate {
-    pub fortunes_list: Vec<Fortunes>,
-}
-
-impl FortunesTemplate {
-    pub fn new(fortunes_list: Vec<Fortunes>) -> Self {
-        Self { fortunes_list }
-    }
-}
-
-impl fmt::Display for FortunesTemplate {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>")?;
-        for fortunes in &self.fortunes_list {
-            let decoded_message: Cow<'_, str> = encode_text(&fortunes.message);
-            write!(
-                f,
-                "<tr><td>{}</td><td>{}</td></tr>",
-                fortunes.id, decoded_message
-            )?;
-        }
-        write!(f, "</table></body></html>")
-    }
-}

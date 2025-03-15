@@ -22,8 +22,8 @@ hyperlane = "4.33.0"
 rand = "0.9.0"
 chrono = "0.4.40"
 serde = "1.0.219"
-html-escape = "0.2.13"
 sqlx = { version = "0.8.3", features = ["runtime-tokio", "postgres"] }
+handlebars = "6.3.1"
 
 [profile.dev]
 incremental = false
