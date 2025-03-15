@@ -6,7 +6,7 @@ Hyperlane is a lightweight and high-performance Rust HTTP server library designe
 
 ## Database
 
-PostgreSQL
+PostgreSQL.
 
 ## Test URLs
 
@@ -22,6 +22,14 @@ PostgreSQL
 
     http://localhost:8080/queries?q=20
 
-### Test 4: Plaintext
+### Test 4: Fortunes (Template rendering)
+
+    http://localhost:8080/fortune
+
+### Test 5: Update Query
+
+    http://localhost:8080/updates?q=20
+
+### Test 6: Plaintext
 
     http://localhost:8080/plaintext

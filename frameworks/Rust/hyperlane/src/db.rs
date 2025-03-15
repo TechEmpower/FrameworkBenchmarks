@@ -113,7 +113,7 @@ pub async fn init_db() {
     insert_records().await;
 }
 
-pub async fn random_world_row() -> Result<QueryRow, Box<dyn std::error::Error>> {
+pub async fn random_world_row() -> Result<QueryRow, Box<dyn Error>> {
     let random_id: i32 = rand::rng().random_range(1..ROW_LIMIT);
     let db_pool: DbPoolConnection = get_db_connection().await;
     let connection: DbConnection = db_pool
@@ -131,5 +131,61 @@ pub async fn random_world_row() -> Result<QueryRow, Box<dyn std::error::Error>> 
         let random_number: i32 = rows.get(1);
         return Ok(QueryRow::new(id, random_number));
     }
-    return Ok(QueryRow::new(0, 0));
+    return Ok(QueryRow::new(1, 1));
+}
+
+pub async fn update_world_rows(times: usize) -> Result<Vec<QueryRow>, Box<dyn Error>> {
+    let db_pool: DbPoolConnection = get_db_connection().await;
+    let connection: DbConnection = db_pool
+        .get()
+        .await
+        .map_err(|e| io::Error::new(io::ErrorKind::Other, format!("timeout: {}", e)))?;
+    let mut random_id_list: Vec<QueryRow> = Vec::with_capacity(times);
+    let mut params: Vec<Box<dyn ToSql + Send + Sync>> = Vec::with_capacity(times * 2);
+    for _ in 0..times {
+        let random_id: i32 = rand::rng().random_range(1..ROW_LIMIT);
+        let new_random_number: i32 = rand::rng().random_range(1..ROW_LIMIT);
+        random_id_list.push(QueryRow::new(random_id, new_random_number));
+        params.push(Box::new(new_random_number));
+        params.push(Box::new(random_id));
+    }
+    let mut query: String = format!("UPDATE {} SET randomNumber = CASE id ", TABLE_NAME);
+    for i in 0..times {
+        query.push_str(&format!(
+            "WHEN ${}::INTEGER THEN ${}::INTEGER ",
+            i * 2 + 2,
+            i * 2 + 1
+        ));
+    }
+    query.push_str("END WHERE id IN (");
+    for i in 0..times {
+        if i > 0 {
+            query.push_str(", ");
+        }
+        query.push_str(&format!("${}::INTEGER", i * 2 + 2));
+    }
+    query.push(')');
+    let stmt: Statement = connection.prepare(&query).await?;
+    let params_refs: Vec<&(dyn bb8_postgres::tokio_postgres::types::ToSql + Sync)> = params
+        .iter()
+        .map(|p| p.as_ref() as &(dyn ToSql + Sync))
+        .collect();
+    connection.execute(&stmt, &params_refs).await?;
+    Ok(random_id_list)
+}
+
+pub async fn all_world_row() -> Result<Vec<Row>, Box<dyn Error>> {
+    let db_pool: DbPoolConnection = get_db_connection().await;
+    let connection: DbConnection = db_pool
+        .get()
+        .await
+        .map_err(|e| io::Error::new(io::ErrorKind::Other, format!("timeout: {}", e)))?;
+    let stmt: Statement = connection
+        .prepare(&format!(
+            "SELECT id, randomNumber FROM {} ORDER BY randomNumber ASC",
+            TABLE_NAME
+        ))
+        .await?;
+    let rows: Vec<Row> = connection.query(&stmt, &[]).await?;
+    return Ok(rows);
 }

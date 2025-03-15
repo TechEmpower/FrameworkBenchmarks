@@ -10,7 +10,7 @@ PostgreSQL.
 
 ## Test URLs
 
-### Test 1: JSON Encoding 
+### Test 1: JSON Encoding
 
     http://localhost:8080/json
 

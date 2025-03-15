@@ -6,5 +6,4 @@ pub static DATABASE_USER_PASSWORD: &str = "benchmarkdbpass";
 pub static DATABASE_PORT: usize = 5432;
 pub static DATABASE_NAME: &str = "hello_world";
 pub static TABLE_NAME: &str = "World";
-pub static ROW_LIMIT: i32 = 500;
-pub static HYPERLANE: &str = "hyperlane";
+pub static ROW_LIMIT: i32 = 10_000;
