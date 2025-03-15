@@ -11,7 +11,7 @@ pub async fn run_server() {
     server.route("/plaintext", plaintext).await;
     server.route("/db", db).await;
     server.route("/queries", queries).await;
-    server.route("/fortune", fortune).await;
+    server.route("/fortunes", fortunes).await;
     server.route("/updates", updates).await;
     server.request_middleware(request).await;
     server.response_middleware(response).await;

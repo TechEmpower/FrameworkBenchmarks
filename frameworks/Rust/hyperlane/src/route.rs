@@ -43,7 +43,7 @@ pub async fn queries(controller_data: ControllerData) {
         .await;
 }
 
-pub async fn fortune(controller_data: ControllerData) {
+pub async fn fortunes(controller_data: ControllerData) {
     let all_rows: Vec<Row> = all_world_row().await.unwrap_or_default();
     let fortune_list: Vec<Fortune> = all_rows
         .iter()
