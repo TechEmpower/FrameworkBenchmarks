@@ -8,12 +8,15 @@ pub type Queries = usize;
 #[derive(Serialize)]
 pub struct QueryRow {
     id: i32,
-    random_number: i32,
+    randomNumber: i32,
 }
 
 impl QueryRow {
     pub fn new(id: i32, random_number: i32) -> Self {
-        Self { id, random_number }
+        Self {
+            id,
+            randomNumber: random_number,
+        }
     }
 }
 
