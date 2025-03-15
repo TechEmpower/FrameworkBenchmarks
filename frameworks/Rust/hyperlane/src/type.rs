@@ -1,7 +1,6 @@
 use crate::*;
 
-pub type DbPoolConnection = Pool<PostgresConnectionManager<NoTls>>;
-pub type DbConnection<'a> = PooledConnection<'a, PostgresConnectionManager<NoTls>>;
+pub type DbPoolConnection = Pool<Postgres>;
 pub type Queries = i32;
 
 #[allow(bad_style)]

@@ -51,7 +51,7 @@ pub async fn queries(controller_data: ControllerData) {
 
 #[inline]
 pub async fn fortunes(controller_data: ControllerData) {
-    let all_rows: Vec<Row> = all_world_row().await.unwrap_or_default();
+    let all_rows: Vec<PgRow> = all_world_row().await;
     let mut fortunes_list: Vec<Fortunes> = all_rows
         .iter()
         .map(|row| {
