@@ -29,7 +29,7 @@ pub(crate) use sqlx::{
     postgres::{PgPoolOptions, PgRow},
     Error as SqlxError, Pool, Postgres, Row,
 };
-pub(crate) use std::{collections::HashMap, error::Error, fmt::Write, sync::Arc, time::SystemTime};
+pub(crate) use std::{collections::HashMap, error::Error, fmt, sync::Arc, time::SystemTime};
 pub(crate) use utils::*;
 
 #[tokio::main]
