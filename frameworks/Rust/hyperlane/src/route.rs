@@ -87,7 +87,7 @@ pub async fn fortunes(controller_data: ControllerData) {
         0,
         "Additional fortune added at request time.".to_owned(),
     ));
-    fortunes_list.sort_by_key(|f| f.message.clone());
+    fortunes_list.sort_by(|it, next| it.message.cmp(&next.message));
     let mut result: String = String::with_capacity(2048);
     let _ = write!(
         &mut result,
