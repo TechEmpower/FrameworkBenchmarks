@@ -36,7 +36,7 @@ pub async fn queries(controller_data: ControllerData) {
         .unwrap_or_default()
         .min(ROW_LIMIT as Queries)
         .max(1);
-    let mut data: Vec<QueryRow> = Vec::with_capacity(queries);
+    let mut data: Vec<QueryRow> = Vec::with_capacity(queries as usize);
     let db_pool: DbPoolConnection = get_db_connection().await;
     for _ in 0..queries {
         let _ = random_world_row(&db_pool).await.map(|row| {

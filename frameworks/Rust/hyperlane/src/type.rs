@@ -2,9 +2,7 @@ use crate::*;
 
 pub type DbPoolConnection = Pool<PostgresConnectionManager<NoTls>>;
 pub type DbConnection<'a> = PooledConnection<'a, PostgresConnectionManager<NoTls>>;
-pub type Queries = usize;
-pub type DynToSqlSync = dyn ToSql + Sync;
-pub type DynToSqlSyncSend = dyn ToSql + Sync + Send + Sync;
+pub type Queries = i32;
 
 #[allow(bad_style)]
 #[derive(Serialize, Default, Clone)]

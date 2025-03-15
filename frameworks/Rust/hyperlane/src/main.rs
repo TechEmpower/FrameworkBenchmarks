@@ -18,7 +18,7 @@ pub(crate) use hyperlane::{
     once_cell::sync::Lazy,
     serde::*,
     serde_json::json,
-    tokio::sync::{RwLock, RwLockWriteGuard},
+    tokio::sync::{RwLock, RwLockReadGuard, RwLockWriteGuard},
     *,
 };
 pub(crate) use lazy::*;
@@ -38,7 +38,7 @@ pub(crate) use std::{
     time::Duration,
     time::SystemTime,
 };
-pub(crate) use tokio_postgres::{types::ToSql, Config, NoTls, Row, Statement};
+pub(crate) use tokio_postgres::{Config, NoTls, Row, Statement};
 pub(crate) use utils::*;
 
 #[tokio::main]

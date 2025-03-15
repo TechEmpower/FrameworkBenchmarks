@@ -74,21 +74,6 @@ pub async fn insert_records() {
 }
 
 #[inline]
-pub async fn init_db() {
-    {
-        let mut db_pool_lock: RwLockWriteGuard<'_, Option<DbPoolConnection>> = DB.write().await;
-        *db_pool_lock = Some(connection_db().await);
-    }
-    #[cfg(feature = "dev")]
-    {
-        create_batabase().await;
-        create_table().await;
-        insert_records().await;
-    }
-    init_update_state().await;
-}
-
-#[inline]
 pub async fn connection_db() -> DbPoolConnection {
     let db_url: &str = match option_env!("POSTGRES_URL") {
         Some(it) => it,
@@ -115,24 +100,21 @@ pub async fn connection_db() -> DbPoolConnection {
 }
 
 #[inline]
-pub async fn random_world_row(db_pool: &DbPoolConnection) -> Result<QueryRow, Box<dyn Error>> {
-    let random_id: i32 = rand::rng().random_range(1..ROW_LIMIT);
-    let connection: DbConnection = db_pool
-        .get()
-        .await
-        .map_err(|e| io::Error::new(io::ErrorKind::Other, format!("timeout: {}", e)))?;
-    let stmt: Statement = connection
-        .prepare(&format!(
-            "SELECT id, randomNumber FROM {} WHERE id = $1",
-            TABLE_NAME
-        ))
-        .await?;
-    if let Some(rows) = connection.query_opt(&stmt, &[&random_id]).await? {
-        let id: i32 = rows.get(0);
-        let random_number: i32 = rows.get(1);
-        return Ok(QueryRow::new(id, random_number));
+pub async fn init_query_state() {
+    let db_pool: DbPoolConnection = get_db_connection().await;
+    let mut query_state: RwLockWriteGuard<'_, HashMap<Queries, Statement>> =
+        QUERY_STATE.write().await;
+    for random_id in 1..=ROW_LIMIT {
+        let connection: DbConnection = db_pool.get().await.unwrap();
+        let stmt: Statement = connection
+            .prepare(&format!(
+                "SELECT id, randomNumber FROM {} WHERE id = {}",
+                TABLE_NAME, random_id
+            ))
+            .await
+            .unwrap();
+        query_state.insert(random_id, stmt);
     }
-    return Ok(QueryRow::new(1, 1));
 }
 
 #[inline]
@@ -143,16 +125,16 @@ pub async fn init_update_state() {
         .await
         .map_err(|e| io::Error::new(io::ErrorKind::Other, format!("timeout: {}", e)))
         .unwrap();
-    let mut update_state: RwLockWriteGuard<'_, HashMap<usize, Statement>> =
+    let mut update_state: RwLockWriteGuard<'_, HashMap<Queries, Statement>> =
         UPDATE_STATE.write().await;
-    let mut update_query: RwLockWriteGuard<'_, HashMap<usize, Vec<QueryRow>>> =
+    let mut update_query: RwLockWriteGuard<'_, HashMap<Queries, Vec<QueryRow>>> =
         UPDATE_QUERY.write().await;
     for limit in 1..=ROW_LIMIT {
-        let limit: usize = limit as usize;
-        let mut query_res_list: Vec<QueryRow> = Vec::with_capacity(limit);
+        let limit: Queries = limit as Queries;
+        let mut query_res_list: Vec<QueryRow> = Vec::with_capacity(limit as usize);
         let rows: Vec<Row> = get_some_row_id(limit, &db_pool).await.unwrap_or_default();
         let mut query = format!("UPDATE {} SET randomNumber = CASE id ", TABLE_NAME);
-        let mut id_list: Vec<i32> = Vec::with_capacity(limit);
+        let mut id_list: Vec<i32> = Vec::with_capacity(limit as usize);
         let mut value_list = String::new();
         let mut id_in_clause = String::new();
         for (i, row) in rows.iter().enumerate() {
@@ -175,13 +157,45 @@ pub async fn init_update_state() {
 }
 
 #[inline]
-pub async fn update_world_rows(limit: usize) -> Result<Vec<QueryRow>, Box<dyn Error>> {
-    let stmt: Statement = UPDATE_STATE.read().await.get(&limit).unwrap().clone();
+pub async fn init_db() {
+    {
+        let mut db_pool_lock: RwLockWriteGuard<'_, Option<DbPoolConnection>> = DB.write().await;
+        *db_pool_lock = Some(connection_db().await);
+    }
+    #[cfg(feature = "dev")]
+    {
+        create_batabase().await;
+        create_table().await;
+        insert_records().await;
+    }
+    init_query_state().await;
+    init_update_state().await;
+}
+
+#[inline]
+pub async fn random_world_row(db_pool: &DbPoolConnection) -> Result<QueryRow, Box<dyn Error>> {
+    let random_id: i32 = rand::rng().random_range(1..ROW_LIMIT);
+    let connection: DbConnection = db_pool
+        .get()
+        .await
+        .map_err(|e| io::Error::new(io::ErrorKind::Other, format!("timeout: {}", e)))?;
+    let stmt: Statement = QUERY_STATE.read().await.get(&random_id).cloned().unwrap();
+    if let Some(rows) = connection.query_opt(&stmt, &[]).await? {
+        let id: i32 = rows.get(0);
+        let random_number: i32 = rows.get(1);
+        return Ok(QueryRow::new(id, random_number));
+    }
+    return Ok(QueryRow::new(1, 1));
+}
+
+#[inline]
+pub async fn update_world_rows(limit: Queries) -> Result<Vec<QueryRow>, Box<dyn Error>> {
     let db_pool: DbPoolConnection = get_db_connection().await;
     let connection: DbConnection = db_pool
         .get()
         .await
         .map_err(|e| io::Error::new(io::ErrorKind::Other, format!("timeout: {}", e)))?;
+    let stmt: Statement = UPDATE_STATE.read().await.get(&limit).unwrap().clone();
     connection.execute(&stmt, &[]).await?;
     let list: Vec<QueryRow> = UPDATE_QUERY.read().await.get(&limit).cloned().unwrap();
     Ok(list)
@@ -194,16 +208,15 @@ pub async fn all_world_row() -> Result<Vec<Row>, Box<dyn Error>> {
         .get()
         .await
         .map_err(|e| io::Error::new(io::ErrorKind::Other, format!("timeout: {}", e)))?;
-    let stmt: Statement = connection
-        .prepare(&format!("SELECT id, randomNumber FROM {}", TABLE_NAME))
-        .await?;
+    let query_state: RwLockReadGuard<'_, HashMap<Queries, Statement>> = QUERY_STATE.read().await;
+    let stmt: Statement = query_state.get(&(ROW_LIMIT as Queries)).unwrap().clone();
     let rows: Vec<Row> = connection.query(&stmt, &[]).await?;
     return Ok(rows);
 }
 
 #[inline]
 pub async fn get_some_row_id(
-    limit: usize,
+    limit: Queries,
     db_pool: &DbPoolConnection,
 ) -> Result<Vec<Row>, Box<dyn Error>> {
     let connection: DbConnection = db_pool
