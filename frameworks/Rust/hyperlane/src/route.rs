@@ -65,11 +65,7 @@ pub async fn fortunes(controller_data: ControllerData) {
         0,
         "Additional fortune added at request time.".to_owned(),
     ));
-    fortunes_list.sort_by(|a, b| {
-        let message_a: &String = &a.message;
-        let message_b: &String = &b.message;
-        message_a.cmp(message_b)
-    });
+    fortunes_list.sort_by_key(|f| f.message.clone());
     let template: &str = include_str!("../templates/fortune.hbs");
     let mut handlebars: Handlebars<'_> = Handlebars::new();
     handlebars
