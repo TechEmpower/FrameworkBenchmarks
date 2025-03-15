@@ -49,6 +49,28 @@ pub async fn queries(controller_data: ControllerData) {
         .await;
 }
 
+markup::define! {
+    FortunesTemplate(fortunes: Vec<Fortunes>) {
+        {markup::doctype()}
+        html {
+            head {
+                title { "Fortunes" }
+            }
+            body {
+                table {
+                    tr { th { "id" } th { "message" } }
+                    @for item in fortunes {
+                        tr {
+                            td { {item.id} }
+                            td { {markup::raw(v_htmlescape::escape(&item.message))} }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 #[inline]
 pub async fn fortunes(controller_data: ControllerData) {
     let all_rows: Vec<PgRow> = all_world_row().await;
@@ -66,14 +88,14 @@ pub async fn fortunes(controller_data: ControllerData) {
         "Additional fortune added at request time.".to_owned(),
     ));
     fortunes_list.sort_by_key(|f| f.message.clone());
-    let template: &str = include_str!("../templates/fortune.hbs");
-    let mut handlebars: Handlebars<'_> = Handlebars::new();
-    handlebars
-        .register_template_string("fortunes", template)
-        .unwrap();
-    let mut data: HashMap<&str, Vec<Fortunes>> = HashMap::new();
-    data.insert("fortunes", fortunes_list);
-    let result: String = handlebars.render("fortunes", &data).unwrap();
+    let mut result: String = String::with_capacity(2048);
+    let _ = write!(
+        &mut result,
+        "{}",
+        FortunesTemplate {
+            fortunes: fortunes_list
+        }
+    );
     controller_data
         .set_response_header(CONTENT_TYPE, format!("{}; {}", TEXT_HTML, CHARSET_UTF_8))
         .await
