@@ -99,20 +99,6 @@ pub async fn connection_db() -> DbPoolConnection {
 }
 
 #[inline]
-pub async fn init_query_state() {
-    let mut query_sql: RwLockWriteGuard<'_, HashMap<Queries, String>> = QUERY_SQL.write().await;
-    for random_id in 1..=ROW_LIMIT {
-        query_sql.insert(
-            random_id,
-            format!(
-                "SELECT id, randomNumber FROM {} WHERE id = {}",
-                TABLE_NAME_WORLD, random_id
-            ),
-        );
-    }
-}
-
-#[inline]
 pub async fn get_update_data(limit: Queries) -> (String, Vec<QueryRow>) {
     let db_pool: DbPoolConnection = get_db_connection().await;
     let mut query_res_list: Vec<QueryRow> = Vec::with_capacity(limit as usize);
@@ -149,13 +135,15 @@ pub async fn init_db() {
         create_table().await;
         insert_records().await;
     }
-    init_query_state().await;
 }
 
 #[inline]
 pub async fn random_world_row(db_pool: &DbPoolConnection) -> Result<QueryRow, Box<dyn Error>> {
     let random_id: i32 = rand::rng().random_range(1..=ROW_LIMIT);
-    let sql: String = QUERY_SQL.read().await.get(&random_id).cloned().unwrap();
+    let sql: String = format!(
+        "SELECT id, randomNumber FROM {} WHERE id = {}",
+        TABLE_NAME_WORLD, random_id
+    );
     if let Ok(rows) = sqlx::query(&sql).fetch_one(db_pool).await {
         let id: i32 = rows.get(KEY_ID);
         let random_number: i32 = rows.get(KEY_RANDOM_NUMBER);
@@ -175,8 +163,7 @@ pub async fn update_world_rows(limit: Queries) -> Result<Vec<QueryRow>, Box<dyn 
 #[inline]
 pub async fn all_world_row() -> Vec<PgRow> {
     let db_pool: DbPoolConnection = get_db_connection().await;
-    let query_all_sql: String = format!("SELECT id, message FROM {}", TABLE_NAME_FORTUNE);
-    let sql: String = query_all_sql.clone();
+    let sql: String = format!("SELECT id, message FROM {}", TABLE_NAME_FORTUNE);
     let res: Vec<PgRow> = sqlx::query(&sql)
         .fetch_all(&db_pool)
         .await
