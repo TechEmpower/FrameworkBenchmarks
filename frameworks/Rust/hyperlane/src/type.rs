@@ -50,10 +50,11 @@ impl fmt::Display for FortunesTemplate {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>")?;
         for fortunes in &self.fortunes_list {
+            let escaped_message: String = fortunes.message.escape_default().collect::<String>();
             write!(
                 f,
                 "<tr><td>{}</td><td>{}</td></tr>",
-                fortunes.id, fortunes.message
+                fortunes.id, escaped_message
             )?;
         }
         write!(f, "</table></body></html>")
