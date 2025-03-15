@@ -7,12 +7,12 @@ pub type Queries = i32;
 #[derive(Serialize, Default, Clone)]
 pub struct QueryRow {
     pub id: i32,
-    pub randomNumber: String,
+    pub randomNumber: i32,
 }
 
 impl QueryRow {
     #[inline]
-    pub fn new(id: i32, random_number: String) -> Self {
+    pub fn new(id: i32, random_number: i32) -> Self {
         Self {
             id,
             randomNumber: random_number,

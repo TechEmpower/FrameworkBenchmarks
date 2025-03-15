@@ -77,8 +77,8 @@ pub async fn fortunes(controller_data: ControllerData) {
     let mut fortunes_list: Vec<Fortunes> = all_rows
         .iter()
         .map(|row| {
-            let id: i32 = row.get(0);
-            let message: String = row.get(1);
+            let id: i32 = row.get(KEY_ID);
+            let message: String = row.get(KEY_RANDOM_NUMBER);
             Fortunes::new(id, message)
         })
         .collect();
