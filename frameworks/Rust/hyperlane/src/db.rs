@@ -133,27 +133,42 @@ pub async fn random_world_row() -> Result<QueryRow, Box<dyn Error>> {
     }
     return Ok(QueryRow::new(1, 1));
 }
-
 pub async fn update_world_rows(times: usize) -> Result<Vec<QueryRow>, Box<dyn Error>> {
     let db_pool: DbPoolConnection = get_db_connection().await;
     let connection: DbConnection = db_pool
         .get()
         .await
         .map_err(|e| io::Error::new(io::ErrorKind::Other, format!("timeout: {}", e)))?;
-    let mut random_id_list: Vec<QueryRow> = Vec::with_capacity(times);
-    for _ in 0..times {
-        let random_id: i32 = rand::rng().random_range(1..ROW_LIMIT);
+    let mut id_list: Vec<QueryRow> = Vec::with_capacity(times);
+    let mut params: Vec<Box<DynToSqlSyncSend>> = Vec::with_capacity(times * 2);
+    for id in 0..times {
+        let id: i32 = id as i32;
         let new_random_number: i32 = rand::rng().random_range(1..ROW_LIMIT);
-        random_id_list.push(QueryRow::new(random_id, new_random_number));
-        let query = format!("UPDATE {} SET randomNumber = $1 WHERE id = $2", TABLE_NAME);
-        let stmt: Statement = connection.prepare(&query).await?;
-        let params_refs: Vec<&DynToSqlSync> = vec![
-            &new_random_number as &DynToSqlSync,
-            &random_id as &DynToSqlSync,
-        ];
-        connection.execute(&stmt, &params_refs).await?;
+        id_list.push(QueryRow::new(id, new_random_number));
+        params.push(Box::new(new_random_number));
+        params.push(Box::new(id));
     }
-    Ok(random_id_list)
+    let mut query: String = format!("UPDATE {} SET randomNumber = CASE id ", TABLE_NAME);
+    for i in 0..times {
+        query.push_str(&format!(
+            "WHEN ${}::INTEGER THEN ${}::INTEGER ",
+            i * 2 + 2,
+            i * 2 + 1
+        ));
+    }
+    query.push_str("END WHERE id IN (");
+    for i in 0..times {
+        if i > 0 {
+            query.push_str(", ");
+        }
+        query.push_str(&format!("${}::INTEGER", i * 2 + 2));
+    }
+    query.push(')');
+    let stmt: Statement = connection.prepare(&query).await?;
+    let params_refs: Vec<&DynToSqlSync> =
+        params.iter().map(|p| p.as_ref() as &DynToSqlSync).collect();
+    connection.execute(&stmt, &params_refs).await?;
+    Ok(id_list)
 }
 
 pub async fn all_world_row() -> Result<Vec<Row>, Box<dyn Error>> {
