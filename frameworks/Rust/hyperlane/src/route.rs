@@ -21,7 +21,8 @@ pub async fn plaintext(controller_data: ControllerData) {
 
 #[inline]
 pub async fn db(controller_data: ControllerData) {
-    let query_row: QueryRow = random_world_row(&get_db_connection().await).await.unwrap();
+    let db_connection: DbPoolConnection = get_db_connection().await;
+    let query_row: QueryRow = random_world_row(&db_connection).await.unwrap();
     let _ = controller_data
         .set_response_body(serde_json::to_string(&query_row).unwrap_or_default())
         .await;

@@ -2,9 +2,10 @@ use crate::*;
 
 pub static DB: Lazy<ArcRwLock<Option<DbPoolConnection>>> =
     Lazy::new(|| Arc::new(RwLock::new(None)));
-pub static UPDATE_STATE: Lazy<ArcRwLock<HashMap<Queries, Statement>>> =
+pub static UPDATE_SQL: Lazy<ArcRwLock<HashMap<Queries, String>>> =
     Lazy::new(|| arc_rwlock(HashMap::new()));
-pub static UPDATE_QUERY: Lazy<ArcRwLock<HashMap<Queries, Vec<QueryRow>>>> =
+pub static UPDATE_QUERY_SQL: Lazy<ArcRwLock<HashMap<Queries, Vec<QueryRow>>>> =
     Lazy::new(|| arc_rwlock(HashMap::new()));
-pub static QUERY_STATE: Lazy<ArcRwLock<HashMap<Queries, Statement>>> =
+pub static QUERY_SQL: Lazy<ArcRwLock<HashMap<Queries, String>>> =
     Lazy::new(|| arc_rwlock(HashMap::new()));
+pub static QUERY_ALL_SQL: Lazy<ArcRwLock<String>> = Lazy::new(|| arc_rwlock(String::new()));
