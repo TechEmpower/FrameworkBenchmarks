@@ -145,9 +145,9 @@ pub async fn init_update_state() {
             id_in_clause.push_str(&id.to_string());
             query_res_list.push(QueryRow::new(id, new_random_number));
         }
-        update_query_sql.insert(limit, query_res_list);
         query.push_str(&value_list);
         query.push_str(&format!("END WHERE id IN ({})", id_in_clause));
+        update_query_sql.insert(limit, query_res_list);
         update_sql.insert(limit, query);
     }
 }
@@ -193,7 +193,7 @@ pub async fn update_world_rows(limit: Queries) -> Result<Vec<QueryRow>, Box<dyn 
         .await
         .map_err(|e| io::Error::new(io::ErrorKind::Other, format!("timeout: {}", e)))?;
     let sql: String = UPDATE_SQL.read().await.get(&limit).unwrap().clone();
-    connection.execute(&sql, &[]).await?;
+    let _ = connection.execute(&sql, &[]).await;
     let list: Vec<QueryRow> = UPDATE_QUERY_SQL.read().await.get(&limit).cloned().unwrap();
     Ok(list)
 }
