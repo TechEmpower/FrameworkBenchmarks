@@ -22,12 +22,12 @@ impl QueryRow {
 }
 
 #[derive(Serialize)]
-pub struct Fortune {
+pub struct Fortunes {
     id: i32,
     message: String,
 }
 
-impl Fortune {
+impl Fortunes {
     pub fn new(id: i32, message: String) -> Self {
         Self { id, message }
     }
