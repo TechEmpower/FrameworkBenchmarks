@@ -164,10 +164,9 @@ pub async fn random_world_row(db_pool: &DbPoolConnection) -> Result<QueryRow, Bo
 pub async fn update_world_rows(limit: Queries) -> Result<Vec<QueryRow>, Box<dyn Error>> {
     let db_pool: DbPoolConnection = get_db_connection().await;
     let sql: String = UPDATE_SQL.read().await.get(&limit).unwrap().clone();
-    let _ = spawn_blocking(move || async move {
+    spawn(async move {
         let _ = sqlx::query(&sql).execute(&db_pool).await;
-    })
-    .await?;
+    });
     let list: Vec<QueryRow> = UPDATE_QUERY_SQL.read().await.get(&limit).cloned().unwrap();
     Ok(list)
 }

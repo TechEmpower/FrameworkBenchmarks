@@ -18,7 +18,7 @@ pub(crate) use hyperlane::{
     serde_json::json,
     tokio::{
         sync::{RwLock, RwLockReadGuard, RwLockWriteGuard},
-        task::spawn_blocking,
+        task::spawn,
     },
     *,
 };

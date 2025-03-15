@@ -9,4 +9,4 @@ pub static TABLE_NAME: &str = "World";
 pub static ROW_LIMIT: i32 = 500;
 pub static RANDOM_MAX: i32 = 10_000;
 pub static KEY_ID: &str = "id";
-pub static KEY_RANDOM_NUMBER: &str = "randomNumber";
+pub static KEY_RANDOM_NUMBER: &str = "randomnumber";
