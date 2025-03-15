@@ -34,6 +34,7 @@ pub(crate) use std::{
     fmt::{self, Write},
     io,
     sync::Arc,
+    time::Duration,
     time::SystemTime,
 };
 pub(crate) use tokio_postgres::{types::ToSql, Config, NoTls, Row, Statement};
@@ -41,9 +42,6 @@ pub(crate) use utils::*;
 
 #[tokio::main]
 async fn main() {
-    println_warning!("start connect db");
     init_db().await;
-    println_success!("connect db finish");
-    println_warning!("start init server");
     run_server().await;
 }

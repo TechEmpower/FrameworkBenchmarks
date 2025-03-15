@@ -19,18 +19,11 @@ pub async fn create_batabase() {
         .unwrap()
         .get(0);
     if !db_exists {
-        println_warning!(
-            "database `",
-            DATABASE_NAME,
-            "` not found. Creating database..."
-        );
         connection
             .batch_execute(&format!("CREATE DATABASE {};", DATABASE_NAME))
             .await
             .unwrap();
-        println_success!("database `", DATABASE_NAME, "` created successfully");
     }
-    println_success!("database `", DATABASE_NAME, "` ready");
 }
 
 #[inline]
@@ -47,7 +40,6 @@ pub async fn create_table() {
         ))
         .await
         .unwrap();
-    println_success!("table `", TABLE_NAME, "` ready");
 }
 
 #[inline]
@@ -61,17 +53,9 @@ pub async fn insert_records() {
     let count: i64 = row.get(0);
     let limit: i64 = ROW_LIMIT as i64;
     if count >= limit {
-        println_warning!(format!(
-            "table '{}' already has {} records. No need to insert.",
-            TABLE_NAME, count
-        ));
         return;
     }
     let missing_count: i64 = limit - count;
-    println_warning!(format!(
-        "table '{}' has {} records. Inserting {} missing records...",
-        TABLE_NAME, count, missing_count
-    ));
     let mut rng: rand::prelude::ThreadRng = rand::rng();
     let mut values: Vec<String> = Vec::new();
     for _ in 0..missing_count {
@@ -84,14 +68,21 @@ pub async fn insert_records() {
         values.join(",")
     );
     connection.batch_execute(&query).await.unwrap();
-    println_success!(format!(
-        "successfully inserted {} missing records into '{}' table.",
-        TABLE_NAME, missing_count
-    ));
 }
 
 #[inline]
 pub async fn init_db() {
+    {
+        let mut db_pool_lock: RwLockWriteGuard<'_, Option<DbPoolConnection>> = DB.write().await;
+        *db_pool_lock = Some(connection_db().await);
+    }
+    create_batabase().await;
+    create_table().await;
+    insert_records().await;
+}
+
+#[inline]
+pub async fn connection_db() -> DbPoolConnection {
     let db_url: &str = match option_env!("POSTGRES_URL") {
         Some(it) => it,
         _ => &format!(
@@ -104,29 +95,21 @@ pub async fn init_db() {
             DATABASE_NAME
         ),
     };
-    println_warning!("db url: ", db_url);
     let config: Config = db_url.parse::<Config>().unwrap();
     let db_manager: PostgresConnectionManager<NoTls> =
         PostgresConnectionManager::new(config, NoTls);
     let db_pool: DbPoolConnection = Pool::builder()
-        .max_size(1_000)
-        .max_lifetime(Some(std::time::Duration::from_secs(u64::MAX)))
+        .max_size(DB_POOL_SIZE)
+        .max_lifetime(Some(Duration::from_secs(u64::MAX)))
         .build(db_manager)
         .await
         .unwrap();
-    {
-        let mut db_pool_lock: RwLockWriteGuard<'_, Option<DbPoolConnection>> = DB.write().await;
-        *db_pool_lock = Some(db_pool.clone());
-    }
-    create_batabase().await;
-    create_table().await;
-    insert_records().await;
+    db_pool
 }
 
 #[inline]
-pub async fn random_world_row() -> Result<QueryRow, Box<dyn Error>> {
+pub async fn random_world_row(db_pool: &DbPoolConnection) -> Result<QueryRow, Box<dyn Error>> {
     let random_id: i32 = rand::rng().random_range(1..ROW_LIMIT);
-    let db_pool: DbPoolConnection = get_db_connection().await;
     let connection: DbConnection = db_pool
         .get()
         .await
@@ -146,40 +129,24 @@ pub async fn random_world_row() -> Result<QueryRow, Box<dyn Error>> {
 }
 
 #[inline]
-pub async fn update_world_rows(times: usize) -> Result<Vec<QueryRow>, Box<dyn Error>> {
+pub async fn update_world_rows(limit: usize) -> Result<Vec<QueryRow>, Box<dyn Error>> {
     let db_pool: DbPoolConnection = get_db_connection().await;
     let connection: DbConnection = db_pool
         .get()
         .await
         .map_err(|e| io::Error::new(io::ErrorKind::Other, format!("timeout: {}", e)))?;
-    let mut id_list: Vec<QueryRow> = Vec::with_capacity(times);
-    let mut params: Vec<Box<DynToSqlSyncSend>> = Vec::with_capacity(times * 2);
-    let mut cnt: usize = 0;
-    let mut map: Vec<bool> = vec![false; ROW_LIMIT as usize];
-    loop {
-        if cnt >= times {
-            break;
-        }
+    let mut id_list: Vec<QueryRow> = Vec::with_capacity(limit);
+    let mut params: Vec<Box<DynToSqlSyncSend>> = Vec::with_capacity(limit * 2);
+    let rows: Vec<Row> = get_some_row_id(limit, &db_pool).await.unwrap_or_default();
+    for row in rows {
         let new_random_number: i32 = rand::rng().random_range(1..RANDOM_MAX);
-        if let Ok(row) = random_world_row().await {
-            let id: i32 = row.id;
-            if (id as usize) >= ROW_LIMIT as usize {
-                continue;
-            }
-            if map[id as usize] {
-                continue;
-            }
-            map[id as usize] = true;
-            id_list.push(QueryRow::new(id, new_random_number));
-            params.push(Box::new(new_random_number));
-            params.push(Box::new(id));
-            cnt += 1;
-        } else {
-            continue;
-        }
+        let id: i32 = row.get(0);
+        id_list.push(QueryRow::new(id, new_random_number));
+        params.push(Box::new(new_random_number));
+        params.push(Box::new(id));
     }
     let mut query: String = format!("UPDATE {} SET randomNumber = CASE id ", TABLE_NAME);
-    for i in 0..times {
+    for i in 0..limit {
         query.push_str(&format!(
             "WHEN ${}::INTEGER THEN ${}::INTEGER ",
             i * 2 + 2,
@@ -187,7 +154,7 @@ pub async fn update_world_rows(times: usize) -> Result<Vec<QueryRow>, Box<dyn Er
         ));
     }
     query.push_str("END WHERE id IN (");
-    for i in 0..times {
+    for i in 0..limit {
         if i > 0 {
             query.push_str(", ");
         }
@@ -210,6 +177,22 @@ pub async fn all_world_row() -> Result<Vec<Row>, Box<dyn Error>> {
         .map_err(|e| io::Error::new(io::ErrorKind::Other, format!("timeout: {}", e)))?;
     let stmt: Statement = connection
         .prepare(&format!("SELECT id, randomNumber FROM {}", TABLE_NAME))
+        .await?;
+    let rows: Vec<Row> = connection.query(&stmt, &[]).await?;
+    return Ok(rows);
+}
+
+#[inline]
+pub async fn get_some_row_id(
+    limit: usize,
+    db_pool: &DbPoolConnection,
+) -> Result<Vec<Row>, Box<dyn Error>> {
+    let connection: DbConnection = db_pool
+        .get()
+        .await
+        .map_err(|e| io::Error::new(io::ErrorKind::Other, format!("timeout: {}", e)))?;
+    let stmt: Statement = connection
+        .prepare(&format!("SELECT id FROM {} LIMIT {}", TABLE_NAME, limit))
         .await?;
     let rows: Vec<Row> = connection.query(&stmt, &[]).await?;
     return Ok(rows);

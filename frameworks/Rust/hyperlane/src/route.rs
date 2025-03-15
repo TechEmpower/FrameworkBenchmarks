@@ -21,7 +21,7 @@ pub async fn plaintext(controller_data: ControllerData) {
 
 #[inline]
 pub async fn db(controller_data: ControllerData) {
-    let query_row: QueryRow = random_world_row().await.unwrap();
+    let query_row: QueryRow = random_world_row(&get_db_connection().await).await.unwrap();
     let _ = controller_data
         .set_response_body(serde_json::to_string(&query_row).unwrap_or_default())
         .await;
@@ -37,8 +37,9 @@ pub async fn queries(controller_data: ControllerData) {
         .min(ROW_LIMIT as Queries)
         .max(1);
     let mut data: Vec<QueryRow> = Vec::with_capacity(queries);
+    let db_pool: DbPoolConnection = get_db_connection().await;
     for _ in 0..queries {
-        let _ = random_world_row().await.map(|row| {
+        let _ = random_world_row(&db_pool).await.map(|row| {
             data.push(row);
         });
     }

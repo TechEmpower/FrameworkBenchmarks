@@ -16,6 +16,5 @@ pub async fn run_server() {
     server.route("/updates", updates).await;
     server.request_middleware(request).await;
     server.response_middleware(response).await;
-    println_success!("server initialization completed");
     server.listen().await;
 }
