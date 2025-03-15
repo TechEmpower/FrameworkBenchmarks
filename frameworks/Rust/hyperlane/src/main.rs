@@ -16,7 +16,7 @@ pub(crate) use hyperlane::{
     serde::*,
     serde_json::json,
     tokio::{
-        sync::{RwLock, RwLockReadGuard, RwLockWriteGuard},
+        sync::{RwLock, RwLockWriteGuard},
         task::spawn,
     },
     *,

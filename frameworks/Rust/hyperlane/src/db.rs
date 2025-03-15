@@ -94,12 +94,6 @@ pub async fn init_query_state() {
 }
 
 #[inline]
-pub async fn init_query_all_state() {
-    let mut query_all_sql: RwLockWriteGuard<'_, String> = QUERY_ALL_SQL.write().await;
-    *query_all_sql = format!("SELECT id, randomNumber FROM {}", TABLE_NAME);
-}
-
-#[inline]
 pub async fn get_update_data(limit: Queries) -> (String, Vec<QueryRow>) {
     let db_pool: DbPoolConnection = get_db_connection().await;
     let mut query_res_list: Vec<QueryRow> = Vec::with_capacity(limit as usize);
@@ -137,7 +131,6 @@ pub async fn init_db() {
         insert_records().await;
     }
     init_query_state().await;
-    init_query_all_state().await;
 }
 
 #[inline]
@@ -165,7 +158,7 @@ pub async fn update_world_rows(limit: Queries) -> Result<Vec<QueryRow>, Box<dyn 
 #[inline]
 pub async fn all_world_row() -> Vec<PgRow> {
     let db_pool: DbPoolConnection = get_db_connection().await;
-    let query_all_sql: RwLockReadGuard<'_, String> = QUERY_ALL_SQL.read().await;
+    let query_all_sql: String = format!("SELECT id, randomNumber FROM {}", TABLE_NAME);
     let sql: String = query_all_sql.clone();
     let res: Vec<PgRow> = sqlx::query(&sql)
         .fetch_all(&db_pool)
