@@ -49,12 +49,7 @@ pub async fn queries(controller_data: ControllerData) {
 
 #[inline]
 pub async fn fortunes(controller_data: ControllerData) {
-    let mut all_rows: Vec<Row> = all_world_row().await.unwrap_or_default();
-    all_rows.sort_by(|a, b| {
-        let message_a: i32 = a.get(1);
-        let message_b: i32 = b.get(1);
-        message_a.cmp(&message_b)
-    });
+    let all_rows: Vec<Row> = all_world_row().await.unwrap_or_default();
     let mut fortunes_list: Vec<Fortunes> = all_rows
         .iter()
         .map(|row| {
@@ -64,6 +59,11 @@ pub async fn fortunes(controller_data: ControllerData) {
             Fortunes::new(id, message)
         })
         .collect();
+    fortunes_list.sort_by(|a, b| {
+        let message_a: &String = &a.message;
+        let message_b: &String = &b.message;
+        message_a.cmp(message_b)
+    });
     fortunes_list.push(Fortunes::new(
         0,
         "Additional fortune added at request time.".to_owned(),

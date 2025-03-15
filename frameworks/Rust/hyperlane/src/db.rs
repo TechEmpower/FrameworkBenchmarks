@@ -155,6 +155,7 @@ pub async fn update_world_rows(times: usize) -> Result<Vec<QueryRow>, Box<dyn Er
     let mut id_list: Vec<QueryRow> = Vec::with_capacity(times);
     let mut params: Vec<Box<DynToSqlSyncSend>> = Vec::with_capacity(times * 2);
     let mut cnt: usize = 0;
+    let mut map: Vec<bool> = vec![false; ROW_LIMIT as usize];
     loop {
         if cnt >= times {
             break;
@@ -162,6 +163,13 @@ pub async fn update_world_rows(times: usize) -> Result<Vec<QueryRow>, Box<dyn Er
         let new_random_number: i32 = rand::rng().random_range(1..RANDOM_MAX);
         if let Ok(row) = random_world_row().await {
             let id: i32 = row.id;
+            if (id as usize) >= ROW_LIMIT as usize {
+                continue;
+            }
+            if map[id as usize] {
+                continue;
+            }
+            map[id as usize] = true;
             id_list.push(QueryRow::new(id, new_random_number));
             params.push(Box::new(new_random_number));
             params.push(Box::new(id));
