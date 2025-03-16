@@ -53,7 +53,7 @@ pub async fn insert_records() {
         .await
         .unwrap();
     let count: i64 = row.get(0);
-    let limit: i64 = ROW_LIMIT as i64;
+    let limit: i64 = RANDOM_MAX as i64;
     if count >= limit {
         return;
     }
@@ -140,15 +140,18 @@ pub async fn get_update_data(limit: Queries) -> (String, Vec<QueryRow>) {
         let new_random_number: i32 = rand::rng().random_range(1..RANDOM_MAX);
         let id: i32 = row.id;
         id_list.push(id);
-        value_list.push_str(&format!("WHEN {} THEN {} ", id, new_random_number));
+        value_list.push_str(&format!(
+            "WHEN ?::INTEGER {} THEN {} ?::INTEGER ",
+            id, new_random_number
+        ));
         if i > 0 {
-            id_in_clause.push_str(", ");
+            id_in_clause.push_str("?::INTEGER,");
         }
         id_in_clause.push_str(&id.to_string());
         query_res_list.push(QueryRow::new(id, new_random_number));
     }
     query.push_str(&value_list);
-    query.push_str(&format!("END WHERE id IN ({})", id_in_clause));
+    query.push_str(&format!("END WHERE id IN ({}?::INTEGER)", id_in_clause));
     (query, query_res_list)
 }
 
@@ -175,11 +178,10 @@ pub async fn random_world_row(db_pool: &DbPoolConnection) -> QueryRow {
         TABLE_NAME_WORLD, random_id
     );
     if let Ok(rows) = sqlx::query(&sql).fetch_one(db_pool).await {
-        let id: i32 = rows.get(KEY_ID);
         let random_number: i32 = rows.get(KEY_RANDOM_NUMBER);
-        return QueryRow::new(id, random_number);
+        return QueryRow::new(random_id, random_number);
     }
-    QueryRow::new(1, 1)
+    return QueryRow::new(random_id, 1);
 }
 
 #[inline]
