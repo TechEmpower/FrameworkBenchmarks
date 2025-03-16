@@ -207,7 +207,8 @@ pub async fn all_world_row() -> Vec<PgRow> {
 #[inline]
 pub async fn get_some_row_id(limit: Queries, db_pool: &DbPoolConnection) -> Vec<QueryRow> {
     let mut res: Vec<QueryRow> = Vec::with_capacity(limit as usize);
-    for id in 0..limit {
+    let id_list: Vec<i32> = get_random_id_list(limit);
+    for id in id_list {
         let tem: QueryRow = query_world_row(db_pool, id).await;
         res.push(tem);
     }
