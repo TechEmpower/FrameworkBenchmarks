@@ -21,7 +21,7 @@ pub fn main() !void {
     defer pg_pool.deinit();
 
     const date_thread = try std.Thread.spawn(.{}, struct {
-        fn update() void {
+        fn update() !void {
             const ally = std.heap.page_allocator;
             while (true) {
                 const now = datetimez.datetime.Date.now();

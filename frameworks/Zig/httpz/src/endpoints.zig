@@ -92,7 +92,7 @@ fn getFortunesHtml(allocator: std.mem.Allocator, pool: *pg.Pool) ![]const u8 {
     try sb.appendSlice(allocator, "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>");
 
     for (fortunes) |ft| {
-        try writer.print("<tr><td>{d}</td><td>{}</td></tr>", .{
+        try writer.print("<tr><td>{d}</td><td>{s}</td></tr>", .{
             ft.id,
             try deescapeHtml(allocator, ft.message),
         });
