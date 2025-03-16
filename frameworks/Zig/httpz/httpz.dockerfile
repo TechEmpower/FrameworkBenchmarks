@@ -1,4 +1,4 @@
-FROM eloitor/zig:0.13.0 AS build
+FROM eloitor/zig:0.13.0
 
 ENV PG_USER=benchmarkdbuser
 ENV PG_PASS=benchmarkdbpass
@@ -14,12 +14,8 @@ COPY build.zig build.zig
 
 RUN zig build -Doptimize=ReleaseFast
 
-FROM ubuntu:24.04
-
 RUN apt-get update && apt-get install -y ca-certificates
-
-COPY --from=build /app/zig-out/bin/httpz /server
 
 EXPOSE 3000
 
-CMD ["/server"]
+CMD ./app/zig-out/bin/httpz
