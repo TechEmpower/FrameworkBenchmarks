@@ -3,7 +3,7 @@ const httpz = @import("httpz");
 const pg = @import("pg");
 const datetimez = @import("datetimez");
 
-pub var date_str = "";
+pub var date_str: []u8 = "";
 
 pub const Global = struct {
     pool: *pg.Pool,
