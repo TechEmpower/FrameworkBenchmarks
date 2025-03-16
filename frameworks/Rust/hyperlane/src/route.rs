@@ -67,7 +67,7 @@ pub async fn fortunes(controller_data: ControllerData) {
     fortunes_list.sort_by(|it, next| it.message.cmp(&next.message));
     let res: String = FortunesTemplate::new(fortunes_list).to_string();
     controller_data
-        .set_response_header(CONTENT_TYPE, format!("{}; {}", TEXT_HTML, CHARSET_UTF_8))
+        .set_response_header(CONTENT_TYPE, content_type_charset(TEXT_HTML, UTF8))
         .await
         .set_response_body(res)
         .await;

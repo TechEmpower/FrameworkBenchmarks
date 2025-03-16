@@ -9,7 +9,7 @@ pub async fn request(controller_data: ControllerData) {
         .await
         .set_response_header(SERVER, HYPERLANE)
         .await
-        .set_response_header(DATE, generate_rfc1123_timestamp())
+        .set_response_header(DATE, current_date_gmt())
         .await
         .set_response_status_code(200)
         .await;
