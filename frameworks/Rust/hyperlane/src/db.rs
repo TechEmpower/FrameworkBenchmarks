@@ -135,7 +135,7 @@ pub async fn get_update_data(limit: Queries) -> (String, Vec<QueryRow>) {
     let mut query: String = format!("UPDATE {} SET randomNumber = CASE id ", TABLE_NAME_WORLD);
     let mut id_list: Vec<i32> = Vec::with_capacity(limit as usize);
     let mut value_list: String = String::new();
-    let mut id_in_clause: String = String::new();
+    let mut id_in_clause: String = String::from("?::INTEGER");
     for (i, row) in rows.iter().enumerate() {
         let new_random_number: i32 = rand::rng().random_range(1..RANDOM_MAX);
         let id: i32 = row.id;
@@ -145,13 +145,12 @@ pub async fn get_update_data(limit: Queries) -> (String, Vec<QueryRow>) {
             id, new_random_number
         ));
         if i > 0 {
-            id_in_clause.push_str("?::INTEGER,");
+            id_in_clause.push_str(",?::INTEGER");
         }
-        id_in_clause.push_str(&id.to_string());
         query_res_list.push(QueryRow::new(id, new_random_number));
     }
     query.push_str(&value_list);
-    query.push_str(&format!("END WHERE id IN ({}?::INTEGER)", id_in_clause));
+    query.push_str(&format!("END WHERE id IN ({})", id_in_clause));
     (query, query_res_list)
 }
 
