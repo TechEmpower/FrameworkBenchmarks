@@ -15,7 +15,10 @@ pub(crate) use hyperlane::{
     once_cell::sync::Lazy,
     serde::*,
     serde_json::json,
-    tokio::sync::{RwLock, RwLockWriteGuard},
+    tokio::{
+        spawn,
+        sync::{RwLock, RwLockWriteGuard},
+    },
     *,
 };
 pub(crate) use lazy::*;
@@ -27,7 +30,7 @@ pub(crate) use route::*;
 pub(crate) use server::*;
 pub(crate) use sqlx::{
     postgres::{PgPoolOptions, PgRow},
-    Error as SqlxError, Pool, Postgres, Row,
+    Pool, Postgres, Row,
 };
 pub(crate) use std::{error::Error, fmt, sync::Arc, time::SystemTime};
 pub(crate) use utils::*;

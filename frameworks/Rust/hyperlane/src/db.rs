@@ -102,14 +102,14 @@ pub async fn connection_db() -> DbPoolConnection {
 pub async fn get_update_data(limit: Queries) -> (String, Vec<QueryRow>) {
     let db_pool: DbPoolConnection = get_db_connection().await;
     let mut query_res_list: Vec<QueryRow> = Vec::with_capacity(limit as usize);
-    let rows: Vec<PgRow> = get_some_row_id(limit, &db_pool).await.unwrap_or_default();
+    let rows: Vec<QueryRow> = get_some_row_id(limit, &db_pool).await;
     let mut query: String = format!("UPDATE {} SET randomNumber = CASE id ", TABLE_NAME_WORLD);
     let mut id_list: Vec<i32> = Vec::with_capacity(limit as usize);
     let mut value_list: String = String::new();
     let mut id_in_clause: String = String::new();
     for (i, row) in rows.iter().enumerate() {
         let new_random_number: i32 = rand::rng().random_range(1..RANDOM_MAX);
-        let id: i32 = row.get(KEY_ID);
+        let id: i32 = row.id;
         id_list.push(id);
         value_list.push_str(&format!("WHEN {} THEN {} ", id, new_random_number));
         if i > 0 {
@@ -139,7 +139,7 @@ pub async fn init_db() {
 
 #[inline]
 pub async fn random_world_row(db_pool: &DbPoolConnection) -> Result<QueryRow, Box<dyn Error>> {
-    let random_id: i32 = rand::rng().random_range(1..=ROW_LIMIT);
+    let random_id: i32 = rand::rng().random_range(1..=RANDOM_MAX);
     let sql: String = format!(
         "SELECT id, randomNumber FROM {} WHERE id = {}",
         TABLE_NAME_WORLD, random_id
@@ -156,7 +156,9 @@ pub async fn random_world_row(db_pool: &DbPoolConnection) -> Result<QueryRow, Bo
 pub async fn update_world_rows(limit: Queries) -> Result<Vec<QueryRow>, Box<dyn Error>> {
     let db_pool: DbPoolConnection = get_db_connection().await;
     let (sql, data) = get_update_data(limit).await;
-    let _ = sqlx::query(&sql).execute(&db_pool).await;
+    spawn(async move {
+        let _ = sqlx::query(&sql).execute(&db_pool).await;
+    });
     Ok(data)
 }
 
@@ -172,11 +174,11 @@ pub async fn all_world_row() -> Vec<PgRow> {
 }
 
 #[inline]
-pub async fn get_some_row_id(
-    limit: Queries,
-    db_pool: &DbPoolConnection,
-) -> Result<Vec<PgRow>, SqlxError> {
-    let sql: String = format!("SELECT id FROM {} LIMIT {}", TABLE_NAME_WORLD, limit);
-    let res: Result<Vec<PgRow>, SqlxError> = sqlx::query(&sql).fetch_all(db_pool).await;
-    return res;
+pub async fn get_some_row_id(limit: Queries, db_pool: &DbPoolConnection) -> Vec<QueryRow> {
+    let mut res: Vec<QueryRow> = Vec::with_capacity(limit as usize);
+    for _ in 0..limit {
+        let tem: QueryRow = random_world_row(db_pool).await.unwrap_or_default();
+        res.push(tem);
+    }
+    res
 }
