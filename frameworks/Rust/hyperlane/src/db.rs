@@ -132,26 +132,28 @@ pub async fn get_update_data(limit: Queries) -> (String, Vec<QueryRow>) {
     let db_pool: DbPoolConnection = get_db_connection().await;
     let mut query_res_list: Vec<QueryRow> = Vec::with_capacity(limit as usize);
     let rows: Vec<QueryRow> = get_some_row_id(limit, &db_pool).await;
-    let mut query: String = format!("UPDATE {} SET randomNumber = CASE id ", TABLE_NAME_WORLD);
+    let mut sql: String = format!("UPDATE {} SET randomNumber = CASE id ", TABLE_NAME_WORLD);
     let mut id_list: Vec<i32> = Vec::with_capacity(limit as usize);
     let mut value_list: String = String::new();
-    let mut id_in_clause: String = String::from("?::INTEGER");
+    let mut id_in_clause: String = format!("{}::INTEGER", rows[0].id);
+    let last_idx: usize = rows.len() - 1;
     for (i, row) in rows.iter().enumerate() {
         let new_random_number: i32 = rand::rng().random_range(1..RANDOM_MAX);
         let id: i32 = row.id;
         id_list.push(id);
         value_list.push_str(&format!(
-            "WHEN ?::INTEGER {} THEN {} ?::INTEGER ",
+            "WHEN {}::INTEGER THEN {}::INTEGER ",
             id, new_random_number
         ));
-        if i > 0 {
-            id_in_clause.push_str(",?::INTEGER");
+        if i < last_idx {
+            id_in_clause.push_str(&format!(",{}::INTEGER", id.to_string()));
         }
         query_res_list.push(QueryRow::new(id, new_random_number));
     }
-    query.push_str(&value_list);
-    query.push_str(&format!("END WHERE id IN ({})", id_in_clause));
-    (query, query_res_list)
+    sql.push_str(&value_list);
+    sql.push_str(&format!("END WHERE id IN ({})", id_in_clause));
+    print_success!(sql);
+    (sql, query_res_list)
 }
 
 #[inline]
