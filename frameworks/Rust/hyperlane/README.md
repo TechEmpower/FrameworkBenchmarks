@@ -20,15 +20,15 @@ PostgreSQL.
 
 ### Test 3: Multi Row Query
 
-    http://localhost:8080/queries?q=20
+    http://localhost:8080/query?q=20
 
 ### Test 4: Fortunes (Template rendering)
 
-    http://localhost:8080/fortune
+    http://localhost:8080/fortunes
 
 ### Test 5: Update Query
 
-    http://localhost:8080/updates?q=20
+    http://localhost:8080/upda?q=20
 
 ### Test 6: Plaintext
 
@@ -36,4 +36,4 @@ PostgreSQL.
 
 ### Test 7: Caching
 
-    http://localhost:8080/cached-queries?c=20
+    http://localhost:8080/cached-quer?c=20
