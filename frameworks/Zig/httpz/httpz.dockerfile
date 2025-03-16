@@ -14,7 +14,7 @@ COPY build.zig build.zig
 
 ARG ZIG_VER=0.13.0
 
-RUN apt-get update && apt-get install -y curl xz-utils
+RUN apt-get update && apt-get install -y curl xz-utils ca-certificates
 
 RUN curl https://ziglang.org/download/${ZIG_VER}/zig-linux-$(uname -m)-${ZIG_VER}.tar.xz -o zig-linux.tar.xz && \
     tar xf zig-linux.tar.xz && \
@@ -22,11 +22,6 @@ RUN curl https://ziglang.org/download/${ZIG_VER}/zig-linux-$(uname -m)-${ZIG_VER
 
 RUN /opt/zig/zig build -Doptimize=ReleaseFast
 
-FROM debian:12.9-slim
-
-RUN apt-get update && apt-get install -y ca-certificates
-
-COPY --from=build /app/zig-out/bin/zzz /server
 EXPOSE 3000
 
-CMD ["/server"]
+CMD ["app/zig-out/bin/httpz"]
