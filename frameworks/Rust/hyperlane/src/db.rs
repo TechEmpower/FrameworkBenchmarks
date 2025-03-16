@@ -152,7 +152,6 @@ pub async fn get_update_data(limit: Queries) -> (String, Vec<QueryRow>) {
     }
     sql.push_str(&value_list);
     sql.push_str(&format!("END WHERE id IN ({})", id_in_clause));
-    print_success!(sql);
     (sql, query_res_list)
 }
 
