@@ -47,10 +47,7 @@ pub fn main() !void {
         .rand = &rand,
     };
 
-    const args = try std.process.argsAlloc(allocator);
-
-    const port: u16 = if (args.len > 1) try std.fmt.parseInt(u16, args[1], 0) else 3000;
-
+    const port: u16 = 3000;
     const workers = @as(u16, @intCast(16 * cpu_count));
 
     server = try httpz.ServerApp(*endpoints.Global).init(allocator, .{
