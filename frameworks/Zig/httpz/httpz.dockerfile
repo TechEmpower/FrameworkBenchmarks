@@ -1,4 +1,4 @@
-FROM eloitor/zig:0.13.0
+FROM debian:12.9
 
 ENV PG_USER=benchmarkdbuser
 ENV PG_PASS=benchmarkdbpass
@@ -12,10 +12,20 @@ COPY src src
 COPY build.zig.zon build.zig.zon
 COPY build.zig build.zig
 
-RUN zig build -Doptimize=ReleaseFast
+ARG ZIG_VER=0.13.0
+
+RUN apt-get update && apt-get install -y curl xz-utils
+
+RUN curl https://ziglang.org/download/${ZIG_VER}/zig-linux-$(uname -m)-${ZIG_VER}.tar.xz -o zig-linux.tar.xz && \
+    tar xf zig-linux.tar.xz && \
+    mv zig-linux-$(uname -m)-${ZIG_VER}/ /opt/zig
+
+RUN /opt/zig/zig build -Doptimize=ReleaseFast
+
+FROM debian:12.9-slim
 
 RUN apt-get update && apt-get install -y ca-certificates
 
-EXPOSE 3000
+COPY --from=build /app/zig-out/bin/zzz /server
 
-CMD ./app/zig-out/bin/httpz
+CMD ["/server"]
