@@ -135,18 +135,15 @@ pub async fn get_update_data(limit: Queries) -> (String, Vec<QueryRow>) {
     let mut sql: String = format!("UPDATE {} SET randomNumber = CASE id ", TABLE_NAME_WORLD);
     let mut id_list: Vec<i32> = Vec::with_capacity(limit as usize);
     let mut value_list: String = String::new();
-    let mut id_in_clause: String = format!("{}::INTEGER", rows[0].id);
+    let mut id_in_clause: String = format!("{}", rows[0].id);
     let last_idx: usize = rows.len() - 1;
     for (i, row) in rows.iter().enumerate() {
         let new_random_number: i32 = rng().random_range(1..RANDOM_MAX);
         let id: i32 = row.id;
         id_list.push(id);
-        value_list.push_str(&format!(
-            "WHEN {}::INTEGER THEN {}::INTEGER ",
-            id, new_random_number
-        ));
+        value_list.push_str(&format!("WHEN {} THEN {} ", id, new_random_number));
         if i < last_idx {
-            id_in_clause.push_str(&format!(",{}::INTEGER", id.to_string()));
+            id_in_clause.push_str(&format!(",{}", id.to_string()));
         }
         query_res_list.push(QueryRow::new(id, new_random_number));
     }
@@ -173,7 +170,6 @@ pub async fn init_db() {
 #[inline]
 pub async fn random_world_row(db_pool: &DbPoolConnection) -> QueryRow {
     let random_id: i32 = rng().random_range(1..=RANDOM_MAX);
-    print_success!(random_id);
     let sql: String = format!(
         "SELECT id, randomNumber FROM {} WHERE id = {}",
         TABLE_NAME_WORLD, random_id
