@@ -1,3 +1,5 @@
+use crate::*;
+
 #[inline]
 pub fn escape_html(input: &str) -> String {
     let mut result: String = String::new();
@@ -12,4 +14,11 @@ pub fn escape_html(input: &str) -> String {
         }
     }
     result
+}
+
+#[inline]
+pub fn get_random_id() -> i32 {
+    let mut rand: WyRand = WyRand::new();
+    let random_id: i32 = (rand.generate::<u32>() % 10_000 + 1) as i32;
+    random_id
 }

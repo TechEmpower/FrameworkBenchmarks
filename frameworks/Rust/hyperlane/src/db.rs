@@ -58,10 +58,9 @@ pub async fn insert_records() {
         return;
     }
     let missing_count: i64 = limit - count;
-    let mut rng: ThreadRng = rng();
     let mut values: Vec<String> = Vec::new();
     for _ in 0..missing_count {
-        let random_number: i32 = rng.random_range(1..=RANDOM_MAX);
+        let random_number: i32 = get_random_id();
         values.push(format!("(DEFAULT, {})", random_number));
     }
     let sql: String = format!(
@@ -72,7 +71,7 @@ pub async fn insert_records() {
     let _ = query(&sql).execute(&db_pool).await;
     let mut values: Vec<String> = Vec::new();
     for _ in 0..missing_count {
-        let random_number: String = rng.random_range(1..=RANDOM_MAX).to_string();
+        let random_number: i32 = get_random_id();
         values.push(format!("(DEFAULT, {})", random_number));
     }
     let sql: String = format!(
@@ -138,7 +137,7 @@ pub async fn get_update_data(limit: Queries) -> (String, Vec<QueryRow>) {
     let mut id_in_clause: String = format!("{}", rows[0].id);
     let last_idx: usize = rows.len() - 1;
     for (i, row) in rows.iter().enumerate() {
-        let new_random_number: i32 = rng().random_range(1..RANDOM_MAX);
+        let new_random_number: i32 = get_random_id();
         let id: i32 = row.id;
         id_list.push(id);
         value_list.push_str(&format!("WHEN {} THEN {} ", id, new_random_number));
@@ -148,7 +147,10 @@ pub async fn get_update_data(limit: Queries) -> (String, Vec<QueryRow>) {
         query_res_list.push(QueryRow::new(id, new_random_number));
     }
     sql.push_str(&value_list);
-    sql.push_str(&format!("END WHERE id IN ({})", id_in_clause));
+    sql.push_str(&format!(
+        "ELSE randomNumber END WHERE id IN ({})",
+        id_in_clause
+    ));
     (sql, query_res_list)
 }
 
@@ -169,7 +171,7 @@ pub async fn init_db() {
 
 #[inline]
 pub async fn random_world_row(db_pool: &DbPoolConnection) -> QueryRow {
-    let random_id: i32 = rng().random_range(1..=RANDOM_MAX);
+    let random_id: i32 = get_random_id();
     let sql: String = format!(
         "SELECT id, randomNumber FROM {} WHERE id = {}",
         TABLE_NAME_WORLD, random_id
