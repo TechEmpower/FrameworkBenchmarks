@@ -11,7 +11,7 @@ pub async fn run_server() {
     server.route("/json", json).await;
     server.route("/plaintext", plaintext).await;
     server.route("/db", db).await;
-    server.route("/quer", queries).await;
+    server.route("/query", queries).await;
     server.route("/fortunes", fortunes).await;
     server.route("/upda", updates).await;
     server.route("/cached-quer", cached_queries).await;

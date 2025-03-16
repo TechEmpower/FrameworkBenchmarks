@@ -8,7 +8,7 @@
         "plaintext_url": "/plaintext",
         "fortune_url": "/fortunes",
         "db_url": "/db",
-        "query_url": "/quer?q=",
+        "query_url": "/query?q=",
         "update_url": "/upda?q=",
         "cached_query_url": "/cached-quer?c=",
         "port": 8080,
