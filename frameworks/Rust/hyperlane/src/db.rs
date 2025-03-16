@@ -185,9 +185,7 @@ pub async fn random_world_row(db_pool: &DbPoolConnection) -> QueryRow {
 pub async fn update_world_rows(limit: Queries) -> Vec<QueryRow> {
     let db_pool: DbPoolConnection = get_db_connection().await;
     let (sql, data) = get_update_data(limit).await;
-    spawn(async move {
-        let _ = query(&sql).execute(&db_pool).await;
-    });
+    let _ = query(&sql).execute(&db_pool).await;
     data
 }
 

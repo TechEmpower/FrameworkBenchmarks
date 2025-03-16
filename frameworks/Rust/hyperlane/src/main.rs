@@ -14,10 +14,7 @@ pub(crate) use hyperlane::{
     once_cell::sync::Lazy,
     serde::*,
     serde_json::json,
-    tokio::{
-        spawn,
-        sync::{RwLock, RwLockReadGuard, RwLockWriteGuard},
-    },
+    tokio::sync::{RwLock, RwLockReadGuard, RwLockWriteGuard},
     *,
 };
 pub(crate) use lazy::*;
