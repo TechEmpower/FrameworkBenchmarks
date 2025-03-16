@@ -29,7 +29,7 @@ pub fn get_random_id_list(limit: Queries) -> Vec<i32> {
     let mut rand: WyRand = WyRand::new();
     let len: usize = id_list.len();
     for i in (1..len).rev() {
-        let j: usize = (rand.generate::<u32>() % RANDOM_MAX as u32 + 1) as usize;
+        let j: usize = (rand.generate::<u32>() as usize) % (i + 1);
         id_list.swap(i, j);
     }
     id_list.truncate(limit as usize);
