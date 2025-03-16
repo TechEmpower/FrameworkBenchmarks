@@ -87,3 +87,22 @@ pub async fn updates(controller_data: ControllerData) {
         .set_response_body(serde_json::to_string(&res).unwrap_or_default())
         .await;
 }
+
+#[inline]
+pub async fn cached_queries(controller_data: ControllerData) {
+    let count: Queries = controller_data
+        .get_request_query("c")
+        .await
+        .and_then(|queries| queries.parse::<Queries>().ok())
+        .unwrap_or_default()
+        .min(ROW_LIMIT as Queries)
+        .max(1);
+    let mut res: Vec<QueryRow> = Vec::with_capacity(count as usize);
+    let cache: tokio::sync::RwLockReadGuard<'_, Vec<QueryRow>> = CACHE.read().await;
+    for i in 0..count {
+        res.push(cache[i as usize].clone());
+    }
+    let _ = controller_data
+        .set_response_body(serde_json::to_string(&res).unwrap_or_default())
+        .await;
+}

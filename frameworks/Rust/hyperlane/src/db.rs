@@ -77,6 +77,25 @@ pub async fn insert_records() {
 }
 
 #[inline]
+pub async fn init_cache() {
+    let mut res: Vec<QueryRow> = Vec::with_capacity(RANDOM_MAX as usize);
+    let db_pool: DbPoolConnection = get_db_connection().await;
+    let sql: String = format!(
+        "SELECT id, randomNumber FROM {} LIMIT {}",
+        TABLE_NAME_WORLD, RANDOM_MAX
+    );
+    if let Ok(rows) = sqlx::query(&sql).fetch_all(&db_pool).await {
+        for row in rows {
+            let id: i32 = row.get(KEY_ID);
+            let random_number: i32 = row.get(KEY_RANDOM_NUMBER);
+            res.push(QueryRow::new(id, random_number));
+        }
+    }
+    let mut cache: RwLockWriteGuard<'_, Vec<QueryRow>> = CACHE.write().await;
+    *cache = res;
+}
+
+#[inline]
 pub async fn connection_db() -> DbPoolConnection {
     let db_url: &str = match option_env!("POSTGRES_URL") {
         Some(it) => it,
@@ -135,6 +154,7 @@ pub async fn init_db() {
         create_table().await;
         insert_records().await;
     }
+    init_cache().await;
 }
 
 #[inline]
