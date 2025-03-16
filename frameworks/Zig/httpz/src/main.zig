@@ -33,7 +33,7 @@ pub fn main() !void {
                 std.time.sleep(std.time.ns_per_ms * 980);
             }
         }
-    }, .{});
+    }.update, .{});
 
     date_thread.detach();
 
