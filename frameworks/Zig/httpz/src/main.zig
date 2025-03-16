@@ -22,6 +22,7 @@ pub fn main() !void {
 
     const date_thread = try std.Thread.spawn(.{}, struct {
         fn update() void {
+            const ally = std.heap.page_allocator;
             while (true) {
                 const now = datetimez.datetime.Date.now();
                 const time = datetimez.datetime.Time.now();
@@ -29,7 +30,7 @@ pub fn main() !void {
                 // Wed, 17 Apr 2013 12:00:00 GMT
                 // Return date in ISO format YYYY-MM-DD
                 const TB_DATE_FMT = "{s:0>3}, {d:0>2} {s:0>3} {d:0>4} {d:0>2}:{d:0>2}:{d:0>2} GMT";
-                endpoints.date_str = try std.fmt.allocPrint(allocator, TB_DATE_FMT, .{ now.weekdayName()[0..3], now.day, now.monthName()[0..3], now.year, time.hour, time.minute, time.second });
+                endpoints.date_str = try std.fmt.allocPrint(ally, TB_DATE_FMT, .{ now.weekdayName()[0..3], now.day, now.monthName()[0..3], now.year, time.hour, time.minute, time.second });
                 std.time.sleep(std.time.ns_per_ms * 980);
             }
         }
