@@ -23,5 +23,6 @@ RUN curl https://ziglang.org/download/${ZIG_VER}/zig-linux-$(uname -m)-${ZIG_VER
 RUN /opt/zig/zig build -Doptimize=ReleaseFast
 
 EXPOSE 3000
+RUN ls 
 
-CMD ["app/zig-out/bin/httpz"]
+CMD ["zig-out/bin/httpz"]
