@@ -1,8 +1,17 @@
+use std::{time::Duration, u64};
+
 use crate::*;
 
 #[inline]
 pub async fn get_db_connection() -> DbPoolConnection {
-    let db_pool: DbPoolConnection = DB.read().await.clone().unwrap();
+    if let Some(db_pool) = DB.read().await.clone() {
+        return db_pool;
+    };
+    let db_pool: DbPoolConnection = connection_db().await;
+    {
+        let mut db_pool_lock: RwLockWriteGuard<'_, Option<DbPoolConnection>> = DB.write().await;
+        *db_pool_lock = Some(db_pool.clone());
+    }
     db_pool
 }
 
@@ -111,6 +120,8 @@ pub async fn connection_db() -> DbPoolConnection {
     };
     let pool: DbPoolConnection = PgPoolOptions::new()
         .max_connections(1_000)
+        .max_lifetime(Some(Duration::from_secs(u64::MAX)))
+        .idle_timeout(None)
         .connect(db_url)
         .await
         .unwrap();
