@@ -60,7 +60,7 @@ pub async fn insert_records() {
     let missing_count: i64 = limit - count;
     let mut values: Vec<String> = Vec::new();
     for _ in 0..missing_count {
-        let random_number: i32 = get_random_id();
+        let random_number: i32 = get_random_id().await;
         values.push(format!("(DEFAULT, {})", random_number));
     }
     let sql: String = format!(
@@ -71,7 +71,7 @@ pub async fn insert_records() {
     let _ = query(&sql).execute(&db_pool).await;
     let mut values: Vec<String> = Vec::new();
     for _ in 0..missing_count {
-        let random_number: i32 = get_random_id();
+        let random_number: i32 = get_random_id().await;
         values.push(format!("(DEFAULT, {})", random_number));
     }
     let sql: String = format!(
@@ -137,7 +137,7 @@ pub async fn get_update_data(limit: Queries) -> (String, Vec<QueryRow>) {
     let mut id_in_clause: String = format!("{}", rows[0].id);
     let last_idx: usize = rows.len() - 1;
     for (i, row) in rows.iter().enumerate() {
-        let new_random_number: Queries = get_random_id();
+        let new_random_number: Queries = get_random_id().await;
         let id: i32 = row.id;
         id_list.push(id);
         value_list.push_str(&format!("WHEN {} THEN {} ", id, new_random_number));
@@ -171,7 +171,7 @@ pub async fn init_db() {
 
 #[inline]
 pub async fn random_world_row(db_pool: &DbPoolConnection) -> QueryRow {
-    let random_id: Queries = get_random_id();
+    let random_id: Queries = get_random_id().await;
     query_world_row(db_pool, random_id).await
 }
 
@@ -207,8 +207,8 @@ pub async fn all_world_row() -> Vec<PgRow> {
 #[inline]
 pub async fn get_some_row_id(limit: Queries, db_pool: &DbPoolConnection) -> Vec<QueryRow> {
     let mut res: Vec<QueryRow> = Vec::with_capacity(limit as usize);
-    let id_list: Vec<i32> = get_random_id_list(limit);
-    for id in id_list {
+    for _ in 0..limit {
+        let id: i32 = get_random_id().await;
         let tem: QueryRow = query_world_row(db_pool, id).await;
         res.push(tem);
     }

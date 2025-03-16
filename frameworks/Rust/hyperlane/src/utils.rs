@@ -17,21 +17,8 @@ pub fn escape_html(input: &str) -> String {
 }
 
 #[inline]
-pub fn get_random_id() -> Queries {
-    let mut rand: WyRand = WyRand::new();
+pub async fn get_random_id() -> Queries {
+    let mut rand: RwLockWriteGuard<'_, WyRand> = RAND.write().await;
     let random_id: u32 = rand.generate::<u32>() % RANDOM_MAX as u32 + 1;
     random_id as Queries
-}
-
-#[inline]
-pub fn get_random_id_list(limit: Queries) -> Vec<i32> {
-    let mut id_list: Vec<i32> = (1..=limit).collect();
-    let mut rand: WyRand = WyRand::new();
-    let len: usize = id_list.len();
-    for i in (1..len).rev() {
-        let j: usize = (rand.generate::<u32>() as usize) % (i + 1);
-        id_list.swap(i, j);
-    }
-    id_list.truncate(limit as usize);
-    id_list
 }
