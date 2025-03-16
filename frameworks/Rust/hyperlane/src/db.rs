@@ -158,7 +158,7 @@ pub async fn init_db() {
 }
 
 #[inline]
-pub async fn random_world_row(db_pool: &DbPoolConnection) -> Result<QueryRow, Box<dyn Error>> {
+pub async fn random_world_row(db_pool: &DbPoolConnection) -> QueryRow {
     let random_id: i32 = rand::rng().random_range(1..=RANDOM_MAX);
     let sql: String = format!(
         "SELECT id, randomNumber FROM {} WHERE id = {}",
@@ -167,19 +167,19 @@ pub async fn random_world_row(db_pool: &DbPoolConnection) -> Result<QueryRow, Bo
     if let Ok(rows) = sqlx::query(&sql).fetch_one(db_pool).await {
         let id: i32 = rows.get(KEY_ID);
         let random_number: i32 = rows.get(KEY_RANDOM_NUMBER);
-        return Ok(QueryRow::new(id, random_number));
+        return QueryRow::new(id, random_number);
     }
-    return Ok(QueryRow::new(1, 1));
+    QueryRow::new(1, 1)
 }
 
 #[inline]
-pub async fn update_world_rows(limit: Queries) -> Result<Vec<QueryRow>, Box<dyn Error>> {
+pub async fn update_world_rows(limit: Queries) -> Vec<QueryRow> {
     let db_pool: DbPoolConnection = get_db_connection().await;
     let (sql, data) = get_update_data(limit).await;
     spawn(async move {
         let _ = sqlx::query(&sql).execute(&db_pool).await;
     });
-    Ok(data)
+    data
 }
 
 #[inline]
@@ -197,7 +197,7 @@ pub async fn all_world_row() -> Vec<PgRow> {
 pub async fn get_some_row_id(limit: Queries, db_pool: &DbPoolConnection) -> Vec<QueryRow> {
     let mut res: Vec<QueryRow> = Vec::with_capacity(limit as usize);
     for _ in 0..limit {
-        let tem: QueryRow = random_world_row(db_pool).await.unwrap_or_default();
+        let tem: QueryRow = random_world_row(db_pool).await;
         res.push(tem);
     }
     res

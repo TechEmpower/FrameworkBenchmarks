@@ -31,7 +31,7 @@ pub(crate) use sqlx::{
     postgres::{PgPoolOptions, PgRow},
     Pool, Postgres, Row,
 };
-pub(crate) use std::{error::Error, fmt, sync::Arc};
+pub(crate) use std::{fmt, sync::Arc};
 pub(crate) use utils::*;
 
 #[tokio::main]
