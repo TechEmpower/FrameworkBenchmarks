@@ -1,5 +1,3 @@
-use std::{time::Duration, u64};
-
 use crate::*;
 
 #[inline]
@@ -120,7 +118,7 @@ pub async fn connection_db() -> DbPoolConnection {
     };
     let pool: DbPoolConnection = PgPoolOptions::new()
         .max_connections(1_000)
-        .max_lifetime(Some(Duration::from_secs(u64::MAX)))
+        .max_lifetime(Some(Duration::from_secs(860_400)))
         .idle_timeout(None)
         .connect(db_url)
         .await
