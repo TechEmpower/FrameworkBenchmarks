@@ -94,7 +94,7 @@ fn getFortunesHtml(allocator: std.mem.Allocator, pool: *pg.Pool) ![]const u8 {
     for (fortunes) |ft| {
         try writer.print("<tr><td>{d}</td><td>{s}</td></tr>", .{
             ft.id,
-            try deescapeHtml(allocator, ft.message),
+            try escape_html(allocator, ft.message),
         });
     }
 
@@ -131,51 +131,15 @@ fn cmpFortuneByMessage(_: void, a: Fortune, b: Fortune) bool {
     return std.mem.order(u8, a.message, b.message).compare(std.math.CompareOperator.lt);
 }
 
-fn deescapeHtml(allocator: std.mem.Allocator, input: []const u8) ![]const u8 {
+fn escape_html(allocator: std.mem.Allocator, input: []const u8) ![]const u8 {
     var output = try std.ArrayListUnmanaged(u8).initCapacity(allocator, 0);
     defer output.deinit(allocator);
 
-    var i: usize = 0;
-    while (i < input.len) {
-        if (std.mem.startsWith(u8, input[i..], "&#32;")) {
-            try output.append(allocator, ' ');
-            i += 5;
-        } else if (std.mem.startsWith(u8, input[i..], "&#34;")) {
-            try output.append(allocator, '"');
-            i += 5;
-        } else if (std.mem.startsWith(u8, input[i..], "&#38;")) {
-            try output.append(allocator, '&');
-            i += 5;
-        } else if (std.mem.startsWith(u8, input[i..], "&#39;")) {
-            try output.append(allocator, '\'');
-            i += 5;
-        } else if (std.mem.startsWith(u8, input[i..], "&#40;")) {
-            try output.append(allocator, '(');
-            i += 5;
-        } else if (std.mem.startsWith(u8, input[i..], "&#41;")) {
-            try output.append(allocator, ')');
-            i += 5;
-        } else if (std.mem.startsWith(u8, input[i..], "&#43;")) {
-            try output.append(allocator, '+');
-            i += 5;
-        } else if (std.mem.startsWith(u8, input[i..], "&#44;")) {
-            try output.append(allocator, ',');
-            i += 5;
-        } else if (std.mem.startsWith(u8, input[i..], "&#46;")) {
-            try output.append(allocator, '.');
-            i += 5;
-        } else if (std.mem.startsWith(u8, input[i..], "&#47;")) {
-            try output.append(allocator, '/');
-            i += 5;
-        } else if (std.mem.startsWith(u8, input[i..], "&#58;")) {
-            try output.append(allocator, ':');
-            i += 5;
-        } else if (std.mem.startsWith(u8, input[i..], "&#59;")) {
-            try output.append(allocator, ';');
-            i += 5;
-        } else {
-            try output.append(allocator, input[i]);
-            i += 1;
+    for (input) |char| {
+        switch (char) {
+            '<' => try output.appendSlice(allocator, "&lt;"),
+            '>' => try output.appendSlice(allocator, "&gt;"),
+            else => try output.append(allocator, char),
         }
     }
 
