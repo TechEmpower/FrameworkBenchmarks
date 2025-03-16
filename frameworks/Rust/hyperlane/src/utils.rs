@@ -17,8 +17,8 @@ pub fn escape_html(input: &str) -> String {
 }
 
 #[inline]
-pub fn get_random_id() -> i32 {
+pub fn get_random_id() -> Queries {
     let mut rand: WyRand = WyRand::new();
-    let random_id: i32 = (rand.generate::<u32>() % 10_000 + 1) as i32;
+    let random_id: Queries = rand.generate::<Queries>() % (RANDOM_MAX as Queries + 1);
     random_id
 }

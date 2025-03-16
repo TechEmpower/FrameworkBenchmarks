@@ -130,21 +130,21 @@ pub async fn connection_db() -> DbPoolConnection {
 pub async fn get_update_data(limit: Queries) -> (String, Vec<QueryRow>) {
     let db_pool: DbPoolConnection = get_db_connection().await;
     let mut query_res_list: Vec<QueryRow> = Vec::with_capacity(limit as usize);
-    let rows: Vec<QueryRow> = get_some_row_id(limit, &db_pool).await;
+    let rows: Vec<QueryRow> = get_some_row_id(limit as Queries, &db_pool).await;
     let mut sql: String = format!("UPDATE {} SET randomNumber = CASE id ", TABLE_NAME_WORLD);
     let mut id_list: Vec<i32> = Vec::with_capacity(limit as usize);
     let mut value_list: String = String::new();
     let mut id_in_clause: String = format!("{}", rows[0].id);
     let last_idx: usize = rows.len() - 1;
     for (i, row) in rows.iter().enumerate() {
-        let new_random_number: i32 = get_random_id();
+        let new_random_number: Queries = get_random_id();
         let id: i32 = row.id;
         id_list.push(id);
         value_list.push_str(&format!("WHEN {} THEN {} ", id, new_random_number));
         if i < last_idx {
             id_in_clause.push_str(&format!(",{}", id.to_string()));
         }
-        query_res_list.push(QueryRow::new(id, new_random_number));
+        query_res_list.push(QueryRow::new(id, new_random_number as i32));
     }
     sql.push_str(&value_list);
     sql.push_str(&format!(
@@ -171,16 +171,21 @@ pub async fn init_db() {
 
 #[inline]
 pub async fn random_world_row(db_pool: &DbPoolConnection) -> QueryRow {
-    let random_id: i32 = get_random_id();
+    let random_id: Queries = get_random_id();
+    query_world_row(db_pool, random_id).await
+}
+
+#[inline]
+pub async fn query_world_row(db_pool: &DbPoolConnection, id: Queries) -> QueryRow {
     let sql: String = format!(
         "SELECT id, randomNumber FROM {} WHERE id = {}",
-        TABLE_NAME_WORLD, random_id
+        TABLE_NAME_WORLD, id
     );
     if let Ok(rows) = query(&sql).fetch_one(db_pool).await {
         let random_number: i32 = rows.get(KEY_RANDOM_NUMBER);
-        return QueryRow::new(random_id, random_number);
+        return QueryRow::new(id as i32, random_number);
     }
-    return QueryRow::new(random_id, 1);
+    return QueryRow::new(id as i32, 1);
 }
 
 #[inline]
@@ -202,8 +207,8 @@ pub async fn all_world_row() -> Vec<PgRow> {
 #[inline]
 pub async fn get_some_row_id(limit: Queries, db_pool: &DbPoolConnection) -> Vec<QueryRow> {
     let mut res: Vec<QueryRow> = Vec::with_capacity(limit as usize);
-    for _ in 0..limit {
-        let tem: QueryRow = random_world_row(db_pool).await;
+    for id in 0..limit {
+        let tem: QueryRow = query_world_row(db_pool, id).await;
         res.push(tem);
     }
     res
