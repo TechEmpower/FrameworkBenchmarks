@@ -1,6 +1,5 @@
-import io.vertx.core.CompositeFuture
 import io.vertx.core.Future
-import io.vertx.kotlin.coroutines.await
+import io.vertx.kotlin.coroutines.coAwait
 
 suspend fun <T> List<Future<T>>.awaitAll(): List<T> =
-    CompositeFuture.all(this).await().list()
+    Future.all(this).coAwait().list()

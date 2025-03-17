@@ -10,7 +10,7 @@ use std::time::Duration;
 
 use anyhow::Error;
 use bytes::Bytes;
-use dotenv::dotenv;
+use dotenvy::dotenv;
 use mongodb::{
     options::{ClientOptions, Compressor},
     Client, Database,
@@ -102,7 +102,10 @@ async fn fortunes(res: &mut Response, depot: &mut Depot) -> Result<(), Error> {
 
     let headers = res.headers_mut();
     headers.insert(header::SERVER, HeaderValue::from_static("salvo"));
-    headers.insert(header::CONTENT_TYPE, HeaderValue::from_static("text/html; charset=utf-8"));
+    headers.insert(
+        header::CONTENT_TYPE,
+        HeaderValue::from_static("text/html; charset=utf-8"),
+    );
     res.body(ResBody::Once(Bytes::from(data)));
     Ok(())
 }
@@ -174,7 +177,7 @@ async fn serve() {
     let database = client.database("hello_world");
 
     let router = Router::new()
-        .hoop(salvo::affix::inject(database))
+        .hoop(salvo::affix_state::inject(database))
         .push(Router::with_path("db").get(world_row))
         .push(Router::with_path("fortunes").get(fortunes))
         .push(Router::with_path("queries").get(queries))

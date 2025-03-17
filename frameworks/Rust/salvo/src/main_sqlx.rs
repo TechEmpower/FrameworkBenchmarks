@@ -9,6 +9,7 @@ use std::thread::available_parallelism;
 
 use anyhow::Error;
 use bytes::Bytes;
+use dotenvy::dotenv;
 use once_cell::sync::OnceCell;
 use rand::rngs::SmallRng;
 use rand::{Rng, SeedableRng};
@@ -17,7 +18,6 @@ use salvo::http::header::{self, HeaderValue};
 use salvo::http::ResBody;
 use salvo::prelude::*;
 use sqlx::PgPool;
-use dotenv::dotenv;
 
 mod db_sqlx;
 mod models_sqlx;
@@ -62,7 +62,10 @@ async fn fortunes(res: &mut Response) -> Result<(), Error> {
 
     let headers = res.headers_mut();
     headers.insert(header::SERVER, HeaderValue::from_static("salvo"));
-    headers.insert(header::CONTENT_TYPE, HeaderValue::from_static("text/html; charset=utf-8"));
+    headers.insert(
+        header::CONTENT_TYPE,
+        HeaderValue::from_static("text/html; charset=utf-8"),
+    );
     res.body(ResBody::Once(Bytes::from(data)));
     Ok(())
 }

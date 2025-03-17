@@ -1,0 +1,15 @@
+pub static RESPONSEDATA: &str = "Hello, World!";
+pub static DATABASE_TYPE: &str = "postgres";
+pub static DATABASE_HOST: &str = "tfb-database";
+pub static DATABASE_USER_NAME: &str = "benchmarkdbuser";
+pub static DATABASE_USER_PASSWORD: &str = "benchmarkdbpass";
+pub static DATABASE_PORT: usize = 5_432;
+pub static DATABASE_NAME: &str = "hello_world";
+pub static TABLE_NAME_WORLD: &str = "World";
+pub static TABLE_NAME_FORTUNE: &str = "Fortune";
+pub static ROW_LIMIT: i32 = 500;
+pub static RANDOM_MAX: i32 = 10_000;
+pub static RANDOM_MAX_ADD_ONE: u32 = 10_001;
+pub static KEY_ID: &str = "id";
+pub static KEY_RANDOM_NUMBER: &str = "randomnumber";
+pub static KEY_MESSAGE: &str = "message";

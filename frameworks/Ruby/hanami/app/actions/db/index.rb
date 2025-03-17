@@ -2,13 +2,13 @@
 
 module HelloWorld
   module Actions
-    module Db
+    module DB
       class Index < HelloWorld::Action
         QUERY_RANGE = 1..10_000    # range of IDs in the Fortune DB
         include Deps["persistence.rom"]
 
         def handle(*, response)
-          world = rom.relations[:World].where(id: random_id).one
+          world = rom.relations[:World].by_pk(random_id).one
           response.headers['Server'] = 'hanami'
           response.headers['Date'] = Time.now.httpdate
           response.format = :json

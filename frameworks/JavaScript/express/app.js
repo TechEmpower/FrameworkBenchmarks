@@ -41,5 +41,6 @@ if (cluster.isPrimary) {
   app.get('/plaintext', (req, res) =>
     res.header('Content-Type', 'text/plain').send('Hello, World!'));
 
-  app.listen(8080);
+  const server = app.listen(8080);
+  server.keepAliveTimeout = 0;
 }

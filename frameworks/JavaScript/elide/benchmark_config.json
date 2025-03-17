@@ -1,0 +1,20 @@
+{
+  "framework": "elide",
+  "tests": [{
+    "default": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 3000,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "language": "JavaScript",
+      "flavor": "elide",
+      "platform": "elide",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "elide",
+      "versus": "nodejs"
+    }
+  }]
+}

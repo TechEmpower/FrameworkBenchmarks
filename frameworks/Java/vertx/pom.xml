@@ -10,10 +10,10 @@
 		<maven.compiler.target>17</maven.compiler.target>
 		<!-- the main class -->
 		<main.class>vertx.App</main.class>
-		<stack.version>4.5.3</stack.version>
-		<jackson.version>2.15.0</jackson.version>
-		<netty.version>4.1.92.Final</netty.version>
-		<netty.io_uring.version>0.0.21.Final</netty.io_uring.version>
+		<stack.version>4.5.9</stack.version>
+		<jackson.version>2.16.1</jackson.version>
+		<netty.version>4.1.111.Final</netty.version>
+		<netty.io_uring.version>0.0.25.Final</netty.io_uring.version>
 	</properties>
 
 	<dependencies>
@@ -28,14 +28,14 @@
 			<version>${stack.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-core</artifactId>
-			<version>${jackson.version}</version>
+			<groupId>com.dslplatform</groupId>
+			<artifactId>dsl-json</artifactId>
+			<version>2.0.2</version>
 		</dependency>
 		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
-			<version>${jackson.version}</version>
+			<groupId>com.julienviet</groupId>
+			<artifactId>jsonsergen</artifactId>
+			<version>0.0.5</version>
 		</dependency>
 		<dependency>
 			<groupId>io.netty</groupId>
@@ -75,6 +75,16 @@
 				<configuration>
 					<debug>false</debug>
 				</configuration>
+				<executions>
+					<execution>
+						<id>default-compile</id>
+						<configuration>
+							<annotationProcessors>
+								<annotationProcessor>io.vertx.codegen.CodeGenProcessor</annotationProcessor>
+							</annotationProcessors>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>com.fizzed</groupId>
@@ -91,7 +101,7 @@
 							<javaVersion>17</javaVersion>
 							<templateDirectory>${basedir}/src/main/templates</templateDirectory>
 							<outputDirectory>${basedir}/target/generated-sources/rocker</outputDirectory>
-							<discardLogicWhitespace>false</discardLogicWhitespace>
+							<discardLogicWhitespace>true</discardLogicWhitespace>
 							<addAsSources>true</addAsSources>
 							<optimize>true</optimize>
 							<failOnError>true</failOnError>
@@ -138,9 +148,6 @@
 			<id>Linux</id>
 			<activation>
 				<activeByDefault>false</activeByDefault>
-				<os>
-					<family>unix</family>
-				</os>
 			</activation>
 			<dependencies>
 				<dependency>

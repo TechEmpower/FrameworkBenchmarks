@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-class HelloWorldController < ApplicationController
+class HelloWorldController < ActionController::API
+  include DateHeader
+
   QUERY_RANGE = 1..10_000    # range of IDs in the Fortune DB
   ALL_IDS = QUERY_RANGE.to_a # enumeration of all the IDs in fortune DB
   MIN_QUERIES = 1            # min number of records that can be retrieved
@@ -24,12 +26,6 @@ class HelloWorldController < ApplicationController
     end
 
     render json: items.values
-  end
-
-  def fortune
-    @fortunes = Fortune.all.to_a
-    @fortunes << Fortune.new(id: 0, message: 'Additional fortune added at request time.')
-    @fortunes.sort_by!(&:message)
   end
 
   def update

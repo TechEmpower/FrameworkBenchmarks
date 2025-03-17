@@ -29,7 +29,6 @@ defmodule HelloWeb do
         log: false
 
       import Plug.Conn
-      import HelloWeb.Gettext
 
       unquote(verified_routes())
     end
@@ -38,8 +37,6 @@ defmodule HelloWeb do
   def component do
     quote do
       use Phoenix.Component
-
-      import HelloWeb.Gettext
 
       # Routes generation with the ~p sigil
       unquote(verified_routes())
@@ -62,9 +59,7 @@ defmodule HelloWeb do
   defp html_helpers do
     quote do
       # Use all HTML functionality (forms, tags, etc)
-      use Phoenix.HTML
-      # Core UI Components and translation
-      import HelloWeb.Gettext
+      import Phoenix.HTML
 
       # Routes generation with the ~p sigil
       unquote(verified_routes())
@@ -97,8 +92,8 @@ defmodule HelloWeb do
   end
 
   @doc """
-    When used, dispatch to the appropriate controller/view/etc.
-    """
+  When used, dispatch to the appropriate controller/view/etc.
+  """
   defmacro __using__(which) when is_atom(which) do
     apply(__MODULE__, which, [])
   end

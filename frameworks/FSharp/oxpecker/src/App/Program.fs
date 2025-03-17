@@ -1,112 +1,121 @@
 namespace App
 
-[<AutoOpen>]
-module Common =
-    open System
-
-    [<CLIMutable>]
-    type Fortune =
-        {
-            id      : int
-            message : string
-        }
-
-    [<Literal>]
-    let ConnectionString = "Server=tfb-database;Database=hello_world;User Id=benchmarkdbuser;Password=benchmarkdbpass;SSL Mode=Disable;Maximum Pool Size=1024;NoResetOnClose=true;Enlist=false;Max Auto Prepare=4;Multiplexing=true;Write Coalescing Buffer Threshold Bytes=1000"
-
-    let fortuneComparer a b =
-        String.CompareOrdinal(a.message, b.message)
-
-[<RequireQualifiedAccess>]
-module HtmlViews =
-    open Oxpecker.ViewEngine
-
-    let private fortunesHead =
-        head() {
-            title() { raw "Fortunes" }
-        }
-
-    let private layout (content: HtmlElement) =
-        html() {
-            fortunesHead
-            body() { content }
-        }
-
-    let private fortunesTableHeader =
-        tr() {
-            th() { raw "id" }
-            th() { raw "message" }
-        }
-
-    let fortunes (fortunes: Fortune[]) =
-        table() {
-            fortunesTableHeader
-            for f in fortunes do
-                tr() {
-                    td() { raw <| string f.id }
-                    td() { f.message }
-                }
-        } |> layout
+open System
+open Oxpecker
 
 [<RequireQualifiedAccess>]
 module HttpHandlers =
-    open Oxpecker
-    open Dapper
-    open Npgsql
+    open System.Text
+    open Microsoft.AspNetCore.Http
+    open SpanJson
+    open Oxpecker.ViewEngine
 
     let private extra =
         {
-            id      = 0
+            id = 0
             message = "Additional fortune added at request time."
         }
 
-    let private fortunes : EndpointHandler =
+    let private fortunesHeadAndTail =
+        (fun (content: HtmlElement) ->
+            html() {
+                head() {
+                    title() { "Fortunes" }
+                }
+                body() {
+                    table() {
+                        tr() {
+                            th() { "id" }
+                            th() { "message" }
+                        }
+                        content
+                    }
+                }
+            } :> HtmlElement
+        ) |> RenderHelpers.prerender
+
+    let rec private renderFortunes (ctx: HttpContext) (data: ResizeArray<Fortune>) =
+        data.Add extra
+        data.Sort FortuneComparer
+        RenderHelpers.CombinedElement(fortunesHeadAndTail, data)
+        |> ctx.WriteHtmlViewChunked
+
+    let fortunes : EndpointHandler =
         fun ctx ->
             task {
-                use conn = new NpgsqlConnection(ConnectionString)
-                let! data = conn.QueryAsync<Fortune>("SELECT id, message FROM fortune")
-                let augmentedData = [|
-                    yield! data
-                    extra
-                |]
-                augmentedData |> Array.sortInPlaceWith fortuneComparer
-                let view = HtmlViews.fortunes augmentedData
-                return! ctx.WriteHtmlView view
+                let! dbFortunes = loadFortunes ()
+                return! renderFortunes ctx dbFortunes
             }
 
-    let endpoints : Endpoint[] =
-        [|
-            route "/plaintext" <| text "Hello, World!"
-            route "/json"<| jsonChunked {| message = "Hello, World!" |}
-            route "/fortunes" fortunes
-        |]
+    let singleQuery : EndpointHandler =
+        fun ctx ->
+            task {
+                let! result = loadSingleRow()
+                return! ctx.WriteJsonChunked result
+            }
 
+    let private parseQueries (ctx: HttpContext) =
+        match ctx.TryGetRouteValue<string>("count") with
+        | Some q ->
+            match Int32.TryParse q with
+            | true, q when q > 1 -> if q < 500 then q else 500
+            | _, _ -> 1
+        | _ -> 1
+
+    let multipleQueries : EndpointHandler =
+        fun ctx ->
+            let count = parseQueries ctx
+            task {
+                let! results = loadMultipleRows count
+                return! ctx.WriteJsonChunked results
+            }
+
+    let multipleUpdates : EndpointHandler =
+        fun ctx ->
+            let count = parseQueries ctx
+            task {
+                let! results = doMultipleUpdates count
+                return! ctx.WriteJsonChunked results
+            }
+
+    let utf8Const (s: string): EndpointHandler =
+        let result = s |> Encoding.UTF8.GetBytes
+        fun ctx ->
+            ctx.SetContentType("text/plain")
+            ctx.WriteBytes(result)
+
+    let jsonSimple value : EndpointHandler =
+        fun ctx ->
+            ctx.SetContentType("application/json")
+            JsonSerializer.Generic.Utf8.SerializeAsync<_>(value, stream = ctx.Response.Body).AsTask()
+
+    let endpoints =
+        [|
+            route "/plaintext" <| utf8Const "Hello, World!"
+            route "/json" <| jsonSimple { message = "Hello, World!" }
+            route "/fortunes" fortunes
+            route "/db" singleQuery
+            route "/queries/{count?}" multipleQueries
+            route "/updates/{count?}" multipleUpdates
+        |]
 
 module Main =
     open Microsoft.AspNetCore.Builder
-    open Microsoft.AspNetCore.Hosting
     open Microsoft.Extensions.DependencyInjection
-    open Oxpecker
     open Microsoft.Extensions.Hosting
     open Microsoft.Extensions.Logging
 
     [<EntryPoint>]
     let main args =
-
         let builder = WebApplication.CreateBuilder(args)
-
         builder.Services
             .AddRouting()
             .AddOxpecker() |> ignore
-
-        builder.Logging.ClearProviders() |> ignore
-        builder.WebHost.ConfigureKestrel(fun options -> options.AllowSynchronousIO <- true) |> ignore
-
+        builder.Logging
+            .ClearProviders() |> ignore
         let app = builder.Build()
-
-        app.UseRouting()
-           .UseOxpecker HttpHandlers.endpoints |> ignore
-
+        app
+            .UseRouting()
+            .UseOxpecker(HttpHandlers.endpoints) |> ignore
         app.Run()
-
         0

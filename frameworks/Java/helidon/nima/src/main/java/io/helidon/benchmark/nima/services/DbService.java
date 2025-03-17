@@ -1,27 +1,21 @@
-
 package io.helidon.benchmark.nima.services;
 
-import java.util.Collections;
-import java.util.List;
-
+import com.jsoniter.output.JsonStream;
+import com.jsoniter.output.JsonStreamPool;
 import io.helidon.benchmark.nima.models.DbRepository;
-import io.helidon.benchmark.nima.models.World;
+import io.helidon.common.mapper.OptionalValue;
 import io.helidon.common.parameters.Parameters;
+import io.helidon.http.HeaderValues;
 import io.helidon.webserver.http.HttpRules;
 import io.helidon.webserver.http.HttpService;
 import io.helidon.webserver.http.ServerRequest;
 import io.helidon.webserver.http.ServerResponse;
 
-import jakarta.json.Json;
-import jakarta.json.JsonArrayBuilder;
-import jakarta.json.JsonBuilderFactory;
-import jakarta.json.JsonObject;
-
+import static io.helidon.benchmark.nima.JsonSerializer.serialize;
 import static io.helidon.benchmark.nima.Main.SERVER;
 import static io.helidon.benchmark.nima.models.DbRepository.randomWorldNumber;
 
 public class DbService implements HttpService {
-    private static final JsonBuilderFactory JSON = Json.createBuilderFactory(Collections.emptyMap());
 
     private final DbRepository repository;
 
@@ -37,37 +31,51 @@ public class DbService implements HttpService {
     }
 
     private void db(ServerRequest req, ServerResponse res) {
-        res.header(SERVER);
-        res.send(repository.getWorldAsJson(randomWorldNumber()));
+        JsonStream stream = JsonStreamPool.borrowJsonStream();
+        try {
+            res.header(SERVER);
+            res.header(HeaderValues.CONTENT_TYPE_JSON);
+            serialize(repository.getWorld(randomWorldNumber()), stream);
+            res.send(stream.buffer().data(), 0, stream.buffer().tail());
+        } finally {
+            JsonStreamPool.returnJsonStream(stream);
+        }
     }
 
     private void queries(ServerRequest req, ServerResponse res) {
-        res.header(SERVER);
-        int count = parseQueryCount(req.query());
-        res.send(repository.getWorldsAsJson(count));
+        JsonStream stream = JsonStreamPool.borrowJsonStream();
+        try {
+            res.header(SERVER);
+            res.header(HeaderValues.CONTENT_TYPE_JSON);
+            int count = parseQueryCount(req.query());
+            serialize(repository.getWorlds(count), stream);
+            res.send(stream.buffer().data(), 0, stream.buffer().tail());
+        } finally {
+            JsonStreamPool.returnJsonStream(stream);
+        }
     }
 
     private void updates(ServerRequest req, ServerResponse res) {
-        res.header(SERVER);
-        int count = parseQueryCount(req.query());
-        List<World> worlds = repository.updateWorlds(count);
-        JsonArrayBuilder arrayBuilder = JSON.createArrayBuilder();
-        for (World world : worlds) {
-            JsonObject json = world.toJson();
-            arrayBuilder.add(json);
+        JsonStream stream = JsonStreamPool.borrowJsonStream();
+        try {
+            res.header(SERVER);
+            res.header(HeaderValues.CONTENT_TYPE_JSON);
+            int count = parseQueryCount(req.query());
+            serialize(repository.updateWorlds(count), stream);
+            res.send(stream.buffer().data(), 0, stream.buffer().tail());
+        } finally {
+            JsonStreamPool.returnJsonStream(stream);
         }
-        res.send(arrayBuilder.build());
     }
 
     private int parseQueryCount(Parameters parameters) {
-        List<String> values = parameters.all("queries");
-        if (values.isEmpty()) {
+        OptionalValue<String> value = parameters.first("queries");
+        if (value.isEmpty()) {
             return 1;
         }
-        String first = values.get(0);
         int parsedValue;
         try {
-            parsedValue = Integer.parseInt(first, 10);
+            parsedValue = Integer.parseInt(value.get(), 10);
         } catch (NumberFormatException e) {
             return 1;
         }

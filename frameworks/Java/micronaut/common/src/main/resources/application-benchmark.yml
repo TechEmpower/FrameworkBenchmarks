@@ -5,6 +5,7 @@ micronaut:
     port: 8080
     server-header: Micronaut
     date-header: false
+    validate-url: false
   http:
     client:
       read-timeout: 60s

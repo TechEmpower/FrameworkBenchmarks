@@ -13,12 +13,16 @@ RUN apt-get -yqq update && \
       gcc \
       git-core \
       gosu \
+      iproute2 \
       # Needed for mysqlclient
       libmysqlclient-dev \
       libpq-dev \
       pkg-config \
       python3 \
+      python3-colorama \
       python3-dev \
+      python3-dnspython \
+      python3-packaging \
       python3-pip \
       python3-psutil \
       python3-psycopg2 \
@@ -28,10 +32,9 @@ RUN apt-get -yqq update && \
     # Ubuntu's equivalent packages are too old and/or broken.
     pip3 install \
       --break-system-packages \
-      colorama==0.3.1 \
       docker==7.0.0 \
       mysqlclient==2.2.4 \
-      pymongo==3.13.0
+      pymongo==4.7.2
 
 # Collect resource usage statistics
 ARG DOOL_VERSION=v1.3.1

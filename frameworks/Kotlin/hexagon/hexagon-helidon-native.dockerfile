@@ -16,6 +16,8 @@ RUN ./gradlew --quiet -x test hexagon_helidon_pgclient:nativeCompile
 FROM scratch
 ARG PROJECT=hexagon_helidon_pgclient
 
+ENV maximumPoolSize 300
+
 COPY --from=build /hexagon/$PROJECT/build/native/nativeCompile/$PROJECT /
 
 ENTRYPOINT [ "/hexagon_helidon_pgclient" ]

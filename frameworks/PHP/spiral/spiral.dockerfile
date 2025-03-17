@@ -1,26 +1,24 @@
 FROM php:8.3-cli
 
-RUN docker-php-ext-install pdo_mysql > /dev/null
-
-# Workaround solution for installing ext-sockets for PHP 8.0
-# See https://github.com/docker-library/php/issues/1245
-RUN CFLAGS="$CFLAGS -D_GNU_SOURCE" docker-php-ext-install sockets > /dev/null
-
-ADD ./ /spiral
-WORKDIR /spiral
-
-# composer and opcache settings
-COPY php/* /usr/local/etc/php/
-RUN chmod +x /usr/local/etc/php/install-composer.sh && /usr/local/etc/php/install-composer.sh
-
-# install dependencies
 RUN apt-get update -yqq > /dev/null && apt-get install -yqq git unzip > /dev/null
-RUN php composer.phar install --optimize-autoloader --classmap-authoritative --no-dev
+COPY --from=composer/composer:latest-bin --link /composer /usr/local/bin/composer
 
-# RoadRunner >= 2024.x.x requires protobuf and grpc extensions to be installed
+RUN docker-php-ext-install \
+    opcache \
+    pdo_mysql \
+    sockets > /dev/null
+
+# RoadRunner >= 2024.x.x requires protobuf extensions to be installed
 ARG PROTOBUF_VERSION="4.26.1"
 RUN pecl channel-update pecl.php.net
-RUN MAKEFLAGS="-j $(nproc)" pecl install protobuf-${PROTOBUF_VERSION} grpc
+RUN MAKEFLAGS="-j $(nproc)" pecl install protobuf-${PROTOBUF_VERSION} > /dev/null
+
+WORKDIR /spiral
+COPY --link . .
+
+# composer and opcache settings
+COPY --link php/php.ini /usr/local/etc/php/
+RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
 
 # pre-configure
 RUN ./vendor/bin/rr get-binary > /dev/null 2>&1

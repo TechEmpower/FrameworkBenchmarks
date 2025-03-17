@@ -1,13 +1,11 @@
 // Copyright (c) .NET Foundation. All rights reserved. 
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information. 
 
-using System.Text.Encodings.Web;
-using System.Text.Unicode;
-using Microsoft.AspNetCore.Http.HttpResults;
-using RazorSlices;
 using Minimal;
 using Minimal.Database;
 using Minimal.Models;
+using System.Text.Encodings.Web;
+using System.Text.Unicode;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,14 +34,14 @@ app.MapGet("/json", () => new { message = "Hello, World!" });
 
 app.MapGet("/db", async (Db db) => await db.LoadSingleQueryRow());
 
-var createFortunesTemplate = RazorSlice.ResolveSliceFactory<List<Fortune>>("/Templates/Fortunes.cshtml");
 var htmlEncoder = CreateHtmlEncoder();
 
 app.MapGet("/fortunes", async (HttpContext context, Db db) => {
     var fortunes = await db.LoadFortunesRows();
-    var template = (RazorSliceHttpResult<List<Fortune>>)createFortunesTemplate(fortunes);
-    template.HtmlEncoder = htmlEncoder;
-    return template;
+    var result = Results.Extensions.RazorSlice<Minimal.Slices.Fortunes, List<Fortune>>(fortunes);
+    result.HtmlEncoder = htmlEncoder;
+
+    return result;
 });
 
 app.MapGet("/queries/{count?}", async (Db db, string? count) => await db.LoadMultipleQueriesRows(count));
