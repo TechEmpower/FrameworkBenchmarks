@@ -20,6 +20,24 @@ pub fn main() !void {
     var pg_pool = try pool.initPool(allocator);
     defer pg_pool.deinit();
 
+    const date_thread = try std.Thread.spawn(.{}, struct {
+        fn update() !void {
+            const ally = std.heap.page_allocator;
+            while (true) {
+                const now = datetimez.datetime.Date.now();
+                const time = datetimez.datetime.Time.now();
+
+                // Wed, 17 Apr 2013 12:00:00 GMT
+                // Return date in ISO format YYYY-MM-DD
+                const TB_DATE_FMT = "{s:0>3}, {d:0>2} {s:0>3} {d:0>4} {d:0>2}:{d:0>2}:{d:0>2} GMT";
+                endpoints.date_str = try std.fmt.allocPrint(ally, TB_DATE_FMT, .{ now.weekdayName()[0..3], now.day, now.monthName()[0..3], now.year, time.hour, time.minute, time.second });
+                std.time.sleep(std.time.ns_per_ms * 980);
+            }
+        }
+    }.update, .{});
+
+    date_thread.detach();
+
     var prng = std.rand.DefaultPrng.init(@as(u64, @bitCast(std.time.milliTimestamp())));
 
     var rand = prng.random();
@@ -29,10 +47,7 @@ pub fn main() !void {
         .rand = &rand,
     };
 
-    const args = try std.process.argsAlloc(allocator);
-
-    const port: u16 = if (args.len > 1) try std.fmt.parseInt(u16, args[1], 0) else 3000;
-
+    const port: u16 = 3000;
     const workers = @as(u16, @intCast(16 * cpu_count));
 
     server = try httpz.ServerApp(*endpoints.Global).init(allocator, .{
@@ -55,10 +70,6 @@ pub fn main() !void {
             // static buffers. For example, if response headers don't fit in in
             // $response.header_buffer_size, a buffer will be pulled from here.
             // This is per-worker.
-            .large_buffer_count = 16,
-
-            // The size of each large buffer.
-            .large_buffer_size = 65536,
 
             // Size of bytes retained for the connection arena between use. This will
             // result in up to `count * min_conn * retain_allocated_bytes` of memory usage.
@@ -77,22 +88,8 @@ pub fn main() !void {
             // This applies back pressure to the above workers and ensures that, under load
             // pending requests get precedence over processing new requests.
             .backlog = 2048,
-
-            // Size of the static buffer to give each thread. Memory usage will be
-            // `count * buffer_size`. If you're making heavy use of either `req.arena` or
-            // `res.arena`, this is likely the single easiest way to gain performance.
-            .buffer_size = 8192,
         },
         .request = .{
-            // Maximum request body size that we'll process. We can allocate up
-            // to this much memory per request for the body. Internally, we might
-            // keep this memory around for a number of requests as an optimization.
-            .max_body_size = 1_048_576,
-
-            // This memory is allocated upfront. The request header _must_ fit into
-            // this space, else the request will be rejected.
-            .buffer_size = 4_096,
-
             // Maximum number of headers to accept.
             // Additional headers will be silently ignored.
             .max_header_count = 32,
