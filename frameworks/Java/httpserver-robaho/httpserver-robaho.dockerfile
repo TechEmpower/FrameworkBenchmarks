@@ -1,4 +1,4 @@
-FROM jelastic/maven:3.9.5-openjdk-21 as maven
+FROM jelastic/maven:3.9.9-openjdk-23.0.1-almalinux-9 as maven
 WORKDIR /httpserver-robaho
 COPY pom.xml pom.xml
 COPY src src
