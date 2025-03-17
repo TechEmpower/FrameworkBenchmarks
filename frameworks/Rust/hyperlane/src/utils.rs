@@ -1,3 +1,5 @@
+use rand::rng;
+
 use crate::*;
 
 #[inline]
@@ -17,8 +19,8 @@ pub fn escape_html(input: &str) -> String {
 }
 
 #[inline]
-pub async fn get_random_id() -> Queries {
-    let mut rand: RwLockWriteGuard<'_, WyRand> = RAND.write().await;
-    let random_id: u32 = rand.generate::<u32>() % RANDOM_MAX as u32 + 1;
+pub fn get_random_id() -> Queries {
+    let mut rng: SmallRng = SmallRng::from_rng(&mut rng());
+    let random_id: u32 = rng.random_range(1..RANDOM_MAX_ADD_ONE);
     random_id as Queries
 }

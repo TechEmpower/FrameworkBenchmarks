@@ -60,7 +60,7 @@ pub async fn insert_records() {
     let missing_count: i64 = limit - count;
     let mut values: Vec<String> = Vec::new();
     for _ in 0..missing_count {
-        let random_number: i32 = get_random_id().await;
+        let random_number: i32 = get_random_id();
         values.push(format!("(DEFAULT, {})", random_number));
     }
     let sql: String = format!(
@@ -71,7 +71,7 @@ pub async fn insert_records() {
     let _ = query(&sql).execute(&db_pool).await;
     let mut values: Vec<String> = Vec::new();
     for _ in 0..missing_count {
-        let random_number: i32 = get_random_id().await;
+        let random_number: i32 = get_random_id();
         values.push(format!("(DEFAULT, {})", random_number));
     }
     let sql: String = format!(
@@ -116,9 +116,19 @@ pub async fn connection_db() -> DbPoolConnection {
         ),
     };
     let pool_size: u32 = (get_thread_count() >> 2).max(10).min(100) as u32;
+    let max_pool_size: u32 = option_env!("POSTGRES_MAX_POOL_SIZE")
+        .unwrap_or(&pool_size.to_string())
+        .parse::<u32>()
+        .unwrap_or(pool_size);
+    let min_pool_size: u32 = option_env!("POSTGRES_MIN_POOL_SIZE")
+        .unwrap_or(&pool_size.to_string())
+        .parse::<u32>()
+        .unwrap_or(pool_size);
     let pool: DbPoolConnection = PgPoolOptions::new()
-        .max_connections(pool_size)
+        .max_connections(max_pool_size)
+        .min_connections(min_pool_size)
         .max_lifetime(None)
+        .test_before_acquire(false)
         .idle_timeout(None)
         .connect(db_url)
         .await
@@ -137,7 +147,7 @@ pub async fn get_update_data(limit: Queries) -> (String, Vec<QueryRow>) {
     let mut id_in_clause: String = format!("{}", rows[0].id);
     let last_idx: usize = rows.len() - 1;
     for (i, row) in rows.iter().enumerate() {
-        let new_random_number: Queries = get_random_id().await;
+        let new_random_number: Queries = get_random_id();
         let id: i32 = row.id;
         id_list.push(id);
         value_list.push_str(&format!("WHEN {} THEN {} ", id, new_random_number));
@@ -171,14 +181,14 @@ pub async fn init_db() {
 
 #[inline]
 pub async fn random_world_row(db_pool: &DbPoolConnection) -> QueryRow {
-    let random_id: Queries = get_random_id().await;
+    let random_id: Queries = get_random_id();
     query_world_row(db_pool, random_id).await
 }
 
 #[inline]
 pub async fn query_world_row(db_pool: &DbPoolConnection, id: Queries) -> QueryRow {
     let sql: String = format!(
-        "SELECT id, randomNumber FROM {} WHERE id = {}",
+        "SELECT id, randomNumber FROM {} WHERE id = {} LIMIT 1",
         TABLE_NAME_WORLD, id
     );
     if let Ok(rows) = query(&sql).fetch_one(db_pool).await {
@@ -208,7 +218,7 @@ pub async fn all_world_row() -> Vec<PgRow> {
 pub async fn get_some_row_id(limit: Queries, db_pool: &DbPoolConnection) -> Vec<QueryRow> {
     let mut res: Vec<QueryRow> = Vec::with_capacity(limit as usize);
     for _ in 0..limit {
-        let id: i32 = get_random_id().await;
+        let id: i32 = get_random_id();
         let tem: QueryRow = query_world_row(db_pool, id).await;
         res.push(tem);
     }

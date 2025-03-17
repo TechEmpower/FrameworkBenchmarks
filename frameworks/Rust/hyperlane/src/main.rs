@@ -18,8 +18,8 @@ pub(crate) use hyperlane::{
     *,
 };
 pub(crate) use lazy::*;
-pub(crate) use nanorand::{Rng, WyRand};
 pub(crate) use r#type::*;
+pub(crate) use rand::{rngs::SmallRng, Rng, SeedableRng};
 pub(crate) use request_middleware::*;
 pub(crate) use response_middleware::*;
 pub(crate) use route::*;
