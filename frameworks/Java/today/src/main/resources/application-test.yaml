@@ -5,10 +5,11 @@ datasource:
 
 logging:
   level:
-    root: info
+    root: OFF
 
 server:
   netty:
-    acceptor-threads: 4
-    worker-threads: 8
-    max-connection: 65535
+    acceptor-threads: 8
+    worker-threads: 16
+    max-connection: 8192
+    validate-headers: false
