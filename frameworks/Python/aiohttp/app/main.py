@@ -26,7 +26,7 @@ CONNECTION_ORM = os.getenv('CONNECTION', 'ORM').upper() == 'ORM'
 
 def pg_dsn(dialect=None) -> str:
     """
-    :return: DSN url suitable for sqlalchemy and aiopg.
+    :return: DSN url suitable for sqlalchemy and aiopg
     """
     return str(URL.create(
         database='hello_world',
