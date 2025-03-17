@@ -12,5 +12,6 @@ COPY --from=maven /helidon/target/benchmark-nima.jar app.jar
 EXPOSE 8080
 
 CMD java -XX:+UseNUMA \
+    -server \
     -XX:+UseParallelGC \
     -jar app.jar

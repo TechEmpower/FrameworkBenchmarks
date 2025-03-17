@@ -4,6 +4,10 @@ mod server;
 use axum::{http::StatusCode, response::IntoResponse, routing::get, Router};
 use common::models::Message;
 use dotenv::dotenv;
+use mimalloc::MiMalloc;
+
+#[global_allocator]
+static GLOBAL: MiMalloc = MiMalloc;
 
 #[cfg(not(feature = "simd-json"))]
 use axum::Json;

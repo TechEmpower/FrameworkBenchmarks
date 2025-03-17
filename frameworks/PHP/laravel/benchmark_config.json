@@ -160,7 +160,8 @@
 			"database_os": "Linux",
 			"display_name": "laravel-ripple",
 			"notes": "",
-			"versus": "php"
+			"versus": "php",
+			"tags": ["broken"]
 		}
 	}]
 }

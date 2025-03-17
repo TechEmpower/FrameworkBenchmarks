@@ -10,9 +10,8 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http;
 using Microsoft.Extensions.ObjectPool;
-#if !AOT
+using Platform.Templates;
 using RazorSlices;
-#endif
 
 namespace PlatformBenchmarks
 {
@@ -42,26 +41,24 @@ namespace PlatformBenchmarks
 
         public static RawDb RawDb { get; set; }
 
-        private static readonly DefaultObjectPool<ChunkedBufferWriter<WriterAdapter>> ChunkedWriterPool
+        private static readonly DefaultObjectPool<ChunkedPipeWriter> ChunkedWriterPool
             = new(new ChunkedWriterObjectPolicy());
 
-        private sealed class ChunkedWriterObjectPolicy : IPooledObjectPolicy<ChunkedBufferWriter<WriterAdapter>>
+        private sealed class ChunkedWriterObjectPolicy : IPooledObjectPolicy<ChunkedPipeWriter>
         {
-            public ChunkedBufferWriter<WriterAdapter> Create() => new();
+            public ChunkedPipeWriter Create() => new();
 
-            public bool Return(ChunkedBufferWriter<WriterAdapter> writer)
+            public bool Return(ChunkedPipeWriter writer)
             {
                 writer.Reset();
                 return true;
             }
         }
 
-#if !AOT
 #if NPGSQL
-        private readonly static SliceFactory<List<FortuneUtf8>> FortunesTemplateFactory = RazorSlice.ResolveSliceFactory<List<FortuneUtf8>>("/Templates/FortunesUtf8.cshtml");
+        private readonly static Func<List<FortuneUtf8>, RazorSlice<List<FortuneUtf8>>> FortunesTemplateFactory = FortunesUtf8.Create;
 #else
-        private readonly static SliceFactory<List<FortuneUtf16>> FortunesTemplateFactory = RazorSlice.ResolveSliceFactory<List<FortuneUtf16>>("/Templates/FortunesUtf16.cshtml");
-#endif
+        private readonly static Func<List<FortuneUtf16>, RazorSlice<List<FortuneUtf16>>> FortunesTemplateFactory = FortunesUtf16.Create;
 #endif
 
         [ThreadStatic]
@@ -167,9 +164,7 @@ namespace PlatformBenchmarks
 
         private Task ProcessRequestAsync() => _requestType switch
         {
-#if !AOT
             RequestType.FortunesRaw => FortunesRaw(Writer),
-#endif
             RequestType.SingleQuery => SingleQuery(Writer),
             RequestType.Caching => Caching(Writer, _queries),
             RequestType.Updates => Updates(Writer, _queries),

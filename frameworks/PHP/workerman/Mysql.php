@@ -32,32 +32,27 @@ class Mysql
 
     function query($request): array
     {
-        $query_count = 1;
-        $q = (int)$request->get('q');
-        if ($q > 1) {
-            $query_count = min($q, 500);
-        }
+        $count = min(max((int) $request->get('q'), 1), 500);
         $arr = [];
-        while ($query_count--) {
-            $this->world->execute([mt_rand(1, 10000)]);
-            $arr[] = $this->world->fetch();
+        $world = $this->world;
+        while ($count--) {
+            $world->execute([mt_rand(1, 10000)]);
+            $arr[] = $world->fetch();
         }
         return $arr;
     }
 
     function update($request): array
     {
-        $query_count = 1;
-        $q = (int)$request->get('q');
-        if ($q > 1) {
-            $query_count = min($q, 500);
-        }
+        $count = min(max((int) $request->get('q'), 1), 500);
         $arr = [];
-        while ($query_count--) {
+        $world = $this->world;
+        $update = $this->update;
+        while ($count--) {
             $id = mt_rand(1, 10000);
-            $this->world->execute([$id]);
-            $item = $this->world->fetch();
-            $this->update->execute(
+            $world->execute([$id]);
+            $item = $world->fetch();
+            $update->execute(
                 [$item['randomNumber'] = mt_rand(1, 10000), $id]
             );
             $arr[] = $item;

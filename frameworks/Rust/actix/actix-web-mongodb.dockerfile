@@ -1,4 +1,4 @@
-FROM rust:1.57.0
+FROM rust:1.85
 
 ENV ACTIX_TECHEMPOWER_MONGODB_URL=mongodb://tfb-database:27017
 

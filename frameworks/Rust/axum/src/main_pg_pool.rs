@@ -15,6 +15,10 @@ use dotenv::dotenv;
 use futures_util::{stream::FuturesUnordered, TryStreamExt};
 use rand::{rngs::SmallRng, thread_rng, SeedableRng};
 use yarte::Template;
+use mimalloc::MiMalloc;
+
+#[global_allocator]
+static GLOBAL: MiMalloc = MiMalloc;
 
 mod server;
 

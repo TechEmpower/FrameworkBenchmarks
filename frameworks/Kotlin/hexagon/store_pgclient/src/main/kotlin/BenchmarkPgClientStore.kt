@@ -1,10 +1,10 @@
-package com.hexagonkt.store
+package com.hexagontk.store
 
-import com.hexagonkt.Settings
-import com.hexagonkt.core.Jvm
-import com.hexagonkt.model.CachedWorld
-import com.hexagonkt.model.Fortune
-import com.hexagonkt.model.World
+import com.hexagontk.Settings
+import com.hexagontk.core.Platform
+import com.hexagontk.model.CachedWorld
+import com.hexagontk.model.Fortune
+import com.hexagontk.model.World
 import io.vertx.core.Future
 import io.vertx.core.Vertx
 import io.vertx.core.VertxOptions
@@ -19,14 +19,15 @@ class BenchmarkPgClientStore(
 ) : BenchmarkStore(settings) {
 
     companion object {
-        private const val SELECT_WORLD: String = "select * from world where id = $1"
+        private const val LOAD_WORLDS: String = "select id, randomNumber from world"
+        private const val SELECT_WORLD: String = "select id, randomNumber from world where id = $1"
         private const val UPDATE_WORLD: String = "update world set randomNumber = $1 where id = $2"
-        private const val SELECT_ALL_FORTUNES: String = "select * from fortune"
+        private const val SELECT_ALL_FORTUNES: String = "select id, message from fortune"
     }
 
     private val connectOptions: PgConnectOptions by lazy {
         PgConnectOptions().apply {
-            host = Jvm.systemSettingOrNull("${engine.uppercase()}_DB_HOST") ?: "tfb-database"
+            host = Platform.systemSettingOrNull("${engine.uppercase()}_DB_HOST") ?: "tfb-database"
             database = settings.databaseName
             user = settings.databaseUsername
             password = settings.databasePassword
@@ -36,9 +37,9 @@ class BenchmarkPgClientStore(
 
     private val poolOptions: PoolOptions by lazy {
         PoolOptions().apply {
-            val environment = Jvm.systemSettingOrNull<String>("BENCHMARK_ENV")?.lowercase()
-            val poolSize = 8 + if (environment == "citrine") Jvm.cpuCount else Jvm.cpuCount * 2
-            maxSize = Jvm.systemSettingOrNull(Int::class, "maximumPoolSize") ?: poolSize
+            val environment = Platform.systemSettingOrNull<String>("BENCHMARK_ENV")?.lowercase()
+            val poolSize = 8 + if (environment == "citrine") Platform.cpuCount else Platform.cpuCount * 2
+            maxSize = Platform.systemSettingOrNull(Int::class, "maximumPoolSize") ?: poolSize
         }
     }
 
@@ -81,13 +82,12 @@ class BenchmarkPgClientStore(
                 .toCompletionStage()
                 .toCompletableFuture()
                 .get()
-
         }
     }
 
     override fun initWorldsCache(cache: Cache<Int, CachedWorld>) {
         dataSource
-            .preparedQuery("select * from world")
+            .preparedQuery(LOAD_WORLDS)
             .execute()
             .map { rowSet ->
                 rowSet.map { row ->

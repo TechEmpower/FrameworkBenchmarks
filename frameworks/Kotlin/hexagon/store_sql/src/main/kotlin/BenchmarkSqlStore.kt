@@ -1,10 +1,10 @@
-package com.hexagonkt.store
+package com.hexagontk.store
 
-import com.hexagonkt.model.CachedWorld
-import com.hexagonkt.model.Fortune
-import com.hexagonkt.Settings
-import com.hexagonkt.model.World
-import com.hexagonkt.core.Jvm
+import com.hexagontk.model.CachedWorld
+import com.hexagontk.model.Fortune
+import com.hexagontk.Settings
+import com.hexagontk.model.World
+import com.hexagontk.core.Platform
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import org.cache2k.Cache
@@ -16,15 +16,16 @@ class BenchmarkSqlStore(
 ) : BenchmarkStore(settings) {
 
     companion object {
-        private const val SELECT_WORLD: String = "select * from world where id = ?"
+        private const val LOAD_WORLDS: String = "select id, randomNumber from world"
+        private const val SELECT_WORLD: String = "select id, randomNumber from world where id = ?"
         private const val UPDATE_WORLD: String = "update world set randomNumber = ? where id = ?"
-        private const val SELECT_ALL_FORTUNES: String = "select * from fortune"
+        private const val SELECT_ALL_FORTUNES: String = "select id, message from fortune"
     }
 
     private val dataSource: HikariDataSource by lazy {
-        val dbHost = Jvm.systemSettingOrNull("${engine.uppercase()}_DB_HOST") ?: "tfb-database"
-        val environment = Jvm.systemSettingOrNull(String::class, "BENCHMARK_ENV")?.lowercase()
-        val poolSize = 8 + if (environment == "citrine") Jvm.cpuCount else Jvm.cpuCount * 2
+        val dbHost = Platform.systemSettingOrNull("${engine.uppercase()}_DB_HOST") ?: "tfb-database"
+        val environment = Platform.systemSettingOrNull(String::class, "BENCHMARK_ENV")?.lowercase()
+        val poolSize = 8 + if (environment == "citrine") Platform.cpuCount else Platform.cpuCount * 2
         val postgresqlSettings = listOf(
             "ssl=false",
             "assumeMinServerVersion=12.10",
@@ -34,7 +35,7 @@ class BenchmarkSqlStore(
         ).joinToString("&")
         val config = HikariConfig().apply {
             jdbcUrl = "jdbc:postgresql://$dbHost/${settings.databaseName}?$postgresqlSettings"
-            maximumPoolSize = Jvm.systemSettingOrNull(Int::class, "maximumPoolSize") ?: poolSize
+            maximumPoolSize = Platform.systemSettingOrNull(Int::class, "maximumPoolSize") ?: poolSize
             driverClassName = settings.databaseDriver
             username = settings.databaseUsername
             password = settings.databasePassword
@@ -63,19 +64,17 @@ class BenchmarkSqlStore(
     override fun replaceWorlds(worlds: List<World>) {
         dataSource.connection.use { con: Connection ->
             val stmtSelect = con.prepareStatement(SELECT_WORLD)
-            val stmtUpdate = con.prepareStatement(UPDATE_WORLD)
-
             worlds.forEach {
-                val worldId = it.id
-                val newRandomNumber = it.randomNumber
-
-                stmtSelect.setInt(1, worldId)
+                stmtSelect.setInt(1, it.id)
                 val rs = stmtSelect.executeQuery()
                 rs.next()
                 rs.getInt(2) // Read 'randomNumber' to comply with Test type 5, point 6
+            }
 
-                stmtUpdate.setInt(1, newRandomNumber)
-                stmtUpdate.setInt(2, worldId)
+            val stmtUpdate = con.prepareStatement(UPDATE_WORLD)
+            worlds.forEach {
+                stmtUpdate.setInt(1, it.randomNumber)
+                stmtUpdate.setInt(2, it.id)
                 stmtUpdate.executeUpdate()
             }
         }
@@ -83,7 +82,7 @@ class BenchmarkSqlStore(
 
     override fun initWorldsCache(cache: Cache<Int, CachedWorld>) {
         dataSource.connection.use { con: Connection ->
-            val stmtSelect = con.prepareStatement("select * from world")
+            val stmtSelect = con.prepareStatement(LOAD_WORLDS)
             val rs = stmtSelect.executeQuery()
 
             while (rs.next()) {

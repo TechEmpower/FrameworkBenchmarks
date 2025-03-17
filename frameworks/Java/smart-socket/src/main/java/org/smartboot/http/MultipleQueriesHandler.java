@@ -1,9 +1,10 @@
 package org.smartboot.http;
 
-import org.smartboot.http.common.utils.NumberUtils;
-import org.smartboot.http.server.HttpRequest;
-import org.smartboot.http.server.HttpResponse;
-import org.smartboot.http.server.HttpServerHandler;
+
+import tech.smartboot.feat.core.common.utils.NumberUtils;
+import tech.smartboot.feat.core.server.HttpHandler;
+import tech.smartboot.feat.core.server.HttpRequest;
+import tech.smartboot.feat.core.server.HttpResponse;
 
 import javax.sql.DataSource;
 import java.io.IOException;
@@ -18,7 +19,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * @author 三刀
  * @version V1.0 , 2020/6/16
  */
-public class MultipleQueriesHandler extends HttpServerHandler {
+public class MultipleQueriesHandler implements HttpHandler {
     private DataSource dataSource;
 
     public MultipleQueriesHandler(DataSource dataSource) {
@@ -26,7 +27,8 @@ public class MultipleQueriesHandler extends HttpServerHandler {
     }
 
     @Override
-    public void handle(HttpRequest httpRequest, HttpResponse response, CompletableFuture<Object> completableFuture) throws IOException {
+    public void handle(HttpRequest httpRequest, CompletableFuture<Object> completableFuture) throws IOException {
+        HttpResponse response = httpRequest.getResponse();
         Thread.startVirtualThread(() -> {
             try {
                 int queries = Math.min(Math.max(NumberUtils.toInt(httpRequest.getParameter("queries"), 1), 1), 500);
@@ -54,6 +56,11 @@ public class MultipleQueriesHandler extends HttpServerHandler {
                 completableFuture.complete(null);
             }
         });
+
+    }
+
+    @Override
+    public void handle(HttpRequest request) throws Throwable {
 
     }
 

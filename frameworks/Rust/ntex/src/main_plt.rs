@@ -1,10 +1,10 @@
 #[global_allocator]
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
-use std::{future::Future, io, pin::Pin, task::Context, task::Poll};
+use std::{future::Future, io, pin::Pin, task::ready, task::Context, task::Poll};
 
-use ntex::{fn_service, http::h1, io::Io, io::RecvError, util::ready, util::PoolId};
-use yarte::Serialize;
+use ntex::{fn_service, http::h1, io::Io, io::RecvError, util::PoolId};
+use sonic_rs::Serialize;
 
 mod utils;
 
@@ -42,10 +42,13 @@ impl Future for App {
                                     buf.extend_from_slice(JSON);
                                     this.codec.set_date_header(buf);
 
-                                    Message {
-                                        message: "Hello, World!",
-                                    }
-                                    .to_bytes_mut(buf);
+                                    sonic_rs::to_writer(
+                                        utils::BytesWriter(buf),
+                                        &Message {
+                                            message: "Hello, World!",
+                                        },
+                                    )
+                                    .unwrap();
                                 }
                                 "/plaintext" => {
                                     buf.extend_from_slice(PLAIN);
@@ -78,6 +81,7 @@ async fn main() -> io::Result<()> {
     // start http server
     ntex::server::build()
         .backlog(1024)
+        .enable_affinity()
         .bind("techempower", "0.0.0.0:8080", |cfg| {
             cfg.memory_pool(PoolId::P1);
             PoolId::P1.set_read_params(65535, 2048);
@@ -88,7 +92,6 @@ async fn main() -> io::Result<()> {
                 codec: h1::Codec::default(),
             })
         })?
-        .workers(num_cpus::get())
         .run()
         .await
 }

@@ -21,35 +21,29 @@ Bundler.require(*Rails.groups)
 module Hello
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 7.2
+    config.load_defaults Rails::VERSION::STRING.to_f
 
     # Please, add to the `ignore` list any other `lib` subdirectories that do
     # not contain `.rb` files, or that should not be reloaded or eager loaded.
     # Common ones are `templates`, `generators`, or `middleware`, for example.
     config.autoload_lib(ignore: %w[assets tasks])
 
-    config.action_dispatch.default_headers.merge!('Server' => 'WebServer')
+    # Only use headers required by TechEmpower.
+    config.action_dispatch.default_headers = {'Server' => 'Rails'}
+
+    config.api_only = true
 
     config.middleware.delete ActionDispatch::Callbacks
-    config.middleware.delete ActionDispatch::ContentSecurityPolicy::Middleware
-    config.middleware.delete ActionDispatch::Cookies
     config.middleware.delete ActionDispatch::DebugExceptions
     config.middleware.delete ActionDispatch::Executor
-    config.middleware.delete ActionDispatch::Flash
-    config.middleware.delete ActionDispatch::PermissionsPolicy::Middleware
-    config.middleware.delete ActionDispatch::Reloader
     config.middleware.delete ActionDispatch::RemoteIp
     config.middleware.delete ActionDispatch::RequestId
-    config.middleware.delete ActionDispatch::Session::CookieStore
     config.middleware.delete ActionDispatch::ShowExceptions
-    config.middleware.delete ActiveRecord::Migration::CheckPending
     config.middleware.delete Rack::ConditionalGet
     config.middleware.delete Rack::ETag
     config.middleware.delete Rack::Head
-    config.middleware.delete Rack::MethodOverride
     config.middleware.delete Rack::Runtime
     config.middleware.delete Rack::Sendfile
-    config.middleware.delete Rack::TempfileReaper
     config.middleware.delete Rails::Rack::Logger
 
     config.active_support.isolation_level = :fiber if defined?(Falcon)

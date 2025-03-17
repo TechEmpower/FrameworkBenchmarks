@@ -6,8 +6,9 @@ use mongodb::{
     bson::{doc, RawDocumentBuf},
     Database,
 };
+use rand::rngs::SmallRng;
 
-use crate::common::models::World;
+use crate::common::{models::World, random_ids};
 
 pub struct DatabaseConnection(pub Database);
 
@@ -48,7 +49,7 @@ pub async fn find_world_by_id(db: Database, id: i32) -> Result<World, MongoError
     let filter = doc! { "_id": id as f32 };
 
     let raw: RawDocumentBuf = world_collection
-        .find_one(Some(filter), None)
+        .find_one(filter)
         .await
         .unwrap()
         .expect("expected world, found none");
@@ -69,10 +70,10 @@ pub async fn find_world_by_id(db: Database, id: i32) -> Result<World, MongoError
     })
 }
 
-pub async fn find_worlds(db: Database, ids: Vec<i32>) -> Result<Vec<World>, MongoError> {
+pub async fn find_worlds(db: Database, rng: &mut SmallRng, count: usize) -> Result<Vec<World>, MongoError> {
     let future_worlds = FuturesUnordered::new();
 
-    for id in ids {
+    for id in random_ids(rng, count) {
         future_worlds.push(find_world_by_id(db.clone(), id));
     }
 
@@ -93,8 +94,7 @@ pub async fn update_worlds(
     }
 
     db.run_command(
-        doc! {"update": "world", "updates": updates, "ordered": false},
-        None,
+        doc! {"update": "world", "updates": updates, "ordered": false}
     )
     .await
     .expect("could not update worlds");

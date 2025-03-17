@@ -1,6 +1,5 @@
 {
   "framework": "workerman",
-  "maintainers": ["walkor"],
   "tests": [{
     "default": {
       "dockerfile": "workerman-jit.dockerfile",
@@ -108,28 +107,6 @@
       "notes": "",
       "versus": "php"
     },
-    "pgsql-swow": {
-      "dockerfile": "workerman-pgsql-swow-jit.dockerfile",
-      "db_url": "/db",
-      "query_url": "/query?q=",
-      "update_url": "/update?q=",
-      "fortune_url": "/fortunes",
-      "port": 8080,
-      "approach": "Realistic",
-      "classification": "Platform",
-      "database": "Postgres",
-      "framework": "workerman",
-      "language": "PHP",
-      "flavor": "PHP8",
-      "orm": "Raw",
-      "platform": "workerman",
-      "webserver": "None",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "workerman [jit, pgsql, swow, async]",
-      "notes": "",
-      "versus": "php"
-    },
     "mysql-swow": {
       "dockerfile": "workerman-mysql-swow-jit.dockerfile",
       "db_url": "/db",
@@ -149,28 +126,6 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "workerman [jit, mysql, swow, async]",
-      "notes": "",
-      "versus": "php"
-    },
-    "pgsql-swoole": {
-      "dockerfile": "workerman-pgsql-swoole-jit.dockerfile",
-      "db_url": "/db",
-      "query_url": "/query?q=",
-      "update_url": "/update?q=",
-      "fortune_url": "/fortunes",
-      "port": 8080,
-      "approach": "Realistic",
-      "classification": "Platform",
-      "database": "Postgres",
-      "framework": "workerman",
-      "language": "PHP",
-      "flavor": "PHP8",
-      "orm": "Raw",
-      "platform": "workerman",
-      "webserver": "None",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "workerman [jit, pgsql, swoole, async]",
       "notes": "",
       "versus": "php"
     },

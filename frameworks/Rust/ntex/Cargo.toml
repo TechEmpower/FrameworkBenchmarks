@@ -1,6 +1,6 @@
 [package]
 name = "ntex-bench"
-version = "2.0.0"
+version = "2.1.0"
 edition = "2018"
 
 [[bin]]
@@ -12,11 +12,27 @@ name = "ntex-compio"
 path = "src/main.rs"
 
 [[bin]]
+name = "ntex-neon"
+path = "src/main.rs"
+
+[[bin]]
+name = "ntex-neon-uring"
+path = "src/main.rs"
+
+[[bin]]
 name = "ntex-db"
 path = "src/main_db.rs"
 
 [[bin]]
 name = "ntex-db-compio"
+path = "src/main_db.rs"
+
+[[bin]]
+name = "ntex-db-neon"
+path = "src/main_db.rs"
+
+[[bin]]
+name = "ntex-db-neon-uring"
 path = "src/main_db.rs"
 
 [[bin]]
@@ -27,6 +43,14 @@ path = "src/main_plt.rs"
 name = "ntex-plt-compio"
 path = "src/main_plt.rs"
 
+[[bin]]
+name = "ntex-plt-neon"
+path = "src/main_plt.rs"
+
+[[bin]]
+name = "ntex-plt-neon-uring"
+path = "src/main_plt.rs"
+
 [features]
 default = []
 
@@ -34,11 +58,17 @@ default = []
 tokio = ["ntex/tokio"]
 
 # compio runtime
-compio = ["ntex/compio", ]
+compio = ["ntex/compio"]
+
+# neon runtime
+neon = ["ntex/neon"]
+
+# neon runtime
+neon-uring = ["ntex/neon-uring"]
 
 [dependencies]
-ntex = "2.4"
-ntex-compio = "0.1.2"
+ntex = "2.12"
+ntex-compio = "0.2"
 ntex-bytes = { version = "0.1.21", features=["simd"] }
 mimalloc = { version = "0.1.25", default-features = false }
 snmalloc-rs = { version = "0.3.3", features = ["native-cpu"] }
@@ -47,15 +77,22 @@ buf-min = { version = "0.7", features = ["ntex-bytes"] }
 env_logger = "0.11"
 nanorand = { version = "0.7", default-features = false, features = ["std", "wyrand", "tls"] }
 atoi = "2.0"
-num_cpus = "1.16"
-smallvec = "1.13"
 futures = "0.3"
-serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
+sonic-rs = "0.4.0"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
 log = { version = "0.4", features = ["release_max_level_off"] }
-compio-driver = { version = "0.4", features = ["io-uring", "io-uring-socket"]}
 tok_io = {version = "1", package = "tokio" }
 tokio-postgres = { git="https://github.com/fafhrd91/postgres.git", branch="ntex-2" }
+
+[target.'cfg(target_os = "linux")'.dependencies]
+compio-driver = { version = "*", features = ["io-uring"]}
+
+[patch.crates-io]
+ntex = { git = "https://github.com/ntex-rs/ntex.git" }
+ntex-io = { git = "https://github.com/ntex-rs/ntex.git" }
+ntex-net = { git = "https://github.com/ntex-rs/ntex.git" }
+ntex-rt = { git = "https://github.com/ntex-rs/ntex.git" }
 
 [profile.release]
 opt-level = 3

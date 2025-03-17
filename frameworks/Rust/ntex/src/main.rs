@@ -3,7 +3,7 @@ static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
 use ntex::http::header::{CONTENT_TYPE, SERVER};
 use ntex::{http, time::Seconds, util::BytesMut, util::PoolId, web};
-use yarte::Serialize;
+use sonic_rs::Serialize;
 
 mod utils;
 
@@ -15,10 +15,13 @@ pub struct Message {
 #[web::get("/json")]
 async fn json() -> web::HttpResponse {
     let mut body = BytesMut::with_capacity(utils::SIZE);
-    Message {
-        message: "Hello, World!",
-    }
-    .to_bytes_mut(&mut body);
+    sonic_rs::to_writer(
+        utils::BytesWriter(&mut body),
+        &Message {
+            message: "Hello, World!",
+        },
+    )
+    .unwrap();
 
     let mut response = web::HttpResponse::with_body(http::StatusCode::OK, body.into());
     response.headers_mut().insert(SERVER, utils::HDR_SERVER);
@@ -48,6 +51,7 @@ async fn main() -> std::io::Result<()> {
     // start http server
     ntex::server::build()
         .backlog(1024)
+        .enable_affinity()
         .bind("techempower", "0.0.0.0:8080", |cfg| {
             cfg.memory_pool(PoolId::P1);
             PoolId::P1.set_read_params(65535, 2048);
@@ -60,7 +64,6 @@ async fn main() -> std::io::Result<()> {
                 .payload_read_rate(Seconds::ZERO, Seconds::ZERO, 0)
                 .h1(web::App::new().service(json).service(plaintext).finish())
         })?
-        .workers(num_cpus::get())
         .run()
         .await
 }

@@ -1,7 +1,7 @@
 
 package io.helidon.benchmark.nima.models;
 
-public final class Fortune {
+public final class Fortune implements Comparable<Fortune> {
     public int id;
     public String message;
 
@@ -16,5 +16,9 @@ public final class Fortune {
 
     public String getMessage() {
         return message;
+    }
+    @Override
+    public int compareTo(Fortune other) {
+        return message.compareTo(other.message);
     }
 }
