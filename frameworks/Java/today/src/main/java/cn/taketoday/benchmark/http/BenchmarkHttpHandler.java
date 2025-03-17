@@ -50,6 +50,7 @@ final class BenchmarkHttpHandler {
     return "Hello, World!";
   }
 
+  @Nullable
   @GET("/db")
   public World db() {
     return entityManager.findById(World.class, nextInt());

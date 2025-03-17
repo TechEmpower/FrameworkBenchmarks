@@ -8,6 +8,7 @@ configure(allprojects) {
   group = "cn.taketoday.benchmark"
 
   repositories {
+    mavenLocal()
     mavenCentral()
     maven { url = "https://oss.sonatype.org/content/repositories/snapshots/" }
   }
@@ -57,15 +58,13 @@ application {
       "-Xms2G",
       "-Xmx2G",
       "-XX:+UseNUMA",
-      "-XX:+UseParallelGC",
-      "-XX:+AggressiveOpts",
-      "-Djava.lang.Integer.IntegerCache.high=10000",
-      "-XX:-StackTraceInThrowable",
       "-XX:+UseStringDeduplication",
       "-Dinfra.profiles.active=test",
       "-Dio.netty.buffer.checkBounds=false",
       "-Dio.netty.buffer.checkAccessible=false",
       "-Dio.netty.leakDetection.level=disabled",
+      "-Dio.netty.iouring.iosqeAsyncThreshold=32000",
+      "-Djava.lang.Integer.IntegerCache.high=10000",
       "--add-opens=java.base/java.nio=ALL-UNNAMED",
       "--add-opens=java.base/sun.nio.ch=ALL-UNNAMED"
   ]

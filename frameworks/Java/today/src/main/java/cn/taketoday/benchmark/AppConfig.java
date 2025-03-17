@@ -11,12 +11,17 @@ import infra.context.annotation.Role;
 import infra.jdbc.RepositoryManager;
 import infra.persistence.EntityManager;
 import infra.stereotype.Component;
+import infra.web.server.WebServerFactoryCustomizer;
 import infra.web.server.error.SendErrorHandler;
 import infra.web.server.support.NettyRequestConfig;
+import infra.web.server.support.NettyWebServerFactory;
 import io.netty.handler.codec.http.DefaultHttpHeaders;
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpHeadersFactory;
 import io.netty.handler.codec.http.multipart.DefaultHttpDataFactory;
+import io.netty.incubator.channel.uring.IOUring;
+import io.netty.incubator.channel.uring.IOUringEventLoopGroup;
+import io.netty.incubator.channel.uring.IOUringServerSocketChannel;
 
 import static infra.http.HttpHeaders.DATE_FORMATTER;
 
@@ -40,9 +45,22 @@ class AppConfig {
   }
 
   @Component
+  public static WebServerFactoryCustomizer<NettyWebServerFactory> factoryWebServerFactoryCustomizer() {
+    return factory -> {
+      if (IOUring.isAvailable()) {
+        IOUringEventLoopGroup loopGroup = new IOUringEventLoopGroup();
+        factory.setAcceptorGroup(loopGroup);
+        factory.setWorkerGroup(loopGroup);
+        factory.setSocketChannel(IOUringServerSocketChannel.class);
+      }
+    };
+  }
+
+  @Component
   @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
   public static NettyRequestConfig nettyRequestConfig(SendErrorHandler sendErrorHandler) {
     var factory = new DefaultHttpDataFactory(false);
+
     return NettyRequestConfig.forBuilder(false)
             .httpDataFactory(factory)
             .sendErrorHandler(sendErrorHandler)
