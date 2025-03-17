@@ -27,14 +27,15 @@ def pg_dsn(dialect=None) -> str:
     """
     :return: DSN url suitable for sqlalchemy and aiopg.
     """
-    return str(URL.create(
+    url = URL.create(
         database='hello_world',
         password=os.getenv('PGPASS', 'benchmarkdbpass'),
         host='tfb-database',
         port='5432',
         username=os.getenv('PGUSER', 'benchmarkdbuser'),
         drivername='postgresql+{}'.format(dialect) if dialect else 'postgresql',
-    ))
+    )
+    return url.render_as_string(hide_password=False)
 
 
 async def db_ctx(app: web.Application):
