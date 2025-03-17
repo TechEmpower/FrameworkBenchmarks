@@ -1,46 +1,33 @@
 mod ser;
 mod util;
 
-use std::{env, io, net::TcpListener, os::wasi::io::FromRawFd};
+use std::os::wasi::io::FromRawFd;
 
 use xitca_web::{
-    handler::{handler_service, json::Json},
-    http::{header::SERVER, WebResponse},
+    App,
+    handler::{json::Json, text::Text},
+    http::{WebResponse, header::SERVER},
     route::get,
-    service::Service,
-    App, WebContext,
 };
 
-fn main() -> io::Result<()> {
-    let fd = env::var("FD_COUNT")
+fn main() -> std::io::Result<()> {
+    let listener = std::env::var("FD_COUNT")
         .ok()
-        .and_then(|var| var.parse().ok())
+        .and_then(|v| v.parse().ok())
+        .map(|fd| unsafe { std::net::TcpListener::from_raw_fd(fd) })
         .expect("failed to parse FD_COUNT env");
 
-    let listener = unsafe { TcpListener::from_raw_fd(fd) };
-
     App::new()
-        .at(
-            "/json",
-            get(handler_service(|| async { Json(ser::Message::new()) })),
-        )
-        .at(
-            "/plaintext",
-            get(handler_service(|| async { "Hello, World!" })),
-        )
-        .enclosed_fn(middleware_fn)
+        .at("/json", get(Json(ser::Message::new())))
+        .at("/plaintext", get(Text("Hello, World!")))
+        .map(header)
         .serve()
         .listen(listener)?
         .run()
         .wait()
 }
 
-async fn middleware_fn<S, E>(service: &S, ctx: WebContext<'_>) -> Result<WebResponse, E>
-where
-    S: for<'r> Service<WebContext<'r>, Response = WebResponse, Error = E>,
-{
-    service.call(ctx).await.map(|mut res| {
-        res.headers_mut().append(SERVER, util::SERVER_HEADER_VALUE);
-        res
-    })
+fn header(mut res: WebResponse) -> WebResponse {
+    res.headers_mut().append(SERVER, util::SERVER_HEADER_VALUE);
+    res
 }

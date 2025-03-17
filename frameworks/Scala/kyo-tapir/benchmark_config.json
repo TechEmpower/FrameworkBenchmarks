@@ -1,0 +1,26 @@
+{
+  "framework": "kyo-tapir",
+  "tests": [
+    {
+      "default": {
+        "plaintext_url": "/plaintext",
+        "json_url": "/json",
+        "port": 9999,
+        "database": "None",
+        "approach": "Realistic",
+        "classification": "Micro",
+        "framework": "kyo-tapir",
+        "language": "Scala",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "Netty",
+        "webserver": "None",
+        "database_os": "Linux",
+        "os": "Linux",
+        "display_name": "kyo-tapir",
+        "notes": "",
+        "versus": "None"
+      }
+    }
+  ]
+}

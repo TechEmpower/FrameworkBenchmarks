@@ -5,12 +5,10 @@ Hanami.app.register_provider :persistence, namespace: true do
     require_relative '../auto_tune'
     num_workers, num_threads = auto_tune
 
-    opts = {}
-
-    if (threads = num_threads) > 1
-      opts[:max_connections] = (2 * Math.log(threads)).floor
-      opts[:pool_timeout] = 10
-    end
+    opts = {
+      max_connections: 3,
+      pool_timeout: 10
+    }
     config = ROM::Configuration.new(:sql, target["settings"].database_url, opts)
 
     register "config", config
@@ -26,5 +24,9 @@ Hanami.app.register_provider :persistence, namespace: true do
     )
 
     register "rom", ROM.container(config)
+  end
+
+  stop do
+    target["persistence.rom"].disconnect
   end
 end

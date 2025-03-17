@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 
 # Required scripts for benchmarking
 COPY concurrency.sh pipeline.lua pipeline.sh query.sh ./

@@ -4,6 +4,7 @@
 
 #include <userver/clients/dns/component.hpp>
 
+#include <userver/server/middlewares/configuration.hpp>
 #include <userver/storages/postgres/component.hpp>
 #include <userver/storages/secdist/component.hpp>
 #include <userver/storages/secdist/provider_component.hpp>
@@ -65,7 +66,7 @@ int Main(int argc, char* argv[]) {
           .Append<fortunes::Handler>()
           // tracing tweaks
           .Append<NoopTracingManager>()
-          // bare
+          // bare (not used in the benchmark currently)
           .Append<bare::SimpleRouter>()
           .Append<bare::SimpleServer>();
 

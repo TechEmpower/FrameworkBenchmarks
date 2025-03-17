@@ -35,7 +35,7 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "silverlining",
+        "display_name": "silverlining [prefork]",
         "notes": "",
         "versus": "go"
       }

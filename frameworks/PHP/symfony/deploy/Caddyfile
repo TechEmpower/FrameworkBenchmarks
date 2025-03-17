@@ -3,7 +3,7 @@
     {$CADDY_DEBUG}
 
 	frankenphp {
-		#worker /path/to/your/worker.php
+		#worker /path/to/your/runtime.php
 		{$FRANKENPHP_CONFIG}
 	}
 }
@@ -11,18 +11,13 @@
 :8080
 
 route {
-    root * /symfony/public
 
-    # If the requested file does not exist, try index files
-    @indexFiles file {
-        try_files {path} {path}/worker.php worker.php
-        split_path .php
+	# FrankenPHP!
+	# disable static files for this benchmark
+	# by using php instead of php_server
+    rewrite runtime.php
+    php {
+        root /symfony/public
     }
-    rewrite @indexFiles {http.matchers.file.relative}
-    
-    # FrankenPHP!
-    @phpFiles path *.php
-    php @phpFiles
 
-    respond 404
 }

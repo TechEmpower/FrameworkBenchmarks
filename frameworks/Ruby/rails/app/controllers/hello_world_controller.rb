@@ -1,13 +1,15 @@
 # frozen_string_literal: true
 
-class HelloWorldController < ApplicationController
+class HelloWorldController < ActionController::API
+  include DateHeader
+
   QUERY_RANGE = 1..10_000    # range of IDs in the Fortune DB
   ALL_IDS = QUERY_RANGE.to_a # enumeration of all the IDs in fortune DB
   MIN_QUERIES = 1            # min number of records that can be retrieved
   MAX_QUERIES = 500          # max number of records that can be retrieved
 
   def db
-    render json: World.find(random_id)
+    render json: World.find(random_id).attributes
   end
 
   def query
@@ -26,20 +28,14 @@ class HelloWorldController < ApplicationController
     render json: items.values
   end
 
-  def fortune
-    @fortunes = Fortune.all.to_a
-    @fortunes << Fortune.new(id: 0, message: 'Additional fortune added at request time.')
-    @fortunes.sort_by!(&:message)
-  end
-
   def update
-    worlds = Array.new(query_count) do
-      world = World.find(random_id)
+    worlds = ALL_IDS.sample(query_count).map do |id|
+      world = World.find(id)
       new_value = random_id
       new_value = random_id until new_value != world.randomNumber
-      world.update_columns(randomNumber: new_value)
-      world
+      { id: id, randomNumber: new_value }
     end
+    World.upsert_all(worlds.sort_by!{_1[:id]})
 
     render json: worlds
   end
@@ -48,10 +44,7 @@ class HelloWorldController < ApplicationController
 
   def query_count
     queries = params[:queries].to_i
-    return MIN_QUERIES if queries < MIN_QUERIES
-    return MAX_QUERIES if queries > MAX_QUERIES
-
-    queries
+    queries.clamp(MIN_QUERIES, MAX_QUERIES)
   end
 
   def random_id

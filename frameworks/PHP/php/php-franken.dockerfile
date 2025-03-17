@@ -4,12 +4,13 @@ FROM dunglas/frankenphp
 RUN install-php-extensions \
     pdo_mysql \
     zip \
-    opcache
+    opcache > /dev/null
 
 
-COPY deploy/franken/Caddyfile /etc/caddy/Caddyfile
+COPY --link deploy/franken/Caddyfile /etc/caddy/Caddyfile
+COPY --link deploy/conf/php.ini /usr/local/etc/php/
 
-ADD . /php
+COPY --link . /php
 
 # Worker mode 
 #ENV FRANKENPHP_CONFIG="worker ./public/index.php"

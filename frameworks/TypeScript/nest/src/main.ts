@@ -23,6 +23,7 @@ async function bootstrapExpress() {
     app = await NestFactory.create<NestExpressApplication>(SqlModule, {
       logger: false,
     });
+    app.getHttpServer().keepAliveTimeout = 0;
   }
 
   app.setBaseViewsDir(join(__dirname, '..', 'views'));
@@ -40,12 +41,14 @@ async function bootstrapFastify() {
       new FastifyAdapter(),
       { logger: false },
     );
+    app.getHttpServer().keepAliveTimeout = 0;
   } else {
     app = await NestFactory.create<NestFastifyApplication>(
       SqlModule,
       new FastifyAdapter(),
       { logger: false },
     );
+    app.getHttpServer().keepAliveTimeout = 0;
   }
 
   app.setViewEngine({

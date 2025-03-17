@@ -4,7 +4,9 @@ import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.annotation.Filter;
 import io.micronaut.http.annotation.ResponseFilter;
 import io.micronaut.http.annotation.ServerFilter;
+import io.micronaut.http.netty.NettyHttpHeaders;
 import io.micronaut.scheduling.annotation.Scheduled;
+import io.netty.handler.codec.http.HttpHeaderNames;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -25,7 +27,8 @@ public class ServerHeaderFilter {
 
     @ResponseFilter
     public void addDateHeader(MutableHttpResponse<?> mutableHttpResponse) {
-        mutableHttpResponse.header("Date", dateHeader);
+        NettyHttpHeaders nettyHttpHeaders = (NettyHttpHeaders) mutableHttpResponse.getHeaders();
+        nettyHttpHeaders.setUnsafe(HttpHeaderNames.DATE, dateHeader);
     }
 
 }

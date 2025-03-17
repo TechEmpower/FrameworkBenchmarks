@@ -1,9 +1,8 @@
 # Giraffe Benchmarks on Linux
 
-This application tests Giraffe in 3 modes:
+This application tests Giraffe in 2 modes:
 
 - Default: Using Giraffe's Endpoint Routing APIs with the `System.Text.Json` serializer
-- Utf8Json: Testing the JSON endpoint with the `Utf8Json` serializer
 - Newtonsoft: Testing the JSON endpoint with the `NewtonsoftJson` serializer
 
 ## Infrastructure Software Versions

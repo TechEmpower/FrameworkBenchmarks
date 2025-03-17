@@ -1,22 +1,23 @@
 #
 # BUILD
 #
-FROM docker.io/gradle:8.4-jdk21-alpine AS build
+FROM docker.io/bellsoft/liberica-runtime-container:jdk-all-21-cds-musl AS build
 USER root
 WORKDIR /hexagon
 
 ADD . .
-RUN gradle --quiet classes
-RUN gradle --quiet -x test installDist
+RUN ./gradlew --quiet classes
+RUN ./gradlew --quiet -x test installDist
 
 #
 # RUNTIME
 #
-FROM docker.io/eclipse-temurin:21-jre-alpine
+FROM docker.io/bellsoft/liberica-runtime-container:jre-21-musl
 ARG PROJECT=hexagon_nettyepoll_postgresql
 
 ENV POSTGRESQL_DB_HOST tfb-database
 ENV JDK_JAVA_OPTIONS -XX:+AlwaysPreTouch -XX:+UseParallelGC -XX:+UseNUMA
+ENV maximumPoolSize 300
 
 COPY --from=build /hexagon/$PROJECT/build/install/$PROJECT /opt/$PROJECT
 

@@ -1,7 +1,7 @@
 use sqlx::{
     pool::PoolConnection,
     postgres::{PgArguments, PgPoolOptions},
-    Arguments, PgPool, Postgres, Error
+    Arguments, Error, PgPool, Postgres,
 };
 
 use crate::{Fortune, World};

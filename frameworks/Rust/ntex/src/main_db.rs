@@ -1,7 +1,6 @@
 #[cfg(not(target_os = "macos"))]
 #[global_allocator]
-static GLOBAL: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
-// static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
+static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
 use ntex::http::header::{CONTENT_TYPE, SERVER};
 use ntex::http::{HttpService, KeepAlive, Request, Response, StatusCode};
@@ -85,6 +84,7 @@ async fn main() -> std::io::Result<()> {
 
     ntex::server::build()
         .backlog(1024)
+        .enable_affinity()
         .bind("techempower", "0.0.0.0:8080", |cfg| {
             cfg.memory_pool(PoolId::P1);
             PoolId::P1.set_read_params(65535, 2048);
@@ -97,7 +97,6 @@ async fn main() -> std::io::Result<()> {
                 .payload_read_rate(Seconds::ZERO, Seconds::ZERO, 0)
                 .h1(AppFactory)
         })?
-        .workers(num_cpus::get())
         .run()
         .await
 }

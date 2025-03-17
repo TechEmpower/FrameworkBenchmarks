@@ -1,0 +1,98 @@
+<?php
+
+require __DIR__.'/vendor/autoload.php';
+
+use Dotenv\Dotenv;
+use Symfony\Component\Console\Application;
+use Fomo\Commands\Server\Start as StartServerCommand;
+use Fomo\Commands\Server\Reload as ReloadServerCommand;
+use Fomo\Commands\Server\Status as StatusServerCommand;
+use Fomo\Commands\Server\Stop as StopServerCommand;
+use Fomo\Commands\Build\Controller as BuildControllerCommand;
+use Fomo\Commands\Build\Exception as BuildExceptionCommand;
+use Fomo\Commands\Build\Middleware as BuildMiddlewareCommand;
+use Fomo\Commands\Build\Resource as BuildResourceCommand;
+use Fomo\Commands\Build\Test as BuildTestCommand;
+use Fomo\Commands\Build\Job as BuildJobCommand;
+use Fomo\Commands\Build\Task as BuildTaskCommand;
+use Fomo\Commands\Build\Service as BuildServiceCommand;
+use Fomo\Commands\Tests\Run as TestsRunCommand;
+use Fomo\Commands\Factory\Start as FactoryStartCommand;
+use Fomo\Commands\Queue\Start as QueueStartCommand;
+use Fomo\Commands\Queue\Status as QueueStatusCommand;
+use Fomo\Commands\Queue\Stop as QueueStopCommand;
+use Fomo\Commands\Scheduling\Start as SchedulerStartCommand;
+use Fomo\Commands\Scheduling\Status as SchedulerStatusCommand;
+use Fomo\Commands\Scheduling\Stop as SchedulerStopCommand;
+
+/*
+ * create const's and definitions
+ */
+define('PROJECT_PATH' , realpath('./'));
+const FOMO_VERSION = '2.4.3';
+const ENABLE = true;
+const DISABLE = false;
+
+/*
+ * load .env file
+ */
+Dotenv::createImmutable(basePath())->load();
+
+/*
+ * set timezone
+ */
+date_default_timezone_set(config('app.timezone'));
+
+/*
+ * create console
+ */
+$application = new Application();
+
+/*
+ * server commands
+ */
+$application->add(new StartServerCommand());
+$application->add(new ReloadServerCommand());
+$application->add(new StatusServerCommand());
+$application->add(new StopServerCommand());
+
+/*
+ * build commands
+ */
+$application->add(new BuildControllerCommand());
+$application->add(new BuildExceptionCommand());
+$application->add(new BuildMiddlewareCommand());
+$application->add(new BuildResourceCommand());
+$application->add(new BuildTestCommand());
+$application->add(new BuildJobCommand());
+$application->add(new BuildTaskCommand());
+$application->add(new BuildServiceCommand());
+
+/*
+ * tests commands
+ */
+$application->add(new TestsRunCommand());
+
+/*
+ * factory commands
+ */
+$application->add(new FactoryStartCommand());
+
+/*
+ * queue commands
+ */
+$application->add(new QueueStartCommand());
+$application->add(new QueueStatusCommand());
+$application->add(new QueueStopCommand());
+
+/*
+ * scheduler commands
+ */
+$application->add(new SchedulerStartCommand());
+$application->add(new SchedulerStatusCommand());
+$application->add(new SchedulerStopCommand());
+
+/*
+ * run console
+ */
+$application->run();

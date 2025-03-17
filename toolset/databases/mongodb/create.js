@@ -1,4 +1,3 @@
-disableTelemetry()
 db = db.getSiblingDB('hello_world')
 db.world.drop()
 for (var i = 1; i <= 10000; i++) {

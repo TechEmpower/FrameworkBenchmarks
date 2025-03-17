@@ -1,21 +1,27 @@
-use axum::{
-    http::{header, HeaderValue, StatusCode},
-    response::IntoResponse,
-    routing::get,
-    Json, Router,
-};
-use dotenv::dotenv;
-use tower_http::set_header::SetResponseHeaderLayer;
-
-mod models_common;
+mod common;
 mod server;
 
-use self::models_common::Message;
+use axum::{http::StatusCode, response::IntoResponse, routing::get, Router};
+use common::models::Message;
+use dotenv::dotenv;
+use mimalloc::MiMalloc;
 
+#[global_allocator]
+static GLOBAL: MiMalloc = MiMalloc;
+
+#[cfg(not(feature = "simd-json"))]
+use axum::Json;
+#[cfg(feature = "simd-json")]
+use common::simd_json::Json;
+
+/// Return a plaintext static string.
+#[inline(always)]
 pub async fn plaintext() -> &'static str {
     "Hello, World!"
 }
 
+/// Return a JSON message.
+#[inline(always)]
 pub async fn json() -> impl IntoResponse {
     let message = Message {
         message: "Hello, World!",
@@ -24,23 +30,16 @@ pub async fn json() -> impl IntoResponse {
     (StatusCode::OK, Json(message))
 }
 
-#[tokio::main]
-async fn main() {
+fn main() {
     dotenv().ok();
+    server::start_tokio(serve_app)
+}
 
-    let server_header_value = HeaderValue::from_static("Axum");
+async fn serve_app() {
 
     let app = Router::new()
         .route("/plaintext", get(plaintext))
-        .route("/json", get(json))
-        .layer(SetResponseHeaderLayer::if_not_present(
-            header::SERVER,
-            server_header_value,
-        ));
+        .route("/json", get(json));
 
-    server::builder()
-        .http1_pipeline_flush(true)
-        .serve(app.into_make_service())
-        .await
-        .unwrap();
+    server::serve_hyper(app, Some(8000)).await
 }

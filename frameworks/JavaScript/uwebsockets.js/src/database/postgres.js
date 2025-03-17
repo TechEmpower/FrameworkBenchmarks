@@ -5,6 +5,7 @@ const sql = postgres({
   user: "benchmarkdbuser",
   password: "benchmarkdbpass",
   database: "hello_world",
+  fetch_types: false,
   max: 1
 });
 

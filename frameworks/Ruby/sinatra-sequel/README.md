@@ -12,12 +12,12 @@ comparing a variety of web platforms.
 
 The tests will be run with:
 
-* [Ruby 3.3](http://www.ruby-lang.org)
+* [Ruby 3.4](http://www.ruby-lang.org)
 * [JRuby 9.4](http://jruby.org)
 * [Puma 6](http://puma.io)
-* [Passenger 5](https://www.phusionpassenger.com)
+* [Passenger 6](https://www.phusionpassenger.com)
 * [Unicorn 5](https://bogomips.org/unicorn/)
-* [Sinatra 2](http://www.sinatrarb.com)
+* [Sinatra 4](http://www.sinatrarb.com)
 * [Sequel 5](http://sequel.jeremyevans.net)
 * [Slim 3](http://slim-lang.com)
 * [MySQL 5.5](https://www.mysql.com)

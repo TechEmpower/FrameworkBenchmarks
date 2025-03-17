@@ -8,7 +8,7 @@ hpack==4.0.0
 hypercorn==0.14.3
 hyperframe==6.0.1
 jetblack-asgi-typing==0.4.0
-Jinja2==3.1.3
+Jinja2==3.1.4
 MarkupSafe==2.1.1
 orjson==3.8.0
 priority==2.0.0

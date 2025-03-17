@@ -6,9 +6,9 @@ using System;
 using System.Threading;
 using System.Text;
 using BeetleX.Buffers;
-using SpanJson;
 using System.Collections.Generic;
 using BeetleX.EventArgs;
+using System.Text.Json;
 
 namespace Benchmarks
 {
@@ -109,8 +109,8 @@ namespace Benchmarks
                 mComplete.TrySetResult(new object());
             };
             mApiServer.Open();
-            RawDb._connectionString = "Server=tfb-database;Database=hello_world;User Id=benchmarkdbuser;Password=benchmarkdbpass;Maximum Pool Size=256;NoResetOnClose=true;Enlist=false;Max Auto Prepare=4;Multiplexing=true;Write Coalescing Delay Us=500;Write Coalescing Buffer Threshold Bytes=1000";
-            //RawDb._connectionString = "Server=192.168.2.19;Database=hello_world;User Id=benchmarkdbuser;Password=benchmarkdbpass;Maximum Pool Size=256;NoResetOnClose=true;Enlist=false;Max Auto Prepare=3";
+            RawDb._connectionString = "Server=tfb-database;Database=hello_world;User Id=benchmarkdbuser;Password=benchmarkdbpass;SSL Mode=Disable;Maximum Pool Size=64;NoResetOnClose=true;Enlist=false;Max Auto Prepare=4;Multiplexing=true;Write Coalescing Buffer Threshold Bytes=1000";
+            //RawDb._connectionString = "Server=localhost;Database=hello_world;User Id=benchmarkdbuser;Password=benchmarkdbpass;Maximum Pool Size=256;NoResetOnClose=true;Enlist=false;Max Auto Prepare=3";
             await mComplete.Task;
         }
 
@@ -140,7 +140,8 @@ namespace Benchmarks
 
         public override void Write(PipeStream stream, HttpResponse response)
         {
-            JsonSerializer.NonGeneric.Utf8.SerializeAsync(Data, stream);
+
+            JsonSerializer.Serialize(stream, Data); ;
         }
 
 

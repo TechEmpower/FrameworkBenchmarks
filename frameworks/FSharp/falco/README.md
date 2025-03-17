@@ -1,11 +1,12 @@
 # Falco Tests on Linux
+
 This includes tests for plaintext, json, and fortunes HTML serialization.
 
 ## Infrastructure Software Versions
 
 **Language**
 
-* F# 6.0
+* F# 6.0 (or greater)
 
 **Platforms**
 
@@ -18,11 +19,10 @@ This includes tests for plaintext, json, and fortunes HTML serialization.
 **Web Stack**
 
 * [Falco](https://github.com/pimbrouwers/Falco)
-* [Donald](https://github.com/pimbrouwers/Donald)
 * ASP.NET Core
 
 ## Paths & Source for Tests
 
-* [Plaintext](src/App/Value.fs): "/plaintext"
-* [JSON serialization](src/App/Value.fs): "/json"
-* [Fortunes using Donald](src/App/Fortune.fs): "/fortunes"
+* [Plaintext](src/App/Program.fs): "/plaintext"
+* [JSON serialization](src/App/Program.fs): "/json"
+* [Fortunes using Donald](src/App/Program.fs): "/fortunes"
