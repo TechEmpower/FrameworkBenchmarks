@@ -5,6 +5,7 @@ RUN gradle installDist --no-daemon
 
 #FROM openjdk:21
 FROM bellsoft/liberica-openjre-debian:21.0.5
+RUN apt install findutils
 WORKDIR /today
 COPY --from=build /infra-src/build/install/today/ ./
 
