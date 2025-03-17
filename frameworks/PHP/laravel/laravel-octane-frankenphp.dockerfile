@@ -1,4 +1,6 @@
 FROM dunglas/frankenphp
+
+# TEST
  
 RUN install-php-extensions \
 	opcache \
