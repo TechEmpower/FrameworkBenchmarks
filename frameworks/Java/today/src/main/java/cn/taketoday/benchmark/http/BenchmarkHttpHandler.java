@@ -2,21 +2,22 @@ package cn.taketoday.benchmark.http;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
 
 import cn.taketoday.benchmark.model.Fortune;
+import cn.taketoday.benchmark.model.Message;
 import cn.taketoday.benchmark.model.World;
-import cn.taketoday.http.MediaType;
-import cn.taketoday.http.ResponseEntity;
-import cn.taketoday.jdbc.persistence.EntityManager;
-import cn.taketoday.lang.Nullable;
-import cn.taketoday.ui.Model;
-import cn.taketoday.web.annotation.GET;
-import cn.taketoday.web.annotation.RestController;
-import cn.taketoday.web.view.ViewRef;
+import infra.http.MediaType;
+import infra.http.ResponseEntity;
+import infra.lang.Nullable;
+import infra.persistence.EntityManager;
+import infra.ui.Model;
+import infra.util.concurrent.Future;
+import infra.web.annotation.GET;
+import infra.web.annotation.RestController;
+import infra.web.view.ViewRef;
 
 /**
  * @author <a href="https://github.com/TAKETODAY">Harry Yang</a>
@@ -30,15 +31,18 @@ final class BenchmarkHttpHandler {
 
   private final EntityManager entityManager;
 
+  private final WorldCache worldCache;
+
   BenchmarkHttpHandler(EntityManager entityManager) {
     this.entityManager = entityManager;
+    this.worldCache = new WorldCache(entityManager.find(World.class));
   }
 
   @GET("/json")
-  public ResponseEntity<Map<String, String>> json() {
+  public ResponseEntity<Message> json() {
     return ResponseEntity.ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(Map.of("message", "Hello, World!"));
+            .body(new Message("Hello, World!"));
   }
 
   @GET("/plaintext")
@@ -59,9 +63,14 @@ final class BenchmarkHttpHandler {
             .toList();
   }
 
+  @GET("/cached")
+  public List<World> cachedQueries(@Nullable String count) {
+    return worldCache.getCachedWorld(parseQueryCount(count));
+  }
+
   @GET("/updates")
-  public List<World> updates(@Nullable String queries) {
-    return randomNumbers()
+  public Future<List<World>> updates(@Nullable String queries) {
+    return Future.run(() -> randomNumbers()
             .mapToObj(this::findWorldById)
             .filter(Objects::nonNull)
             .peek(world -> {
@@ -69,7 +78,7 @@ final class BenchmarkHttpHandler {
               entityManager.updateById(world);
             })
             .limit(parseQueryCount(queries))
-            .toList();
+            .toList());
   }
 
   @GET("/fortunes")
@@ -84,7 +93,7 @@ final class BenchmarkHttpHandler {
 
   @Nullable
   private World findWorldById(int id) {
-    return entityManager.findById(World.class, boxed[id]);
+    return entityManager.findById(World.class, id);
   }
 
   //
@@ -95,12 +104,8 @@ final class BenchmarkHttpHandler {
             .distinct();
   }
 
-  private static final Integer[] boxed = IntStream.range(MIN_WORLD_NUMBER, MAX_WORLD_NUMBER + 1)
-          .boxed()
-          .toArray(Integer[]::new);
-
-  private static Integer nextInt() {
-    return boxed[ThreadLocalRandom.current().nextInt(MIN_WORLD_NUMBER, MAX_WORLD_NUMBER)];
+  private static int nextInt() {
+    return ThreadLocalRandom.current().nextInt(MIN_WORLD_NUMBER, MAX_WORLD_NUMBER);
   }
 
   private static int parseQueryCount(@Nullable String textValue) {

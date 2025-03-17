@@ -17,6 +17,10 @@ http://localhost:8080/db
 
 http://localhost:8080/queries?queries=
 
+### Caching QUERY
+
+http://localhost:8080/cached?count=10
+
 ### UPDATE
 
 http://localhost:8080/update?queries=
