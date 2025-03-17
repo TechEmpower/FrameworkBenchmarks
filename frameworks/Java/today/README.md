@@ -19,7 +19,7 @@ http://localhost:8080/queries?queries=
 
 ### Caching QUERY
 
-http://localhost:8080/cached?count=10
+http://localhost:8080/cached-queries?count=10
 
 ### UPDATE
 

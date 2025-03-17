@@ -62,7 +62,7 @@ final class BenchmarkHttpHandler {
             .asList();
   }
 
-  @GET("/cached")
+  @GET("/cached-queries")
   public List<World> cachedQueries(@Nullable String count) {
     return worldCache.getCachedWorld(parseQueryCount(count));
   }
