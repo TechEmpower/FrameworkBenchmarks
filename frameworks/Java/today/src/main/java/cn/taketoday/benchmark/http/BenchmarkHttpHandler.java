@@ -2,7 +2,6 @@ package cn.taketoday.benchmark.http;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
 
@@ -27,6 +26,7 @@ import infra.web.view.ViewRef;
 final class BenchmarkHttpHandler {
 
   private static final int MIN_WORLD_NUMBER = 1;
+
   private static final int MAX_WORLD_NUMBER = 10_000;
 
   private final EntityManager entityManager;
@@ -56,11 +56,9 @@ final class BenchmarkHttpHandler {
   }
 
   @GET("/queries")
-  public List<World> queries(@Nullable String queries) {
-    return randomNumbers()
-            .mapToObj(this::findWorldById)
-            .limit(parseQueryCount(queries))
-            .toList();
+  public Future<List<World>> queries(@Nullable String queries) {
+    return Future.combine(randomNumbers().limit(parseQueryCount(queries)).mapToObj(this::findWorldByIdFuture))
+            .asList();
   }
 
   @GET("/cached")
@@ -70,15 +68,14 @@ final class BenchmarkHttpHandler {
 
   @GET("/updates")
   public Future<List<World>> updates(@Nullable String queries) {
-    return Future.run(() -> randomNumbers()
-            .mapToObj(this::findWorldById)
-            .filter(Objects::nonNull)
-            .peek(world -> {
+    return Future.combine(randomNumbers()
+            .limit(parseQueryCount(queries))
+            .mapToObj(this::findWorldByIdFuture)
+            .map(worldFuture -> worldFuture.map(world -> {
               world.setRandomNumber(nextInt());
               entityManager.updateById(world);
-            })
-            .limit(parseQueryCount(queries))
-            .toList());
+              return world;
+            }))).asList();
   }
 
   @GET("/fortunes")
@@ -89,6 +86,10 @@ final class BenchmarkHttpHandler {
 
     model.addAttribute("fortunes", fortunes);
     return ViewRef.forViewName("fortunes");
+  }
+
+  private Future<World> findWorldByIdFuture(int id) {
+    return Future.run(() -> findWorldById(id));
   }
 
   @Nullable
