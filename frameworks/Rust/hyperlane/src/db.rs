@@ -137,31 +137,35 @@ pub async fn connection_db() -> DbPoolConnection {
 }
 
 #[inline]
-pub async fn get_update_data(limit: Queries) -> (String, Vec<QueryRow>) {
+pub async fn get_update_data(
+    limit: Queries,
+) -> (String, Vec<QueryRow>, Vec<Queries>, Vec<Queries>) {
     let db_pool: DbPoolConnection = get_db_connection().await;
     let mut query_res_list: Vec<QueryRow> = Vec::with_capacity(limit as usize);
-    let rows: Vec<QueryRow> = get_some_row_id(limit as Queries, &db_pool).await;
-    let mut sql: String = format!("UPDATE {} SET randomNumber = CASE id ", TABLE_NAME_WORLD);
-    let mut id_list: Vec<i32> = Vec::with_capacity(limit as usize);
-    let mut value_list: String = String::new();
-    let mut id_in_clause: String = format!("{}", rows[0].id);
-    let last_idx: usize = rows.len() - 1;
+    let rows: Vec<QueryRow> = get_some_row_id(limit, &db_pool).await;
+    let mut sql = format!("UPDATE {} SET randomNumber = CASE id ", TABLE_NAME_WORLD);
+    let mut id_list: Vec<i32> = Vec::with_capacity(rows.len());
+    let mut value_list: Vec<String> = Vec::with_capacity(rows.len() * 2);
+    let mut random_numbers: Vec<i32> = Vec::with_capacity(rows.len());
     for (i, row) in rows.iter().enumerate() {
-        let new_random_number: Queries = get_random_id();
-        let id: i32 = row.id;
-        id_list.push(id);
-        value_list.push_str(&format!("WHEN {} THEN {} ", id, new_random_number));
-        if i < last_idx {
-            id_in_clause.push_str(&format!(",{}", id.to_string()));
-        }
-        query_res_list.push(QueryRow::new(id, new_random_number as i32));
+        let new_random_number: i32 = get_random_id() as i32;
+        id_list.push(row.id);
+        random_numbers.push(new_random_number);
+        value_list.push(format!("WHEN ${} THEN ${}", i * 2 + 1, i * 2 + 2));
+        query_res_list.push(QueryRow::new(row.id, new_random_number));
     }
-    sql.push_str(&value_list);
+    sql.push_str(&value_list.join(" "));
+    let id_params: String = id_list
+        .iter()
+        .enumerate()
+        .map(|(i, _)| format!("${}", (rows.len() * 2 + 1) + i))
+        .collect::<Vec<_>>()
+        .join(",");
     sql.push_str(&format!(
-        "ELSE randomNumber END WHERE id IN ({})",
-        id_in_clause
+        " ELSE randomNumber END WHERE id IN ({})",
+        id_params
     ));
-    (sql, query_res_list)
+    (sql, query_res_list, id_list, random_numbers)
 }
 
 #[inline]
@@ -201,8 +205,15 @@ pub async fn query_world_row(db_pool: &DbPoolConnection, id: Queries) -> QueryRo
 #[inline]
 pub async fn update_world_rows(limit: Queries) -> Vec<QueryRow> {
     let db_pool: DbPoolConnection = get_db_connection().await;
-    let (sql, data) = get_update_data(limit).await;
-    let _ = query(&sql).execute(&db_pool).await;
+    let (sql, data, id_list, random_numbers) = get_update_data(limit).await;
+    let mut query_builder: query::Query<'_, Postgres, postgres::PgArguments> = query(&sql);
+    for (id, random_number) in id_list.iter().zip(random_numbers.iter()) {
+        query_builder = query_builder.bind(id).bind(random_number);
+    }
+    for id in &id_list {
+        query_builder = query_builder.bind(id);
+    }
+    let _ = query_builder.execute(&db_pool).await;
     data
 }
 
