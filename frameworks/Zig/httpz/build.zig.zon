@@ -1,0 +1,15 @@
+.{ .name = "Zap testing", .version = "0.1.1", .paths = .{
+    "build.zig",
+    "build.zig.zon",
+    "src",
+}, .dependencies = .{
+    .pg = .{ .url = "https://github.com/karlseguin/pg.zig/archive/239a4468163a49d8c0d03285632eabe96003e9e2.tar.gz", .hash = "1220a1d7e51e2fa45e547c76a9e099c09d06e14b0b9bfc6baa89367f56f1ded399a0" },
+    .httpz = .{
+        .url = "git+https://github.com/karlseguin/http.zig?ref=zig-0.13#7d2ddae87af9b110783085c0ea6b03985faa4584",
+        .hash = "12208c1f2c5f730c4c03aabeb0632ade7e21914af03e6510311b449458198d0835d6",
+    },
+    .datetimez = .{
+        .url = "git+https://github.com/frmdstryr/zig-datetime#70aebf28fb3e137cd84123a9349d157a74708721",
+        .hash = "122077215ce36e125a490e59ec1748ffd4f6ba00d4d14f7308978e5360711d72d77f",
+    },
+} }

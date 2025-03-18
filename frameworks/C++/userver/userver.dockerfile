@@ -1,4 +1,4 @@
-FROM ghcr.io/userver-framework/ubuntu-userver-build-base:v2 AS builder
+FROM ghcr.io/userver-framework/ubuntu-22.04-userver-pg AS builder
 
 RUN apt update && \
     apt install -y lsb-release wget software-properties-common gnupg && \
@@ -6,7 +6,7 @@ RUN apt update && \
 
 WORKDIR /src
 RUN git clone https://github.com/userver-framework/userver.git && \
-    cd userver && git checkout ec1a3b07793f8d4cd0968cd61d8e6079d667a1e7
+    cd userver && git checkout bdd5e1e03921ff378b062f86a189c3cfa3d66332
 
 COPY userver_benchmark/ ./
 RUN mkdir build && cd build && \
@@ -14,7 +14,7 @@ RUN mkdir build && cd build && \
           -DUSERVER_FEATURE_UTEST=0 \
           -DUSERVER_FEATURE_POSTGRESQL=1 \
           -DUSERVER_FEATURE_ERASE_LOG_WITH_LEVEL=warning \
-          -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-march=native -flto=thin" -DCMAKE_C_FLAGS="-march=native -flto=thin" \
+          -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-march=native" -DCMAKE_C_FLAGS="-march=native" \
           -DCMAKE_CXX_COMPILER=clang++-16 -DCMAKE_C_COMPILER=clang-16 -DUSERVER_USE_LD=lld-16 \
           -DUSERVER_LTO=0 .. && \
     make -j $(nproc)

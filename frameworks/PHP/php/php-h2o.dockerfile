@@ -4,7 +4,7 @@ ARG H2O_PREFIX=/opt/h2o
 
 FROM "ubuntu:${UBUNTU_VERSION}" AS compile
 
-ARG H2O_VERSION=18b175f71ede08b50d3e5ae8303dacef3ea510fc
+ARG H2O_VERSION=c54c63285b52421da2782f028022647fc2ea3dd1
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG H2O_PREFIX
@@ -44,7 +44,7 @@ RUN apt-get -yqq update && \
 
 FROM "ubuntu:${UBUNTU_VERSION}"
 
-ARG PHP_VERSION=8.3
+ARG PHP_VERSION=8.4
 
 ENV TZ=America/Los_Angeles
 
@@ -75,5 +75,5 @@ ARG TFB_TEST_DATABASE
 ARG TFB_TEST_NAME
 
 CMD sed -i "s/num-threads: x/num-threads: $((2 * $(nproc)))/g" /opt/h2o/etc/h2o.conf && \
-    service php8.3-fpm start && \
+    service php8.4-fpm start && \
     /opt/h2o/bin/h2o -c /opt/h2o/etc/h2o.conf

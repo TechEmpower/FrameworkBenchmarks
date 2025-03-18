@@ -8,9 +8,15 @@ if __name__ == '__main__':
     interface = sys.argv[1]
     threading_mode = sys.argv[2]
     workers = multiprocessing.cpu_count()
-    if threading_mode == "workers":
-        workers = round(workers / 2)
-    threads = 1
+
+    if interface == "rsgi":
+        #: leave 25% cpu to the Rust runtime
+        workers = round(workers * 0.75)
+
+    blocking_threads = None
+    if interface == "wsgi":
+        #: we don't run any I/O in WSGI benches
+        blocking_threads = 1
 
     Granian(
         f"app_{interface}:main",
@@ -18,8 +24,8 @@ if __name__ == '__main__':
         port=8080,
         workers=workers,
         threading_mode=threading_mode,
-        threads=threads,
-        backlog=2048,
+        blocking_threads=blocking_threads,
+        backlog=16384,
         interface=interface,
         http="1",
         websockets=False

@@ -1,4 +1,4 @@
-FROM mongo:7.0
+FROM mongo:8.0
 
 ENV MONGO_INITDB_DATABASE=hello_world
 

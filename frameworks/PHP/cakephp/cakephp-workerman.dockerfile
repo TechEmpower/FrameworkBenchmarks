@@ -24,8 +24,6 @@ RUN composer install --optimize-autoloader --classmap-authoritative --no-dev  --
 
 RUN chmod -R 777 /cakephp
 
-#ENV XDEBUG_CONFIG="remote_host=$(ipconfig getifaddr en0)"
-ENV XDEBUG_SESSION=xdebug_is_great
 #COPY deploy/conf/cli-php.ini /etc/php/8.3/cli/php.ini
 
 CMD php -c deploy/conf/cli-php.ini \

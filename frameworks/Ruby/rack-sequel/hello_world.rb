@@ -1,12 +1,31 @@
 # frozen_string_literal: true
+require 'time'
 
 # Our Rack application to be executed by rackup
 class HelloWorld
-  DEFAULT_HEADERS = {}.tap do |h|
-    h[SERVER_HEADER] = SERVER_STRING if SERVER_STRING
-
-    h.freeze
-  end
+  MAX_PK = 10_000
+  ID_RANGE = (1..10_000).freeze
+  ALL_IDS = ID_RANGE.to_a
+  QUERIES_MIN = 1
+  QUERIES_MAX = 500
+  CONTENT_TYPE = 'Content-Type'
+  CONTENT_LENGTH = 'Content-Length'
+  JSON_TYPE = 'application/json'
+  HTML_TYPE = 'text/html; charset=utf-8'
+  PLAINTEXT_TYPE = 'text/plain'
+  DATE = 'Date'
+  SERVER = 'Server'
+  SERVER_STRING = if defined?(PhusionPassenger)
+                    'Passenger'
+                  elsif defined?(Puma)
+                    'Puma'
+                  elsif defined?(Iodine)
+                    'Iodine'
+                  elsif defined?(Unicorn)
+                    'Unicorn'
+                  else
+                    'Ruby Rack'
+                  end
 
   def bounded_queries(env)
     params = Rack::Utils.parse_query(env['QUERY_STRING'])
@@ -20,17 +39,15 @@ class HelloWorld
     rand(MAX_PK).succ
   end
 
-  WORLD_BY_ID = World.naked.where(:id=>:$id).prepare(:first, :world_by_id)
-  WORLD_UPDATE = World.where(:id=>:$id).prepare(:update, :world_update, :randomnumber=>:$randomnumber)
-
   def db
-    WORLD_BY_ID.(:id=>rand1)
+    World::BY_ID.(id: rand1)
   end
 
   def queries(env)
+    ids = ALL_IDS.sample(bounded_queries(env))
     DB.synchronize do
-      ALL_IDS.sample(bounded_queries(env)).map do |id|
-        WORLD_BY_ID.(id: id)
+      ids.map do |id|
+        World::BY_ID.(id: id)
       end
     end
   end
@@ -38,8 +55,8 @@ class HelloWorld
   def fortunes
     fortunes = Fortune.all
     fortunes << Fortune.new(
-      :id=>0,
-      :message=>'Additional fortune added at request time.'
+      id: 0,
+      message: 'Additional fortune added at request time.'
     )
     fortunes.sort_by!(&:message)
 
@@ -77,45 +94,74 @@ class HelloWorld
   end
 
   def updates(env)
+    ids = ALL_IDS.sample(bounded_queries(env))
     DB.synchronize do
-      ALL_IDS.sample(bounded_queries(env)).map do |id|
-        world = WORLD_BY_ID.(id: id)
-        WORLD_UPDATE.(id: world[:id], randomnumber: (world[:randomnumber] = rand1))
-        world
-      end
+      worlds =
+        ids.map do |id|
+          world = World::BY_ID.(id: id)
+          world[:randomnumber] = rand1
+          world
+        end
+      World.batch_update(worlds)
+      worlds
     end
   end
 
   def call(env)
-    content_type, *body =
-      case env['PATH_INFO']
-      when '/json'
-        # Test type 1: JSON serialization
-        [JSON_TYPE, JSON.fast_generate(:message=>'Hello, World!')]
-      when '/db'
-        # Test type 2: Single database query
-        [JSON_TYPE, JSON.fast_generate(db)]
-      when '/queries'
-        # Test type 3: Multiple database queries
-        [JSON_TYPE, JSON.fast_generate(queries(env))]
-      when '/fortunes'
-        # Test type 4: Fortunes
-        [HTML_TYPE, fortunes]
-      when '/updates'
-        # Test type 5: Database updates
-        [JSON_TYPE, JSON.fast_generate(updates(env))]
-      when '/plaintext'
-        # Test type 6: Plaintext
-        [PLAINTEXT_TYPE, 'Hello, World!']
-      end
+    case env['PATH_INFO']
+    when '/json'
+      # Test type 1: JSON serialization
+      respond JSON_TYPE, { message: 'Hello, World!' }.to_json
+    when '/db'
+      # Test type 2: Single database query
+      respond JSON_TYPE, db.to_json
+    when '/queries'
+      # Test type 3: Multiple database queries
+      respond JSON_TYPE, queries(env).to_json
+    when '/fortunes'
+      # Test type 4: Fortunes
+      respond HTML_TYPE, fortunes
+    when '/updates'
+      # Test type 5: Database updates
+      respond JSON_TYPE, updates(env).to_json
+    when '/plaintext'
+      # Test type 6: Plaintext
+      respond PLAINTEXT_TYPE, 'Hello, World!'
+    end
+  end
 
+  private
+
+  def respond(content_type, body)
     [
       200,
-      DEFAULT_HEADERS.merge(
-        CONTENT_TYPE => content_type,
-        DATE_HEADER => Time.now.httpdate
-      ),
-      body
+      headers(content_type, body),
+      [body]
     ]
+  end
+
+  if defined?(Unicorn)
+    def headers(content_type, body)
+      {
+        CONTENT_TYPE => content_type,
+        SERVER => SERVER_STRING,
+        CONTENT_LENGTH => body.bytesize.to_s
+      }
+    end
+  elsif defined?(Puma)
+    def headers(content_type, _)
+      {
+        CONTENT_TYPE => content_type,
+        SERVER => SERVER_STRING,
+        DATE => Time.now.utc.httpdate
+      }
+    end
+  else
+    def headers(content_type, _)
+      {
+        CONTENT_TYPE => content_type,
+        SERVER => SERVER_STRING
+      }
+    end
   end
 end

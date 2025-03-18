@@ -1,29 +1,21 @@
-﻿using System;
-using System.Threading.Tasks;
-
+﻿using Benchmarks.Model;
+using GenHTTP.Modules.Webservices;
 using Microsoft.EntityFrameworkCore;
 
-using GenHTTP.Modules.Webservices;
+namespace Benchmarks.Tests;
 
-using Benchmarks.Model;
-
-namespace Benchmarks.Tests
+public sealed class DbResource
 {
+    private static readonly Random Random = new();
 
-    public sealed class DbResource
+    [ResourceMethod]
+    public async ValueTask<World> GetRandomWorld()
     {
-        private static readonly Random _Random = new();
+        var id = Random.Next(1, 10001);
 
-        [ResourceMethod]
-        public async ValueTask<World> GetRandomWorld()
-        {
-            var id = _Random.Next(1, 10001);
+        await using var context = DatabaseContext.CreateNoTracking();
 
-            using var context = DatabaseContext.CreateNoTracking();
-
-            return await context.World.FirstOrDefaultAsync(w => w.Id == id).ConfigureAwait(false);
-        }
-
+        return await context.World.FirstOrDefaultAsync(w => w.Id == id).ConfigureAwait(false);
     }
 
 }

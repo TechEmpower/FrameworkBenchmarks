@@ -1,7 +1,7 @@
 package cn.taketoday.benchmark;
 
-import cn.taketoday.framework.Application;
-import cn.taketoday.framework.InfraApplication;
+import infra.app.Application;
+import infra.app.InfraApplication;
 
 @InfraApplication
 public class BenchmarkApplication {

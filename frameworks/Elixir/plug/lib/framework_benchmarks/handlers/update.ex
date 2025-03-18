@@ -22,7 +22,7 @@ defmodule FrameworkBenchmarks.Handlers.Update do
         :rand.uniform(10_000)
       end)
 
-    records =
+    json =
       ids
       |> Enum.map(
         &Task.async(fn ->
@@ -38,16 +38,8 @@ defmodule FrameworkBenchmarks.Handlers.Update do
           |> FrameworkBenchmarks.Repo.update!()
         end)
       )
-      |> Enum.map(&Task.await(&1))
-
-    {:ok, json} =
-      records
-      |> Enum.map(fn record ->
-        record
-        |> Map.from_struct()
-        |> Map.drop([:__meta__])
-      end)
-      |> Jason.encode()
+      |> Enum.map(&Task.await(&1, :infinity))
+      |> Jason.encode_to_iodata!()
 
     conn
     |> Plug.Conn.put_resp_content_type("application/json")

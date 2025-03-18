@@ -7,6 +7,8 @@ import io.ktor.server.plugins.defaultheaders.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.vertx.kotlin.coroutines.await
+import io.vertx.kotlin.coroutines.coAwait
+import io.vertx.pgclient.PgBuilder
 import io.vertx.pgclient.PgConnectOptions
 import io.vertx.pgclient.PgPool
 import io.vertx.sqlclient.PoolOptions
@@ -35,6 +37,12 @@ interface Repository {
 }
 
 class PgclientRepository : Repository {
+    companion object {
+        private const val FORTUNES_QUERY = "select id, message from FORTUNE"
+        private const val SELECT_WORLD_QUERY = "SELECT id, randomnumber from WORLD where id=$1"
+        private const val UPDATE_WORLD_QUERY = "UPDATE WORLD SET randomnumber=$1 WHERE id=$2"
+    }
+
     private val connectOptions =
         PgConnectOptions().apply {
             port = 5432
@@ -47,21 +55,23 @@ class PgclientRepository : Repository {
         }
 
     private val poolOptions = PoolOptions()
-    private val client = ThreadLocal.withInitial { PgPool.client(connectOptions, poolOptions) }
-    private fun client() = client.get()
+    private val client = PgBuilder.client()
+        .with(poolOptions)
+        .connectingTo(connectOptions)
+        .build()
 
     override suspend fun getFortunes(): List<Fortune> {
-        val results = client().preparedQuery("select id, message from fortune").execute().await()
+        val results = client.preparedQuery(FORTUNES_QUERY).execute().coAwait()
         return results.map { Fortune(it.getInteger(0), it.getString(1)) }
     }
 
     override suspend fun getWorld(): World {
         val worldId = rand.nextInt(1, 10001)
         val result =
-            client()
-                .preparedQuery("select id, randomNumber from world where id = $1")
+            client
+                .preparedQuery(SELECT_WORLD_QUERY)
                 .execute(Tuple.of(worldId))
-                .await()
+                .coAwait()
         val row = result.first()
         return World(row.getInteger(0), row.getInteger(1)!!)
     }
@@ -69,10 +79,10 @@ class PgclientRepository : Repository {
     override suspend fun updateWorlds(worlds: List<World>) {
         // Worlds should be sorted before being batch-updated with to avoid data race and deadlocks.
         val batch = worlds.sortedBy { it.id }.map { Tuple.of(it.randomNumber, it.id) }
-        client()
-            .preparedQuery("update world set randomNumber = $1 where id = $2")
+        client
+            .preparedQuery(UPDATE_WORLD_QUERY)
             .executeBatch(batch)
-            .await()
+            .coAwait()
     }
 }
 

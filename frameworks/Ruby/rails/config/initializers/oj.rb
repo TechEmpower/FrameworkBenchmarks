@@ -1,1 +1,0 @@
-Oj.optimize_rails

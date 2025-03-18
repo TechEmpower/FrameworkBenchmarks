@@ -1,5 +1,10 @@
-const fastify = require("fastify")();
+const fastify = require("fastify")({ logger: false, keepAliveTimeout: 0 });
 const handlers = require("./handlers");
+
+fastify.setErrorHandler((error, request, reply) => {
+  console.log(error)
+  reply.status(500).send({ ok: false })
+})
 
 fastify.register(require("@fastify/view"), {
   engine: {

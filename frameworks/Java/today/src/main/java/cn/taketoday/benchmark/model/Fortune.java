@@ -2,8 +2,8 @@ package cn.taketoday.benchmark.model;
 
 import java.util.Objects;
 
-import cn.taketoday.jdbc.persistence.Id;
-import cn.taketoday.jdbc.persistence.Table;
+import infra.persistence.Id;
+import infra.persistence.Table;
 
 @Table("fortune")
 public class Fortune {
@@ -13,7 +13,8 @@ public class Fortune {
 
   private String message;
 
-  public Fortune() { }
+  public Fortune() {
+  }
 
   public Fortune(Integer id, String message) {
     this.id = id;

@@ -7,12 +7,12 @@
   "dependencies": {
     "bluebird": "3.5.1",
     "handlebars": "4.3.0",
-    "koa": "2.5.0",
+    "koa": "2.15.4",
     "koa-bodyparser": "4.2.0",
     "koa-hbs": "1.0.0",
     "koa-router": "7.4.0",
     "mongoose": "5.13.20",
-    "mysql2": "3.9.7",
+    "mysql2": "3.9.8",
     "pg": "8.5.1",
     "pg-hstore": "2.3.2",
     "sequelize": "6.29.0"

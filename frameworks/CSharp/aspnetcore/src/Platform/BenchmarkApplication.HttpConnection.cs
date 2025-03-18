@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http;
 
 namespace PlatformBenchmarks;
 
-public partial class BenchmarkApplication : IHttpConnection
+public sealed partial class BenchmarkApplication : IHttpConnection
 {
     private State _state;
 
@@ -193,15 +193,15 @@ public partial class BenchmarkApplication : IHttpConnection
         => new(new(pipeWriter), sizeHint);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static ChunkedBufferWriter<WriterAdapter> GetChunkedWriter(PipeWriter pipeWriter, int chunkSizeHint)
+    private static ChunkedPipeWriter GetChunkedWriter(PipeWriter pipeWriter, int chunkSizeHint)
     {
         var writer = ChunkedWriterPool.Get();
-        writer.SetOutput(new WriterAdapter(pipeWriter), chunkSizeHint);
+        writer.SetOutput(pipeWriter, chunkSizeHint);
         return writer;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static void ReturnChunkedWriter(ChunkedBufferWriter<WriterAdapter> writer) => ChunkedWriterPool.Return(writer);
+    private static void ReturnChunkedWriter(ChunkedPipeWriter writer) => ChunkedWriterPool.Return(writer);
 
     private struct WriterAdapter : IBufferWriter<byte>
     {

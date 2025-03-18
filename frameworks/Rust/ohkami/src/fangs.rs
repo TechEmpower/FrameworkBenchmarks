@@ -1,6 +1,4 @@
 use ohkami::prelude::*;
-use crate::Postgres;
-
 
 #[derive(Clone)]
 pub struct SetServer;
@@ -11,10 +9,11 @@ impl FangAction for SetServer {
     }
 }
 
-impl Postgres {
+#[cfg(feature = "db")]
+impl crate::Postgres {
     pub async fn init() -> impl FangAction {
         #[derive(Clone)]
-        pub struct UsePostgres(Postgres);
+        pub struct UsePostgres(crate::Postgres);
         impl FangAction for UsePostgres {
             #[inline(always)]
             async fn fore<'a>(&'a self, req: &'a mut Request) -> Result<(), Response> {

@@ -1,0 +1,13 @@
+source "https://rubygems.org"
+
+gem "rage-rb", "~> 1.10"
+
+gem "pg", "~> 1.0"
+gem "activerecord", "~> 7.2.0", require: "active_record"
+
+# Build JSON APIs with ease
+# gem "alba"
+
+# Get 50% to 150% boost when parsing JSON.
+# Rage will automatically use FastJsonparser if it is available.
+# gem "fast_jsonparser"

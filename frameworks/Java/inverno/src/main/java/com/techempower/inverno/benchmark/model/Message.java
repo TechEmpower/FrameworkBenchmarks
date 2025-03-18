@@ -1,5 +1,8 @@
 package com.techempower.inverno.benchmark.model;
 
+import com.dslplatform.json.CompiledJson;
+
+@CompiledJson
 public final class Message {
 
 	private final String message;
