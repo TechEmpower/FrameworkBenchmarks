@@ -9,20 +9,12 @@ module HelloWorld
         MIN_QUERIES = 1            # min number of records that can be retrieved
         MAX_QUERIES = 500          # max number of records that can be retrieved
 
-        include Deps["persistence.rom"]
+        include Deps["repos.world_repo"]
 
         def handle(request, response)
           worlds = ALL_IDS.sample(queries(request)).map do |id|
-            world = rom.relations[:World].by_pk(id)
-            world_struct = world.one
-            new_value = random_id
-            new_value = random_id while new_value == world_struct[:randomnumber]
-            world_struct[:randomnumber] = new_value
-            world.command(:update).call(randomnumber: world_struct[:randomnumber])
-            world_struct
+            world_repo.update(id)
           end
-          response.headers['Server'] = 'hanami'
-          response.headers['Date'] = Time.now.httpdate
           response.format = :json
           response.body = worlds.to_json
         end
