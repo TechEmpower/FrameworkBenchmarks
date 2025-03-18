@@ -4,8 +4,7 @@ import multiprocessing
 import asyncpg
 from aiohttp import web
 from sqlalchemy.engine.url import URL
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 
 from .views import (
     json,
@@ -28,14 +27,15 @@ def pg_dsn(dialect=None) -> str:
     """
     :return: DSN url suitable for sqlalchemy and aiopg.
     """
-    return str(URL.create(
+    url = URL.create(
         database='hello_world',
         password=os.getenv('PGPASS', 'benchmarkdbpass'),
         host='tfb-database',
         port='5432',
         username=os.getenv('PGUSER', 'benchmarkdbuser'),
         drivername='postgresql+{}'.format(dialect) if dialect else 'postgresql',
-    ))
+    )
+    return url.render_as_string(hide_password=False)
 
 
 async def db_ctx(app: web.Application):
@@ -48,15 +48,17 @@ async def db_ctx(app: web.Application):
     print(f'connection pool: min size: {min_size}, max size: {max_size}, orm: {CONNECTION_ORM}')
     if CONNECTION_ORM:
         dsn = pg_dsn('asyncpg')
-        engine = create_async_engine(dsn, future=True, pool_size=max_size)
-        app['db_session'] = sessionmaker(engine, class_=AsyncSession)
+        engine = create_async_engine(dsn, pool_size=max_size)
+        app['db_session'] = async_sessionmaker(engine)
     else:
         dsn = pg_dsn()
         app['pg'] = await asyncpg.create_pool(dsn=dsn, min_size=min_size, max_size=max_size, loop=app.loop)
 
     yield
 
-    if not CONNECTION_ORM:
+    if CONNECTION_ORM:
+        await app['db_session'].dispose()
+    else:
         await app['pg'].close()
 
 
