@@ -5,7 +5,7 @@ using TouchSocket.Sockets;
 using TouchSocket.WebApi;
 using TouchSocket.WebApi.Swagger;
 
-namespace WebApi_v2_0
+namespace TouchSocketWebApi
 {
     public class Program
     {
@@ -44,18 +44,17 @@ namespace WebApi_v2_0
         }
     }
 
-    [GeneratorRpcServer]
     public partial class ApiServer : RpcServer
     {
         [Router("/plaintext")]
-        [WebApi(HttpMethodType.GET)]
+        [WebApi(Method = HttpMethodType.Get)]
         public string Plaintext()
         {
             return "Hello, World!";
         }
 
         [Router("/json")]
-        [WebApi(HttpMethodType.GET)]
+        [WebApi(Method = HttpMethodType.Get)]
         public object Json()
         {
             return new { message = "Hello, World!" };
