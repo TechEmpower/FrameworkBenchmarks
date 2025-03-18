@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using TouchSocket.Core;
 using TouchSocket.Http;
 using TouchSocket.Rpc;
@@ -5,59 +6,77 @@ using TouchSocket.Sockets;
 using TouchSocket.WebApi;
 using TouchSocket.WebApi.Swagger;
 
-namespace TouchSocketWebApi
+namespace TouchSocketWebApi;
+
+public class Program
 {
-    public class Program
+    public static void Main(string[] args)
     {
-        public static void Main(string[] args)
+        var builder = Host.CreateApplicationBuilder(args);
+
+        builder.Services.AddServiceHostedService<IHttpService, HttpService>(config =>
         {
-            var builder = Host.CreateApplicationBuilder(args);
-
-            builder.Services.AddServiceHostedService<IHttpService, HttpService>(config =>
-            {
-                config.SetListenIPHosts(8080)
-               .ConfigureContainer(a =>
+            config.SetListenIPHosts(8080)
+           .ConfigureContainer(a =>
+           {
+               a.AddConsoleLogger();
+               a.AddRpcStore(store =>
                {
-                   a.AddConsoleLogger();
-                   a.AddRpcStore(store =>
+                   store.RegisterServer<ApiServer>();
+               });
+           })
+           .ConfigurePlugins(a =>
+           {
+               a.UseCheckClear();
+
+               a.UseWebApi()
+               .ConfigureConverter(converter =>
+               {
+                   converter.Clear();
+                   converter.AddSystemTextJsonSerializerFormatter(options =>
                    {
-                       store.RegisterServer<ApiServer>();
+                       options.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default);
                    });
-               })
-               .ConfigurePlugins(a =>
-               {
-                   a.UseCheckClear();
-
-                   a.UseWebApi();
+               });
 
 #if DEBUG
-                   a.UseSwagger()
-                   .UseLaunchBrowser();
+               a.UseSwagger()
+               .UseLaunchBrowser();
 #endif
 
-                   a.UseDefaultHttpServicePlugin();
-               });
-            });
+               a.UseDefaultHttpServicePlugin();
+           });
+        });
 
-            var host = builder.Build();
-            host.Run();
-        }
+        var host = builder.Build();
+        host.Run();
     }
+}
 
-    public partial class ApiServer : RpcServer
+public partial class ApiServer : RpcServer
+{
+    [Router("/plaintext")]
+    [WebApi(Method = HttpMethodType.Get)]
+    public string Plaintext()
     {
-        [Router("/plaintext")]
-        [WebApi(Method = HttpMethodType.Get)]
-        public string Plaintext()
-        {
-            return "Hello, World!";
-        }
-
-        [Router("/json")]
-        [WebApi(Method = HttpMethodType.Get)]
-        public object Json()
-        {
-            return new { message = "Hello, World!" };
-        }
+        return "Hello, World!";
     }
+
+    [Router("/json")]
+    [WebApi(Method = HttpMethodType.Get)]
+    public MyJson Json()
+    {
+        return new MyJson() { Message = "Hello, World!" };
+    }
+}
+
+[JsonSerializable(typeof(MyJson))]//实际类型1
+internal partial class AppJsonSerializerContext : JsonSerializerContext
+{
+
+}
+
+public class MyJson
+{
+    public string? Message { get; set; }
 }
