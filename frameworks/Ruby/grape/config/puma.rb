@@ -5,7 +5,7 @@ num_workers, num_threads = auto_tune
 
 workers num_workers
 
-threads 2, 2
+threads 3, 3
 
 # Use the `preload_app!` method when specifying a `workers` number.
 # This directive tells Puma to first boot the application and load code
