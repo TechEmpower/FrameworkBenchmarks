@@ -102,6 +102,13 @@ GEM
       dry-transformer (~> 1.0, < 2)
     hanami-validations (2.2.0)
       dry-validation (>= 1.10, < 2)
+    hanami-view (2.2.1)
+      dry-configurable (~> 1.0)
+      dry-core (~> 1.0)
+      dry-inflector (~> 1.0, < 2)
+      temple (~> 0.10.0, >= 0.10.2)
+      tilt (~> 2.3)
+      zeitwerk (~> 2.6)
     hansi (0.2.1)
     ice_nine (0.11.2)
     json (2.10.2)
@@ -146,6 +153,8 @@ GEM
     ruby2_keywords (0.0.5)
     sequel (5.90.0)
       bigdecimal
+    temple (0.10.3)
+    tilt (2.6.0)
     transproc (1.1.1)
     zeitwerk (2.7.2)
 
@@ -160,6 +169,7 @@ DEPENDENCIES
   hanami-db (~> 2.2)
   hanami-router (~> 2.2)
   hanami-validations (~> 2.2)
+  hanami-view (~> 2.2)
   pg
   puma
   rake
