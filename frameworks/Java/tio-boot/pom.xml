@@ -27,15 +27,20 @@
       <groupId>com.litongjava</groupId>
       <artifactId>java-db</artifactId>
       <version>1.5.0</version>
-
     </dependency>
+
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>1.2.3</version>
+    </dependency>
+
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.12</version>
       <scope>test</scope>
     </dependency>
-
 
     <dependency>
       <groupId>com.alibaba.fastjson2</groupId>
