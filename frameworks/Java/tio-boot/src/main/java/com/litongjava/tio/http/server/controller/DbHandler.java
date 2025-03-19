@@ -5,8 +5,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 import com.alibaba.fastjson2.JSON;
 import com.jfinal.template.Engine;
@@ -14,6 +12,7 @@ import com.jfinal.template.Template;
 import com.litongjava.db.activerecord.Db;
 import com.litongjava.db.activerecord.Row;
 import com.litongjava.ehcache.EhCacheKit;
+import com.litongjava.tio.boot.http.TioRequestContext;
 import com.litongjava.tio.http.common.HeaderName;
 import com.litongjava.tio.http.common.HeaderValue;
 import com.litongjava.tio.http.common.HttpRequest;
@@ -23,6 +22,10 @@ import com.litongjava.tio.http.server.util.Resps;
 import com.litongjava.tio.http.server.utils.RandomUtils;
 
 public class DbHandler {
+  private Engine engine = Engine.use();
+  private String filename = "fortunes.html";
+  private Template template = engine.getTemplate(filename);
+  private static final byte[] bytes = "{}".getBytes();
 
   public HttpResponse db(HttpRequest request) {
     Integer id = request.getInt("id");
@@ -31,7 +34,7 @@ public class DbHandler {
     }
 
     //System.out.println("id:" + id);
-    HttpResponse httpResponse = new HttpResponse(request);
+    HttpResponse httpResponse = TioRequestContext.getResponse();
 
     // int id = 11;
     // String sql="SELECT id, randomNumber FROM world WHERE id = ?";
@@ -40,7 +43,7 @@ public class DbHandler {
     if (recored != null) {
       httpResponse.setBody(JSON.toJSONBytes(recored.toMap()));
     } else {
-      httpResponse.setBody("{}".getBytes());
+      httpResponse.setBody(bytes);
     }
 
     httpResponse.addHeader(HeaderName.Content_Type, HeaderValue.Content_Type.TEXT_PLAIN_JSON);
@@ -51,15 +54,19 @@ public class DbHandler {
   // @GetMapping("/queries")
   public HttpResponse queries(HttpRequest request) {
     String queries = request.getParam("queries");
-    List<Map<String, Object>> recordMaps = RandomUtils.randomWorldNumbers()
-        // limit
-        .limit(RandomUtils.parseQueryCount(queries)) // 限制查询数量
-        .mapToObj(id -> Db.findById("world", id)) // 使用 mapToObj 将 int 映射为对象
-        .filter(Objects::nonNull) // 过滤掉 null 值
-        .map(Row::toMap) // 将每个 Record 对象转换为 Map
-        .collect(Collectors.toList()); // 收集到 List
+    int queryCount = RandomUtils.parseQueryCount(queries);
+    int[] randomNumbers = RandomUtils.randomWorldNumbers().limit(queryCount).toArray();
 
-    HttpResponse httpResponse = new HttpResponse(request);
+    List<Map<String, Object>> recordMaps = new ArrayList<>();
+
+    for (int id : randomNumbers) {
+      Row row = Db.findById("world", id);
+      if (row != null) {
+        recordMaps.add(row.toMap());
+      }
+    }
+
+    HttpResponse httpResponse = TioRequestContext.getResponse();
     httpResponse.addHeader(HeaderName.Content_Type, HeaderValue.Content_Type.TEXT_PLAIN_JSON);
     httpResponse.setBody(JSON.toJSONBytes(recordMaps));
     return httpResponse;
@@ -71,27 +78,24 @@ public class DbHandler {
 
     EhCacheKit.removeAll("world");
 
-    List<Map<String, Object>> updatedRecords = RandomUtils.randomWorldNumbers()// random numbers
-        // limit
-        .limit(RandomUtils.parseQueryCount(queries))
-        // map
-        .mapToObj(id -> Db.findById("world", id))
-        // not null
-        .filter(Objects::nonNull).map(record -> {
-          int currentRandomNumber = record.getInt("randomNumber"); // "randomnumber"
-          int newRandomNumber;
-          do {
-            newRandomNumber = RandomUtils.randomWorldNumber();
-          } while (newRandomNumber == currentRandomNumber);
+    int queryCount = RandomUtils.parseQueryCount(queries);
+    int[] randomNumbers = RandomUtils.randomWorldNumbers().limit(queryCount).toArray();
+    List<Map<String, Object>> updatedRecords = new ArrayList<>();
 
-          record.set("randomnumber", newRandomNumber);
-          Db.update("world", "id", record); // update
-          return record;
-        })
-        // tomap
-        .map(Row::toMap)
-        // to List
-        .collect(Collectors.toList());
+    for (int id : randomNumbers) {
+      Row row = Db.findById("world", id);
+      if (row != null) {
+        int currentRandomNumber = row.getInt("randomNumber"); // "randomnumber"
+        int newRandomNumber;
+        do {
+          newRandomNumber = RandomUtils.randomWorldNumber();
+        } while (newRandomNumber == currentRandomNumber);
+
+        row.set("randomnumber", newRandomNumber);
+        Db.update("world", "id", row); // update
+        updatedRecords.add(row.toMap());
+      }
+    }
 
     HttpResponse httpResponse = new HttpResponse(request);
     httpResponse.addHeader(HeaderName.Content_Type, HeaderValue.Content_Type.TEXT_PLAIN_JSON);
@@ -116,11 +120,8 @@ public class DbHandler {
     viewData.put("fortunes", fortunes);
 
     // 转换为 HTML
-    Engine engine = Engine.use();
-    String filename = "fortunes.html";
-    Template template = engine.getTemplate(filename);
     String html = template.renderToString(viewData);
-
-    return Resps.html(request, html);
+    HttpResponse httpResponse = TioRequestContext.getResponse();
+    return Resps.html(httpResponse, html);
   }
 }
