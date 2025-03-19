@@ -4,7 +4,7 @@ COPY pom.xml pom.xml
 COPY src src
 RUN mvn compile assembly:single -q
 
-FROM openjdk:21-jdk-slim
+FROM openjdk:23-jdk-slim
 WORKDIR /httpserver-robaho
 COPY --from=maven /httpserver-robaho/target/httpserver-robaho-1.0-jar-with-dependencies.jar app.jar
 
