@@ -4,6 +4,8 @@ rpc:
   listen: tcp://127.0.0.1:6001
 
 server:
+  on_init:
+    command: "php app.php cycle"
   command: "php app.php"
   relay: pipes
 
