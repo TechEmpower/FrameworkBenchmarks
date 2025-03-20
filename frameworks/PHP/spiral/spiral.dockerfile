@@ -22,7 +22,7 @@ RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --q
 
 # pre-configure
 RUN ./vendor/bin/rr get-binary > /dev/null 2>&1
-RUN php app.php configure > /dev/null 2>&1
+RUN php app.php configure
 
 EXPOSE 8080
 
