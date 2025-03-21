@@ -18,8 +18,7 @@ pub(crate) use hyperlane::{
     *,
 };
 pub(crate) use lazy::*;
-pub(crate) use r#type::*;
-pub(crate) use rand::{rngs::SmallRng, Rng, SeedableRng};
+pub(crate) use rand::{Rng, SeedableRng, rng, rngs::SmallRng};
 pub(crate) use request_middleware::*;
 pub(crate) use response_middleware::*;
 pub(crate) use route::*;
@@ -29,6 +28,7 @@ pub(crate) use sqlx::{
     *,
 };
 pub(crate) use std::{fmt, sync::Arc};
+pub(crate) use r#type::*;
 pub(crate) use utils::*;
 
 #[tokio::main]

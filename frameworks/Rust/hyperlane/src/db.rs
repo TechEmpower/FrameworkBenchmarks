@@ -15,7 +15,7 @@ pub async fn get_db_connection() -> DbPoolConnection {
 
 #[inline]
 #[cfg(feature = "dev")]
-pub async fn create_batabase() {
+pub async fn create_database() {
     let db_pool: DbPoolConnection = get_db_connection().await;
     let _ = query(&format!("CREATE DATABASE {};", DATABASE_NAME))
         .execute(&db_pool)
@@ -176,7 +176,7 @@ pub async fn init_db() {
     }
     #[cfg(feature = "dev")]
     {
-        create_batabase().await;
+        create_database().await;
         create_table().await;
         insert_records().await;
     }
