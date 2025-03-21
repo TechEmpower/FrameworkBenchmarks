@@ -1,5 +1,7 @@
 FROM rust:1.85
 
+RUN apt-get update -yqq && apt-get install -yqq cmake g++ binutils lld
+
 ENV POSTGRES_URL=postgres://benchmarkdbuser:benchmarkdbpass@tfb-database:5432/hello_world
 
 ADD ./ /hyperlane_techempower

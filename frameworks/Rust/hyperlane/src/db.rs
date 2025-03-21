@@ -2,14 +2,12 @@ use crate::*;
 
 #[inline]
 pub async fn get_db_connection() -> DbPoolConnection {
-    if let Some(db_pool) = DB.read().await.clone() {
-        return db_pool;
+    if let Some(db_pool) = DB.get() {
+        return db_pool.clone();
     };
     let db_pool: DbPoolConnection = connection_db().await;
-    {
-        let mut db_pool_lock: RwLockWriteGuard<'_, Option<DbPoolConnection>> = DB.write().await;
-        *db_pool_lock = Some(db_pool.clone());
-    }
+    DB.set(db_pool.clone())
+        .expect("Failed to initialize DB_POOL");
     db_pool
 }
 
@@ -97,8 +95,7 @@ pub async fn init_cache() {
             res.push(QueryRow::new(id, random_number));
         }
     }
-    let mut cache: RwLockWriteGuard<'_, Vec<QueryRow>> = CACHE.write().await;
-    *cache = res;
+    let _ = CACHE.set(res);
 }
 
 #[inline]
@@ -170,10 +167,7 @@ pub async fn get_update_data(
 
 #[inline]
 pub async fn init_db() {
-    {
-        let mut db_pool_lock: RwLockWriteGuard<'_, Option<DbPoolConnection>> = DB.write().await;
-        *db_pool_lock = Some(connection_db().await);
-    }
+    get_db_connection().await;
     #[cfg(feature = "dev")]
     {
         create_database().await;
