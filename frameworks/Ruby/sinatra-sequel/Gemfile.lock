@@ -51,6 +51,7 @@ GEM
 PLATFORMS
   ruby
   x86_64-darwin-23
+  x86_64-linux
 
 DEPENDENCIES
   iodine (~> 0.7)
@@ -65,4 +66,4 @@ DEPENDENCIES
   unicorn (~> 6.1)
 
 BUNDLED WITH
-   2.5.16
+   2.6.2

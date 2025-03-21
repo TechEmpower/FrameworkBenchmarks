@@ -161,6 +161,7 @@ GEM
 PLATFORMS
   ruby
   x86_64-darwin-23
+  x86_64-linux
 
 DEPENDENCIES
   dry-types (~> 1.0, >= 1.6.1)
@@ -177,4 +178,4 @@ DEPENDENCIES
   rom-sql (~> 3.6)
 
 BUNDLED WITH
-   2.5.16
+   2.6.2
