@@ -1,6 +1,5 @@
 Django==3.2.25
-mysqlclient==1.4.6
-psycopg2==2.9.6; implementation_name=='cpython'
-psycopg2cffi==2.9.0; implementation_name=='pypy'
-pytz==2020.4
-ujson==5.4.0
+mysqlclient==2.2.6
+psycopg2==2.9.9; implementation_name=='cpython'
+pytz==2023.2
+ujson==5.8.0

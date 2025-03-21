@@ -1,8 +1,12 @@
 
 package io.helidon.benchmark.nima.models;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+
 import io.vertx.pgclient.PgConnection;
 import io.vertx.sqlclient.PreparedQuery;
+import io.vertx.sqlclient.PreparedStatement;
 import io.vertx.sqlclient.Row;
 import io.vertx.sqlclient.RowSet;
 
@@ -11,9 +15,9 @@ public class PgClientConnection implements AutoCloseable {
     private static String SELECT_WORLD = "SELECT id, randomnumber from WORLD where id=$1";
     private static String SELECT_FORTUNE = "SELECT * from FORTUNE";
 
-    private PreparedQuery<RowSet<Row>> worldQuery;
-    private PreparedQuery<RowSet<Row>> fortuneQuery;
-    private PreparedQuery<RowSet<Row>>[] updateQuery;
+    private CompletableFuture<PreparedStatement> worldQuery;
+    private CompletableFuture<PreparedStatement> fortuneQuery;
+    private CompletableFuture<PreparedStatement>[] updateQuery;
 
     private final PgConnection conn;
 
@@ -30,30 +34,28 @@ public class PgClientConnection implements AutoCloseable {
         conn.close();
     }
 
-    public PreparedQuery<RowSet<Row>> worldQuery() {
-        return worldQuery;
+    public PreparedQuery<RowSet<Row>> worldQuery() throws ExecutionException, InterruptedException {
+        return worldQuery.get().query();
     }
 
-    public PreparedQuery<RowSet<Row>> fortuneQuery() {
-        return fortuneQuery;
+    public PreparedQuery<RowSet<Row>> fortuneQuery() throws ExecutionException, InterruptedException {
+        return fortuneQuery.get().query();
     }
 
-    public PreparedQuery<RowSet<Row>> updateQuery(int queryCount) {
-        return updateQuery[queryCount - 1];
+    public PreparedQuery<RowSet<Row>> updateQuery(int queryCount) throws ExecutionException, InterruptedException {
+        return updateQuery[queryCount - 1].get().query();
     }
 
     @SuppressWarnings("unchecked")
     void prepare() {
         try {
-            worldQuery = conn.prepare(SELECT_WORLD)
-                    .toCompletionStage().toCompletableFuture().get().query();
-            fortuneQuery = conn.prepare(SELECT_FORTUNE)
-                    .toCompletionStage().toCompletableFuture().get().query();
-            updateQuery = (PreparedQuery<RowSet<Row>>[]) new PreparedQuery<?>[UPDATE_QUERIES];
+            worldQuery = conn.prepare(SELECT_WORLD).toCompletionStage().toCompletableFuture();
+            fortuneQuery = conn.prepare(SELECT_FORTUNE).toCompletionStage().toCompletableFuture();
+            updateQuery = (CompletableFuture<PreparedStatement>[]) new CompletableFuture<?>[UPDATE_QUERIES];
             for (int i = 0; i < UPDATE_QUERIES; i++) {
                 updateQuery[i] = conn.prepare(singleUpdate(i + 1))
-                        .toCompletionStage().toCompletableFuture().get().query();
-            }
+                                     .toCompletionStage().toCompletableFuture();
+                    }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

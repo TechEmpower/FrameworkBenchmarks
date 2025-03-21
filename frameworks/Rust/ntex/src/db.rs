@@ -173,7 +173,7 @@ impl PgConnection {
         utils::reserve(&mut body, 4 * 1024);
 
         FortunesTemplate {
-            fortunes: &*fortunes,
+            fortunes: &fortunes,
         }
         .write_call(&mut body);
         fortunes.clear();

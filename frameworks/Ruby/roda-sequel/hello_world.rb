@@ -3,7 +3,7 @@
 # Our Rack application to be executed by rackup
 class HelloWorld < Roda
   plugin :hooks
-  plugin :render, escape: true, layout_opts: { cache_key: "default_layout" }
+  plugin :render, escape: true, assume_fixed_locals: true, template_opts: { extract_fixed_locals: true}, layout_opts: { cache_key: "default_layout" }
 
   def bounded_queries
     queries = request.params["queries"].to_i
@@ -44,9 +44,10 @@ class HelloWorld < Roda
     # Test type 3: Multiple database queries
     r.is "queries" do
       response[CONTENT_TYPE] = JSON_TYPE
+      ids = ALL_IDS.sample(bounded_queries)
       worlds =
         DB.synchronize do
-          ALL_IDS.sample(bounded_queries).map do |id|
+          ids.map do |id|
             World.with_pk(id).values
           end
         end
@@ -56,22 +57,23 @@ class HelloWorld < Roda
     # Test type 4: Fortunes
     r.is "fortunes" do
       response[CONTENT_TYPE] = HTML_TYPE
-      @fortunes = Fortune.all
-      @fortunes << Fortune.new(
+      fortunes = Fortune.all
+      fortunes << Fortune.new(
         id: 0,
         message: "Additional fortune added at request time."
       )
-      @fortunes.sort_by!(&:message)
-      view :fortunes
+      fortunes.sort_by!(&:message)
+      view :fortunes, locals: { fortunes: fortunes }
     end
 
     # Test type 5: Database updates
     r.is "updates" do
       response[CONTENT_TYPE] = JSON_TYPE
       worlds = []
+      ids = ALL_IDS.sample(bounded_queries)
       DB.synchronize do
         worlds =
-          ALL_IDS.sample(bounded_queries).map do |id|
+          ids.map do |id|
             world = World.with_pk(id)
             new_value = rand1
             new_value = rand1 while new_value == world.randomnumber
