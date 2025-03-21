@@ -97,7 +97,7 @@ pub async fn cached_queries(controller_data: ControllerData) {
         .min(ROW_LIMIT as Queries)
         .max(1);
     let mut res: Vec<QueryRow> = Vec::with_capacity(count as usize);
-    let cache: RwLockReadGuard<'_, Vec<QueryRow>> = CACHE.read().await;
+    let cache: Vec<QueryRow> = CACHE.get().cloned().unwrap_or_default();
     for i in 0..count {
         res.push(cache[i as usize].clone());
     }
