@@ -63,13 +63,10 @@ class World < Sequel::Model(:World)
     if DB.database_type == :mysql
       worlds.map(&:save_changes)
     else
-      ids = []
-      sql = String.new("UPDATE world SET randomnumber = CASE id ")
-      worlds.each do |world|
-        sql << "when #{world.id} then #{world.randomnumber} "
-        ids << world.id
-      end
-      sql << "ELSE randomnumber END WHERE id IN ( #{ids.join(',')})"
+      sql_values = worlds.map { "(#{_1.id}, #{_1.randomnumber})" }.join(', ')
+      sql = "UPDATE world SET randomnumber = updated.randomnumber "
+      sql << " FROM (VALUES #{ sql_values }) AS updated (id, randomnumber)"
+      sql << "WHERE id = updated.id"
       DB.run(sql)
     end
   end
