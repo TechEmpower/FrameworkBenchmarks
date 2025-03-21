@@ -44,9 +44,13 @@ impl FortunesTemplate {
 }
 
 impl fmt::Display for FortunesTemplate {
+    #[inline]
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let fortunes: &Vec<Fortunes> = &self.0;
-        let _ = write!(f,  "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>");
+        let _ = write!(
+            f,
+            "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>"
+        );
         for tem in fortunes.iter() {
             let row: String = format!(
                 "<tr><td>{}</td><td>{}</td></tr>",
