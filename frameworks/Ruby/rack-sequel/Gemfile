@@ -13,11 +13,6 @@ group :postgresql, optional: true do
   gem 'sequel_pg', '~> 1.6', platforms: :ruby, require: false
 end
 
-group :passenger, optional: true do
-  gem 'base64' # required by passenger on Ruby 3.4
-  gem 'passenger', '~> 6.0', platforms: [:ruby, :mswin], require: false
-end
-
 group :puma, optional: true do
   gem 'puma', '~> 6.5', require: false
 end
