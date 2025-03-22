@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Cycle\ORM\SchemaInterface;
 
+/** @see \Spiral\Cycle\Config\CycleConfig */
 return [
     'schema' => [
         /**
@@ -47,5 +48,5 @@ return [
     /**
      * Prepare all internal ORM services (mappers, repositories, typecasters...)
      */
-    'warmup' => true,
+    'warmup' => \env('RR_MODE') !== null,
 ];
