@@ -15,17 +15,7 @@ class HelloWorld
   PLAINTEXT_TYPE = 'text/plain'
   DATE = 'Date'
   SERVER = 'Server'
-  SERVER_STRING = if defined?(PhusionPassenger)
-                    'Passenger'
-                  elsif defined?(Puma)
-                    'Puma'
-                  elsif defined?(Iodine)
-                    'Iodine'
-                  elsif defined?(Unicorn)
-                    'Unicorn'
-                  else
-                    'Ruby Rack'
-                  end
+  SERVER_STRING = "Rack"
 
   def bounded_queries(env)
     params = Rack::Utils.parse_query(env['QUERY_STRING'])
