@@ -15,7 +15,7 @@ const Route = http.Route;
 const Respond = http.Respond;
 
 const Message = struct { message: []const u8 };
-var date: [29]u8 = undefined;
+var date: []u8 = "";
 
 pub fn main() !void {
     const host: []const u8 = "0.0.0.0";
@@ -26,8 +26,8 @@ pub fn main() !void {
             while (true) {
                 var d = http.Date.init(std.time.milliTimestamp());
                 const http_date = d.to_http_date();
-                _ = try http_date.into_buf(date[0..]);
-                std.time.sleep(std.time.ns_per_s);
+                date = try http_date.into_alloc(std.heap.page.allocator);
+                std.time.sleep(std.time.ns_per_ms * 980);
             }
         }
     }.a, .{});
