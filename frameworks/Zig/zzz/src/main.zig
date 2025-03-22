@@ -15,10 +15,24 @@ const Route = http.Route;
 const Respond = http.Respond;
 
 const Message = struct { message: []const u8 };
+var date: [29]u8 = undefined;
 
 pub fn main() !void {
     const host: []const u8 = "0.0.0.0";
     const port: u16 = 8080;
+
+    const date_thread = try std.Thread.spawn(.{}, struct {
+        fn a() void {
+            while (true) {
+                var d = http.Date.init(std.time.milliTimestamp());
+                const http_date = d.to_http_date();
+                try http_date.into_buf(date[0..]);
+                std.time.sleep(std.time.ns_per_s);
+            }
+        }
+    }.a, .{});
+
+    date_thread.detach();
 
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
     defer if (gpa.deinit() == .leak) {
@@ -62,6 +76,7 @@ pub fn main() !void {
 }
 
 pub fn home_handler(ctx: *const Context, _: void) !Respond {
+    try ctx.response.headers.put("Date", date[0..]);
     return ctx.response.apply(.{
         .mime = http.Mime.TEXT,
         .body = "Hello, World!",
@@ -70,6 +85,7 @@ pub fn home_handler(ctx: *const Context, _: void) !Respond {
 }
 
 pub fn json_handler(ctx: *const Context, _: void) !Respond {
+    try ctx.response.headers.put("Date", date[0..]);
     return ctx.response.apply(.{
         .mime = http.Mime.JSON,
         .body = try std.json.stringifyAlloc(ctx.allocator, Message{ .message = "Hello, World!" }, .{}),
