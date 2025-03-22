@@ -26,7 +26,7 @@ pub fn main() !void {
             while (true) {
                 var d = http.Date.init(std.time.milliTimestamp());
                 const http_date = d.to_http_date();
-                date = try http_date.into_alloc(std.heap.page.allocator);
+                date = try http_date.into_alloc(std.heap.page_allocator);
                 std.time.sleep(std.time.ns_per_ms * 980);
             }
         }
