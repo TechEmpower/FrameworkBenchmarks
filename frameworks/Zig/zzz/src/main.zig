@@ -15,7 +15,7 @@ const Route = http.Route;
 const Respond = http.Respond;
 
 const Message = struct { message: []const u8 };
-var date: []u8 = "";
+var date: []const u8 = "";
 
 pub fn main() !void {
     const host: []const u8 = "0.0.0.0";
