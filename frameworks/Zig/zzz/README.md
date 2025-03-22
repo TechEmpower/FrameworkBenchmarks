@@ -1,5 +1,5 @@
 
-# [ZZZ](https://github.com/tardy-org/zzz) - A Framework for writing performant and reliable networked services in Zig.
+# [ZZZ](https://github.com/tardy-org/zzz) - Web Franework.
 
 ## Description
 
