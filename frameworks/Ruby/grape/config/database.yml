@@ -5,5 +5,5 @@ production:
   database: hello_world
   username: benchmarkdbuser
   password: benchmarkdbpass
-  pool: 2
+  pool: 3
   timeout: 5000

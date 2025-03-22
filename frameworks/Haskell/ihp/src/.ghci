@@ -1,3 +1,4 @@
-import Prelude
-:def source readFile
-:source build/ihp-lib/applicationGhciConfig
+:set -XNoImplicitPrelude
+:def loadFromIHP \file -> (System.Environment.getEnv "IHP_LIB") >>= (\ihpLib -> readFile (ihpLib <> "/" <> file))
+:loadFromIHP applicationGhciConfig
+import IHP.Prelude

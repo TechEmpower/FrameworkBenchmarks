@@ -59,9 +59,10 @@ class HelloWorld < Sinatra::Base
 
   # Test type 3: Multiple database queries
   get '/queries' do
+    ids = ALL_IDS.sample(bounded_queries)
     worlds =
       ActiveRecord::Base.with_connection do
-        ALL_IDS.sample(bounded_queries).map do |id|
+        ids.map do |id|
           World.find(id).attributes
         end
       end
@@ -86,8 +87,9 @@ class HelloWorld < Sinatra::Base
   # Test type 5: Database updates
   get '/updates' do
     worlds = nil
+    ids = ALL_IDS.sample(bounded_queries)
     ActiveRecord::Base.with_connection do
-      worlds = ALL_IDS.sample(bounded_queries).map do |id|
+      worlds = ids.map do |id|
         world = World.find(id)
         new_value = rand1
         new_value = rand1 until new_value != world.randomNumber
