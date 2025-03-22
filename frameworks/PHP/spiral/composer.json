@@ -16,14 +16,6 @@
     "spiral/roadrunner-bridge": "^3.0",
     "spiral/roadrunner-cli": "^2.4"
   },
-  "scripts": {
-    "post-create-project-cmd": [
-      "php -r \"copy('.env.sample', '.env');\"",
-      "php app.php encrypt:key -m .env",
-      "php app.php configure -vv",
-      "rr get-binary --quiet"
-    ]
-  },
   "autoload": {
     "psr-4": {
       "App\\": "app/src/"
