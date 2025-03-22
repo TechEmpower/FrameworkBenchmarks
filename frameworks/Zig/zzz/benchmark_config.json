@@ -1,5 +1,5 @@
 {
-  "framework": "ZZZ",
+  "framework": "zzz",
   "tests": [{
     "default": {
       "json_url": "/json",
@@ -8,7 +8,7 @@
       "approach": "Realistic",
       "classification": "Micro",
       "database": "None",
-      "framework": "ZZZ",
+      "framework": "zzz",
       "language": "Zig",
       "flavor": "None",
       "orm": "None",
