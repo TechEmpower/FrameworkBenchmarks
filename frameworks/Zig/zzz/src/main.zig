@@ -26,7 +26,7 @@ pub fn main() !void {
             while (true) {
                 var d = http.Date.init(std.time.timestamp());
                 const http_date = d.to_http_date();
-                date = try http_date.into_buf(date[0..]);
+                _ = try http_date.into_buf(date[0..]);
                 std.time.sleep(std.time.ns_per_ms * 985);
             }
         }
