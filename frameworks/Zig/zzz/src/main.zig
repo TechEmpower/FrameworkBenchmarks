@@ -22,7 +22,7 @@ pub fn main() !void {
     const port: u16 = 8080;
 
     const date_thread = try std.Thread.spawn(.{}, struct {
-        fn a() void {
+        fn a() !void {
             while (true) {
                 var d = http.Date.init(std.time.milliTimestamp());
                 const http_date = d.to_http_date();
