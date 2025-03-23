@@ -1,5 +1,10 @@
 {
   "framework": "hyper",
+  "maintainers": [
+    "polachok",
+    "seanmonstar",
+    "steveklabnik"
+  ],
   "tests": [{
     "default": {
       "docker_cmd": "hyper-techempower --runtime current-thread",
