@@ -11,7 +11,7 @@ pub async fn json(controller_data: ControllerData) {
 
 pub async fn plaintext(controller_data: ControllerData) {
     let _ = controller_data
-        .set_response_header(CONTENT_TYPE, TEXT_PLAIN)
+        .set_response_header(CONTENT_TYPE, content_type_charset(TEXT_PLAIN, UTF8))
         .await
         .set_response_body(RESPONSEDATA)
         .await;
