@@ -3,8 +3,6 @@ import time
 import rand
 import db.pg
 
-import log
-
 pub struct Context {
     veb.Context
 }
@@ -15,14 +13,12 @@ pub mut:
 }
 
 pub fn (app &App) plaintext(mut ctx Context) veb.Result {
-	log.error('plain')
-    ctx.set_header(.date, time.now().as_utc().custom_format('ddd, DD MMM YYYY HH:MM:ss') + ' GMT')
+	ctx.set_header(.date, time.now().as_utc().custom_format('ddd, DD MMM YYYY HH:MM:ss') + ' GMT')
 	ctx.set_header(.server, 'veb')
 	return ctx.text('Hello, World!')
 }
 
 pub fn (app &App) json(mut ctx Context) veb.Result {
-	log.error('json')
 	obj := {'message': 'Hello, World!'}
 	ctx.set_header(.date, time.now().as_utc().custom_format('ddd, DD MMM YYYY HH:MM:ss') + ' GMT')
 	ctx.set_header(.server, 'veb')
@@ -31,17 +27,69 @@ pub fn (app &App) json(mut ctx Context) veb.Result {
 
 struct World {
 	id           int @[primary; sql: serial]
+mut:
 	randomnumber int
 }
 
 pub fn (app &App) db(mut ctx Context) veb.Result {
 	r := rand.int_in_range(1, 10000) or { return ctx.text('rand error') }
-	result := sql app.db {
+	mut world := sql app.db {
 		select from World where id == r
-	} or { return ctx.text(app.db.last_id().str()) }
+	} or { return ctx.text('db error') }
 	ctx.set_header(.date, time.now().as_utc().custom_format('ddd, DD MMM YYYY HH:MM:ss') + ' GMT')
 	ctx.set_header(.server, 'veb')
-	return ctx.json({'id': r, 'randomNumber': result[0].randomnumber})
+	return ctx.json(world.first())
+}
+
+pub fn (app &App) queries(mut ctx Context) veb.Result {
+	mut q := ctx.query['q'].int()
+	if q < 1 { q = 1 } else if q > 500 { q = 500 }
+	mut world := []World{}
+	for _ in 0..q {
+		r := rand.int_in_range(1, 10000) or { return ctx.text('rand error') }
+		world << sql app.db {
+			select from World where id == r
+		} or { return ctx.text('db error') }
+	}
+	ctx.set_header(.date, time.now().as_utc().custom_format('ddd, DD MMM YYYY HH:MM:ss') + ' GMT')
+	ctx.set_header(.server, 'veb')
+	return ctx.json(world)
+}
+
+pub fn (app &App) update(mut ctx Context) veb.Result {
+	mut q := ctx.query['q'].int()
+	if q < 1 { q = 1 } else if q > 500 { q = 500 }
+	mut world := []World{}
+	for _ in 0..q {
+		r := rand.int_in_range(1, 10000) or { return ctx.text('rand error') }
+		world << sql app.db {
+			select from World where id == r
+		} or { return ctx.text('db error') }
+		world.last().randomnumber = rand.int_in_range(1, 10000) or { return ctx.text('rand error') }
+		sql app.db {
+			update World set randomnumber = world.last().randomnumber where id == world.last().id
+		} or { return ctx.text('db error') }
+	}
+	ctx.set_header(.date, time.now().as_utc().custom_format('ddd, DD MMM YYYY HH:MM:ss') + ' GMT')
+	ctx.set_header(.server, 'veb')
+	return ctx.json(world)
+}
+
+struct Fortune {
+	id      int @[primary; sql: serial]
+	message string
+}
+
+pub fn (app &App) fortunes(mut ctx Context) veb.Result {
+	mut fortunes := sql app.db {
+		select from Fortune
+	} or { return ctx.text('db error') }
+	fortunes.insert(0, Fortune{id: 0, message: 'Additional fortune added at request time.'})
+	fortunes.sort(a.message < b.message)
+	ctx.set_header(.date, time.now().as_utc().custom_format('ddd, DD MMM YYYY HH:MM:ss') + ' GMT')
+	ctx.set_header(.server, 'veb')
+	ctx.content_type = 'text/html; charset=utf-8'
+	return $veb.html()
 }
 
 fn main() {
@@ -53,21 +101,6 @@ fn main() {
 			password: 'benchmarkdbpass'
 			dbname:   'hello_world'
 		}) !
-		//db: pg.connect_with_conninfo('postgresql://benchmarkdbuser:benchmarkdbpass@tfb-database:5432/hello_world?sslmode=disable') !
 	}
 	veb.run[App, Context](mut app,  8080)
 }
-
-/*
-pub fn (app &App) queries(mut ctx Context) veb.Result {
-	return 
-}
-
-pub fn (app &App) updates(mut ctx Context) veb.Result {
-	return 
-}
-
-pub fn (app &App) fortunes(mut ctx Context) veb.Result {
-	return 
-}
-*/
