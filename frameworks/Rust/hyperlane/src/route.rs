@@ -1,8 +1,8 @@
 use crate::*;
 
 pub async fn json(controller_data: ControllerData) {
-    let json: serde_json::Value = json!({
-        "message": RESPONSEDATA
+    let json: Value = json!({
+        "message": RESPONSEDATA_STR
     });
     let _ = controller_data
         .set_response_body(serde_json::to_string(&json).unwrap_or_default())
@@ -11,9 +11,9 @@ pub async fn json(controller_data: ControllerData) {
 
 pub async fn plaintext(controller_data: ControllerData) {
     let _ = controller_data
-        .set_response_header(CONTENT_TYPE, content_type_charset(TEXT_PLAIN, UTF8))
+        .set_response_header(CONTENT_TYPE, TEXT_PLAIN)
         .await
-        .set_response_body(RESPONSEDATA)
+        .set_response_body(RESPONSEDATA_BIN)
         .await;
 }
 
