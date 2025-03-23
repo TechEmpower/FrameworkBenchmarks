@@ -34,11 +34,7 @@ pub async fn queries(controller_data: ControllerData) {
         .min(ROW_LIMIT as Queries)
         .max(1);
     let db_pool: DbPoolConnection = get_db_connection().await;
-    for _ in 0..queries {}
-    let futures: Vec<_> = (0..queries)
-        .map(|_| async { random_world_row(&db_pool).await })
-        .collect();
-    let data = join_all(futures).await;
+    let data: Vec<QueryRow> = get_some_row_id(queries, &db_pool).await;
     let _ = controller_data
         .set_response_body(serde_json::to_string(&data).unwrap_or_default())
         .await;
