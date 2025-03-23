@@ -103,11 +103,11 @@ Future configureServer(Angel app) async {
     var result = <World>[];
     for (var id in listOfIds) {
       var query = WorldQuery();
-      //query.where?.id.equals(id);
-      //var optWorld = await query.getOne(executor);
+      query.where?.id.equals(id);
+      var optWorld = await query.getOne(executor);
 
       query
-        ..where?.id.equals(id)
+        ..where?.id.equals(optWorld.value.id!)
         ..values.randomNumber = genRandomId();
       var updatedRec = await query.updateOne(executor);
       result.add(updatedRec.value);
