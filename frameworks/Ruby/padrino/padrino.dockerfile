@@ -16,4 +16,4 @@ EXPOSE 8080
 
 ENV RUBY_YJIT_ENABLE=1
 
-CMD bundle exec puma -C config/puma.rb -w 8 --preload
+CMD bundle exec puma -C config/puma.rb

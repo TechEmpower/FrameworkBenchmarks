@@ -1,6 +1,7 @@
 package com.litongjava.tio.http.server.controller;
 
 import com.alibaba.fastjson2.JSON;
+import com.litongjava.tio.boot.http.TioRequestContext;
 import com.litongjava.tio.http.common.HeaderName;
 import com.litongjava.tio.http.common.HeaderValue;
 import com.litongjava.tio.http.common.HttpRequest;
@@ -22,19 +23,16 @@ public class IndexHandler {
   }
 
   public HttpResponse plaintext(HttpRequest request) {
-    // 更高性能的写法
-    HttpResponse ret = new HttpResponse(request);
-    ret.setBody(HELLO_WORLD_BYTES);
-    ret.addHeader(HeaderName.Content_Type, HeaderValue.Content_Type.TEXT_PLAIN_TXT);
-    return ret;
+    HttpResponse response = TioRequestContext.getResponse();
+    response.setBody(HELLO_WORLD_BYTES);
+    response.addHeader(HeaderName.Content_Type, HeaderValue.Content_Type.TEXT_PLAIN_TXT);
+    return response;
   }
 
-  // 在IndexController中添加
   public HttpResponse json(HttpRequest request) {
-    // 更高性能的写法
-    HttpResponse ret = new HttpResponse(request);
-    ret.setBody(JSON.toJSONString(new Message(HELLO_WORLD)).getBytes());
-    ret.addHeader(HeaderName.Content_Type, HeaderValue.Content_Type.TEXT_PLAIN_JSON);
-    return ret;
+    HttpResponse response = TioRequestContext.getResponse();
+    response.setBody(JSON.toJSONBytes(new Message(HELLO_WORLD)));
+    response.addHeader(HeaderName.Content_Type, HeaderValue.Content_Type.TEXT_PLAIN_JSON);
+    return response;
   }
 }

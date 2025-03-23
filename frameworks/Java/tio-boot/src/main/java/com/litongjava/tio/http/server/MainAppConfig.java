@@ -15,24 +15,6 @@ public class MainAppConfig implements BootConfiguration {
 
   @Override
   public void config() throws Exception {
-    // add route
-    IndexHandler controller = new IndexHandler();
-
-    TioBootServer server = TioBootServer.me();
-    HttpRequestRouter requestRouter = server.getRequestRouter();
-
-    requestRouter.add("/", controller::index);
-    requestRouter.add("/plaintext", controller::plaintext);
-    requestRouter.add("/json", controller::json);
-
-    DbHandler dbQueryController = new DbHandler();
-    requestRouter.add("/db", dbQueryController::db);
-    requestRouter.add("/queries", dbQueryController::queries);
-    requestRouter.add("/updates", dbQueryController::updates);
-    requestRouter.add("/fortunes", dbQueryController::fortunes);
-
-    CacheHandler cacheController = new CacheHandler();
-    requestRouter.add("/cachedQuery", cacheController::cachedQuery);
 
     boolean db = EnvUtils.getBoolean("db", true);
     if (db) {
@@ -49,6 +31,25 @@ public class MainAppConfig implements BootConfiguration {
     } catch (Exception e) {
       e.printStackTrace();
     }
-  }
 
+    // add route
+    IndexHandler controller = new IndexHandler();
+
+    TioBootServer server = TioBootServer.me();
+    HttpRequestRouter requestRouter = server.getRequestRouter();
+    if (requestRouter != null) {
+      requestRouter.add("/", controller::index);
+      requestRouter.add("/plaintext", controller::plaintext);
+      requestRouter.add("/json", controller::json);
+
+      DbHandler dbQueryController = new DbHandler();
+      requestRouter.add("/db", dbQueryController::db);
+      requestRouter.add("/queries", dbQueryController::queries);
+      requestRouter.add("/updates", dbQueryController::updates);
+      requestRouter.add("/fortunes", dbQueryController::fortunes);
+
+      CacheHandler cacheController = new CacheHandler();
+      requestRouter.add("/cachedQuery", cacheController::cachedQuery);
+    }
+  }
 }
