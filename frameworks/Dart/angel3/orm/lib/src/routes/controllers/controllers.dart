@@ -55,18 +55,11 @@ Future configureServer(Angel app) async {
 
   // Add an entry and sort a list of fortune
   app.get('/fortunes', (req, res) async {
-    //var stopwatch = Stopwatch()..start();
-
     var list = await FortuneQuery().get(executor);
-
-    //print('Query Time: ${stopwatch.elapsed.inMilliseconds}ms');
 
     list.add(
         Fortune(id: 0, message: 'Additional fortune added at request time.'));
     list.sort((a, b) => a.message?.compareTo(b.message ?? '') ?? 0);
-
-    //print('Process Time: ${stopwatch.elapsed.inMilliseconds}ms');
-    //stopwatch.stop();
 
     res.render('listing', {'fortunes': list});
   });
@@ -90,9 +83,9 @@ Future configureServer(Angel app) async {
     var queryLimit = parseQueryCount(params['queries'] as String?);
 
     var list = generateIds(queryLimit);
-    var query = WorldQuery();
     var result = <World>[];
     for (var id in list) {
+      var query = WorldQuery();
       query.where?.id.equals(id);
       var optWorld = await query.getOne(executor);
       result.add(optWorld.value);
@@ -103,15 +96,13 @@ Future configureServer(Angel app) async {
 
   // Update a list of worlds
   app.get('/updates', (req, res) async {
-    //var stopwatch = Stopwatch()..start();
-
     var params = req.queryParameters;
     var queryLimit = parseQueryCount(params['queries'] as String?);
     var listOfIds = generateIds(queryLimit);
 
-    var query = WorldQuery();
     var result = <World>[];
     for (var id in listOfIds) {
+      var query = WorldQuery();
       query.where?.id.equals(id);
       var optWorld = await query.getOne(executor);
 
@@ -121,9 +112,6 @@ Future configureServer(Angel app) async {
       var updatedRec = await query.updateOne(executor);
       result.add(updatedRec.value);
     }
-
-    //print('Process Time: ${stopwatch.elapsed.inMilliseconds}ms');
-    //stopwatch.stop();
 
     res.json(result);
   });
