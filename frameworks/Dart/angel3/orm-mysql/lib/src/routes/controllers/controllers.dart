@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:math';
 import 'package:angel3_framework/angel3_framework.dart';
 import 'package:angel3_orm/angel3_orm.dart';
@@ -12,12 +11,12 @@ Future configureServer(Angel app) async {
   var executor = app.container.make<QueryExecutor>();
 
   // Generate a random number between 1 and 10000
-  int _genRandomId() {
+  int genRandomId() {
     var rand = Random();
     return rand.nextInt(10000) + 1;
   }
 
-  int _parseQueryCount(String? count) {
+  int parseQueryCount(String? count) {
     if (count == null) {
       return 1;
     }
@@ -30,11 +29,11 @@ Future configureServer(Angel app) async {
     return limit;
   }
 
-  List<int> _generateIds(int maxCount) {
+  List<int> generateIds(int maxCount) {
     var result = <int>[];
 
     while (result.length < maxCount) {
-      var id = _genRandomId();
+      var id = genRandomId();
       if (!result.contains(id)) {
         result.add(id);
       }
@@ -74,7 +73,7 @@ Future configureServer(Angel app) async {
 
   // Find a random World
   app.get('/db', (req, res) async {
-    var id = _genRandomId();
+    var id = genRandomId();
     var query = WorldQuery()..where?.id.equals(id);
     var result = await query.get(executor);
     if (result.isNotEmpty) {
@@ -88,9 +87,9 @@ Future configureServer(Angel app) async {
   app.get('/query', (req, res) async {
     var params = req.queryParameters;
 
-    var queryLimit = _parseQueryCount(params['queries'] as String?);
+    var queryLimit = parseQueryCount(params['queries'] as String?);
 
-    var list = _generateIds(queryLimit);
+    var list = generateIds(queryLimit);
     var query = WorldQuery();
     var result = <World>[];
     for (var id in list) {
@@ -107,8 +106,8 @@ Future configureServer(Angel app) async {
     //var stopwatch = Stopwatch()..start();
 
     var params = req.queryParameters;
-    var queryLimit = _parseQueryCount(params['queries'] as String?);
-    var listOfIds = _generateIds(queryLimit);
+    var queryLimit = parseQueryCount(params['queries'] as String?);
+    var listOfIds = generateIds(queryLimit);
 
     var query = WorldQuery();
     var result = <World>[];
@@ -118,12 +117,12 @@ Future configureServer(Angel app) async {
 
       query
         ..where?.id.equals(optWorld.value.id!)
-        ..values.randomNumber = _genRandomId();
+        ..values.randomNumber = genRandomId();
       var updatedRec = await query.updateOne(executor);
       result.add(updatedRec.value);
     }
 
-    //rint('Process Time: ${stopwatch.elapsed.inMilliseconds}ms');
+    //print('Process Time: ${stopwatch.elapsed.inMilliseconds}ms');
     //stopwatch.stop();
 
     res.json(result);
