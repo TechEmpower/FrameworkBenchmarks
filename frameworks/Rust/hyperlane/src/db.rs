@@ -106,7 +106,7 @@ pub async fn connection_db() -> DbPoolConnection {
             DATABASE_NAME
         ),
     };
-    let pool_size: u32 = (get_thread_count() >> 2).max(10).min(100) as u32;
+    let pool_size: u32 = (get_thread_count() << 2).max(10).min(100) as u32;
     let max_pool_size: u32 = option_env!("POSTGRES_MAX_POOL_SIZE")
         .unwrap_or(&pool_size.to_string())
         .parse::<u32>()
