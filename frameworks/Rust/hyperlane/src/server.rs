@@ -1,6 +1,5 @@
 use crate::*;
 
-#[inline]
 pub async fn run_server() {
     let server: Server = Server::new();
     server.host("0.0.0.0").await;

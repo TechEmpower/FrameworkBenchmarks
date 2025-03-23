@@ -10,6 +10,7 @@ pub(crate) mod utils;
 
 pub(crate) use constant::*;
 pub(crate) use db::*;
+pub(crate) use futures::future::join_all;
 pub(crate) use hyperlane::{once_cell::sync::OnceCell, serde::*, serde_json::json, *};
 pub(crate) use lazy::*;
 pub(crate) use rand::{Rng, SeedableRng, rng, rngs::SmallRng};
