@@ -1,6 +1,6 @@
 #!/bin/sh
 
-for i in $(seq 0 $(nproc --ignore=1)); do
+for i in $(seq 0 $(nproc)); do
   taskset -c $i ./main &
 done
 

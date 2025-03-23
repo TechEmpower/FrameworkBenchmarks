@@ -3,26 +3,14 @@ import time
 import rand
 import db.pg
 
-pub struct Context {
-    veb.Context
-}
-
-pub struct App {
-pub mut:
-	db pg.DB
-}
-
 pub fn (app &App) plaintext(mut ctx Context) veb.Result {
-	ctx.set_header(.date, time.now().as_utc().custom_format('ddd, DD MMM YYYY HH:MM:ss') + ' GMT')
-	ctx.set_header(.server, 'veb')
-	return ctx.text('Hello, World!')
+	s := 'Hello, World!'
+	return ctx.text(s)
 }
 
 pub fn (app &App) json(mut ctx Context) veb.Result {
 	obj := {'message': 'Hello, World!'}
-	ctx.set_header(.date, time.now().as_utc().custom_format('ddd, DD MMM YYYY HH:MM:ss') + ' GMT')
-	ctx.set_header(.server, 'veb')
-    return ctx.json(obj)
+	return ctx.json(obj)
 }
 
 struct World {
@@ -36,8 +24,6 @@ pub fn (app &App) db(mut ctx Context) veb.Result {
 	mut world := sql app.db {
 		select from World where id == r
 	} or { return ctx.text('db error') }
-	ctx.set_header(.date, time.now().as_utc().custom_format('ddd, DD MMM YYYY HH:MM:ss') + ' GMT')
-	ctx.set_header(.server, 'veb')
 	return ctx.json(world.first())
 }
 
@@ -51,8 +37,6 @@ pub fn (app &App) queries(mut ctx Context) veb.Result {
 			select from World where id == r
 		} or { return ctx.text('db error') }
 	}
-	ctx.set_header(.date, time.now().as_utc().custom_format('ddd, DD MMM YYYY HH:MM:ss') + ' GMT')
-	ctx.set_header(.server, 'veb')
 	return ctx.json(world)
 }
 
@@ -70,8 +54,6 @@ pub fn (app &App) update(mut ctx Context) veb.Result {
 			update World set randomnumber = world.last().randomnumber where id == world.last().id
 		} or { return ctx.text('db error') }
 	}
-	ctx.set_header(.date, time.now().as_utc().custom_format('ddd, DD MMM YYYY HH:MM:ss') + ' GMT')
-	ctx.set_header(.server, 'veb')
 	return ctx.json(world)
 }
 
@@ -86,10 +68,24 @@ pub fn (app &App) fortunes(mut ctx Context) veb.Result {
 	} or { return ctx.text('db error') }
 	fortunes.insert(0, Fortune{id: 0, message: 'Additional fortune added at request time.'})
 	fortunes.sort(a.message < b.message)
-	ctx.set_header(.date, time.now().as_utc().custom_format('ddd, DD MMM YYYY HH:MM:ss') + ' GMT')
-	ctx.set_header(.server, 'veb')
 	ctx.content_type = 'text/html; charset=utf-8'
 	return $veb.html()
+}
+
+pub struct Context {
+    veb.Context
+}
+
+pub struct App {
+	veb.Middleware[Context]
+pub mut:
+	db pg.DB
+}
+
+pub fn header(mut ctx Context)  bool {
+	ctx.set_header(.date, time.now().as_utc().custom_format('ddd, DD MMM YYYY HH:MM:ss') + ' GMT')
+	ctx.set_header(.server, 'veb')
+	return true
 }
 
 fn main() {
@@ -102,5 +98,6 @@ fn main() {
 			dbname:   'hello_world'
 		}) !
 	}
+	app.use(handler: header)
 	veb.run[App, Context](mut app,  8080)
 }
