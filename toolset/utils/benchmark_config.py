@@ -22,6 +22,25 @@ class BenchmarkConfig:
         else:
             self.types = {t: types[t] for t in args.type}
 
+        # Check if we're running in a CI environment
+        self.is_ci = any([
+            os.getenv('GITHUB_ACTIONS'),  # GitHub Actions
+            os.getenv('CI'),              # Generic CI (GitLab, Travis, etc.)
+            os.getenv('TRAVIS'),          # Travis CI
+            os.getenv('CIRCLECI'),        # CircleCI
+            os.getenv('JENKINS_URL'),     # Jenkins
+            os.getenv('BUILDKITE'),       # Buildkite
+            os.getenv('DRONE'),           # Drone CI
+            os.getenv('GITLAB_CI'),       # GitLab CI
+            os.getenv('BITBUCKET_BUILD_NUMBER'),  # Bitbucket Pipelines
+            os.getenv('TEAMCITY_VERSION'),        # TeamCity
+            os.getenv('BAMBOO_BUILDKEY'),         # Bamboo
+            os.getenv('GO_PIPELINE_NAME'),        # GoCD
+            os.getenv('HUDSON_URL'),              # Hudson
+            os.getenv('TFS_BUILD'),               # Azure DevOps
+            os.getenv('SYSTEM_TEAMFOUNDATIONCOLLECTIONURI'),  # Azure DevOps (alternative)
+        ])
+
         self.duration = args.duration
         self.exclude = args.exclude
         self.quiet = args.quiet
