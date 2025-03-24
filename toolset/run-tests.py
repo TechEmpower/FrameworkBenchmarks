@@ -208,6 +208,10 @@ def main(argv=None):
         nargs='*',
         default=None,
         help='Extra docker arguments to be passed to the test container')
+    parser.add_argument(
+        '--force-rm',
+        default=True,
+        help='Remove intermediate docker containers after running.')
 
     # Network options
     parser.add_argument(
