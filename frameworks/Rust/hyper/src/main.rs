@@ -150,6 +150,7 @@ fn create_socket(addr: SocketAddr) -> Result<Socket> {
     #[cfg(unix)]
     socket.set_reuse_port(true)?;
     socket.set_reuse_address(true)?;
+    socket.set_nodelay(true)?;
     socket.set_nonblocking(true)?; // required for tokio
     socket.bind(&addr)?;
     socket.listen(backlog)?;
