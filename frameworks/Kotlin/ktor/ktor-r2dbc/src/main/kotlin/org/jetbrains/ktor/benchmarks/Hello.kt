@@ -32,6 +32,14 @@ import org.jetbrains.ktor.benchmarks.models.World
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import kotlin.random.Random
+import java.time.Duration
+
+private val json = Json {
+    prettyPrint = false
+    isLenient = true
+    ignoreUnknownKeys = true
+    coerceInputValues = true
+}
 
 fun Application.main() {
     val config = ApplicationConfig("application.conf")
@@ -40,6 +48,7 @@ fun Application.main() {
     install(DefaultHeaders)
 
     val helloWorldContent = TextContent("Hello, World!", ContentType.Text.Plain)
+    val helloWorldMsg = Message("Hello, world!")
 
     routing {
         get("/plaintext") {
@@ -47,7 +56,7 @@ fun Application.main() {
         }
 
         get("/json") {
-            call.respondText(Json.encodeToString(Message("Hello, world!")), ContentType.Application.Json)
+            call.respondText(json.encodeToString(helloWorldMsg), ContentType.Application.Json)
         }
 
         get("/db") {
@@ -55,7 +64,7 @@ fun Application.main() {
             val request = getWorld(dbConnFactory, random)
             val result = request.awaitFirstOrNull()
 
-            call.respondText(Json.encodeToString(result), ContentType.Application.Json)
+            call.respondText(json.encodeToString(result), ContentType.Application.Json)
         }
 
         fun selectWorlds(queries: Int, random: Random): Flow<World> = flow {
@@ -74,7 +83,7 @@ fun Application.main() {
                 }
             }
 
-            call.respondText(Json.encodeToString(result), ContentType.Application.Json)
+            call.respondText(json.encodeToString(result), ContentType.Application.Json)
         }
 
         get("/fortunes") {
@@ -123,19 +132,20 @@ fun Application.main() {
                 worlds.collect { world ->
                     world.randomNumber = random.nextInt(DB_ROWS) + 1
                     add(world)
-
-                    Mono.usingWhen(dbConnFactory.create(), { connection ->
-                        Mono.from(
-                            connection.createStatement(UPDATE_QUERY)
-                                .bind(0, world.randomNumber)
-                                .bind(1, world.id)
-                                .execute()
-                        ).flatMap { Mono.from(it.rowsUpdated) }
-                    }, Connection::close).awaitFirstOrNull()
                 }
             }
 
-            call.respondText(Json.encodeToString(worldsUpdated), ContentType.Application.Json)
+            Mono.usingWhen(dbConnFactory.create(), { connection ->
+                val statement = connection.createStatement(UPDATE_QUERY)
+                worldsUpdated.forEach { world ->
+                    statement.bind(0, world.randomNumber)
+                    statement.bind(1, world.id)
+                    statement.add()
+                }
+                Mono.from(statement.execute())
+            }, Connection::close).awaitFirstOrNull()
+
+            call.respondText(json.encodeToString(worldsUpdated), ContentType.Application.Json)
         }
     }
 }
@@ -170,6 +180,9 @@ private fun configurePostgresR2DBC(config: ApplicationConfig): ConnectionFactory
     val cp = ConnectionPoolConfiguration.builder(cf)
         .initialSize(config.property("db.initPoolSize").getString().toInt())
         .maxSize(config.property("db.maxPoolSize").getString().toInt())
+        .maxIdleTime(Duration.ofSeconds(30))
+        .maxAcquireTime(Duration.ofSeconds(5))
+        .validationQuery("SELECT 1")
         .build()
 
     return ConnectionPool(cp)
