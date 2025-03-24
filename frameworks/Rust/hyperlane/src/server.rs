@@ -9,7 +9,6 @@ pub async fn run_server() {
     server.disable_inner_print().await;
     server.http_line_buffer_size(512).await;
     server.websocket_buffer_size(512).await;
-    server.log_interval_millis(1_000_000_000).await;
     server.route("/plaintext", plaintext).await;
     server.route("/json", json).await;
     server.route("/cached-quer", cached_queries).await;
