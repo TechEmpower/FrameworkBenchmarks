@@ -29,6 +29,7 @@ GEM
 PLATFORMS
   ruby
   x86_64-darwin-22
+  x86_64-linux
 
 DEPENDENCIES
   base64
@@ -45,4 +46,4 @@ DEPENDENCIES
   unicorn (~> 6.1)
 
 BUNDLED WITH
-   2.5.10
+   2.6.2
