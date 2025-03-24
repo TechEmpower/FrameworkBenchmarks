@@ -1,5 +1,3 @@
-# TODO - MSMITH REMOVE ME
-
 # Spiral Framework 2.0 Benchmarking Test
 This is the Spiral Framework portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
 Tests are run with realistic approach, full ORM and templating stack.
