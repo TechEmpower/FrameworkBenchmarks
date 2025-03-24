@@ -16,12 +16,10 @@ pub fn build(b: *std.Build) !void {
     const httpz_module = b.dependency("httpz", dep_opts).module("httpz");
     const pg_module = b.dependency("pg", dep_opts).module("pg");
     const datetimez_module = b.dependency("datetimez", dep_opts).module("zig-datetime");
-    const mustache_module = b.dependency("mustache", dep_opts).module("mustache");
 
     exe.root_module.addImport("httpz", httpz_module);
     exe.root_module.addImport("pg", pg_module);
     exe.root_module.addImport("datetimez", datetimez_module);
-    exe.root_module.addImport("mustache", mustache_module);
 
     // This declares intent for the executable to be installed into the
     // standard location when the user invokes the "install" step (the default

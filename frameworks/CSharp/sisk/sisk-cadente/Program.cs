@@ -1,10 +1,19 @@
-﻿using System.Text;
+﻿using System.Net;
+using System.Text;
 using System.Text.Json;
 using Sisk.Cadente;
 
-var host = new HttpHost ( 8080, session => {
-    var request = session.Request;
+HttpHost.QueueSize = 4096;
 
+var host = new HttpHost ( new IPEndPoint ( IPAddress.Any, 8080 ) );
+host.ContextCreated += Host_ContextCreated;
+
+host.Start ();
+Thread.Sleep ( Timeout.Infinite );
+
+void Host_ContextCreated ( HttpHost sender, HttpHostContext session ) {
+    var request = session.Request;
+    
     if (request.Path == "/plaintext") {
         SerializePlainTextResponse ( session.Response );
     }
@@ -14,23 +23,22 @@ var host = new HttpHost ( 8080, session => {
     else {
         session.Response.StatusCode = 404;
     }
-} );
-
-host.Start ();
-Thread.Sleep ( Timeout.Infinite );
-
-static void SerializePlainTextResponse ( HttpResponse response ) {
-    var contentBytes = Encoding.UTF8.GetBytes ( "Hello, world!" );
-
-    response.Headers.Add ( new HttpHeader ( "Content-Type", "text/plain" ) );
-    response.ResponseStream = new MemoryStream ( contentBytes );
 }
 
-static void SerializeJsonResponse ( HttpResponse response ) {
-    var contentBytes = JsonSerializer.SerializeToUtf8Bytes ( new {
-        message = "Hello, world!"
-    } );
+static void SerializePlainTextResponse ( HttpHostContext.HttpResponse response ) {
 
-    response.Headers.Add ( new HttpHeader ( "Content-Type", "application/json; charset=utf-8" ) );
+    var messageBytes = Encoding.UTF8.GetBytes ( "Hello, World!" );
+
+    response.Headers.Add ( new HttpHeader ( "Content-Type", "text/plain; charset=UTF-8" ) );
+    response.ResponseStream = new MemoryStream ( messageBytes );
+}
+
+static void SerializeJsonResponse ( HttpHostContext.HttpResponse response ) {
+
+    var contentBytes = JsonSerializer.SerializeToUtf8Bytes ( new {
+        message = "Hello, World!"
+    } );
+    
+    response.Headers.Add ( new HttpHeader ( "Content-Type", "application/json" ) );
     response.ResponseStream = new MemoryStream ( contentBytes );
 }

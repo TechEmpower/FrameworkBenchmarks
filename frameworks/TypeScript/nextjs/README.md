@@ -27,21 +27,3 @@
 [`app/updates/route.ts`]: ./app/updates/route.ts
 [`app/plaintext/route.ts`]: ./app/plaintext/route.ts
 [`app/cached-queries/route.ts`]: ./app/cached-queries/route.ts
-
-## TODO
-
-The Fortunes test is currently disabled because the benchmark expects exact HTML output — see [TechEmpower/FrameworkBenchmarks#9505](https://github.com/TechEmpower/FrameworkBenchmarks/pull/9505).  After that issue is resolved, the Fortunes test can be re-enabled by applying the following diff:
-
-```diff
---- a/frameworks/TypeScript/nextjs/benchmark_config.json
-+++ b/frameworks/TypeScript/nextjs/benchmark_config.json
-@@ -20,7 +20,7 @@
-         "json_url": "/json",
-         "db_url": "/db",
-         "query_url": "/queries?queries=",
--        "TEMPORARILY DISABLED fortune_url": "/fortunes",
-+        "fortune_url": "/fortunes",
-         "update_url": "/updates?queries=",
-         "plaintext_url": "/plaintext",
-         "cached_query_url": "/cached-queries?queries="
-```

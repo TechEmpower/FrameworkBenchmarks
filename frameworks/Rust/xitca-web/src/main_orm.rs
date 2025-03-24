@@ -3,17 +3,16 @@ mod schema;
 mod ser;
 mod util;
 
-use serde::Serialize;
 use xitca_web::{
+    App,
     codegen::route,
     handler::{html::Html, json::Json, query::Query, state::StateRef, text::Text},
-    http::{header::SERVER, WebResponse},
+    http::{WebResponse, header::SERVER},
     route::get,
-    App,
 };
 
 use db_diesel_async::Pool;
-use ser::Num;
+use ser::{Num, World};
 use util::{HandleResult, SERVER_HEADER_VALUE};
 
 fn main() -> std::io::Result<()> {
@@ -39,7 +38,7 @@ fn header(mut res: WebResponse) -> WebResponse {
 }
 
 #[route("/db", method = get)]
-async fn db(StateRef(pool): StateRef<'_, Pool>) -> HandleResult<Json<impl Serialize>> {
+async fn db(StateRef(pool): StateRef<'_, Pool>) -> HandleResult<Json<World>> {
     pool.get_world().await.map(Json)
 }
 
@@ -51,17 +50,11 @@ async fn fortunes(StateRef(pool): StateRef<'_, Pool>) -> HandleResult<Html<Strin
 }
 
 #[route("/queries", method = get)]
-async fn queries(
-    Query(Num(num)): Query<Num>,
-    StateRef(pool): StateRef<'_, Pool>,
-) -> HandleResult<Json<impl Serialize>> {
+async fn queries(Query(Num(num)): Query<Num>, StateRef(pool): StateRef<'_, Pool>) -> HandleResult<Json<Vec<World>>> {
     pool.get_worlds(num).await.map(Json)
 }
 
 #[route("/updates", method = get)]
-async fn updates(
-    Query(Num(num)): Query<Num>,
-    StateRef(pool): StateRef<'_, Pool>,
-) -> HandleResult<Json<impl Serialize>> {
+async fn updates(Query(Num(num)): Query<Num>, StateRef(pool): StateRef<'_, Pool>) -> HandleResult<Json<Vec<World>>> {
     pool.update(num).await.map(Json)
 }

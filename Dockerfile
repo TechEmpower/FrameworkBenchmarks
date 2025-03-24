@@ -13,6 +13,7 @@ RUN apt-get -yqq update && \
       gcc \
       git-core \
       gosu \
+      iproute2 \
       # Needed for mysqlclient
       libmysqlclient-dev \
       libpq-dev \
@@ -43,17 +44,12 @@ RUN curl -LSs "https://github.com/scottchiefbaker/dool/archive/${DOOL_VERSION}.t
       tar --strip-components=1 -xz && \
     ./install.py
 
-# Check if the group ID is already created
+# create group and user
 ARG GROUP_ID
-RUN if ! getent group "$GROUP_ID"; then \
-      addgroup --gid "$GROUP_ID" user; \
-    fi
-
-# Check if the user ID is already created
 ARG USER_ID
-RUN if ! getent passwd "$USER_ID"; then \
-      adduser --disabled-password --gecos '' --gid "$GROUP_ID" --uid "$USER_ID" user; \
-    fi
+
+RUN groupadd -g "$GROUP_ID" user || true && \
+    useradd -m -u "$USER_ID" -g "$GROUP_ID" -s /bin/bash user || true
 
 ENV FWROOT=/FrameworkBenchmarks USER_ID="$USER_ID"
 ENV PYTHONPATH="$FWROOT"
