@@ -24,21 +24,21 @@ class BenchmarkConfig:
 
         # Check if we're running in a CI environment
         self.is_ci = any([
-            os.getenv('GITHUB_ACTIONS'),  # GitHub Actions
-            os.getenv('CI'),              # Generic CI (GitLab, Travis, etc.)
-            os.getenv('TRAVIS'),          # Travis CI
-            os.getenv('CIRCLECI'),        # CircleCI
-            os.getenv('JENKINS_URL'),     # Jenkins
-            os.getenv('BUILDKITE'),       # Buildkite
-            os.getenv('DRONE'),           # Drone CI
-            os.getenv('GITLAB_CI'),       # GitLab CI
-            os.getenv('BITBUCKET_BUILD_NUMBER'),  # Bitbucket Pipelines
-            os.getenv('TEAMCITY_VERSION'),        # TeamCity
-            os.getenv('BAMBOO_BUILDKEY'),         # Bamboo
-            os.getenv('GO_PIPELINE_NAME'),        # GoCD
-            os.getenv('HUDSON_URL'),              # Hudson
-            os.getenv('TFS_BUILD'),               # Azure DevOps
-            os.getenv('SYSTEM_TEAMFOUNDATIONCOLLECTIONURI'),  # Azure DevOps (alternative)
+            os.getenv('GITHUB_ACTIONS') == 'true',  # GitHub Actions
+            os.getenv('CI') == 'true',              # Generic CI (GitLab, Travis, etc.)
+            os.getenv('TRAVIS') == 'true',          # Travis CI
+            os.getenv('CIRCLECI') == 'true',        # CircleCI
+            os.getenv('JENKINS_URL') == 'true',     # Jenkins
+            os.getenv('BUILDKITE') == 'true',       # Buildkite
+            os.getenv('DRONE') == 'true',           # Drone CI
+            os.getenv('GITLAB_CI') == 'true',       # GitLab CI
+            os.getenv('BITBUCKET_BUILD_NUMBER') == 'true',  # Bitbucket Pipelines
+            os.getenv('TEAMCITY_VERSION') == 'true',        # TeamCity
+            os.getenv('BAMBOO_BUILDKEY') == 'true',         # Bamboo
+            os.getenv('GO_PIPELINE_NAME') == 'true',        # GoCD
+            os.getenv('HUDSON_URL') == 'true',              # Hudson
+            os.getenv('TFS_BUILD') == 'true',               # Azure DevOps
+            os.getenv('SYSTEM_TEAMFOUNDATIONCOLLECTIONURI') == 'true',  # Azure DevOps (alternative)
         ])
 
         self.duration = args.duration
