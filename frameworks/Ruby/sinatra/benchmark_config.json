@@ -88,26 +88,6 @@
         "versus": "rack-postgres-iodine-mri",
         "notes": ""
       },
-      "postgres-passenger-mri": {
-        "db_url": "/db",
-        "query_url": "/queries?queries=",
-        "fortune_url": "/fortunes",
-        "update_url": "/updates?queries=",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Micro",
-        "database": "Postgres",
-        "framework": "sinatra",
-        "language": "Ruby",
-        "orm": "Full",
-        "platform": "Rack",
-        "webserver": "Passenger",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "sinatra-postgres-passenger-mri",
-        "versus": "rack-postgres-passenger-mri",
-        "notes": ""
-      },
       "postgres-unicorn-mri": {
         "db_url": "/db",
         "query_url": "/queries?queries=",
