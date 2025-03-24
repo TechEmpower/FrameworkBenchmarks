@@ -1,24 +1,17 @@
 {
   "framework": "hyper",
+  "maintainers": [
+    "polachok",
+    "seanmonstar",
+    "steveklabnik"
+  ],
   "tests": [{
     "default": {
-      "plaintext_url": "/plaintext",
+      "docker_cmd": "hyper-techempower --runtime current-thread",
       "json_url": "/json",
-      "port": 8080,
-      "approach": "Realistic",
-      "classification": "Micro",
-      "database": "Postgres",
-      "framework": "hyper",
-      "language": "Rust",
-      "orm": "Raw",
-      "platform": "Rust",
-      "webserver": "hyper",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "hyper",
-      "notes": ""
-    },
-    "db": {
+      "plaintext_url": "/plaintext",
+      "db_url": "/db",
+      "query_url": "/queries?count=",
       "fortune_url": "/fortunes",
       "port": 8080,
       "approach": "Realistic",
@@ -31,7 +24,29 @@
       "webserver": "hyper",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "hyper",
+      "display_name": "Hyper (current-thread runtime)",
+      "notes": ""
+    },
+    "multi-thread": {
+      "dockerfile": "hyper.dockerfile",
+      "docker_cmd": "hyper-techempower --runtime multi-thread",
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "db_url": "/db",
+      "query_url": "/queries?count=",
+      "fortune_url": "/fortunes",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "Postgres",
+      "framework": "hyper",
+      "language": "Rust",
+      "orm": "Raw",
+      "platform": "Rust",
+      "webserver": "hyper",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Hyper (multi-thread runtime)",
       "notes": ""
     }
   }]
