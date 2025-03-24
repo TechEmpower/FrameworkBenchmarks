@@ -444,7 +444,7 @@ def verify_queries_count(test_instance, tbl_name, url, concurrency=512, count=2,
 
     # Add a margin based on whether we're running in a CI environment
     queries_margin = 1.015  # For a run in CI environment
-    if test_instance.config.is_ci:
+    if not test_instance.config.is_ci:
         queries_margin = 1  # real run (Citrine or Azure) -> no margin on queries
         # Check for transactions failures (socket errors...)
         if trans_failures > 0:
