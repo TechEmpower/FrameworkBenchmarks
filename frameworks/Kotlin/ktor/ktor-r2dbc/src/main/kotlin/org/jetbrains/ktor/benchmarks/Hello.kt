@@ -137,11 +137,9 @@ fun Application.main() {
             Mono.usingWhen(dbConnFactory.create(), { connection ->
                 val statement = connection.createStatement(UPDATE_QUERY)
                 worldsUpdated.forEach { world ->
-                    if (world.id != null && world.randomNumber != null) {
-                        statement.bind(0, world.randomNumber)
-                        statement.bind(1, world.id)
-                        statement.add()
-                    }
+                    statement.bind("$1", world.randomNumber)
+                    statement.bind("$2", world.id)
+                    statement.add()
                 }
                 if (worldsUpdated.isNotEmpty()) {
                     Mono.from(statement.execute())
@@ -159,7 +157,7 @@ private fun getWorld(
     dbConnFactory: ConnectionFactory, random: Random
 ): Mono<World> = Mono.usingWhen(dbConnFactory.create(), { connection ->
     Mono.from(connection.createStatement(WORLD_QUERY)
-        .bind(0, random.nextInt(DB_ROWS) + 1)
+        .bind("$1", random.nextInt(DB_ROWS) + 1)
         .execute())
         .flatMap { r ->
             Mono.from(r.map { row, _ ->
