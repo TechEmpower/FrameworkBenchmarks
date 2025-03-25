@@ -15,7 +15,7 @@ ENV LD_PRELOAD=libjemalloc.so.2
 COPY ./Gemfile* /rails/
 
 ENV BUNDLE_FORCE_RUBY_PLATFORM=true
-ENV BUNDLE_WITH=postgresql:agoo
+ENV BUNDLE_WITH=postgresql:pitchfork
 RUN bundle install --jobs=8
 
 COPY . /rails/
@@ -24,4 +24,4 @@ ENV RAILS_ENV=production_postgresql
 ENV PORT=8080
 ENV REDIS_URL=redis://localhost:6379/0
 CMD service redis-server start && \
-    RACK_ENV=production bundle exec rackup -r agoo -s agoo -p 8080 -q -O workers=$(ruby config/auto_tune.rb | grep -Eo '[0-9]+' | head -n 1)
+    RACK_ENV=production bundle exec pitchfork -c config/pitchfork.rb
