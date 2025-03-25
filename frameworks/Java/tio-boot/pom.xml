@@ -11,7 +11,7 @@
     <java.version>1.8</java.version>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
-    <tio-boot.version>1.9.3</tio-boot.version>
+    <tio-boot.version>1.9.4</tio-boot.version>
 
 
     <main.class>com.litongjava.tio.http.server.MainApp</main.class>
