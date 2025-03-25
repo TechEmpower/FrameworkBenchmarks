@@ -1,14 +1,12 @@
-use std::convert::Infallible;
 
-use http::header::{CONTENT_LENGTH, CONTENT_TYPE, SERVER};
+use http::header::{CONTENT_LENGTH, CONTENT_TYPE};
 use http::Response;
-use http_body_util::combinators::BoxBody;
-use http_body_util::{BodyExt, Full};
+use http_body_util::Full;
 use hyper::body::Bytes;
 use tokio_postgres::Row;
 
 use crate::db::POOL;
-use crate::{Error, SERVER_HEADER, TEXT_HTML};
+use crate::{Error, Result, TEXT_HTML};
 
 const QUERY: &str = "SELECT id, message FROM fortune";
 
@@ -26,18 +24,18 @@ impl From<&Row> for Fortune {
     }
 }
 
-pub async fn get() -> crate::Result<Response<BoxBody<Bytes, Infallible>>> {
+pub async fn get() -> Result<Response<Full<Bytes>>> {
     let fortunes = tell_fortune().await?;
     let content = FortunesTemplate { fortunes }.to_string();
+    
     Response::builder()
-        .header(SERVER, SERVER_HEADER.clone())
         .header(CONTENT_TYPE, TEXT_HTML.clone())
         .header(CONTENT_LENGTH, content.len())
-        .body(Full::from(content).boxed())
+        .body(content.into())
         .map_err(Error::from)
 }
 
-async fn tell_fortune() -> crate::Result<Vec<Fortune>> {
+async fn tell_fortune() -> Result<Vec<Fortune>> {
     let db = POOL.get().await?;
     let statement = db.prepare_cached(QUERY).await?;
     let rows = db.query(&statement, &[]).await?;

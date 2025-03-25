@@ -4,7 +4,7 @@ use std::{io, thread};
 
 use clap::{Parser, ValueEnum};
 use http_body_util::combinators::BoxBody;
-use http_body_util::{BodyExt, Empty, Full};
+use http_body_util::Empty;
 use hyper::body::{Bytes, Incoming};
 use hyper::header::{HeaderValue, SERVER};
 use hyper::server::conn::http1;
@@ -181,32 +181,31 @@ async fn accept_loop(handle: runtime::Handle, listener: TcpListener) -> Result<(
 /// Routes requests to the appropriate handler.
 async fn router(request: Request<Incoming>) -> Result<Response<BoxBody<Bytes, Infallible>>> {
     // The method is always GET, so we don't check it.
-    match request.uri().path() {
-        "/ping" => ping(),
-        "/json" => json::get(),
-        "/db" => single_query::get().await,
-        "/queries" => multiple_queries::get(request.uri().query()).await,
-        "/fortunes" => fortunes::get().await,
-        "/plaintext" => plaintext::get(),
-        _ => not_found_error(),
-    }
+    let mut response = match request.uri().path() {
+        "/ping" => ping()?.map(BoxBody::new),
+        "/json" => json::get()?.map(BoxBody::new),
+        "/db" => single_query::get().await?.map(BoxBody::new),
+        "/queries" => multiple_queries::get(request.uri().query()).await?.map(BoxBody::new),
+        "/fortunes" => fortunes::get().await?.map(BoxBody::new),
+        "/plaintext" => plaintext::get()?.map(BoxBody::new),
+        _ => not_found_error()?.map(BoxBody::new),
+    };
+    response.headers_mut().insert(SERVER, SERVER_HEADER.clone());
+    Ok(response)
 }
 
 /// A handler that returns a "pong" response.
 ///
 /// This handler is used to verify that the server is running and can respond to requests. It is
 /// used by the docker health check command.
-fn ping() -> Result<Response<BoxBody<Bytes, Infallible>>> {
-    Response::builder()
-        .body(Full::from("pong").boxed())
-        .map_err(Error::from)
+fn ping() -> Result<Response<String>> {
+    Response::builder().body("pong".to_string()).map_err(Error::from)
 }
 
 /// A handler that returns a 404 response.
-fn not_found_error() -> Result<Response<BoxBody<Bytes, Infallible>>> {
+fn not_found_error() -> Result<Response<Empty<Bytes>>> {
     Response::builder()
         .status(StatusCode::NOT_FOUND)
-        .header(SERVER, SERVER_HEADER.clone())
-        .body(Empty::new().boxed())
+        .body(Empty::new())
         .map_err(Error::from)
 }

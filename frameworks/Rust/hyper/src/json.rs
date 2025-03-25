@@ -1,13 +1,10 @@
-use std::convert::Infallible;
-
-use http::header::{CONTENT_LENGTH, CONTENT_TYPE, SERVER};
+use http::header::{CONTENT_LENGTH, CONTENT_TYPE};
 use http::Response;
-use http_body_util::combinators::BoxBody;
-use http_body_util::{BodyExt, Full};
+use http_body_util::Full;
 use hyper::body::Bytes;
 use serde::Serialize;
 
-use crate::{Error, Result, APPLICATION_JSON, SERVER_HEADER};
+use crate::{Error, Result, APPLICATION_JSON};
 
 #[derive(Serialize)]
 struct JsonResponse<'a> {
@@ -18,12 +15,12 @@ static CONTENT: JsonResponse = JsonResponse {
     message: "Hello, world!",
 };
 
-pub fn get() -> Result<Response<BoxBody<Bytes, Infallible>>> {
+pub fn get() -> Result<Response<Full<Bytes>>> {
     let content = serde_json::to_vec(&CONTENT)?;
+
     Response::builder()
-        .header(SERVER, SERVER_HEADER.clone())
         .header(CONTENT_TYPE, APPLICATION_JSON.clone())
         .header(CONTENT_LENGTH, content.len())
-        .body(Full::from(content).boxed())
+        .body(content.into())
         .map_err(Error::from)
 }
