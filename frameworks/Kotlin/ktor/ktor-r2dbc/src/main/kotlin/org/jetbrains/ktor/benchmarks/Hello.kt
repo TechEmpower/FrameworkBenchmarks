@@ -157,13 +157,14 @@ private fun getWorld(
         .execute())
         .flatMap { r ->
             Mono.from(r.map { row, _ ->
-                val id = row.get(0, Int::class.java)
-                val randomNumber = row.get(1, Int::class.java)
-                if (id != null && randomNumber != null) {
-                    World(id, randomNumber)
-                } else {
+                val id = row.get("id", Int::class.java) ?: row.get(0, Int::class.java)
+                val randomNumber = row.get("randomnumber", Int::class.java) ?: row.get(1, Int::class.java)
+                
+                if (id == null || randomNumber == null) {
                     throw IllegalStateException("Database returned null values for required fields")
                 }
+                
+                World(id, randomNumber)
             })
         }
 }, Connection::close)
