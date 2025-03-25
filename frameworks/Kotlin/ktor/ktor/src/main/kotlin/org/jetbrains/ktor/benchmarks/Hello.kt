@@ -31,12 +31,6 @@ data class World(val id: Int, var randomNumber: Int)
 @Serializable
 data class Fortune(val id: Int, var message: String)
 
-@Serializable
-data class DynamicValue(
-    @Contextual
-    val value: Any
-)
-
 // Optimized JSON instance with better performance settings
 private val json = Json {
     prettyPrint = false
@@ -166,11 +160,6 @@ fun Application.main() {
             }
 
             call.respondText(json.encodeToString(result), ContentType.Application.Json)
-        }
-
-        post("/dynamic-map") {
-            val dynamicMap = call.receive<Map<String, DynamicValue>>()
-            call.respondText(json.encodeToString(dynamicMap), ContentType.Application.Json)
         }
     }
 }
