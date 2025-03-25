@@ -23,35 +23,7 @@ class BenchmarkConfig:
             self.types = {t: types[t] for t in args.type}
 
         # Check if we're running in a CI environment
-        # Log CI environment variables to help debug
-        github_actions = os.getenv('GITHUB_ACTIONS')
-        print(f"GITHUB_ACTIONS env var: '{github_actions}'")
-        print(f"GITHUB_ACTIONS type: {type(github_actions)}")
-
-        ci_vars = {
-            'GITHUB_ACTIONS': os.getenv('GITHUB_ACTIONS'),  # GitHub Actions
-            'CI': os.getenv('CI'),              # Generic CI (GitLab, Travis, etc.)
-            'TRAVIS': os.getenv('TRAVIS'),          # Travis CI
-            'CIRCLECI': os.getenv('CIRCLECI'),        # CircleCI
-            'JENKINS_URL': os.getenv('JENKINS_URL'),     # Jenkins
-            'BUILDKITE': os.getenv('BUILDKITE'),       # Buildkite
-            'DRONE': os.getenv('DRONE'),           # Drone CI
-            'GITLAB_CI': os.getenv('GITLAB_CI'),       # GitLab CI
-            'BITBUCKET_BUILD_NUMBER': os.getenv('BITBUCKET_BUILD_NUMBER'),  # Bitbucket Pipelines
-            'TEAMCITY_VERSION': os.getenv('TEAMCITY_VERSION'),        # TeamCity
-            'BAMBOO_BUILDKEY': os.getenv('BAMBOO_BUILDKEY'),         # Bamboo
-            'GO_PIPELINE_NAME': os.getenv('GO_PIPELINE_NAME'),        # GoCD
-            'HUDSON_URL': os.getenv('HUDSON_URL'),              # Hudson
-            'TFS_BUILD': os.getenv('TFS_BUILD'),               # Azure DevOps
-            'SYSTEM_TEAMFOUNDATIONCOLLECTIONURI': os.getenv('SYSTEM_TEAMFOUNDATIONCOLLECTIONURI'),  # Azure DevOps (alternative)
-        }
-
-        print("All CI environment variables:")
-        for var, value in ci_vars.items():
-            print(f"{var}: '{value}'")
-
-        self.is_ci = any(value == 'true' for value in ci_vars.values())
-
+        self.is_ci = os.getenv('GITHUB_ACTIONS')
         self.duration = args.duration
         self.exclude = args.exclude
         self.quiet = args.quiet
