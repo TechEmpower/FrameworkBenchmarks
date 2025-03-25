@@ -1,4 +1,4 @@
-FROM rust:1.83
+FROM rust:1.85
 
 ADD ./ /viz
 WORKDIR /viz
