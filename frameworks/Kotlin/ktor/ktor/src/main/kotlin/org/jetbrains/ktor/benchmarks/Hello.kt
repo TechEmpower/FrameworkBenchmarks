@@ -21,18 +21,6 @@ import java.sql.Connection
 import java.util.concurrent.ThreadLocalRandom
 import kotlin.random.Random
 import kotlinx.serialization.Contextual
-import kotlinx.serialization.modules.SerializersModule
-import kotlinx.serialization.modules.contextual
-import kotlinx.serialization.modules.polymorphic
-import kotlinx.serialization.modules.subclass
-import kotlinx.serialization.KSerializer
-import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.descriptors.buildClassSerialDescriptor
-import kotlinx.serialization.descriptors.element
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
-import kotlinx.serialization.encoding.encodeStructure
-import kotlinx.serialization.encoding.decodeStructure
 
 @Serializable
 data class Message(val message: String)
@@ -49,72 +37,8 @@ data class DynamicValue(
     val value: Any
 )
 
-class AnySerializer : KSerializer<Any> {
-    override val descriptor: SerialDescriptor = buildClassSerialDescriptor("Any") {
-        element<String>("type")
-        element<String>("value")
-    }
-
-    override fun serialize(encoder: Encoder, value: Any) {
-        encoder.encodeStructure(descriptor) {
-            when (value) {
-                is String -> {
-                    encodeStringElement(descriptor, 0, "string")
-                    encodeStringElement(descriptor, 1, value)
-                }
-                is Number -> {
-                    encodeStringElement(descriptor, 0, "number")
-                    encodeStringElement(descriptor, 1, value.toString())
-                }
-                is Boolean -> {
-                    encodeStringElement(descriptor, 0, "boolean")
-                    encodeStringElement(descriptor, 1, value.toString())
-                }
-                is List<*> -> {
-                    encodeStringElement(descriptor, 0, "list")
-                    encodeStringElement(descriptor, 1, json.encodeToString(value))
-                }
-                is Map<*, *> -> {
-                    encodeStringElement(descriptor, 0, "map")
-                    encodeStringElement(descriptor, 1, json.encodeToString(value))
-                }
-                else -> {
-                    encodeStringElement(descriptor, 0, "string")
-                    encodeStringElement(descriptor, 1, value.toString())
-                }
-            }
-        }
-    }
-
-    override fun deserialize(decoder: Decoder): Any {
-        return decoder.decodeStructure(descriptor) {
-            val type = decodeStringElement(descriptor, 0)
-            val value = decodeStringElement(descriptor, 1)
-            when (type) {
-                "string" -> value
-                "number" -> value.toDoubleOrNull() ?: value
-                "boolean" -> value.toBoolean()
-                "list" -> json.decodeFromString<List<Any>>(value)
-                "map" -> json.decodeFromString<Map<String, Any>>(value)
-                else -> value
-            }
-        }
-    }
-}
-
 // Optimized JSON instance with better performance settings
 private val json = Json {
-    prettyPrint = false
-    isLenient = true
-    ignoreUnknownKeys = true
-    coerceInputValues = true
-}
-
-// Create a custom JSON instance with the AnySerializer
-private val jsonWithAny = Json {
-    serializersModule = SerializersModule {
-        contextual(AnySerializer())
-    }
     prettyPrint = false
     isLenient = true
     ignoreUnknownKeys = true
@@ -246,7 +170,7 @@ fun Application.main() {
 
         post("/dynamic-map") {
             val dynamicMap = call.receive<Map<String, DynamicValue>>()
-            call.respondText(jsonWithAny.encodeToString(dynamicMap), ContentType.Application.Json)
+            call.respondText(json.encodeToString(dynamicMap), ContentType.Application.Json)
         }
     }
 }
