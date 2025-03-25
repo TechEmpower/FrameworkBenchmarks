@@ -134,14 +134,20 @@ fun Application.main() {
                 worldsUpdated.add(world)
             }
 
-            // Execute updates sequentially
-            worldsUpdated.forEach { world ->
-                Mono.usingWhen(dbConnFactory.create(), { connection ->
-                    Mono.from(connection.createStatement(UPDATE_QUERY)
-                        .bind("$1", world.randomNumber)
-                        .bind("$2", world.id)
-                        .execute())
-                }, Connection::close).awaitFirstOrNull()
+            val worldsUpdated = buildList {
+                worlds.collect { world ->
+                    world.randomNumber = random.nextInt(DB_ROWS) + 1
+                    add(world)
+
+                    Mono.usingWhen(dbConnFactory.create(), { connection ->
+                        Mono.from(
+                            connection.createStatement(UPDATE_QUERY)
+                                .bind(0, world.randomNumber)
+                                .bind(1, world.id)
+                                .execute()
+                        ).flatMap { Mono.from(it.rowsUpdated) }
+                    }, Connection::close).awaitFirstOrNull()
+                }
             }
 
             call.respondText(json.encodeToString(worldsUpdated), ContentType.Application.Json)
@@ -157,14 +163,13 @@ private fun getWorld(
         .execute())
         .flatMap { r ->
             Mono.from(r.map { row, _ ->
-                val id = row.get("id", Int::class.java) ?: row.get(0, Int::class.java)
-                val randomNumber = row.get("randomnumber", Int::class.java) ?: row.get(1, Int::class.java)
-                
-                if (id == null || randomNumber == null) {
+                val id = row.get(0, Int::class.java)
+                val randomNumber = row.get(1, Int::class.java)
+                if (id != null && randomNumber != null) {
+                    World(id, randomNumber)
+                } else {
                     throw IllegalStateException("Database returned null values for required fields")
                 }
-                
-                World(id, randomNumber)
             })
         }
 }, Connection::close)
