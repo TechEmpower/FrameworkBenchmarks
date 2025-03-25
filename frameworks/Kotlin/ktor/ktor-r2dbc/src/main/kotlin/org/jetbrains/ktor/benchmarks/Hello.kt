@@ -134,19 +134,15 @@ fun Application.main() {
                 worldsUpdated.add(world)
             }
 
-            Mono.usingWhen(dbConnFactory.create(), { connection ->
-                val statement = connection.createStatement(UPDATE_QUERY)
-                worldsUpdated.forEach { world ->
-                    statement.bind("$1", world.randomNumber)
-                    statement.bind("$2", world.id)
-                    statement.add()
-                }
-                if (worldsUpdated.isNotEmpty()) {
-                    Mono.from(statement.execute())
-                } else {
-                    Mono.empty()
-                }
-            }, Connection::close).awaitFirstOrNull()
+            // Execute updates sequentially
+            worldsUpdated.forEach { world ->
+                Mono.usingWhen(dbConnFactory.create(), { connection ->
+                    Mono.from(connection.createStatement(UPDATE_QUERY)
+                        .bind("$1", world.randomNumber)
+                        .bind("$2", world.id)
+                        .execute())
+                }, Connection::close).awaitFirstOrNull()
+            }
 
             call.respondText(json.encodeToString(worldsUpdated), ContentType.Application.Json)
         }
