@@ -127,22 +127,27 @@ fun Application.main() {
             val random = Random.Default
 
             val worlds = selectWorlds(queries, random)
+            val worldsUpdated = ArrayList<World>(queries)
 
-            val worldsUpdated = buildList {
-                worlds.collect { world ->
-                    world.randomNumber = random.nextInt(DB_ROWS) + 1
-                    add(world)
-                }
+            worlds.collect { world ->
+                world.randomNumber = random.nextInt(DB_ROWS) + 1
+                worldsUpdated.add(world)
             }
 
             Mono.usingWhen(dbConnFactory.create(), { connection ->
                 val statement = connection.createStatement(UPDATE_QUERY)
                 worldsUpdated.forEach { world ->
-                    statement.bind(0, world.randomNumber)
-                    statement.bind(1, world.id)
-                    statement.add()
+                    if (world.id != null && world.randomNumber != null) {
+                        statement.bind(0, world.randomNumber)
+                        statement.bind(1, world.id)
+                        statement.add()
+                    }
                 }
-                Mono.from(statement.execute())
+                if (worldsUpdated.isNotEmpty()) {
+                    Mono.from(statement.execute())
+                } else {
+                    Mono.empty()
+                }
             }, Connection::close).awaitFirstOrNull()
 
             call.respondText(json.encodeToString(worldsUpdated), ContentType.Application.Json)
@@ -153,13 +158,20 @@ fun Application.main() {
 private fun getWorld(
     dbConnFactory: ConnectionFactory, random: Random
 ): Mono<World> = Mono.usingWhen(dbConnFactory.create(), { connection ->
-    Mono.from(connection.createStatement(WORLD_QUERY).bind(0, random.nextInt(DB_ROWS) + 1).execute()).flatMap { r ->
-        Mono.from(r.map { row, _ ->
-            World(
-                row.get(0, Int::class.java)!!, row.get(1, Int::class.java)!!
-            )
-        })
-    }
+    Mono.from(connection.createStatement(WORLD_QUERY)
+        .bind(0, random.nextInt(DB_ROWS) + 1)
+        .execute())
+        .flatMap { r ->
+            Mono.from(r.map { row, _ ->
+                val id = row.get(0, Int::class.java)
+                val randomNumber = row.get(1, Int::class.java)
+                if (id != null && randomNumber != null) {
+                    World(id, randomNumber)
+                } else {
+                    throw IllegalStateException("Database returned null values for required fields")
+                }
+            })
+        }
 }, Connection::close)
 
 private fun configurePostgresR2DBC(config: ApplicationConfig): ConnectionFactory {
