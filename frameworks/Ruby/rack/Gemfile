@@ -22,6 +22,10 @@ group :iodine, optional: true do
   gem 'iodine', '~> 0.7', platforms: %i[ruby mswin]
 end
 
+group :pitchfork, optional: true do
+  gem 'pitchfork', '~> 0.17'
+end
+
 group :puma, optional: true do
   gem 'puma', '~> 6.5'
 end
