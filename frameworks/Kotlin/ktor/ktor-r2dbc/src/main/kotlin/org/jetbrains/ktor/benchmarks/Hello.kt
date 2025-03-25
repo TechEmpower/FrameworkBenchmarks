@@ -127,12 +127,6 @@ fun Application.main() {
             val random = Random.Default
 
             val worlds = selectWorlds(queries, random)
-            val worldsUpdated = ArrayList<World>(queries)
-
-            worlds.collect { world ->
-                world.randomNumber = random.nextInt(DB_ROWS) + 1
-                worldsUpdated.add(world)
-            }
 
             val worldsUpdated = buildList {
                 worlds.collect { world ->
