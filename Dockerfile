@@ -47,15 +47,11 @@ RUN curl -LSs "https://github.com/scottchiefbaker/dool/archive/${DOOL_VERSION}.t
 # create group and user
 ARG GROUP_ID
 ARG USER_ID
-ARG GITHUB_ACTIONS
 
 RUN groupadd -g "$GROUP_ID" user || true && \
     useradd -m -u "$USER_ID" -g "$GROUP_ID" -s /bin/bash user || true
 
 ENV FWROOT=/FrameworkBenchmarks USER_ID="$USER_ID"
 ENV PYTHONPATH="$FWROOT"
-ENV GITHUB_ACTIONS="$GITHUB_ACTIONS"
-
-RUN echo "GITHUB_ACTIONS: $GITHUB_ACTIONS"
 
 ENTRYPOINT ["/FrameworkBenchmarks/entrypoint.sh"]

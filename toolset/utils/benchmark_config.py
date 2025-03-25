@@ -23,7 +23,7 @@ class BenchmarkConfig:
             self.types = {t: types[t] for t in args.type}
 
         # Check if we're running in a CI environment
-        self.is_ci = os.getenv('GITHUB_ACTIONS')
+        self.is_ci = os.getenv('CI')
         self.duration = args.duration
         self.exclude = args.exclude
         self.quiet = args.quiet
