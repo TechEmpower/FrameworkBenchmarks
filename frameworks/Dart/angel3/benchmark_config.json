@@ -26,9 +26,12 @@
         "versus": "None"
       },
       "mysql": {
+        "json_url": "/json",
         "db_url": "/db",
+        "plaintext_url": "/plaintext",
         "query_url": "/query?queries=",
         "fortune_url": "/fortunes",
+        "update_url": "/updates?queries=",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Fullstack",
