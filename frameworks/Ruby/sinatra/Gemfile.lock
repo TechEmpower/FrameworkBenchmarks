@@ -20,7 +20,6 @@ GEM
       securerandom (>= 0.3)
       tzinfo (~> 2.0, >= 2.0.5)
       uri (>= 0.13.1)
-    agoo (2.15.13)
     base64 (0.2.0)
     benchmark (0.4.0)
     bigdecimal (3.1.9)
@@ -49,8 +48,6 @@ GEM
     rack-session (2.1.0)
       base64 (>= 0.1.0)
       rack (>= 3.0.0)
-    rackup (2.2.1)
-      rack (>= 3)
     raindrops (0.20.1)
     ruby2_keywords (0.0.5)
     securerandom (0.4.1)
@@ -77,13 +74,11 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord (~> 8.0)
-  agoo
   iodine (~> 0.7)
   json (~> 2.8)
   mysql2 (~> 0.5)
   pg (~> 1.5)
   puma (~> 6.4)
-  rackup
   sinatra (~> 4.0)
   unicorn (~> 6.1)
 

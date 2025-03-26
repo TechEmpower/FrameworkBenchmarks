@@ -12,7 +12,7 @@
     <name>org.jetbrains.ktor tech-empower-framework-benchmark</name>
 
     <properties>
-        <kotlin.version>2.0.21</kotlin.version>
+        <kotlin.version>2.1.20</kotlin.version>
         <kotlin.coroutines.version>1.10.1</kotlin.coroutines.version>
         <ktor.version>3.1.1</ktor.version>
         <serialization.version>1.8.0</serialization.version>

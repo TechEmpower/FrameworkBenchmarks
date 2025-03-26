@@ -1,4 +1,4 @@
-package com.litongjava.tio.http.server.controller;
+package com.litongjava.tio.http.server.handler;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -22,7 +22,7 @@ import com.litongjava.tio.http.server.model.Fortune;
 import com.litongjava.tio.http.server.util.Resps;
 import com.litongjava.tio.http.server.utils.RandomUtils;
 
-public class DbController {
+public class DbHandler {
 
   public HttpResponse db(HttpRequest request) {
     Integer id = request.getInt("id");

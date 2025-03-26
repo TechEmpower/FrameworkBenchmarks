@@ -11,4 +11,4 @@ RUN ./mill assembly
 
 EXPOSE 8080
 
-CMD ["java", "-server", "-Xms1g", "-Xmx1g", "-jar", "out/assembly.dest/out.jar"]
+CMD ["java", "-server", "-Xms2g", "-Xmx2g", "-jar", "out/assembly.dest/out.jar"]

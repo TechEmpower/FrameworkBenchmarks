@@ -1,4 +1,4 @@
-package com.litongjava.tio.http.server.controller;
+package com.litongjava.tio.http.server.handler;
 
 import com.alibaba.fastjson2.JSON;
 import com.litongjava.tio.http.common.HeaderName;
@@ -12,7 +12,7 @@ import com.litongjava.tio.http.server.util.Resps;
  * ab -k -n1000000 -c10 http://127.0.0.1:8080/json 
  * ab -k -n1000000 -c10 http://127.0.0.1:8080/plaintext
  */
-public class IndexController {
+public class IndexHandler {
   private static final String HELLO_WORLD = "Hello, World!";
 
   private static final byte[] HELLO_WORLD_BYTES = HELLO_WORLD.getBytes();

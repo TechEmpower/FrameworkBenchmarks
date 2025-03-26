@@ -1,4 +1,4 @@
-FROM unit:php8.3
+FROM unit:php8.4
 
 RUN docker-php-ext-install pdo_mysql opcache > /dev/null
 
