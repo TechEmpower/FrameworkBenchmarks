@@ -20,6 +20,7 @@ import org.jetbrains.ktor.benchmarks.Constants.WORLD_QUERY
 import java.sql.Connection
 import java.util.concurrent.ThreadLocalRandom
 import kotlin.random.Random
+import kotlinx.serialization.Contextual
 
 @Serializable
 data class Message(val message: String)
@@ -30,15 +31,26 @@ data class World(val id: Int, var randomNumber: Int)
 @Serializable
 data class Fortune(val id: Int, var message: String)
 
+// Optimized JSON instance with better performance settings
+private val json = Json {
+    prettyPrint = false
+    isLenient = true
+    ignoreUnknownKeys = true
+    coerceInputValues = true
+}
+
 fun Application.main() {
     val dbRows = 10000
-    val poolSize = 48
+    val poolSize = Runtime.getRuntime().availableProcessors() * 2
     val pool = HikariDataSource(HikariConfig().apply { configurePostgres(poolSize) })
-    val databaseDispatcher = Dispatchers.IO
+    
+    // Create a dedicated dispatcher for database operations
+    val databaseDispatcher = Dispatchers.IO.limitedParallelism(poolSize)
 
     install(DefaultHeaders)
 
     val helloWorldContent = TextContent("Hello, World!", ContentType.Text.Plain)
+    val jsonResponse = json.encodeToString(Message("Hello, world!"))
 
     routing {
         get("/plaintext") {
@@ -46,7 +58,7 @@ fun Application.main() {
         }
 
         get("/json") {
-            call.respondText(Json.encodeToString(Message("Hello, world!")), ContentType.Application.Json)
+            call.respondText(jsonResponse, ContentType.Application.Json)
         }
 
         get("/db") {
@@ -56,7 +68,6 @@ fun Application.main() {
                 pool.connection.use { connection ->
                     connection.prepareStatement(WORLD_QUERY).use { statement ->
                         statement.setInt(1, random.nextInt(dbRows) + 1)
-
                         statement.executeQuery().use { rs ->
                             rs.next()
                             World(rs.getInt(1), rs.getInt(2))
@@ -65,7 +76,7 @@ fun Application.main() {
                 }
             }
 
-            call.respondText(Json.encodeToString(world), ContentType.Application.Json)
+            call.respondText(json.encodeToString(world), ContentType.Application.Json)
         }
 
         fun Connection.selectWorlds(queries: Int, random: Random): List<World> {
@@ -73,14 +84,12 @@ fun Application.main() {
             prepareStatement(WORLD_QUERY).use { statement ->
                 repeat(queries) {
                     statement.setInt(1, random.nextInt(dbRows) + 1)
-
                     statement.executeQuery().use { rs ->
                         rs.next()
                         result += World(rs.getInt(1), rs.getInt(2))
                     }
                 }
             }
-
             return result
         }
 
@@ -92,7 +101,7 @@ fun Application.main() {
                 pool.connection.use { it.selectWorlds(queries, random) }
             }
 
-            call.respondText(Json.encodeToString(result), ContentType.Application.Json)
+            call.respondText(json.encodeToString(result), ContentType.Application.Json)
         }
 
         get("/fortunes") {
@@ -137,22 +146,20 @@ fun Application.main() {
             withContext(databaseDispatcher) {
                 pool.connection.use { connection ->
                     result = connection.selectWorlds(queries, random)
-
                     result.forEach { it.randomNumber = random.nextInt(dbRows) + 1 }
 
                     connection.prepareStatement(UPDATE_QUERY).use { updateStatement ->
-                            for ((id, randomNumber) in result) {
-                                updateStatement.setInt(1, randomNumber)
-                                updateStatement.setInt(2, id)
-                                updateStatement.addBatch()
-                            }
-
-                            updateStatement.executeBatch()
+                        for ((id, randomNumber) in result) {
+                            updateStatement.setInt(1, randomNumber)
+                            updateStatement.setInt(2, id)
+                            updateStatement.addBatch()
                         }
+                        updateStatement.executeBatch()
+                    }
                 }
             }
 
-            call.respondText(Json.encodeToString(result), ContentType.Application.Json)
+            call.respondText(json.encodeToString(result), ContentType.Application.Json)
         }
     }
 }
@@ -160,7 +167,6 @@ fun Application.main() {
 fun HikariConfig.configurePostgres(poolSize: Int) {
     jdbcUrl = "jdbc:postgresql://tfb-database/hello_world?useSSL=false"
     driverClassName = org.postgresql.Driver::class.java.name
-
     configureCommon(poolSize)
 }
 
@@ -172,9 +178,13 @@ fun HikariConfig.configureCommon(poolSize: Int) {
     addDataSourceProperty("useUnbufferedInput", "false")
     addDataSourceProperty("prepStmtCacheSize", "4096")
     addDataSourceProperty("prepStmtCacheSqlLimit", "2048")
-    connectionTimeout = 10000
+    connectionTimeout = 5000 
     maximumPoolSize = poolSize
     minimumIdle = poolSize
+    idleTimeout = 300000 // 5 minutes
+    maxLifetime = 600000 // 10 minutes
+    validationTimeout = 5000
+    leakDetectionThreshold = 60000
 }
 
 fun HikariConfig.configureMySql(poolSize: Int) {
@@ -185,7 +195,6 @@ fun HikariConfig.configureMySql(poolSize: Int) {
 
 fun ApplicationCall.queries() =
     request.queryParameters["queries"]?.toIntOrNull()?.coerceIn(1, 500) ?: 1
-
 
 object Constants {
     const val WORLD_QUERY = "SELECT id, randomNumber FROM World WHERE id = ?"

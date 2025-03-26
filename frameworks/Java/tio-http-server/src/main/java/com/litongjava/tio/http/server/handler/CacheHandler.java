@@ -1,4 +1,4 @@
-package com.litongjava.tio.http.server.controller;
+package com.litongjava.tio.http.server.handler;
 
 import java.util.List;
 import java.util.Map;
@@ -14,7 +14,7 @@ import com.litongjava.tio.http.common.HttpRequest;
 import com.litongjava.tio.http.common.HttpResponse;
 import com.litongjava.tio.http.server.utils.RandomUtils;
 
-public class CacheController {
+public class CacheHandler {
   // private Logger log = LoggerFactory.getLogger(this.getClass());
 
   public HttpResponse cachedQuery(HttpRequest request) {

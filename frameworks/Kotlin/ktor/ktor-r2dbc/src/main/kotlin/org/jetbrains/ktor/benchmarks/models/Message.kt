@@ -3,4 +3,9 @@ package org.jetbrains.ktor.benchmarks.models
 import kotlinx.serialization.Serializable
 
 @Serializable
-class Message(val message: String)
+data class Message(val message: String)
+
+// Cache common messages to reduce allocations
+object MessageCache {
+    val helloWorld = Message("Hello, world!")
+}

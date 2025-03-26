@@ -23,8 +23,3 @@ end
 group :unicorn, optional: true do
   gem 'unicorn', '~> 6.1', platforms: [:ruby, :mswin], require: false
 end
-
-group :agoo, optional: true do
-  gem 'agoo', require: false
-  gem 'rackup'
-end

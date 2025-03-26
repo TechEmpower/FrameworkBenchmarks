@@ -91,7 +91,7 @@
       "notes": "",
       "versus": "rack-iodine-mri-sequel-raw"
     },
-    "agoo": {
+    "pitchfork": {
       "db_url": "/db",
       "json_url": "/json",
       "query_url": "/queries?queries=",
@@ -107,12 +107,12 @@
       "language": "Ruby",
       "orm": "Full",
       "platform": "Rack",
-      "webserver": "Agoo",
+      "webserver": "Pitchfork",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "rails-agoo",
+      "display_name": "rails-pitchfork",
       "notes": "",
-      "versus": ""
+      "versus": "rack-pitchfork-mri-sequel-raw"
     }
   }]
 }

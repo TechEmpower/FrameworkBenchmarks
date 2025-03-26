@@ -1,6 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.litongjava</groupId>
   <artifactId>tio-http-server-benchmark</artifactId>
@@ -18,17 +16,18 @@
     <dependency>
       <groupId>com.litongjava</groupId>
       <artifactId>tio-http-server</artifactId>
-      <version>3.7.3.v20250301-RELEASE</version>
+      <version>3.7.3.v20250401-RELEASE</version>
     </dependency>
-        <dependency>
+
+    <dependency>
       <groupId>com.litongjava</groupId>
-      <artifactId>tio-core</artifactId>
-      <version>3.7.3.v20250305-RELEASE</version>
+      <artifactId>tio-utils</artifactId>
+      <version>3.7.3.v20250401-RELEASE</version>
     </dependency>
     <dependency>
       <groupId>com.litongjava</groupId>
       <artifactId>java-db</artifactId>
-      <version>1.5.0</version>
+      <version>1.5.1</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
@@ -60,6 +59,12 @@
       <groupId>com.zaxxer</groupId>
       <artifactId>HikariCP</artifactId>
       <version>4.0.3</version>
+    </dependency>
+
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>1.2.13</version>
     </dependency>
 
   </dependencies>
