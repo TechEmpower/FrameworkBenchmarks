@@ -1,14 +1,14 @@
-FROM python:3.8
+FROM python:3.13
 
 ADD ./ /aiohttp
 
 WORKDIR aiohttp
 
-RUN pip3 install cython==0.29.23 && \
+RUN pip3 install cython==3.0.11 && \
     pip3 install -r /aiohttp/requirements.txt
 
 ENV CONNECTION=RAW
 
 EXPOSE 8080
 
-CMD gunicorn app.gunicorn:app -c gunicorn_conf.py
+CMD python3 -O -m gunicorn app.gunicorn:app -c gunicorn_conf.py

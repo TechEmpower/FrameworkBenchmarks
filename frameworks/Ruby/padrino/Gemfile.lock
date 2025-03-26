@@ -1,0 +1,149 @@
+GIT
+  remote: https://github.com/padrino/padrino-framework.git
+  revision: 9a38042351c9f5768231e94abca87bb1592cdcfa
+  specs:
+    padrino (0.16.0.pre3)
+      padrino-admin (= 0.16.0.pre3)
+      padrino-cache (= 0.16.0.pre3)
+      padrino-core (= 0.16.0.pre3)
+      padrino-gen (= 0.16.0.pre3)
+      padrino-helpers (= 0.16.0.pre3)
+      padrino-mailer (= 0.16.0.pre3)
+      padrino-support (= 0.16.0.pre3)
+    padrino-admin (0.16.0.pre3)
+      padrino-core (= 0.16.0.pre3)
+      padrino-helpers (= 0.16.0.pre3)
+    padrino-cache (0.16.0.pre3)
+      moneta (~> 1.6)
+      padrino-core (= 0.16.0.pre3)
+      padrino-helpers (= 0.16.0.pre3)
+    padrino-core (0.16.0.pre3)
+      padrino-support (= 0.16.0.pre3)
+      rackup (~> 2.1)
+      sinatra (~> 4)
+      thor (~> 1.0)
+    padrino-gen (0.16.0.pre3)
+      bundler (>= 1.0, < 3)
+      padrino-core (= 0.16.0.pre3)
+    padrino-helpers (0.16.0.pre3)
+      i18n (>= 0.6.7, < 2)
+      padrino-support (= 0.16.0.pre3)
+      tilt (>= 1.4.1, < 3)
+    padrino-mailer (0.16.0.pre3)
+      mail (~> 2.5)
+      mime-types (< 4)
+      padrino-core (= 0.16.0.pre3)
+    padrino-support (0.16.0.pre3)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    activemodel (8.0.2)
+      activesupport (= 8.0.2)
+    activerecord (8.0.2)
+      activemodel (= 8.0.2)
+      activesupport (= 8.0.2)
+      timeout (>= 0.4.0)
+    activesupport (8.0.2)
+      base64
+      benchmark (>= 0.3)
+      bigdecimal
+      concurrent-ruby (~> 1.0, >= 1.3.1)
+      connection_pool (>= 2.2.5)
+      drb
+      i18n (>= 1.6, < 2)
+      logger (>= 1.4.2)
+      minitest (>= 5.1)
+      securerandom (>= 0.3)
+      tzinfo (~> 2.0, >= 2.0.5)
+      uri (>= 0.13.1)
+    base64 (0.2.0)
+    benchmark (0.4.0)
+    bigdecimal (3.1.9)
+    concurrent-ruby (1.3.5)
+    connection_pool (2.5.0)
+    date (3.4.1)
+    drb (2.2.1)
+    i18n (1.14.7)
+      concurrent-ruby (~> 1.0)
+    json (2.10.2)
+    kgio (2.11.4)
+    logger (1.6.6)
+    mail (2.8.1)
+      mini_mime (>= 0.1.1)
+      net-imap
+      net-pop
+      net-smtp
+    mime-types (3.6.1)
+      logger
+      mime-types-data (~> 3.2015)
+    mime-types-data (3.2025.0318)
+    mini_mime (1.1.5)
+    minitest (5.25.5)
+    moneta (1.6.0)
+    mustermann (3.0.3)
+      ruby2_keywords (~> 0.0.1)
+    mysql2 (0.5.6)
+    net-imap (0.5.6)
+      date
+      net-protocol
+    net-pop (0.1.2)
+      net-protocol
+    net-protocol (0.2.2)
+      timeout
+    net-smtp (0.5.1)
+      net-protocol
+    nio4r (2.7.4)
+    puma (6.6.0)
+      nio4r (~> 2.0)
+    rack (3.1.12)
+    rack-protection (4.1.1)
+      base64 (>= 0.1.0)
+      logger (>= 1.6.0)
+      rack (>= 3.0.0, < 4)
+    rack-session (2.1.0)
+      base64 (>= 0.1.0)
+      rack (>= 3.0.0)
+    rackup (2.2.1)
+      rack (>= 3)
+    raindrops (0.20.1)
+    ruby2_keywords (0.0.5)
+    securerandom (0.4.1)
+    sinatra (4.1.1)
+      logger (>= 1.6.0)
+      mustermann (~> 3.0)
+      rack (>= 3.0.0, < 4)
+      rack-protection (= 4.1.1)
+      rack-session (>= 2.0.0, < 3)
+      tilt (~> 2.0)
+    slim (2.0.3)
+      temple (~> 0.6.6)
+      tilt (>= 1.3.3, < 2.1)
+    temple (0.6.10)
+    thor (1.3.2)
+    tilt (2.0.11)
+    timeout (0.4.3)
+    tzinfo (2.0.6)
+      concurrent-ruby (~> 1.0)
+    unicorn (6.1.0)
+      kgio (~> 2.6)
+      raindrops (~> 0.7)
+    uri (1.0.3)
+
+PLATFORMS
+  ruby
+  x86_64-darwin-23
+  x86_64-linux
+
+DEPENDENCIES
+  activerecord (>= 7.1)
+  json
+  mysql2 (> 0.5)
+  padrino!
+  puma (~> 6.4)
+  rack
+  slim (= 2.0.3)
+  unicorn (~> 6.1)
+
+BUNDLED WITH
+   2.6.2

@@ -15,17 +15,7 @@ class HelloWorld
   PLAINTEXT_TYPE = 'text/plain'
   DATE = 'Date'
   SERVER = 'Server'
-  SERVER_STRING = if defined?(PhusionPassenger)
-                    'Passenger'
-                  elsif defined?(Puma)
-                    'Puma'
-                  elsif defined?(Iodine)
-                    'Iodine'
-                  elsif defined?(Unicorn)
-                    'Unicorn'
-                  else
-                    'Ruby Rack'
-                  end
+  SERVER_STRING = "Rack"
 
   def bounded_queries(env)
     params = Rack::Utils.parse_query(env['QUERY_STRING'])
@@ -44,8 +34,9 @@ class HelloWorld
   end
 
   def queries(env)
+    ids = ALL_IDS.sample(bounded_queries(env))
     DB.synchronize do
-      ALL_IDS.sample(bounded_queries(env)).map do |id|
+      ids.map do |id|
         World::BY_ID.(id: id)
       end
     end
@@ -93,9 +84,10 @@ class HelloWorld
   end
 
   def updates(env)
+    ids = ALL_IDS.sample(bounded_queries(env))
     DB.synchronize do
       worlds =
-        ALL_IDS.sample(bounded_queries(env)).map do |id|
+        ids.map do |id|
           world = World::BY_ID.(id: id)
           world[:randomnumber] = rand1
           world

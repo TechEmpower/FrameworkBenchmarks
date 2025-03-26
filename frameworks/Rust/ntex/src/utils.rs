@@ -57,10 +57,11 @@ impl WriteExt for BytesWriter<'_> {
     }
 
     #[inline(always)]
-    unsafe fn flush_len(&mut self, additional: usize) {
+    unsafe fn flush_len(&mut self, additional: usize) -> io::Result<()> {
         unsafe {
             let new_len = self.0.len() + additional;
             self.0.set_len(new_len);
         }
+        Ok(())
     }
 }

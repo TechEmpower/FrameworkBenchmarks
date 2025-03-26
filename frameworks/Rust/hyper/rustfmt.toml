@@ -1,0 +1,4 @@
+# unstable_features
+comment_width = 100
+group_imports = "StdExternalCrate"
+imports_granularity = "Module"

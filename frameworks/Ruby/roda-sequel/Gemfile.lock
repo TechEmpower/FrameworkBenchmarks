@@ -5,16 +5,16 @@ GEM
     bigdecimal (3.1.9)
     erubi (1.13.1)
     iodine (0.7.58)
-    json (2.10.1)
+    json (2.10.2)
     kgio (2.11.4)
     mysql2 (0.5.6)
     nio4r (2.7.4)
     pg (1.5.9)
     puma (6.6.0)
       nio4r (~> 2.0)
-    rack (3.1.11)
+    rack (3.1.12)
     raindrops (0.20.1)
-    roda (3.89.0)
+    roda (3.90.0)
       rack
     sequel (5.90.0)
       bigdecimal
@@ -29,6 +29,7 @@ GEM
 PLATFORMS
   ruby
   x86_64-darwin-22
+  x86_64-linux
 
 DEPENDENCIES
   base64
@@ -45,4 +46,4 @@ DEPENDENCIES
   unicorn (~> 6.1)
 
 BUNDLED WITH
-   2.5.10
+   2.6.2

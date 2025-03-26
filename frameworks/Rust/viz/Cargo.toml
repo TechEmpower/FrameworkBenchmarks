@@ -25,14 +25,14 @@ required-features = ["diesel", "diesel-async", "sailfish"]
 
 [dependencies]
 viz = "0.10"
-hyper = "1.5"
+hyper = "1.0"
 hyper-util = "0.1"
 http-body-util = "0.1"
 atoi = "2.0"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1"
 mime = "0.3"
-rand = { version = "0.8", features = ["small_rng"] }
+rand = { version = "0.9", features = ["small_rng"] }
 thiserror = "2.0"
 futures-util = "0.3"
 
@@ -66,3 +66,5 @@ sailfish = { version = "0.9", optional = true }
 [profile.release]
 lto = true
 codegen-units = 1
+strip = true
+opt-level = 3

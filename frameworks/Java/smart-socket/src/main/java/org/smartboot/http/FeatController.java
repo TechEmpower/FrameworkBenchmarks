@@ -1,9 +1,9 @@
 package org.smartboot.http;
 
 import org.smartboot.Message;
-import tech.smartboot.feat.core.apt.annotation.Controller;
-import tech.smartboot.feat.core.apt.annotation.RequestMapping;
-import tech.smartboot.feat.core.common.enums.HeaderValueEnum;
+import tech.smartboot.feat.cloud.annotation.Controller;
+import tech.smartboot.feat.cloud.annotation.RequestMapping;
+import tech.smartboot.feat.core.common.HeaderValue;
 import tech.smartboot.feat.core.server.HttpResponse;
 
 @Controller
@@ -12,13 +12,13 @@ public class FeatController {
 
     @RequestMapping("/plaintext")
     public byte[] plaintext(HttpResponse response) {
-        response.setContentType(HeaderValueEnum.ContentType.TEXT_PLAIN_UTF8);
+        response.setContentType(HeaderValue.ContentType.TEXT_PLAIN_UTF8);
         return body;
     }
 
     @RequestMapping("/json")
     public Message json(HttpResponse response) {
-        response.setContentType(HeaderValueEnum.ContentType.APPLICATION_JSON_UTF8);
+        response.setContentType(HeaderValue.ContentType.APPLICATION_JSON_UTF8);
         return new Message("Hello, World!");
     }
 }

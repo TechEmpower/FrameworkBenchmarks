@@ -11,7 +11,7 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <log4j.version>2.17.1</log4j.version>
-        <smartservlet.version>2.8</smartservlet.version>
+        <smartservlet.version>2.9.1</smartservlet.version>
         <hikaricp.version>5.0.0</hikaricp.version>
         <jsoniter.version>0.9.23</jsoniter.version>
     </properties>
@@ -19,13 +19,13 @@
     <dependencies>
         <dependency>
             <groupId>tech.smartboot.feat</groupId>
-            <artifactId>feat-restful</artifactId>
-            <version>0.5</version>
+            <artifactId>feat-cloud-starter</artifactId>
+            <version>0.8.2</version>
         </dependency>
         <dependency>
-            <groupId>io.edap</groupId>
-            <artifactId>edapx-json</artifactId>
-            <version>0.1-SNAPSHOT</version>
+            <groupId>io.github.smartboot.socket</groupId>
+            <artifactId>aio-pro</artifactId>
+            <version>1.6.56</version>
         </dependency>
         <dependency>
             <groupId>tech.smartboot.servlet</groupId>
@@ -34,7 +34,7 @@
             <exclusions>
                 <exclusion>
                     <groupId>tech.smartboot.feat</groupId>
-                    <artifactId>feat-restful</artifactId>
+                    <artifactId>feat-core</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>

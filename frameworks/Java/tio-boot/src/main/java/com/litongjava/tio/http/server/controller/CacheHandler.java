@@ -1,13 +1,13 @@
 package com.litongjava.tio.http.server.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 import com.alibaba.fastjson2.JSON;
 import com.litongjava.db.activerecord.Db;
 import com.litongjava.db.activerecord.Row;
+import com.litongjava.tio.boot.http.TioRequestContext;
 import com.litongjava.tio.http.common.HeaderName;
 import com.litongjava.tio.http.common.HeaderValue;
 import com.litongjava.tio.http.common.HttpRequest;
@@ -16,26 +16,26 @@ import com.litongjava.tio.http.server.utils.RandomUtils;
 
 public class CacheHandler {
   // private Logger log = LoggerFactory.getLogger(this.getClass());
+  String sql = "SELECT id, randomNumber FROM world WHERE id = ?";
 
   public HttpResponse cachedQuery(HttpRequest request) {
     String queries = request.getParam("queries");
-    List<Map<String, Object>> recordMaps = RandomUtils.randomWorldNumbers()
-        // limit
-        .limit(RandomUtils.parseQueryCount(queries)) // 限制查询数量
-        .mapToObj(id -> findByIdWithCache("world", id)) // 使用 mapToObj 将 int 映射为对象
-        .filter(Objects::nonNull) // 过滤掉 null 值
-        .map(Row::toMap) // 将每个 Record 对象转换为 Map
-        .collect(Collectors.toList()); // 收集到 List
 
-    HttpResponse httpResponse = new HttpResponse(request);
-    httpResponse.addHeader(HeaderName.Content_Type, HeaderValue.Content_Type.TEXT_PLAIN_JSON);
-    httpResponse.setBody(JSON.toJSONBytes(recordMaps));
-    return httpResponse;
+    int queryCount = RandomUtils.parseQueryCount(queries);
 
-  }
+    List<Map<String, Object>> recordMaps = new ArrayList<>();
 
-  private Row findByIdWithCache(String tableName, int id) {
-    String sql = "SELECT id, randomNumber FROM world WHERE id = ?";
-    return Db.findFirstByCache(tableName, id, sql, id);
+    int[] randomNumbers = RandomUtils.randomWorldNumbers().limit(queryCount).toArray();
+    for (int id : randomNumbers) {
+      Row row = Db.findFirstByCache("world", id, sql, id);
+      if (row != null) {
+        recordMaps.add(row.toMap());
+      }
+    }
+
+    HttpResponse response = TioRequestContext.getResponse();
+    response.addHeader(HeaderName.Content_Type, HeaderValue.Content_Type.TEXT_PLAIN_JSON);
+    response.setBody(JSON.toJSONBytes(recordMaps));
+    return response;
   }
 }
