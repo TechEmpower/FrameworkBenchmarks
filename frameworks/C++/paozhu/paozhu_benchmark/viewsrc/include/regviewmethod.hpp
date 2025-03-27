@@ -17,7 +17,7 @@ namespace http
 {
   void _initview_method_regto(VIEW_REG  &_viewmetholdreg)
   {
-            	 //create time: Mon, 30 Dec 2024 15:45:45 GMT
+            	 //create time: Thu, 27 Mar 2025 01:00:54 GMT
 
 	_viewmetholdreg.emplace("techempower/fortunes",http::view::techempower::fortunes);
 
