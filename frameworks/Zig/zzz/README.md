@@ -1,5 +1,5 @@
 
-# [ZZZ](https://github.com/tardy-org/zzz) - Web Franework.
+# [ZZZ](https://github.com/tardy-org/zzz) - Web Framework.
 
 ## Description
 
