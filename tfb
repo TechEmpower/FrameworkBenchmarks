@@ -45,7 +45,7 @@ _resolve_symlinks() {
     fi
 }
 
-_prepend_dir_context_if_necessary() {
+_append_dir_context_if_necessary() {
     if [ "$1" = . ]; then
         printf '%s\n' "$2"
     else
