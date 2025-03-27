@@ -17,6 +17,7 @@ namespace view {
 namespace techempower{ 
 
 	std::string fortunes(const struct view_param &vinfo,http::obj_val &obj);
+}
 
 
 }
