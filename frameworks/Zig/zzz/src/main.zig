@@ -76,19 +76,23 @@ pub fn main() !void {
 }
 
 pub fn home_handler(ctx: *const Context, _: void) !Respond {
-    try ctx.response.headers.put("Date", try ctx.allocator.dupe(u8, date[0..]));
     return ctx.response.apply(.{
         .mime = http.Mime.TEXT,
         .body = "Hello, World!",
         .status = .OK,
+        .headers = &.{
+           .{"Date", try ctx.allocator.dupe(u8, date[0..])},
+        },
     });
 }
 
 pub fn json_handler(ctx: *const Context, _: void) !Respond {
-    try ctx.response.headers.put("Date", try ctx.allocator.dupe(u8, date[0..]));
     return ctx.response.apply(.{
         .mime = http.Mime.JSON,
         .body = try std.json.stringifyAlloc(ctx.allocator, Message{ .message = "Hello, World!" }, .{}),
         .status = .OK,
+        .headers = &.{
+            .{"Date", try ctx.allocator.dupe(u8, date[0..])},
+        },
     });
 }
