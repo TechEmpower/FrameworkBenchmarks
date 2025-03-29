@@ -176,7 +176,7 @@ pub async fn random_world_row(db_pool: &DbPoolConnection) -> QueryRow {
 
 pub async fn query_world_row(db_pool: &DbPoolConnection, id: Queries) -> QueryRow {
     let sql: String = format!(
-        "SELECT id, randomNumber FROM {} WHERE id = {} LIMIT 1",
+        "SELECT id, randomNumber FROM {} WHERE id = {}",
         TABLE_NAME_WORLD, id
     );
     if let Ok(rows) = query(&sql).fetch_one(db_pool).await {
@@ -208,11 +208,22 @@ pub async fn all_world_row() -> Vec<PgRow> {
 }
 
 pub async fn get_some_row_id(limit: Queries, db_pool: &DbPoolConnection) -> Vec<QueryRow> {
-    let futures: Vec<_> = (0..limit)
-        .map(|_| async {
-            let id: i32 = get_random_id();
-            query_world_row(db_pool, id).await
-        })
-        .collect();
-    join_all(futures).await
+    let semaphore: Arc<Semaphore> = Arc::new(Semaphore::new(32));
+    let mut tasks: Vec<JoinHandle<QueryRow>> = Vec::with_capacity(limit as usize);
+    for _ in 0..limit {
+        let _ = semaphore.clone().acquire_owned().await.map(|permit| {
+            let db_pool: DbPoolConnection = db_pool.clone();
+            tasks.push(tokio::spawn(async move {
+                let id: i32 = get_random_id();
+                let res: QueryRow = query_world_row(&db_pool, id).await;
+                drop(permit);
+                res
+            }));
+        });
+    }
+    join_all(tasks)
+        .await
+        .into_iter()
+        .filter_map(Result::ok)
+        .collect()
 }
