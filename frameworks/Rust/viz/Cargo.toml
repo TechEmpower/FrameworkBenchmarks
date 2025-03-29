@@ -35,6 +35,8 @@ mime = "0.3"
 rand = { version = "0.9", features = ["small_rng"] }
 thiserror = "2.0"
 futures-util = "0.3"
+socket2 = "0.5.8"
+num_cpus = "1.16.0"
 
 [target.'cfg(not(unix))'.dependencies]
 nanorand = { version = "0.7" }

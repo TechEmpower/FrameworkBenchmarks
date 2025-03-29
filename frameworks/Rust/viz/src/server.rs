@@ -1,49 +1,82 @@
 use std::error::Error;
+use std::future::Future;
 use std::io;
 use std::net::{Ipv4Addr, SocketAddr};
 use std::sync::Arc;
+use std::thread;
 
+use socket2::{Domain, SockAddr, Socket};
 use hyper::server::conn::http1::Builder;
 use hyper_util::rt::TokioIo;
-use tokio::net::{TcpListener, TcpSocket};
+use tokio::{net::TcpListener, runtime};
 use viz::{Responder, Router, Tree};
 
 pub async fn serve(router: Router) -> Result<(), Box<dyn Error + Send + Sync>> {
-    let tree = Arc::<Tree>::new(router.into());
     let addr = SocketAddr::from((Ipv4Addr::UNSPECIFIED, 8080));
-    let listener = reuse_listener(addr).expect("couldn't bind to addr");
+    let socket = create_socket(addr).expect("couldn't bind to addr");
+    let listener = TcpListener::from_std(socket.into())?;
+
+    let tree = Arc::<Tree>::new(router.into());
+
+    let mut http = Builder::new();
+    http.pipeline_flush(true);
 
     println!("Started viz server at 8080");
 
     loop {
         let (tcp, _) = listener.accept().await?;
-        let io = TokioIo::new(tcp);
+        tcp.set_nodelay(true).expect("couldn't set TCP_NODELAY!");
+
+        let http = http.clone();
         let tree = tree.clone();
 
-        tokio::task::spawn(async move {
-            Builder::new()
-                .pipeline_flush(true)
-                .serve_connection(io, Responder::<Arc<SocketAddr>>::new(tree, None))
-                .with_upgrades()
+        tokio::spawn(async move {
+            http
+                .serve_connection(
+                    TokioIo::new(tcp),
+                    Responder::<Arc<SocketAddr>>::new(tree, None),
+                )
                 .await
         });
     }
 }
 
-fn reuse_listener(addr: SocketAddr) -> io::Result<TcpListener> {
-    let socket = match addr {
-        SocketAddr::V4(_) => TcpSocket::new_v4()?,
-        SocketAddr::V6(_) => TcpSocket::new_v6()?,
+fn create_socket(addr: SocketAddr) -> Result<Socket, io::Error> {
+    let domain = match addr {
+        SocketAddr::V4(_) => Domain::IPV4,
+        SocketAddr::V6(_) => Domain::IPV6,
     };
-
+    let addr = SockAddr::from(addr);
+    let socket = Socket::new(domain, socket2::Type::STREAM, None)?;
+    let backlog = 4096;
     #[cfg(unix)]
-    {
-        if let Err(e) = socket.set_reuseport(true) {
-            eprintln!("error setting SO_REUSEPORT: {e}");
-        }
+    socket.set_reuse_port(true)?;
+    socket.set_reuse_address(true)?;
+    socket.set_nodelay(true)?;
+    socket.set_nonblocking(true)?;
+    socket.bind(&addr)?;
+    socket.listen(backlog)?;
+
+    Ok(socket)
+}
+
+pub fn run<Fut>(f: fn() -> Fut)
+where
+    Fut: Future + Send + 'static,
+{
+    for _ in 1..num_cpus::get() {
+        let runtime = runtime::Builder::new_current_thread()
+            .enable_all()
+            .build()
+            .unwrap();
+        thread::spawn(move || {
+            runtime.block_on(f());
+        });
     }
 
-    socket.set_reuseaddr(true)?;
-    socket.bind(addr)?;
-    socket.listen(1024)
+    let runtime = runtime::Builder::new_current_thread()
+        .enable_all()
+        .build()
+        .unwrap();
+    runtime.block_on(f());
 }
