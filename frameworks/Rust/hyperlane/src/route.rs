@@ -18,7 +18,7 @@ pub async fn plaintext(ctx: Context) {
 }
 
 pub async fn db(ctx: Context) {
-    let db_connection: &DbPoolConnection = get_db_connection().await;
+    let db_connection: &DbPoolConnection = get_db_connection();
     let query_row: QueryRow = random_world_row(db_connection).await;
     let _ = ctx
         .set_response_body(serde_json::to_string(&query_row).unwrap_or_default())
@@ -33,7 +33,7 @@ pub async fn queries(ctx: Context) {
         .unwrap_or_default()
         .min(ROW_LIMIT as Queries)
         .max(1);
-    let db_pool: &DbPoolConnection = get_db_connection().await;
+    let db_pool: &DbPoolConnection = get_db_connection();
     let data: Vec<QueryRow> = get_some_row_id(queries, db_pool).await;
     let _ = ctx
         .set_response_body(serde_json::to_string(&data).unwrap_or_default())
