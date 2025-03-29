@@ -133,7 +133,7 @@ pub async fn get_update_data(
     let db_pool: DbPoolConnection = get_db_connection().await;
     let mut query_res_list: Vec<QueryRow> = Vec::with_capacity(limit as usize);
     let rows: Vec<QueryRow> = get_some_row_id(limit, &db_pool).await;
-    let mut sql = format!("UPDATE {} SET randomNumber = CASE id ", TABLE_NAME_WORLD);
+    let mut sql: String = format!("UPDATE {} SET randomNumber = CASE id ", TABLE_NAME_WORLD);
     let mut id_list: Vec<i32> = Vec::with_capacity(rows.len());
     let mut value_list: Vec<String> = Vec::with_capacity(rows.len() * 2);
     let mut random_numbers: Vec<i32> = Vec::with_capacity(rows.len());

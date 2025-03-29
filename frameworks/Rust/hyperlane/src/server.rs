@@ -18,5 +18,5 @@ pub async fn run_server() {
     server.route("/upda", updates).await;
     server.request_middleware(request).await;
     server.response_middleware(response).await;
-    server.listen().await;
+    server.listen().await.unwrap();
 }
