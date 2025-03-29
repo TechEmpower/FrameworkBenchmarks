@@ -11,11 +11,11 @@ pub(crate) mod utils;
 pub(crate) use constant::*;
 pub(crate) use db::*;
 pub(crate) use hyperlane::{
-    futures::future::join_all,
-    once_cell::sync::OnceCell,
+    futures::{executor::block_on, future::join_all},
+    once_cell::sync::Lazy,
     serde::*,
     serde_json::{Value, json},
-    tokio::{sync::Semaphore, task::JoinHandle},
+    tokio::{spawn, sync::Semaphore, task::JoinHandle},
     *,
 };
 pub(crate) use lazy::*;

@@ -1,18 +1,12 @@
 use crate::*;
 
-pub async fn get_db_connection() -> DbPoolConnection {
-    if let Some(db_pool) = DB.get() {
-        return db_pool.clone();
-    };
-    let db_pool: DbPoolConnection = connection_db().await;
-    DB.set(db_pool.clone())
-        .expect("Failed to initialize DB_POOL");
-    db_pool
+pub async fn get_db_connection() -> &'static DbPoolConnection {
+    &DB
 }
 
 #[cfg(feature = "dev")]
 pub async fn create_database() {
-    let db_pool: DbPoolConnection = get_db_connection().await;
+    let db_pool: &DbPoolConnection = get_db_connection().await;
     let _ = query(&format!("CREATE DATABASE {};", DATABASE_NAME))
         .execute(&db_pool)
         .await;
@@ -20,7 +14,7 @@ pub async fn create_database() {
 
 #[cfg(feature = "dev")]
 pub async fn create_table() {
-    let db_pool: DbPoolConnection = get_db_connection().await;
+    let db_pool: &DbPoolConnection = get_db_connection().await;
     let _ = query(&format!(
         "CREATE TABLE IF NOT EXISTS {} (
             id SERIAL PRIMARY KEY, randomNumber INT NOT NULL
@@ -41,7 +35,7 @@ pub async fn create_table() {
 
 #[cfg(feature = "dev")]
 pub async fn insert_records() {
-    let db_pool: DbPoolConnection = get_db_connection().await;
+    let db_pool: &DbPoolConnection = get_db_connection().await;
     let row: PgRow = query(&format!("SELECT COUNT(*) FROM {}", TABLE_NAME_WORLD))
         .fetch_one(&db_pool)
         .await
@@ -76,21 +70,21 @@ pub async fn insert_records() {
     let _ = query(&sql).execute(&db_pool).await;
 }
 
-pub async fn init_cache() {
+pub async fn init_cache() -> Vec<QueryRow> {
     let mut res: Vec<QueryRow> = Vec::with_capacity(RANDOM_MAX as usize);
-    let db_pool: DbPoolConnection = get_db_connection().await;
+    let db_pool: &DbPoolConnection = get_db_connection().await;
     let sql: String = format!(
         "SELECT id, randomNumber FROM {} LIMIT {}",
         TABLE_NAME_WORLD, RANDOM_MAX
     );
-    if let Ok(rows) = query(&sql).fetch_all(&db_pool).await {
+    if let Ok(rows) = query(&sql).fetch_all(db_pool).await {
         for row in rows {
             let id: i32 = row.get(KEY_ID);
             let random_number: i32 = row.get(KEY_RANDOM_NUMBER);
             res.push(QueryRow::new(id, random_number));
         }
     }
-    let _ = CACHE.set(res);
+    res
 }
 
 pub async fn connection_db() -> DbPoolConnection {
@@ -130,9 +124,9 @@ pub async fn connection_db() -> DbPoolConnection {
 pub async fn get_update_data(
     limit: Queries,
 ) -> (String, Vec<QueryRow>, Vec<Queries>, Vec<Queries>) {
-    let db_pool: DbPoolConnection = get_db_connection().await;
+    let db_pool: &DbPoolConnection = get_db_connection().await;
     let mut query_res_list: Vec<QueryRow> = Vec::with_capacity(limit as usize);
-    let rows: Vec<QueryRow> = get_some_row_id(limit, &db_pool).await;
+    let rows: Vec<QueryRow> = get_some_row_id(limit, db_pool).await;
     let mut sql: String = format!("UPDATE {} SET randomNumber = CASE id ", TABLE_NAME_WORLD);
     let mut id_list: Vec<i32> = Vec::with_capacity(rows.len());
     let mut value_list: Vec<String> = Vec::with_capacity(rows.len() * 2);
@@ -159,7 +153,6 @@ pub async fn get_update_data(
 }
 
 pub async fn init_db() {
-    get_db_connection().await;
     #[cfg(feature = "dev")]
     {
         create_database().await;
@@ -187,7 +180,7 @@ pub async fn query_world_row(db_pool: &DbPoolConnection, id: Queries) -> QueryRo
 }
 
 pub async fn update_world_rows(limit: Queries) -> Vec<QueryRow> {
-    let db_pool: DbPoolConnection = get_db_connection().await;
+    let db_pool: &DbPoolConnection = get_db_connection().await;
     let (sql, data, id_list, random_numbers) = get_update_data(limit).await;
     let mut query_builder: query::Query<'_, Postgres, postgres::PgArguments> = query(&sql);
     for (id, random_number) in id_list.iter().zip(random_numbers.iter()) {
@@ -196,14 +189,14 @@ pub async fn update_world_rows(limit: Queries) -> Vec<QueryRow> {
     for id in &id_list {
         query_builder = query_builder.bind(id);
     }
-    let _ = query_builder.execute(&db_pool).await;
+    let _ = query_builder.execute(db_pool).await;
     data
 }
 
 pub async fn all_world_row() -> Vec<PgRow> {
-    let db_pool: DbPoolConnection = get_db_connection().await;
+    let db_pool: &DbPoolConnection = get_db_connection().await;
     let sql: String = format!("SELECT id, message FROM {}", TABLE_NAME_FORTUNE);
-    let res: Vec<PgRow> = query(&sql).fetch_all(&db_pool).await.unwrap_or_default();
+    let res: Vec<PgRow> = query(&sql).fetch_all(db_pool).await.unwrap_or_default();
     return res;
 }
 
@@ -213,7 +206,7 @@ pub async fn get_some_row_id(limit: Queries, db_pool: &DbPoolConnection) -> Vec<
     for _ in 0..limit {
         let _ = semaphore.clone().acquire_owned().await.map(|permit| {
             let db_pool: DbPoolConnection = db_pool.clone();
-            tasks.push(tokio::spawn(async move {
+            tasks.push(spawn(async move {
                 let id: i32 = get_random_id();
                 let res: QueryRow = query_world_row(&db_pool, id).await;
                 drop(permit);
