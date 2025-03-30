@@ -11,8 +11,8 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
-    <PackageReference Include="TouchSocket.Hosting" Version="3.0.18" />
-    <PackageReference Include="TouchSocket.WebApi" Version="3.0.18" />
-    <PackageReference Include="TouchSocket.WebApi.Swagger" Version="3.0.18" />
+    <PackageReference Include="TouchSocket.Hosting" Version="3.0.20" />
+    <PackageReference Include="TouchSocket.WebApi" Version="3.0.20" />
+    <PackageReference Include="TouchSocket.WebApi.Swagger" Version="3.0.20" />
   </ItemGroup>
 </Project>
