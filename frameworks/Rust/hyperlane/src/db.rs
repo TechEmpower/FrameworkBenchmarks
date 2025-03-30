@@ -159,7 +159,7 @@ pub async fn init_db() {
         create_table().await;
         insert_records().await;
     }
-    std::hint::black_box(init_cache().await);
+    black_box(init_cache().await);
 }
 
 pub async fn random_world_row(db_pool: &DbPoolConnection) -> QueryRow {

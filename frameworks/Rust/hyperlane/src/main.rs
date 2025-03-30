@@ -28,7 +28,7 @@ pub(crate) use sqlx::{
     postgres::{PgPoolOptions, PgRow},
     *,
 };
-pub(crate) use std::{fmt, sync::Arc};
+pub(crate) use std::{fmt, hint::black_box, sync::Arc};
 pub(crate) use r#type::*;
 pub(crate) use utils::*;
 
