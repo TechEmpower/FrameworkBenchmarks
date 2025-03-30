@@ -35,6 +35,7 @@ module Acme
   end
 
   class DatabaseQueries < Grape::API
+    logger nil
     helpers do
       def bounded_queries
         queries = params[:queries].to_i
@@ -80,6 +81,7 @@ module Acme
       header 'Date', Time.now.httpdate if defined?(Puma)
       header 'Server', 'WebServer'
     end
+    logger nil
     content_type :json, 'application/json'
     format :json
 

@@ -1,4 +1,5 @@
-pub static RESPONSEDATA: &str = "Hello, World!";
+pub static RESPONSEDATA_STR: &str = "Hello, World!";
+pub static RESPONSEDATA_BIN: &[u8] = b"Hello, World!";
 pub static DATABASE_TYPE: &str = "postgres";
 pub static DATABASE_HOST: &str = "tfb-database";
 pub static DATABASE_USER_NAME: &str = "benchmarkdbuser";

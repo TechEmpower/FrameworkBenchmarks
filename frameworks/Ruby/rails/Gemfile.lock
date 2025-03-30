@@ -72,7 +72,6 @@ GEM
       securerandom (>= 0.3)
       tzinfo (~> 2.0, >= 2.0.5)
       uri (>= 0.13.1)
-    agoo (2.15.13)
     async (2.23.0)
       console (~> 1.29)
       fiber-annotation
@@ -184,6 +183,9 @@ GEM
       racc (~> 1.4)
     openssl (3.3.0)
     pg (1.5.9)
+    pitchfork (0.17.0)
+      logger
+      rack (>= 2.0)
     pp (0.6.2)
       prettyprint
     prettyprint (0.2.0)
@@ -276,16 +278,15 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  agoo
   falcon (~> 0.47)
   iodine (~> 0.7)
   pg (~> 1.5)
+  pitchfork (~> 0.17)
   puma (~> 6.5)
-  rackup
   rails (~> 8.0.0)
   redis (~> 5.0)
   trilogy (~> 2.8.1)
   tzinfo-data
 
 BUNDLED WITH
-   2.5.16
+   2.6.2

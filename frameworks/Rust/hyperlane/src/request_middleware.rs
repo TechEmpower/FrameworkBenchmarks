@@ -1,6 +1,5 @@
 use crate::*;
 
-#[inline]
 pub async fn request(controller_data: ControllerData) {
     let _ = controller_data
         .set_response_header(CONNECTION, CONNECTION_KEEP_ALIVE)

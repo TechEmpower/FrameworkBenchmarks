@@ -127,7 +127,7 @@ class Response
         }
 
         $headers['Content-Type'] = 'application/json; charset=utf-8';
-        $headers['Date'] = gmdate('D, d M Y H:i:s').' GMT';
+        $headers['Date'] = gmdate(DATE_RFC7231);
         return new static($json, $status, $headers);
     }
 
@@ -137,7 +137,7 @@ class Response
     public static function html(string $html, int $status = 200, array $headers = []): static
     {
         $headers['Content-Type'] = 'text/html; charset=utf-8';
-        $headers['Date'] = gmdate('D, d M Y H:i:s').' GMT';
+        $headers['Date'] = gmdate(DATE_RFC7231);
         return new static($html, $status, $headers);
     }
 
@@ -147,7 +147,7 @@ class Response
     public static function text(string $text, int $status = 200, array $headers = []): static
     {
         $headers['Content-Type'] = 'text/plain; charset=utf-8';
-        $headers['Date'] = gmdate('D, d M Y H:i:s').' GMT';
+        $headers['Date'] = gmdate(DATE_RFC7231);
         return new static($text, $status, $headers);
     }
     /**
@@ -156,7 +156,7 @@ class Response
     public static function file(string $file, string $filename, int $status = 200, array $headers = []): static
     {
         $headers['Content-Type'] = 'application/octet-stream';
-        $headers['Date'] = gmdate('D, d M Y H:i:s').' GMT';
+        $headers['Date'] = gmdate(DATE_RFC7231);
         $headers['Content-Disposition'] = 'attachment; filename="' . $filename . '"';
         return new static(file_get_contents($file), $status, $headers);
     }

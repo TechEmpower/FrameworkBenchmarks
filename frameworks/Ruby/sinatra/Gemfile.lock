@@ -20,7 +20,6 @@ GEM
       securerandom (>= 0.3)
       tzinfo (~> 2.0, >= 2.0.5)
       uri (>= 0.13.1)
-    agoo (2.15.13)
     base64 (0.2.0)
     benchmark (0.4.0)
     bigdecimal (3.1.9)
@@ -38,10 +37,6 @@ GEM
       ruby2_keywords (~> 0.0.1)
     mysql2 (0.5.6)
     nio4r (2.7.4)
-    passenger (6.0.26)
-      rack (>= 1.6.13)
-      rackup (>= 2.0.0)
-      rake (>= 12.3.3)
     pg (1.5.9)
     puma (6.6.0)
       nio4r (~> 2.0)
@@ -53,10 +48,7 @@ GEM
     rack-session (2.1.0)
       base64 (>= 0.1.0)
       rack (>= 3.0.0)
-    rackup (2.2.1)
-      rack (>= 3)
     raindrops (0.20.1)
-    rake (13.2.1)
     ruby2_keywords (0.0.5)
     securerandom (0.4.1)
     sinatra (4.1.1)
@@ -78,19 +70,17 @@ GEM
 PLATFORMS
   ruby
   x86_64-darwin-23
+  x86_64-linux
 
 DEPENDENCIES
   activerecord (~> 8.0)
-  agoo
   iodine (~> 0.7)
   json (~> 2.8)
   mysql2 (~> 0.5)
-  passenger (~> 6.0)
   pg (~> 1.5)
   puma (~> 6.4)
-  rackup
   sinatra (~> 4.0)
   unicorn (~> 6.1)
 
 BUNDLED WITH
-   2.5.16
+   2.6.2

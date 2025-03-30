@@ -2,7 +2,7 @@
 
 use serde::Serialize;
 use viz::{
-    header::{HeaderValue, SERVER},
+    header::{HeaderValue, CONTENT_TYPE, SERVER},
     Bytes, Error, Request, Response, ResponseExt, Result, Router,
 };
 
@@ -22,18 +22,24 @@ async fn plaintext(_: Request) -> Result<Response> {
 }
 
 async fn json(_: Request) -> Result<Response> {
-    let mut res = Response::with(
-        http_body_util::Full::new(Bytes::from(
-            serde_json::to_vec(&Message {
-                message: "Hello, World!",
-            })
-            .unwrap(),
-        )),
-        mime::APPLICATION_JSON.as_ref(),
+    let mut resp = Response::builder()
+        .body(
+            http_body_util::Full::new(Bytes::from(
+                serde_json::to_vec(&Message {
+                    message: "Hello, World!",
+                })
+                .unwrap(),
+            ))
+            .into(),
+        )
+        .unwrap();
+    let headers = resp.headers_mut();
+    headers.insert(SERVER, HeaderValue::from_static("Viz"));
+    headers.insert(
+        CONTENT_TYPE,
+        HeaderValue::from_static(mime::APPLICATION_JSON.as_ref()),
     );
-    res.headers_mut()
-        .insert(SERVER, HeaderValue::from_static("Viz"));
-    Ok(res)
+    Ok(resp)
 }
 
 #[tokio::main]

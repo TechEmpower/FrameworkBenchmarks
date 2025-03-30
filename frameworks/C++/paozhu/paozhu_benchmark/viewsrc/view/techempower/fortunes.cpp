@@ -21,7 +21,7 @@ namespace http {
 
 namespace view {
 	namespace techempower{
- 		 std::string fortunes([[maybe_unused]] const struct view_param &vinfo,[[maybe_unused]] http::OBJ_VALUE &obj)
+ 		 std::string fortunes([[maybe_unused]] const struct view_param &vinfo,[[maybe_unused]] http::obj_val &obj)
 			{
  
                      std::ostringstream echo;
@@ -32,9 +32,9 @@ namespace view {
     for(auto &a:obj["list"].as_array()){
 
  			 echo<<"<tr><td>";
- echo<<a.second["id"].to_string(); 
+ echo<<a["id"].to_string(); 
  			 echo<<"</td><td>";
- echo<<a.second["message"].to_string(); 
+ echo<<a["message"].to_string(); 
  			 echo<<"</td></tr>";
 
     }
