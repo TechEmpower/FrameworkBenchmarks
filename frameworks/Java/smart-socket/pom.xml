@@ -25,7 +25,7 @@
         <dependency>
             <groupId>io.github.smartboot.socket</groupId>
             <artifactId>aio-pro</artifactId>
-            <version>1.6.56</version>
+            <version>1.5.58-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>tech.smartboot.servlet</groupId>
