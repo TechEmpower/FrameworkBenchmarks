@@ -100,18 +100,10 @@ pub async fn connection_db() -> DbPoolConnection {
             DATABASE_NAME
         ),
     };
-    let pool_size: u32 = (get_thread_count() << 2).max(10).min(100) as u32;
-    let max_pool_size: u32 = option_env!("POSTGRES_MAX_POOL_SIZE")
-        .unwrap_or(&pool_size.to_string())
-        .parse::<u32>()
-        .unwrap_or(pool_size);
-    let min_pool_size: u32 = option_env!("POSTGRES_MIN_POOL_SIZE")
-        .unwrap_or(&pool_size.to_string())
-        .parse::<u32>()
-        .unwrap_or(pool_size);
+    let pool_size: u32 = num_cpus::get() as u32;
     let pool: DbPoolConnection = PgPoolOptions::new()
-        .max_connections(max_pool_size)
-        .min_connections(min_pool_size)
+        .max_connections(100)
+        .min_connections(pool_size)
         .max_lifetime(None)
         .test_before_acquire(false)
         .idle_timeout(None)
