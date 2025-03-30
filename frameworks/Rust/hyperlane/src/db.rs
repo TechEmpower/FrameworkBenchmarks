@@ -1,28 +1,23 @@
 use crate::*;
 
-#[inline]
 pub async fn get_db_connection() -> DbPoolConnection {
-    if let Some(db_pool) = DB.read().await.clone() {
-        return db_pool;
+    if let Some(db_pool) = DB.get() {
+        return db_pool.clone();
     };
     let db_pool: DbPoolConnection = connection_db().await;
-    {
-        let mut db_pool_lock: RwLockWriteGuard<'_, Option<DbPoolConnection>> = DB.write().await;
-        *db_pool_lock = Some(db_pool.clone());
-    }
+    DB.set(db_pool.clone())
+        .expect("Failed to initialize DB_POOL");
     db_pool
 }
 
-#[inline]
 #[cfg(feature = "dev")]
-pub async fn create_batabase() {
+pub async fn create_database() {
     let db_pool: DbPoolConnection = get_db_connection().await;
     let _ = query(&format!("CREATE DATABASE {};", DATABASE_NAME))
         .execute(&db_pool)
         .await;
 }
 
-#[inline]
 #[cfg(feature = "dev")]
 pub async fn create_table() {
     let db_pool: DbPoolConnection = get_db_connection().await;
@@ -44,7 +39,6 @@ pub async fn create_table() {
     .await;
 }
 
-#[inline]
 #[cfg(feature = "dev")]
 pub async fn insert_records() {
     let db_pool: DbPoolConnection = get_db_connection().await;
@@ -82,7 +76,6 @@ pub async fn insert_records() {
     let _ = query(&sql).execute(&db_pool).await;
 }
 
-#[inline]
 pub async fn init_cache() {
     let mut res: Vec<QueryRow> = Vec::with_capacity(RANDOM_MAX as usize);
     let db_pool: DbPoolConnection = get_db_connection().await;
@@ -97,11 +90,9 @@ pub async fn init_cache() {
             res.push(QueryRow::new(id, random_number));
         }
     }
-    let mut cache: RwLockWriteGuard<'_, Vec<QueryRow>> = CACHE.write().await;
-    *cache = res;
+    let _ = CACHE.set(res);
 }
 
-#[inline]
 pub async fn connection_db() -> DbPoolConnection {
     let db_url: &str = match option_env!("POSTGRES_URL") {
         Some(it) => it,
@@ -115,7 +106,7 @@ pub async fn connection_db() -> DbPoolConnection {
             DATABASE_NAME
         ),
     };
-    let pool_size: u32 = (get_thread_count() >> 2).max(10).min(100) as u32;
+    let pool_size: u32 = (get_thread_count() << 2).max(10).min(100) as u32;
     let max_pool_size: u32 = option_env!("POSTGRES_MAX_POOL_SIZE")
         .unwrap_or(&pool_size.to_string())
         .parse::<u32>()
@@ -136,7 +127,6 @@ pub async fn connection_db() -> DbPoolConnection {
     pool
 }
 
-#[inline]
 pub async fn get_update_data(
     limit: Queries,
 ) -> (String, Vec<QueryRow>, Vec<Queries>, Vec<Queries>) {
@@ -168,28 +158,22 @@ pub async fn get_update_data(
     (sql, query_res_list, id_list, random_numbers)
 }
 
-#[inline]
 pub async fn init_db() {
-    {
-        let mut db_pool_lock: RwLockWriteGuard<'_, Option<DbPoolConnection>> = DB.write().await;
-        *db_pool_lock = Some(connection_db().await);
-    }
+    get_db_connection().await;
     #[cfg(feature = "dev")]
     {
-        create_batabase().await;
+        create_database().await;
         create_table().await;
         insert_records().await;
     }
     init_cache().await;
 }
 
-#[inline]
 pub async fn random_world_row(db_pool: &DbPoolConnection) -> QueryRow {
     let random_id: Queries = get_random_id();
     query_world_row(db_pool, random_id).await
 }
 
-#[inline]
 pub async fn query_world_row(db_pool: &DbPoolConnection, id: Queries) -> QueryRow {
     let sql: String = format!(
         "SELECT id, randomNumber FROM {} WHERE id = {} LIMIT 1",
@@ -202,7 +186,6 @@ pub async fn query_world_row(db_pool: &DbPoolConnection, id: Queries) -> QueryRo
     return QueryRow::new(id as i32, 1);
 }
 
-#[inline]
 pub async fn update_world_rows(limit: Queries) -> Vec<QueryRow> {
     let db_pool: DbPoolConnection = get_db_connection().await;
     let (sql, data, id_list, random_numbers) = get_update_data(limit).await;
@@ -217,7 +200,6 @@ pub async fn update_world_rows(limit: Queries) -> Vec<QueryRow> {
     data
 }
 
-#[inline]
 pub async fn all_world_row() -> Vec<PgRow> {
     let db_pool: DbPoolConnection = get_db_connection().await;
     let sql: String = format!("SELECT id, message FROM {}", TABLE_NAME_FORTUNE);
@@ -225,13 +207,12 @@ pub async fn all_world_row() -> Vec<PgRow> {
     return res;
 }
 
-#[inline]
 pub async fn get_some_row_id(limit: Queries, db_pool: &DbPoolConnection) -> Vec<QueryRow> {
-    let mut res: Vec<QueryRow> = Vec::with_capacity(limit as usize);
-    for _ in 0..limit {
-        let id: i32 = get_random_id();
-        let tem: QueryRow = query_world_row(db_pool, id).await;
-        res.push(tem);
-    }
-    res
+    let futures: Vec<_> = (0..limit)
+        .map(|_| async {
+            let id: i32 = get_random_id();
+            query_world_row(db_pool, id).await
+        })
+        .collect();
+    join_all(futures).await
 }

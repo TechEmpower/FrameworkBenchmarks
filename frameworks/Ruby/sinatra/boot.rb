@@ -7,19 +7,7 @@ ID_RANGE = (1..MAX_PK).freeze
 ALL_IDS = ID_RANGE.to_a
 QUERIES_MIN = 1
 QUERIES_MAX = 500
-
-SERVER_STRING =
-  if defined?(PhusionPassenger)
-    'passenger'
-  elsif defined?(Puma)
-    'puma'
-  elsif defined?(Unicorn)
-    'unicorn'
-  elsif defined?(Iodine)
-    'iodine'
-  elsif defined?(Agoo)
-    'agoo'
-  end
+SERVER_STRING = "Sinatra"
 
 Bundler.require(:default) # Load core modules
 

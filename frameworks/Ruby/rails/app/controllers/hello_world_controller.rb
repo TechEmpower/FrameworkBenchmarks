@@ -21,8 +21,9 @@ class HelloWorldController < ActionController::API
   end
 
   def cached_query
-    items = Rails.cache.fetch_multi(*ALL_IDS.sample(query_count)) do |id|
-      World.find(id).as_json
+    keys = ALL_IDS.sample(query_count).map { "world_#{_1}" }
+    items = Rails.cache.fetch_multi(*keys) do |id|
+      raise "Could not find World with id: #{id} in cache"
     end
 
     render json: items.values

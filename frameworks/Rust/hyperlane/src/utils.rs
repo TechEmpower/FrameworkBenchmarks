@@ -1,8 +1,5 @@
-use rand::rng;
-
 use crate::*;
 
-#[inline]
 pub fn escape_html(input: &str) -> String {
     let mut result: String = String::new();
     for ch in input.chars() {
@@ -18,7 +15,6 @@ pub fn escape_html(input: &str) -> String {
     result
 }
 
-#[inline]
 pub fn get_random_id() -> Queries {
     let mut rng: SmallRng = SmallRng::from_rng(&mut rng());
     let random_id: u32 = rng.random_range(1..RANDOM_MAX_ADD_ONE);

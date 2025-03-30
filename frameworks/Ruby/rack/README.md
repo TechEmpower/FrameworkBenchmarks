@@ -18,6 +18,7 @@ The tests were run with:
 * [Puma 6.4](http://puma.io/)
 * [Iodine](https://github.com/boazsegev/iodine)
 * [Falcon](https://github.com/socketry/falcon)
+* [Pitchfork](https://github.com/Shopify/pitchfork)
 * [Sequel 5](https://sequel.jeremyevans.net/)
 
 
