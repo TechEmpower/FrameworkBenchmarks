@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+    <head>
+        <title>V web server</title>
+        <style>
+            .list li {
+                display: inline-block;
+            }
+        </style>
+    </head>
+    <body>
+        <h1><i>V</i> web server</h1>
+        <p>
+            Welcome to <a href="https://vlang.io">V</a> lang example web server
+            for
+            <a href="https://www.techempower.com/benchmarks">
+                Web Framework Benchmarks
+            </a>
+        </p>
+
+        <h2>Settings</h2>
+        <ul>
+            <li>v: 0.4.10</li>
+            <li>${db_connector} (version is a user choice)</li>
+            <li>
+                Used V libraries and modules:
+                <ul>
+                    <li>
+                        <a href="https://modules.vlang.io/veb.html">Veb</a>: web
+                        server and front-end
+                    </li>
+                    <li>
+                        <a
+                            href="https://modules.vlang.io/${db_connector_module}.html"
+                        >
+                            ${db_connector_module}</a
+                        >
+                        : ${db_connector} connector
+                    </li>
+                </ul>
+            </li>
+        </ul>
+
+        <h2>Local Setup</h2>
+        <ul>
+            <li><a href="/db_init">Database setup</a></li>
+        </ul>
+
+        <h2>Benchmark Tests</h2>
+        <ul>
+            <li><a href="/json">JSON serialization</a></li>
+            <li><a href="/db">Single query</a></li>
+            <li>
+                <a href="/queries">Multiple queries</a>
+                <ul class="list">
+                    <li><a href="/queries?q?count=0"> 0</a></li>
+                    <li><a href="/queries?q=1"> 2</a></li>
+                    <li><a href="/queries?q=foo"> foo</a></li>
+                    <li><a href="/queries?q=501"> 501</a></li>
+                    <li><a href="/queries?q=15"> 15</a></li>
+                    <li><a href="/queries?q="> (empty)</a></li>
+                </ul>
+            </li>
+            <li><a href="/fortunes">Fortunes</a></li>
+            <li>
+                <a href="/update">Data updates</a>
+                <ul class="list">
+                    <li><a href="/update?q?count=0"> 0</a></li>
+                    <li><a href="/update?q=1"> 2</a></li>
+                    <li><a href="/update?q=foo"> foo</a></li>
+                    <li><a href="/update?q=501"> 501</a></li>
+                    <li><a href="/update?q=15"> 15</a></li>
+                    <li><a href="/update?q="> (empty)</a></li>
+                </ul>
+            </li>
+            <li><a href="/plaintext">Plaintext</a></li>
+        </ul>
+    </body>
+</html>
