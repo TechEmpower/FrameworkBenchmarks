@@ -16,19 +16,10 @@ group :iodine, optional: true do
   gem 'iodine', '~> 0.7', platforms: [:ruby, :mswin], require: false
 end
 
-group :passenger, optional: true do
-  gem 'passenger', '~> 6.0', platforms: [:ruby, :mswin], require: false
-end
-
 group :puma, optional: true do
   gem 'puma', '~> 6.4', require: false
 end
 
 group :unicorn, optional: true do
   gem 'unicorn', '~> 6.1', platforms: [:ruby, :mswin], require: false
-end
-
-group :agoo, optional: true do
-  gem 'agoo', require: false
-  gem 'rackup'
 end

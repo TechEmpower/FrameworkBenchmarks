@@ -31,14 +31,7 @@ class App extends Kernel
      */
     protected const LOAD = [
         // Core Services
-        Bootloader\DebugBootloader::class,
         Bootloader\SnapshotsBootloader::class,
-
-        // Security and validation
-        Bootloader\Security\EncrypterBootloader::class,
-        Bootloader\Security\FiltersBootloader::class,
-        Bootloader\Security\GuardBootloader::class,
-
         RoadRunnerBridge\HttpBootloader::class,
 
         // HTTP extensions
@@ -58,8 +51,6 @@ class App extends Kernel
 
         // Template engine
         Stempler\StemplerBootloader::class,
-
-        Scaffolder\ScaffolderBootloader::class,
 
         // Framework commands
         Bootloader\CommandBootloader::class,

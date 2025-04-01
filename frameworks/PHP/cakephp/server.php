@@ -36,9 +36,9 @@ class HeaderDate
 
     public static function init(): void
     {
-        self::$date = self::NAME.gmdate('D, d M Y H:i:s').' GMT';
+        self::$date = self::NAME.gmdate(DATE_RFC7231);
         Timer::add(1, static function () {
-            self::$date = self::NAME.gmdate('D, d M Y H:i:s').' GMT';
+            self::$date = self::NAME.gmdate(DATE_RFC7231);
         });
     }
 }

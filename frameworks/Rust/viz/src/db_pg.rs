@@ -1,7 +1,7 @@
 use std::{collections::HashMap, fmt::Write, io, sync::Arc};
 
 use futures_util::{stream::FuturesUnordered, StreamExt, TryFutureExt, TryStreamExt};
-use rand::{rngs::SmallRng, thread_rng, Rng, SeedableRng};
+use rand::{rng, rngs::SmallRng, Rng, SeedableRng};
 use tokio::pin;
 use tokio_postgres::{connect, types::ToSql, Client, NoTls, Statement};
 use viz::{Error, IntoResponse, Response, StatusCode};
@@ -105,19 +105,19 @@ impl PgConnection {
     }
 
     pub async fn get_world(&self) -> Result<World, PgError> {
-        let mut rng = SmallRng::from_rng(&mut thread_rng()).unwrap();
-        let random_id = (rng.gen::<u32>() % 10_000 + 1) as i32;
+        let mut rng = SmallRng::from_rng(&mut rng());
+        let random_id = (rng.random::<u32>() % 10_000 + 1) as i32;
 
         self.query_one_world(random_id).await
     }
 
     pub async fn get_worlds(&self, num: u16) -> Result<Vec<World>, PgError> {
-        let mut rng = SmallRng::from_rng(&mut thread_rng()).unwrap();
+        let mut rng = SmallRng::from_rng(&mut rng());
 
         let worlds = FuturesUnordered::new();
 
         for _ in 0..num {
-            let id = (rng.gen::<u32>() % 10_000 + 1) as i32;
+            let id = (rng.random::<u32>() % 10_000 + 1) as i32;
             worlds.push(self.query_one_world(id));
         }
 
@@ -125,13 +125,13 @@ impl PgConnection {
     }
 
     pub async fn update(&self, num: u16) -> Result<Vec<World>, PgError> {
-        let mut rng = SmallRng::from_rng(&mut thread_rng()).unwrap();
+        let mut rng = SmallRng::from_rng(&mut rng());
 
         let worlds = FuturesUnordered::new();
 
         for _ in 0..num {
-            let id = (rng.gen::<u32>() % 10_000 + 1) as i32;
-            let rid = (rng.gen::<u32>() % 10_000 + 1) as i32;
+            let id = (rng.random::<u32>() % 10_000 + 1) as i32;
+            let rid = (rng.random::<u32>() % 10_000 + 1) as i32;
 
             worlds.push(self.query_one_world(id).map_ok(move |mut world| {
                 world.randomnumber = rid;

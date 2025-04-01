@@ -1,25 +1,22 @@
 use crate::*;
 
-#[inline]
 pub async fn json(controller_data: ControllerData) {
-    let json: serde_json::Value = json!({
-        "message": RESPONSEDATA
+    let json: Value = json!({
+        "message": RESPONSEDATA_STR
     });
     let _ = controller_data
         .set_response_body(serde_json::to_string(&json).unwrap_or_default())
         .await;
 }
 
-#[inline]
 pub async fn plaintext(controller_data: ControllerData) {
     let _ = controller_data
         .set_response_header(CONTENT_TYPE, TEXT_PLAIN)
         .await
-        .set_response_body(RESPONSEDATA)
+        .set_response_body(RESPONSEDATA_BIN)
         .await;
 }
 
-#[inline]
 pub async fn db(controller_data: ControllerData) {
     let db_connection: DbPoolConnection = get_db_connection().await;
     let query_row: QueryRow = random_world_row(&db_connection).await;
@@ -28,7 +25,6 @@ pub async fn db(controller_data: ControllerData) {
         .await;
 }
 
-#[inline]
 pub async fn queries(controller_data: ControllerData) {
     let queries: Queries = controller_data
         .get_request_query("q")
@@ -37,18 +33,13 @@ pub async fn queries(controller_data: ControllerData) {
         .unwrap_or_default()
         .min(ROW_LIMIT as Queries)
         .max(1);
-    let mut data: Vec<QueryRow> = Vec::with_capacity(queries as usize);
     let db_pool: DbPoolConnection = get_db_connection().await;
-    for _ in 0..queries {
-        let row: QueryRow = random_world_row(&db_pool).await;
-        data.push(row);
-    }
+    let data: Vec<QueryRow> = get_some_row_id(queries, &db_pool).await;
     let _ = controller_data
         .set_response_body(serde_json::to_string(&data).unwrap_or_default())
         .await;
 }
 
-#[inline]
 pub async fn fortunes(controller_data: ControllerData) {
     let all_rows: Vec<PgRow> = all_world_row().await;
     let mut fortunes_list: Vec<Fortunes> = all_rows
@@ -72,7 +63,6 @@ pub async fn fortunes(controller_data: ControllerData) {
         .await;
 }
 
-#[inline]
 pub async fn updates(controller_data: ControllerData) {
     let queries: Queries = controller_data
         .get_request_query("q")
@@ -87,7 +77,6 @@ pub async fn updates(controller_data: ControllerData) {
         .await;
 }
 
-#[inline]
 pub async fn cached_queries(controller_data: ControllerData) {
     let count: Queries = controller_data
         .get_request_query("c")
@@ -96,11 +85,13 @@ pub async fn cached_queries(controller_data: ControllerData) {
         .unwrap_or_default()
         .min(ROW_LIMIT as Queries)
         .max(1);
-    let mut res: Vec<QueryRow> = Vec::with_capacity(count as usize);
-    let cache: Vec<QueryRow> = CACHE.get().cloned().unwrap_or_default();
-    for i in 0..count {
-        res.push(cache[i as usize].clone());
-    }
+    let res: Vec<QueryRow> = CACHE
+        .get()
+        .unwrap_or(&Vec::new())
+        .iter()
+        .take(count as usize)
+        .cloned()
+        .collect();
     let _ = controller_data
         .set_response_body(serde_json::to_string(&res).unwrap_or_default())
         .await;
