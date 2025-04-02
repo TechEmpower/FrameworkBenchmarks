@@ -1,15 +1,12 @@
-use std::convert::Infallible;
-
-use http::header::{CONTENT_LENGTH, CONTENT_TYPE, SERVER};
+use http::header::{CONTENT_LENGTH, CONTENT_TYPE};
 use http::Response;
-use http_body_util::combinators::BoxBody;
-use http_body_util::{BodyExt, Full};
+use http_body_util::Full;
 use hyper::body::Bytes;
 use serde::Serialize;
 use tokio_postgres::Row;
 
 use crate::db::POOL;
-use crate::{Error, Result, APPLICATION_JSON, SERVER_HEADER};
+use crate::{Error, Result, APPLICATION_JSON};
 
 const QUERY: &str = "SELECT id, randomnumber FROM world WHERE id = $1";
 
@@ -28,21 +25,19 @@ impl From<Row> for World {
     }
 }
 
-pub async fn get(query: Option<&str>) -> Result<Response<BoxBody<Bytes, Infallible>>> {
+pub async fn get(query: Option<&str>) -> Result<Response<Full<Bytes>>> {
     let count = query
         .and_then(|query| query.strip_prefix("count="))
         .and_then(|query| query.parse().ok())
         .unwrap_or(1)
         .clamp(1, 500);
-
     let worlds = query_worlds(count).await?;
-    let json = serde_json::to_vec(&worlds)?;
+    let content = serde_json::to_vec(&worlds)?;
 
     Response::builder()
-        .header(SERVER, SERVER_HEADER.clone())
         .header(CONTENT_TYPE, APPLICATION_JSON.clone())
-        .header(CONTENT_LENGTH, json.len())
-        .body(Full::from(json).boxed())
+        .header(CONTENT_LENGTH, content.len())
+        .body(content.into())
         .map_err(Error::from)
 }
 
