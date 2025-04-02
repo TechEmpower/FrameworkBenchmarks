@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="dapper" Version="2.1.66" />
     <PackageReference Include="Falco" Version="5.*" />
     <PackageReference Include="Npgsql" Version="9.*" />
   </ItemGroup>
