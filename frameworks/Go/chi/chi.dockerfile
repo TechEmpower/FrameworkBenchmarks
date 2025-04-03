@@ -1,4 +1,4 @@
-FROM docker.io/golang:1.23.1
+FROM docker.io/golang:1.24.2
 
 ADD ./src/chi /chi
 WORKDIR /chi
