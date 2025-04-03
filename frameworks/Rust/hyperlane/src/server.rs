@@ -4,6 +4,8 @@ pub async fn run_server() {
     let server: Server = Server::new();
     server.host("0.0.0.0").await;
     server.port(8080).await;
+    server.disable_linger().await;
+    server.disable_nodelay().await;
     server.disable_log().await;
     server.disable_inner_log().await;
     server.disable_inner_print().await;
