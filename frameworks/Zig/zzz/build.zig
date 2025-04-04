@@ -16,6 +16,7 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
         .root_source_file = root_source_file,
         .strip = true,
+        .omit_frame_pointer = false,
     });
     exe.root_module.addImport("zzz", zzz.module("zzz"));
     b.installArtifact(exe);

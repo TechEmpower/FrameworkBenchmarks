@@ -68,6 +68,7 @@ pub fn main() !void {
             fn entry(rt: *Runtime, p: EntryParams) !void {
                 var server = Server.init(.{
                     .capture_count_max = 0,
+                    .connection_count_max = 4096,
                 });
                 try server.serve(rt, p.router, .{ .normal = p.socket });
             }
@@ -81,7 +82,7 @@ pub fn home_handler(ctx: *const Context, _: void) !Respond {
         .body = "Hello, World!",
         .status = .OK,
         .headers = &.{
-           .{"Date", try ctx.allocator.dupe(u8, date[0..])},
+            .{ "Date", try ctx.allocator.dupe(u8, date[0..]) },
         },
     });
 }
@@ -92,7 +93,7 @@ pub fn json_handler(ctx: *const Context, _: void) !Respond {
         .body = try std.json.stringifyAlloc(ctx.allocator, Message{ .message = "Hello, World!" }, .{}),
         .status = .OK,
         .headers = &.{
-            .{"Date", try ctx.allocator.dupe(u8, date[0..])},
+            .{ "Date", try ctx.allocator.dupe(u8, date[0..]) },
         },
     });
 }
