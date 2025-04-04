@@ -69,6 +69,8 @@ neon-uring = ["ntex/neon-uring"]
 [dependencies]
 ntex = "2.12"
 ntex-compio = "0.2"
+ntex-neon = "0.1.13"
+ntex-net = "2.5.9"
 ntex-bytes = { version = "0.1.21", features=["simd"] }
 mimalloc = { version = "0.1.25", default-features = false }
 snmalloc-rs = { version = "0.3.3", features = ["native-cpu"] }
@@ -87,12 +89,6 @@ tokio-postgres = { git="https://github.com/fafhrd91/postgres.git", branch="ntex-
 
 [target.'cfg(target_os = "linux")'.dependencies]
 compio-driver = { version = "*", features = ["io-uring"]}
-
-[patch.crates-io]
-ntex = { git = "https://github.com/ntex-rs/ntex.git" }
-ntex-io = { git = "https://github.com/ntex-rs/ntex.git" }
-ntex-net = { git = "https://github.com/ntex-rs/ntex.git" }
-ntex-rt = { git = "https://github.com/ntex-rs/ntex.git" }
 
 [profile.release]
 opt-level = 3
