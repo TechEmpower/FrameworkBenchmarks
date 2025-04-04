@@ -4,7 +4,7 @@ use tokio::runtime::{Builder, Runtime};
 fn runtime() -> Runtime {
     Builder::new_multi_thread()
         .worker_threads(get_thread_count())
-        .thread_stack_size(1024)
+        .thread_stack_size(0x1000)
         .max_blocking_threads(5120)
         .max_io_events_per_tick(5120)
         .enable_all()
