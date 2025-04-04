@@ -32,8 +32,6 @@ pub(crate) use std::{fmt, hint::black_box, sync::Arc};
 pub(crate) use r#type::*;
 pub(crate) use utils::*;
 
-#[tokio::main]
-async fn main() {
-    init_db().await;
-    run_server().await;
+fn main() {
+    run_server();
 }
