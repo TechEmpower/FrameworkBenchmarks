@@ -2,6 +2,8 @@
 name = "aiohttp"
 
 [main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
 urls.db = "/db"
 urls.query = "/queries/"
 urls.update = "/updates/"
@@ -17,8 +19,6 @@ webserver = "gunicorn"
 versus = "None"
 
 [orm]
-urls.plaintext = "/plaintext"
-urls.json = "/json"
 urls.db = "/db"
 urls.query = "/queries/"
 urls.update = "/updates/"
