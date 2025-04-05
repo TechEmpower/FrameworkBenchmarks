@@ -14,7 +14,7 @@ RUN curl https://ziglang.org/download/${ZIG_VER}/zig-linux-$(uname -m)-${ZIG_VER
   tar xf zig-linux.tar.xz && \
   mv zig-linux-$(uname -m)-${ZIG_VER}/ /opt/zig
 
-RUN /opt/zig/zig build -Doptimize=ReleaseFast -Dcpu=native
+RUN /opt/zig/zig build -Doptimize=ReleaseFast
 
 EXPOSE 8080
 
