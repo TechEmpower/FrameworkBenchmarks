@@ -19,4 +19,4 @@ RUN ls
 
 EXPOSE 8080
 
-CMD ["zig-out/bin/zzz"]
+CMD ./zig-out/bin/zzz
