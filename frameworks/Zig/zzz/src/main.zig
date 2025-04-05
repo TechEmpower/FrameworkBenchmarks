@@ -81,7 +81,7 @@ pub fn home_handler(ctx: *const Context, _: void) !Respond {
         .body = "Hello, World!",
         .status = .OK,
         .headers = &.{
-           .{"Date", try ctx.allocator.dupe(u8, date[0..])},
+            .{ "Date", try ctx.allocator.dupe(u8, date[0..]) },
         },
     });
 }
@@ -92,7 +92,7 @@ pub fn json_handler(ctx: *const Context, _: void) !Respond {
         .body = try std.json.stringifyAlloc(ctx.allocator, Message{ .message = "Hello, World!" }, .{}),
         .status = .OK,
         .headers = &.{
-            .{"Date", try ctx.allocator.dupe(u8, date[0..])},
+            .{ "Date", try ctx.allocator.dupe(u8, date[0..]) },
         },
     });
 }
