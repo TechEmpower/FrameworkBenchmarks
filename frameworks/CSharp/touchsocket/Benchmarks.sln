@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31717.71
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TouchSocketWebApi", "src\TouchSocketWebApi\TouchSocketWebApi.csproj", "{6BD9363A-D77F-5D90-8444-2BC37495C920}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TouchSocketHttp", "src\TouchSocketHttp\TouchSocketHttp.csproj", "{A7FB43AB-672B-8854-68D7-C2B383B0BC04}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{6BD9363A-D77F-5D90-8444-2BC37495C920}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6BD9363A-D77F-5D90-8444-2BC37495C920}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6BD9363A-D77F-5D90-8444-2BC37495C920}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7FB43AB-672B-8854-68D7-C2B383B0BC04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7FB43AB-672B-8854-68D7-C2B383B0BC04}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7FB43AB-672B-8854-68D7-C2B383B0BC04}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7FB43AB-672B-8854-68D7-C2B383B0BC04}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

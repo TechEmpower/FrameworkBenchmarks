@@ -5,16 +5,10 @@
       "default": {
         "plaintext_url": "/plaintext",
         "json_url": "/json",
-        "db_url": "/db",
-        "query_url": "/queries/",
-        "fortune_url": "/fortunes",
-        "update_url": "/updates/",
-        "cached_query_url": "/cached-worlds/",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Platform",
-        "database": "Postgres",
-        "framework": "touchsocket",
+        "framework": "touchsocket.webapi",
         "language": "C#",
         "orm": "Raw",
         "platform": ".NET",
@@ -22,31 +16,28 @@
         "webserver": "touchsocket",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "touchsocket",
-        "notes": ""
+        "display_name": "touchsocket.webapi",
+        "notes": "",
+        "versus": "aspcore-mvc"
       },
-      "minimal": {
+      "http": {
         "plaintext_url": "/plaintext",
         "json_url": "/json",
-        "db_url": "/db",
-        "query_url": "/queries/",
-        "fortune_url": "/fortunes",
-        "update_url": "/updates/",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Micro",
         "database": "Postgres",
-        "framework": "touchsocket webapi",
+        "framework": "touchsocket.http",
         "language": "C#",
         "orm": "Micro",
         "platform": ".NET",
         "flavor": "CoreCLR",
-        "webserver": "touchsocket.http",
+        "webserver": "touchsocket",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "touchsocket webapi",
+        "display_name": "touchsocket.http",
         "notes": "",
-        "versus": "touchsocket"
+        "versus": "aspcore"
       }
     }
   ]

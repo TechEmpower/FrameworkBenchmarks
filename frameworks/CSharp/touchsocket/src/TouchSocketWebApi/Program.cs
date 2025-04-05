@@ -17,6 +17,9 @@ public class Program
         builder.Services.AddServiceHostedService<IHttpService, HttpService>(config =>
         {
             config.SetListenIPHosts(8080)
+            .SetNoDelay(true)
+            .SetMaxCount(1000000)
+            .SetBacklog(1000)
            .ConfigureContainer(a =>
            {
                a.AddConsoleLogger();
@@ -55,6 +58,8 @@ public class Program
 
 public partial class ApiServer : RpcServer
 {
+    public static MyJson MyJson { get; set; } = new MyJson() { Message = "Hello, World!" };
+
     [Router("/plaintext")]
     [WebApi(Method = HttpMethodType.Get)]
     public string Plaintext()
@@ -66,7 +71,7 @@ public partial class ApiServer : RpcServer
     [WebApi(Method = HttpMethodType.Get)]
     public MyJson Json()
     {
-        return new MyJson() { Message = "Hello, World!" };
+        return MyJson;
     }
 }
 
