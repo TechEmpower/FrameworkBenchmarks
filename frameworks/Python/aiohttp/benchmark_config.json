@@ -1,7 +1,7 @@
 {
   "framework": "aiohttp",
   "tests": [{
-    "default": {
+    "orm": {
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries/",
@@ -20,10 +20,10 @@
       "webserver": "gunicorn",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "aiohttp",
-      "notes": "uses aiopg with sqlalchemy for database access"
+      "display_name": "aiohttp-orm",
+      "notes": "uses sqlalchemy for database access"
     },
-    "pg-raw": {
+    "default": {
       "db_url": "/db",
       "query_url": "/queries/",
       "fortune_url": "/fortunes",
@@ -40,7 +40,7 @@
       "webserver": "gunicorn",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "aiohttp-pg-raw",
+      "display_name": "aiohttp",
       "notes": "uses asyncpg for database access",
       "versus": "default"
     }
