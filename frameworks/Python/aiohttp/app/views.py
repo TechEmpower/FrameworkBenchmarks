@@ -128,12 +128,13 @@ async def updates(request):
     Test 5 ORM
     """
     num_queries = get_num_queries(request)
-    updates = sample(range(1, 10001), num_queries)
-    updates.sort()
+    update_ids = sample(range(1, 10001), num_queries)
+    update_ids.sort()
+    updates = zip(updates, sample(range(1, 10001), num_queries))
     worlds = [{'id': row_id, 'randomNumber': number} for row_id, number in updates]
 
     async with request.app['db_session'].begin() as sess:
-        for id_, number in zip(updates, sample(range(1, 10001), num_queries)):
+        for id_, number in updates:
             world = await sess.get(World, id_, populate_existing=True)
             world.randomnumber = number
     return json_response(worlds)
@@ -143,8 +144,9 @@ async def updates_raw(request):
     Test 5 RAW
     """
     num_queries = get_num_queries(request)
-    updates = sample(range(1, 10001), num_queries)
-    updates.sort()
+    update_ids = sample(range(1, 10001), num_queries)
+    update_ids.sort()
+    updates = zip(updates, sample(range(1, 10001), num_queries))
     worlds = [{'id': row_id, 'randomNumber': number} for row_id, number in updates]
 
     async with request.app['pg'].acquire() as conn:
@@ -152,7 +154,7 @@ async def updates_raw(request):
         for id_ in updates:
             # the result of this is the int previous random number which we don't actually use
             await stmt.fetchval(id_)
-        await conn.executemany(WRITE_ROW_SQL, zip(updates, sample(range(1, 10001), num_queries)))
+        await conn.executemany(WRITE_ROW_SQL, updates)
 
     return json_response(worlds)
 
