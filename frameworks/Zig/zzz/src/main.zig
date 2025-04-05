@@ -68,7 +68,6 @@ pub fn main() !void {
             fn entry(rt: *Runtime, p: EntryParams) !void {
                 var server = Server.init(.{
                     .capture_count_max = 0,
-                    .connection_count_max = 4096,
                 });
                 try server.serve(rt, p.router, .{ .normal = p.socket });
             }
