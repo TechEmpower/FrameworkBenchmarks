@@ -1,7 +1,7 @@
 from functools import partial
 from operator import attrgetter, itemgetter
 from pathlib import Path
-from random import randint
+from random import randint, sample
 
 import jinja2
 import ujson
@@ -142,16 +142,16 @@ async def updates_raw(request):
     Test 5 RAW
     """
     num_queries = get_num_queries(request)
-    updates = [(randint(1, 10000), randint(1, 10000)) for _ in range(num_queries)]
+    updates = sample(range(1, 10001), num_queries)
     updates.sort()
     worlds = [{'id': row_id, 'randomNumber': number} for row_id, number in updates]
 
     async with request.app['pg'].acquire() as conn:
         stmt = await conn.prepare(READ_ROW_SQL)
-        for id_, _ in updates:
+        for id_ in updates:
             # the result of this is the int previous random number which we don't actually use
             await stmt.fetchval(id_)
-        await conn.executemany(WRITE_ROW_SQL, updates)
+        await conn.executemany(WRITE_ROW_SQL, zip(updates, sample(range(1, 10001), num_queries)))
 
     return json_response(worlds)
 
