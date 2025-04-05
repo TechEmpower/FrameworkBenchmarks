@@ -1,11 +1,10 @@
-from functools import partial
 from operator import attrgetter, itemgetter
 from pathlib import Path
 from random import randint
 
 import jinja2
-import ujson
-from aiohttp.web import Response, json_response
+import orjson
+from aiohttp.web import Response
 from sqlalchemy import select
 
 from .models import sa_fortunes, sa_worlds, Fortune, World
@@ -16,7 +15,6 @@ READ_ROW_SQL = 'SELECT "randomnumber", "id" FROM "world" WHERE id = $1'
 READ_SELECT_ORM = select(World.randomnumber)
 WRITE_ROW_SQL = 'UPDATE "world" SET "randomnumber"=$2 WHERE id=$1'
 
-json_response = partial(json_response, dumps=ujson.dumps)
 template_path = Path(__file__).parent / 'templates' / 'fortune.jinja'
 template = jinja2.Template(template_path.read_text())
 sort_fortunes_orm = attrgetter('message')
@@ -34,6 +32,11 @@ def get_num_queries(request):
         return 500
     return num_queries
 
+def json_response(payload):
+    return Response(
+        body=orjson.dumps(payload),
+        content_type="application/json",
+    )
 
 async def json(request):
     """
