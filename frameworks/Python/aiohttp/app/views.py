@@ -7,6 +7,7 @@ import jinja2
 import ujson
 from aiohttp.web import Response, json_response
 from sqlalchemy import select
+from sqlalchemy.orm.attributes import flag_modified
 
 from .models import sa_fortunes, sa_worlds, Fortune, World
 
@@ -137,6 +138,9 @@ async def updates(request):
         for id_, number in updates:
             world = await sess.get(World, id_, populate_existing=True)
             world.randomnumber = number
+            # Force sqlalchemy to UPDATE entry even if the value has not changed
+            # doesn't make sense in a real application, added only to pass tests.
+            flag_modified(world, "randomnumber")
     return json_response(worlds)
 
 async def updates_raw(request):
