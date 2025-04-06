@@ -5,7 +5,7 @@ use axum::{
     extract::Query, http::StatusCode, response::IntoResponse, routing::get, Router,
 };
 use dotenv::dotenv;
-use rand::{rngs::SmallRng, thread_rng, SeedableRng};
+use rand::{rngs::SmallRng, rng, SeedableRng};
 use yarte::Template;
 use mimalloc::MiMalloc;
 
@@ -33,7 +33,7 @@ pub struct FortunesTemplate<'a> {
 }
 
 async fn db(DatabaseConnection(conn): DatabaseConnection) -> impl IntoResponse {
-    let mut rng = SmallRng::from_rng(&mut thread_rng()).unwrap();
+    let mut rng = SmallRng::from_rng(&mut rng());
 
     let world = conn
         .fetch_world_by_id(random_id(&mut rng))

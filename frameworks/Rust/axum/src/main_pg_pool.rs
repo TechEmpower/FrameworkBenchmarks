@@ -13,7 +13,7 @@ use common::simd_json::Json;
 use common::{random_ids, SELECT_ALL_FORTUNES, SELECT_WORLD_BY_ID, UPDATE_WORLDS};
 use dotenv::dotenv;
 use futures_util::{stream::FuturesUnordered, TryStreamExt};
-use rand::{rngs::SmallRng, thread_rng, SeedableRng};
+use rand::{rngs::SmallRng, rng, SeedableRng};
 use yarte::Template;
 use mimalloc::MiMalloc;
 
@@ -38,7 +38,7 @@ pub struct FortunesTemplate<'a> {
 }
 
 async fn db(DatabaseClient(client): DatabaseClient) -> impl IntoResponse {
-    let mut rng = SmallRng::from_rng(&mut thread_rng()).unwrap();
+    let mut rng = SmallRng::from_rng(&mut rng());
     let random_id = random_id(&mut rng);
 
     let select = &client.prepare_cached(SELECT_WORLD_BY_ID).await.unwrap();
@@ -55,7 +55,7 @@ async fn queries(
 ) -> impl IntoResponse {
     let q = parse_params(params);
 
-    let mut rng = SmallRng::from_rng(&mut thread_rng()).unwrap();
+    let mut rng = SmallRng::from_rng(&mut rng());
     let select = &client.prepare_cached(SELECT_WORLD_BY_ID).await.unwrap();
     let future_worlds = FuturesUnordered::new();
 
@@ -98,7 +98,7 @@ async fn updates(
 ) -> impl IntoResponse {
     let q = parse_params(params);
 
-    let mut rng = SmallRng::from_entropy();
+    let mut rng = SmallRng::from_rng(&mut rng());
     let select = &client.prepare_cached(SELECT_WORLD_BY_ID).await.unwrap();
     let update = &client.prepare_cached(UPDATE_WORLDS).await.unwrap();
 

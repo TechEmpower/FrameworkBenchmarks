@@ -32,10 +32,10 @@ use mongodb::{
     options::{ClientOptions, Compressor},
     Client,
 };
-use rand::{rngs::SmallRng, thread_rng, SeedableRng};
+use rand::{rngs::SmallRng, rng, SeedableRng};
 
 async fn db(DatabaseConnection(db): DatabaseConnection) -> impl IntoResponse {
-    let mut rng = SmallRng::from_rng(&mut thread_rng()).unwrap();
+    let mut rng = SmallRng::from_rng(&mut rng());
 
     let random_id = random_id(&mut rng);
 
@@ -52,7 +52,7 @@ async fn queries(
 ) -> impl IntoResponse {
     let q = parse_params(params);
 
-    let mut rng = SmallRng::from_rng(&mut thread_rng()).unwrap();
+    let mut rng = SmallRng::from_rng(&mut rng());
     let worlds = find_worlds(db, &mut rng, q).await;
     let results = worlds.expect("worlds could not be retrieved");
 
@@ -65,7 +65,7 @@ async fn updates(
 ) -> impl IntoResponse {
     let q = parse_params(params);
 
-    let mut rng = SmallRng::from_rng(&mut thread_rng()).unwrap();
+    let mut rng = SmallRng::from_rng(&mut rng());
 
     let worlds = find_worlds(db.clone(), &mut rng, q)
         .await

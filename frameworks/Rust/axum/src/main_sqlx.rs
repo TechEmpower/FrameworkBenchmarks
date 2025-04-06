@@ -13,7 +13,7 @@ use axum::{
 };
 use dotenv::dotenv;
 use quick_cache::sync::Cache;
-use rand::{rngs::SmallRng, thread_rng, SeedableRng};
+use rand::{rngs::SmallRng, rng, SeedableRng};
 use sqlx::models::World;
 use yarte::Template;
 use mimalloc::MiMalloc;
@@ -42,7 +42,7 @@ pub struct FortunesTemplate<'a> {
 }
 
 async fn db(State(AppState { db, .. }): State<AppState>) -> impl IntoResponse {
-    let mut rng = SmallRng::from_rng(&mut thread_rng()).unwrap();
+    let mut rng = SmallRng::from_rng(&mut rng());
 
     let world: World = ::sqlx::query_as(common::SELECT_WORLD_BY_ID)
         .bind(random_id(&mut rng))
@@ -57,7 +57,7 @@ async fn queries(
     State(AppState { db, .. }): State<AppState>,
     Query(params): Query<Params>,
 ) -> impl IntoResponse {
-    let mut rng = SmallRng::from_rng(&mut thread_rng()).unwrap();
+    let mut rng = SmallRng::from_rng(&mut rng());
     let count = parse_params(params);
     let mut worlds: Vec<World> = Vec::with_capacity(count);
 
@@ -100,7 +100,7 @@ async fn cache(
     Query(params): Query<Params>,
 ) -> impl IntoResponse {
     let count = parse_params(params);
-    let mut rng = SmallRng::from_rng(&mut thread_rng()).unwrap();
+    let mut rng = SmallRng::from_rng(&mut rng());
     let mut worlds: Vec<Option<World>> = Vec::with_capacity(count);
     
     for id in random_ids(&mut rng, count) {

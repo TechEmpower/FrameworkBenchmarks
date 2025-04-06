@@ -1,7 +1,7 @@
 use std::{env, str::FromStr};
 
 use core::fmt::Debug;
-use rand::{distributions::Uniform, rngs::SmallRng, Rng};
+use rand::{distr::Uniform, rngs::SmallRng, Rng};
 pub mod models;
 pub mod utils;
 
@@ -37,13 +37,13 @@ where
 #[allow(dead_code)]
 #[inline(always)]
 pub fn random_id(rng: &mut SmallRng) -> i32 {
-    rng.gen_range(1..10_001)
+    rng.random_range(1..=10_000)
 }
 
 /// Generate an iterator of integers in the range 1 to 10,000 (inclusive)
 #[allow(dead_code)]
 #[inline(always)]
 pub fn random_ids(rng: &mut SmallRng, count: usize) -> impl Iterator<Item = i32> + use<'_> {
-    rng.sample_iter(Uniform::new(1, 10_001))
+    rng.sample_iter(Uniform::new_inclusive(1, 10_000).unwrap())
         .take(count)
 }
