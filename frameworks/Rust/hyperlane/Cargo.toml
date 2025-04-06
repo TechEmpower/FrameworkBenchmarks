@@ -18,7 +18,7 @@ exclude = [
 ]
 
 [dependencies]
-hyperlane = "4.75.0"
+hyperlane = "4.76.0"
 num_cpus = "1.16.0"
 rand = "0.9.0"
 serde = "1.0.219"
