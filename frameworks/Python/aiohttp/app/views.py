@@ -16,7 +16,6 @@ READ_ROW_SQL = 'SELECT "randomnumber", "id" FROM "world" WHERE id = $1'
 READ_SELECT_ORM = select(World.randomnumber)
 WRITE_ROW_SQL = 'UPDATE "world" SET "randomnumber"=$2 WHERE id=$1'
 
-dumps = ujson.dumps
 template_path = Path(__file__).parent / 'templates' / 'fortune.jinja'
 template = jinja2.Template(template_path.read_text())
 sort_fortunes_orm = attrgetter('message')
@@ -30,6 +29,7 @@ sort_fortunes_raw = itemgetter('message')
 # 2000000 loops, best of 5: 161 nsec per loop
 # > python3 -m timeit 'import random; sample = random.sample' 'sample'
 # 2000000 loops, best of 5: 161 nsec per loop
+dumps = ujson.dumps
 randint = random.randint
 sample = random.sample
 Response = aiohttp.web.Response
