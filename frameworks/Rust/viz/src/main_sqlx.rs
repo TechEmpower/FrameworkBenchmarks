@@ -79,8 +79,7 @@ async fn updates(mut req: Request) -> Result<Response> {
     Ok(res)
 }
 
-#[tokio::main]
-async fn main() -> Result<()> {
+async fn app() -> Result<()> {
     let max = available_parallelism().map(|n| n.get()).unwrap_or(16) as u32;
 
     let pool = PgPoolOptions::new()
@@ -101,6 +100,10 @@ async fn main() -> Result<()> {
         .with(State::new(rng));
 
     server::serve(app).await.map_err(Error::Boxed)
+}
+
+fn main() {
+    server::run(app)
 }
 
 markup::define! {

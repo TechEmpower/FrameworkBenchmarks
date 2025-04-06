@@ -1,7 +1,4 @@
-use std::{
-    sync::Arc,
-    thread::{available_parallelism, spawn},
-};
+use std::sync::Arc;
 
 use viz::{
     header::{HeaderValue, SERVER},
@@ -76,26 +73,7 @@ async fn updates(req: Request) -> Result<Response> {
     Ok(res)
 }
 
-fn main() {
-    let rt = tokio::runtime::Builder::new_current_thread()
-        .enable_all()
-        .build()
-        .unwrap();
-
-    for _ in 1..available_parallelism().map(|n| n.get()).unwrap_or(16) {
-        spawn(move || {
-            let rt = tokio::runtime::Builder::new_current_thread()
-                .enable_all()
-                .build()
-                .unwrap();
-            rt.block_on(serve());
-        });
-    }
-
-    rt.block_on(serve());
-}
-
-async fn serve() {
+async fn app() {
     let conn = PgConnection::connect(DB_URL).await;
 
     let app = Router::new()
@@ -106,4 +84,8 @@ async fn serve() {
         .with(State::new(conn));
 
     server::serve(app).await.unwrap()
+}
+
+fn main() {
+    server::run(app)
 }

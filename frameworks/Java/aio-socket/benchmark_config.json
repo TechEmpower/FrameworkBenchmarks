@@ -1,0 +1,23 @@
+{
+  "framework": "aio-socket",
+  "tests": [{
+    "default": {
+      "plaintext_url": "/plaintext",
+      "json_url": "/json",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "framework": "aio-socket",
+      "language": "Java",
+      "flavor": "None",
+      "orm": "Raw",
+      "platform": "t-io",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "aio-socket",
+      "notes": "aio-socket",
+      "versus": "t-io"
+    }
+  }]
+}
