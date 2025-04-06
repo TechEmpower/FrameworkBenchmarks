@@ -1,15 +1,14 @@
-from functools import partial
+import random
 from operator import attrgetter, itemgetter
 from pathlib import Path
-from random import randint, sample
 
+import aiohttp.web
 import jinja2
+import sqlalchemy
+import sqlalchemy.orm
 import ujson
-from aiohttp.web import Response, json_response
-from sqlalchemy import select
-from sqlalchemy.orm.attributes import flag_modified
 
-from .models import sa_fortunes, sa_worlds, Fortune, World
+from . import models
 
 ADDITIONAL_FORTUNE_ORM = Fortune(id=0, message='Additional fortune added at request time.')
 ADDITIONAL_FORTUNE_ROW = {'id': 0, 'message': 'Additional fortune added at request time.'}
@@ -22,6 +21,23 @@ template_path = Path(__file__).parent / 'templates' / 'fortune.jinja'
 template = jinja2.Template(template_path.read_text())
 sort_fortunes_orm = attrgetter('message')
 sort_fortunes_raw = itemgetter('message')
+
+# In current versions of Python (tested 3.9 and 3.12), from ... import ...
+# creates variables that are atleast 4x slower to reference:
+# > python3 -m timeit 'from random import sample' 'sample'
+# 500000 loops, best of 5: 823 nsec per loop
+# > python3 -m timeit 'import random' 'random.sample'
+# 2000000 loops, best of 5: 161 nsec per loop
+# > python3 -m timeit 'import random; sample = random.sample' 'sample'
+# 2000000 loops, best of 5: 161 nsec per loop
+randint = random.randint
+sample = random.sample
+Response = aiohttp.web.Response
+json_response = aiohttp.web.json_response
+select = sqlalchemy.select
+flag_modified = sqlalchemy.orm.attributes.flag_modified
+Fortune = models.Fortune
+World = models.World
 
 
 def get_num_queries(request):
