@@ -35,9 +35,7 @@ use mongodb::{
 use rand::{rngs::SmallRng, rng, SeedableRng};
 
 async fn db(DatabaseConnection(db): DatabaseConnection) -> impl IntoResponse {
-    let mut rng = SmallRng::from_rng(&mut rng());
-
-    let random_id = random_id(&mut rng);
+    let random_id = random_id(&mut rng());
 
     let world = find_world_by_id(db, random_id)
         .await

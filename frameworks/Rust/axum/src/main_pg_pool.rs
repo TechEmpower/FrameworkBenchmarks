@@ -38,8 +38,7 @@ pub struct FortunesTemplate<'a> {
 }
 
 async fn db(DatabaseClient(client): DatabaseClient) -> impl IntoResponse {
-    let mut rng = SmallRng::from_rng(&mut rng());
-    let random_id = random_id(&mut rng);
+    let random_id = random_id(&mut rng());
 
     let select = &client.prepare_cached(SELECT_WORLD_BY_ID).await.unwrap();
     let world = fetch_world_by_id(&client, random_id, select)

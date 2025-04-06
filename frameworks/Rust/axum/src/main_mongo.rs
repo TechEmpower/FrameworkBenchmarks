@@ -21,7 +21,7 @@ use mongodb::{
     options::{ClientOptions, Compressor},
     Client,
 };
-use rand::{rngs::SmallRng, rng, Rng, SeedableRng};
+use rand::{rngs::SmallRng, rng, SeedableRng};
 use yarte::Template;
 use mimalloc::MiMalloc;
 
@@ -43,9 +43,7 @@ pub struct FortunesTemplate<'a> {
 }
 
 async fn db(DatabaseConnection(db): DatabaseConnection) -> impl IntoResponse {
-    let mut rng = SmallRng::from_rng(&mut rng());
-
-    let random_id = rng.random_range(1..=10_000) as i32;
+    let random_id = random_id(&mut rng());
 
     let world = find_world_by_id(db, random_id)
         .await

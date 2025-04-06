@@ -42,10 +42,9 @@ pub struct FortunesTemplate<'a> {
 }
 
 async fn db(State(AppState { db, .. }): State<AppState>) -> impl IntoResponse {
-    let mut rng = SmallRng::from_rng(&mut rng());
-
+    let id = random_id(&mut rng());
     let world: World = ::sqlx::query_as(common::SELECT_WORLD_BY_ID)
-        .bind(random_id(&mut rng))
+        .bind(id)
         .fetch_one(&mut *db.acquire().await.unwrap())
         .await
         .expect("error loading world");

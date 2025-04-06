@@ -1,6 +1,6 @@
 [package]
 name = "axum-techempower"
-version = "0.2.1"
+version = "0.3.0"
 authors = ["Dragos Varovici <dvarovici.work@gmail.com>"]
 edition = "2024"
 

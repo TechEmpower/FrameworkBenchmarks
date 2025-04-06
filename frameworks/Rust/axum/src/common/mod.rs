@@ -1,7 +1,7 @@
 use std::{env, str::FromStr};
 
 use core::fmt::Debug;
-use rand::{distr::Uniform, rngs::SmallRng, Rng};
+use rand::{distr::Uniform, rngs::SmallRng, Rng, RngCore};
 pub mod models;
 pub mod utils;
 
@@ -36,7 +36,7 @@ where
 /// Generate a single integer in the range 1 to 10,000 (inclusive)
 #[allow(dead_code)]
 #[inline(always)]
-pub fn random_id(rng: &mut SmallRng) -> i32 {
+pub fn random_id(rng: &mut impl RngCore) -> i32 {
     rng.random_range(1..=10_000)
 }
 
