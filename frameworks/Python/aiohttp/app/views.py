@@ -53,7 +53,7 @@ def get_num_queries(request):
 
 def json_response(payload):
     return Response(
-        body=orjson.dumps(payload),
+        body=dumps(payload),
         content_type="application/json",
     )
 
@@ -62,7 +62,7 @@ async def json(request):
     """
     Test 1
     """
-    return json_response({'message': 'Hello, World!'}, dumps=dumps)
+    return json_response({'message': 'Hello, World!'})
 
 
 async def single_database_query_orm(request):
