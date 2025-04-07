@@ -43,8 +43,8 @@ sealed class MyHttpService : HttpService<MyHttpSessionClient>
 
 sealed class MyHttpSessionClient : HttpSessionClient
 {
-    HttpContent m_contentPlaintext = StringHttpContent.FromText("Hello, World!");
-    HttpContent m_contentJson = StringHttpContent.FromJson("{\"Message\":\"Hello, World!\"}");
+    private HttpContent m_contentPlaintext = StringHttpContent.FromText("Hello, World!");
+    private HttpContent m_contentJson = StringHttpContent.FromJson("{\"Message\":\"Hello, World!\"}");
 
     protected override async Task OnReceivedHttpRequest(HttpContext httpContext)
     {
@@ -55,15 +55,19 @@ sealed class MyHttpSessionClient : HttpSessionClient
         {
             case "/plaintext":
                 {
-                    response.SetStatus(200, "success");
-                    response.SetContent(m_contentPlaintext);
+                    response.StatusCode = 200;
+                    response.StatusMessage = "success";
+                    response.Headers.Add(HttpHeaders.Server, HttpExtensions.HttpHeadersServer);
+                    response.Content = m_contentPlaintext;
                     await response.AnswerAsync().ConfigureAwait(false);
                 }
                 break;
             case "/json":
                 {
-                    response.SetStatus(200, "success");
-                    response.SetContent(m_contentJson);
+                    response.StatusCode = 200;
+                    response.StatusMessage = "success";
+                    response.Headers.Add(HttpHeaders.Server, HttpExtensions.HttpHeadersServer);
+                    response.Content = m_contentJson;
                     await response.AnswerAsync().ConfigureAwait(false);
                 }
                 break;
