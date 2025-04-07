@@ -22,7 +22,6 @@ dumps = orjson.dumps
 randint = random.randint
 sample = random.sample
 Response = aiohttp.web.Response
-json_response = aiohttp.web.json_response
 select = sqlalchemy.select
 flag_modified = sqlalchemy.orm.attributes.flag_modified
 Fortune = models.Fortune
@@ -50,6 +49,14 @@ def get_num_queries(request):
     if num_queries > 500:
         return 500
     return num_queries
+
+
+def json_response(payload):
+    return Response(
+        body=orjson.dumps(payload),
+        content_type="application/json",
+    )
+
 
 async def json(request):
     """
@@ -170,9 +177,9 @@ async def updates_raw(request):
 
     async with request.app['pg'].acquire() as conn:
         stmt = await conn.prepare(READ_ROW_SQL)
-        for row_id in ids:
+        for id_, _ in updates:
             # the result of this is the int previous random number which we don't actually use
-            await stmt.fetchval(row_id)
+            await stmt.fetchval(id_)
         await conn.executemany(WRITE_ROW_SQL, updates)
 
     return json_response(worlds)
