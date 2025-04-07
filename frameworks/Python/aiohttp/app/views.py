@@ -6,7 +6,7 @@ import aiohttp.web
 import jinja2
 import sqlalchemy
 import sqlalchemy.orm
-import ujson
+import orjson
 
 from . import models
 
@@ -29,7 +29,7 @@ sort_fortunes_raw = itemgetter('message')
 # 2000000 loops, best of 5: 161 nsec per loop
 # > python3 -m timeit 'import random; sample = random.sample' 'sample'
 # 2000000 loops, best of 5: 161 nsec per loop
-dumps = ujson.dumps
+dumps = orjson.dumps
 randint = random.randint
 sample = random.sample
 Response = aiohttp.web.Response
@@ -50,7 +50,6 @@ def get_num_queries(request):
     if num_queries > 500:
         return 500
     return num_queries
-
 
 async def json(request):
     """
@@ -91,7 +90,7 @@ async def multiple_database_queries_orm(request):
     result = []
     async with request.app['db_session']() as sess:
         for id_ in ids:
-            num = await sess.scalar(READ_SELECT_ORM.filter_by(id=id_))
+            num = await sess.scalar(READ_SELECT_ORM.where(World.id == id_))
             result.append({'id': id_, 'randomNumber': num})
     return json_response(result)
 
@@ -171,9 +170,9 @@ async def updates_raw(request):
 
     async with request.app['pg'].acquire() as conn:
         stmt = await conn.prepare(READ_ROW_SQL)
-        for id_, _ in updates:
+        for row_id in ids:
             # the result of this is the int previous random number which we don't actually use
-            await stmt.fetchval(id_)
+            await stmt.fetchval(row_id)
         await conn.executemany(WRITE_ROW_SQL, updates)
 
     return json_response(worlds)

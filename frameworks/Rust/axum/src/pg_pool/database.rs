@@ -5,7 +5,6 @@ use crate::{
     pg_pool::models::{Fortune, World},
 };
 use axum::{
-    async_trait,
     extract::FromRequestParts,
     http::{request::Parts, StatusCode},
 };
@@ -55,7 +54,6 @@ pub async fn create_pool(
 
 pub struct DatabaseClient(pub Client);
 
-#[async_trait]
 impl FromRequestParts<deadpool_postgres::Pool> for DatabaseClient {
     type Rejection = (StatusCode, String);
 
