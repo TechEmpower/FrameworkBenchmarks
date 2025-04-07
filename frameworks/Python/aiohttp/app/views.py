@@ -10,17 +10,6 @@ import orjson
 
 from . import models
 
-ADDITIONAL_FORTUNE_ORM = Fortune(id=0, message='Additional fortune added at request time.')
-ADDITIONAL_FORTUNE_ROW = {'id': 0, 'message': 'Additional fortune added at request time.'}
-READ_ROW_SQL = 'SELECT "randomnumber", "id" FROM "world" WHERE id = $1'
-READ_SELECT_ORM = select(World.randomnumber)
-WRITE_ROW_SQL = 'UPDATE "world" SET "randomnumber"=$2 WHERE id=$1'
-
-template_path = Path(__file__).parent / 'templates' / 'fortune.jinja'
-template = jinja2.Template(template_path.read_text())
-sort_fortunes_orm = attrgetter('message')
-sort_fortunes_raw = itemgetter('message')
-
 # In current versions of Python (tested 3.9 and 3.12), from ... import ...
 # creates variables that are atleast 4x slower to reference:
 # > python3 -m timeit 'from random import sample' 'sample'
@@ -38,6 +27,17 @@ select = sqlalchemy.select
 flag_modified = sqlalchemy.orm.attributes.flag_modified
 Fortune = models.Fortune
 World = models.World
+
+ADDITIONAL_FORTUNE_ORM = Fortune(id=0, message='Additional fortune added at request time.')
+ADDITIONAL_FORTUNE_ROW = {'id': 0, 'message': 'Additional fortune added at request time.'}
+READ_ROW_SQL = 'SELECT "randomnumber", "id" FROM "world" WHERE id = $1'
+READ_SELECT_ORM = select(World.randomnumber)
+WRITE_ROW_SQL = 'UPDATE "world" SET "randomnumber"=$2 WHERE id=$1'
+
+template_path = Path(__file__).parent / 'templates' / 'fortune.jinja'
+template = jinja2.Template(template_path.read_text())
+sort_fortunes_orm = attrgetter('message')
+sort_fortunes_raw = itemgetter('message')
 
 
 def get_num_queries(request):
