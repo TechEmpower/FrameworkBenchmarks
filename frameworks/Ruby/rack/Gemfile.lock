@@ -32,6 +32,7 @@ GEM
     async-service (0.13.0)
       async
       async-container (~> 0.16)
+    base64 (0.2.0)
     bigdecimal (3.1.9)
     concurrent-ruby (1.3.5)
     connection_pool (2.5.0)
@@ -75,6 +76,10 @@ GEM
     parser (3.3.7.1)
       ast (~> 2.4.1)
       racc
+    passenger (6.0.26)
+      rack (>= 1.6.13)
+      rackup (>= 2.0.0)
+      rake (>= 12.3.3)
     pg (1.5.9)
     pitchfork (0.17.0)
       logger
@@ -95,8 +100,11 @@ GEM
     rack (3.1.11)
     rack-test (2.2.0)
       rack (>= 1.3)
+    rackup (2.2.1)
+      rack (>= 3)
     rainbow (3.1.1)
     raindrops (0.20.1)
+    rake (13.2.1)
     regexp_parser (2.10.0)
     rubocop (1.73.2)
       json (~> 2.3)
@@ -137,11 +145,13 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  base64
   connection_pool (~> 2.4)
   falcon (~> 0.47)
   iodine (~> 0.7)
   jdbc-postgres (~> 42.2)
   json (~> 2.10)
+  passenger (~> 6.0)
   pg (~> 1.5)
   pitchfork (~> 0.17)
   puma (~> 6.5)

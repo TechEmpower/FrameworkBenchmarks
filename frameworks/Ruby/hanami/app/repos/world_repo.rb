@@ -7,13 +7,12 @@ module HelloWorld
         worlds.by_pk(id).one
       end
 
-      def update(id)
-        world = worlds.by_pk(id)
-        world_hash = world.one.to_h
+      def update_random_number(id)
+        world = find(id)
+        world_hash = world.to_h
         new_value = random_id
         new_value = random_id while new_value == world_hash[:randomnumber]
-        world_hash[:randomnumber] = new_value
-        world.changeset(:update, **world_hash).commit
+        worlds.where(id: id).update({ randomnumber: new_value })
         world_hash
       end
 
