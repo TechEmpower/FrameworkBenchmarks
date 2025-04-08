@@ -2,6 +2,7 @@ using System.Text;
 using TouchSocket.Core;
 using TouchSocket.Http;
 using TouchSocket.Sockets;
+using static System.Net.Mime.MediaTypeNames;
 using HttpContent = TouchSocket.Http.HttpContent;
 
 namespace TouchSocketHttp;
@@ -12,6 +13,7 @@ public class Program
     {
         int port = 8080;
 
+        Console.WriteLine(DateHelper.DateString);
         var service = new MyHttpService();
 
         await service.SetupAsync(new TouchSocketConfig()
@@ -43,8 +45,8 @@ sealed class MyHttpService : HttpService<MyHttpSessionClient>
 
 sealed class MyHttpSessionClient : HttpSessionClient
 {
-    private HttpContent m_contentPlaintext = StringHttpContent.FromText("Hello, World!");
-    private HttpContent m_contentJson = StringHttpContent.FromJson("{\"Message\":\"Hello, World!\"}");
+    private readonly HttpContent m_contentPlaintext = new StringHttpContent("Hello, World!", Encoding.UTF8, $"text/plain");
+    private readonly HttpContent m_contentJson = new StringHttpContent("{\"message\":\"Hello, World!\"}", Encoding.UTF8, $"application/json");
 
     protected override async Task OnReceivedHttpRequest(HttpContext httpContext)
     {
@@ -57,7 +59,8 @@ sealed class MyHttpSessionClient : HttpSessionClient
                 {
                     response.StatusCode = 200;
                     response.StatusMessage = "success";
-                    response.Headers.Add(HttpHeaders.Server, HttpExtensions.HttpHeadersServer);
+                    response.Headers.Add(HttpHeaders.Server, "T");
+                    response.Headers.Add(HttpHeaders.Date, DateHelper.DateString);
                     response.Content = m_contentPlaintext;
                     await response.AnswerAsync().ConfigureAwait(false);
                 }
@@ -66,7 +69,8 @@ sealed class MyHttpSessionClient : HttpSessionClient
                 {
                     response.StatusCode = 200;
                     response.StatusMessage = "success";
-                    response.Headers.Add(HttpHeaders.Server, HttpExtensions.HttpHeadersServer);
+                    response.Headers.Add(HttpHeaders.Server, "T");
+                    response.Headers.Add(HttpHeaders.Date, DateHelper.DateString);
                     response.Content = m_contentJson;
                     await response.AnswerAsync().ConfigureAwait(false);
                 }
@@ -77,5 +81,19 @@ sealed class MyHttpSessionClient : HttpSessionClient
                 break;
         }
     }
+}
+
+static class DateHelper
+{
+    static Timer m_timer;
+    static DateHelper()
+    {
+        m_timer = new Timer((state) =>
+            {
+                DateString = DateTime.UtcNow.ToGMTString();
+            }, null, 0, 1000);
+    }
+
+    public static string DateString { get; private set; }
 }
 

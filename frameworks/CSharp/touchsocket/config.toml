@@ -1,7 +1,7 @@
 [framework]
 name = "touchsocket"
 
-[main]
+[webapi]
 urls.plaintext = "/plaintext"
 urls.json = "/json"
 approach = "Realistic"
@@ -18,7 +18,7 @@ versus = "aspcore-mvc"
 urls.plaintext = "/plaintext"
 urls.json = "/json"
 approach = "Realistic"
-classification = "Platform"
+classification = "Micro"
 database = "Postgres"
 database_os = "Linux"
 os = "Linux"

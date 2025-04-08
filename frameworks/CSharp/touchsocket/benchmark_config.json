@@ -2,12 +2,12 @@
   "framework": "touchsocket",
   "tests": [
     {
-      "default": {
+      "webapi": {
         "plaintext_url": "/plaintext",
         "json_url": "/json",
         "port": 8080,
         "approach": "Realistic",
-        "classification": "Platform",
+        "classification": "Fullstack",
         "framework": "touchsocket.webapi",
         "language": "C#",
         "orm": "Raw",

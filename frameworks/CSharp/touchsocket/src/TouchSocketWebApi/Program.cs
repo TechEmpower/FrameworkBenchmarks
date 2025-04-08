@@ -1,3 +1,4 @@
+using System.Text;
 using System.Text.Json.Serialization;
 using TouchSocket.Core;
 using TouchSocket.Http;
@@ -5,6 +6,7 @@ using TouchSocket.Rpc;
 using TouchSocket.Sockets;
 using TouchSocket.WebApi;
 using TouchSocket.WebApi.Swagger;
+using HttpContent = TouchSocket.Http.HttpContent;
 
 namespace TouchSocketWebApi;
 
@@ -58,13 +60,18 @@ public class Program
 
 public partial class ApiServer : RpcServer
 {
+    private HttpContent m_contentPlaintext = new StringHttpContent("Hello, World!", Encoding.UTF8, $"text/plain");
+   
     public static MyJson MyJson { get; set; } = new MyJson() { Message = "Hello, World!" };
 
     [Router("/plaintext")]
     [WebApi(Method = HttpMethodType.Get)]
-    public string Plaintext()
+    public async Task Plaintext(IWebApiCallContext callContext)
     {
-        return "Hello, World!";
+       var response= callContext.HttpContext.Response;
+        response.SetStatus(200, "success");
+        response.Content= m_contentPlaintext;
+        await response.AnswerAsync();
     }
 
     [Router("/json")]
