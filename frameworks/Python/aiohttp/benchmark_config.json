@@ -15,15 +15,15 @@
       "framework": "aiohttp",
       "language": "Python",
       "flavor": "Python3",
-      "orm": "Full",
+      "orm": "Raw",
       "platform": "asyncio",
       "webserver": "gunicorn",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "aiohttp",
-      "notes": "uses aiopg with sqlalchemy for database access"
+      "notes": "uses asyncpg for database access"
     },
-    "pg-raw": {
+    "orm": {
       "db_url": "/db",
       "query_url": "/queries/",
       "fortune_url": "/fortunes",
@@ -35,13 +35,13 @@
       "framework": "aiohttp",
       "language": "Python",
       "flavor": "Python3",
-      "orm": "Raw",
+      "orm": "Full",
       "platform": "asyncio",
       "webserver": "gunicorn",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "aiohttp-pg-raw",
-      "notes": "uses asyncpg for database access",
+      "display_name": "aiohttp-orm",
+      "notes": "uses sqlalchemy for database access",
       "versus": "default"
     }
   }]
