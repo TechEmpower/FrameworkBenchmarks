@@ -18,6 +18,23 @@ platform = "asyncio"
 webserver = "gunicorn"
 versus = "None"
 
+[nginx]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+urls.db = "/db"
+urls.query = "/queries/"
+urls.update = "/updates/"
+urls.fortune = "/fortunes"
+approach = "Realistic"
+classification = "Micro"
+database = "Postgres"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "asyncio"
+webserver = "nginx"
+versus = "None"
+
 [orm]
 urls.db = "/db"
 urls.query = "/queries/"
