@@ -4,21 +4,24 @@ CORES=$(nproc)
 echo "$CORES cores detected, starting $CORES aiohttp workers..."
 
 for i in $(seq 0 $((CORES-1))); do
-  PORT=$((8000 + i))
-  echo "Starting worker on port $PORT"
-  python3 -O -m app.app --port $PORT &
+  SOCKET="/run/aiohttp-$i.sock"
+  echo "Starting worker on socket $SOCKET"
+  python3 -O -m app.app --socket $SOCKET &
 done
 
 echo "Waiting for all workers to be ready..."
 for i in $(seq 0 $((CORES-1))); do
-  PORT=$((8000 + i))
-  until nc -z localhost $PORT; do
-    echo "Waiting for port $PORT..."
+  SOCKET="/run/aiohttp-$i.sock"
+  until [ -S "$SOCKET" ]; do
+    echo "Waiting for socket $SOCKET..."
     sleep 0.1
   done
+  chown root:www-data "$SOCKET"
+  chmod 660 "$SOCKET"
 done
 
 cat > /aiohttp/nginx.conf <<EOF
+user www-data;
 worker_processes auto;
 
 events {
@@ -33,7 +36,7 @@ http {
 EOF
 
 for i in $(seq 0 $((CORES-1))); do
-  echo "        server 127.0.0.1:$((8000 + i));" >> /aiohttp/nginx.conf
+  echo "        server unix:/run/aiohttp-$i.sock fail_timeout=0;" >> /aiohttp/nginx.conf
 done
 
 cat >> /aiohttp/nginx.conf <<EOF

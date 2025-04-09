@@ -1,8 +1,6 @@
 FROM python:3.13
 
-RUN apt-get update && apt-get install -y \
-    nginx \
-    netcat-openbsd
+RUN apt-get update && apt-get install -y nginx
 
 ADD ./requirements.txt /aiohttp/requirements.txt
 
