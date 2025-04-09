@@ -18,35 +18,44 @@ for i in $(seq 0 $((CORES-1))); do
   done
 done
 
-# Generate Nginx configuration
-cat > /etc/nginx/conf.d/default.conf <<EOF
-keepalive_requests 10000000;
+cat > /aiohttp/nginx.conf <<EOF
+worker_processes auto;
 
-upstream aiohttp {
-    least_conn;
-EOF
-for i in $(seq 0 $((CORES-1))); do
-  echo "    server 127.0.0.1:$((8000 + i));" >> /etc/nginx/conf.d/default.conf
-done
-cat >> /etc/nginx/conf.d/default.conf <<EOF
-    keepalive 32;
+events {
+    worker_connections 65535;
 }
 
-server {
-    listen 8080;
+http {
+    keepalive_requests 10000000;
 
-    access_log off;
-    error_log stderr error;
+    upstream aiohttp {
+        least_conn;
+EOF
 
-    location / {
-        proxy_pass http://aiohttp;
-        proxy_http_version 1.1;
-        proxy_set_header Connection "";
-        proxy_redirect off;
-        proxy_buffering off;
+for i in $(seq 0 $((CORES-1))); do
+  echo "        server 127.0.0.1:$((8000 + i));" >> /aiohttp/nginx.conf
+done
+
+cat >> /aiohttp/nginx.conf <<EOF
+        keepalive 32;
+    }
+
+    server {
+        listen 8080 reuseport;
+
+        access_log off;
+        error_log stderr error;
+
+        location / {
+            proxy_pass http://aiohttp;
+            proxy_http_version 1.1;
+            proxy_set_header Connection "";
+            proxy_redirect off;
+            proxy_buffering off;
+        }
     }
 }
 EOF
 
 echo "Starting Nginx..."
-nginx -g "daemon off;"
+nginx -c /aiohttp/nginx.conf -g "daemon off;"
