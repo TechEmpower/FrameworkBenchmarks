@@ -20,14 +20,13 @@ done
 
 # Generate Nginx configuration
 cat > /etc/nginx/conf.d/default.conf <<EOF
+keepalive_requests 10000000;
 
 upstream aiohttp {
     least_conn;
 EOF
-i=0
-while [ $i -lt $CORES ]; do
+for i in $(seq 0 $((CORES-1))); do
   echo "    server 127.0.0.1:$((8000 + i));" >> /etc/nginx/conf.d/default.conf
-  i=$((i + 1))
 done
 cat >> /etc/nginx/conf.d/default.conf <<EOF
     keepalive 32;
@@ -37,7 +36,7 @@ server {
     listen 8080;
 
     access_log off;
-    error_log /var/log/nginx/error.log crit;
+    error_log stderr error;
 
     location / {
         proxy_pass http://aiohttp;
