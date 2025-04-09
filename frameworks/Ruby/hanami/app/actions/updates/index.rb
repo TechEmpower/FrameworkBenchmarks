@@ -13,7 +13,7 @@ module HelloWorld
 
         def handle(request, response)
           worlds = ALL_IDS.sample(queries(request)).map do |id|
-            world_repo.update(id)
+            world_repo.update_random_number(id)
           end
           response.format = :json
           response.body = worlds.to_json

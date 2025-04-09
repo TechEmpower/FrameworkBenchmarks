@@ -1,8 +1,8 @@
 #ifndef ORM_DEFAULT_WORLDBASEMATA_H
 #define ORM_DEFAULT_WORLDBASEMATA_H
 /*
-*This file is auto create from cli
-*本文件为自动生成 Wed, 26 Mar 2025 14:12:09 GMT
+*This file is auto create from paozhu_cli
+*本文件为自动生成 Tue, 08 Apr 2025 07:55:59 GMT
 ***/
 #include <iostream>
 #include <cstdio>

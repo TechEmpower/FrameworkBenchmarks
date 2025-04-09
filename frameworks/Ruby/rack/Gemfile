@@ -22,6 +22,11 @@ group :iodine, optional: true do
   gem 'iodine', '~> 0.7', platforms: %i[ruby mswin]
 end
 
+group :passenger, optional: true do
+  gem 'base64' # required by passenger on Ruby 3.4
+  gem 'passenger', '~> 6.0', platforms: [:ruby, :mswin], require: false
+end
+
 group :pitchfork, optional: true do
   gem 'pitchfork', '~> 0.17'
 end

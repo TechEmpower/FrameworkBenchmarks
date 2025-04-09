@@ -77,8 +77,7 @@ async fn updates(req: Request) -> Result<Response> {
     Ok(res)
 }
 
-#[tokio::main]
-async fn main() {
+async fn app() {
     let max = available_parallelism().map(|n| n.get()).unwrap_or(16) as u32;
 
     let pool = Pool::<AsyncPgConnection>::builder()
@@ -98,4 +97,8 @@ async fn main() {
         .with(State::new(rng));
 
     server::serve(app).await.unwrap()
+}
+
+fn main() {
+    server::run(app)
 }

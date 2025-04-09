@@ -10,6 +10,6 @@ FROM amazoncorretto:21-al2023-headless
 WORKDIR /app
 COPY --from=build /app/build/libs/ktor-pgclient.jar ktor-pgclient.jar
 
-EXPOSE 8080
+EXPOSE 9090
 
 CMD ["java", "-server","-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AlwaysPreTouch", "-jar", "ktor-pgclient.jar"]

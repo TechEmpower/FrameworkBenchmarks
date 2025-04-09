@@ -34,7 +34,7 @@ serde_json = "1.0.140"
 socket2 = { version = "0.5.8", features = ["all"] }
 strum = { version = "0.27.1", features = ["derive"] }
 thiserror = "2.0.12"
-tokio = { version = "1.44.1", features = [
+tokio = { version = "1.44.2", features = [
     "rt",
     "rt-multi-thread",
     "net",

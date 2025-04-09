@@ -25,17 +25,7 @@ class HelloWorld
   PLAINTEXT_TYPE = 'text/plain'
   DATE = 'Date'
   SERVER = 'Server'
-  SERVER_STRING = if defined?(Puma)
-                    'Puma'
-                  elsif defined?(Iodine)
-                    'Iodine'
-                  elsif defined?(Unicorn)
-                    'Unicorn'
-                  elsif defined?(Falcon)
-                    'Falcon'
-                  else
-                    'Ruby Rack'
-                  end
+  SERVER_STRING = 'Rack'
   TEMPLATE_PREFIX = '<!DOCTYPE html>
 <html>
 <head>

@@ -3,30 +3,15 @@ import com.github.jasync.sql.db.QueryResult
 import com.github.jasync.sql.db.SuspendingConnection
 import com.github.jasync.sql.db.asSuspending
 import com.github.jasync.sql.db.postgresql.PostgreSQLConnectionBuilder
-import io.ktor.http.ContentType
 import io.ktor.server.application.*
-import io.ktor.server.engine.embeddedServer
 import io.ktor.server.html.*
-import io.ktor.server.netty.Netty
 import io.ktor.server.plugins.defaultheaders.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.coroutines.*
 import kotlinx.html.*
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
-import java.lang.IllegalArgumentException
 import kotlin.random.Random
 import kotlin.random.nextInt
-
-@Serializable
-data class Message(val message: String)
-
-@Serializable
-data class World(val id: Int, val randomNumber: Int)
-
-data class Fortune(val id: Int, val message: String)
 
 val rand = Random(1)
 
@@ -121,57 +106,46 @@ class FortuneTemplate(private val fortunes: List<Fortune>, private val main: Mai
     }
 }
 
-fun main(args: Array<String>) {
-    val db = when(args.firstOrNull()) {
-        "jasync-sql" -> JasyncRepository()
-        else -> throw IllegalArgumentException("Must specify a postgres client")
-    }
+fun Application.main() {
 
-    val server = embeddedServer(Netty, 8080, configure = {
-        shareWorkGroup = true
-    }) {
-        install(DefaultHeaders)
-        routing {
-            get("/plaintext") {
-                call.respondText("Hello, World!")
-            }
+    val db = JasyncRepository()
 
-            get("/json") {
-                call.respondText(
-                    Json.encodeToString(Message("Hello, World!")),
-                    ContentType.Application.Json
-                )
-            }
+    install(DefaultHeaders)
+    routing {
+        get("/plaintext") {
+            call.respondText("Hello, World!")
+        }
 
-            get("/db") {
-                call.respondText(Json.encodeToString(db.getWorld()), ContentType.Application.Json)
-            }
+        get("/json") {
+            call.respondJson(Message("Hello, World!"))
+        }
 
-            get("/query/") {
-                val queries = call.parameters["queries"]?.toBoxedInt(1..500) ?: 1
-                val worlds = (1..queries).map { db.getWorld() }
-                call.respondText(Json.encodeToString(worlds), ContentType.Application.Json)
-            }
+        get("/db") {
+            call.respondJson(db.getWorld())
+        }
 
-            get("/fortunes") {
-                val newFortune = Fortune(0, "Additional fortune added at request time.")
-                val fortunes = db.getFortunes().toMutableList()
-                fortunes.add(newFortune)
-                fortunes.sortBy { it.message }
-                call.respondHtmlTemplate(FortuneTemplate(fortunes)) { }
-            }
+        get("/query/") {
+            val queries = call.parameters["queries"]?.toBoxedInt(1..500) ?: 1
+            val worlds = (1..queries).map { db.getWorld() }
+            call.respondJson(worlds)
+        }
 
-            get("/updates") {
-                val queries = call.parameters["queries"]?.toBoxedInt(1..500) ?: 1
-                val worlds = (1..queries).map { db.getWorld() }
-                val newWorlds = worlds.map { it.copy(randomNumber = rand.nextInt(1..10000)) }
+        get("/fortunes") {
+            val newFortune = Fortune(0, "Additional fortune added at request time.")
+            val fortunes = db.getFortunes().toMutableList()
+            fortunes.add(newFortune)
+            fortunes.sortBy { it.message }
+            call.respondHtmlTemplate(FortuneTemplate(fortunes)) { }
+        }
 
-                db.updateWorlds(newWorlds)
+        get("/updates") {
+            val queries = call.parameters["queries"]?.toBoxedInt(1..500) ?: 1
+            val worlds = (1..queries).map { db.getWorld() }
+            val newWorlds = worlds.map { it.copy(randomNumber = rand.nextInt(1..10000)) }
 
-                call.respondText(Json.encodeToString(newWorlds), ContentType.Application.Json)
-            }
+            db.updateWorlds(newWorlds)
+
+            call.respondJson(newWorlds)
         }
     }
-
-    server.start(wait = true)
 }

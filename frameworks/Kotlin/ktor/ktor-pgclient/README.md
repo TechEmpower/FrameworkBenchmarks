@@ -7,27 +7,27 @@ The client features batching, pipelining and supports coroutines.
 
 ### Plain Text Test
 
-    http://localhost:8080/plaintext
+    http://localhost:9090/plaintext
 
 ### JSON Encoding Test
 
-    http://localhost:8080/json
+    http://localhost:9090/json
 
 ### Single Query Test
 
-    http://localhost:8080/db
+    http://localhost:9090/db
 
 ### Multiple Queries Test
 
-    http://localhost:8080/query?queries=
+    http://localhost:9090/query?queries=
 
 ### Database updates Test
 
-    http://localhost:8080/updates?queries=
+    http://localhost:9090/updates?queries=
 
 ### Fortunes Test
 
-    http://localhost:8080/fortunes
+    http://localhost:9090/fortunes
 
 ## build
 
