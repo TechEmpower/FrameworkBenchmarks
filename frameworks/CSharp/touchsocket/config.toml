@@ -1,7 +1,7 @@
 [framework]
 name = "touchsocket"
 
-[webapi]
+[main]
 urls.plaintext = "/plaintext"
 urls.json = "/json"
 approach = "Realistic"
