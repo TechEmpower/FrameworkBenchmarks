@@ -17,13 +17,13 @@
       "flavor": "Python3",
       "orm": "Raw",
       "platform": "asyncio",
-      "webserver": "gunicorn",
+      "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "aiohttp",
       "notes": "uses asyncpg for database access"
     },
-    "nginx": {
+    "gunicorn": {
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries/",
@@ -42,8 +42,8 @@
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "aiohttp-nginx",
-      "notes": "uses nginx as proxy server",
+      "display_name": "aiohttp-gunicorn",
+      "notes": "uses gunicorn as proxy server",
       "versus": "default"
     },
     "orm": {
@@ -60,7 +60,7 @@
       "flavor": "Python3",
       "orm": "Full",
       "platform": "asyncio",
-      "webserver": "gunicorn",
+      "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "aiohttp-orm",

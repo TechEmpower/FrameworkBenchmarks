@@ -14,7 +14,7 @@ for i in $(seq 0 $((CORES-1))); do
   SOCKET="/run/aiohttp-$i.sock"
   until [ -S "$SOCKET" ]; do
     echo "Waiting for socket $SOCKET..."
-    sleep 0.1
+    sleep 0.2
   done
   chown root:www-data "$SOCKET"
   chmod 660 "$SOCKET"
