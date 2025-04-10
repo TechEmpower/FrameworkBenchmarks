@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<OutputType>Exe</OutputType>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<InvariantGlobalization>true</InvariantGlobalization>
+		<!--<PublishAot>true</PublishAot>-->
+		<UserSecretsId>dotnet-TouchSocketWebApi-987c185f-10b1-452b-beb6-47d798a5a131</UserSecretsId>
+		<ServerGarbageCollection>true</ServerGarbageCollection>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="TouchSocket.Http" Version="3.0.24" />
+	</ItemGroup>
+</Project>
