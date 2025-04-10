@@ -1,5 +1,5 @@
 # build layer
-FROM docker.io/golang:1.19-alpine as builder
+FROM docker.io/golang:1.24.2-alpine as builder
 
 WORKDIR /gin
 COPY ./gin-std /gin

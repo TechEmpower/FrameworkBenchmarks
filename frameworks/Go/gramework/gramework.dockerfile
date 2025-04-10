@@ -1,4 +1,4 @@
-FROM golang:1.12
+FROM golang:1.24.2
 
 WORKDIR /gramework
 

@@ -1,4 +1,4 @@
-FROM golang:1.23-alpine as builder
+FROM golang:1.24.2-alpine as builder
 
 WORKDIR /fiber
 
