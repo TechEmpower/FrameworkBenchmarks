@@ -7,6 +7,7 @@ import java.util.Arrays;
 
 import com.jsoniter.output.JsonStream;
 import com.jsoniter.output.JsonStreamPool;
+import com.jsoniter.spi.Config;
 import com.jsoniter.spi.JsonException;
 
 import io.netty.util.concurrent.FastThreadLocal;
@@ -35,7 +36,13 @@ public class JsonUtils {
    public static JsonStream acquireJsonStreamFromEventLoop() {
       var stream = JSON_STREAM.get();
       if (stream == null) {
-         stream = new JsonStream(null, 512);
+         stream = new JsonStream(null, 512) {
+            // this is to save virtual threads to use thread locals
+            @Override
+            public Config currentConfig() {
+               return Config.INSTANCE;
+            }
+         };
       } else {
          stream.reset(null);
          JSON_STREAM.set(null);

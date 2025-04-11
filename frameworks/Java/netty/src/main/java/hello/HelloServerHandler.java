@@ -1,12 +1,9 @@
 package hello;
 
-import static hello.Constants.STATIC_PLAINTEXT;
-import static hello.Constants.newMsg;
 import static hello.HttpResponses.makeJsonResponse;
 import static hello.HttpResponses.makePlaintextResponse;
 import static hello.JsonUtils.acquireJsonStreamFromEventLoop;
 import static hello.JsonUtils.releaseJsonStreamFromEventLoop;
-import static hello.JsonUtils.serializeMsg;
 import static io.netty.handler.codec.http.HttpResponseStatus.NOT_FOUND;
 import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 
@@ -17,7 +14,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import com.jsoniter.output.JsonStream;
-import com.jsoniter.output.JsonStreamPool;
 
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;

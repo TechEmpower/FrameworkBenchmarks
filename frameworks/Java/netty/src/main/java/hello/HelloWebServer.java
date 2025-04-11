@@ -16,9 +16,21 @@ import io.netty.util.ResourceLeakDetector.Level;
 public class HelloWebServer {
 
 	private static final boolean EVENT_LOOP_CARRIER = Boolean.getBoolean("hello.eventloop.carrier");
+	private static final IoMultiplexer PREFERRED_TRANSPORT;
 
 	static {
 		ResourceLeakDetector.setLevel(Level.DISABLED);
+		String transportName = System.getProperty("hello.transport");
+		if (transportName != null) {
+			try {
+				PREFERRED_TRANSPORT = IoMultiplexer.valueOf(transportName);
+			} catch (IllegalArgumentException e) {
+				System.err.println("Invalid transport name: " + transportName);
+				throw e;
+			}
+		} else {
+			PREFERRED_TRANSPORT = IoMultiplexer.type();
+		}
 	}
 
 	private final int port;
@@ -28,24 +40,24 @@ public class HelloWebServer {
 	}
 
 	public void run() throws Exception {
-		final var type = IoMultiplexer.type();
-		System.out.printf("Using %s IoMultiplexer%n", type);
+		final var preferredTransport = PREFERRED_TRANSPORT;
+		System.out.printf("Using %s IoMultiplexer%n", preferredTransport);
 		final int coreCount = Runtime.getRuntime().availableProcessors();
 		final var group = EVENT_LOOP_CARRIER?
-				type.newVirtualEventExecutorGroup(coreCount) :
-				type.newEventLoopGroup(coreCount);
+				preferredTransport.newVirtualEventExecutorGroup(coreCount) :
+				preferredTransport.newEventLoopGroup(coreCount);
 		if (EVENT_LOOP_CARRIER) {
 			LoomSupport.checkSupported();
 			System.out.println("Using EventLoop optimized for Loom");
 		}
 		try {
-			final var serverChannelClass = type.serverChannelClass();
+			final var serverChannelClass = preferredTransport.serverChannelClass();
 			var inet = new InetSocketAddress(port);
 			var b = new ServerBootstrap();
 
 			b.option(ChannelOption.SO_BACKLOG, 8192);
 			b.option(ChannelOption.SO_REUSEADDR, true);
-			switch (type) {
+			switch (preferredTransport) {
 				case EPOLL:
 					b.option(EpollChannelOption.SO_REUSEPORT, true);
 					break;
