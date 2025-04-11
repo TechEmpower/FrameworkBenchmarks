@@ -64,13 +64,13 @@ async def db_ctx(app: web.Application):
 
 def setup_routes(app):
     if CONNECTION_ORM:
-        app.router.add_get('/json', json)
         app.router.add_get('/db', single_database_query_orm)
         app.router.add_get('/queries/{queries:.*}', multiple_database_queries_orm)
         app.router.add_get('/fortunes', fortunes)
         app.router.add_get('/updates/{queries:.*}', updates)
-        app.router.add_get('/plaintext', plaintext)
     else:
+        app.router.add_get('/json', json)
+        app.router.add_get('/plaintext', plaintext)
         app.router.add_get('/db', single_database_query_raw)
         app.router.add_get('/queries/{queries:.*}', multiple_database_queries_raw)
         app.router.add_get('/fortunes', fortunes_raw)

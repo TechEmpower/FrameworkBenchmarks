@@ -10,22 +10,26 @@
 		<maven.compiler.target>17</maven.compiler.target>
 		<!-- the main class -->
 		<main.class>vertx.App</main.class>
-		<stack.version>4.5.9</stack.version>
+		<vertx.version>5.0.0.CR6</vertx.version>
+		<netty.version>4.2.0.Final</netty.version>
 		<jackson.version>2.16.1</jackson.version>
-		<netty.version>4.1.111.Final</netty.version>
-		<netty.io_uring.version>0.0.25.Final</netty.io_uring.version>
 	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>io.vertx</groupId>
 			<artifactId>vertx-core</artifactId>
-			<version>${stack.version}</version>
+			<version>${vertx.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.vertx</groupId>
+			<artifactId>vertx-core-logging</artifactId>
+			<version>${vertx.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.vertx</groupId>
 			<artifactId>vertx-pg-client</artifactId>
-			<version>${stack.version}</version>
+			<version>${vertx.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.dslplatform</groupId>
@@ -151,14 +155,9 @@
 			</activation>
 			<dependencies>
 				<dependency>
-					<groupId>io.vertx</groupId>
-					<artifactId>vertx-io_uring-incubator</artifactId>
-					<version>${stack.version}</version>
-				</dependency>
-				<dependency>
-					<groupId>io.netty.incubator</groupId>
-					<artifactId>netty-incubator-transport-native-io_uring</artifactId>
-					<version>${netty.io_uring.version}</version>
+					<groupId>io.netty</groupId>
+					<artifactId>netty-transport-native-io_uring</artifactId>
+					<version>${netty.version}</version>
 					<classifier>linux-x86_64</classifier>
 				</dependency>
 			</dependencies>
