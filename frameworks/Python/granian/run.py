@@ -6,7 +6,7 @@ from granian import Granian
 
 if __name__ == '__main__':
     interface = sys.argv[1]
-    threading_mode = sys.argv[2]
+    runtime_mode = sys.argv[2]
     workers = multiprocessing.cpu_count()
 
     if interface == "rsgi":
@@ -23,7 +23,7 @@ if __name__ == '__main__':
         address="0.0.0.0",
         port=8080,
         workers=workers,
-        threading_mode=threading_mode,
+        runtime_mode=runtime_mode,
         blocking_threads=blocking_threads,
         backlog=16384,
         interface=interface,
