@@ -1,2 +1,2 @@
-emmett[orjson]>=2.6.0,<2.7.0
+emmett[orjson,uvloop]>=2.7.0,<2.8.0
 psycopg2-binary==2.9.9
