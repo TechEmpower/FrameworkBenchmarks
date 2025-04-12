@@ -26,6 +26,8 @@ public class HelloServerInitializer extends ChannelInitializer<SocketChannel> {
 						if (lastSeenHeaders != headers) {
 							updateEncodedHttpHeaders(headers, buf);
 						}
+						var encodedHeaders = this.encodedHeaders;
+						buf.ensureWritable(encodedHeaders.readableBytes());
 						encodedHeaders.getBytes(encodedHeaders.readerIndex(), buf, encodedHeaders.readableBytes());
 					}
 
