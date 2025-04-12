@@ -4,8 +4,6 @@ import kotlin.random.Random
 @Serializable
 class Message(val message: String)
 
-val jsonSerializationMessage = Message("Hello, World!")
-
 @Serializable
 data class World(val id: Int, val randomNumber: Int)
 
