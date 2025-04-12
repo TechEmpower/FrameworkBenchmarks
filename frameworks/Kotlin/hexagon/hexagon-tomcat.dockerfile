@@ -1,7 +1,7 @@
 #
 # BUILD
 #
-FROM docker.io/bellsoft/liberica-runtime-container:jdk-all-21-cds-musl AS build
+FROM docker.io/bellsoft/liberica-runtime-container:jdk-all-24-cds-musl AS build
 USER root
 WORKDIR /hexagon
 
