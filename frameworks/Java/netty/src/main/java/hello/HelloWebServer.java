@@ -2,30 +2,35 @@ package hello;
 
 import java.net.InetSocketAddress;
 
+import hello.loom.HelloLoomServerInitializer;
+import hello.loom.LoomSupport;
+import hello.loom.MultithreadVirtualEventExecutorGroup;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.ServerChannel;
-import io.netty.channel.epoll.Epoll;
 import io.netty.channel.epoll.EpollChannelOption;
-import io.netty.channel.epoll.EpollEventLoopGroup;
-import io.netty.channel.epoll.EpollServerSocketChannel;
-import io.netty.channel.kqueue.KQueue;
-import io.netty.channel.kqueue.KQueueServerSocketChannel;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.incubator.channel.uring.IOUring;
-import io.netty.incubator.channel.uring.IOUringChannelOption;
-import io.netty.incubator.channel.uring.IOUringEventLoopGroup;
-import io.netty.incubator.channel.uring.IOUringServerSocketChannel;
+import io.netty.channel.uring.IoUringChannelOption;
 import io.netty.util.ResourceLeakDetector;
 import io.netty.util.ResourceLeakDetector.Level;
 
 public class HelloWebServer {
 
+	private static final boolean EVENT_LOOP_CARRIER = Boolean.getBoolean("hello.eventloop.carrier");
+	private static final IoMultiplexer PREFERRED_TRANSPORT;
+
 	static {
 		ResourceLeakDetector.setLevel(Level.DISABLED);
+		String transportName = System.getProperty("hello.transport");
+		if (transportName != null) {
+			try {
+				PREFERRED_TRANSPORT = IoMultiplexer.valueOf(transportName);
+			} catch (IllegalArgumentException e) {
+				System.err.println("Invalid transport name: " + transportName);
+				throw e;
+			}
+		} else {
+			PREFERRED_TRANSPORT = IoMultiplexer.type();
+		}
 	}
 
 	private final int port;
@@ -35,47 +40,46 @@ public class HelloWebServer {
 	}
 
 	public void run() throws Exception {
-		// Configure the server.
-		if (IOUring.isAvailable()) {
-			doRun(new IOUringEventLoopGroup(Runtime.getRuntime().availableProcessors()), IOUringServerSocketChannel.class, IoMultiplexer.IO_URING);
-		} else
-			if (Epoll.isAvailable()) {
-			doRun(new EpollEventLoopGroup(), EpollServerSocketChannel.class, IoMultiplexer.EPOLL);
-		} else if (KQueue.isAvailable()) {
-			doRun(new EpollEventLoopGroup(), KQueueServerSocketChannel.class, IoMultiplexer.KQUEUE);
-		} else {
-			doRun(new NioEventLoopGroup(), NioServerSocketChannel.class, IoMultiplexer.JDK);
+		final var preferredTransport = PREFERRED_TRANSPORT;
+		System.out.printf("Using %s IoMultiplexer%n", preferredTransport);
+		final int coreCount = Runtime.getRuntime().availableProcessors();
+		final var group = EVENT_LOOP_CARRIER?
+				preferredTransport.newVirtualEventExecutorGroup(coreCount) :
+				preferredTransport.newEventLoopGroup(coreCount);
+		if (EVENT_LOOP_CARRIER) {
+			LoomSupport.checkSupported();
+			System.out.println("Using EventLoop optimized for Loom");
 		}
-	}
-
-	private void doRun(EventLoopGroup loupGroup, Class<? extends ServerChannel> serverChannelClass, IoMultiplexer multiplexer) throws InterruptedException {
 		try {
-			InetSocketAddress inet = new InetSocketAddress(port);
-			
-			System.out.printf("Using %s IoMultiplexer%n", multiplexer);
+			final var serverChannelClass = preferredTransport.serverChannelClass();
+			var inet = new InetSocketAddress(port);
+			var b = new ServerBootstrap();
 
-			ServerBootstrap b = new ServerBootstrap();
-
-			if (multiplexer == IoMultiplexer.EPOLL) {
-				b.option(EpollChannelOption.SO_REUSEPORT, true);
-			}
-			
-			if (multiplexer == IoMultiplexer.IO_URING) {
-				b.option(IOUringChannelOption.SO_REUSEPORT, true);
-			}
-			
 			b.option(ChannelOption.SO_BACKLOG, 8192);
 			b.option(ChannelOption.SO_REUSEADDR, true);
-			b.group(loupGroup).channel(serverChannelClass).childHandler(new HelloServerInitializer(loupGroup.next()));
+			switch (preferredTransport) {
+				case EPOLL:
+					b.option(EpollChannelOption.SO_REUSEPORT, true);
+					break;
+				case IO_URING:
+					b.option(IoUringChannelOption.SO_REUSEPORT, true);
+					break;
+			}
+			var channelB = b.group(group).channel(serverChannelClass);
+			if (EVENT_LOOP_CARRIER) {
+				channelB.childHandler(new HelloLoomServerInitializer((MultithreadVirtualEventExecutorGroup) group, group.next()));
+			} else {
+				channelB.childHandler(new HelloServerInitializer(group.next()));
+			}
 			b.childOption(ChannelOption.SO_REUSEADDR, true);
 
 			Channel ch = b.bind(inet).sync().channel();
 
-			System.out.printf("Httpd started. Listening on: %s%n", inet.toString());
+			System.out.printf("Httpd started. Listening on: %s%n", inet);
 
 			ch.closeFuture().sync();
 		} finally {
-			loupGroup.shutdownGracefully().sync();
+			group.shutdownGracefully().sync();
 		}
 	}
 
@@ -87,5 +91,7 @@ public class HelloWebServer {
 			port = 8080;
 		}
 		new HelloWebServer(port).run();
+
+
 	}
 }

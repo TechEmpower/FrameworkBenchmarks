@@ -1,0 +1,44 @@
+{
+  "framework": "touchsocket",
+  "tests": [
+    {
+      "default": {
+        "plaintext_url": "/plaintext",
+        "json_url": "/json",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "framework": "touchsocket.webapi",
+        "language": "C#",
+        "orm": "Raw",
+        "platform": ".NET",
+        "flavor": "CoreCLR",
+        "webserver": "touchsocket",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "touchsocket.webapi",
+        "notes": "",
+        "versus": "aspnetcore-mvc"
+      },
+      "http": {
+        "plaintext_url": "/plaintext",
+        "json_url": "/json",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "Postgres",
+        "framework": "touchsocket.http",
+        "language": "C#",
+        "orm": "Micro",
+        "platform": ".NET",
+        "flavor": "CoreCLR",
+        "webserver": "touchsocket",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "touchsocket.http",
+        "notes": "",
+        "versus": "aspnetcore"
+      }
+    }
+  ]
+}

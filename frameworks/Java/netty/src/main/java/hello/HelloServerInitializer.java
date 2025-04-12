@@ -14,7 +14,7 @@ import io.netty.handler.codec.http.HttpVersion;
 
 public class HelloServerInitializer extends ChannelInitializer<SocketChannel> {
 
-	private final ScheduledExecutorService service;
+	protected final ScheduledExecutorService service;
 
 	public HelloServerInitializer(ScheduledExecutorService service) {
 		this.service = service;
@@ -46,6 +46,10 @@ public class HelloServerInitializer extends ChannelInitializer<SocketChannel> {
 						return false;
 					}
 				})
-                .addLast("handler", new HelloServerHandler(service));
+                .addLast("handler", newHelloServerHandler(service));
+	}
+
+	protected HelloServerHandler newHelloServerHandler(ScheduledExecutorService service) {
+		return new HelloServerHandler(service);
 	}
 }

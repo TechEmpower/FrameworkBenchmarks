@@ -13,20 +13,21 @@ repositories {
 }
 
 application {
-    mainClass.set("MainKt")
+    mainClass = "io.ktor.server.netty.EngineMain"
 }
 
-val ktor_version = "2.3.12"
+val ktor_version = "3.1.2"
 val vertx_version = "4.5.11"
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
     implementation("io.ktor:ktor-server-netty:$ktor_version")
     implementation("io.ktor:ktor-server-html-builder-jvm:$ktor_version")
     implementation("io.ktor:ktor-server-default-headers-jvm:$ktor_version")
     implementation("io.vertx:vertx-pg-client:$vertx_version")
     implementation("io.vertx:vertx-lang-kotlin:$vertx_version")
     implementation("io.vertx:vertx-lang-kotlin-coroutines:$vertx_version")
+    implementation("ch.qos.logback:logback-classic:1.5.12")
 }
 
 java {

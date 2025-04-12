@@ -16,13 +16,11 @@ CMD export DBIP=`getent hosts tfb-database | awk '{ print $1 }'` && \
       -XX:+UseParallelGC \
       -Djava.lang.Integer.IntegerCache.high=10000 \
       -Dvertx.disableMetrics=true \
-      -Dvertx.disableH2c=true \
       -Dvertx.disableWebsockets=true \
-      -Dvertx.flashPolicyHandler=false \
-      -Dvertx.threadChecks=false \
       -Dvertx.disableContextTimings=true \
-      -Dvertx.disableTCCL=true \
       -Dvertx.disableHttpHeadersValidation=true \
+      -Dvertx.cacheImmutableHttpResponseHeaders=true \
+      -Dvertx.internCommonHttpRequestHeadersToLowerCase=true \
       -Dvertx.eventLoopPoolSize=$((`grep --count ^processor /proc/cpuinfo`)) \
       -Dio.netty.buffer.checkBounds=false  \
       -Dio.netty.buffer.checkAccessible=false \

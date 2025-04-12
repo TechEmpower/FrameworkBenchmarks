@@ -4,7 +4,7 @@ import io.ktor.http.*
 import io.ktor.http.content.*
 import io.ktor.server.application.*
 import io.ktor.server.config.*
-import io.ktor.server.html.*
+import io.ktor.server.html.respondHtml
 import io.ktor.server.plugins.defaultheaders.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -20,35 +20,25 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.reactive.awaitFirst
 import kotlinx.coroutines.reactive.awaitFirstOrNull
 import kotlinx.html.*
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
-import org.jetbrains.ktor.benchmarks.Constants.DB_ROWS
-import org.jetbrains.ktor.benchmarks.Constants.FORTUNES_QUERY
-import org.jetbrains.ktor.benchmarks.Constants.UPDATE_QUERY
-import org.jetbrains.ktor.benchmarks.Constants.WORLD_QUERY
-import org.jetbrains.ktor.benchmarks.models.Fortune
-import org.jetbrains.ktor.benchmarks.models.Message
-import org.jetbrains.ktor.benchmarks.models.World
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
-import kotlin.random.Random
 import java.time.Duration
+import kotlin.random.Random
 
-private val json = Json {
-    prettyPrint = false
-    isLenient = true
-    ignoreUnknownKeys = true
-    coerceInputValues = true
-}
+const val HELLO_WORLD = "Hello, World!"
+const val WORLD_QUERY = "SELECT id, randomnumber FROM world WHERE id = $1"
+const val FORTUNES_QUERY = "SELECT id, message FROM fortune"
+const val UPDATE_QUERY = "UPDATE world SET randomnumber = $1 WHERE id = $2"
+const val DB_ROWS = 10000
 
 fun Application.main() {
     val config = ApplicationConfig("application.conf")
     val dbConnFactory = configurePostgresR2DBC(config)
 
-    install(DefaultHeaders)
-
     val helloWorldContent = TextContent("Hello, World!", ContentType.Text.Plain)
-    val helloWorldMsg = Message("Hello, world!")
+    val random = Random.Default
+
+    install(DefaultHeaders)
 
     routing {
         get("/plaintext") {
@@ -56,15 +46,14 @@ fun Application.main() {
         }
 
         get("/json") {
-            call.respondText(json.encodeToString(helloWorldMsg), ContentType.Application.Json)
+            call.respondJson(Message(HELLO_WORLD))
         }
 
         get("/db") {
-            val random = Random.Default
             val request = getWorld(dbConnFactory, random)
             val result = request.awaitFirstOrNull()
 
-            call.respondText(json.encodeToString(result), ContentType.Application.Json)
+            call.respondJson(result)
         }
 
         fun selectWorlds(queries: Int, random: Random): Flow<World> = flow {
@@ -75,7 +64,6 @@ fun Application.main() {
 
         get("/queries") {
             val queries = call.queries()
-            val random = Random.Default
 
             val result = buildList {
                 selectWorlds(queries, random).collect {
@@ -83,7 +71,7 @@ fun Application.main() {
                 }
             }
 
-            call.respondText(json.encodeToString(result), ContentType.Application.Json)
+            call.respondJson(result)
         }
 
         get("/fortunes") {
@@ -124,7 +112,6 @@ fun Application.main() {
 
         get("/updates") {
             val queries = call.queries()
-            val random = Random.Default
 
             val worlds = selectWorlds(queries, random)
 
@@ -144,7 +131,7 @@ fun Application.main() {
                 }
             }
 
-            call.respondText(json.encodeToString(worldsUpdated), ContentType.Application.Json)
+            call.respondJson(worldsUpdated)
         }
     }
 }
@@ -195,11 +182,3 @@ private fun configurePostgresR2DBC(config: ApplicationConfig): ConnectionFactory
 }
 
 private fun ApplicationCall.queries() = request.queryParameters["queries"]?.toIntOrNull()?.coerceIn(1, 500) ?: 1
-
-
-object Constants {
-    const val WORLD_QUERY = "SELECT id, randomnumber FROM world WHERE id = $1"
-    const val FORTUNES_QUERY = "SELECT id, message FROM fortune"
-    const val UPDATE_QUERY = "UPDATE world SET randomnumber = $1 WHERE id = $2"
-    const val DB_ROWS = 10000
-}
