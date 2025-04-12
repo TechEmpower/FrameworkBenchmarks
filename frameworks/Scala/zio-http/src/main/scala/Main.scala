@@ -2,12 +2,13 @@ import zio._
 import zio.http._
 import zio.http.netty.NettyConfig
 import zio.http.netty.NettyConfig.LeakDetectionLevel
+import zio.json.EncoderOps
+
 import java.lang.{Runtime => JRuntime}
 
 object Main extends ZIOAppDefault {
 
   private val plainTextMessage: String = "hello, world!"
-  private val jsonMessage: String      = """{"message": "hello, world!"}"""
 
   private val STATIC_SERVER_NAME = "zio-http"
   private val NUM_PROCESSORS     = JRuntime.getRuntime.availableProcessors()
@@ -22,7 +23,7 @@ object Main extends ZIOAppDefault {
     Method.GET / "/json"      ->
       Handler.fromResponse(
         Response
-          .json(jsonMessage)
+          .json(Payload(plainTextMessage).toJson)
           .addHeader(Header.Server(STATIC_SERVER_NAME)),
       ),
   )
