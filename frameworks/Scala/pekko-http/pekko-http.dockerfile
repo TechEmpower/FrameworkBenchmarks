@@ -1,4 +1,4 @@
-FROM sbtscala/scala-sbt:eclipse-temurin-jammy-17.0.5_8_1.9.3_2.13.11 as build
+FROM sbtscala/scala-sbt:eclipse-temurin-21.0.6_7_1.10.11_2.13.16 as build
 
 WORKDIR /pekko-http
 COPY pekko-http ./
@@ -10,7 +10,7 @@ RUN \
   sbt sbtVersion
 RUN sbt clean compile stage
 
-FROM eclipse-temurin:17-jre-jammy
+FROM eclipse-temurin:21-jre-noble
 COPY --from=build /pekko-http/target/universal/stage /pekko-http
 
 EXPOSE 9000

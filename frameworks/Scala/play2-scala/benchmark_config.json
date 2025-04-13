@@ -103,7 +103,7 @@
         "query_url": "/queries?queries=",
         "fortune_url": "/fortunes",
         "update_url": "/update?queries=",
-        "tags": ["broken"]
+        "tags": []
       },
       "reactivemongo-netty": {
         "display_name": "play2-scala-reactivemongo-netty",
@@ -126,7 +126,7 @@
         "query_url": "/queries?queries=",
         "fortune_url": "/fortunes",
         "update_url": "/update?queries=",
-        "tags": ["broken"]
+        "tags": []
       },
       "slick": {
         "display_name": "play2-scala-slick",
