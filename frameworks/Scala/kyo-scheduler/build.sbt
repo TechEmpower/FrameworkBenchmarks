@@ -2,7 +2,7 @@ name := "kyo-scheduler-benchmark"
 
 ThisBuild / version := "1.0.0"
 
-val kyoVersion = "0.17.0"
+val kyoVersion = "0.18.0"
 
 val commonAssemblySettings = assembly / assemblyMergeStrategy := {
   case x if x.contains("io.netty.versions.properties") => MergeStrategy.discard

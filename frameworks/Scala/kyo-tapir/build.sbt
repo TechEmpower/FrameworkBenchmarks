@@ -4,7 +4,7 @@ scalaVersion := "3.6.3"
 lazy val root = (project in file("."))
   .settings(
     libraryDependencies ++= Seq(
-      "io.getkyo" %% "kyo-tapir" % "0.16.2",
+      "io.getkyo" %% "kyo-tapir" % "0.18.0",
       "com.softwaremill.sttp.tapir" %% "tapir-json-zio" % "1.11.15",
       "dev.zio" %% "zio-json" % "0.7.32"
     ),
