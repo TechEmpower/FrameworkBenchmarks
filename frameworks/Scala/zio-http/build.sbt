@@ -1,6 +1,6 @@
 name := "zio-http"
 version := "1.0.0"
-scalaVersion := "2.13.14"
+scalaVersion := "2.13.16"
 lazy val root = (project in file("."))
   .settings(
     libraryDependencies += "dev.zio" %% "zio-http" % "3.2.0",
