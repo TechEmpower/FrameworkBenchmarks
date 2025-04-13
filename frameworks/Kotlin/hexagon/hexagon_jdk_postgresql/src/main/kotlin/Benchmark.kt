@@ -17,7 +17,7 @@ fun main() {
     val templateUrl = urlOf("classpath:fortunes.jte")
     val engine = JdkHttpServer(
         executor = newVirtualThreadPerTaskExecutor(),
-        backlog = 2_048
+        backlog = 4_096
     )
 
     val benchmark = Benchmark(engine, store, templateEngine, templateUrl, settings)
