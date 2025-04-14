@@ -1,21 +1,46 @@
-FROM debian:12.9
+FROM debian:12-slim AS build
 
-WORKDIR /app
+# Set a non-root user for added security
+RUN useradd -m ziguser
 
-COPY src src
-COPY build.zig.zon build.zig.zon
-COPY build.zig build.zig
+# Install dependencies (update to latest secure versions)
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    wget xz-utils \
+    ca-certificates && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
-ARG ZIG_VER=0.14.0
+# Download the latest stable Zig binary from the official website
+ARG ZIG_VERSION=0.14.0
+RUN wget https://ziglang.org/download/0.14.0/zig-linux-{{arch}}-0.14.0.tar.xz
 
-RUN apt-get update && apt-get install -y curl xz-utils ca-certificates
+RUN tar -xvf zig-linux-{{arch}}-0.14.0.tar.xz
 
-RUN curl https://ziglang.org/download/${ZIG_VER}/zig-linux-$(uname -m)-${ZIG_VER}.tar.xz -o zig-linux.tar.xz && \
-  tar xf zig-linux.tar.xz && \
-  mv zig-linux-$(uname -m)-${ZIG_VER}/ /opt/zig
+RUN mv zig-linux-{{arch}}-0.14.0 /usr/local/zig 
 
-RUN /opt/zig/zig build -Doptimize=ReleaseFast
+# Add Zig to the PATH
+ENV PATH="/usr/local/zig:$PATH"
 
+WORKDIR /home/ziguser
+
+{{#files}}
+COPY '{{source}}' '{{target}}'
+RUN chown ziguser {{target}}
+{{/files}}
+RUN chown -R ziguser src
+
+# Switch to the non-root user
+USER ziguser
+
+RUN zig build -Doptimize=ReleaseFast
+RUN ls
+
+FROM debian:12-slim
+
+RUN apt-get -qq update 
+RUN apt-get -qy install ca-certificates curl
+
+COPY --from=build /home/ziguser/zig-out/bin/zzz /server
 EXPOSE 8080
-
-CMD ["zig-out/bin/zzz"]
+ENTRYPOINT ./server
