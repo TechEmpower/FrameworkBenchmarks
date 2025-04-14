@@ -2,11 +2,12 @@ import zio._
 import zio.http._
 import zio.http.netty.NettyConfig
 import zio.http.netty.NettyConfig.LeakDetectionLevel
-import zio.json.EncoderOps
+import zio.json.*
 
 import java.lang.{Runtime => JRuntime}
 
-object Main extends ZIOAppDefault {
+// based on the framework/Scala/zio-http implementation
+object ZioHttp extends kyo.KyoSchedulerZIOAppDefault {
 
   private val plainTextMessage: String = "hello, world!"
 
