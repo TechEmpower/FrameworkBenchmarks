@@ -18,6 +18,7 @@ This is a simple test to benchmark the performance of the Tapir libraries along 
 * [Tapir running as http4s server](https://tapir.softwaremill.com/en/latest/server/http4s.html)
 * [as an http4s server using ZIO](https://tapir.softwaremill.com/en/latest/server/zio-http4s.html)
 * [Tapir running as Netty-based server(Cats)](https://tapir.softwaremill.com/en/latest/server/netty.html)
+* [Tapir running as Netty-based server(Kyo)](https://getkyo.io/#/?id=routes-http-server-via-tapir)
 * [Tapir running as Netty-based server(ZIO)](https://tapir.softwaremill.com/en/latest/server/netty.html)
 * [Tapir running as pekko-http server](https://tapir.softwaremill.com/en/latest/server/pekkohttp.html)
 

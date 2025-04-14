@@ -3,11 +3,15 @@ import sttp.model.{Header, HeaderNames}
 import sttp.tapir.*
 import sttp.tapir.json.zio.*
 import sttp.tapir.server.netty.*
+import zio.json.*
 
-object Main extends KyoApp {
+object TapirNettyKyoServerBenchmark extends KyoApp {
   private val STATIC_SERVER_NAME = "kyo-tapir"
 
   private val plainTextMessage: String = "Hello, World!"
+
+  private given JsonCodec[Payload] = DeriveJsonCodec.gen
+  private given Schema[Payload] = Schema.derived
 
   run {
     val plaintextRoute: Unit < Routes =
@@ -38,7 +42,7 @@ object Main extends KyoApp {
       .withSocketKeepAlive
       .copy(lingerTimeout = None)
     
-    val server = NettyKyoServer(config).host("0.0.0.0").port(9999)
+    val server = NettyKyoServer(config).host("0.0.0.0").port(8080)
 
     val binding: NettyKyoServerBinding < Async =
       Routes.run(server)(plaintextRoute.andThen(jsonRoute))

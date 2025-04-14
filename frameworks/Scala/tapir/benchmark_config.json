@@ -78,6 +78,25 @@
         "notes": "https://tapir.softwaremill.com/en/latest/server/netty.html",
         "versus": "None"
       },
+      "netty-kyo": {
+        "plaintext_url": "/plaintext",
+        "json_url": "/json",
+        "port": 8080,
+        "database": "None",
+        "approach": "Realistic",
+        "classification": "Micro",
+        "framework": "tapir",
+        "language": "Scala",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "Netty",
+        "webserver": "None",
+        "database_os": "Linux",
+        "os": "Linux",
+        "display_name": "tapir as netty(kyo) server",
+        "notes": "https://getkyo.io/#/?id=routes-http-server-via-tapir",
+        "versus": "None"
+      },
       "netty-zio": {
         "plaintext_url": "/plaintext",
         "json_url": "/json",

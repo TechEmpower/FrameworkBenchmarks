@@ -53,6 +53,19 @@ platform = "Netty"
 webserver = "None"
 versus = "None"
 
+[netty-kyo]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+approach = "Realistic"
+classification = "Micro"
+database = "None"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "Netty"
+webserver = "None"
+versus = "None"
+
 [netty-zio]
 urls.plaintext = "/plaintext"
 urls.json = "/json"

@@ -54,6 +54,17 @@ lazy val `http4s-server-zio` = (project in file("http4s-server-zio"))
     commonAssemblySettings
   )
 
+lazy val `netty-kyo-server` = (project in file("netty-kyo-server"))
+  .dependsOn(common)
+  .settings(
+    name := "tapir-netty-kyo-server",
+    libraryDependencies ++= Seq(
+      "io.getkyo" %% "kyo-tapir" % "0.18.0",
+      "com.softwaremill.sttp.tapir" %% "tapir-json-zio" % tapirVersion
+    ),
+    commonAssemblySettings
+  )
+
 lazy val `netty-zio-server` = (project in file("netty-zio-server"))
   .dependsOn(common)
   .settings(
