@@ -24,12 +24,6 @@ ENV PATH="/usr/local/zig:$PATH"
 
 WORKDIR /home/ziguser
 
-{{#files}}
-COPY '{{source}}' '{{target}}'
-RUN chown ziguser {{target}}
-{{/files}}
-RUN chown -R ziguser src
-
 # Switch to the non-root user
 USER ziguser
 
