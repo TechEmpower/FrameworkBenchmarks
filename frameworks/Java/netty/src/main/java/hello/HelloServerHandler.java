@@ -10,6 +10,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import com.jsoniter.output.JsonStream;
@@ -34,9 +35,10 @@ public class HelloServerHandler extends ChannelInboundHandlerAdapter {
 
 	private HttpHeaders jsonHeaders = makeJsonHeaders(new AsciiString(FORMAT.get().format(new Date())));
 	private HttpHeaders plaintextHeaders = makePlaintextHeaders(new AsciiString(FORMAT.get().format(new Date())));
+	private ScheduledFuture<?> refreshHeaders;
 
 	public HelloServerHandler(ScheduledExecutorService service) {
-		service.scheduleWithFixedDelay(new Runnable() {
+		refreshHeaders = service.scheduleWithFixedDelay(new Runnable() {
 			private final DateFormat format = FORMAT.get();
 
 			@Override
@@ -112,5 +114,14 @@ public class HelloServerHandler extends ChannelInboundHandlerAdapter {
 	@Override
 	public void channelReadComplete(ChannelHandlerContext ctx) {
 		ctx.flush();
+	}
+
+	@Override
+	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+		super.channelInactive(ctx);
+		if (refreshHeaders != null) {
+			refreshHeaders.cancel(false);
+			refreshHeaders = null;
+		}
 	}
 }
