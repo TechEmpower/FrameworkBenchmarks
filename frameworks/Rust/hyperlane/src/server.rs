@@ -3,12 +3,11 @@ use tokio::runtime::{Builder, Runtime};
 
 fn runtime() -> Runtime {
     Builder::new_multi_thread()
-        .worker_threads(num_cpus::get() << 1)
+        .worker_threads(num_cpus::get() << 2)
         .thread_stack_size(1_048_576)
-        .max_blocking_threads(1024)
+        .max_blocking_threads(5120)
         .max_io_events_per_tick(65_536)
-        .enable_io()
-        .enable_time()
+        .enable_all()
         .global_queue_interval(61)
         .event_interval(1)
         .build()

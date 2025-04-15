@@ -100,10 +100,9 @@ pub async fn connection_db() -> DbPoolConnection {
             DATABASE_NAME
         ),
     };
-    let pool_size: u32 = num_cpus::get() as u32;
     let pool: DbPoolConnection = PgPoolOptions::new()
-        .max_connections(100)
-        .min_connections(pool_size)
+        .max_connections(1000)
+        .min_connections(512)
         .max_lifetime(None)
         .test_before_acquire(false)
         .idle_timeout(None)
