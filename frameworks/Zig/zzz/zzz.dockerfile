@@ -1,9 +1,7 @@
 FROM debian:12-slim AS build
 
-# Set a non-root user for added security
 RUN useradd -m ziguser
 
-# Install dependencies (update to latest secure versions)
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     wget xz-utils \
@@ -25,11 +23,9 @@ COPY src src
 COPY build.zig build.zig
 COPY build.zig.zon build.zig.zon
 
-
-# Switch to the non-root user
 USER ziguser
 
-RUN zig build -Doptimize=ReleaseFast
+RUN zig build -Doptimize=ReleaseFast -Dcpu=native
 RUN ls
 
 FROM debian:12-slim
