@@ -8,8 +8,7 @@ fn runtime() -> Runtime {
         .max_blocking_threads(5120)
         .max_io_events_per_tick(65_536)
         .enable_all()
-        .global_queue_interval(61)
-        .event_interval(1)
+        .global_queue_interval(61)        
         .build()
         .unwrap()
 }
