@@ -1,5 +1,6 @@
 package com.hexagontk
 
+import com.hexagontk.core.Platform.systemSettingOrNull
 import com.hexagontk.core.media.TEXT_HTML
 import com.hexagontk.core.urlOf
 import com.hexagontk.http.server.jdk.JdkHttpServer
@@ -17,7 +18,7 @@ fun main() {
     val templateUrl = urlOf("classpath:fortunes.jte")
     val engine = JdkHttpServer(
         executor = newVirtualThreadPerTaskExecutor(),
-        backlog = 2_048
+        backlog = systemSettingOrNull("backlog") ?: (8 * 1024),
     )
 
     val benchmark = Benchmark(engine, store, templateEngine, templateUrl, settings)

@@ -153,7 +153,7 @@ class MainVerticle(val hasDb: Boolean) : CoroutineVerticle(), CoroutineRouterSup
 
     fun Router.routes() {
         get("/json").jsonResponseCoHandler(Serializers.message) {
-            jsonSerializationMessage
+            Message("Hello, World!")
         }
 
         get("/db").jsonResponseCoHandler(Serializers.world) {

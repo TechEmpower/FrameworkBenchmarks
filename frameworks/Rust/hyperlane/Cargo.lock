@@ -174,7 +174,9 @@ checksum = "fc3dfae702af156917c65f4ccc70687088331f0b694e5e687453e4d68a16b496"
 [[package]]
 name = "color-output"
 version = "6.6.0"
+version = "6.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "74d465b5dc60106412924964948f7e5c0c1f023e6b45fa451aad4110480bd750"
 checksum = "74d465b5dc60106412924964948f7e5c0c1f023e6b45fa451aad4110480bd750"
 dependencies = [
  "hyperlane-time 0.4.0",

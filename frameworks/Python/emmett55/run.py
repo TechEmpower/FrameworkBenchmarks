@@ -13,7 +13,7 @@ if __name__ == "__main__":
         port=8080,
         workers=workers,
         backlog=16384,
-        threading_mode="runtime",
+        runtime_mode="mt",
         http="1",
         enable_websockets=False,
         log_level="warn"

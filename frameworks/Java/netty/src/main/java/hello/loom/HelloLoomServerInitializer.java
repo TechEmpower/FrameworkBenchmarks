@@ -9,8 +9,7 @@ public class HelloLoomServerInitializer extends HelloServerInitializer {
 
    private final MultithreadVirtualEventExecutorGroup group;
 
-   public HelloLoomServerInitializer(MultithreadVirtualEventExecutorGroup group, ScheduledExecutorService service) {
-      super(service);
+   public HelloLoomServerInitializer(MultithreadVirtualEventExecutorGroup group) {
       this.group = group;
    }
 

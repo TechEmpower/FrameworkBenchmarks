@@ -1,7 +1,6 @@
 package hello;
 
-import static hello.HttpResponses.makeJsonResponse;
-import static hello.HttpResponses.makePlaintextResponse;
+import static hello.HttpResponses.*;
 import static hello.JsonUtils.acquireJsonStreamFromEventLoop;
 import static hello.JsonUtils.releaseJsonStreamFromEventLoop;
 import static io.netty.handler.codec.http.HttpResponseStatus.NOT_FOUND;
@@ -11,6 +10,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import com.jsoniter.output.JsonStream;
@@ -19,11 +19,7 @@ import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.handler.codec.http.DefaultFullHttpResponse;
-import io.netty.handler.codec.http.DefaultHttpRequest;
-import io.netty.handler.codec.http.FullHttpResponse;
-import io.netty.handler.codec.http.HttpRequest;
-import io.netty.handler.codec.http.LastHttpContent;
+import io.netty.handler.codec.http.*;
 import io.netty.util.AsciiString;
 import io.netty.util.ReferenceCountUtil;
 import io.netty.util.concurrent.FastThreadLocal;
@@ -37,15 +33,19 @@ public class HelloServerHandler extends ChannelInboundHandlerAdapter {
       }
    };
 
-	protected volatile AsciiString date = new AsciiString(FORMAT.get().format(new Date()));
+	private HttpHeaders jsonHeaders = makeJsonHeaders(new AsciiString(FORMAT.get().format(new Date())));
+	private HttpHeaders plaintextHeaders = makePlaintextHeaders(new AsciiString(FORMAT.get().format(new Date())));
+	private ScheduledFuture<?> refreshHeaders;
 
 	public HelloServerHandler(ScheduledExecutorService service) {
-		service.scheduleWithFixedDelay(new Runnable() {
+		refreshHeaders = service.scheduleWithFixedDelay(new Runnable() {
 			private final DateFormat format = FORMAT.get();
 
 			@Override
 			public void run() {
-				date = new AsciiString(format.format(new Date()));
+				var date = new AsciiString(format.format(new Date()));
+				jsonHeaders = makeJsonHeaders(date);
+				plaintextHeaders = makePlaintextHeaders(date);
 			}
 		}, 1000, 1000, TimeUnit.MILLISECONDS);
 	}
@@ -80,13 +80,13 @@ public class HelloServerHandler extends ChannelInboundHandlerAdapter {
 		String uri = request.uri();
 		switch (uri) {
 		case "/plaintext":
-			writePlainResponse(ctx, date);
+			writePlainResponse(ctx, plaintextHeaders);
 			return;
 		case "/json":
 			// even for the virtual thread case we expect virtual threads to be executed inlined!
 			var stream = acquireJsonStreamFromEventLoop();
 			try {
-				writeJsonResponse(ctx, stream, date);
+				writeJsonResponse(ctx, stream, jsonHeaders);
 			} finally {
 				releaseJsonStreamFromEventLoop(stream);
 			}
@@ -98,12 +98,12 @@ public class HelloServerHandler extends ChannelInboundHandlerAdapter {
 		ctx.writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);
 	}
 
-	protected void writePlainResponse(ChannelHandlerContext ctx, AsciiString date) {
-		ctx.write(makePlaintextResponse(date), ctx.voidPromise());
+	protected void writePlainResponse(ChannelHandlerContext ctx, HttpHeaders plaintextHeaders) {
+		ctx.write(makePlaintextResponse(plaintextHeaders), ctx.voidPromise());
 	}
 
-	protected void writeJsonResponse(ChannelHandlerContext ctx, JsonStream stream, AsciiString date) {
-		ctx.write(makeJsonResponse(stream, date), ctx.voidPromise());
+	protected void writeJsonResponse(ChannelHandlerContext ctx, JsonStream stream, HttpHeaders jsonHeaders) {
+		ctx.write(makeJsonResponse(stream, jsonHeaders), ctx.voidPromise());
 	}
 
 	@Override
@@ -114,5 +114,14 @@ public class HelloServerHandler extends ChannelInboundHandlerAdapter {
 	@Override
 	public void channelReadComplete(ChannelHandlerContext ctx) {
 		ctx.flush();
+	}
+
+	@Override
+	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+		super.channelInactive(ctx);
+		if (refreshHeaders != null) {
+			refreshHeaders.cancel(false);
+			refreshHeaders = null;
+		}
 	}
 }
