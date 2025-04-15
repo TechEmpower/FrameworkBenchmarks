@@ -1,4 +1,4 @@
-pub(crate) mod constant;
+pub(crate) mod r#const;
 pub(crate) mod db;
 pub(crate) mod lazy;
 pub(crate) mod request_middleware;
@@ -7,7 +7,7 @@ pub(crate) mod server;
 pub(crate) mod r#type;
 pub(crate) mod utils;
 
-pub(crate) use constant::*;
+pub(crate) use r#const::*;
 pub(crate) use db::*;
 pub(crate) use hyperlane::{
     futures::{executor::block_on, future::join_all},

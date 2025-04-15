@@ -14,3 +14,4 @@ pub const RANDOM_MAX_ADD_ONE: u32 = 10_001;
 pub const KEY_ID: &str = "id";
 pub const KEY_RANDOM_NUMBER: &str = "randomnumber";
 pub const KEY_MESSAGE: &str = "message";
+pub const DB_MAX_CONNECTIONS: u32 = 100;
