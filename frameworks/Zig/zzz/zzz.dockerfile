@@ -23,7 +23,8 @@ ENV PATH="/usr/local/zig:$PATH"
 WORKDIR /home/ziguser
 COPY src src
 COPY build.zig build.zig
-COPY build.zig.zon build zig.zon
+COPY build.zig.zon build.zig.zon
+
 
 # Switch to the non-root user
 USER ziguser
