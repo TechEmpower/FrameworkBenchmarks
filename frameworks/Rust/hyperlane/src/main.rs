@@ -2,7 +2,6 @@ pub(crate) mod constant;
 pub(crate) mod db;
 pub(crate) mod lazy;
 pub(crate) mod request_middleware;
-pub(crate) mod response_middleware;
 pub(crate) mod route;
 pub(crate) mod server;
 pub(crate) mod r#type;
@@ -21,7 +20,6 @@ pub(crate) use hyperlane::{
 pub(crate) use lazy::*;
 pub(crate) use rand::{Rng, SeedableRng, rng, rngs::SmallRng};
 pub(crate) use request_middleware::*;
-pub(crate) use response_middleware::*;
 pub(crate) use route::*;
 pub(crate) use server::*;
 pub(crate) use sqlx::{
