@@ -726,7 +726,6 @@ name = "hyperlane_techempower"
 version = "0.0.1"
 dependencies = [
  "hyperlane",
- "num_cpus",
  "rand 0.9.0",
  "serde",
  "sqlx",
