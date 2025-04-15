@@ -102,7 +102,7 @@ pub async fn connection_db() -> DbPoolConnection {
     };
     let pool: DbPoolConnection = PgPoolOptions::new()
         .max_connections(1000)
-        .min_connections(512)
+        .min_connections(100)
         .max_lifetime(None)
         .test_before_acquire(false)
         .idle_timeout(None)
