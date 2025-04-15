@@ -31,7 +31,7 @@ RUN ls
 FROM debian:12-slim
 
 RUN apt-get -qq update 
-RUN apt-get -qy install ca-certificates curl
+RUN apt-get -qy install ca-certificates
 
 COPY --from=build /home/ziguser/zig-out/bin/zzz /server
 EXPOSE 8080
