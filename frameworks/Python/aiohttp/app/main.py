@@ -1,7 +1,7 @@
 import os
 import multiprocessing
 
-import asyncpg.connection
+import asyncpg
 from aiohttp import web
 from sqlalchemy.engine.url import URL
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
