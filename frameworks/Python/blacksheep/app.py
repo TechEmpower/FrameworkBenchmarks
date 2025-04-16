@@ -86,10 +86,6 @@ def jsonify(
 async def json_test(request):
     return jsonify( {'message': 'Hello, world!'} )
 
-@bs.get("/test_curloop")
-async def test_curloop(request):
-    return jsonify({"current_loop": str(asyncio.get_event_loop())})
-
 @bs.get('/db')
 async def single_db_query_test(request):
     row_id = random.randint(1, 10000)
