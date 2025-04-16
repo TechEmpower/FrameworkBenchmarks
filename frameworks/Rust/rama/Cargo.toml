@@ -1,0 +1,81 @@
+[package]
+name = "rama-techempower"
+version = "0.2.0"
+authors = ["Glen Henri J. De Cauwsemaecker <glen@plabayo.tech>"]
+edition = "2024"
+
+[[bin]]
+name = "rama"
+path = "src/main.rs"
+
+[[bin]]
+name = "rama-sqlx"
+path = "src/main_sqlx.rs"
+
+[[bin]]
+name = "rama-pg-pool"
+path = "src/main_pg_pool.rs"
+
+[[bin]]
+name = "rama-mongo"
+path = "src/main_mongo.rs"
+
+[[bin]]
+name = "rama-mongo-raw"
+path = "src/main_mongo_raw.rs"
+
+[[bin]]
+name = "rama-pg"
+path = "src/main_pg.rs"
+
+[features]
+default = []
+simd-json = [
+    "dep:simd-json",
+    "dep:mime",
+    "dep:bytes",
+    "dep:serde_path_to_error",
+]
+
+[dependencies]
+rama = { version = "0.2.0-alpha.11", default-features = false, features = [
+    "http-full",
+] }
+deadpool = { version = "0.12", features = ["rt_tokio_1", "serde", "managed"] }
+deadpool-postgres = { version = "0.14", features = ["rt_tokio_1", "serde"] }
+dotenv = "0.15"
+futures = "0.3"
+futures-util = "0.3"
+mongodb = { version = "3.2", features = [
+    "zstd-compression",
+    "snappy-compression",
+    "zlib-compression",
+] }
+num_cpus = "1.16"
+rand = { version = "0.9", features = ["small_rng"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sqlx = { version = "0.8", features = [
+    "postgres",
+    "macros",
+    "runtime-tokio",
+    "tls-rustls",
+] }
+tokio = { version = "1.44", features = ["full"] }
+tokio-pg-mapper = { version = "0.2" }
+tokio-pg-mapper-derive = { version = "0.2" }
+tokio-postgres = { version = "0.7" }
+yarte = "0.15"
+simd-json = { version = "0.15", optional = true }
+mime = { version = "0.3", optional = true }
+bytes = { version = "1.10", optional = true }
+serde_path_to_error = { version = "0.1", optional = true }
+quick_cache = "0.6"
+mimalloc = "0.1"
+
+
+[profile.release]
+lto = "fat"
+codegen-units = 1
+strip = true
+opt-level = 3
