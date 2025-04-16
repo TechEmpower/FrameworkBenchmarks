@@ -30,12 +30,7 @@ path = "src/main_pg.rs"
 
 [features]
 default = []
-simd-json = [
-    "dep:simd-json",
-    "dep:mime",
-    "dep:bytes",
-    "dep:serde_path_to_error",
-]
+simd-json = ["dep:simd-json", "dep:mime", "dep:serde_path_to_error"]
 
 [dependencies]
 rama = { version = "0.2.0-alpha.11", default-features = false, features = [
@@ -68,7 +63,7 @@ tokio-postgres = { version = "0.7" }
 yarte = "0.15"
 simd-json = { version = "0.15", optional = true }
 mime = { version = "0.3", optional = true }
-bytes = { version = "1.10", optional = true }
+bytes = { version = "1.10" }
 serde_path_to_error = { version = "0.1", optional = true }
 quick_cache = "0.6"
 mimalloc = "0.1"
