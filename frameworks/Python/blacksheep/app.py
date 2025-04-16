@@ -79,6 +79,9 @@ def jsonify(
         content=bs.Content(content_type=JSON_CONTENT_TYPE, data=ENCODER.encode(data)),
     )
 
+class Result(msgspec.Struct):
+    id: int
+    randomNumber: int
 
 # ------------------------------------------------------------------------------------------
 
@@ -93,7 +96,8 @@ async def single_db_query_test(request):
     async with db_pool.acquire() as db_conn:
         number = await db_conn.fetchval(READ_ROW_SQL, row_id)
     
-    return jsonify({'id': row_id, 'randomNumber': number})
+    return jsonify(Result(id=row_id, randomNumber=number))
+    # return ({'id': row_id, 'randomNumber': number})
 
 
 @bs.get('/queries')
@@ -106,7 +110,8 @@ async def multiple_db_queries_test(request):
         statement = await db_conn.prepare(READ_ROW_SQL)
         for row_id in row_ids:
             number = await statement.fetchval(row_id)
-            worlds.append( {"id": row_id, "randomNumber": number} )
+            # worlds.append( {"id": row_id, "randomNumber": number} )
+            worlds.append(Result(id=row_id, randomNumber=number))
 
     return jsonify(worlds)
 
@@ -129,8 +134,8 @@ async def db_updates_test(request):
     numbers = sorted(random.sample(range(1, 10000), num_queries))
     updates = list(zip(ids, numbers))
 
-    worlds = [ {"id": row_id, "randomNumber": number} for row_id, number in updates ]
-
+    # worlds = [ {"id": row_id, "randomNumber": number} for row_id, number in updates ]
+    worlds = [Result(id=row_id, randomNumber=number) for row_id, number in updates]
     async with db_pool.acquire() as db_conn:
         statement = await db_conn.prepare(READ_ROW_SQL)
         for row_id, _ in updates:
