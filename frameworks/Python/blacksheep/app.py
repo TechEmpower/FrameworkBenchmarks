@@ -1,20 +1,27 @@
+import multiprocessing
 import os
 import asyncpg
-import multiprocessing
 import random
+import asyncio
+from operator import itemgetter
 import blacksheep as bs
 import jinja2
 import msgspec
-import typing as t
-from email.utils import formatdate
 from pathlib import Path
 
 READ_ROW_SQL = 'SELECT "id", "randomnumber" FROM "world" WHERE id = $1'
 WRITE_ROW_SQL = 'UPDATE "world" SET "randomnumber"=$1 WHERE id=$2'
 ADDITIONAL_ROW = [0, "Additional fortune added at request time."]
-
+MAX_POOL_SIZE = 1000 // multiprocessing.cpu_count()
+MIN_POOL_SIZE = max(int(MAX_POOL_SIZE / 2), 1)
 db_pool = None
+key = itemgetter(1)
 
+try:
+    import uvloop
+    asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+except Exception:
+    ...
 
 async def setup_db(app):
     global db_pool
@@ -24,6 +31,8 @@ async def setup_db(app):
         database='hello_world',
         host="tfb-database",
         port=5432,
+        min_size=MIN_POOL_SIZE,
+        max_size=MAX_POOL_SIZE,
     )
 
 
@@ -38,7 +47,7 @@ app = bs.Application()
 app.on_start += setup_db
 
 
-def get_num_queries(request: bs.Request):
+def get_num_queries(request):
     try:
         value = request.query.get('queries')
         if value is None:
@@ -52,32 +61,34 @@ def get_num_queries(request: bs.Request):
         return 500
     return query_count
 
-
-# ------------------------------------------------------------------------------------------
 ENCODER = msgspec.json.Encoder()
 DECODER = msgspec.json.Decoder()
 JSON_CONTENT_TYPE = b"application/json"
-HeaderType = tuple[bytes, bytes]
 def jsonify(
-    data: dict,
-    status: int = 200,
-    headers: t.Optional[t.List[HeaderType]] = None,
-) -> Response:
+    data,
+    status=200,
+    headers=None,
+):
     """
     Returns a response with application/json content,
     and given status (default HTTP 200 OK).
     """
-    return Response(
+    return bs.Response(
         status=status,
         headers=headers,
-        content=Content(content_type=JSON_CONTENT_TYPE, data=ENCODER.encode(data)),
+        content=bs.Content(content_type=JSON_CONTENT_TYPE, data=ENCODER.encode(data)),
     )
 
+
+# ------------------------------------------------------------------------------------------
 
 @bs.get('/json')
 async def json_test(request):
     return jsonify( {'message': 'Hello, world!'} )
 
+@bs.get("/test_curloop")
+async def test_curloop(request):
+    return jsonify({"current_loop": str(asyncio.get_event_loop())})
 
 @bs.get('/db')
 async def single_db_query_test(request):
@@ -103,7 +114,6 @@ async def multiple_db_queries_test(request):
 
     return jsonify(worlds)
 
-key = itemgetter(1)
 
 @bs.get('/fortunes')
 async def fortunes_test(request):
@@ -116,7 +126,7 @@ async def fortunes_test(request):
     return bs.html(data)
 
 
-@app.route('/updates')
+@bs.get('/updates')
 async def db_updates_test(request):
     num_queries = get_num_queries(request)
     ids = sorted(random.sample(range(1, 10000 + 1), num_queries))
@@ -134,54 +144,8 @@ async def db_updates_test(request):
     return jsonify(worlds)
 
 
-@app.route('/plaintext')
+@bs.get('/plaintext')
 async def plaintext_test(request):
     return bs.Response(200, content=bs.Content(b"text/plain", b'Hello, World!'))
     #return bs.text('Hello, World!')
-
-
-# -----------------------------------------------------------------------------------
-
-if __name__ == "__main__":
-    import optparse
-    import logging
-    import re
-
-    parser = optparse.OptionParser("usage: %prog [options]", add_help_option=False)
-    parser.add_option("-h", "--host", dest="host", default='0.0.0.0', type="string")
-    parser.add_option("-p", "--port", dest="port", default=8080, type="int")
-    parser.add_option("-s", "--server", dest="server", default="uvicorn", type="string")
-    parser.add_option("-w", "--workers", dest="workers", default=1, type="int")
-    parser.add_option("-k", "--keepalive", dest="keepalive", default=60, type="int")
-    parser.add_option("-v", "--verbose", dest="verbose", default=0, type="int")
-    (opt, args) = parser.parse_args() 
-
-    workers = _cpu_count
-    if workers > 0:
-        workers = opt.workers
-
-    if _is_travis:
-        workers = 2
-
-    def run_app():
-        if opt.gateway == "uvicorn":
-            import uvicorn
-            log_level = logging.ERROR
-            uvicorn.run(app, host=opt.host, port=opt.port, workers=opt.workers, loop="uvloop", log_level=log_level, access_log=False)
-        if opt.server == 'socketify':
-            import socketify
-            msg = "Listening on http://0.0.0.0:{port} now\n".format(port=opt.port)
-            socketify.ASGI(app).listen(opt.port, lambda config: logging.info(msg)).run()
-
-    def create_fork():
-        n = os.fork()
-        # n greater than 0 means parent process
-        if not n > 0:
-            run_app()
-
-    # fork limiting the cpu count - 1
-    for i in range(1, workers):
-        create_fork()
-
-    run_app()  # run app on the main process too :)
 
