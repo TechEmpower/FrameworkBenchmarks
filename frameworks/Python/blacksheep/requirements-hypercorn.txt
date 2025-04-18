@@ -1,1 +1,1 @@
-hypercorn==0.14.3
+hypercorn==0.17.3

@@ -1,0 +1,19 @@
+{
+    "listeners": {
+        "*:8080": {
+            "pass": "applications/blacksheep"
+        }
+    },
+    "applications": {
+        "blacksheep": {
+            "type": "python",
+            "path": "/blacksheep",
+            "working_directory": "/blacksheep",
+            "protocol": "asgi",
+            "module": "app",
+            "callable": "app",
+            "processes": {{NPROC}}
+        }
+    },
+    "access_log": "/dev/null"
+}
