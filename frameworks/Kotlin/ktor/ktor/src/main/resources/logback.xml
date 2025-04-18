@@ -11,7 +11,7 @@
      </appender>
 
 
-    <root level="INFO">
+    <root level="ERROR">
         <appender-ref ref="ASYNC"/>
     </root>
 
