@@ -1,0 +1,20 @@
+[framework]
+name = "rama"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+urls.db = "/db"
+urls.query = "/queries?q="
+urls.update = "/updates?q="
+urls.fortune = "/fortunes"
+urls.cached_query = "/cached-queries?q="
+approach = "Realistic"
+classification = "Fullstack"
+database = "Postgres"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "Rust"
+webserver = "Rama"
+versus = "None"
