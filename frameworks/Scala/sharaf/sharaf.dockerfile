@@ -1,4 +1,4 @@
-FROM eclipse-temurin:21-jdk-ubi9-minimal
+FROM nightscape/scala-mill:eclipse-temurin-21.0.6_7-jdk-jammy_0.12.10
 WORKDIR /sharaf
 
 COPY src src
