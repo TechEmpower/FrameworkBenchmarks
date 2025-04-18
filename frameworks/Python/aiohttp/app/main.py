@@ -37,6 +37,11 @@ def pg_dsn(dialect=None) -> str:
     )
     return url.render_as_string(hide_password=False)
 
+class NoResetConnection(asyncpg.Connection):
+    __slots__ = ()
+
+    def get_reset_query(self):
+        return ''
 
 async def db_ctx(app: web.Application):
     # number of gunicorn workers = multiprocessing.cpu_count() as per gunicorn_conf.py
@@ -52,7 +57,7 @@ async def db_ctx(app: web.Application):
         app['db_session'] = async_sessionmaker(engine)
     else:
         dsn = pg_dsn()
-        app['pg'] = await asyncpg.create_pool(dsn=dsn, min_size=min_size, max_size=max_size, loop=app.loop)
+        app['pg'] = await asyncpg.create_pool(dsn=dsn, min_size=min_size, max_size=max_size, loop=app.loop, connection_class=NoResetConnection)
 
     yield
 
