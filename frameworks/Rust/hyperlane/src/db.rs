@@ -119,9 +119,13 @@ pub async fn get_update_data(
     let db_pool: &DbPoolConnection = get_db_connection();
     let mut query_res_list: Vec<QueryRow> = Vec::with_capacity(limit as usize);
     let rows: Vec<QueryRow> = get_some_row_id(limit, db_pool).await;
-    let mut sql: String = format!("UPDATE {} SET randomNumber = CASE id ", TABLE_NAME_WORLD);
+    let mut sql: String = String::with_capacity(rows.len() * 32);
+    sql.push_str(&format!(
+        "UPDATE {} SET randomNumber = CASE id ",
+        TABLE_NAME_WORLD
+    ));
     let mut id_list: Vec<i32> = Vec::with_capacity(rows.len());
-    let mut value_list: Vec<String> = Vec::with_capacity(rows.len() * 2);
+    let mut value_list: Vec<String> = Vec::with_capacity(rows.len());
     let mut random_numbers: Vec<i32> = Vec::with_capacity(rows.len());
     for (i, row) in rows.iter().enumerate() {
         let new_random_number: i32 = get_random_id() as i32;
@@ -131,10 +135,8 @@ pub async fn get_update_data(
         query_res_list.push(QueryRow::new(row.id, new_random_number));
     }
     sql.push_str(&value_list.join(" "));
-    let id_params: String = id_list
-        .iter()
-        .enumerate()
-        .map(|(i, _)| format!("${}", (rows.len() * 2 + 1) + i))
+    let id_params: String = (0..rows.len())
+        .map(|i| format!("${}", (rows.len() * 2 + 1) + i))
         .collect::<Vec<_>>()
         .join(",");
     sql.push_str(&format!(
@@ -174,7 +176,7 @@ pub async fn query_world_row(db_pool: &DbPoolConnection, id: Queries) -> QueryRo
 pub async fn update_world_rows(limit: Queries) -> Vec<QueryRow> {
     let db_pool: &DbPoolConnection = get_db_connection();
     let (sql, data, id_list, random_numbers) = get_update_data(limit).await;
-    let mut query_builder: query::Query<'_, Postgres, postgres::PgArguments> = query(&sql);
+    let mut query_builder = query(&sql);
     for (id, random_number) in id_list.iter().zip(random_numbers.iter()) {
         query_builder = query_builder.bind(id).bind(random_number);
     }
@@ -194,18 +196,18 @@ pub async fn all_world_row() -> Vec<PgRow> {
 
 pub async fn get_some_row_id(limit: Queries, db_pool: &DbPoolConnection) -> Vec<QueryRow> {
     let semaphore: Arc<Semaphore> = Arc::new(Semaphore::new(32));
-    let mut tasks: Vec<JoinHandle<QueryRow>> = Vec::with_capacity(limit as usize);
-    for _ in 0..limit {
-        let _ = semaphore.clone().acquire_owned().await.map(|permit| {
-            let db_pool: DbPoolConnection = db_pool.clone();
-            tasks.push(spawn(async move {
+    let tasks: Vec<_> = (0..limit)
+        .map(|_| {
+            let semaphore: Arc<Semaphore> = semaphore.clone();
+            let db_pool: Pool<Postgres> = db_pool.clone();
+            spawn(async move {
+                let _permit: Result<OwnedSemaphorePermit, AcquireError> =
+                    semaphore.acquire_owned().await;
                 let id: i32 = get_random_id();
-                let res: QueryRow = query_world_row(&db_pool, id).await;
-                drop(permit);
-                res
-            }));
-        });
-    }
+                query_world_row(&db_pool, id).await
+            })
+        })
+        .collect();
     join_all(tasks)
         .await
         .into_iter()
