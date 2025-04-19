@@ -2,12 +2,13 @@ package org.tio.http.server.benchmark;
 
 import java.io.IOException;
 
+import org.tio.core.PacketHandlerMode;
 import org.tio.http.common.HttpConfig;
 import org.tio.http.server.HttpServerStarter;
 import org.tio.http.server.benchmark.controller.TestController;
 import org.tio.http.server.handler.DefaultHttpRequestHandler;
 import org.tio.http.server.mvc.Routes;
-import org.tio.server.ServerTioConfig;
+import org.tio.server.TioServerConfig;
 
 /**
  * @author tanyaowu 
@@ -17,7 +18,7 @@ public class TioBenchmarkStarter {
 	public static HttpConfig				httpConfig;
 	public static DefaultHttpRequestHandler	requestHandler;
 	public static HttpServerStarter			httpServerStarter;
-	public static ServerTioConfig			serverTioConfig;
+	public static TioServerConfig			tioServerConfig;
 
 	/**
 	 * @param args
@@ -36,8 +37,11 @@ public class TioBenchmarkStarter {
 		requestHandler = new DefaultHttpRequestHandler(httpConfig, routes);
 		requestHandler.setCompatibilityAssignment(false);
 		httpServerStarter = new HttpServerStarter(httpConfig, requestHandler);
-		serverTioConfig = httpServerStarter.getServerTioConfig();
-		serverTioConfig.statOn = false;
+		tioServerConfig = httpServerStarter.getTioServerConfig();
+		tioServerConfig.setUseQueueDecode(false);
+		tioServerConfig.setPacketHandlerMode(PacketHandlerMode.SINGLE_THREAD);
+		tioServerConfig.setUseQueueSend(false);
+		tioServerConfig.statOn = false;
 		httpServerStarter.start();
 	}
 }
