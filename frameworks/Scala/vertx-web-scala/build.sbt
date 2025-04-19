@@ -2,7 +2,7 @@ name := "vertx-web-scala"
 
 version := "1"
 
-scalaVersion := "2.12.17"
+scalaVersion := "2.12.20"
 
 lazy val root = (project in file(".")).enablePlugins(SbtTwirl)
 

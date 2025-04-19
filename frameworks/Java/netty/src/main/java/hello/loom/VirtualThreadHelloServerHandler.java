@@ -9,6 +9,7 @@ import hello.HelloServerHandler;
 import hello.HttpResponses;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.FullHttpResponse;
+import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.util.AsciiString;
 
 public class VirtualThreadHelloServerHandler extends HelloServerHandler {
@@ -22,16 +23,16 @@ public class VirtualThreadHelloServerHandler extends HelloServerHandler {
    }
 
    @Override
-   protected void writePlainResponse(ChannelHandlerContext ctx, AsciiString date) {
+   protected void writePlainResponse(ChannelHandlerContext ctx, HttpHeaders plainTextHeaders) {
       group.eventLoopVirtualThreadFactory().newThread(() -> {
-         responses.add(HttpResponses.makePlaintextResponse(date));
+         responses.add(HttpResponses.makePlaintextResponse(plainTextHeaders));
       }).start();
    }
 
    @Override
-   protected void writeJsonResponse(ChannelHandlerContext ctx, JsonStream stream, AsciiString date) {
+   protected void writeJsonResponse(ChannelHandlerContext ctx, JsonStream stream, HttpHeaders jsonHeaders) {
       group.eventLoopVirtualThreadFactory().newThread(() -> {
-         responses.add(HttpResponses.makeJsonResponse(stream, date));
+         responses.add(HttpResponses.makeJsonResponse(stream, jsonHeaders));
       }).start();
    }
 

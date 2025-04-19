@@ -67,9 +67,9 @@ public class HelloWebServer {
 			}
 			var channelB = b.group(group).channel(serverChannelClass);
 			if (EVENT_LOOP_CARRIER) {
-				channelB.childHandler(new HelloLoomServerInitializer((MultithreadVirtualEventExecutorGroup) group, group.next()));
+				channelB.childHandler(new HelloLoomServerInitializer((MultithreadVirtualEventExecutorGroup) group));
 			} else {
-				channelB.childHandler(new HelloServerInitializer(group.next()));
+				channelB.childHandler(new HelloServerInitializer());
 			}
 			b.childOption(ChannelOption.SO_REUSEADDR, true);
 

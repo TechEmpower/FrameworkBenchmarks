@@ -3,8 +3,8 @@ use tokio::runtime::{Builder, Runtime};
 
 fn runtime() -> Runtime {
     Builder::new_multi_thread()
-        .worker_threads(get_thread_count())
-        .thread_stack_size(2097152)
+        .worker_threads(get_thread_count() >> 1)
+        .thread_stack_size(1_048_576)
         .max_blocking_threads(5120)
         .max_io_events_per_tick(5120)
         .enable_all()
@@ -21,8 +21,9 @@ async fn init_server() {
     server.disable_log().await;
     server.disable_inner_log().await;
     server.disable_inner_print().await;
-    server.http_line_buffer_size(512).await;
-    server.websocket_buffer_size(512).await;
+    server.http_line_buffer_size(256).await;
+    server.websocket_buffer_size(256).await;
+    server.request_middleware(request).await;
     server.route("/plaintext", plaintext).await;
     server.route("/json", json).await;
     server.route("/cached-quer", cached_queries).await;
@@ -30,8 +31,6 @@ async fn init_server() {
     server.route("/query", queries).await;
     server.route("/fortunes", fortunes).await;
     server.route("/upda", updates).await;
-    server.request_middleware(request).await;
-    server.response_middleware(response).await;
     server.listen().await.unwrap();
 }
 

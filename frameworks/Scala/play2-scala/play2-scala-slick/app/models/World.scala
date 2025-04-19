@@ -34,8 +34,14 @@ class WorldDAO @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)
     db.run(Worlds.filter(_.id === id).result.head)
   }
 
-  def updateRandom(world: World) = {
-    db.run(Worlds.filter(_.id === world.id).map(_.randomNumber).update(world.randomNumber))
+  def updateRandom(updatedWorlds: Seq[World]): Future[Seq[Int]] = {
+    val updateActions = updatedWorlds.map { uw =>
+      Worlds.filter(_.id === uw.id).map(_.randomNumber).update(uw.randomNumber)
+    }
+
+    val combinedUpdateAction: DBIO[Seq[Int]] = DBIO.sequence(updateActions)
+
+    db.run(combinedUpdateAction)
   }
 }
 

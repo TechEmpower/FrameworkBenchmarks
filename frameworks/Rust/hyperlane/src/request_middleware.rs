@@ -8,8 +8,6 @@ pub async fn request(ctx: Context) {
         .await
         .set_response_header(SERVER, HYPERLANE)
         .await
-        .set_response_header(DATE, current_date_gmt())
-        .await
-        .set_response_status_code(200)
+        .set_response_header(DATE, gmt())
         .await;
 }

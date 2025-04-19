@@ -20,26 +20,43 @@ import com.jsoniter.output.JsonStream;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
+import io.netty.handler.codec.http.DefaultHttpHeadersFactory;
 import io.netty.handler.codec.http.FullHttpResponse;
+import io.netty.handler.codec.http.HttpHeaders;
+import io.netty.handler.codec.http.HttpHeadersFactory;
 import io.netty.util.AsciiString;
 
 public class HttpResponses {
 
-   public static FullHttpResponse makePlaintextResponse(AsciiString date) {
-      return makeResponse(Unpooled.wrappedBuffer(STATIC_PLAINTEXT), TEXT_PLAIN, PLAINTEXT_CLHEADER_VALUE, date);
-   }
+   private static final HttpHeadersFactory HEADERS_FACTORY = DefaultHttpHeadersFactory.headersFactory()
+         .withValidation(false);
 
-   public static FullHttpResponse makeJsonResponse(JsonStream stream, AsciiString date) {
-      return makeResponse(Unpooled.wrappedBuffer(serializeMsg(newMsg(), stream)), APPLICATION_JSON, JSON_CLHEADER_VALUE, date);
-   }
-
-   private static FullHttpResponse makeResponse(ByteBuf buf, CharSequence contentType, CharSequence contentLength, AsciiString date) {
-      final FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, OK, buf, false);
-      response.headers()
-            .set(CONTENT_TYPE, contentType)
+   public static HttpHeaders makeJsonHeaders(AsciiString date) {
+      return HEADERS_FACTORY.newHeaders()
+            .set(CONTENT_TYPE, APPLICATION_JSON)
             .set(SERVER, SERVER_NAME)
             .set(DATE, date)
-            .set(CONTENT_LENGTH, contentLength);
-      return response;
+            .set(CONTENT_LENGTH, JSON_CLHEADER_VALUE);
+   }
+
+
+   public static HttpHeaders makePlaintextHeaders(AsciiString date) {
+      return HEADERS_FACTORY.newHeaders()
+            .set(CONTENT_TYPE, TEXT_PLAIN)
+            .set(SERVER, SERVER_NAME)
+            .set(DATE, date)
+            .set(CONTENT_LENGTH, PLAINTEXT_CLHEADER_VALUE);
+   }
+
+   public static FullHttpResponse makePlaintextResponse(HttpHeaders plaintextHeaders) {
+      return makeResponse(Unpooled.wrappedBuffer(STATIC_PLAINTEXT), plaintextHeaders);
+   }
+
+   public static FullHttpResponse makeJsonResponse(JsonStream stream, HttpHeaders jsonHeaders) {
+      return makeResponse(Unpooled.wrappedBuffer(serializeMsg(newMsg(), stream)), jsonHeaders);
+   }
+
+   private static FullHttpResponse makeResponse(ByteBuf buf, HttpHeaders headers) {
+      return new DefaultFullHttpResponse(HTTP_1_1, OK, buf, headers, HttpHeaders.EMPTY_HEADERS);
    }
 }
