@@ -24,17 +24,30 @@ async fn init_server() {
     server.http_line_buffer_size(256).await;
     server.websocket_buffer_size(256).await;
     server.request_middleware(request).await;
+    #[cfg(feature = "plaintext")]
     server.route("/plaintext", plaintext).await;
+    #[cfg(feature = "json")]
     server.route("/json", json).await;
+    #[cfg(feature = "cached_query")]
     server.route("/cached-quer", cached_queries).await;
+    #[cfg(feature = "db")]
     server.route("/db", db).await;
+    #[cfg(feature = "query")]
     server.route("/query", queries).await;
+    #[cfg(feature = "fortunes")]
     server.route("/fortunes", fortunes).await;
+    #[cfg(feature = "update")]
     server.route("/upda", updates).await;
     server.listen().await.unwrap();
 }
 
 async fn init() {
+    #[cfg(any(
+        feature = "db",
+        feature = "query",
+        feature = "update",
+        feature = "fortunes"
+    ))]
     init_db().await;
     init_server().await;
 }

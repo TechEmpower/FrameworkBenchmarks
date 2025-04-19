@@ -1,3 +1,5 @@
+#[allow(warnings)]
+#[allow(dead_code)]
 pub(crate) mod r#const;
 pub(crate) mod db;
 pub(crate) mod lazy;
@@ -20,6 +22,7 @@ pub(crate) use hyperlane::{
 pub(crate) use lazy::*;
 pub(crate) use rand::{Rng, SeedableRng, rng, rngs::SmallRng};
 pub(crate) use request_middleware::*;
+#[allow(unused_imports)]
 pub(crate) use route::*;
 pub(crate) use server::*;
 pub(crate) use sqlx::{
