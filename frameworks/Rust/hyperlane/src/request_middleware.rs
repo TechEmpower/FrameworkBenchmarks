@@ -9,12 +9,11 @@ pub async fn request(ctx: Context) {
         .await;
     #[cfg(feature = "plaintext")]
     {
-        set_response_header(CONTENT_TYPE, TEXT_PLAIN).await;
+        ctx.set_response_header(CONTENT_TYPE, TEXT_PLAIN).await;
     }
     #[cfg(feature = "fortunes")]
     {
-        ctx = ctx
-            .set_response_header(CONTENT_TYPE, content_type_charset(TEXT_HTML, UTF8))
+        ctx.set_response_header(CONTENT_TYPE, content_type_charset(TEXT_HTML, UTF8))
             .await;
     }
     #[cfg(any(
@@ -25,8 +24,7 @@ pub async fn request(ctx: Context) {
         feature = "cached_query"
     ))]
     {
-        ctx = ctx
-            .set_response_header(CONTENT_TYPE, APPLICATION_JSON)
+        ctx.set_response_header(CONTENT_TYPE, APPLICATION_JSON)
             .await;
     }
 }

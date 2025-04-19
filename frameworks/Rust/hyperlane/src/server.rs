@@ -23,21 +23,21 @@ async fn init_server() {
     server.disable_inner_print().await;
     server.http_line_buffer_size(256).await;
     server.websocket_buffer_size(256).await;
-    server.request_middleware(request).await;
+    server.request_middleware(request_middleware::request).await;
     #[cfg(feature = "plaintext")]
-    server.route("/plaintext", plaintext).await;
+    server.route("/plaintext", route::plaintext).await;
     #[cfg(feature = "json")]
-    server.route("/json", json).await;
+    server.route("/json", route::json).await;
     #[cfg(feature = "cached_query")]
-    server.route("/cached-quer", cached_queries).await;
+    server.route("/cached-quer", route::cached_query).await;
     #[cfg(feature = "db")]
-    server.route("/db", db).await;
+    server.route("/db", route::db).await;
     #[cfg(feature = "query")]
-    server.route("/query", queries).await;
+    server.route("/query", route::query).await;
     #[cfg(feature = "fortunes")]
-    server.route("/fortunes", fortunes).await;
+    server.route("/fortunes", route::fortunes).await;
     #[cfg(feature = "update")]
-    server.route("/upda", updates).await;
+    server.route("/upda", route::update).await;
     server.listen().await.unwrap();
 }
 

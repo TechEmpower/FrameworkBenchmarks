@@ -21,7 +21,7 @@ pub async fn db(ctx: Context) {
         .await;
 }
 
-pub async fn queries(ctx: Context) {
+pub async fn query(ctx: Context) {
     let queries: Queries = ctx
         .get_request_query("q")
         .await
@@ -55,7 +55,7 @@ pub async fn fortunes(ctx: Context) {
     let _ = ctx.send_response(200, res).await;
 }
 
-pub async fn updates(ctx: Context) {
+pub async fn update(ctx: Context) {
     let queries: Queries = ctx
         .get_request_query("q")
         .await
@@ -69,7 +69,7 @@ pub async fn updates(ctx: Context) {
         .await;
 }
 
-pub async fn cached_queries(ctx: Context) {
+pub async fn cached_query(ctx: Context) {
     let count: Queries = ctx
         .get_request_query("c")
         .await

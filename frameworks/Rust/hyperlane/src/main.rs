@@ -17,13 +17,15 @@ pub(crate) use hyperlane::{
     once_cell::sync::Lazy,
     serde::*,
     serde_json::{Value, json},
-    tokio::{spawn, sync::Semaphore, task::JoinHandle},
+    tokio::{
+        spawn,
+        sync::{AcquireError, OwnedSemaphorePermit, Semaphore},
+        task::JoinHandle,
+    },
     *,
 };
 pub(crate) use lazy::*;
 pub(crate) use rand::{Rng, SeedableRng, rng, rngs::SmallRng};
-pub(crate) use request_middleware::*;
-pub(crate) use route::*;
 pub(crate) use server::*;
 pub(crate) use sqlx::{
     postgres::{PgPoolOptions, PgRow},
