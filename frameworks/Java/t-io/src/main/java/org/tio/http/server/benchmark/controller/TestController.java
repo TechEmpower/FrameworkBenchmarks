@@ -20,12 +20,14 @@ public class TestController {
 	private static final String HELLO_WORLD = "Hello, World!";
 	
 	private static final byte[] HELLO_WORLD_BYTES = HELLO_WORLD.getBytes();
+	
+	private static final Message MESSAGE = new Message(HELLO_WORLD);
 		
 	@RequestPath(value = "json")
 	public HttpResponse json(HttpRequest request) throws Exception {
 		//更高性能的写法
 		HttpResponse ret = new HttpResponse(request);
-		ret.setBody(Json.toJson(new Message(HELLO_WORLD)).getBytes());
+		ret.setBody(Json.toJson(MESSAGE).getBytes());
 		ret.addHeader(HeaderName.Content_Type, HeaderValue.Content_Type.TEXT_PLAIN_JSON);
 		return ret;
 		
