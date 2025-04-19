@@ -1538,6 +1538,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f743f2a3cea30a58cd479013f75550e879009e3a02f616f18ca699335aa248c3"
 dependencies = [
  "base64",
+ "base64",
  "bytes",
  "crc",
  "crossbeam-queue",
