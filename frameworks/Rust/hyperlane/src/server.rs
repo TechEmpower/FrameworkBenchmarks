@@ -24,29 +24,31 @@ async fn init_server() {
     server.http_line_buffer_size(256).await;
     server.websocket_buffer_size(256).await;
     server.request_middleware(request_middleware::request).await;
-    #[cfg(feature = "plaintext")]
+    #[cfg(any(feature = "dev", feature = "plaintext"))]
     server.route("/plaintext", route::plaintext).await;
-    #[cfg(feature = "json")]
+    #[cfg(any(feature = "dev", feature = "json"))]
     server.route("/json", route::json).await;
-    #[cfg(feature = "cached_query")]
+    #[cfg(any(feature = "dev", feature = "cached_query"))]
     server.route("/cached-quer", route::cached_query).await;
-    #[cfg(feature = "db")]
+    #[cfg(any(feature = "dev", feature = "db"))]
     server.route("/db", route::db).await;
-    #[cfg(feature = "query")]
+    #[cfg(any(feature = "dev", feature = "query"))]
     server.route("/query", route::query).await;
-    #[cfg(feature = "fortunes")]
+    #[cfg(any(feature = "dev", feature = "fortunes"))]
     server.route("/fortunes", route::fortunes).await;
-    #[cfg(feature = "update")]
+    #[cfg(any(feature = "dev", feature = "update"))]
     server.route("/upda", route::update).await;
     server.listen().await.unwrap();
 }
 
 async fn init() {
     #[cfg(any(
+        feature = "dev",
         feature = "db",
         feature = "query",
         feature = "update",
-        feature = "fortunes"
+        feature = "fortunes",
+        feature = "cached_query",
     ))]
     init_db().await;
     init_server().await;
