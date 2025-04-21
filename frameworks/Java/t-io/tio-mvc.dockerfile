@@ -5,7 +5,7 @@ COPY src src
 COPY script script
 RUN mvn package -q
 
-#TODO use separate JDK/JRE for the RUN (as the other builds)
+FROM openjdk:17
 WORKDIR /t-io/target/tio-http-server-benchmark
 
 EXPOSE 8080
