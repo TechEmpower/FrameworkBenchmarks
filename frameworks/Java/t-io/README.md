@@ -10,7 +10,8 @@ These implementations use the t-io's controller.
 
 
 ## Versions
-3.8.6.v20240801-RELEASE (https://gitee.com/tywo45/t-io)
+* [Java OpenJDK 17](http://openjdk.java.net/)
+* [t-io 3.8.6.v20240801-RELEASE](https://github.com/tywo45/t-io)
 
 ## Test URLs
 
