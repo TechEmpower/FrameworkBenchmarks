@@ -1,7 +1,7 @@
 click==6.7
 Flask==1.0
 greenlet==0.4.14
-gunicorn==19.9.0
+gunicorn==23.0.0
 itsdangerous==0.24
 meinheld==1.0.2
 uWSGI==2.0.22
