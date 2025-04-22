@@ -33,7 +33,7 @@ This is the Vert.x portion of a [benchmarking test suite](../) comparing a varie
 ## Versions
 
 * [Java 17](https://jdk.java.net)
-* [vertx 4.3.8](http://vertx.io/)
+* [vertx 5.0.0.CR6](http://vertx.io/)
 
 ## Test URLs
 

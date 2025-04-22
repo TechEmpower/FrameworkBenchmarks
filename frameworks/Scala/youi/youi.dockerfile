@@ -1,4 +1,4 @@
-FROM hseeberger/scala-sbt:8u151-2.12.5-1.1.2
+FROM sbtscala/scala-sbt:eclipse-temurin-21.0.6_7_1.10.11_2.13.16
 WORKDIR /youi
 COPY project project
 COPY src src

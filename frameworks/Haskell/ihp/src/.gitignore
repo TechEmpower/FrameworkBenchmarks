@@ -1,5 +1,4 @@
 .DS_Store
-.envrc
 .idea
 tmp
 result
@@ -17,3 +16,8 @@ gen
 del
 static/prod.*
 Config/client_session_key.aes
+
+.devenv*
+devenv.local.nix
+.direnv
+.env

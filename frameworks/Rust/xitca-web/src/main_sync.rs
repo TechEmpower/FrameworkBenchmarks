@@ -5,11 +5,11 @@ mod util;
 
 use serde::Serialize;
 use xitca_web::{
+    App,
     codegen::route,
     handler::{html::Html, json::Json, query::Query, state::StateOwn, text::Text},
-    http::{header::SERVER, WebResponse},
+    http::{WebResponse, header::SERVER},
     route::get,
-    App,
 };
 
 use db_diesel::Pool;

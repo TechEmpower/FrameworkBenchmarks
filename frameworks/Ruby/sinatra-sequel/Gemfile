@@ -13,13 +13,8 @@ group :postgresql, optional: true do
   gem 'sequel_pg', '~> 1.6', :platforms=>:ruby, :require=>false
 end
 
-
 group :iodine, optional: true do
   gem 'iodine', '~> 0.7', platforms: [:ruby, :mswin], require: false
-end
-
-group :passenger, optional: true do
-  gem 'passenger', '~> 6.0', platforms: [:ruby, :mswin], require: false
 end
 
 group :puma, optional: true do

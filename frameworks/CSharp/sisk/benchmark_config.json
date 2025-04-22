@@ -17,9 +17,7 @@
                 "os": "Linux",
                 "database_os": "Linux",
                 "display_name": "Sisk Framework"
-            }
-        },
-        {
+            },
             "cadente": {
                 "plaintext_url": "/plaintext",
                 "json_url": "/json",

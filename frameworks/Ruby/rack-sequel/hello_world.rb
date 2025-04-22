@@ -1,12 +1,21 @@
 # frozen_string_literal: true
+require 'time'
 
 # Our Rack application to be executed by rackup
 class HelloWorld
-  DEFAULT_HEADERS = {}.tap do |h|
-    h[SERVER_HEADER] = SERVER_STRING if SERVER_STRING
-
-    h.freeze
-  end
+  MAX_PK = 10_000
+  ID_RANGE = (1..10_000).freeze
+  ALL_IDS = ID_RANGE.to_a
+  QUERIES_MIN = 1
+  QUERIES_MAX = 500
+  CONTENT_TYPE = 'Content-Type'
+  CONTENT_LENGTH = 'Content-Length'
+  JSON_TYPE = 'application/json'
+  HTML_TYPE = 'text/html; charset=utf-8'
+  PLAINTEXT_TYPE = 'text/plain'
+  DATE = 'Date'
+  SERVER = 'Server'
+  SERVER_STRING = "Rack"
 
   def bounded_queries(env)
     params = Rack::Utils.parse_query(env['QUERY_STRING'])
@@ -25,8 +34,9 @@ class HelloWorld
   end
 
   def queries(env)
+    ids = ALL_IDS.sample(bounded_queries(env))
     DB.synchronize do
-      ALL_IDS.sample(bounded_queries(env)).map do |id|
+      ids.map do |id|
         World::BY_ID.(id: id)
       end
     end
@@ -74,9 +84,10 @@ class HelloWorld
   end
 
   def updates(env)
+    ids = ALL_IDS.sample(bounded_queries(env))
     DB.synchronize do
       worlds =
-        ALL_IDS.sample(bounded_queries(env)).map do |id|
+        ids.map do |id|
           world = World::BY_ID.(id: id)
           world[:randomnumber] = rand1
           world
@@ -87,35 +98,60 @@ class HelloWorld
   end
 
   def call(env)
-    content_type, *body =
-      case env['PATH_INFO']
-      when '/json'
-        # Test type 1: JSON serialization
-        [JSON_TYPE, { message: 'Hello, World!' }.to_json]
-      when '/db'
-        # Test type 2: Single database query
-        [JSON_TYPE, db.to_json]
-      when '/queries'
-        # Test type 3: Multiple database queries
-        [JSON_TYPE, queries(env).to_json]
-      when '/fortunes'
-        # Test type 4: Fortunes
-        [HTML_TYPE, fortunes]
-      when '/updates'
-        # Test type 5: Database updates
-        [JSON_TYPE, updates(env).to_json]
-      when '/plaintext'
-        # Test type 6: Plaintext
-        [PLAINTEXT_TYPE, 'Hello, World!']
-      end
+    case env['PATH_INFO']
+    when '/json'
+      # Test type 1: JSON serialization
+      respond JSON_TYPE, { message: 'Hello, World!' }.to_json
+    when '/db'
+      # Test type 2: Single database query
+      respond JSON_TYPE, db.to_json
+    when '/queries'
+      # Test type 3: Multiple database queries
+      respond JSON_TYPE, queries(env).to_json
+    when '/fortunes'
+      # Test type 4: Fortunes
+      respond HTML_TYPE, fortunes
+    when '/updates'
+      # Test type 5: Database updates
+      respond JSON_TYPE, updates(env).to_json
+    when '/plaintext'
+      # Test type 6: Plaintext
+      respond PLAINTEXT_TYPE, 'Hello, World!'
+    end
+  end
 
+  private
+
+  def respond(content_type, body)
     [
       200,
-      DEFAULT_HEADERS.merge(
-        CONTENT_TYPE => content_type,
-        DATE_HEADER => Time.now.httpdate
-      ),
-      body
+      headers(content_type, body),
+      [body]
     ]
+  end
+
+  if defined?(Unicorn)
+    def headers(content_type, body)
+      {
+        CONTENT_TYPE => content_type,
+        SERVER => SERVER_STRING,
+        CONTENT_LENGTH => body.bytesize.to_s
+      }
+    end
+  elsif defined?(Puma)
+    def headers(content_type, _)
+      {
+        CONTENT_TYPE => content_type,
+        SERVER => SERVER_STRING,
+        DATE => Time.now.utc.httpdate
+      }
+    end
+  else
+    def headers(content_type, _)
+      {
+        CONTENT_TYPE => content_type,
+        SERVER => SERVER_STRING
+      }
+    end
   end
 end

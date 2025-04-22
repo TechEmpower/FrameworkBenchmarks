@@ -1,8 +1,8 @@
 #ifndef ORM_DEFAULT_FORTUNEBASEMATA_H
 #define ORM_DEFAULT_FORTUNEBASEMATA_H
 /*
-*This file is auto create from cli
-*本文件为自动生成 Fri, 26 Jan 2024 02:59:30 GMT
+*This file is auto create from paozhu_cli
+*本文件为自动生成 Tue, 08 Apr 2025 07:55:59 GMT
 ***/
 #include <iostream>
 #include <cstdio>
@@ -14,28 +14,30 @@
 #include <vector>
 #include <ctime>
 #include <array>
-#include "mysql.h"
+#include "unicode.h"
+
 namespace orm { 
    
     
 struct fortunebase
 {
     struct meta{
-    unsigned  int id= 0; //
- std::string message=""; //
+     unsigned  int  id = 0; ///**/
+ std::string  message = ""; ///**/
  } data;
  std::vector<fortunebase::meta> record;
 std::string _rmstag="default";//this value must be default or tag value, tag in mysqlconnect config file .
-std::vector<unsigned char> _keypos{0x00};
-MYSQL_ROW _row;
+unsigned int _offset=0;
 std::vector<fortunebase::meta>::iterator begin(){     return record.begin(); }
 std::vector<fortunebase::meta>::iterator end(){     return record.end(); }
 std::vector<fortunebase::meta>::const_iterator begin() const{     return record.begin(); }
 std::vector<fortunebase::meta>::const_iterator end() const{     return record.end(); }
-const std::array<std::string,2> colnames={"id","message"};
-const std::array<unsigned char,2> colnamestype= {3,253};
+static constexpr std::array<std::string_view,2> col_names={"id","message"};
+static constexpr std::array<unsigned char,2> col_types={3,253};
+static constexpr std::array<unsigned char,2> col_length={0,0};
+static constexpr std::array<unsigned char,2> col_decimals={0,0};
 std::string tablename="fortune";
-std::string modelname="Fortune";
+static constexpr std::string_view modelname="Fortune";
 
 	  unsigned char findcolpos(const std::string &coln){
             if(coln.size()==0)
@@ -82,70 +84,9 @@ break;
      
          return temp;
      }
-     void _setColnamevalue()
-      {
-        for(unsigned char i=0;i<_keypos.size();i++)
-        {
-            switch(_keypos[i]){
-        	case 0:
-		 try{
-			data.id=std::stoul(_row[i]);
-		}catch (...) { 
-			data.id=0;
-			 }
-			break;
-	case 1:
-		 try{
-			data.message.append((_row[i]==NULL?"":_row[i]));
-		}catch (...) { 
-			data.message.clear();
-			 }
-			break;
-	default:
-		 { }
-			
+     
 
-                 }
-
-                 if(i>210){
-                     break;
-                 }
-          }
-   } 
-         void _addnewrowvalue(){
-           fortunebase::meta metatemp;   
-
-          for(unsigned char i=0;i<_keypos.size();i++){
- 
-                 switch(_keypos[i]){
-
-        	case 0:
-		 try{
-			metatemp.id=std::stoul(_row[i]);
-		}catch (...) { 
-			metatemp.id=0;
-			 }
-			break;
-	case 1:
-		 try{
-			metatemp.message.append((_row[i]==NULL?"":_row[i]));
-		}catch (...) { 
-			metatemp.message.clear();
-			 }
-			break;
-	default:
-		 { }
-			
-
-                  }
-                 if(i>210){
-                     break;
-                 }
-          }
-           record.emplace_back(std::move(metatemp)); 
-   } 
-
-  inline  std::string stringaddslash(std::string &content){
+  inline  std::string stringaddslash(const std::string &content){
         std::string temp;
         for(unsigned int i=0;i<content.size();i++){
             if(content[i]=='\''){
@@ -162,7 +103,7 @@ break;
         }
         return temp;
    }  
-  inline  std::string jsonaddslash(std::string &content){
+  inline  std::string jsonaddslash(const std::string &content){
         std::string temp;
         for(unsigned int i=0;i<content.size();i++){
             if(content[i]=='"'){
@@ -179,23 +120,23 @@ break;
    }  
 
    std::string _makeinsertsql(){
-      unsigned int j=0;
-                std::ostringstream tempsql;
-                tempsql<<"INSERT INTO ";
-                    tempsql<<tablename;
-                   tempsql<<" (";
-                    for(;j<colnames.size();j++){
-                            if(j>0){
-                                tempsql<<"`,`";
-                            }else{
-                                tempsql<<"`";
-                            }
-                            tempsql<<colnames[j];
-                    }
-                    if(j>0){
-                        tempsql<<"`";
-                    }
-            tempsql<<") VALUES (";
+        unsigned int j=0;
+        std::ostringstream tempsql;
+        tempsql<<"INSERT INTO ";
+        tempsql<<tablename;
+        tempsql<<" (";
+        for(;j<col_names.size();j++){
+                if(j>0){
+                    tempsql<<"`,`";
+                }else{
+                    tempsql<<"`";
+                }
+                tempsql<<col_names[j];
+        }
+        if(j>0){
+            tempsql<<"`";
+        }
+        tempsql<<") VALUES (";
 
         if(data.id==0){
 tempsql<<"null";
@@ -209,24 +150,24 @@ tempsql<<")";
        return tempsql.str();
    } 
       
-      std::string _makerecordinsertsql( meta &insert_data){
-      unsigned int j=0;
-                std::ostringstream tempsql;
-                tempsql<<"INSERT INTO ";
-                    tempsql<<tablename;
-                   tempsql<<" (";
-                    for(;j<colnames.size();j++){
-                            if(j>0){
-                                tempsql<<"`,`";
-                            }else{
-                                tempsql<<"`";
-                            }
-                            tempsql<<colnames[j];
-                    }
-                    if(j>0){
-                        tempsql<<"`";
-                    }
-            tempsql<<") VALUES (";
+      std::string _makerecordinsertsql(const meta &insert_data){
+        unsigned int j=0;
+        std::ostringstream tempsql;
+        tempsql<<"INSERT INTO ";
+        tempsql<<tablename;
+        tempsql<<" (";
+        for(;j<col_names.size();j++){
+                if(j>0){
+                    tempsql<<"`,`";
+                }else{
+                    tempsql<<"`";
+                }
+                tempsql<<col_names[j];
+        }
+        if(j>0){
+            tempsql<<"`";
+        }
+        tempsql<<") VALUES (";
 
         if(insert_data.id==0){
 tempsql<<"null";
@@ -240,35 +181,35 @@ tempsql<<")";
        return tempsql.str();
    } 
        
-      std::string _makerecordinsertsql( std::vector<meta> &insert_data){
-      unsigned int j=0;
-                std::ostringstream tempsql;
-                tempsql<<"INSERT INTO ";
-                    tempsql<<tablename;
-                   tempsql<<" (";
-                    for(;j<colnames.size();j++){
-                            if(j>0){
-                                tempsql<<"`,`";
-                            }else{
-                                tempsql<<"`";
-                            }
-                            tempsql<<colnames[j];
-                    }
-                    if(j>0){
-                        tempsql<<"`";
-                    }
-            tempsql<<") VALUES ";
+    std::string _makerecordinsertsql(const std::vector<meta> &insert_data){
+        unsigned int j=0;
+        std::ostringstream tempsql;
+        tempsql<<"INSERT INTO ";
+        tempsql<<tablename;
+        tempsql<<" (";
+        for(;j<col_names.size();j++){
+                if(j>0){
+                    tempsql<<"`,`";
+                }else{
+                    tempsql<<"`";
+                }
+                tempsql<<col_names[j];
+        }
+        if(j>0){
+            tempsql<<"`";
+        }
+        tempsql<<") VALUES ";
 
-    for(unsigned int i=0;i<insert_data.size();i++)
-    {
-		if(i>0)
-		{
-			tempsql<<",";	
-		}
-		tempsql<<"(";
+        for(unsigned int i=0;i<insert_data.size();i++)
+        {
+            if(i>0)
+            {
+                tempsql<<",";	
+            }
+            tempsql<<"(";
 
 
-        	if(insert_data[i].id==0){
+            	if(insert_data[i].id==0){
 	tempsql<<"null";
 	 }else{ 
 	tempsql<<std::to_string(insert_data[i].id);
@@ -282,17 +223,16 @@ tempsql<<")";
    } 
        
     std::string _makeupdatesql(const std::string &fileld){
-       //int j=0;
-            std::ostringstream tempsql;
-                 tempsql<<"UPDATE ";
-                 tempsql<<tablename;
-                 tempsql<<" SET ";
+        std::ostringstream tempsql;
+        tempsql<<"UPDATE ";
+        tempsql<<tablename;
+        tempsql<<" SET ";
 
-            bool isall=false;
-            if(fileld.empty()){
-                isall=true;
-            }
-            if(isall){
+        bool isall=false;
+        if(fileld.empty()){
+            isall=true;
+        }
+        if(isall){
 
         if(data.id==0){
 	tempsql<<"`id`=0";
@@ -311,7 +251,7 @@ tempsql<<",`message`='"<<stringaddslash(data.message)<<"'";
                                 unsigned char bpos_i=findcolpos(keyname);
                                keypos.emplace_back(bpos_i); 
 #ifdef DEBUG
-                    if (bpos_i == 254)
+                    if (bpos_i == 255)
                     {
                         std::cout << "\033[1m\033[31m-----------\n"
                                   << keyname << " not in " << tablename << " table Field.\n-----------\033[0m"
@@ -331,7 +271,7 @@ tempsql<<",`message`='"<<stringaddslash(data.message)<<"'";
                  if(keyname.size()>0){
                                 unsigned char bpos_i=findcolpos(keyname);
  #ifdef DEBUG
-                    if (bpos_i == 254)
+                    if (bpos_i == 255)
                     {
                         std::cout << "\033[1m\033[31m-----------\n"
                                   << keyname << " not in " << tablename << " table Field.\n-----------\033[0m"
@@ -375,7 +315,7 @@ tempsql<<"`message`='"<<stringaddslash(data.message)<<"'";
         tempsql << "REPLACE INTO ";
         tempsql << tablename;
         tempsql << " (";
-        for (; j < colnames.size(); j++)
+        for (; j < col_names.size(); j++)
         {
             if (j > 0)
             {
@@ -385,7 +325,7 @@ tempsql<<"`message`='"<<stringaddslash(data.message)<<"'";
             {
                 tempsql << "`";
             }
-            tempsql << colnames[j];
+            tempsql << col_names[j];
         }
         if (j > 0)
         {
@@ -419,7 +359,7 @@ tempsql<<"`message`='"<<stringaddslash(data.message)<<"'";
         tempsql << "INSERT INTO ";
         tempsql << tablename;
         tempsql << " (";
-        for (; j < colnames.size(); j++)
+        for (; j < col_names.size(); j++)
         {
             if (j > 0)
             {
@@ -429,7 +369,7 @@ tempsql<<"`message`='"<<stringaddslash(data.message)<<"'";
             {
                 tempsql << "`";
             }
-            tempsql << colnames[j];
+            tempsql << col_names[j];
         }
         if (j > 0)
         {
@@ -455,33 +395,12 @@ tempsql<<"`message`='"<<stringaddslash(data.message)<<"'";
 	 tempsql<<" as new ON DUPLICATE KEY UPDATE ";
 
      
-    std::string keyname;
-    unsigned char jj=0;
-    j=0;
-     if(fileld.size()>0){
-            for(;jj<fileld.size();jj++){
-                    if(fileld[jj]==','){
-                        if(findcolpos(keyname)<255)
-                        {
-                            if(j>0)
-                            {
-                                tempsql<<",";
-                            }
-                            tempsql<<keyname;
-                            tempsql<<"=new.";
-                            tempsql<<keyname;
-                             
-                        }
-                        continue;   
-                    }
-                    if(fileld[jj]==0x20){
-
-                        continue;   
-                    }
-                    keyname.push_back(fileld[jj]);
-
-            }  
-            if(keyname.size()>0){
+        std::string keyname;
+        unsigned char jj=0;
+        j=0;
+        if(fileld.size()>0){
+        for(;jj<fileld.size();jj++){
+            if(fileld[jj]==','){
                 if(findcolpos(keyname)<255)
                 {
                     if(j>0)
@@ -491,10 +410,30 @@ tempsql<<"`message`='"<<stringaddslash(data.message)<<"'";
                     tempsql<<keyname;
                     tempsql<<"=new.";
                     tempsql<<keyname;
-                    
                 }
+                continue;   
             }
-        } 
+            if(fileld[jj]==0x20){
+                continue;   
+            }
+            keyname.push_back(fileld[jj]);
+
+        }  
+        if(keyname.size()>0){
+            if(findcolpos(keyname)<255)
+            {
+                if(j>0)
+                {
+                    tempsql<<",";
+                }
+                tempsql<<keyname;
+                tempsql<<"=new.";
+                tempsql<<keyname;
+                
+            }
+        }
+
+    } 
  
  return tempsql.str();
 }
@@ -506,30 +445,30 @@ tempsql<<"`message`='"<<stringaddslash(data.message)<<"'";
         std::vector<unsigned char> keypos;
         if(fileld.size()>1){
             for(;jj<fileld.size();jj++){
-                    if(fileld[jj]==','){
-                        keypos.emplace_back(findcolpos(keyname)); 
-                        keyname.clear();
-                        continue;   
-                    }
-                    if(fileld[jj]==0x20){
+                if(fileld[jj]==','){
+                    keypos.emplace_back(findcolpos(keyname)); 
+                    keyname.clear();
+                    continue;   
+                }
+                if(fileld[jj]==0x20){
 
-                        continue;   
-                    }
-                    keyname.push_back(fileld[jj]);
+                    continue;   
+                }
+                keyname.push_back(fileld[jj]);
 
             }  
             if(keyname.size()>0){
-                            keypos.emplace_back(findcolpos(keyname)); 
-                            keyname.clear();
+                keypos.emplace_back(findcolpos(keyname)); 
+                keyname.clear();
             }
         }else{
-            for(jj=0;jj<colnames.size();jj++){
+            for(jj=0;jj<col_names.size();jj++){
                 keypos.emplace_back(jj); 
             }
         }
                
-                 for(jj=0;jj<keypos.size();jj++){
-                       switch(keypos[jj]){
+            for(jj=0;jj<keypos.size();jj++){
+                switch(keypos[jj]){
          case 0:
 if(data.id==0){
 	temparray.push_back("0");
@@ -551,35 +490,35 @@ if(data.id==0){
    
    std::map<std::string,std::string> data_tomap(std::string fileld=""){
        std::map<std::string,std::string> tempsql;
-            std::string keyname;
-            unsigned char jj=0;
-                  std::vector<unsigned char> keypos;
-                  if(fileld.size()>1){
-                    for(;jj<fileld.size();jj++){
-                            if(fileld[jj]==','){
-                                keypos.emplace_back(findcolpos(keyname)); 
-                                keyname.clear();
-                                continue;   
-                            }
-                            if(fileld[jj]==0x20){
+        std::string keyname;
+        unsigned char jj=0;
+        std::vector<unsigned char> keypos;
+        if(fileld.size()>1){
+        for(;jj<fileld.size();jj++){
+            if(fileld[jj]==','){
+                keypos.emplace_back(findcolpos(keyname)); 
+                keyname.clear();
+                continue;   
+            }
+            if(fileld[jj]==0x20){
 
-                                continue;   
-                            }
-                            keyname.push_back(fileld[jj]);
+                continue;   
+            }
+            keyname.push_back(fileld[jj]);
 
-                    }  
-                    if(keyname.size()>0){
-                                    keypos.emplace_back(findcolpos(keyname)); 
-                                    keyname.clear();
-                    }
-                 }else{
-                     for(jj=0;jj<colnames.size();jj++){
-                         keypos.emplace_back(jj); 
-                     }
-                 }
-                
-                 for(jj=0;jj<keypos.size();jj++){
-                       switch(keypos[jj]){
+        }  
+        if(keyname.size()>0){
+            keypos.emplace_back(findcolpos(keyname)); 
+            keyname.clear();
+        }
+        }else{
+            for(jj=0;jj<col_names.size();jj++){
+                keypos.emplace_back(jj); 
+            }
+        }
+    
+        for(jj=0;jj<keypos.size();jj++){
+            switch(keypos[jj]){
          case 0:
 if(data.id==0){
 	tempsql.insert({"id","0"});
@@ -617,36 +556,36 @@ tempsql<<"}";
    }   
    
    std::string data_tojson(std::string fileld){
-       std::ostringstream tempsql;
-            std::string keyname;
-            unsigned char jj=0;
-                  std::vector<unsigned char> keypos;
-                  if(fileld.size()>0){
-                    for(;jj<fileld.size();jj++){
-                            if(fileld[jj]==','){
-                                keypos.emplace_back(findcolpos(keyname)); 
-                                keyname.clear();
-                                continue;   
-                            }
-                            if(fileld[jj]==0x20){
+        std::ostringstream tempsql;
+        std::string keyname;
+        unsigned char jj=0;
+        std::vector<unsigned char> keypos;
+        if(fileld.size()>0){
+        for(;jj<fileld.size();jj++){
+            if(fileld[jj]==','){
+                keypos.emplace_back(findcolpos(keyname)); 
+                keyname.clear();
+                continue;   
+            }
+            if(fileld[jj]==0x20){
 
-                                continue;   
-                            }
-                            keyname.push_back(fileld[jj]);
+                continue;   
+            }
+            keyname.push_back(fileld[jj]);
 
-                    }  
-                    if(keyname.size()>0){
-                                    keypos.emplace_back(findcolpos(keyname)); 
-                                    keyname.clear();
-                    }
-                 }else{
-                     for(jj=0;jj<colnames.size();jj++){
-                         keypos.emplace_back(jj); 
-                     }
-                 }
-                 tempsql<<"{";
-                 for(jj=0;jj<keypos.size();jj++){
-                       switch(keypos[jj]){
+        }  
+        if(keyname.size()>0){
+            keypos.emplace_back(findcolpos(keyname)); 
+            keyname.clear();
+        }
+        }else{
+            for(jj=0;jj<col_names.size();jj++){
+                keypos.emplace_back(jj); 
+            }
+        }
+        tempsql<<"{";
+        for(jj=0;jj<keypos.size();jj++){
+            switch(keypos[jj]){
          case 0:
  if(jj>0){ tempsql<<","; } 
 if(data.id==0){
@@ -981,43 +920,43 @@ tempsql<<"\"message\":\""<<http::utf8_to_jsonstring(data.message)<<"\"";
    } 
     
    std::string to_json(std::string fileld=""){
-       std::ostringstream tempsql;
-            std::string keyname;
-            unsigned char jj=0;
-                  std::vector<unsigned char> keypos;
-                  if(fileld.size()>0){
-                    for(;jj<fileld.size();jj++){
-                            if(fileld[jj]==','){
-                                keypos.emplace_back(findcolpos(keyname)); 
-                                keyname.clear();
-                                continue;   
-                            }
-                            if(fileld[jj]==0x20){
+    std::ostringstream tempsql;
+    std::string keyname;
+    unsigned char jj=0;
+    std::vector<unsigned char> keypos;
+    if(fileld.size()>0){
+        for(;jj<fileld.size();jj++){
+            if(fileld[jj]==','){
+                keypos.emplace_back(findcolpos(keyname)); 
+                keyname.clear();
+                continue;   
+            }
+            if(fileld[jj]==0x20){
 
-                                continue;   
-                            }
-                            keyname.push_back(fileld[jj]);
+                continue;   
+            }
+            keyname.push_back(fileld[jj]);
 
-                    }  
-                    if(keyname.size()>0){
-                                    keypos.emplace_back(findcolpos(keyname)); 
-                                    keyname.clear();
-                    }
-                 }else{
-                     for(jj=0;jj<colnames.size();jj++){
-                         keypos.emplace_back(jj); 
-                     }
-                 }
-                tempsql<<"[";
-              for(size_t n=0;n<record.size();n++){
-                  if(n>0){
-                      tempsql<<",{";
-                  }else{
-                      tempsql<<"{";
-                  }  
-                 
-                 for(jj=0;jj<keypos.size();jj++){
-                       switch(keypos[jj]){
+        }  
+        if(keyname.size()>0){
+            keypos.emplace_back(findcolpos(keyname)); 
+            keyname.clear();
+        }
+    }else{
+        for(jj=0;jj<col_names.size();jj++){
+            keypos.emplace_back(jj); 
+        }
+    }
+    tempsql<<"[";
+    for(size_t n=0;n<record.size();n++){
+        if(n>0){
+            tempsql<<",{";
+        }else{
+            tempsql<<"{";
+        }  
+    
+        for(jj=0;jj<keypos.size();jj++){
+            switch(keypos[jj]){
          case 0:
  if(jj>0){ tempsql<<","; } 
 if(record[n].id==0){
@@ -1043,49 +982,49 @@ tempsql<<"\"message\":\""<<http::utf8_to_jsonstring(record[n].message)<<"\"";
    
    std::string to_json(std::function<bool(std::string&,meta&)> func,std::string fileld=""){
        std::ostringstream tempsql;
-            std::string keyname;
-            unsigned char jj=0;
-                  std::vector<unsigned char> keypos;
-                  if(fileld.size()>0){
-                    for(;jj<fileld.size();jj++){
-                            if(fileld[jj]==','){
-                                keypos.emplace_back(findcolpos(keyname)); 
-                                keyname.clear();
-                                continue;   
-                            }
-                            if(fileld[jj]==0x20){
+        std::string keyname;
+        unsigned char jj=0;
+        std::vector<unsigned char> keypos;
+        if(fileld.size()>0){
+            for(;jj<fileld.size();jj++){
+                if(fileld[jj]==','){
+                    keypos.emplace_back(findcolpos(keyname)); 
+                    keyname.clear();
+                    continue;   
+                }
+                if(fileld[jj]==0x20){
 
-                                continue;   
-                            }
-                            keyname.push_back(fileld[jj]);
+                    continue;   
+                }
+                keyname.push_back(fileld[jj]);
 
-                    }  
-                    if(keyname.size()>0){
-                                    keypos.emplace_back(findcolpos(keyname)); 
-                                    keyname.clear();
-                    }
-                 }else{
-                     for(jj=0;jj<colnames.size();jj++){
-                         keypos.emplace_back(jj); 
-                     }
-                 }
-                tempsql<<"[";
-              for(size_t n=0;n<record.size();n++){
-                 keyname.clear();
-                 if(func(keyname,record[n])){ 
-                            if(n>0){
-                                tempsql<<",{";
-                            }else{
-                                tempsql<<"{";
-                            } 
-                            tempsql<<keyname;
-                 }else{
-                    continue;
-                 } 
-                  
-                 for(jj=0;jj<keypos.size();jj++){
-                        
-                       switch(keypos[jj]){
+            }  
+            if(keyname.size()>0){
+                keypos.emplace_back(findcolpos(keyname)); 
+                keyname.clear();
+            }
+        }else{
+            for(jj=0;jj<col_names.size();jj++){
+                keypos.emplace_back(jj); 
+            }
+        }
+        tempsql<<"[";
+        for(size_t n=0;n<record.size();n++){
+            keyname.clear();
+            if(func(keyname,record[n])){ 
+                if(n>0){
+                    tempsql<<",{";
+                }else{
+                    tempsql<<"{";
+                } 
+                tempsql<<keyname;
+            }else{
+            continue;
+            } 
+        
+        for(jj=0;jj<keypos.size();jj++){
+            
+            switch(keypos[jj]){
          case 0:
  if(jj>0){ tempsql<<","; } 
 if(record[n].id==0){
@@ -1110,12 +1049,12 @@ tempsql<<"\"message\":\""<<http::utf8_to_jsonstring(record[n].message)<<"\"";
    }   
    long long getPK(){  return data.id; } 
  void setPK(long long val){  data.id=val;} 
-unsigned  int  getId(){  return data.id; } 
- void setId(unsigned  int  val){  data.id=val;} 
+ unsigned  int  getId(){  return data.id; } 
+ void setId( unsigned  int  val){  data.id=val;} 
 
-std::string getMessage(){  return data.message; } 
-std::string& getRefMessage(){  return std::ref(data.message); } 
- void setMessage(std::string &val){  data.message=val;} 
+ std::string  getMessage(){  return data.message; } 
+ std::string & getRefMessage(){  return std::ref(data.message); } 
+ void setMessage( std::string  &val){  data.message=val;} 
  void setMessage(std::string_view val){  data.message=val;} 
 
 fortunebase::meta getnewData(){

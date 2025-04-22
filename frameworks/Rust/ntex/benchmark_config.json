@@ -19,7 +19,7 @@
         "notes": "",
         "versus": ""
     },
-    "compio": {
+    "neon": {
         "json_url": "/json",
         "plaintext_url": "/plaintext",
         "port": 8080,
@@ -33,7 +33,25 @@
         "webserver": "ntex",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "ntex [compio]",
+        "display_name": "ntex [neon]",
+        "notes": "",
+        "versus": ""
+    },
+    "neon-uring": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "Postgres",
+        "framework": "ntex",
+        "language": "Rust",
+        "orm": "Raw",
+        "platform": "None",
+        "webserver": "ntex",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "ntex [neon(io-uring)]",
         "notes": "",
         "versus": ""
     },
@@ -57,7 +75,7 @@
         "notes": "",
         "versus": ""
     },
-    "db-compio": {
+    "db-neon": {
         "fortune_url": "/fortunes",
         "db_url": "/db",
         "query_url": "/query?q=",
@@ -73,7 +91,27 @@
         "webserver": "ntex",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "ntex [compio,db]",
+        "display_name": "ntex [neon,db]",
+        "notes": "",
+        "versus": ""
+    },
+    "db-neon-uring": {
+        "fortune_url": "/fortunes",
+        "db_url": "/db",
+        "query_url": "/query?q=",
+        "update_url": "/update?q=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "Postgres",
+        "framework": "ntex",
+        "language": "Rust",
+        "orm": "Raw",
+        "platform": "None",
+        "webserver": "ntex",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "ntex [neon(io-uring),db]",
         "notes": "",
         "versus": ""
     },
@@ -95,7 +133,7 @@
         "notes": "",
         "versus": ""
     },
-    "plt-compio": {
+    "plt-neon": {
         "json_url": "/json",
         "plaintext_url": "/plaintext",
         "port": 8080,
@@ -109,7 +147,25 @@
         "webserver": "ntex",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "ntex [compio,platform]",
+        "display_name": "ntex [neon,platform]",
+        "notes": "",
+        "versus": ""
+    },
+    "plt-neon-uring": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "Postgres",
+        "framework": "ntex",
+        "language": "Rust",
+        "orm": "Raw",
+        "platform": "None",
+        "webserver": "ntex",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "ntex [neon(io-uring),platform]",
         "notes": "",
         "versus": ""
     }

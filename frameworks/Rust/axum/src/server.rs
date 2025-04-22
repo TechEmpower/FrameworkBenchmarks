@@ -37,7 +37,7 @@ fn set_socket_options(addr: SocketAddr) -> io::Result<tokio::net::TcpListener> {
 }
 
 /// Build an Axum server with consistent configuration, using the high-level API exposed
-/// by Axum 0.7. This is intended for convenience and intentionally does not provide much
+/// by Axum 0.8. This is intended for convenience and intentionally does not provide much
 /// customisability.
 #[allow(dead_code)]
 pub async fn serve(app: Router<()>, port: Option<u16>) {

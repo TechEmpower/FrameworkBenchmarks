@@ -2,10 +2,13 @@
 
 source 'https://rubygems.org'
 
+# Show platform so we can set in the Gemfile
+puts "Platform: #{Gem::Platform.local}"
+
 gem 'rack', '~> 3.0'
 gem 'connection_pool', '~> 2.4'
 gem 'jdbc-postgres', '~> 42.2', platforms: :jruby, require: 'jdbc/postgres'
-gem 'json', '~> 2.8'
+gem 'json', '~> 2.10'
 gem 'pg', '~> 1.5', platforms: %i[ruby mswin]
 gem 'sequel'
 gem 'sequel_pg', platforms: %i[ruby mswin]
@@ -19,8 +22,17 @@ group :iodine, optional: true do
   gem 'iodine', '~> 0.7', platforms: %i[ruby mswin]
 end
 
+group :passenger, optional: true do
+  gem 'base64' # required by passenger on Ruby 3.4
+  gem 'passenger', '~> 6.0', platforms: [:ruby, :mswin], require: false
+end
+
+group :pitchfork, optional: true do
+  gem 'pitchfork', '~> 0.17'
+end
+
 group :puma, optional: true do
-  gem 'puma', '~> 6.4'
+  gem 'puma', '~> 6.5'
 end
 
 group :unicorn, optional: true do

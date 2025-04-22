@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration debug="false" xmlns="http://ch.qos.logback/xml/ns/logback" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://ch.qos.logback/xml/ns/logback https://raw.githubusercontent.com/enricopulatzo/logback-XSD/master/src/main/xsd/logback.xsd
+http://ch.qos.logback/xml/ns/logback ">
+
+  <!-- 定义日志文件的存储地址，避免在 Logback 的配置中使用相对路径 -->
+  <property name="LOG_HOME" value="logs" />
+
+  <!-- 格式化输出：%d 表示日期，[%thread] 输出线程名称，%-6level 表示日志级别占6个字符宽度，%logger{1}.%M:%L 表示类名、方法名和行号，%m 表示日志消息，%n 是换行符 -->
+  <property name="CONSOLE_LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-6level %logger{1}.%M:%L - %m%n" />
+
+  <!-- 控制台输出 -->
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+      <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+    </encoder>
+  </appender>
+
+  <!-- 按照每小时生成日志文件 -->
+  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+      <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+    </encoder>
+    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+      <!-- 日志文件输出的文件名，包含日期和小时 -->
+      <fileNamePattern>${LOG_HOME}/log.%d{yyyyMMddHH}.%i.log</fileNamePattern>
+      <!-- 日志文件保留天数 -->
+      <maxHistory>180</maxHistory>
+      <!-- 每个日志文件的最大大小 -->
+      <maxFileSize>100MB</maxFileSize>
+    </rollingPolicy>
+  </appender>
+
+  <!-- Spring 框架日志级别设置 -->
+  <logger name="org.springframework" level="info" />
+
+  <!-- Hibernate 日志级别设置，显示 SQL 语句和绑定参数 -->
+  <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="TRACE" />
+  <logger name="org.hibernate.type.descriptor.sql.BasicExtractor" level="DEBUG" />
+  <logger name="org.hibernate.SQL" level="DEBUG" />
+  <logger name="org.hibernate.engine.QueryParameters" level="DEBUG" />
+  <logger name="org.hibernate.engine.query.HQLQueryPlan" level="DEBUG" />
+
+  <!-- MyBatis 和 SQL 相关日志配置 -->
+  <logger name="com.apache.ibatis" level="TRACE" />
+  <logger name="java.sql.Connection" level="DEBUG" />
+  <logger name="java.sql.Statement" level="DEBUG" />
+  <logger name="java.sql.PreparedStatement" level="DEBUG" />
+
+  <!-- 根日志记录器的日志级别和输出目标 -->
+  <root level="info">
+    <appender-ref ref="STDOUT" />
+    <appender-ref ref="FILE" />
+  </root>
+</configuration>

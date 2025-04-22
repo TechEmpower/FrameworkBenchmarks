@@ -1,4 +1,3 @@
-import asyncio
 import os
 
 from operator import itemgetter
@@ -36,8 +35,6 @@ json_dumps = orjson.dumps
 
 with Path('templates/fortune.html').open('r') as f:
     template = jinja2.Template(f.read())
-
-asyncio.get_event_loop().run_until_complete(pg_setup())
 
 
 def get_num_queries(scope):
@@ -152,6 +149,13 @@ routes = {
 }
 
 
-def main(scope, proto):
-    handler = routes.get(scope.path, handle_404)
-    return handler(scope, proto)
+class App:
+    def __rsgi_init__(self, loop):
+        loop.run_until_complete(pg_setup())
+
+    def __rsgi__(self, scope, proto):
+        handler = routes.get(scope.path, handle_404)
+        return handler(scope, proto)
+
+
+main = App()

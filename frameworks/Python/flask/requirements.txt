@@ -10,3 +10,4 @@ Jinja2==3.1.4
 MarkupSafe==2.1.2
 ujson==5.4.0
 orjson==3.8.7; implementation_name=='cpython' 
+Werkzeug==2.3.8

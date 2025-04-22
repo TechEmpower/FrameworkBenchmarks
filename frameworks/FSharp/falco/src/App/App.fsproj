@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <DebugType>portable</DebugType>
     <AssemblyName>App</AssemblyName>
     <OutputType>Exe</OutputType>
@@ -11,17 +11,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="UI.fs" />
-    <Compile Include="Fortune.fs" />
-    <Compile Include="Server.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Update="FSharp.Core" Version="7.0.0" />
-    <PackageReference Include="Donald" Version="3.0.*" />
-    <PackageReference Include="Falco" Version="2.0.*" />
-    <PackageReference Include="Npgsql" Version="8.0.3" />
+    <PackageReference Include="dapper" Version="2.1.66" />
+    <PackageReference Include="Falco" Version="5.*" />
+    <PackageReference Include="Npgsql" Version="9.*" />
   </ItemGroup>
 
 </Project>

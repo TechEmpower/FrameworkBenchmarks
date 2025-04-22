@@ -21,7 +21,7 @@ Bundler.require(*Rails.groups)
 module Hello
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 7.2
+    config.load_defaults Rails::VERSION::STRING.to_f
 
     # Please, add to the `ignore` list any other `lib` subdirectories that do
     # not contain `.rb` files, or that should not be reloaded or eager loaded.
@@ -47,5 +47,11 @@ module Hello
     config.middleware.delete Rails::Rack::Logger
 
     config.active_support.isolation_level = :fiber if defined?(Falcon)
+
+    config.to_prepare do
+      HelloWorldController::ALL_IDS.each do |id|
+        Rails.cache.write("world_#{id}", World.find(id).as_json, expires_in: 1.day)
+      end
+    end
   end
 end

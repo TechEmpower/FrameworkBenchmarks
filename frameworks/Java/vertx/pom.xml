@@ -10,22 +10,26 @@
 		<maven.compiler.target>17</maven.compiler.target>
 		<!-- the main class -->
 		<main.class>vertx.App</main.class>
-		<stack.version>4.5.9</stack.version>
+		<vertx.version>5.0.0.CR6</vertx.version>
+		<netty.version>4.2.0.Final</netty.version>
 		<jackson.version>2.16.1</jackson.version>
-		<netty.version>4.1.111.Final</netty.version>
-		<netty.io_uring.version>0.0.25.Final</netty.io_uring.version>
 	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>io.vertx</groupId>
 			<artifactId>vertx-core</artifactId>
-			<version>${stack.version}</version>
+			<version>${vertx.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.vertx</groupId>
+			<artifactId>vertx-core-logging</artifactId>
+			<version>${vertx.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.vertx</groupId>
 			<artifactId>vertx-pg-client</artifactId>
-			<version>${stack.version}</version>
+			<version>${vertx.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.dslplatform</groupId>
@@ -36,18 +40,6 @@
 			<groupId>com.julienviet</groupId>
 			<artifactId>jsonsergen</artifactId>
 			<version>0.0.5</version>
-		</dependency>
-		<dependency>
-			<groupId>io.netty</groupId>
-			<artifactId>netty-transport-native-kqueue</artifactId>
-			<version>${netty.version}</version>
-			<classifier>osx-x86_64</classifier>
-		</dependency>
-		<dependency>
-			<groupId>io.netty</groupId>
-			<artifactId>netty-transport-native-epoll</artifactId>
-			<version>${netty.version}</version>
-			<classifier>linux-x86_64</classifier>
 		</dependency>
 		<dependency>
 			<groupId>com.github.ben-manes.caffeine</groupId>
@@ -145,24 +137,107 @@
 
 	<profiles>
 		<profile>
-			<id>Linux</id>
+			<id>linux-x86_64</id>
 			<activation>
-				<activeByDefault>false</activeByDefault>
+				<os>
+					<family>linux</family>
+					<arch>x86_64</arch>
+				</os>
 			</activation>
 			<dependencies>
 				<dependency>
-					<groupId>io.vertx</groupId>
-					<artifactId>vertx-io_uring-incubator</artifactId>
-					<version>${stack.version}</version>
-				</dependency>
-				<dependency>
-					<groupId>io.netty.incubator</groupId>
-					<artifactId>netty-incubator-transport-native-io_uring</artifactId>
-					<version>${netty.io_uring.version}</version>
+					<groupId>io.netty</groupId>
+					<artifactId>netty-transport-native-io_uring</artifactId>
+					<version>${netty.version}</version>
 					<classifier>linux-x86_64</classifier>
 				</dependency>
 			</dependencies>
 		</profile>
+
+		<profile>
+			<id>linux-amd64</id>
+			<activation>
+				<os>
+					<family>linux</family>
+					<arch>amd64</arch>
+				</os>
+			</activation>
+			<dependencies>
+				<dependency>
+					<groupId>io.netty</groupId>
+					<artifactId>netty-transport-native-io_uring</artifactId>
+					<version>${netty.version}</version>
+					<classifier>linux-x86_64</classifier>
+				</dependency>
+			</dependencies>
+		</profile>
+
+		<profile>
+			<id>linux-aarch64</id>
+			<activation>
+				<os>
+					<family>linux</family>
+					<arch>aarch64</arch>
+				</os>
+			</activation>
+			<dependencies>
+				<dependency>
+					<groupId>io.netty</groupId>
+					<artifactId>netty-transport-native-io_uring</artifactId>
+					<version>${netty.version}</version>
+					<classifier>linux-aarch_64</classifier>
+				</dependency>
+			</dependencies>
+		</profile>
+
+		<profile>
+			<id>osx-x86_64</id>
+			<activation>
+				<os>
+					<family>mac</family>
+					<arch>x86_64</arch>
+				</os>
+			</activation>
+			<dependencies>
+				<dependency>
+					<groupId>io.netty</groupId>
+					<artifactId>netty-resolver-dns-native-macos</artifactId>
+					<version>${netty.version}</version>
+					<classifier>osx-x86_64</classifier>
+				</dependency>
+				<dependency>
+					<groupId>io.netty</groupId>
+					<artifactId>netty-transport-native-kqueue</artifactId>
+					<version>${netty.version}</version>
+					<classifier>osx-x86_64</classifier>
+				</dependency>
+			</dependencies>
+		</profile>
+
+		<profile>
+			<id>osx-aarch64</id>
+			<activation>
+				<os>
+					<family>mac</family>
+					<arch>aarch64</arch>
+				</os>
+			</activation>
+			<dependencies>
+				<dependency>
+					<groupId>io.netty</groupId>
+					<artifactId>netty-resolver-dns-native-macos</artifactId>
+					<version>${netty.version}</version>
+					<classifier>osx-aarch_64</classifier>
+				</dependency>
+				<dependency>
+					<groupId>io.netty</groupId>
+					<artifactId>netty-transport-native-kqueue</artifactId>
+					<version>${netty.version}</version>
+					<classifier>osx-aarch_64</classifier>
+				</dependency>
+			</dependencies>
+		</profile>
+
 	</profiles>
 
 </project>

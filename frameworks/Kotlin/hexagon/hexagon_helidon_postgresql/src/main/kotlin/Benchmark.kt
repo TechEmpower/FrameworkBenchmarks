@@ -1,17 +1,31 @@
-package com.hexagonkt
+package com.hexagontk
 
-import com.hexagonkt.core.media.TEXT_HTML
-import com.hexagonkt.core.urlOf
-import com.hexagonkt.http.server.helidon.HelidonServerAdapter
-import com.hexagonkt.store.BenchmarkSqlStore
-import com.hexagonkt.templates.jte.JteAdapter
+import com.hexagontk.core.Platform.systemSettingOrNull
+import com.hexagontk.core.media.TEXT_HTML
+import com.hexagontk.core.urlOf
+import com.hexagontk.http.server.helidon.HelidonHttpServer
+import com.hexagontk.store.BenchmarkSqlStore
+import com.hexagontk.templates.jte.Jte
+import java.time.Duration
 
 fun main() {
     val settings = Settings()
     val store = BenchmarkSqlStore("postgresql")
-    val templateEngine = JteAdapter(TEXT_HTML, precompiled = true)
+    val templateEngine = Jte(TEXT_HTML, precompiled = true)
     val templateUrl = urlOf("classpath:fortunes.jte")
-    val engine = HelidonServerAdapter()
+    val engine = HelidonHttpServer(
+        backlog = systemSettingOrNull("backlog") ?: (8 * 1024),
+        writeQueueLength = systemSettingOrNull("writeQueueLength") ?: (8 * 1024),
+        readTimeout = Duration.parse(systemSettingOrNull("readTimeout") ?: "PT0S"),
+        connectTimeout = Duration.parse(systemSettingOrNull("connectTimeout") ?: "PT0S"),
+        tcpNoDelay = systemSettingOrNull<Boolean>("tcpNoDelay") ?: true,
+        receiveLog = systemSettingOrNull<Boolean>("receiveLog") ?: false,
+        sendLog = systemSettingOrNull<Boolean>("sendLog") ?: false,
+        validatePath = systemSettingOrNull<Boolean>("validatePath") ?: false,
+        validateRequestHeaders = systemSettingOrNull<Boolean>("validateRequestHeaders") ?: false,
+        validateResponseHeaders = systemSettingOrNull<Boolean>("validateResponseHeaders") ?: false,
+        smartAsyncWrites = true,
+    )
 
     val benchmark = Benchmark(engine, store, templateEngine, templateUrl, settings)
     benchmark.server.start()

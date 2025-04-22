@@ -5,14 +5,13 @@ module HelloWorld
     module DB
       class Index < HelloWorld::Action
         QUERY_RANGE = 1..10_000    # range of IDs in the Fortune DB
-        include Deps["persistence.rom"]
+
+        include Deps["repos.world_repo"]
 
         def handle(*, response)
-          world = rom.relations[:World].where(id: random_id).one
-          response.headers['Server'] = 'hanami'
-          response.headers['Date'] = Time.now.httpdate
+          world = world_repo.find(random_id)
           response.format = :json
-          response.body = world.to_json
+          response.body = world.to_h.to_json
         end
 
         def random_id

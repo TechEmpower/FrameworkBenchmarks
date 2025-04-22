@@ -40,5 +40,4 @@ built with Tokio, Tower, and Hyper.
 - Use of PostgreSQL prepared statements cache (where supported).
 - Use of PostgreSQL arrays to execute multi-row database updates with a single `UPDATE` query.
   - This is permitted by the [test requirements](https://github.com/TechEmpower/FrameworkBenchmarks/wiki/Project-Information-Framework-Tests-Overview#database-updates), step (ix).
-- More performance improvements are to be expected in version 0.8:
-  - https://github.com/tokio-rs/axum/issues/1827
+- Use of a fast PRNG

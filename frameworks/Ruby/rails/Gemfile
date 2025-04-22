@@ -12,11 +12,6 @@ group :postgresql, optional: true do
   gem 'pg', '~> 1.5'
 end
 
-group :agoo, optional: true do
-  gem 'agoo', require: false
-  gem 'rackup'
-end
-
 group :iodine, optional: true do
   gem 'iodine', '~> 0.7', require: false
 end
@@ -26,5 +21,9 @@ group :falcon, optional: true do
 end
 
 group :puma, optional: true do
-  gem 'puma', '~> 6.4', require: false
+  gem 'puma', '~> 6.5', require: false
+end
+
+group :pitchfork, optional: true do
+  gem 'pitchfork', '~> 0.17'
 end

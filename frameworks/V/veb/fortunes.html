@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head><title>Fortunes</title></head>
+<body>
+<table>
+<tr><th>id</th><th>message</th></tr>
+@for m in fortunes
+<tr><td>@m.id</td><td>@m.message</td></tr>
+@end
+</table>
+</body>
+</html>

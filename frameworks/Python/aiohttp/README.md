@@ -35,7 +35,7 @@ This will switch which database engine the app uses to execute queries with test
 
 ### Server
 
-gunicorn+uvloop on CPython
+nginx+uvloop on CPython
 
 ## Test URLs
 

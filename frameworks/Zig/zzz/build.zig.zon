@@ -1,0 +1,17 @@
+.{
+    .name = .zzz_bench,
+    .version = "0.0.0",
+    .fingerprint = 0xab2ef1c28b2bcc91,
+    .minimum_zig_version = "0.14.0",
+    .dependencies = .{
+        .zzz = .{
+            .url = "git+https://github.com/tardy-org/zzz#90cc62494644e7234efd85ab1df5d65440f9eead",
+            .hash = "zzz-0.3.0-4HoaJqpQAgDgcImt8cC2cpT59J25JNDynMDt4qLaXDYK",
+        },
+    },
+    .paths = .{
+        "src/",
+        "build.zig",
+        "build.zig.zon",
+    },
+}

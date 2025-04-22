@@ -1,4 +1,3 @@
-/// This app's route configuration.
 import 'package:angel3_framework/angel3_framework.dart';
 import 'package:angel3_static/angel3_static.dart';
 import 'package:file/file.dart';
