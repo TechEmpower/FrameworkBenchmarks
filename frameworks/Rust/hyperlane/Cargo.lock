@@ -122,9 +122,9 @@ dependencies = [
 
 [[package]]
 name = "brotli"
-version = "7.0.0"
+version = "8.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cc97b8f16f944bba54f0433f07e30be199b6dc2bd25937444bbad560bcea29bd"
+checksum = "cf19e729cdbd51af9a397fb9ef8ac8378007b797f8273cfbfdf45dcaa316167b"
 dependencies = [
  "alloc-no-stdlib",
  "alloc-stdlib",
@@ -133,9 +133,9 @@ dependencies = [
 
 [[package]]
 name = "brotli-decompressor"
-version = "4.0.3"
+version = "5.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a334ef7c9e23abf0ce748e8cd309037da93e606ad52eb372e4ce327a0dcfbdfd"
+checksum = "874bb8112abecc98cbd6d81ea4fa7e94fb9449648c93cc89aa40c81c24d7de03"
 dependencies = [
  "alloc-no-stdlib",
  "alloc-stdlib",
@@ -638,9 +638,9 @@ dependencies = [
 
 [[package]]
 name = "http-compress"
-version = "2.12.1"
+version = "2.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c5f7d507f95e723dd293f5c486554ab1e70692ee97c27fc4a493684f54dc6c9a"
+checksum = "fbec9c630191b7df2029ba5a70558a8fa9b30e0bc73bcdb08ea1d69e9764ed4d"
 dependencies = [
  "brotli",
  "flate2",
@@ -655,9 +655,9 @@ checksum = "1292cbdcf2588d15f8bf14cac381785c11ca7634d6a088cad9eebb5068d2652b"
 
 [[package]]
 name = "http-type"
-version = "3.64.2"
+version = "3.67.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d2d8d89138b251e0a91cdaa261885bcfc959986cba2131d448bdc75f2e18c1d0"
+checksum = "7db6b0794e5bb36a7bb661c755983428455a2dd1ee80ca579bb54256ceaf2975"
 dependencies = [
  "ahash",
  "dashmap",
@@ -682,9 +682,9 @@ dependencies = [
 
 [[package]]
 name = "hyperlane"
-version = "4.89.0"
+version = "4.90.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5c64217ace3f2a70a02cb9e95a181c640414d4230d06cea12122894700057a4a"
+checksum = "d369ffde9cd6e8a8cc82e2c9264670db60558571629fdac379d85a183bf063db"
 dependencies = [
  "async-func",
  "clonelicious",
@@ -1355,9 +1355,9 @@ dependencies = [
 
 [[package]]
 name = "serde-xml-rs"
-version = "0.6.0"
+version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fb3aa78ecda1ebc9ec9847d5d3aba7d618823446a049ba2491940506da6e2782"
+checksum = "12ef8209566c27b96b10a096e25abc534e08e9bbbcf8e444b92640f1416dd1c6"
 dependencies = [
  "log",
  "serde",
