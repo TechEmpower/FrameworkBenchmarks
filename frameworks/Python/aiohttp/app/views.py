@@ -3,17 +3,18 @@ from pathlib import Path
 from random import randint, sample
 
 import jinja2
-import orjson
 from aiohttp.web import Response
-from sqlalchemy import select
+from orjson import dumps
+from sqlalchemy import bindparam, select
 from sqlalchemy.orm.attributes import flag_modified
 
-from .models import sa_fortunes, sa_worlds, Fortune, World
+from .models import Fortune, World
 
 ADDITIONAL_FORTUNE_ORM = Fortune(id=0, message='Additional fortune added at request time.')
 ADDITIONAL_FORTUNE_ROW = {'id': 0, 'message': 'Additional fortune added at request time.'}
 READ_ROW_SQL = 'SELECT "randomnumber", "id" FROM "world" WHERE id = $1'
-READ_SELECT_ORM = select(World.randomnumber)
+READ_SELECT_ORM = select(World.randomnumber).where(World.id == bindparam("id"))
+READ_FORTUNES_ORM = select(Fortune.id, Fortune.message)
 WRITE_ROW_SQL = 'UPDATE "world" SET "randomnumber"=$2 WHERE id=$1'
 
 template_path = Path(__file__).parent / 'templates' / 'fortune.jinja'
@@ -33,11 +34,13 @@ def get_num_queries(request):
         return 500
     return num_queries
 
+
 def json_response(payload):
     return Response(
-        body=orjson.dumps(payload),
+        body=dumps(payload),
         content_type="application/json",
     )
+
 
 async def json(request):
     """
@@ -52,7 +55,7 @@ async def single_database_query_orm(request):
     """
     id_ = randint(1, 10000)
     async with request.app['db_session']() as sess:
-        num = await sess.scalar(select(World.randomnumber).filter_by(id=id_))
+        num = await sess.scalar(READ_SELECT_ORM, {"id": id_})
     return json_response({'id': id_, 'randomNumber': num})
 
 
@@ -63,7 +66,7 @@ async def single_database_query_raw(request):
     id_ = randint(1, 10000)
 
     async with request.app['pg'].acquire() as conn:
-        r = await conn.fetchval('SELECT id,randomnumber FROM world WHERE id = $1', id_)
+        r = await conn.fetchval(READ_ROW_SQL, id_)
     return json_response({'id': id_, 'randomNumber': r})
 
 
@@ -78,7 +81,7 @@ async def multiple_database_queries_orm(request):
     result = []
     async with request.app['db_session']() as sess:
         for id_ in ids:
-            num = await sess.scalar(READ_SELECT_ORM.where(World.id == id_))
+            num = await sess.scalar(READ_SELECT_ORM, {"id": id_})
             result.append({'id': id_, 'randomNumber': num})
     return json_response(result)
 
@@ -93,11 +96,10 @@ async def multiple_database_queries_raw(request):
 
     result = []
     async with request.app['pg'].acquire() as conn:
-        stmt = await conn.prepare(READ_ROW_SQL)
         for id_ in ids:
             result.append({
                 'id': id_,
-                'randomNumber': await stmt.fetchval(id_),
+                'randomNumber': await conn.fetchval(READ_ROW_SQL, id_),
             })
     return json_response(result)
 
@@ -107,7 +109,7 @@ async def fortunes(request):
     Test 4 ORM
     """
     async with request.app['db_session']() as sess:
-        ret = await sess.execute(select(Fortune.id, Fortune.message))
+        ret = await sess.execute(READ_FORTUNES_ORM)
         fortunes = ret.all()
     fortunes.append(ADDITIONAL_FORTUNE_ORM)
     fortunes.sort(key=sort_fortunes_orm)
@@ -132,21 +134,18 @@ async def updates(request):
     Test 5 ORM
     """
     num_queries = get_num_queries(request)
-
-    ids = sample(range(1, 10000 + 1), num_queries)
-    ids.sort()
-    worlds = []
+    update_ids = sample(range(1, 10001), num_queries)
+    update_ids.sort()
+    updates = tuple(zip(update_ids, sample(range(1, 10001), num_queries)))
+    worlds = [{'id': row_id, 'randomNumber': number} for row_id, number in updates]
 
     async with request.app['db_session'].begin() as sess:
-        for row_id in ids:
-            random_number =  randint(1, 10000)
-            world = await sess.get(World, row_id, populate_existing=True)
-            world.randomnumber = random_number
-            # force sqlalchemy to UPDATE entry even if the value has not changed
-            # doesn't make sense in a real application, added only for pass `tfb verify`
+        for id_, number in updates:
+            world = await sess.get(World, id_, populate_existing=True)
+            world.randomnumber = number
+            # Force sqlalchemy to UPDATE entry even if the value has not changed
+            # doesn't make sense in a real application, added only to pass tests.
             flag_modified(world, "randomnumber")
-            worlds.append({'id': row_id, 'randomNumber': random_number})
-
     return json_response(worlds)
 
 async def updates_raw(request):
@@ -154,16 +153,15 @@ async def updates_raw(request):
     Test 5 RAW
     """
     num_queries = get_num_queries(request)
-    ids = sample(range(1, 10000 + 1), num_queries)
-    ids.sort()
-    updates = [(row_id, randint(1, 10000)) for row_id in ids]
+    update_ids = sample(range(1, 10001), num_queries)
+    update_ids.sort()
+    updates = tuple(zip(update_ids, sample(range(1, 10001), num_queries)))
     worlds = [{'id': row_id, 'randomNumber': number} for row_id, number in updates]
 
     async with request.app['pg'].acquire() as conn:
-        stmt = await conn.prepare(READ_ROW_SQL)
-        for row_id in ids:
+        for id_, _ in updates:
             # the result of this is the int previous random number which we don't actually use
-            await stmt.fetchval(row_id)
+            await conn.fetchval(READ_ROW_SQL, id_)
         await conn.executemany(WRITE_ROW_SQL, updates)
 
     return json_response(worlds)

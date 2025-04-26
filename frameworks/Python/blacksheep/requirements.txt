@@ -1,4 +1,4 @@
-asyncpg==0.27.0
-Jinja2==3.1.4
-blacksheep==1.2.13
-ujson==5.7.0
+asyncpg==0.30.0
+Jinja2==3.1.6
+blacksheep==2.1.0
+msgspec==0.19.0

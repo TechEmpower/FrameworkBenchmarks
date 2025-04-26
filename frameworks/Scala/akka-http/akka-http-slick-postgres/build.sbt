@@ -62,7 +62,7 @@ lazy val commonSettings =
   Seq(
     organization := "net.benchmark.akka.http",
     organizationName := "Akka",
-    scalaVersion := "2.13.3",
+    scalaVersion := "2.13.16",
     scalacOptions ++= Seq(
       "-deprecation",
       "-encoding",

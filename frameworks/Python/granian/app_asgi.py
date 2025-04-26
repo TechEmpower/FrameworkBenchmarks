@@ -55,8 +55,6 @@ json_dumps = orjson.dumps
 with Path('templates/fortune.html').open('r') as f:
     template = jinja2.Template(f.read())
 
-asyncio.get_event_loop().run_until_complete(pg_setup())
-
 
 def get_num_queries(scope):
     try:
@@ -178,6 +176,26 @@ routes = {
 }
 
 
-def main(scope, receive, send):
-    handler = routes.get(scope['path'], handle_404)
-    return handler(scope, receive, send)
+class App:
+    __slots__ = ["_handler"]
+
+    def __init__(self):
+        self._handler = self._lifespan
+
+    def __call__(self, scope, receive, send):
+        return self._handler(scope, receive, send)
+
+    async def _lifespan(self, scope, receive, send):
+        if scope['type'] == 'lifespan':
+            message = await receive()
+            if message['type'] == 'lifespan.startup':
+                await pg_setup()
+                self._handler = self._asgi
+                await send({'type': 'lifespan.startup.complete'})
+
+    def _asgi(self, scope, receive, send):
+        handler = routes.get(scope['path'], handle_404)
+        return handler(scope, receive, send)
+
+
+main = App()

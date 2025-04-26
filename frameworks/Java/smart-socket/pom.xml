@@ -11,7 +11,7 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <log4j.version>2.17.1</log4j.version>
-        <smartservlet.version>2.9.1</smartservlet.version>
+        <smartservlet.version>3.1-SNAPSHOT</smartservlet.version>
         <hikaricp.version>5.0.0</hikaricp.version>
         <jsoniter.version>0.9.23</jsoniter.version>
     </properties>
@@ -20,12 +20,12 @@
         <dependency>
             <groupId>tech.smartboot.feat</groupId>
             <artifactId>feat-cloud-starter</artifactId>
-            <version>0.8.2</version>
+            <version>0.8.3-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>io.github.smartboot.socket</groupId>
             <artifactId>aio-pro</artifactId>
-            <version>1.6.56</version>
+            <version>1.5.57</version>
         </dependency>
         <dependency>
             <groupId>tech.smartboot.servlet</groupId>
@@ -88,9 +88,15 @@
             <url>https://repo.maven.apache.org/maven2</url>
         </repository>
         <repository>
-            <id>sonatype-nexus-snapshots</id>
-            <name>Sonatype Nexus Snapshots</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <name>Central Portal Snapshots</name>
+            <id>central-portal-snapshots</id>
+            <url>https://central.sonatype.com/repository/maven-snapshots/</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
         </repository>
     </repositories>
     <pluginRepositories>

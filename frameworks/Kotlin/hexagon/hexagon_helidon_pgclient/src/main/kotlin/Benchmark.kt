@@ -23,6 +23,7 @@ fun main() {
         validatePath = systemSettingOrNull<Boolean>("validatePath") ?: false,
         validateRequestHeaders = systemSettingOrNull<Boolean>("validateRequestHeaders") ?: false,
         validateResponseHeaders = systemSettingOrNull<Boolean>("validateResponseHeaders") ?: false,
+        smartAsyncWrites = true,
     )
 
     val benchmark = Benchmark(engine, store, templateEngine, templateUrl, Settings())
