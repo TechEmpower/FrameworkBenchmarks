@@ -2,7 +2,7 @@
 #define ORM_DEFAULT_FORTUNEBASEMATA_H
 /*
 *This file is auto create from paozhu_cli
-*本文件为自动生成 Tue, 08 Apr 2025 07:55:59 GMT
+*本文件为自动生成 Sat, 26 Apr 2025 15:58:21 GMT
 ***/
 #include <iostream>
 #include <cstdio>
@@ -19,19 +19,19 @@
 namespace orm { 
    
     
-struct fortunebase
+struct fortune_base
 {
     struct meta{
      unsigned  int  id = 0; ///**/
  std::string  message = ""; ///**/
  } data;
- std::vector<fortunebase::meta> record;
+ std::vector<fortune_base::meta> record;
 std::string _rmstag="default";//this value must be default or tag value, tag in mysqlconnect config file .
 unsigned int _offset=0;
-std::vector<fortunebase::meta>::iterator begin(){     return record.begin(); }
-std::vector<fortunebase::meta>::iterator end(){     return record.end(); }
-std::vector<fortunebase::meta>::const_iterator begin() const{     return record.begin(); }
-std::vector<fortunebase::meta>::const_iterator end() const{     return record.end(); }
+std::vector<fortune_base::meta>::iterator begin(){     return record.begin(); }
+std::vector<fortune_base::meta>::iterator end(){     return record.end(); }
+std::vector<fortune_base::meta>::const_iterator begin() const{     return record.begin(); }
+std::vector<fortune_base::meta>::const_iterator end() const{     return record.end(); }
 static constexpr std::array<std::string_view,2> col_names={"id","message"};
 static constexpr std::array<unsigned char,2> col_types={3,253};
 static constexpr std::array<unsigned char,2> col_length={0,0};
@@ -75,7 +75,7 @@ break;
             record.clear();     
       }
       void data_reset(){
-     fortunebase::meta metatemp;    
+     fortune_base::meta metatemp;    
             data = metatemp; 
       }
       
@@ -610,7 +610,7 @@ tempsql<<"\"message\":\""<<http::utf8_to_jsonstring(data.message)<<"\"";
     void from_json(const std::string &json_content)
    {
         record.clear();
-        fortunebase::meta metatemp; 
+        fortune_base::meta metatemp; 
         data=metatemp;
         unsigned int json_offset=0;
         bool isarray=false;
@@ -1057,14 +1057,14 @@ tempsql<<"\"message\":\""<<http::utf8_to_jsonstring(record[n].message)<<"\"";
  void setMessage( std::string  &val){  data.message=val;} 
  void setMessage(std::string_view val){  data.message=val;} 
 
-fortunebase::meta getnewData(){
+fortune_base::meta getnewData(){
  	 struct meta newdata;
 	 return newdata; 
 } 
-fortunebase::meta getData(){
+fortune_base::meta getData(){
  	 return data; 
 } 
-std::vector<fortunebase::meta> getRecord(){
+std::vector<fortune_base::meta> getRecord(){
  	 return record; 
 } 
 
@@ -1145,7 +1145,7 @@ std::vector<fortunebase::meta> getRecord(){
             }  
     
         template<typename T, typename std::enable_if<std::is_integral_v<T>,bool>::type = true > 
-        T getVal([[maybe_unused]] fortunebase::meta & iter,[[maybe_unused]] std::string keyname)
+        T getVal([[maybe_unused]] fortune_base::meta & iter,[[maybe_unused]] std::string keyname)
         {
 
           
@@ -1179,7 +1179,7 @@ std::vector<fortunebase::meta> getRecord(){
             }  
     
             template<typename T, typename std::enable_if<std::is_floating_point_v<T>,bool>::type = true > 
-            T getVal([[maybe_unused]] fortunebase::meta & iter,std::string keyname)
+            T getVal([[maybe_unused]] fortune_base::meta & iter,std::string keyname)
             {
                 unsigned char kpos;
                 kpos=findcolpos(keyname);
@@ -1211,7 +1211,7 @@ std::vector<fortunebase::meta> getRecord(){
             }  
    
             template<typename T, typename std::enable_if<std::is_same<T,std::string>::value,bool>::type = true > 
-            std::string getVal([[maybe_unused]] fortunebase::meta & iter,std::string keyname)
+            std::string getVal([[maybe_unused]] fortune_base::meta & iter,std::string keyname)
             {
          
                 unsigned char kpos;
