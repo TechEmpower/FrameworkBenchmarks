@@ -10,11 +10,7 @@ pub async fn json(ctx: Context) {
 }
 
 pub async fn plaintext(ctx: Context) {
-    let _ = ctx
-        .set_response_header(CONTENT_TYPE, TEXT_PLAIN)
-        .await
-        .send_response(200, RESPONSEDATA_BIN)
-        .await;
+    let _ = ctx.send_response(200, RESPONSEDATA_BIN).await;
 }
 
 pub async fn db(ctx: Context) {
@@ -25,7 +21,7 @@ pub async fn db(ctx: Context) {
         .await;
 }
 
-pub async fn queries(ctx: Context) {
+pub async fn query(ctx: Context) {
     let queries: Queries = ctx
         .get_request_query("q")
         .await
@@ -56,14 +52,10 @@ pub async fn fortunes(ctx: Context) {
     ));
     fortunes_list.sort_by(|it, next| it.message.cmp(&next.message));
     let res: String = FortunesTemplate::new(fortunes_list).to_string();
-    let _ = ctx
-        .set_response_header(CONTENT_TYPE, content_type_charset(TEXT_HTML, UTF8))
-        .await
-        .send_response(200, res)
-        .await;
+    let _ = ctx.send_response(200, res).await;
 }
 
-pub async fn updates(ctx: Context) {
+pub async fn update(ctx: Context) {
     let queries: Queries = ctx
         .get_request_query("q")
         .await
@@ -77,7 +69,7 @@ pub async fn updates(ctx: Context) {
         .await;
 }
 
-pub async fn cached_queries(ctx: Context) {
+pub async fn cached_query(ctx: Context) {
     let count: Queries = ctx
         .get_request_query("c")
         .await

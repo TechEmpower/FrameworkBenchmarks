@@ -11,4 +11,4 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     app = create_app()
-    web.run_app(app, path=args.socket)
+    web.run_app(app, path=args.socket, access_log=None)
