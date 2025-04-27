@@ -15,7 +15,7 @@ ext {
 
     hikariVersion = "6.3.0"
     postgresqlVersion = "42.7.5"
-    vertxVersion = "5.0.0.CR6"
+    vertxVersion = "5.0.0.CR7"
     cache2kVersion = "2.6.1.Final"
 
     applicationClass = "com.hexagontk.BenchmarkKt"
@@ -30,6 +30,5 @@ subprojects {
 }
 
 tasks.wrapper {
-//    gradleVersion = "8.14.0"
-    gradleVersion = "release-candidate"
+    gradleVersion = "8.14"
 }
