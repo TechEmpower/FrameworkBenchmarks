@@ -171,7 +171,7 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
     options.setPassword(config.getString("password", "benchmarkdbpass"));
     options.setCachePreparedStatements(true);
     options.setPreparedStatementCacheMaxSize(1024);
-    options.setPipeliningLimit(100_000); // Large pipelining means less flushing and we use a single connection anyway
+    options.setPipeliningLimit(256); // Large pipelining means less flushing and we use a single connection anyway
     Future<?> clientsInit = initClients(options);
     clientsInit
             .transform(ar -> {
