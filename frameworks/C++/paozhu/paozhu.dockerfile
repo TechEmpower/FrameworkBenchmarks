@@ -94,8 +94,8 @@ RUN mkdir ./paozhu/orm/include
 
 
 COPY ./paozhu_benchmark/orm/orm.h ./paozhu/orm/
-COPY ./paozhu_benchmark/orm/include/fortunebase.h ./paozhu/orm/include/
-COPY ./paozhu_benchmark/orm/include/worldbase.h ./paozhu/orm/include/
+COPY ./paozhu_benchmark/orm/include/fortune_base.h ./paozhu/orm/include/
+COPY ./paozhu_benchmark/orm/include/world_base.h ./paozhu/orm/include/
 COPY ./paozhu_benchmark/orm/include/fortune_mysql.h ./paozhu/orm/include/
 COPY ./paozhu_benchmark/orm/include/world_mysql.h ./paozhu/orm/include/
 
