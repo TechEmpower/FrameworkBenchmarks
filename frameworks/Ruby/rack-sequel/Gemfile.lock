@@ -2,7 +2,7 @@ GEM
   remote: https://rubygems.org/
   specs:
     bigdecimal (3.1.9)
-    json (2.10.1)
+    json (2.11.3)
     kgio (2.11.4)
     logger (1.7.0)
     mysql2 (0.5.6)

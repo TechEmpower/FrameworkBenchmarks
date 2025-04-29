@@ -5,7 +5,7 @@ GEM
     bigdecimal (3.1.9)
     erubi (1.13.1)
     iodine (0.7.58)
-    json (2.10.2)
+    json (2.11.3)
     kgio (2.11.4)
     logger (1.7.0)
     mysql2 (0.5.6)

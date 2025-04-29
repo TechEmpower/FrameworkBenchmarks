@@ -61,7 +61,7 @@ GEM
     io-event (1.9.0)
     io-stream (0.6.1)
     iodine (0.7.58)
-    json (2.10.2)
+    json (2.11.3)
     kgio (2.11.4)
     language_server-protocol (3.17.0.4)
     lint_roller (1.1.0)
