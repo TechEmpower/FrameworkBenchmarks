@@ -1,21 +1,38 @@
-FROM debian:12.9
+FROM debian:12-slim AS build
 
-WORKDIR /app
+RUN useradd -m ziguser
 
-COPY src src
-COPY build.zig.zon build.zig.zon
-COPY build.zig build.zig
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    wget xz-utils \
+    ca-certificates && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 ARG ZIG_VER=0.14.0
+RUN wget https://ziglang.org/download/${ZIG_VER}/zig-linux-$(uname -m)-${ZIG_VER}.tar.xz
 
-RUN apt-get update && apt-get install -y curl xz-utils ca-certificates
+RUN tar -xvf zig-linux-$(uname -m)-${ZIG_VER}.tar.xz
 
-RUN curl https://ziglang.org/download/${ZIG_VER}/zig-linux-$(uname -m)-${ZIG_VER}.tar.xz -o zig-linux.tar.xz && \
-  tar xf zig-linux.tar.xz && \
-  mv zig-linux-$(uname -m)-${ZIG_VER}/ /opt/zig
+RUN mv zig-linux-$(uname -m)-${ZIG_VER} /usr/local/zig 
 
-RUN /opt/zig/zig build -Doptimize=ReleaseFast
+ENV PATH="/usr/local/zig:$PATH"
 
+WORKDIR /home/ziguser
+COPY src src
+COPY build.zig build.zig
+COPY build.zig.zon build.zig.zon
+
+USER ziguser
+
+RUN zig build -Doptimize=ReleaseFast -Dcpu=native
+RUN ls
+
+FROM debian:12-slim
+
+RUN apt-get -qq update 
+RUN apt-get -qy install ca-certificates
+
+COPY --from=build /home/ziguser/zig-out/bin/zzz /server
 EXPOSE 8080
-
-CMD ["zig-out/bin/zzz"]
+ENTRYPOINT ./server

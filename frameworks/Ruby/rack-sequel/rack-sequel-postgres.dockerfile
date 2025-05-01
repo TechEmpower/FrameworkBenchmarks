@@ -1,4 +1,4 @@
-FROM ruby:3.4
+FROM ruby:3.5-rc
 
 ADD ./ /rack-sequel
 

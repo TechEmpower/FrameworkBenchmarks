@@ -66,7 +66,7 @@ async def single_database_query_raw(request):
     id_ = randint(1, 10000)
 
     async with request.app['pg'].acquire() as conn:
-        r = await conn.fetchval('SELECT id,randomnumber FROM world WHERE id = $1', id_)
+        r = await conn.fetchval(READ_ROW_SQL, id_)
     return json_response({'id': id_, 'randomNumber': r})
 
 
@@ -92,16 +92,11 @@ async def multiple_database_queries_raw(request):
     """
     num_queries = get_num_queries(request)
 
-    ids = [randint(1, 10000) for _ in range(num_queries)]
+    ids = [(randint(1, 10000), ) for _ in range(num_queries)]
 
-    result = []
     async with request.app['pg'].acquire() as conn:
-        stmt = await conn.prepare(READ_ROW_SQL)
-        for id_ in ids:
-            result.append({
-                'id': id_,
-                'randomNumber': await stmt.fetchval(id_),
-            })
+        rows = await conn.fetchmany(READ_ROW_SQL, ids)
+        result = [{'id': id_[0], 'randomNumber': row[0]} for id_, row in zip(ids, rows)]
     return json_response(result)
 
 
@@ -156,14 +151,13 @@ async def updates_raw(request):
     num_queries = get_num_queries(request)
     update_ids = sample(range(1, 10001), num_queries)
     update_ids.sort()
+    fetch_params = tuple((i, ) for i in update_ids)
     updates = tuple(zip(update_ids, sample(range(1, 10001), num_queries)))
     worlds = [{'id': row_id, 'randomNumber': number} for row_id, number in updates]
 
     async with request.app['pg'].acquire() as conn:
-        stmt = await conn.prepare(READ_ROW_SQL)
-        for id_, _ in updates:
-            # the result of this is the int previous random number which we don't actually use
-            await stmt.fetchval(id_)
+        # the result of this is the int previous random number which we don't actually use
+        await conn.executemany(READ_ROW_SQL, fetch_params)
         await conn.executemany(WRITE_ROW_SQL, updates)
 
     return json_response(worlds)

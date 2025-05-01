@@ -151,6 +151,7 @@ DEPENDENCIES
   iodine (~> 0.7)
   jdbc-postgres (~> 42.2)
   json (~> 2.10)
+  logger
   passenger (~> 6.0)
   pg (~> 1.5)
   pitchfork (~> 0.17)

@@ -2,7 +2,7 @@ asyncpg==0.26.0
 bareasgi==4.3.0
 bareasgi-jinja2==4.0.1
 bareutils==4.0.2
-h11==0.14.0
+h11==0.16.0
 h2==4.1.0
 hpack==4.0.0
 hypercorn==0.14.3

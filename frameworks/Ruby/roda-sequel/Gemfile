@@ -25,5 +25,6 @@ group :puma, optional: true do
 end
 
 group :unicorn, optional: true do
+  gem 'logger' # required by unicorn on Ruby 3.5
   gem "unicorn", "~> 6.1", platforms: %i[ruby mswin], require: false
 end

@@ -1,6 +1,6 @@
 name := "youi-server"
 version := "1.0"
-scalaVersion := "2.13.3"
+scalaVersion := "2.13.16"
 
 libraryDependencies ++= Seq(
   "io.youi" %% "youi-server" % "0.13.17",
