@@ -23,6 +23,11 @@
             <version>0.8.10</version>
         </dependency>
         <dependency>
+            <groupId>io.github.smartboot.socket</groupId>
+            <artifactId>aio-pro</artifactId>
+            <version>1.5.62-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>tech.smartboot.servlet</groupId>
             <artifactId>servlet-core</artifactId>
             <version>${smartservlet.version}</version>
