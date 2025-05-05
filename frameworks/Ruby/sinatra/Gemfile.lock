@@ -29,7 +29,7 @@ GEM
     i18n (1.14.7)
       concurrent-ruby (~> 1.0)
     iodine (0.7.58)
-    json (2.10.1)
+    json (2.11.3)
     kgio (2.11.4)
     logger (1.6.6)
     minitest (5.25.4)
