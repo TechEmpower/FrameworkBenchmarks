@@ -20,7 +20,7 @@
         <dependency>
             <groupId>tech.smartboot.feat</groupId>
             <artifactId>feat-cloud-starter</artifactId>
-            <version>0.8.10</version>
+            <version>0.9.0</version>
         </dependency>
         <dependency>
             <groupId>io.github.smartboot.socket</groupId>
