@@ -40,7 +40,7 @@ public class DbResource extends BaseResource {
         });
 
         Uni.combine().all().unis(worlds)
-                .combinedWith(v -> Arrays.asList(ret))
+                .with(v -> Arrays.asList(ret))
                 .subscribe().with(list -> {
                             sendJson(rc, new JsonArray(list));
                         },
@@ -61,7 +61,7 @@ public class DbResource extends BaseResource {
         });
 
         Uni.combine().all().unis(worlds)
-                .combinedWith(v -> null)
+                .with(v -> null)
                 .flatMap(v -> worldRepository.update(wordsToUpdate))
                 .map(updated -> wordsToUpdate)
                 .subscribe().with(updatedWordsOrderedById -> {

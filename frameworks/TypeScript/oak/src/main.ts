@@ -1,10 +1,7 @@
-import { Application, DatabaseResult, Manager } from "./deps.ts";
+import { Application } from "oak";
 import { router } from "./routes.ts";
-import { getDbClient } from "./utils.ts";
 
-const app = new Application<
-  { manager: Manager; cached_worlds: DatabaseResult[] }
->();
+const app = new Application();
 
 // headers
 app.use(async (ctx, next) => {
@@ -13,15 +10,7 @@ app.use(async (ctx, next) => {
   await next();
 });
 
-// database handling
-app.use(async (ctx, next) => {
-  const db = await getDbClient();
-  ctx.state.manager = db.getManager();
-  await next();
-  await db.disconnect();
-});
-
 app.use(router.routes());
 app.use(router.allowedMethods());
 
-await app.listen({ port: 8080 });
+export default { fetch: app.fetch };

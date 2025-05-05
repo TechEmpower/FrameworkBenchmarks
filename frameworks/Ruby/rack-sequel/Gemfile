@@ -19,4 +19,5 @@ end
 
 group :unicorn, optional: true do
   gem 'unicorn', '~> 6.1', platforms: [:ruby, :mswin], require: false
+  gem 'logger' # required by unicorn on Ruby 3.5
 end

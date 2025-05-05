@@ -6,6 +6,12 @@ WORKDIR /app
 
 USER deno
 
+ENV PG_NAME hello_world
+ENV PG_HOST tfb-database
+ENV PG_USER benchmarkdbuser
+ENV PG_PSWD benchmarkdbpass
+ENV DATABASE postgres
+
 COPY . .
 
 RUN deno install --entrypoint ./src/main.ts
