@@ -28,7 +28,7 @@ local function alloc(len: number)
 		return
 	end
 
-	while cursor + len < size do
+	while cursor + len > size do
 		size *= 2
 	end
 
