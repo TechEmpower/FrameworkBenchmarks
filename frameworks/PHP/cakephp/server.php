@@ -2,7 +2,7 @@
 require_once __DIR__.'/vendor/autoload.php';
 
 use Adapterman\Adapterman;
-use Workerman\Lib\Timer;
+use Workerman\Timer;
 use Workerman\Worker;
 
 Adapterman::init();
