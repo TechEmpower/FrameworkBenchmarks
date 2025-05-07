@@ -1,8 +1,9 @@
 local vm = require("@lute/vm")
+local system = require("@lute/system")
 
-local threadCount = tonumber(...)
+local threadCount = system.threadcount()
 
-for i = 1, threadCount do
+for _ = 1, threadCount do
 	coroutine.resume(coroutine.create(vm.create("./serve").serve))
 end
 
