@@ -1,9 +1,13 @@
 import { Elysia, t } from "elysia";
-import * as db from "./postgres";
-import { Fortune } from "./types";
+import {
+	find,
+	fortunes as getFortunes,
+	findThenRand,
+	bulkUpdate,
+} from "./postgres";
 
 export function rand() {
-	return Math.ceil(Math.random() * 10000);
+	return ~~(Math.random() * 10000);
 }
 
 function parseQueriesNumber(q?: string) {
@@ -16,9 +20,9 @@ export const dbHandlers = new Elysia()
 		server: "Elysia",
 	})
 	// ? Mark as async for Promise result to prevent double Elysia's mapResponse execution
-	.get("/db", async () => db.find(rand()))
+	.get("/db", async () => find(rand()))
 	.get("/fortunes", async (c) => {
-		const fortunes = await db.fortunes();
+		const fortunes = await getFortunes();
 
 		fortunes.push({
 			id: 0,
@@ -47,21 +51,21 @@ export const dbHandlers = new Elysia()
 	// ? Mark as async for Promise result to prevent double Elysia's mapResponse execution
 	.get("/queries", async (c) => {
 		const num = parseQueriesNumber(c.query.queries);
+
 		const worldPromises = new Array(num);
+		for (let i = 0; i < num; i++) worldPromises[i] = find(rand());
 
-		for (let i = 0; i < num; i++) worldPromises[i] = db.find(rand());
-
-		return Promise.all(worldPromises);
+		return await Promise.all(worldPromises);
 	})
 	.get("/updates", async (c) => {
 		const num = parseQueriesNumber(c.query.queries);
 		const worldPromises = new Array(num);
 
-		for (let i = 0; i < num; i++)
-			worldPromises[i] = db.findThenRand(rand());
+		for (let i = 0; i < num; i++) worldPromises[i] = findThenRand(rand());
 
 		const worlds = await Promise.all(worldPromises);
 
-		await db.bulkUpdate(worlds);
+		await bulkUpdate(worlds);
+
 		return worlds;
 	});
