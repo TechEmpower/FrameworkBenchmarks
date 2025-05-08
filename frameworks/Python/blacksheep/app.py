@@ -33,9 +33,6 @@ async def setup_db(app):
         port=5432,
         min_size=MIN_POOL_SIZE,
         max_size=MAX_POOL_SIZE,
-        command_timeout=5,
-        max_inactive_connection_lifetime=60,
-        server_settings={'jit': 'off'},
     )
 
 async def shutdown_db(app):
