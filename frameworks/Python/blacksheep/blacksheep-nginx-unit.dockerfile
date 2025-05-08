@@ -22,8 +22,9 @@ RUN CORE_COUNT=$(nproc) && \
 #     curl -X PUT --data-binary @/blacksheep/unit-config.json --unix-socket \
 #         /var/run/control.unit.sock http://localhost/config
 
-COPY ./unit-config.json /docker-entrypoint.d/unit-config.json
+COPY ./unit-config.json /docker-entrypoint.d/config.json
 ENTRYPOINT []
 EXPOSE 8080
-CMD ["unitd", "--no-daemon", "--control", "unix:/var/run/control.unit.sock"]
+
+# CMD ["unitd", "--no-daemon", "--control", "unix:/var/run/control.unit.sock"]
 # CMD ["./start-unit.sh"]
