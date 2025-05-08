@@ -22,7 +22,6 @@ WORKER_PROCESSES = CORE_COUNT
 MAX_POOL_SIZE = max(1, MAX_CONNECTIONS // WORKER_PROCESSES)
 MIN_POOL_SIZE = max(1, MAX_POOL_SIZE // 2)
 db_pool = None
-key = itemgetter(1)
 
 async def setup_db(app):
     global db_pool
