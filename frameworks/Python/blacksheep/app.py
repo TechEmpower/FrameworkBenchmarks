@@ -131,7 +131,7 @@ async def fortunes_test(request):
 @bs.get('/updates')
 async def db_updates_test(request):
     num_queries = get_num_queries(request)
-    updates = [(row_id, random.randint(1, 10000)) for row_id in random.sample(range(1, 10000), num_queries)]
+    updates = [(row_id, random.randint(1, 10000)) for row_id in sorted(random.sample(range(1, 10000), num_queries))]
     worlds = [Result(id=row_id, randomNumber=number) for row_id, number in updates]
     # worlds = [ {"id": row_id, "randomNumber": number} for row_id, number in updates ]
     async with db_pool.acquire() as db_conn:
