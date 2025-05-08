@@ -132,8 +132,8 @@ async def fortunes_test(request):
 async def db_updates_test(request):
     num_queries = get_num_queries(request)
     updates = list(zip(
-        sample(range(1, 10000), num_queries),
-        sorted(sample(range(1, 10000), num_queries))
+        random.sample(range(1, 10000), num_queries),
+        sorted(random.sample(range(1, 10000), num_queries))
     ))
     worlds = [Result(id=row_id, randomNumber=number) for row_id, number in updates]
     # worlds = [ {"id": row_id, "randomNumber": number} for row_id, number in updates ]

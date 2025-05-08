@@ -4,11 +4,11 @@ WORKDIR /blacksheep
 
 COPY ./ /blacksheep
 
-RUN pip3 install -U pip
-RUN pip3 install Cython==3.0.12
-RUN pip3 install -r /blacksheep/requirements.txt
-RUN pip3 install -r /blacksheep/requirements-gunicorn.txt
-RUN pip3 install -r /blacksheep/requirements-uvicorn.txt
+RUN pip3 install -U pip -q
+RUN pip3 install Cython==3.0.12 -q
+RUN pip3 install -r /blacksheep/requirements.txt -q
+RUN pip3 install -r /blacksheep/requirements-gunicorn.txt -q
+RUN pip3 install -r /blacksheep/requirements-uvicorn.txt -q
 
 EXPOSE 8080
 
