@@ -11,11 +11,17 @@ RUN pip3 install -r /blacksheep/requirements-uvicorn.txt -q
 
 ENV PGSSLMODE=disable
 RUN CORE_COUNT=$(nproc) && \
-    MAX_PROCESSES=$((CORE_COUNT)) && \
-    sed -i "s|\"processes\": [0-9]*|\"processes\": $MAX_PROCESSES|g" /blacksheep/unit-config.json
+    MAX_PROCESSES=$((CORE_COUNT <= 4 ? CORE_COUNT : CORE_COUNT)) && \
+    SPARE_PROCESSES=$((MAX_PROCESSES // 4 > 0 ? MAX_PROCESSES // 4 : 1)) && \
+    sed -i "s|\"max\": [0-9]*|\"max\": $MAX_PROCESSES|g" /blacksheep/unit-config.json && \
+    sed -i "s|\"spare\": [0-9]*|\"spare\": $SPARE_PROCESSES|g" /blacksheep/unit-config.json && \
+    sed -i "s|\"idle_timeout\": [0-9]*|\"idle_timeout\": 3600|g" /blacksheep/unit-config.json
 
-RUN chmod +x start-unit.sh
-
+# RUN chmod +x start-unit.sh
+RUN unitd && \
+    curl -X PUT --data-binary @/blacksheep/unit-config.json --unix-socket \
+        /var/run/control.unit.sock http://localhost/config
 ENTRYPOINT []
 EXPOSE 8080
-CMD ["./start-unit.sh"]
+CMD ["unitd", "--no-daemon", "--control", "unix:/var/run/control.unit.sock"]
+# CMD ["./start-unit.sh"]

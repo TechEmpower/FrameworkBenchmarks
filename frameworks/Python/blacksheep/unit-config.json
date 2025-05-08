@@ -12,7 +12,11 @@
             "protocol": "asgi",
             "module": "app",
             "callable": "app",
-            "processes": 56
+            "processes": {
+                "max": 56,
+                "spare": 14,
+                "idle_timeout": 3600
+            }
         }
     },
     "access_log": "/dev/null"
