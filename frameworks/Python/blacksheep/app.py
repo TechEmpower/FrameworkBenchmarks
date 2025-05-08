@@ -16,7 +16,7 @@ except Exception:
 READ_ROW_SQL = 'SELECT "id", "randomnumber" FROM "world" WHERE id = $1'
 WRITE_ROW_SQL = 'UPDATE "world" SET "randomnumber"=$1 WHERE id=$2'
 ADDITIONAL_ROW = [0, "Additional fortune added at request time."]
-MAX_CONNECTIONS = 1200 
+MAX_CONNECTIONS = 1000 
 CORE_COUNT = multiprocessing.cpu_count()
 WORKER_PROCESSES = CORE_COUNT
 MAX_POOL_SIZE = max(1, MAX_CONNECTIONS // WORKER_PROCESSES)
@@ -131,7 +131,10 @@ async def fortunes_test(request):
 @bs.get('/updates')
 async def db_updates_test(request):
     num_queries = get_num_queries(request)
-    updates = [(row_id, random.randint(1, 10000)) for row_id in sorted(random.sample(range(1, 10000), num_queries))]
+    updates = list(zip(
+        sample(range(1, 10000), num_queries),
+        sorted(sample(range(1, 10000), num_queries))
+    ))
     worlds = [Result(id=row_id, randomNumber=number) for row_id, number in updates]
     # worlds = [ {"id": row_id, "randomNumber": number} for row_id, number in updates ]
     async with db_pool.acquire() as db_conn:
