@@ -12,7 +12,7 @@
             "protocol": "asgi",
             "module": "app",
             "callable": "app",
-            "processes": {{NPROC}}
+            "processes": 56
         }
     },
     "access_log": "/dev/null"
