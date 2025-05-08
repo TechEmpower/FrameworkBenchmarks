@@ -18,9 +18,11 @@ RUN CORE_COUNT=$(nproc) && \
     sed -i "s|\"idle_timeout\": [0-9]*|\"idle_timeout\": 3600|g" /blacksheep/unit-config.json
 
 # RUN chmod +x start-unit.sh
-RUN unitd && \
-    curl -X PUT --data-binary @/blacksheep/unit-config.json --unix-socket \
-        /var/run/control.unit.sock http://localhost/config
+# RUN unitd && \
+#     curl -X PUT --data-binary @/blacksheep/unit-config.json --unix-socket \
+#         /var/run/control.unit.sock http://localhost/config
+
+COPY ./unit-config.json /docker-entrypoint.d/unit-config.json
 ENTRYPOINT []
 EXPOSE 8080
 CMD ["unitd", "--no-daemon", "--control", "unix:/var/run/control.unit.sock"]
