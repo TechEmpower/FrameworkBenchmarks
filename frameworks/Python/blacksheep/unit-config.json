@@ -10,7 +10,6 @@
             "path": "/blacksheep",
             "working_directory": "/blacksheep",
             "processes": 14,
-            "threads": 10,
             "protocol": "asgi",
             "module": "app",
             "callable": "app"
