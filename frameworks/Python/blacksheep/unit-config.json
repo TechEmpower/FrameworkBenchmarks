@@ -9,14 +9,11 @@
             "type": "python",
             "path": "/blacksheep",
             "working_directory": "/blacksheep",
+            "processes": 14,
+            "threads": 10,
             "protocol": "asgi",
             "module": "app",
-            "callable": "app",
-            "processes": {
-                "max": 56,
-                "spare": 14,
-                "idle_timeout": 3600
-            }
+            "callable": "app"
         }
     },
     "access_log": "/dev/null"

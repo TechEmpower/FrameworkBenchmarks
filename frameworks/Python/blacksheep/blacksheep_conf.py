@@ -3,11 +3,11 @@ import os
 
 _is_travis = os.environ.get('TRAVIS') == 'true'
 CPU_CORES = multiprocessing.cpu_count()
-MAX_CONNECTIONS = 2000 
-CONNECTIONS_PER_WORKER = 50
+MAX_CONNECTIONS = 1900 
+CONNECTIONS_PER_WORKER = 100
 max_pg_workers = MAX_CONNECTIONS // CONNECTIONS_PER_WORKER
 
-workers = min(CPU_CORES, max_pg_workers)
+workers = CPU_CORES
 if _is_travis:
     workers = 2
 
