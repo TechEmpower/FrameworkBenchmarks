@@ -18,7 +18,7 @@ WRITE_ROW_SQL = 'UPDATE "world" SET "randomnumber"=$1 WHERE id=$2'
 ADDITIONAL_ROW = [0, "Additional fortune added at request time."]
 MAX_CONNECTIONS = 1900
 CORE_COUNT = multiprocessing.cpu_count()
-PROCESSES = CPU_CORES if os.getenv('GUNICORN') else min(8, CORE_COUNT // 4) if CORE_COUNT > 4 else CORE_COUNT
+PROCESSES = CORE_COUNT if os.getenv('GUNICORN') else min(8, CORE_COUNT // 4) if CORE_COUNT > 4 else CORE_COUNT
 MAX_POOL_SIZE = max(1,int(os.getenv('MAX_POOL_SIZE', MAX_CONNECTIONS // PROCESSES)))
 MIN_POOL_SIZE = max(1,int(os.getenv('MIN_POOL_SIZE', MAX_POOL_SIZE // 2)))
 
