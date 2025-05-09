@@ -3,23 +3,17 @@ GEM
   specs:
     bigdecimal (3.1.9)
     json (2.11.3)
-    kgio (2.11.4)
-    logger (1.7.0)
     mysql2 (0.5.6)
     nio4r (2.7.4)
     pg (1.5.9)
     puma (6.6.0)
       nio4r (~> 2.0)
     rack (3.1.11)
-    raindrops (0.20.1)
     sequel (5.90.0)
       bigdecimal
     sequel_pg (1.17.1)
       pg (>= 0.18.0, != 1.2.0)
       sequel (>= 4.38.0)
-    unicorn (6.1.0)
-      kgio (~> 2.6)
-      raindrops (~> 0.7)
 
 PLATFORMS
   ruby
@@ -28,14 +22,12 @@ PLATFORMS
 
 DEPENDENCIES
   json (~> 2.8)
-  logger
   mysql2 (~> 0.4)
   pg (~> 1.5)
   puma (~> 6.5)
   rack (~> 3.0)
   sequel (~> 5.0)
   sequel_pg (~> 1.6)
-  unicorn (~> 6.1)
 
 BUNDLED WITH
    2.6.2

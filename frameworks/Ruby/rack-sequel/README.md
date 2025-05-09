@@ -14,9 +14,7 @@ The tests will be run with:
 
 * [Ruby 3.4](http://www.ruby-lang.org)
 * [Puma 6](http://puma.io)
-* [Passenger 6](https://www.phusionpassenger.com)
-* [Unicorn 5](https://bogomips.org/unicorn/)
-* [Rack 2](http://rack.rubyforge.org)
+* [Rack 3](http://rack.rubyforge.org)
 * [Sequel 5](http://sequel.jeremyevans.net)
 * [MySQL 5.5](https://www.mysql.com)
 * [Postgres 9.3](https://www.postgresql.org)
