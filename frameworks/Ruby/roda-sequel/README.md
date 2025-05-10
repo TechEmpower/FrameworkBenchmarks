@@ -14,7 +14,6 @@ The tests will be run with:
 
 * [Ruby 3.4](http://www.ruby-lang.org)
 * [Puma 6](http://puma.io)
-* [Unicorn 6](https://bogomips.org/unicorn/)
 * [Iodine](https://github.com/boazsegev/iodine)
 * [Roda 3](http://roda.jeremyevans.net)
 * [Sequel 5](http://sequel.jeremyevans.net)

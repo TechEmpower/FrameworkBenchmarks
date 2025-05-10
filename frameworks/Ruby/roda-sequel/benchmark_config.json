@@ -65,26 +65,6 @@
         "display_name": "roda-sequel-postgres-iodine-mri",
         "versus": "rack-sequel-postgres-iodine-mri",
         "notes": ""
-      },
-      "postgres-unicorn-mri": {
-        "db_url": "/db",
-        "query_url": "/queries?queries=",
-        "fortune_url": "/fortunes",
-        "update_url": "/updates?queries=",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Micro",
-        "database": "Postgres",
-        "framework": "roda-sequel",
-        "language": "Ruby",
-        "orm": "Full",
-        "platform": "Rack",
-        "webserver": "Unicorn",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "roda-sequel-postgres-unicorn-mri",
-        "versus": "rack-sequel-postgres-unicorn-mri",
-        "notes": ""
       }
     }
   ]
