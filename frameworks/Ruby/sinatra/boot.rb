@@ -15,18 +15,15 @@ def connect(dbtype)
   Bundler.require(dbtype) # Load database-specific modules
 
   opts = {
-    :adapter=>(dbtype == :mysql ? 'mysql2' : 'postgresql'),
-    :username=>'benchmarkdbuser',
-    :password=>'benchmarkdbpass',
-    :host=>'tfb-database',
-    :database=>'hello_world'
+    adapter: (dbtype == :mysql ? 'mysql2' : 'postgresql'),
+    username: 'benchmarkdbuser',
+    password: 'benchmarkdbpass',
+    host: 'tfb-database',
+    database: 'hello_world'
   }
 
   # Determine threading/thread pool size and timeout
-  if defined?(JRUBY_VERSION)
-    opts[:pool] = (2 * Math.log(Integer(ENV.fetch('MAX_CONCURRENCY')))).floor
-    opts[:checkout_timeout] = 10
-  elsif defined?(Puma) && (threads = Puma.cli_config.options.fetch(:max_threads)) > 1
+  if defined?(Puma) && (threads = Puma.cli_config.options.fetch(:max_threads)) > 1
     opts[:pool] = (2 * Math.log(threads)).floor
     opts[:checkout_timeout] = 10
   else
