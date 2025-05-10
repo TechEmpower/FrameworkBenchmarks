@@ -1,5 +1,4 @@
-use bytes::Bytes;
-use rama::http::{HeaderValue, IntoResponse, Response, StatusCode, header};
+use rama::http::StatusCode;
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
@@ -25,27 +24,4 @@ where
     E: std::error::Error,
 {
     (StatusCode::INTERNAL_SERVER_ERROR, err.to_string())
-}
-
-#[derive(Clone, Copy, Debug)]
-pub struct Utf8Html<T>(pub T);
-
-impl<T> IntoResponse for Utf8Html<T>
-where
-    T: Into<Bytes>,
-{
-    fn into_response(self) -> Response {
-        let mut res = (StatusCode::OK, self.0.into()).into_response();
-        res.headers_mut().insert(
-            header::CONTENT_TYPE,
-            HeaderValue::from_static("text/html; charset=utf-8"),
-        );
-        res
-    }
-}
-
-impl<T> From<T> for Utf8Html<T> {
-    fn from(inner: T) -> Self {
-        Self(inner)
-    }
 }

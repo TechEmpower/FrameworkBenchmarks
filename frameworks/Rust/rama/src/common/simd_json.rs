@@ -2,11 +2,12 @@
 
 use bytes::{BufMut, BytesMut};
 use rama::http::{
-    HeaderMap, HeaderValue, IntoResponse, Request, Response, StatusCode, header,
+    HeaderMap, HeaderValue, Request, Response, StatusCode, header,
     service::web::extract::{
         Bytes, FromRequest,
         body::{BytesRejection, InvalidJsonContentType, JsonRejection},
     },
+    service::web::response::IntoResponse,
 };
 use serde::{Serialize, de::DeserializeOwned};
 use simd_json;
@@ -83,7 +84,7 @@ fn json_content_type(headers: &HeaderMap) -> bool {
 
     let is_json_content_type = mime.type_() == "application"
         && (mime.subtype() == "json"
-            || mime.suffix().map_or(false, |name| name == "json"));
+            || mime.suffix().is_some_and(|name| name == "json"));
 
     is_json_content_type
 }

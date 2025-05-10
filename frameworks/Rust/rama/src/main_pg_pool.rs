@@ -4,15 +4,19 @@ mod pg_pool;
 #[cfg(feature = "simd-json")]
 use common::simd_json::Json;
 #[cfg(not(feature = "simd-json"))]
-use rama::http::response::Json;
+use rama::http::service::web::response::Json;
 
 use common::{SELECT_ALL_FORTUNES, SELECT_WORLD_BY_ID, UPDATE_WORLDS, random_ids};
 use dotenv::dotenv;
 use futures_util::{TryStreamExt, stream::FuturesUnordered};
 use mimalloc::MiMalloc;
 use rama::http::{
-    IntoResponse, StatusCode,
-    service::web::{Router, extract::Query},
+    StatusCode,
+    service::web::{
+        Router,
+        extract::Query,
+        response::{Html, IntoResponse},
+    },
 };
 use rand::{SeedableRng, rng, rngs::SmallRng};
 use yarte::Template;
@@ -24,7 +28,7 @@ mod server;
 
 use common::{
     get_env, random_id,
-    utils::{Params, Utf8Html, parse_params},
+    utils::{Params, parse_params},
 };
 use pg_pool::database::{
     DatabaseClient, PgError, create_pool, fetch_all_fortunes, fetch_world_by_id,
@@ -82,7 +86,7 @@ async fn fortunes(DatabaseClient(client): DatabaseClient) -> impl IntoResponse {
 
     fortunes.sort_by(|a, b| a.message.cmp(&b.message));
 
-    Utf8Html(
+    Html(
         FortunesTemplate {
             fortunes: &fortunes,
         }

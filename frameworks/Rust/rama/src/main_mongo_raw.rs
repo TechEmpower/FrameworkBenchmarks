@@ -12,8 +12,8 @@ use common::{
     utils::{Params, parse_params},
 };
 use rama::http::{
-    IntoResponse, StatusCode,
-    service::web::{Router, extract::Query},
+    StatusCode,
+    service::web::{Router, extract::Query, response::IntoResponse},
 };
 use std::time::Duration;
 
@@ -25,7 +25,7 @@ static GLOBAL: MiMalloc = MiMalloc;
 #[cfg(feature = "simd-json")]
 use common::simd_json::Json;
 #[cfg(not(feature = "simd-json"))]
-use rama::http::response::Json;
+use rama::http::service::web::response::Json;
 
 use dotenv::dotenv;
 use mongodb::{
