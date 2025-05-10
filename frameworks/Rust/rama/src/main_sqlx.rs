@@ -110,10 +110,12 @@ async fn cache(
 ) -> impl IntoResponse {
     let count = parse_params(params);
     let mut rng = SmallRng::from_rng(&mut rng());
-    let mut worlds: Vec<Option<World>> = Vec::with_capacity(count);
+    let mut worlds: Vec<World> = Vec::with_capacity(count);
 
     for id in random_ids(&mut rng, count) {
-        worlds.push(ctx.state().cache.get(&id));
+        if let Some(world) = ctx.state().cache.get(&id) {
+            worlds.push(world);
+        }
     }
 
     (StatusCode::OK, Json(worlds))
