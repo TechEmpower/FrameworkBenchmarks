@@ -14,7 +14,7 @@ GEM
     pg (1.5.9)
     puma (6.6.0)
       nio4r (~> 2.0)
-    rack (3.1.12)
+    rack (3.1.14)
     rack-protection (4.1.1)
       base64 (>= 0.1.0)
       logger (>= 1.6.0)

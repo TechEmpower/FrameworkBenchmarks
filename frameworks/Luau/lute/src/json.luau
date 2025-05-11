@@ -1,486 +1,197 @@
---!strict
+--!native
+local COMMA = 44
+local QUOTATION = 34
+local OPEN_BRACKET = 91
+local CLOSE_BRACKET = 93
+local OPEN_BRACE = 123
+local CLOSE_BRACE = 125
+local BACKSLASH = 92
 
-local json = {
-    --- Not actually a nil value, a newproxy stand-in for a null value since Luau has no actual representation of `null`
-    NULL = newproxy() :: nil,
-}
-
-type JSONPrimitive = nil | number | string | boolean
-type Object = { [string]: Value }
-type Array = { Value }
-export type Value = JSONPrimitive | Array | Object
-
--- serialization
-
-type SerializerState = {
-    buf: buffer,
-    cursor: number,
-    prettyPrint: boolean,
-    depth: number,
-}
-
-local function checkState(state: SerializerState, len: number)
-    local curLen = buffer.len(state.buf)
-
-    if state.cursor + len < curLen then
-        return
-    end
-
-    local newBuffer = buffer.create(curLen * 2)
-
-    buffer.copy(newBuffer, 0, state.buf)
-
-    state.buf = newBuffer
-end
-
-local function writeByte(state: SerializerState, byte: number)
-    checkState(state, 1)
-
-    buffer.writeu8(state.buf, state.cursor, byte)
-
-    state.cursor += 1
-end
-
-local function writeSpaces(state: SerializerState)
-    if state.depth == 0 then
-        return
-    end
-
-    if state.prettyPrint then
-        checkState(state, state.depth * 4)
-
-        for i = 0, state.depth do
-            buffer.writeu32(state.buf, state.cursor, 0x_20_20_20_20)
-            state.cursor += 4
-        end
-    else
-        buffer.writeu8(state.buf, state.cursor, string.byte(" "))
-
-        state.cursor += 1
-    end
-end
-
-local function writeString(state: SerializerState, str: string)
-    checkState(state, #str)
-
-    buffer.writestring(state.buf, state.cursor, str)
-
-    state.cursor += #str
-end
-
-local serializeAny
-
+-- used for string serialization
 local ESCAPE_MAP = {
-    [0x5C] = string.byte("\\"), -- 5C = '\'
-    [0x08] = string.byte("b"),
-    [0x0C] = string.byte("f"),
-    [0x0A] = string.byte("n"),
-    [0x0D] = string.byte("r"),
-    [0x09] = string.byte("t"),
+	[0x5C] = string.byte("\\"), -- 5C = '\'
+	[0x08] = string.byte("b"),
+	[0x0C] = string.byte("f"),
+	[0x0A] = string.byte("n"),
+	[0x0D] = string.byte("r"),
+	[0x09] = string.byte("t"),
 }
+
+local types = require("./types")
+
+local buff: buffer = buffer.create(1024)
+local size = 1024
+local cursor = 0
+
+local function alloc(len: number)
+	if cursor + len < size then
+		return
+	end
+
+	while cursor + len > size do
+		size *= 2
+	end
+
+	local newbuff = buffer.create(size)
+	buffer.copy(newbuff, 0, buff)
+	buff = newbuff
+end
+
+local function WRITE_QUOTATION()
+	buffer.writeu8(buff, cursor, QUOTATION)
+	cursor += 1
+end
+
+local function WRITE_COMMA()
+	buffer.writeu8(buff, cursor, COMMA)
+	cursor += 1
+end
+
+local function writeString(str: string)
+	local len = #str
+	alloc(len)
+
+	buffer.writestring(buff, cursor, str)
+
+	cursor += len
+end
 
 local function serializeUnicode(codepoint: number)
-    if codepoint >= 0x10000 then
-        local high = math.floor((codepoint - 0x10000) / 0x400) + 0xD800
-        local low = ((codepoint - 0x10000) % 0x400) + 0xDC00
-        return string.format("\\u%04x\\u%04x", high, low)
-    end
+	if codepoint >= 0x10000 then
+		local high = ((codepoint - 0x10000) // 0x400) + 0xD800
+		local low = ((codepoint - 0x10000) % 0x400) + 0xDC00
+		return string.format("\\u%04x\\u%04x", high, low)
+	end
 
-    return string.format("\\u%04x", codepoint)
+	return string.format("\\u%04x", codepoint)
 end
 
-local function serializeString(state: SerializerState, str: string)
-    checkState(state, #str)
+local function serializeString(str: string)
+	-- covers the quotations & utf
+	alloc((#str * 4) + 2)
 
-    writeByte(state, string.byte('"'))
+	WRITE_QUOTATION()
 
-    for pos, codepoint in utf8.codes(str) do
-        if ESCAPE_MAP[codepoint] then
-            writeByte(state, string.byte("\\"))
-            writeByte(state, ESCAPE_MAP[codepoint])
-        elseif codepoint < 32 or codepoint > 126 then
-            writeString(state, serializeUnicode(codepoint))
-        else
-            writeString(state, utf8.char(codepoint))
-        end
-    end
+	for pos, codepoint in utf8.codes(str) do
+		if ESCAPE_MAP[codepoint] then
+			-- write \
+			buffer.writeu8(buff, cursor, BACKSLASH)
+			cursor += 1
 
-    writeByte(state, string.byte('"'))
+			buffer.writeu8(buff, cursor, ESCAPE_MAP[codepoint])
+			cursor += 1
+		elseif codepoint < 32 or codepoint > 126 then
+			writeString(serializeUnicode(codepoint))
+		else
+			-- we are in ascii
+
+			buffer.writeu8(buff, cursor, codepoint)
+			cursor += 1
+		end
+	end
+
+	WRITE_QUOTATION()
 end
 
-local function serializeArray(state: SerializerState, array: Array)
-    state.depth += 1
+local serializeAny: (value: types.Value) -> ()
 
-    writeByte(state, string.byte("["))
+local function serializeArray(array: types.Array)
+	-- open close bracket
+	-- 1 comma for each array element
+	alloc(2 + #array)
 
-    if state.prettyPrint and #array ~= 0 then
-        writeByte(state, string.byte("\n"))
-    end
+	-- write [
+	buffer.writeu8(buff, cursor, OPEN_BRACKET)
+	cursor += 1
 
-    for i, value in array do
-        if i ~= 1 then
-            writeByte(state, string.byte(","))
+	for _, value in array do
+		serializeAny(value)
+		WRITE_COMMA()
+	end
 
-            if state.prettyPrint then
-                writeByte(state, string.byte("\n"))
-            end
-        end
+	-- get rid of comma
+	cursor -= 1
 
-        if i ~= 1 or state.prettyPrint then
-            writeSpaces(state)
-        end
-
-        serializeAny(state, value)
-    end
-
-    state.depth -= 1
-
-    if state.prettyPrint and #array ~= 0 then
-        writeByte(state, string.byte("\n"))
-        writeSpaces(state)
-    end
-
-    writeByte(state, string.byte("]"))
+	-- write ]
+	buffer.writeu8(buff, cursor, CLOSE_BRACKET)
+	cursor += 1
 end
 
-local function serializeTable(state: SerializerState, object: Object)
-    writeByte(state, string.byte("{"))
+local function serializeTable(object: types.Object)
+	-- openbrace, newline
+	alloc(2)
 
-    if state.prettyPrint then
-        writeByte(state, string.byte("\n"))
-    end
+	-- write {
+	buffer.writeu8(buff, cursor, OPEN_BRACE)
+	cursor += 1
 
-    state.depth += 1
+	for key, value in object do
+		-- quotation 2x, colon and comma
+		alloc(4)
 
-    local first = true
-    for key, value in object do
-        if not first then
-            writeByte(state, string.byte(","))
-            writeByte(state, string.byte(" "))
+		WRITE_QUOTATION()
+		buffer.writestring(buff, cursor, key)
+		cursor += #key + 2
 
-            if state.prettyPrint then
-                writeByte(state, string.byte("\n"))
-            end
-        end
+		buffer.writestring(buff, cursor - 2, '":')
 
-        first = false
+		serializeAny(value)
 
-        writeSpaces(state)
+		WRITE_COMMA()
+	end
 
-        writeByte(state, string.byte('"'))
-        writeString(state, key)
-        writeString(state, '": ')
+	-- get rid of the comma
+	cursor -= 1
 
-        serializeAny(state, value)
-    end
-
-    if state.prettyPrint then
-        writeByte(state, string.byte("\n"))
-    end
-
-    state.depth -= 1
-
-    writeSpaces(state)
-
-    writeByte(state, string.byte("}"))
+	-- write }
+	buffer.writeu8(buff, cursor, CLOSE_BRACE)
+	cursor += 1
 end
 
-serializeAny = function(state: SerializerState, value: Value)
-    local valueType = type(value)
+serializeAny = function(value: types.Value)
+	local valueType = type(value)
 
-    if value == json.NULL then
-        writeString(state, "null")
-    elseif valueType == "boolean" then
-        writeString(state, if value then "true" else "false")
-    elseif valueType == "number" then
-        writeString(state, tostring(value))
-    elseif valueType == "string" then
-        serializeString(state, value :: string)
-    elseif valueType == "table" then
-        if #(value :: {}) == 0 and next(value :: {}) ~= nil then
-            serializeTable(state, value :: Object)
-        else
-            serializeArray(state, value :: Array)
-        end
-    else
-        error("Unknown value", 2)
-    end
+	if valueType == "string" then
+		serializeString(value :: string)
+	elseif valueType == "table" then
+		if #(value :: {}) == 0 then
+			serializeTable(value :: types.Object)
+		else
+			serializeArray(value :: types.Array)
+		end
+	elseif valueType == "number" then
+		local numstr = tostring(value)
+
+		buffer.writestring(buff, cursor, numstr)
+		cursor += #numstr
+	elseif value == types.NULL then
+		-- null as u32
+		buffer.writeu32(buff, cursor, 1819047278)
+		cursor += 4
+	elseif value == true then
+		-- true as u32
+		buffer.writeu32(buff, cursor, 1702195828)
+		cursor += 4
+	elseif value == false then
+		-- false as u32 + u8
+		buffer.writeu32(buff, cursor, 1936482662)
+		buffer.writeu8(buff, cursor + 4, 101)
+		cursor += 5
+	else
+		error("Unknown value", 2)
+	end
 end
 
--- deserialization
+local function serialize(data: types.Value)
+	buff = buffer.create(1024)
+	size = 1024
+	cursor = 0
 
-type DeserializerState = {
-    src: string,
-    cursor: number,
+	serializeAny(data)
+
+	return buffer.readstring(buff, 0, cursor)
+end
+
+return {
+	serialize = serialize,
 }
-
-local function deserializerError(state: DeserializerState, msg: string): never
-    return error(`JSON error - {msg} around {state.cursor}`)
-end
-
-local function skipWhitespace(state: DeserializerState): boolean
-    state.cursor = string.find(state.src, "%S", state.cursor) :: number
-
-    if not state.cursor then
-        return false
-    end
-
-    return true
-end
-
-local function currentByte(state: DeserializerState)
-    return string.byte(state.src, state.cursor)
-end
-
-local function deserializeNumber(state: DeserializerState)
-    -- first "segment"
-    local nStart, nEnd = string.find(state.src, "^[%-%deE]*", state.cursor)
-
-    if not nStart then
-        -- i dont think this is possible
-        deserializerError(state, "Could not match a number literal?")
-    end
-
-    if string.byte(state.src, nEnd :: number + 1) == string.byte(".") then -- decimal!
-        local decStart, decEnd = string.find(state.src, "^[eE%-+%d]+", nEnd :: number + 2)
-
-        if not decStart then
-            deserializerError(state, "Trailing '.' in number value")
-        end
-
-        nEnd = decEnd
-    end
-
-    local num = tonumber(string.sub(state.src, nStart :: number, nEnd))
-
-    if not num then
-        deserializerError(state, "Malformed number value")
-    end
-
-    state.cursor = nEnd :: number + 1
-
-    return num
-end
-
-local function decodeSurrogatePair(high, low): string?
-    local highVal = tonumber(high, 16)
-    local lowVal = tonumber(low, 16)
-
-    if not highVal or not lowVal then
-        return nil -- Invalid
-    end
-
-    -- Calculate the actual Unicode codepoint
-    local codepoint = 0x10000 + ((highVal - 0xD800) * 0x400) + (lowVal - 0xDC00)
-    return utf8.char(codepoint)
-end
-
-local function deserializeString(state: DeserializerState): string
-    state.cursor += 1
-
-    local startPos = state.cursor
-
-    if currentByte(state) == string.byte('"') then
-        state.cursor += 1
-
-        return ""
-    end
-
-    while state.cursor <= #state.src do
-        if currentByte(state) == string.byte('"') then
-            state.cursor += 1
-
-            local source = string.sub(state.src, startPos, state.cursor - 2)
-
-            source = string.gsub(
-                source,
-                "\\u([dD]83[dD])\\u(d[cC]%w%w)",
-                function(high, low)
-                    return decodeSurrogatePair(high, low)
-                        or deserializerError(state, "Invalid unicode surrogate pair")
-                end :: any
-            )
-            -- Handle regular Unicode escapes
-            source = string.gsub(source, "\\u(%x%x%x%x)", function(code)
-                return utf8.char(tonumber(code, 16) :: number)
-            end)
-
-            source = string.gsub(source, "\\\\", "\0")
-            source = string.gsub(source, "\\b", "\b")
-            source = string.gsub(source, "\\f", "\f")
-            source = string.gsub(source, "\\n", "\n")
-            source = string.gsub(source, "\\r", "\r")
-            source = string.gsub(source, "\\t", "\t")
-            source = string.gsub(source, '\\"', '"')
-            source = string.gsub(source, '\0', '\\')
-
-            return source
-        end
-
-        if currentByte(state) == string.byte("\\") then
-            state.cursor += 1
-        end
-
-        state.cursor += 1
-    end
-
-    -- error
-
-    state.cursor = startPos
-
-    return deserializerError(state, "Unterminated string")
-end
-
-local deserialize
-
-local function deserializeArray(state: DeserializerState): Array
-    state.cursor += 1
-
-    local current: Array = {}
-
-    local expectingValue = false
-    while state.cursor < #state.src do
-        skipWhitespace(state)
-
-        if currentByte(state) == string.byte(",") then
-            expectingValue = true
-            state.cursor += 1
-        end
-
-        skipWhitespace(state)
-
-        if currentByte(state) == string.byte("]") then
-            break
-        end
-
-        table.insert(current, deserialize(state))
-
-        expectingValue = false
-    end
-
-    if expectingValue then
-        deserializerError(state, "Trailing comma")
-    end
-
-    if not skipWhitespace(state) or currentByte(state) ~= string.byte("]") then
-        deserializerError(state, "Unterminated array")
-    end
-
-    state.cursor += 1
-
-    return current
-end
-
-local function deserializeObject(state: DeserializerState): Object
-    state.cursor += 1
-
-    local current = {}
-
-    local expectingValue = false
-    while state.cursor < #state.src do
-        skipWhitespace(state)
-
-        if currentByte(state) == string.byte("}") then
-            break
-        end
-
-        skipWhitespace(state)
-
-        if currentByte(state) ~= string.byte('"') then
-            return deserializerError(state, "Expected a string key")
-        end
-
-        local key = deserializeString(state)
-
-        skipWhitespace(state)
-
-        if currentByte(state) ~= string.byte(":") then
-            return deserializerError(state, "Expected ':' for key value pair")
-        end
-
-        state.cursor += 1
-
-        local value = deserialize(state)
-
-        current[key] = value
-
-        if not skipWhitespace(state) then
-            deserializerError(state, "Unterminated object")
-        end
-
-        skipWhitespace(state)
-
-        if currentByte(state) == string.byte(",") then
-            expectingValue = true
-            state.cursor += 1
-        else
-            expectingValue = false
-        end
-    end
-
-    if expectingValue then
-        return deserializerError(state, "Trailing comma")
-    end
-
-    if not skipWhitespace(state) or currentByte(state) ~= string.byte("}") then
-        deserializerError(state, "Unterminated object")
-    end
-
-    state.cursor += 1
-
-    return current
-end
-
-deserialize = function(state: DeserializerState): Value
-    skipWhitespace(state)
-
-    local fourChars = string.sub(state.src, state.cursor, state.cursor + 3)
-
-    if fourChars == "null" then
-        state.cursor += 4
-        return json.NULL
-    elseif fourChars == "true" then
-        state.cursor += 4
-        return true
-    elseif string.sub(state.src, state.cursor, state.cursor + 4) == "false" then
-        state.cursor += 5
-        return false
-    elseif string.match(state.src, "^[%d%.]", state.cursor) then
-        -- number
-        return deserializeNumber(state)
-    elseif string.byte(state.src, state.cursor) == string.byte('"') then
-        return deserializeString(state)
-    elseif string.byte(state.src, state.cursor) == string.byte("[") then
-        return deserializeArray(state)
-    elseif string.byte(state.src, state.cursor) == string.byte("{") then
-        return deserializeObject(state)
-    end
-
-    return deserializerError(state, `Unexpected token '{string.sub(state.src, state.cursor, state.cursor)}'`)
-end
-
--- user-facing
-
-json.serialize = function(value: Value, prettyPrint: boolean?)
-    local state: SerializerState = {
-        buf = buffer.create(1024),
-        cursor = 0,
-        prettyPrint = prettyPrint or false,
-        depth = 0,
-    }
-
-    serializeAny(state, value)
-
-    return buffer.readstring(state.buf, 0, state.cursor)
-end
-
-json.deserialize = function(src: string)
-    local state = {
-        src = src,
-        cursor = 0,
-    }
-
-    return deserialize(state)
-end
-
-return table.freeze(json)

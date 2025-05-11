@@ -1,18 +1,20 @@
 local net = require("@lute/net")
 local json = require("./json")
 
+local plaintext = {
+	status = 200,
+	headers = {
+		["Content-Type"] = "text/plain",
+		["Server"] = "Lute",
+	},
+	body = "Hello, world!",
+}
+
 return {
 	serve = function()
 		net.serve(function(req)
 			if req.path == "/plaintext" then
-				return {
-					status = 200,
-					headers = {
-						["Content-Type"] = "text/plain",
-						["Server"] = "Lute",
-					},
-					body = "Hello, world!",
-				}
+				return plaintext
 			elseif req.path == "/json" then
 				return {
 					status = 200,
