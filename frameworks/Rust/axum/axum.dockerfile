@@ -17,8 +17,8 @@ ENV POSTGRES_URL=postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_w
 ENV POSTGRES_MIN_POOL_SIZE=56
 ENV POSTGRES_MAX_POOL_SIZE=56
 ENV MONGODB_URL=mongodb://tfb-database:27017
-ENV MONGODB_MIN_POOL_SIZE=28
-ENV MONGODB_MAX_POOL_SIZE=28
+ENV MONGODB_MIN_POOL_SIZE=56
+ENV MONGODB_MAX_POOL_SIZE=56
 COPY --from=builder /build/target/release/axum* /app/
 EXPOSE 8000
 CMD ["/app/axum"]
