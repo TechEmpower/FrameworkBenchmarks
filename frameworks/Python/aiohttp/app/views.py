@@ -25,8 +25,8 @@ sort_fortunes_raw = itemgetter('message')
 
 def get_num_queries(request):
     try:
-        num_queries = int(request.match_info.get('queries', 1))
-    except ValueError:
+        num_queries = int(request.match_info['queries'])
+    except (KeyError, ValueError):
         return 1
     if num_queries < 1:
         return 1
