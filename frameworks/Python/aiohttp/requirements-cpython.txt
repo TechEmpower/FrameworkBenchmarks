@@ -1,3 +1,4 @@
 -r requirements.txt
 
 orjson==3.10.16
+uvloop==0.21.0
