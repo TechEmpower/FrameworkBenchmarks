@@ -1,4 +1,4 @@
-FROM python:3.13
+FROM python:latest
 
 ADD ./requirements.txt /aiohttp/requirements.txt
 
