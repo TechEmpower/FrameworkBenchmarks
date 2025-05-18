@@ -2,4 +2,3 @@ aiohttp==3.11.18
 asyncpg==0.30.0
 jinja2==3.1.6
 SQLAlchemy==2.0.40
-uvloop==0.21.0
