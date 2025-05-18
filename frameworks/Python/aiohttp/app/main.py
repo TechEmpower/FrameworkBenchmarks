@@ -1,7 +1,7 @@
-import os
 import multiprocessing
+import os
+import platform
 
-import asyncpg
 from aiohttp import web
 from sqlalchemy.engine.url import URL
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
@@ -19,6 +19,9 @@ from .views import (
     fortunes_raw,
     updates_raw,
 )
+
+if platform.python_implementation() != "PyPy":
+    import asyncpg
 
 CONNECTION_ORM = os.getenv('CONNECTION', 'ORM').upper() == 'ORM'
 
@@ -84,6 +87,7 @@ def setup_routes(app):
 
 def create_app():
     app = web.Application()
-    app.cleanup_ctx.append(db_ctx)
+    if platform.python_implementation() != "PyPy":
+        app.cleanup_ctx.append(db_ctx)
     setup_routes(app)
     return app
