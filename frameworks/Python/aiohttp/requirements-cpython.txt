@@ -1,0 +1,3 @@
+-r requirements.txt
+
+orjson==3.10.16
