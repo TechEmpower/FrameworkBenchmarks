@@ -9,26 +9,21 @@ def connect(dbtype)
   Bundler.require(dbtype) # Load database-specific modules
 
   adapters = {
-    mysql: { jruby: 'jdbc:mysql', mri: 'mysql2' },
-    postgresql: { jruby: 'jdbc:postgresql', mri: 'postgres' }
+    mysql: 'mysql2',
+    postgresql: 'postgres'
   }
 
   opts = {}
 
   # Determine threading/thread pool size and timeout
-  if defined?(JRUBY_VERSION)
-    opts[:max_connections] = (2 * Math.log(Integer(ENV.fetch('MAX_CONCURRENCY')))).floor
-    opts[:pool_timeout] = 10
-  elsif defined?(Puma) && (threads = Puma.cli_config.options.fetch(:max_threads)) > 1
+  if defined?(Puma) && (threads = Puma.cli_config.options.fetch(:max_threads)) > 1
     opts[:max_connections] = (2 * Math.log(threads)).floor
     opts[:pool_timeout] = 10
-  else
-    Sequel.single_threaded = true
   end
 
   Sequel.connect \
     '%{adapter}://%{host}/%{database}?user=%{user}&password=%{password}' % {
-      adapter: adapters.fetch(dbtype).fetch(defined?(JRUBY_VERSION) ? :jruby : :mri),
+      adapter: (dbtype == :mysql ? 'mysql2' : 'postgresql'),
       host: 'tfb-database',
       database: 'hello_world',
       user: 'benchmarkdbuser',

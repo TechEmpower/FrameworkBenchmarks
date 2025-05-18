@@ -6,15 +6,12 @@ GEM
     erubi (1.13.1)
     iodine (0.7.58)
     json (2.11.3)
-    kgio (2.11.4)
-    logger (1.7.0)
     mysql2 (0.5.6)
     nio4r (2.7.4)
     pg (1.5.9)
     puma (6.6.0)
       nio4r (~> 2.0)
     rack (3.1.12)
-    raindrops (0.20.1)
     roda (3.90.0)
       rack
     sequel (5.90.0)
@@ -23,9 +20,6 @@ GEM
       pg (>= 0.18.0, != 1.2.0)
       sequel (>= 4.38.0)
     tilt (2.6.0)
-    unicorn (6.1.0)
-      kgio (~> 2.6)
-      raindrops (~> 0.7)
 
 PLATFORMS
   ruby
@@ -37,7 +31,6 @@ DEPENDENCIES
   erubi (~> 1.12)
   iodine (~> 0.7)
   json (~> 2.8)
-  logger
   mysql2 (~> 0.5)
   pg (~> 1.4)
   puma (~> 6.2)
@@ -45,7 +38,6 @@ DEPENDENCIES
   sequel (~> 5.67)
   sequel_pg (~> 1.17)
   tilt (~> 2.1)
-  unicorn (~> 6.1)
 
 BUNDLED WITH
    2.6.2
