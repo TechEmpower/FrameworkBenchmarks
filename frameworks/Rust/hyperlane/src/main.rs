@@ -18,6 +18,7 @@ pub(crate) use hyperlane::{
     serde::*,
     serde_json::{Value, json},
     tokio::{
+        runtime::{Builder, Runtime},
         spawn,
         sync::{AcquireError, OwnedSemaphorePermit, Semaphore},
         task::JoinHandle,

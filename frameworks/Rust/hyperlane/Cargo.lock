@@ -682,9 +682,9 @@ dependencies = [
 
 [[package]]
 name = "hyperlane"
-version = "4.94.0"
+version = "4.96.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3729f28d6eabc3106bff87c6d22e948234edc58cac893ad0b886f9edf6460759"
+checksum = "acc5a8304e2eeb80a1fd2634849f8db35de8db15e11212bd7643fe2b78314b3a"
 dependencies = [
  "clonelicious",
  "color-output",
@@ -717,7 +717,7 @@ checksum = "d0f69051b8978d37eb5a3d8f700a39159d40d7646f1aef8d2f3e441279f4dfa1"
 
 [[package]]
 name = "hyperlane_techempower"
-version = "0.0.1"
+version = "0.1.0"
 dependencies = [
  "hyperlane",
  "rand 0.9.1",
