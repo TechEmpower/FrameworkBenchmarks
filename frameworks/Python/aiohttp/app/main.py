@@ -23,6 +23,12 @@ from .views import (
 if platform.python_implementation() != "PyPy":
     import asyncpg
 
+    class NoResetConnection(asyncpg.Connection):
+        __slots__ = ()
+    
+        def get_reset_query(self):
+            return ""
+
 CONNECTION_ORM = os.getenv('CONNECTION', 'ORM').upper() == 'ORM'
 
 
@@ -39,12 +45,6 @@ def pg_dsn(dialect=None) -> str:
         drivername='postgresql+{}'.format(dialect) if dialect else 'postgresql',
     )
     return url.render_as_string(hide_password=False)
-
-class NoResetConnection(asyncpg.Connection):
-    __slots__ = ()
-
-    def get_reset_query(self):
-        return ''
 
 async def db_ctx(app: web.Application):
     # number of gunicorn workers = multiprocessing.cpu_count() as per gunicorn_conf.py
