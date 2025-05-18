@@ -23,6 +23,29 @@
       "display_name": "aiohttp",
       "notes": "uses asyncpg for database access"
     },
+    "pypy": {
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries/",
+      "fortune_url": "/fortunes",
+      "update_url": "/updates/",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "Postgres",
+      "framework": "aiohttp",
+      "language": "Python",
+      "flavor": "Pypy3",
+      "orm": "Raw",
+      "platform": "asyncio",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "aiohttp-pypy",
+      "notes": "uses Pypy instead of CPython",
+      "versus": "default"
+    },
     "nginx": {
       "json_url": "/json",
       "db_url": "/db",
@@ -43,7 +66,8 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "aiohttp-nginx",
-      "notes": "uses nginx as proxy"
+      "notes": "uses nginx as proxy",
+      "versus": "default"
     },
     "gunicorn": {
       "json_url": "/json",
