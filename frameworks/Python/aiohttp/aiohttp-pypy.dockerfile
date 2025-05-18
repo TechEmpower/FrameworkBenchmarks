@@ -1,4 +1,4 @@
-FROM pypy:3.13
+FROM pypy:3.11
 
 ADD ./requirements.txt /aiohttp/requirements.txt
 
