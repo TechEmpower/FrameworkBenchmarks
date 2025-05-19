@@ -12,6 +12,9 @@ pub(crate) mod utils;
 
 pub(crate) use r#const::*;
 pub(crate) use db::*;
+pub(crate) use r#type::*;
+pub(crate) use utils::*;
+
 pub(crate) use hyperlane::{
     futures::{executor::block_on, future::join_all},
     once_cell::sync::Lazy,
@@ -33,8 +36,6 @@ pub(crate) use sqlx::{
     *,
 };
 pub(crate) use std::{fmt, hint::black_box, sync::Arc};
-pub(crate) use r#type::*;
-pub(crate) use utils::*;
 
 fn main() {
     run_server();

@@ -4,7 +4,7 @@ fn runtime() -> Runtime {
     Builder::new_multi_thread()
         .worker_threads(get_thread_count())
         .thread_stack_size(1_048_576)
-        .max_blocking_threads(1024000)
+        .max_blocking_threads(1_024_000)
         .max_io_events_per_tick(1024000)
         .enable_all()
         .build()
