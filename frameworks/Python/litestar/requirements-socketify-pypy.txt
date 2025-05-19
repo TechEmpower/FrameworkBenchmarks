@@ -1,0 +1,2 @@
+litestar==2.16.0
+git+https://github.com/cirospaciari/socketify.py.git@main#socketify
