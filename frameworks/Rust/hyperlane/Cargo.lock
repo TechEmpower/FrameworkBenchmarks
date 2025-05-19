@@ -158,9 +158,9 @@ checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 
 [[package]]
 name = "clonelicious"
-version = "1.1.1"
+version = "2.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fc3dfae702af156917c65f4ccc70687088331f0b694e5e687453e4d68a16b496"
+checksum = "a3e8d46da7a7455b7a90e9e9de342bb537e98c5ae6012b10f7f5cd3e9afc9145"
 
 [[package]]
 name = "color-output"
@@ -407,12 +407,9 @@ dependencies = [
 
 [[package]]
 name = "future-fn"
-version = "0.1.0"
+version = "0.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "001452c736697c8f96e4689dc5ab6a89f175981417139a44f1dd1f7c20d430a5"
-dependencies = [
- "tokio",
-]
+checksum = "fe7ac439a219e53cb8321c583ba96cbe38384bbc53c54c9eaf0ec0d3aa7d1250"
 
 [[package]]
 name = "futures"
@@ -682,9 +679,9 @@ dependencies = [
 
 [[package]]
 name = "hyperlane"
-version = "4.97.0"
+version = "4.99.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4e851e367b6cd56abb23314a5601420ed8e551df912d8af37e4c1b35783e1f6e"
+checksum = "f278403af42fbbe6bbe9ce6a86478050e34ccf7a94d7e3621512dcd8d366330d"
 dependencies = [
  "clonelicious",
  "color-output",
