@@ -4,8 +4,7 @@ ADD ./ /aiohttp
 
 WORKDIR /aiohttp
 
-RUN pip3 install cython==3.0.11 && \
-    pip3 install -r /aiohttp/requirements-cpython.txt
+RUN pip3 install -r /aiohttp/requirements-cpython.txt
 
 ENV CONNECTION=RAW
 
