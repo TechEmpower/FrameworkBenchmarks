@@ -25,10 +25,6 @@
     },
     "pypy": {
       "json_url": "/json",
-      "db_url": "/db",
-      "query_url": "/queries/",
-      "fortune_url": "/fortunes",
-      "update_url": "/updates/",
       "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
