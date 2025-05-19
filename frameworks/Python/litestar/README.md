@@ -10,7 +10,7 @@ the [Python README](../).
 
 ## Description
 
-[**Litestar**](https://github.com/tiangolo/fastapi) is a modern, fast (high-performance), web framework for building APIs with Python 3.6+.
+[**Litestar**](https://github.com/litestar-org/litestar) is a modern, fast (high-performance), web framework for building APIs with Python 3.6+.
 
 The key features are:
 
