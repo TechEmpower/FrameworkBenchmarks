@@ -1,6 +1,6 @@
 FROM pypy:3.11-bookworm
 
-WORKDIR /fastapi
+WORKDIR /litestar
 
 RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"

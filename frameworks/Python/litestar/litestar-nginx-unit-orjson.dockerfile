@@ -1,6 +1,6 @@
 FROM nginx/unit:1.29.1-python3.13
 
-WORKDIR /fastapi
+WORKDIR /litestar
 
 RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
