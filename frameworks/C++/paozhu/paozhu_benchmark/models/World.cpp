@@ -1,6 +1,6 @@
 
 #include "world_mysql.h"
-#include "worldbase.h"
+#include "world_base.h"
 #include "World.h"
 
 /* 如果此文件存在不会自动覆盖，没有则会自动生成。

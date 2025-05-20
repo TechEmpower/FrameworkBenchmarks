@@ -1,6 +1,6 @@
 
 #include "fortune_mysql.h"
-#include "fortunebase.h"
+#include "fortune_base.h"
 #include "Fortune.h"
 
 /* 如果此文件存在不会自动覆盖，没有则会自动生成。

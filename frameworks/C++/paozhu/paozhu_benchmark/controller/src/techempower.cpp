@@ -166,9 +166,9 @@ asio::awaitable<std::string> techempowercached_queries(std::shared_ptr<httppeer>
     auto myworld          = orm::World();
     std::string mycacheid = "alldatacache";
 
-    pzcache<std::vector<orm::worldbase::meta>> &temp_cache = pzcache<std::vector<orm::worldbase::meta>>::conn();
+    pzcache<std::vector<orm::world_base::meta>> &temp_cache = pzcache<std::vector<orm::world_base::meta>>::conn();
 
-    std::vector<orm::worldbase::meta> allcachedata_array;
+    std::vector<orm::world_base::meta> allcachedata_array;
     allcachedata_array.reserve(10000);
     //create rand data to cache
     if (temp_cache.check(mycacheid) > -1)
@@ -227,7 +227,7 @@ asio::awaitable<std::string> techempowercached_db(std::shared_ptr<httppeer> peer
     auto myworld          = orm::World();
     std::string mycacheid = "my" + std::to_string(get_num);
 
-    pzcache<std::vector<orm::worldbase::meta>> &temp_cache = pzcache<std::vector<orm::worldbase::meta>>::conn();
+    pzcache<std::vector<orm::world_base::meta>> &temp_cache = pzcache<std::vector<orm::world_base::meta>>::conn();
 
     myworld.record.reserve(get_num);
     if (temp_cache.check(mycacheid) > -1)
