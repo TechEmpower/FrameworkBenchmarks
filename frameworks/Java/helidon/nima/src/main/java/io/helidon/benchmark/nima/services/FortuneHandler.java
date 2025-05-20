@@ -71,5 +71,5 @@ public class FortuneHandler implements Handler {
                 throw new RuntimeException(e);
             }
         }
-    };
+    }
 }

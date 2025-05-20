@@ -3,6 +3,7 @@ apply(from: "$gradleScripts/application.gradle")
 
 dependencies {
     api(project(":store_pgclient"))
-    api("com.hexagontk.http:http_server_netty_epoll:$hexagonVersion")
+    api("com.hexagontk.http:http_server_netty:$hexagonVersion")
     api("io.netty:netty-transport-native-epoll:$nettyVersion:linux-x86_64")
+    api("io.netty:netty-transport-native-io_uring:$nettyVersion:linux-x86_64")
 }
