@@ -2,7 +2,7 @@
 name = "hyperlane_techempower"
 version = "0.1.0"
 edition = "2024"
-authors = ["eastspire <root@ltpp.vip>"] 
+authors = ["root@ltpp.vip"] 
 license = "MIT"
 description = """Hyperlane is a lightweight and high-performance Rust HTTP server library designed to simplify network service development. It supports HTTP request parsing, response building, and TCP communication, making it ideal for building modern web services. Additionally, it provides support for request and response middleware, WebSocket, and Server-Sent Events (SSE), enabling flexible and efficient real-time communication."""
 keywords = ["http", "request", "response", "tcp", "redirect"]
@@ -18,7 +18,7 @@ exclude = [
 ]
 
 [dependencies]
-hyperlane = "4.99.1"
+hyperlane = "4.99.2"
 rand = "0.9.1"
 serde = "1.0.219"
 sqlx = { version = "0.8.6", features = ["runtime-tokio", "postgres"] }
