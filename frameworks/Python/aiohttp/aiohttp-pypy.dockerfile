@@ -1,4 +1,4 @@
-FROM pypy:latest
+FROM pypy:3.13
 
 ADD ./ /aiohttp
 
