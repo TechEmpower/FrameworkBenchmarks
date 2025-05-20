@@ -1,4 +1,4 @@
-# [hyperlane](https://github.com/ltpp-universe/hyperlane) web framework
+# [hyperlane](https://github.com/eastspire/hyperlane) web framework
 
 ## Description
 
