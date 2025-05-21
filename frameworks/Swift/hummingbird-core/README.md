@@ -9,7 +9,7 @@ Hummingbird Core is the HTTP server for the Hummingbird framework.
 
 ## Important Libraries
 This version of Hummingbird requires
-* [Swift 5.7](https://swift.org)  
+* [5.10](https://swift.org)  
 * [SwiftNIO 2.x](https://github.com/apple/swift-nio/)
 
 ## Test URLs
