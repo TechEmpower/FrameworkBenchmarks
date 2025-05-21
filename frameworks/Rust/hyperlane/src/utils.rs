@@ -1,4 +1,4 @@
-use crate::*;
+use super::*;
 
 pub fn escape_html(input: &str) -> String {
     let mut result: String = String::new();

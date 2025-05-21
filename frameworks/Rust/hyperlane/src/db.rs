@@ -1,4 +1,4 @@
-use crate::*;
+use super::*;
 
 pub fn get_db_connection() -> &'static DbPoolConnection {
     &DB
