@@ -1,11 +1,11 @@
-// swift-tools-version:6.1
+// swift-tools-version:5.10
 
 import PackageDescription
 
 let package = Package(
     name: "vapor-swifql-ikiga",
     platforms: [
-       .macOS(.v12)
+        .macOS(.v12)
     ],
     products: [
         .executable(name: "app", targets: ["App"])
@@ -39,8 +39,10 @@ let package = Package(
     ]
 )
 
-var swiftSettings: [SwiftSetting] { [
-    .enableUpcomingFeature("DisableOutwardActorInference"),
-    .enableExperimentalFeature("StrictConcurrency"),
-    .unsafeFlags(["-parse-as-library"]),
-] }
+var swiftSettings: [SwiftSetting] {
+    [
+        .enableUpcomingFeature("DisableOutwardActorInference"),
+        .enableExperimentalFeature("StrictConcurrency"),
+        .unsafeFlags(["-parse-as-library"]),
+    ]
+}
