@@ -1,0 +1,6 @@
+-r requirements.txt
+
+asyncpg==0.30.0
+gunicorn==23.0.0
+orjson==3.10.16
+uvloop==0.21.0

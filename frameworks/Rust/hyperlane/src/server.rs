@@ -1,14 +1,11 @@
 use crate::*;
-use tokio::runtime::{Builder, Runtime};
 
 fn runtime() -> Runtime {
     Builder::new_multi_thread()
-        .worker_threads(get_thread_count() >> 1)
+        .worker_threads(get_thread_count())
         .thread_stack_size(1_048_576)
-        .worker_threads(get_thread_count() >> 1)
-        .thread_stack_size(1_048_576)
-        .max_blocking_threads(5120)
-        .max_io_events_per_tick(5120)
+        .max_blocking_threads(1_024_000)
+        .max_io_events_per_tick(1024000)
         .enable_all()
         .build()
         .unwrap()
@@ -40,7 +37,7 @@ async fn init_server() {
     server.route("/fortunes", route::fortunes).await;
     #[cfg(any(feature = "dev", feature = "update"))]
     server.route("/upda", route::update).await;
-    server.listen().await.unwrap();
+    server.run().await.unwrap();
 }
 
 async fn init() {

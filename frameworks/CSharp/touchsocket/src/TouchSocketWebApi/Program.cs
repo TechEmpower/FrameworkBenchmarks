@@ -58,9 +58,9 @@ public class Program
     }
 }
 
-public partial class ApiServer : RpcServer
+public partial class ApiServer : SingletonRpcServer
 {
-    private HttpContent m_contentPlaintext = new StringHttpContent("Hello, World!", Encoding.UTF8, $"text/plain");
+    private readonly HttpContent m_contentPlaintext = new StringHttpContent("Hello, World!", Encoding.UTF8, $"text/plain");
    
     public static MyJson MyJson { get; set; } = new MyJson() { Message = "Hello, World!" };
 
@@ -71,7 +71,7 @@ public partial class ApiServer : RpcServer
        var response= callContext.HttpContext.Response;
         response.SetStatus(200, "success");
         response.Content= m_contentPlaintext;
-        await response.AnswerAsync();
+        await response.AnswerAsync().ConfigureAwait(false);
     }
 
     [Router("/json")]
