@@ -4,6 +4,8 @@ WORKDIR /blacksheep
 
 COPY ./ /blacksheep
 
+RUN apt-get update; apt-get install libuv1 -y
+
 RUN pip3 install -U pip -q
 RUN pip3 install Cython==3.0.12 -q
 RUN pip3 install -r /blacksheep/requirements.txt -q

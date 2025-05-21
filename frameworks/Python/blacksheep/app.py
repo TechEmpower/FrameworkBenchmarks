@@ -1,6 +1,7 @@
 import multiprocessing
 import os
 import asyncpg
+import platform
 import random
 import asyncio
 import blacksheep as bs
@@ -154,3 +155,26 @@ async def plaintext_test(request):
     return bs.Response(200, content=bs.Content(b"text/plain", b'Hello, World!'))
     #return bs.text('Hello, World!')
 
+
+if platform.python_implementation() == 'PyPy':
+    from socketify import ASGI
+    workers = int(multiprocessing.cpu_count())
+    if _is_travis:
+        workers = 2
+
+    def run_app():
+        ASGI(app).listen(8080, lambda config: logging.info(f"Listening on port http://localhost:{config.port} now\n")).run()
+
+
+    def create_fork():
+        n = os.fork()
+        # n greater than 0 means parent process
+        if not n > 0:
+            run_app()
+
+
+    # fork limiting the cpu count - 1
+    for i in range(1, workers):
+        create_fork()
+
+    run_app()
