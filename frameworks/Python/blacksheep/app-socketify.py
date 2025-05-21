@@ -125,7 +125,7 @@ async def plaintext_test(request):
 if platform.python_implementation() == 'PyPy':
     from socketify import ASGI
     workers = int(multiprocessing.cpu_count())
-    if _is_travis:
+    if os.environ.get('TRAVIS') == 'true':
         workers = 2
 
     def run_app():
