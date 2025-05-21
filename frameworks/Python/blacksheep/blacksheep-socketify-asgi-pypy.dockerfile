@@ -4,7 +4,7 @@ ADD ./ /blacksheep
 
 WORKDIR /blacksheep
 
-RUN apt-get update; apt-get install libuv1 -y
+RUN apt-get update; apt-get install libuv1 libpq5 -y
 
 RUN pip3 install -r /blacksheep/requirements.txt
 RUN pip3 install -r /blacksheep/requirements-pypy.txt

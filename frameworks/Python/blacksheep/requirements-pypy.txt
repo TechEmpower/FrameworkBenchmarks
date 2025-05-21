@@ -1,2 +1,3 @@
+psycopg[pool]
 socketify
 h11
