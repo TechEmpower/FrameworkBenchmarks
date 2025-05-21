@@ -1,10 +1,10 @@
-FROM python:3.13
+FROM pypy:3.11
 
 ADD ./ /aiohttp
 
 WORKDIR /aiohttp
 
-RUN pip3 install -r /aiohttp/requirements-cpython.txt
+RUN pip3 install -r /aiohttp/requirements.txt
 
 ENV CONNECTION=RAW
 

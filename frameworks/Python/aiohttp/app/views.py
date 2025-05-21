@@ -1,14 +1,25 @@
+import platform
 from operator import attrgetter, itemgetter
 from pathlib import Path
 from random import randint, sample
 
 import jinja2
 from aiohttp.web import Response
-from orjson import dumps
 from sqlalchemy import bindparam, select
 from sqlalchemy.orm.attributes import flag_modified
 
 from .models import Fortune, World
+
+if platform.python_implementation() == "PyPy":
+    from aiohttp.web import json_response
+else:
+    from orjson import dumps
+
+    def json_response(payload):
+        return Response(
+            body=dumps(payload),
+            content_type="application/json",
+        )
 
 ADDITIONAL_FORTUNE_ORM = Fortune(id=0, message='Additional fortune added at request time.')
 ADDITIONAL_FORTUNE_ROW = {'id': 0, 'message': 'Additional fortune added at request time.'}
@@ -25,21 +36,14 @@ sort_fortunes_raw = itemgetter('message')
 
 def get_num_queries(request):
     try:
-        num_queries = int(request.match_info.get('queries', 1))
-    except ValueError:
+        num_queries = int(request.match_info['queries'])
+    except (KeyError, ValueError):
         return 1
     if num_queries < 1:
         return 1
     if num_queries > 500:
         return 500
     return num_queries
-
-
-def json_response(payload):
-    return Response(
-        body=dumps(payload),
-        content_type="application/json",
-    )
 
 
 async def json(request):
