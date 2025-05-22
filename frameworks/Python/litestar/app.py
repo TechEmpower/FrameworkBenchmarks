@@ -94,7 +94,7 @@ async def multiple_database_queries(queries: Any = None) -> Response:
 	)
 
 
-@get("/fortunes", media_type=MediaType.TEXT)
+@get("/fortunes", media_type=MediaType.HTML)
 async def fortunes(request: Request) -> Template:
 	async with app.state.connection_pool.acquire() as connection:
 		fortunes = await connection.fetch("SELECT * FROM Fortune")
@@ -104,7 +104,7 @@ async def fortunes(request: Request) -> Template:
 	return Template(
 		"fortune.html",
 		context={"fortunes": fortunes, "request": request},
-		media_type=MediaType.TEXT,
+		media_type=MediaType.HTML,
 	)
 
 

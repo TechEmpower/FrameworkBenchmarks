@@ -126,7 +126,7 @@ async def multiple_database_queries(queries: Any = None) -> Response:
 	)
 
 
-@get("/fortunes", media_type=MediaType.TEXT)
+@get("/fortunes", media_type=MediaType.HTML)
 async def fortunes(request: Request) -> Template:
 	async with app.state.db_session() as sess:
 		ret = await sess.execute(select(Fortune.id, Fortune.message))
@@ -138,7 +138,7 @@ async def fortunes(request: Request) -> Template:
 	return Template(
 		"fortune.jinja",
 		context={"request": request, "fortunes": data},
-		media_type=MediaType.TEXT,
+		media_type=MediaType.HTML,
 	)
 
 
