@@ -1,7 +1,7 @@
 # ================================
 # Build image
 # ================================
-FROM swift:6.1 AS build
+FROM swift:5.10 as build
 WORKDIR /build
 
 # Copy entire repo into container
