@@ -8,7 +8,7 @@ from random import randint, sample
 from typing import Any
 
 import orjson
-from litestar import Litestar, MediaType, Request, get
+from litestar import Litestar, MediaType, Request, get, Response
 from litestar.contrib.jinja import JinjaTemplateEngine
 from litestar.response import Template
 from litestar.template import TemplateConfig
@@ -90,22 +90,28 @@ def get_num_queries(queries):
 
 
 @get("/json")
-async def json_serialization() -> bytes:
-	return orjson.dumps({"message": "Hello, world!"})
+async def json_serialization() -> Response:
+	return Response(
+		content=orjson.dumps({"message": "Hello, world!"}),
+		media_type=MediaType.JSON,
+	)
 
 
 @get("/db")
-async def single_database_query() -> bytes:
+async def single_database_query() -> Response:
 	id_ = randint(1, 10000)
 
 	async with app.state.db_session() as sess:
 		result = await sess.get(World, id_)
 
-	return orjson.dumps(result.__json__())
+	return Response(
+		content=orjson.dumps(result.__json__()),
+		media_type=MediaType.JSON,
+	)
 
 
 @get("/queries")
-async def multiple_database_queries(queries: Any = None) -> bytes:
+async def multiple_database_queries(queries: Any = None) -> Response:
 	num_queries = get_num_queries(queries)
 	data = []
 
@@ -114,7 +120,10 @@ async def multiple_database_queries(queries: Any = None) -> bytes:
 			result = await sess.get(World, id_)
 			data.append(result.__json__())
 
-	return orjson.dumps(data)
+	return Response(
+		content=orjson.dumps(data),
+		media_type=MediaType.JSON,
+	)
 
 
 @get("/fortunes")
@@ -130,7 +139,7 @@ async def fortunes(request: Request) -> Template:
 
 
 @get("/updates")
-async def database_updates(queries: Any = None) -> bytes:
+async def database_updates(queries: Any = None) -> Response:
 	num_queries = get_num_queries(queries)
 
 	ids = sorted(sample(range(1, 10000 + 1), num_queries))
@@ -144,7 +153,10 @@ async def database_updates(queries: Any = None) -> bytes:
 			flag_modified(world, "randomnumber")
 			data.append(world.__json__())
 
-	return orjson.dumps(data)
+	return Response(
+		content=orjson.dumps(data),
+		media_type=MediaType.JSON,
+	)
 
 
 @get("/plaintext", media_type=MediaType.TEXT)

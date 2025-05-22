@@ -7,7 +7,7 @@ from typing import Any
 
 import asyncpg
 import orjson
-from litestar import Litestar, MediaType, Request, get
+from litestar import Litestar, MediaType, Request, get, Response
 from litestar.contrib.jinja import JinjaTemplateEngine
 from litestar.response import Template
 from litestar.template import TemplateConfig
@@ -37,10 +37,10 @@ connection_pool = None
 
 async def setup_database():
 	return await asyncpg.create_pool(
-		user=os.getenv("PGUSER", "benchmarkdbuser"),
-		password=os.getenv("PGPASS", "benchmarkdbpass"),
-		database="hello_world",
-		host="tfb-database",
+		user=os.getenv("PGUSER", "postgres"),
+		password=os.getenv("PGPASS", "password"),
+		database="postgres",
+		host="localhost",
 		port=5432,
 		min_size=MIN_POOL_SIZE,
 		max_size=MAX_POOL_SIZE,
@@ -57,21 +57,27 @@ async def lifespan(app: Litestar):
 
 
 @get("/json")
-async def json_serialization() -> bytes:
-	return orjson.dumps({"message": "Hello, world!"})
+async def json_serialization() -> Response:
+	return Response(
+		content=orjson.dumps({"message": "Hello, world!"}),
+		media_type=MediaType.JSON,
+	)
 
 
 @get("/db")
-async def single_database_query() -> bytes:
+async def single_database_query() -> Response:
 	row_id = randint(1, 10000)
 	async with app.state.connection_pool.acquire() as connection:
 		number = await connection.fetchval(READ_ROW_SQL, row_id)
 
-	return orjson.dumps({"id": row_id, "randomNumber": number})
+	return Response(
+		content=orjson.dumps({"id": row_id, "randomNumber": number}),
+		media_type=MediaType.JSON,
+	)
 
 
 @get("/queries")
-async def multiple_database_queries(queries: Any = None) -> bytes:
+async def multiple_database_queries(queries: Any = None) -> Response:
 	num_queries = get_num_queries(queries)
 	row_ids = sample(range(1, 10000), num_queries)
 	worlds = []
@@ -82,7 +88,10 @@ async def multiple_database_queries(queries: Any = None) -> bytes:
 			number = await statement.fetchval(row_id)
 			worlds.append({"id": row_id, "randomNumber": number})
 
-	return orjson.dumps(worlds)
+	return Response(
+		content=orjson.dumps(worlds),
+		media_type=MediaType.JSON,
+	)
 
 
 @get("/fortunes")
@@ -111,7 +120,10 @@ async def database_updates(queries: Any = None) -> bytes:
 			await statement.fetchval(row_id)
 		await connection.executemany(WRITE_ROW_SQL, updates)
 
-	return orjson.dumps(worlds)
+	return Response(
+		content=orjson.dumps(worlds),
+		media_type=MediaType.JSON,
+	)
 
 
 @get("/plaintext", media_type=MediaType.TEXT)

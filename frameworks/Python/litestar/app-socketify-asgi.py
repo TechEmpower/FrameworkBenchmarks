@@ -3,17 +3,17 @@ import multiprocessing
 import logging
 
 import orjson
-from litestar import Litestar, get, MediaType
+from litestar import Litestar, get, MediaType, Response
 from socketify import ASGI
 
 
 @get("/json")
-async def json_serialization():
-	return orjson.dumps({"message": "Hello, world!"})
+async def json_serialization() -> Response:
+	return Response(content=orjson.dumps({"message": "Hello, world!"}), media_type=MediaType.JSON)
 
 
 @get("/plaintext", media_type=MediaType.TEXT)
-async def plaintext():
+async def plaintext() -> bytes:
 	return b"Hello, world!"
 
 
