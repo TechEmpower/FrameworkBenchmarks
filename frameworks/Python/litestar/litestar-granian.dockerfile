@@ -15,4 +15,4 @@ COPY . ./
 
 EXPOSE 8080
 
-CMD hypercorn app:app --bind 0.0.0.0:8080 --workers $(nproc)
+CMD granian --interface asgi app:app --host '0.0.0.0' --port 8080 --workers $(nproc) --http 2

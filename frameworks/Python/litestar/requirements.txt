@@ -1,4 +1,4 @@
 asyncpg==0.30.0
 litestar==2.16.0
 Jinja2==3.1.6
-ujson5==1.0.1
+orjson==3.10.18
