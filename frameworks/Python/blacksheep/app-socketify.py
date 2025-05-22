@@ -12,14 +12,12 @@ from psycopg_pool import AsyncConnectionPool
 READ_ROW_SQL = 'SELECT "id", "randomnumber" FROM "world" WHERE id = %s'
 WRITE_ROW_SQL = 'UPDATE "world" SET "randomnumber"=%s WHERE id=%s'
 ADDITIONAL_ROW = [0, "Additional fortune added at request time."]
-MAX_CONNECTIONS = 1900
+MAX_CONNECTIONS = 200
 CORE_COUNT = multiprocessing.cpu_count()
 PROCESSES = CORE_COUNT
-MAX_POOL_SIZE = max(1, int(os.getenv('MAX_POOL_SIZE', MAX_CONNECTIONS // PROCESSES)))
-MIN_POOL_SIZE = max(1, int(os.getenv('MIN_POOL_SIZE', MAX_POOL_SIZE // 2)))
 
 WORKER_PROCESSES = CORE_COUNT
-MAX_POOL_SIZE = max(1, MAX_CONNECTIONS // WORKER_PROCESSES)
+MAX_POOL_SIZE = CORE_COUNT * 2
 MIN_POOL_SIZE = max(1, MAX_POOL_SIZE // 2)
 db_pool = None
 
@@ -34,6 +32,8 @@ async def setup_db(app):
         min_size=MIN_POOL_SIZE,
         max_size=MAX_POOL_SIZE,
         open=False,
+        timeout=5.0,
+        max_lifetime=1800,
     )
     await db_pool.open()
 
@@ -112,13 +112,14 @@ async def db_updates_test(request,queries):
     ), key=lambda x: x[1])
     worlds = [{"id": row_id, "randomNumber": number} for row_id, number in updates]
     async with db_pool.connection() as db_conn:
+        await db_conn.execute("SET TRANSACTION ISOLATION LEVEL READ COMMITTED")
         async with db_conn.cursor() as cursor:
             for row_id, number in updates:
                 await cursor.execute(READ_ROW_SQL, (row_id,))
                 await cursor.fetchone()
             for _ in range(5):
                 try:
-                    await cursor.executemany(WRITE_ROW_SQL, [(number, row_id) for row_id, number in updates])
+                    await cursor.executemany(WRITE_ROW_SQL + " NOWAIT", [(number, row_id) for row_id, number in updates])
                     break
                 except psycopg.errors.DeadlockDetected:
                     await db_conn.rollback()
