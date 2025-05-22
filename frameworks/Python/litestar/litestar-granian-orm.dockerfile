@@ -17,4 +17,4 @@ EXPOSE 8080
 
 ENV CONNECTION=ORM
 
-CMD granian --interface asgi app:app --host '0.0.0.0' --port 8080 --workers $(nproc) --http 2
+CMD granian --interface asgi app:app --host '0.0.0.0' --port 8080 --workers $(nproc)
