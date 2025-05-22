@@ -15,4 +15,4 @@ COPY . ./
 
 EXPOSE 8080
 
-CMD gunicorn app:app -k uvicorn.workers.UvicornWorker -c litestar_conf.py
+CMD gunicorn app:app -k uvicorn_worker.UvicornWorker -c litestar_conf.py

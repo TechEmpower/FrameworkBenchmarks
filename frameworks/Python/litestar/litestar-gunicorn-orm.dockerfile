@@ -17,4 +17,4 @@ EXPOSE 8080
 
 ENV CONNECTION=ORM
 
-CMD gunicorn app_orm:app -k uvicorn.workers.UvicornWorker -c litestar_conf.py
+CMD gunicorn app_orm:app -k uvicorn_worker.UvicornWorker -c litestar_conf.py
