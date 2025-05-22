@@ -78,6 +78,7 @@ async def single_db_query_test(request):
     return bs.json({'id': row_id, 'randomNumber': number[1]})
 
 @bs.get('/queries/{queries}')
+@bs.get('/queries/')
 async def multiple_db_queries_test(request, queries):
     num_queries = get_num_queries(queries)
     row_ids = random.sample(range(1, 10000), num_queries)
@@ -102,12 +103,13 @@ async def fortunes_test(request):
     return bs.html(data)
 
 @bs.get('/updates/{queries}')
+@bs.get('/updates/')
 async def db_updates_test(request,queries):
     num_queries = get_num_queries(queries)
-    updates = list(zip(
+    updates = sorted(zip(
         random.sample(range(1, 10000), num_queries),
-        sorted(random.sample(range(1, 10000), num_queries))
-    ))
+        random.sample(range(1, 10000), num_queries)
+    ), key=lambda x: x[1])
     worlds = [{"id": row_id, "randomNumber": number} for row_id, number in updates]
     async with db_pool.connection() as db_conn:
         async with db_conn.cursor() as cursor:
