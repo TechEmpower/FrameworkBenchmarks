@@ -1,6 +1,7 @@
 {
   "framework": "litestar",
-  "tests": [{
+  "tests": [
+    {
       "default": {
         "json_url": "/json",
         "fortune_url": "/fortunes",
@@ -62,7 +63,7 @@
         "notes": "",
         "versus": "None"
       },
-      "gunicorn-orjson": {
+      "gunicorn": {
         "json_url": "/json",
         "db_url": "/db",
         "query_url": "/queries?queries=",
@@ -104,7 +105,7 @@
         "notes": "",
         "versus": "None"
       },
-      "hypercorn": {
+      "granian": {
         "json_url": "/json",
         "fortune_url": "/fortunes",
         "plaintext_url": "/plaintext",
@@ -120,15 +121,17 @@
         "flavor": "Python3",
         "orm": "Raw",
         "platform": "asyncio",
-        "webserver": "Hypercorn",
+        "webserver": "Granian",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "Litestar-hypercorn",
+        "display_name": "Litestar-Granian",
         "notes": "",
         "versus": "None"
       },
-      "hypercorn-orjson": {
+      "granian-orm": {
         "json_url": "/json",
+        "fortune_url": "/fortunes",
+        "plaintext_url": "/plaintext",
         "db_url": "/db",
         "query_url": "/queries?queries=",
         "update_url": "/updates?queries=",
@@ -141,10 +144,10 @@
         "flavor": "Python3",
         "orm": "Raw",
         "platform": "asyncio",
-        "webserver": "Hypercorn",
+        "webserver": "Granian",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "Litestar-hypercorn-orjson",
+        "display_name": "Litestar-Granian-ORM",
         "notes": "",
         "versus": "None"
       },
@@ -170,29 +173,9 @@
         "display_name": "Litestar-nginx-unit",
         "notes": "",
         "versus": "None",
-        "tags": ["broken"]
-      },
-      "nginx-unit-orjson": {
-        "json_url": "/json",
-        "db_url": "/db",
-        "query_url": "/queries?queries=",
-        "update_url": "/updates?queries=",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Micro",
-        "database": "Postgres",
-        "framework": "Litestar",
-        "language": "Python",
-        "flavor": "Python3",
-        "orm": "Raw",
-        "platform": "asyncio",
-        "webserver": "nginx-unit",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "Litestar-nginx-unit-orjson",
-        "notes": "",
-        "versus": "None",
-        "tags": ["broken"]
+        "tags": [
+          "broken"
+        ]
       },
       "uvicorn": {
         "json_url": "/json",
@@ -216,27 +199,7 @@
         "display_name": "Litestar-uvicorn",
         "notes": "",
         "versus": "None"
-      },
-      "uvicorn-orjson": {
-        "json_url": "/json",
-        "db_url": "/db",
-        "query_url": "/queries?queries=",
-        "update_url": "/updates?queries=",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Micro",
-        "database": "Postgres",
-        "framework": "Litestar",
-        "language": "Python",
-        "flavor": "Python3",
-        "orm": "Raw",
-        "platform": "asyncio",
-        "webserver": "Uvicorn",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "Litestar-uvicorn-orjson",
-        "notes": "",
-        "versus": "None"
       }
-    }]
+    }
+  ]
 }
