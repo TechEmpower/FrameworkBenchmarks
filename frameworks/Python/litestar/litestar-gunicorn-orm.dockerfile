@@ -7,7 +7,7 @@ ENV PATH="/opt/venv/bin:$PATH"
 
 RUN pip3 install cython==3.0.12
 
-COPY requirements.txt requirements-sqlalchemy.txt requirements-gunicorn.txt requirements-uvicorn.txt ./
+COPY requirements.txt requirements-sqlalchemy.txt requirements-gunicorn.txt ./
 
 RUN pip3 install -r requirements.txt -r requirements-sqlalchemy.txt -r requirements-gunicorn.txt
 
