@@ -53,12 +53,11 @@ app = bs.Application()
 app.on_start += setup_db
 app.on_stop += shutdown_db
 
-def get_num_queries(request):
+def get_num_queries(queries):
     try:
-        value = request.query.get('queries')
-        if value is None:
+        if queries is None:
             return 1
-        query_count = int(value[0])
+        query_count = int(queries)
     except (KeyError, IndexError, ValueError):
         return 1
     return min(max(query_count, 1), 500)
@@ -78,9 +77,9 @@ async def single_db_query_test(request):
             number = await cursor.fetchone()
     return bs.json({'id': row_id, 'randomNumber': number[1]})
 
-@bs.get('/queries')
-async def multiple_db_queries_test(request):
-    num_queries = get_num_queries(request)
+@bs.get('/queries/{queries}')
+async def multiple_db_queries_test(request, queries):
+    num_queries = get_num_queries(queries)
     row_ids = random.sample(range(1, 10000), num_queries)
     worlds = []
     async with db_pool.connection() as db_conn:
@@ -102,9 +101,9 @@ async def fortunes_test(request):
     data = fortune_template.render(fortunes=fortunes)
     return bs.html(data)
 
-@bs.get('/updates')
-async def db_updates_test(request):
-    num_queries = get_num_queries(request)
+@bs.get('/updates/{queries}')
+async def db_updates_test(request,queries):
+    num_queries = get_num_queries(queries)
     updates = list(zip(
         random.sample(range(1, 10000), num_queries),
         sorted(random.sample(range(1, 10000), num_queries))
@@ -123,6 +122,7 @@ async def plaintext_test(request):
     return bs.Response(200, content=bs.Content(b"text/plain", b'Hello, World!'))
 
 if platform.python_implementation() == 'PyPy':
+    import logging
     from socketify import ASGI
     workers = int(multiprocessing.cpu_count())
     if os.environ.get('TRAVIS') == 'true':
