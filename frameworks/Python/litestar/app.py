@@ -94,14 +94,18 @@ async def multiple_database_queries(queries: Any = None) -> Response:
 	)
 
 
-@get("/fortunes")
+@get("/fortunes", media_type=MediaType.TEXT)
 async def fortunes(request: Request) -> Template:
 	async with app.state.connection_pool.acquire() as connection:
 		fortunes = await connection.fetch("SELECT * FROM Fortune")
 
 	fortunes.append(ADDITIONAL_ROW)
 	fortunes.sort(key=lambda row: row[1])
-	return Template("fortune.html", context={"fortunes": fortunes, "request": request})
+	return Template(
+		"fortune.html",
+		context={"fortunes": fortunes, "request": request},
+		media_type=MediaType.TEXT,
+	)
 
 
 @get("/updates")
