@@ -7,7 +7,7 @@ ENV PATH="/opt/venv/bin:$PATH"
 
 RUN pip3 install cython==3.0.12
 
-COPY requirements.txt requirements-hypercorn.txt ./
+COPY requirements.txt requirements-granian.txt ./
 
 RUN pip3 install -r requirements.txt -r requirements-granian.txt
 
