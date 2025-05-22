@@ -37,10 +37,10 @@ connection_pool = None
 
 async def setup_database():
 	return await asyncpg.create_pool(
-		user=os.getenv("PGUSER", "postgres"),
-		password=os.getenv("PGPASS", "password"),
-		database="postgres",
-		host="localhost",
+		user=os.getenv("PGUSER", "benchmarkdbuser"),
+		password=os.getenv("PGPASS", "benchmarkdbpass"),
+		database="hello_world",
+		host="tfb-database",
 		port=5432,
 		min_size=MIN_POOL_SIZE,
 		max_size=MAX_POOL_SIZE,
