@@ -80,7 +80,7 @@
         "webserver": "Gunicorn",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "Litestar-gunicorn-orjson",
+        "display_name": "Litestar-gunicorn",
         "notes": "",
         "versus": "None"
       },
@@ -124,7 +124,7 @@
         "webserver": "Granian",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "Litestar-Granian",
+        "display_name": "Litestar-granian",
         "notes": "",
         "versus": "None"
       },
@@ -147,7 +147,7 @@
         "webserver": "Granian",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "Litestar-Granian-ORM",
+        "display_name": "Litestar-granian-orm",
         "notes": "",
         "versus": "None"
       },
