@@ -19,13 +19,9 @@ WRITE_ROW_SQL = 'UPDATE "world" SET "randomnumber"=$1 WHERE id=$2'
 ADDITIONAL_ROW = [0, "Additional fortune added at request time."]
 MAX_CONNECTIONS = 1900
 CORE_COUNT = multiprocessing.cpu_count()
-PROCESSES = CORE_COUNT
-MAX_POOL_SIZE = max(1,int(os.getenv('MAX_POOL_SIZE', MAX_CONNECTIONS // PROCESSES)))
+MAX_POOL_SIZE = max(1,int(os.getenv('MAX_POOL_SIZE', MAX_CONNECTIONS // CORE_COUNT)))
 MIN_POOL_SIZE = max(1,int(os.getenv('MIN_POOL_SIZE', MAX_POOL_SIZE // 2)))
 
-WORKER_PROCESSES = CORE_COUNT
-MAX_POOL_SIZE = max(1, MAX_CONNECTIONS // WORKER_PROCESSES)
-MIN_POOL_SIZE = max(1, MAX_POOL_SIZE // 2)
 db_pool = None
 
 async def setup_db(app):

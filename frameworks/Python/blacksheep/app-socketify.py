@@ -12,12 +12,10 @@ from psycopg_pool import AsyncConnectionPool
 READ_ROW_SQL = 'SELECT "id", "randomnumber" FROM "world" WHERE id = %s'
 WRITE_ROW_SQL = 'UPDATE "world" SET "randomnumber"=%s WHERE id=%s'
 ADDITIONAL_ROW = [0, "Additional fortune added at request time."]
-MAX_CONNECTIONS = 200
+MAX_CONNECTIONS = 1000
 CORE_COUNT = multiprocessing.cpu_count()
-PROCESSES = CORE_COUNT
 
-WORKER_PROCESSES = CORE_COUNT
-MAX_POOL_SIZE = CORE_COUNT * 2
+MAX_POOL_SIZE = (MAX_CONNECTIONS // CORE_COUNT)
 MIN_POOL_SIZE = max(1, MAX_POOL_SIZE // 2)
 db_pool = None
 
