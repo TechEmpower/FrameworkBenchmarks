@@ -116,7 +116,14 @@ async def db_updates_test(request,queries):
             for row_id, number in updates:
                 await cursor.execute(READ_ROW_SQL, (row_id,))
                 await cursor.fetchone()
-            await cursor.executemany(WRITE_ROW_SQL, [(number, row_id) for row_id, number in updates])
+            for _ in range(5):
+                try:
+                    await cursor.executemany(WRITE_ROW_SQL, [(number, row_id) for row_id, number in updates])
+                    break
+                except psycopg.errors.DeadlockDetected:
+                    await db_conn.rollback()
+                    continue
+            # await cursor.executemany(WRITE_ROW_SQL, [(number, row_id) for row_id, number in updates])
     return bs.json(worlds)
 
 @bs.get('/plaintext')
