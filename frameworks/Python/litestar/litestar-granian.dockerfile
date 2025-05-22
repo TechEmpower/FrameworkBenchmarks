@@ -9,7 +9,7 @@ RUN pip3 install cython==3.0.12
 
 COPY requirements.txt requirements-hypercorn.txt ./
 
-RUN pip3 install -r requirements.txt -r requirements-hypercorn.txt
+RUN pip3 install -r requirements.txt -r requirements-granian.txt
 
 COPY . ./
 
