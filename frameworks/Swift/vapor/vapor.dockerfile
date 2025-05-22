@@ -15,7 +15,7 @@ RUN swift build \
 # ================================
 # Run image
 # ================================
-FROM swift:6.1-slim
+FROM swift:5.10-slim
 WORKDIR /run
 
 # Copy build artifacts
