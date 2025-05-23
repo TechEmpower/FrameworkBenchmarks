@@ -191,6 +191,18 @@ class Metadata:
                     % config['framework'],
                     color=Fore.YELLOW)
 
+            # Check that each framework does not have more than the maximum number of tests
+            maximum_tests = 10
+            non_broken_tests_filter = lambda test: (not hasattr(test, "tags")) or ("broken" not in test.tags)
+            non_broken_tests_to_run = list(filter(non_broken_tests_filter, tests_to_run))
+            if len(non_broken_tests_to_run) > maximum_tests:
+                message = [
+                    "Framework %s defines %s tests in benchmark_config.json (max is %s)."
+                        % (config['framework'], len(non_broken_tests_to_run), maximum_tests),
+                    "Contact maintainers and remove deprecated or discarded ones to make room."
+                ]
+                log("\n".join(message), color=Fore.YELLOW)
+
             # Check that each test configuration is acceptable
             # Throw exceptions if a field is missing, or how to improve the field
             for test_name, test_keys in test.items():
