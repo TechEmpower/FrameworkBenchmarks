@@ -663,9 +663,9 @@ dependencies = [
 
 [[package]]
 name = "hyperlane"
-version = "4.104.0"
+version = "4.104.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e62c0d9f8243e8ed4cc8480d19b58132463019382be65d7eb847665dfb603432"
+checksum = "a93bfea0d900c45673c134c9f76c540dbe76d675e44dd516a121041b4b6b0acc"
 dependencies = [
  "clonelicious",
  "color-output",
@@ -681,9 +681,9 @@ dependencies = [
 
 [[package]]
 name = "hyperlane-broadcast"
-version = "0.2.0"
+version = "0.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7dcd964cea2ae6e4778ca27ce48989040de754f176545fc1827f5e6b15a0055b"
+checksum = "77cd3b98eecd545e1acbe203b9d0fbad46e7d9034033c5e3afa07fff9dbcb3e6"
 dependencies = [
  "dashmap",
  "lombok",
