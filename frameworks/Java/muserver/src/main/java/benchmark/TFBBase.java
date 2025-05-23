@@ -34,7 +34,6 @@ public class TFBBase {
 
     public static MuServerBuilder commonBuilderWithMuHandler() {
         var jackson = new ObjectMapper();
-        var helloWorld = Map.of("message", "Hello, World!");
         var dbService = DbFactory.INSTANCE.getDbService(DbFactory.DbType.POSTGRES);
         return MuServerBuilder.httpServer()
                 .addHandler((ignore, res) -> {
@@ -45,11 +44,10 @@ public class TFBBase {
                     var ah = req.handleAsync();
                     res.headers().add("content-type", "text/plain");
                     ah.write(Mutils.toByteBuffer("Hello, World!"), (optEx) -> ah.complete());
-                    // res.write("Hello, World!");
                 })
                 .addHandler(Method.GET, "/json", (req, res, pp) -> {
                     res.headers().add("content-type", "application/json");
-                    jackson.writeValue(res.writer(), helloWorld);
+                    jackson.writeValue(res.writer(), Map.of("message", "Hello, World!"));
                 })
                 .addHandler(Method.GET, "/db", (req, res, pp) -> {
                     res.headers().add("content-type", "application/json");
@@ -86,7 +84,6 @@ public class TFBBase {
                     res.headers().add("Server", "muserver");
                     return false;
                 })
-
                 .addHandler(RestHandlerBuilder.restHandler(new TFBResource(
                         DbFactory.INSTANCE.getDbService(DbFactory.DbType.POSTGRES),
                         compiledTemplate
@@ -100,7 +97,6 @@ public class TFBBase {
     public static class TFBResource {
         public final DbService dbService;
         public final PebbleTemplate template;
-        public final Map<String, String> helloWorld = Map.of("message", "Hello, World!");
 
         public TFBResource(
                 DbService dbService,
@@ -121,7 +117,7 @@ public class TFBBase {
         @Path("/json")
         @Produces(APPLICATION_JSON)
         public Map<String, String> json() {
-            return helloWorld;
+            return Map.of("message", "Hello, World!");
         }
 
         @GET
