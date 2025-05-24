@@ -1,0 +1,3 @@
+psycopg2==2.9.10
+SQLAlchemy==2.0.40
+litestar[sqlalchemy]==2.16.0
