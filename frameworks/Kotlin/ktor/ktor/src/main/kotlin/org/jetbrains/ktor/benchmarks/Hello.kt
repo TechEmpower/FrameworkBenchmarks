@@ -9,18 +9,16 @@ import io.ktor.server.html.*
 import io.ktor.server.plugins.defaultheaders.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.html.*
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.jetbrains.ktor.benchmarks.Constants.FORTUNES_QUERY
 import org.jetbrains.ktor.benchmarks.Constants.UPDATE_QUERY
 import org.jetbrains.ktor.benchmarks.Constants.WORLD_QUERY
 import java.sql.Connection
-import java.util.concurrent.ThreadLocalRandom
 import kotlin.random.Random
-import kotlinx.serialization.Contextual
 
 @Serializable
 data class Message(val message: String)

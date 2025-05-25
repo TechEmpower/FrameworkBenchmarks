@@ -12,15 +12,15 @@
     <name>org.jetbrains.ktor tech-empower-framework-benchmark</name>
 
     <properties>
-        <kotlin.version>2.1.20</kotlin.version>
+        <kotlin.version>2.1.21</kotlin.version>
         <kotlin.coroutines.version>1.10.1</kotlin.coroutines.version>
-        <ktor.version>3.1.1</ktor.version>
-        <serialization.version>1.8.0</serialization.version>
+        <ktor.version>3.1.3</ktor.version>
+        <serialization.version>1.8.1</serialization.version>
         <kotlinx.html.version>0.12.0</kotlinx.html.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <logback.version>1.5.12</logback.version>
+        <logback.version>1.5.13</logback.version>
         <reactor.version>3.7.1</reactor.version>
-        <postgresql.version>42.7.4</postgresql.version>
+        <postgresql.version>42.7.5</postgresql.version>
         <r2dbc.version>1.0.7.RELEASE</r2dbc.version>
         <r2dbc.pool.version>1.0.2.RELEASE</r2dbc.pool.version>
 
