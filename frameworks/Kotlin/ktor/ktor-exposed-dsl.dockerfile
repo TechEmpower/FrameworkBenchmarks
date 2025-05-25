@@ -7,4 +7,4 @@ RUN gradle --no-daemon shadowJar
 
 EXPOSE 8080
 
-CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseG1GC", "-XX:+AlwaysPreTouch", "-XX:+UseStringDeduplication", "-jar", "app/build/libs/app-all.jar", "Dsl"]
+CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseG1GC", "-XX:+AlwaysPreTouch", "-jar", "app/build/libs/app-all.jar", "Dsl"]
