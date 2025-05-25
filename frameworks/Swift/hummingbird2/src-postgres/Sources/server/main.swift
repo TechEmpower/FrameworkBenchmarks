@@ -13,24 +13,10 @@ extension Int {
 }
 
 struct TechFrameworkRequestContext: RequestContext {
-    static let jsonEncoder = JSONEncoder()
-    static let jsonDecoder = JSONDecoder()
-
-    var coreContext: Hummingbird.CoreRequestContextStorage
-
-    // Use a global JSON Encoder
-    var responseEncoder: JSONEncoder { Self.jsonEncoder }
-    // Use a global JSON Decoder
-    var requestDecoder: JSONDecoder { Self.jsonDecoder }
+    var coreContext: CoreRequestContextStorage
 
     init(source: ApplicationRequestContextSource) {
-        self.init(channel: source.channel, logger: source.logger)
-    }
-
-    init(channel: any Channel, logger: Logger) {
-        self.coreContext = CoreRequestContextStorage(
-            source: ApplicationRequestContextSource(channel: channel, logger: logger)
-        )
+        self.coreContext = CoreRequestContextStorage(source: source)
     }
 }
 
@@ -40,15 +26,15 @@ func runApp() async throws {
     let serverPort = env.get("SERVER_PORT", as: Int.self) ?? 8080
 
     var postgresConfiguration = PostgresClient.Configuration(
-        host: "tfb-database", 
-        username: "benchmarkdbuser", 
-        password: "benchmarkdbpass", 
-        database: "hello_world", 
+        host: "tfb-database",
+        username: "benchmarkdbuser",
+        password: "benchmarkdbpass",
+        database: "hello_world",
         tls: .disable
     )
     postgresConfiguration.options.maximumConnections = 100
     let postgresClient = PostgresClient(
-        configuration: postgresConfiguration, 
+        configuration: postgresConfiguration,
         eventLoopGroup: MultiThreadedEventLoopGroup.singleton
     )
     let router = Router(context: TechFrameworkRequestContext.self)

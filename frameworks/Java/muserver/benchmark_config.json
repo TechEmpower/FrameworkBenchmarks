@@ -1,0 +1,53 @@
+{
+  "framework": "muserver",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/rest/json",
+        "plaintext_url": "/rest/plaintext",
+        "db_url": "/rest/db",
+        "query_url": "/rest/queries?queries=",
+        "update_url": "/rest/updates?queries=",
+        "fortune_url": "/rest/fortunes",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "Postgres",
+        "framework": "muserver",
+        "language": "Java",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "Netty",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "mu-rest-pg",
+        "notes": "Jax-rs rest resource handler implementation",
+        "versus": "None"
+      },
+      "pg": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
+        "update_url": "/updates?queries=",
+        "fortune_url": "/fortunes",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "Postgres",
+        "framework": "muserver",
+        "language": "Java",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "Netty",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "mu-pg",
+        "notes": "MuHandler implementation",
+        "versus": "None"
+      }
+    }
+  ]
+}
