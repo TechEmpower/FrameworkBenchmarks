@@ -10,4 +10,4 @@ COPY --from=maven /ktor-r2dbc/target/tech-empower-framework-benchmark-1.0-SNAPSH
 
 EXPOSE 9090
 
-CMD ["java", "-server","-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AlwaysPreTouch", "-jar", "app.jar"]
+CMD ["java", "-server","-XX:+UseNUMA", "-XX:+UseG1GC", "-XX:+AlwaysPreTouch", "-XX:+UseStringDeduplication", "-jar", "app.jar"]
