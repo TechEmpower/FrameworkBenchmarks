@@ -16,16 +16,19 @@ pub(crate) use r#type::*;
 pub(crate) use utils::*;
 
 pub(crate) use hyperlane::{
-    futures::{executor::block_on, future::join_all},
-    once_cell::sync::Lazy,
-    serde::*,
-    serde_json::{Value, json},
     tokio::{
         runtime::{Builder, Runtime},
         spawn,
         sync::{AcquireError, OwnedSemaphorePermit, Semaphore},
         task::JoinHandle,
     },
+    *,
+};
+pub(crate) use hyperlane_utils::{
+    futures::{executor::block_on, future::join_all},
+    once_cell::sync::Lazy,
+    serde::*,
+    serde_json::{Value, json},
     *,
 };
 pub(crate) use lazy::*;
