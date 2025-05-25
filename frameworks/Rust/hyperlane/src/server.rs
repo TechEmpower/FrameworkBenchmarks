@@ -17,9 +17,7 @@ async fn init_server() {
     server.port(8080).await;
     server.disable_linger().await;
     server.disable_nodelay().await;
-    server.disable_log().await;
-    server.disable_inner_log().await;
-    server.disable_inner_print().await;
+    server.error_handle(|_: String| {}).await;
     server.http_line_buffer_size(256).await;
     server.websocket_buffer_size(256).await;
     server.request_middleware(request_middleware::request).await;
