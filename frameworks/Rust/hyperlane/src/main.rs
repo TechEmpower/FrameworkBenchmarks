@@ -1,6 +1,5 @@
 #![allow(dead_code)]
 #![allow(unused_imports)]
-
 pub(crate) mod r#const;
 pub(crate) mod db;
 pub(crate) mod lazy;
@@ -14,6 +13,8 @@ pub(crate) use r#const::*;
 pub(crate) use db::*;
 pub(crate) use r#type::*;
 pub(crate) use utils::*;
+
+pub(crate) use std::{fmt, hint::black_box, sync::Arc};
 
 pub(crate) use hyperlane::{
     tokio::{
@@ -38,7 +39,6 @@ pub(crate) use sqlx::{
     postgres::{PgPoolOptions, PgRow},
     *,
 };
-pub(crate) use std::{fmt, hint::black_box, sync::Arc};
 
 fn main() {
     run_server();
