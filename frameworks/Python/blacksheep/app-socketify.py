@@ -50,11 +50,12 @@ app = bs.Application()
 app.on_start += setup_db
 app.on_stop += shutdown_db
 
-def get_num_queries(queries):
+def get_num_queries(request):
     try:
-        if queries is None:
+        value = request.query.get('queries')
+        if value is None:
             return 1
-        query_count = int(queries)
+        query_count = int(value[0])
     except (KeyError, IndexError, ValueError):
         return 1
     return min(max(query_count, 1), 500)
@@ -74,10 +75,9 @@ async def single_db_query_test(request):
             number = await cursor.fetchone()
     return bs.json({'id': row_id, 'randomNumber': number[1]})
 
-@bs.get('/queries/{queries}')
-@bs.get('/queries/')
-async def multiple_db_queries_test(request, queries):
-    num_queries = get_num_queries(queries)
+@bs.get('/queries')
+async def multiple_db_queries_test(request):
+    num_queries = get_num_queries(request)
     row_ids = random.sample(range(1, 10000), num_queries)
     worlds = []
     async with db_pool.connection() as db_conn:
@@ -99,10 +99,9 @@ async def fortunes_test(request):
     data = fortune_template.render(fortunes=fortunes)
     return bs.html(data)
 
-@bs.get('/updates/{queries}')
-@bs.get('/updates/')
-async def db_updates_test(request,queries):
-    num_queries = get_num_queries(queries)
+@bs.get('/updates')
+async def db_updates_test(request):
+    num_queries = get_num_queries(request)
     updates = sorted(zip(
         random.sample(range(1, 10000), num_queries),
         random.sample(range(1, 10000), num_queries)
