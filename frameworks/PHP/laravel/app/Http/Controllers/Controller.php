@@ -52,7 +52,7 @@ class Controller extends BaseController
 
         while ($queries--) {
             $row = World::query()->find(self::randomInt());
-            $row->randomNumber = self::randomInt();
+            $row->randomNumber = ($randomInt = self::randomInt()) !== $row->randomNumber ? $randomInt : $randomInt + 1;
             $row->save();
 
             $rows[] = $row;
