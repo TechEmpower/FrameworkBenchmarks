@@ -13,8 +13,11 @@ pub async fn request(ctx: Context) {
     }
     #[cfg(feature = "fortunes")]
     {
-        ctx.set_response_header(CONTENT_TYPE, content_type_charset(TEXT_HTML, UTF8))
-            .await;
+        ctx.set_response_header(
+            CONTENT_TYPE,
+            ContentType::format_content_type_with_charset(TEXT_HTML, UTF8),
+        )
+        .await;
     }
     #[cfg(any(
         feature = "json",

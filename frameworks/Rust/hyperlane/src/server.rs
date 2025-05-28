@@ -4,8 +4,8 @@ fn runtime() -> Runtime {
     Builder::new_multi_thread()
         .worker_threads(get_thread_count())
         .thread_stack_size(1_048_576)
-        .max_blocking_threads(1_024_000)
-        .max_io_events_per_tick(1_024_000)
+        .max_blocking_threads(2_048)
+        .max_io_events_per_tick(1_024)
         .enable_all()
         .build()
         .unwrap()
@@ -17,9 +17,7 @@ async fn init_server() {
     server.port(8080).await;
     server.disable_linger().await;
     server.disable_nodelay().await;
-    server.disable_log().await;
-    server.disable_inner_log().await;
-    server.disable_inner_print().await;
+    server.error_handle(|_: String| {}).await;
     server.http_line_buffer_size(256).await;
     server.websocket_buffer_size(256).await;
     server.request_middleware(request_middleware::request).await;
