@@ -1,0 +1,3 @@
+psycopg[pool]
+git+https://github.com/cirospaciari/socketify.py.git@main#egg=socketify
+h11
