@@ -1,5 +1,5 @@
 
-FROM dart:3.5 AS builder
+FROM dart:3.8 AS builder
 
 COPY . /app
 WORKDIR /app
