@@ -2,10 +2,13 @@
 name = "hyperlane"
 
 [main]
-urls.plaintext = "/plaintext"
 urls.json = "/json"
+urls.plaintext = "/plaintext"
+urls.fortunes = "/fortunes"
 urls.db = "/db"
-urls.query = "/queries?q="
+urls.query = "/query?q="
+urls.update = "/upda?q="
+urls.cached_query = "/cached-quer?c="
 approach = "Realistic"
 classification = "Micro"
 database = "Postgres"
