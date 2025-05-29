@@ -9,10 +9,10 @@
             "type": "python",
             "path": "/blacksheep",
             "working_directory": "/blacksheep",
+            "processes": 14,
             "protocol": "asgi",
             "module": "app",
-            "callable": "app",
-            "processes": {{NPROC}}
+            "callable": "app"
         }
     },
     "access_log": "/dev/null"

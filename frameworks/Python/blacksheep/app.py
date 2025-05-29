@@ -1,27 +1,28 @@
 import multiprocessing
 import os
 import asyncpg
+import platform
 import random
 import asyncio
-from operator import itemgetter
 import blacksheep as bs
 import jinja2
 import msgspec
 from pathlib import Path
-
-READ_ROW_SQL = 'SELECT "id", "randomnumber" FROM "world" WHERE id = $1'
-WRITE_ROW_SQL = 'UPDATE "world" SET "randomnumber"=$1 WHERE id=$2'
-ADDITIONAL_ROW = [0, "Additional fortune added at request time."]
-MAX_POOL_SIZE = 1000 // multiprocessing.cpu_count()
-MIN_POOL_SIZE = max(int(MAX_POOL_SIZE / 2), 1)
-db_pool = None
-key = itemgetter(1)
-
 try:
     import uvloop
     asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 except Exception:
     ...
+
+READ_ROW_SQL = 'SELECT "id", "randomnumber" FROM "world" WHERE id = $1'
+WRITE_ROW_SQL = 'UPDATE "world" SET "randomnumber"=$1 WHERE id=$2'
+ADDITIONAL_ROW = [0, "Additional fortune added at request time."]
+MAX_CONNECTIONS = 1900
+CORE_COUNT = multiprocessing.cpu_count()
+MAX_POOL_SIZE = max(1,int(os.getenv('MAX_POOL_SIZE', MAX_CONNECTIONS // CORE_COUNT)))
+MIN_POOL_SIZE = max(1,int(os.getenv('MIN_POOL_SIZE', MAX_POOL_SIZE // 2)))
+
+db_pool = None
 
 async def setup_db(app):
     global db_pool
@@ -35,6 +36,12 @@ async def setup_db(app):
         max_size=MAX_POOL_SIZE,
     )
 
+async def shutdown_db(app):
+    """Close asyncpg connection pool for the current process."""
+    global db_pool
+    if db_pool is not None:
+        await db_pool.close()
+        db_pool = None
 
 def load_fortunes_template():
     with Path("templates/fortune.html").open("r") as f:
@@ -45,7 +52,7 @@ fortune_template = load_fortunes_template()
 
 app = bs.Application()
 app.on_start += setup_db
-
+app.on_stop += shutdown_db
 
 def get_num_queries(request):
     try:
@@ -55,14 +62,9 @@ def get_num_queries(request):
         query_count = int(value[0])
     except (KeyError, IndexError, ValueError):
         return 1
-    if query_count < 1:
-        return 1
-    if query_count > 500:
-        return 500
-    return query_count
+    return min(max(query_count, 1), 500)
 
 ENCODER = msgspec.json.Encoder()
-DECODER = msgspec.json.Decoder()
 JSON_CONTENT_TYPE = b"application/json"
 def jsonify(
     data,
@@ -122,7 +124,7 @@ async def fortunes_test(request):
         fortunes = await db_conn.fetch("SELECT * FROM Fortune")
 
     fortunes.append(ADDITIONAL_ROW)
-    fortunes.sort(key = key)
+    fortunes.sort(key=lambda row: row[1])
     data = fortune_template.render(fortunes=fortunes)
     return bs.html(data)
 
@@ -130,18 +132,17 @@ async def fortunes_test(request):
 @bs.get('/updates')
 async def db_updates_test(request):
     num_queries = get_num_queries(request)
-    ids = sorted(random.sample(range(1, 10000 + 1), num_queries))
-    numbers = sorted(random.sample(range(1, 10000), num_queries))
-    updates = list(zip(ids, numbers))
-
-    # worlds = [ {"id": row_id, "randomNumber": number} for row_id, number in updates ]
+    updates = list(zip(
+        random.sample(range(1, 10000), num_queries),
+        sorted(random.sample(range(1, 10000), num_queries))
+    ))
     worlds = [Result(id=row_id, randomNumber=number) for row_id, number in updates]
+    # worlds = [ {"id": row_id, "randomNumber": number} for row_id, number in updates ]
     async with db_pool.acquire() as db_conn:
         statement = await db_conn.prepare(READ_ROW_SQL)
         for row_id, _ in updates:
             await statement.fetchval(row_id)
         await db_conn.executemany(WRITE_ROW_SQL, updates)
- 
     return jsonify(worlds)
 
 
@@ -150,3 +151,26 @@ async def plaintext_test(request):
     return bs.Response(200, content=bs.Content(b"text/plain", b'Hello, World!'))
     #return bs.text('Hello, World!')
 
+
+if platform.python_implementation() == 'PyPy':
+    from socketify import ASGI
+    workers = int(multiprocessing.cpu_count())
+    if _is_travis:
+        workers = 2
+
+    def run_app():
+        ASGI(app).listen(8080, lambda config: logging.info(f"Listening on port http://localhost:{config.port} now\n")).run()
+
+
+    def create_fork():
+        n = os.fork()
+        # n greater than 0 means parent process
+        if not n > 0:
+            run_app()
+
+
+    # fork limiting the cpu count - 1
+    for i in range(1, workers):
+        create_fork()
+
+    run_app()
