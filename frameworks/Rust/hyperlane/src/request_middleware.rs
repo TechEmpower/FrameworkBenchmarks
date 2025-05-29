@@ -9,11 +9,7 @@ pub async fn request(ctx: Context) {
         .await;
     #[cfg(feature = "plaintext")]
     {
-        ctx.set_response_header(
-            CONTENT_TYPE,
-            ContentType::format_content_type_with_charset(TEXT_PLAIN, UTF8),
-        )
-        .await;
+        ctx.set_response_header(CONTENT_TYPE, TEXT_PLAIN).await;
     }
     #[cfg(feature = "fortunes")]
     {
