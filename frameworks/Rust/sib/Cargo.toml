@@ -1,0 +1,19 @@
+[package]
+name = "sib-techempower"
+version = "0.0.1"
+authors = ["mail@pooya.ai"]
+description = "A high-performance, secure, and cross-platform modules optimized for efficiency, scalability, and reliability."
+documentation = "https://docs.rs/sib"
+edition = "2024"
+keywords = ["sib", "networking", "real-time", "streaming", "web"]
+license = "Apache-2.0"
+repository = "https://github.com/PooyaEimandar/sib"
+categories = ["development-tools"]
+readme = "README.md"
+
+[dependencies]
+sib = { git = "https://github.com/PooyaEimandar/sib", default-features = false, features = [
+    "http-server",
+] }
+bytes = { version = "1.10.1", default-features = false }
+mimalloc = { version = "0.1.46", features = ["secure"] }
