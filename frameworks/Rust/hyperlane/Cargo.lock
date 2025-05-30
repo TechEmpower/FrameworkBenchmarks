@@ -661,9 +661,9 @@ checksum = "c206e4f9a9bc18a40b387ffdfee9b1204fb692da1eee32d35b6fa9f07447d960"
 
 [[package]]
 name = "http-type"
-version = "4.9.1"
+version = "4.10.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6b14e4120a0ff0ddcb057ba6779ee5079a1ed18f56b00d08841bc6262acc6495"
+checksum = "69c40d1bcd7d62bd8d7ba3495c77985ba1dd6f83615c07c3c0115ede19471148"
 dependencies = [
  "dashmap",
  "hex",
@@ -674,16 +674,15 @@ dependencies = [
  "serde-xml-rs",
  "serde_json",
  "serde_urlencoded",
- "std-macro-extensions",
  "tokio",
  "url",
 ]
 
 [[package]]
 name = "hyperlane"
-version = "5.10.0"
+version = "5.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7d7e2d83866c7d60cfec0c9cb165a308cab446d9d7227b4e062f1e2ecbb90216"
+checksum = "268c531ac2db87a5f2303626894c54cdc71258f0e4ef66888bdd45a4fb38d132"
 dependencies = [
  "http-type",
  "lombok-macros",
@@ -721,9 +720,9 @@ checksum = "c145707425cdd097e117e8b4ee8baeaf8eb265658a5c37d2c4aa0b24fd26a507"
 
 [[package]]
 name = "hyperlane-utils"
-version = "0.5.0"
+version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "435663d62a9b1cc9f41fa8d89448f8eae8bfe68016b3cefd8106526d3fd59993"
+checksum = "efc0786ea14d074594219dbef01259c85ea550ae40962be38108db41195a9e3e"
 dependencies = [
  "ahash",
  "bin-encode-decode",
@@ -749,6 +748,7 @@ dependencies = [
  "serde_urlencoded",
  "server-manager",
  "simd-json",
+ "std-macro-extensions",
  "twox-hash",
  "url",
  "urlencoding",
@@ -1712,9 +1712,9 @@ checksum = "a8f112729512f8e442d81f95a8a7ddf2b7c6b8a1a6f509a95864142b30cab2d3"
 
 [[package]]
 name = "std-macro-extensions"
-version = "0.23.2"
+version = "0.25.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "aa17898d2c4216a85ad32abd51101b6eab0adef954ed1393c4557ba378625ade"
+checksum = "608674e57da06083d40aa7b9949e1682d54dadca0f39a2b69b5184944532f7e6"
 
 [[package]]
 name = "stringprep"
