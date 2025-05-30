@@ -16,4 +16,4 @@ RUN rokit install --no-trust-check
 
 COPY ./src .
 
-CMD ["sh", "-c", "lute parallel.luau -- $(nproc)"]
+CMD ["sh", "-c", "lute parallel.luau"]

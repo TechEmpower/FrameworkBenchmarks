@@ -1,4 +1,4 @@
-FROM jruby:9.4-jdk17
+FROM jruby:10.0
 
 RUN apt-get update -y && apt-get install netbase -y
 

@@ -24,6 +24,7 @@ end
 
 group :passenger, optional: true do
   gem 'base64' # required by passenger on Ruby 3.4
+  gem 'logger' # required by passenger on Ruby 3.5
   gem 'passenger', '~> 6.0', platforms: [:ruby, :mswin], require: false
 end
 
@@ -36,6 +37,7 @@ group :puma, optional: true do
 end
 
 group :unicorn, optional: true do
+  gem 'logger' # required by unicorn on Ruby 3.5
   gem 'unicorn', '~> 6.1', platforms: %i[ruby mswin]
 end
 

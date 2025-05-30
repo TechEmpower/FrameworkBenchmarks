@@ -4,8 +4,12 @@ mod pg;
 use dotenv::dotenv;
 use mimalloc::MiMalloc;
 use rama::http::{
-    IntoResponse, StatusCode,
-    service::web::{Router, extract::Query},
+    StatusCode,
+    service::web::{
+        Router,
+        extract::Query,
+        response::{Html, IntoResponse},
+    },
 };
 use rand::rng;
 use yarte::Template;
@@ -16,13 +20,13 @@ static GLOBAL: MiMalloc = MiMalloc;
 #[cfg(feature = "simd-json")]
 use common::simd_json::Json;
 #[cfg(not(feature = "simd-json"))]
-use rama::http::response::Json;
+use rama::http::service::web::response::Json;
 
 mod server;
 
 use common::{
     get_env, random_id,
-    utils::{Params, Utf8Html, parse_params},
+    utils::{Params, parse_params},
 };
 use pg::database::{DatabaseConnection, PgConnection};
 use pg::models::Fortune;
@@ -63,7 +67,7 @@ async fn fortunes(DatabaseConnection(conn): DatabaseConnection) -> impl IntoResp
         .await
         .expect("error loading fortunes");
 
-    Utf8Html(
+    Html(
         FortunesTemplate {
             fortunes: &fortunes,
         }

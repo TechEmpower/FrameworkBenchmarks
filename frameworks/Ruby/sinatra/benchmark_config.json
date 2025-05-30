@@ -65,26 +65,6 @@
         "display_name": "sinatra-postgres-iodine-mri",
         "versus": "rack-postgres-iodine-mri",
         "notes": ""
-      },
-      "postgres-unicorn-mri": {
-        "db_url": "/db",
-        "query_url": "/queries?queries=",
-        "fortune_url": "/fortunes",
-        "update_url": "/updates?queries=",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Micro",
-        "database": "Postgres",
-        "framework": "sinatra",
-        "language": "Ruby",
-        "orm": "Full",
-        "platform": "Rack",
-        "webserver": "Unicorn",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "sinatra-postgres-unicorn-mri",
-        "versus": "rack-postgres-unicorn-mri",
-        "notes": ""
       }
     }
   ]

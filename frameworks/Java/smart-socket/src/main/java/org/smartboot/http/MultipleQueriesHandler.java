@@ -27,7 +27,7 @@ public class MultipleQueriesHandler implements HttpHandler {
     }
 
     @Override
-    public void handle(HttpRequest httpRequest, CompletableFuture<Object> completableFuture) throws IOException {
+    public void handle(HttpRequest httpRequest, CompletableFuture<Void> completableFuture) throws IOException {
         HttpResponse response = httpRequest.getResponse();
         Thread.startVirtualThread(() -> {
             try {

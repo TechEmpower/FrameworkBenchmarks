@@ -1,14 +1,25 @@
+import platform
 from operator import attrgetter, itemgetter
 from pathlib import Path
 from random import randint, sample
 
 import jinja2
 from aiohttp.web import Response
-from orjson import dumps
 from sqlalchemy import bindparam, select
 from sqlalchemy.orm.attributes import flag_modified
 
 from .models import Fortune, World
+
+if platform.python_implementation() == "PyPy":
+    from aiohttp.web import json_response
+else:
+    from orjson import dumps
+
+    def json_response(payload):
+        return Response(
+            body=dumps(payload),
+            content_type="application/json",
+        )
 
 ADDITIONAL_FORTUNE_ORM = Fortune(id=0, message='Additional fortune added at request time.')
 ADDITIONAL_FORTUNE_ROW = {'id': 0, 'message': 'Additional fortune added at request time.'}
@@ -25,21 +36,14 @@ sort_fortunes_raw = itemgetter('message')
 
 def get_num_queries(request):
     try:
-        num_queries = int(request.match_info.get('queries', 1))
-    except ValueError:
+        num_queries = int(request.match_info['queries'])
+    except (KeyError, ValueError):
         return 1
     if num_queries < 1:
         return 1
     if num_queries > 500:
         return 500
     return num_queries
-
-
-def json_response(payload):
-    return Response(
-        body=dumps(payload),
-        content_type="application/json",
-    )
 
 
 async def json(request):
@@ -92,15 +96,11 @@ async def multiple_database_queries_raw(request):
     """
     num_queries = get_num_queries(request)
 
-    ids = [randint(1, 10000) for _ in range(num_queries)]
+    ids = [(randint(1, 10000), ) for _ in range(num_queries)]
 
-    result = []
     async with request.app['pg'].acquire() as conn:
-        for id_ in ids:
-            result.append({
-                'id': id_,
-                'randomNumber': await conn.fetchval(READ_ROW_SQL, id_),
-            })
+        rows = await conn.fetchmany(READ_ROW_SQL, ids)
+        result = [{'id': id_[0], 'randomNumber': row[0]} for id_, row in zip(ids, rows)]
     return json_response(result)
 
 
@@ -155,13 +155,13 @@ async def updates_raw(request):
     num_queries = get_num_queries(request)
     update_ids = sample(range(1, 10001), num_queries)
     update_ids.sort()
+    fetch_params = tuple((i, ) for i in update_ids)
     updates = tuple(zip(update_ids, sample(range(1, 10001), num_queries)))
     worlds = [{'id': row_id, 'randomNumber': number} for row_id, number in updates]
 
     async with request.app['pg'].acquire() as conn:
-        for id_, _ in updates:
-            # the result of this is the int previous random number which we don't actually use
-            await conn.fetchval(READ_ROW_SQL, id_)
+        # the result of this is the int previous random number which we don't actually use
+        await conn.executemany(READ_ROW_SQL, fetch_params)
         await conn.executemany(WRITE_ROW_SQL, updates)
 
     return json_response(worlds)
