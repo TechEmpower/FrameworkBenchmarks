@@ -720,9 +720,9 @@ checksum = "c145707425cdd097e117e8b4ee8baeaf8eb265658a5c37d2c4aa0b24fd26a507"
 
 [[package]]
 name = "hyperlane-utils"
-version = "0.7.0"
+version = "0.7.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "efc0786ea14d074594219dbef01259c85ea550ae40962be38108db41195a9e3e"
+checksum = "6422f6460295cc064056fba4020747e955738b2b12d1231edfc18d3697d12f37"
 dependencies = [
  "ahash",
  "bin-encode-decode",
@@ -1712,9 +1712,9 @@ checksum = "a8f112729512f8e442d81f95a8a7ddf2b7c6b8a1a6f509a95864142b30cab2d3"
 
 [[package]]
 name = "std-macro-extensions"
-version = "0.25.0"
+version = "0.25.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "608674e57da06083d40aa7b9949e1682d54dadca0f39a2b69b5184944532f7e6"
+checksum = "a35e64ebd4e130e82fbcd036b66007e97ab95803080c51286cf6ec5cf9c7d546"
 
 [[package]]
 name = "stringprep"
