@@ -1,0 +1,79 @@
+fix = true
+line-length = 120
+src = ["evalai_backend", "tests"]
+target-version = "py312"
+
+[format]
+docstring-code-format = true
+docstring-code-line-length = 120
+indent-style = "tab"
+quote-style = "double"
+skip-magic-trailing-comma = false
+
+[lint]
+ignore = [
+    "TID252",
+    "E501",
+    "S101",
+    "S102",
+    "S104",
+    "S324",
+    "EXE002",
+    "D100",
+    "D102",
+    "D203", # clash with formatter
+    "D206", # we use tabs
+    "D103",
+    "D104",
+    "D105",
+    "D106",
+    "D101",
+    "D107",
+    "D212",
+    "D211",
+    "PGH003",
+    "PGH004",
+    "N811",
+    "N804",
+    "N818",
+    "N806",
+    "N815",
+    "ARG001",
+    "ARG002",
+    "DTZ003",
+    "DTZ005",
+    "RSE102",
+    "SLF001",
+    "PLR",
+    "INP",
+    "TRY",
+    "SIM300",
+    "SIM114",
+    "DJ008",
+    "FIX002",
+    "S603",
+    "S607",
+    "TD002",
+    "TD003",
+    "W191", # We use tabs
+    "COM812", # missing trailing comma
+    "ISC001", # handled by formatter
+    "FBT001",
+    "FBT002",
+    "FBT003",
+    "ERA001",
+]
+select = [
+    "ALL"
+]
+
+[lint.flake8-annotations]
+suppress-none-returning = true
+
+[lint.flake8-quotes]
+docstring-quotes = "double"
+inline-quotes = "double"
+multiline-quotes = "double"
+
+[lint.isort]
+combine-as-imports = true
