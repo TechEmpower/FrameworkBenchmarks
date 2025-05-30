@@ -22,7 +22,7 @@ public class JDBCDbService implements DbService {
   }
 
   @Override
-  public List<World> getWorld(int num) {
+  public List<World> getWorld(int num) throws SQLException {
 
     String select = "select id, randomNumber from World where id = ?";
     List<World> worldList = new ArrayList<>();
@@ -37,8 +37,6 @@ public class JDBCDbService implements DbService {
           worldList.add(new World(rs.getInt("id"), rs.getInt("randomNumber")));
         }
       }
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
     }
 
     return worldList;
@@ -55,7 +53,7 @@ public class JDBCDbService implements DbService {
         ResultSet rs = pstm.executeQuery()) {
 
       while (rs.next()) {
-        fortuneList.add(new Fortune(rs.getInt("id"), rs.getString("message")));
+        fortuneList.add(new Fortune(rs.getInt(1), rs.getString(2)));
       }
       fortuneList.add(new Fortune(defaultFortuneId, defaultFortuneMessage));
     }
