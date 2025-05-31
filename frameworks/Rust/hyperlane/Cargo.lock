@@ -177,9 +177,9 @@ dependencies = [
 
 [[package]]
 name = "clonelicious"
-version = "2.0.3"
+version = "2.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b7d51b119ca46e37c21508debf8d9823521be05a70e32ee5afc7695ae1cfb4ec"
+checksum = "fd646e01c20889af081dc20be3aeea14aaaeb87f60f68799483ad716baa33020"
 
 [[package]]
 name = "color-output"
@@ -416,9 +416,9 @@ dependencies = [
 
 [[package]]
 name = "future-fn"
-version = "0.2.5"
+version = "0.2.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "61a60fa5df978d3b02f58da08ae2e47d2bb8b19f765a693eaa9e5e8045b3925d"
+checksum = "472364b0e6f990c5d86b3fb5d99003898ae88af155b82575d6ca67ef554a9426"
 
 [[package]]
 name = "futures"
@@ -605,9 +605,9 @@ checksum = "2304e00983f87ffb38b55b444b5e3b60a884b5d30c0fca7d82fe33449bbe55ea"
 
 [[package]]
 name = "hermit-abi"
-version = "0.3.9"
+version = "0.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d231dfb89cfffdbc30e7fc41579ed6066ad03abda9e567ccafae602b97ec5024"
+checksum = "f154ce46856750ed433c8649605bf7ed2de3bc35fd9d2a9f30cddd873c80cb08"
 
 [[package]]
 name = "hex"
@@ -641,6 +641,12 @@ checksum = "589533453244b0995c858700322199b2becb13b627df2851f64a2775d024abcf"
 dependencies = [
  "windows-sys 0.59.0",
 ]
+
+[[package]]
+name = "hot-restart"
+version = "0.2.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a35c1ce67dc1d078f54ea1ed5293a49f11d63ff3a03b71c046319c31c9e4d243"
 
 [[package]]
 name = "http-compress"
@@ -720,9 +726,9 @@ checksum = "c145707425cdd097e117e8b4ee8baeaf8eb265658a5c37d2c4aa0b24fd26a507"
 
 [[package]]
 name = "hyperlane-utils"
-version = "0.7.1"
+version = "0.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6422f6460295cc064056fba4020747e955738b2b12d1231edfc18d3697d12f37"
+checksum = "5e6031037d894539b963f2541e8c2ebdec5ddd00d235639beafef42bb28d6309"
 dependencies = [
  "ahash",
  "bin-encode-decode",
@@ -734,6 +740,7 @@ dependencies = [
  "future-fn",
  "futures",
  "hex",
+ "hot-restart",
  "hyperlane-broadcast",
  "hyperlane-log",
  "log",
@@ -1047,9 +1054,9 @@ dependencies = [
 
 [[package]]
 name = "num_cpus"
-version = "1.16.0"
+version = "1.17.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4161fcb6d602d4d2081af7c3a45852d875a03dd337a6bfdd6e06407b61342a43"
+checksum = "91df4bbde75afed763b708b7eee1e8e7651e02d97f6d5dd763e89367e957b23b"
 dependencies = [
  "hermit-abi",
  "libc",
@@ -1400,9 +1407,9 @@ dependencies = [
 
 [[package]]
 name = "server-manager"
-version = "3.2.4"
+version = "3.4.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d6936d74a2263590ed722bdf27315b693b8a84a5dffdb3b47a9b7c0a7b50396b"
+checksum = "44ef1cee6952595d4726b88ffbb1535f123955c0af5c2dbf508c643efc684c94"
 dependencies = [
  "tokio",
 ]
