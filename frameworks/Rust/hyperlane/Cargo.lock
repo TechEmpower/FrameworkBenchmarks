@@ -177,9 +177,9 @@ dependencies = [
 
 [[package]]
 name = "clonelicious"
-version = "2.0.3"
+version = "2.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b7d51b119ca46e37c21508debf8d9823521be05a70e32ee5afc7695ae1cfb4ec"
+checksum = "fd646e01c20889af081dc20be3aeea14aaaeb87f60f68799483ad716baa33020"
 
 [[package]]
 name = "color-output"
@@ -416,9 +416,9 @@ dependencies = [
 
 [[package]]
 name = "future-fn"
-version = "0.2.5"
+version = "0.2.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "61a60fa5df978d3b02f58da08ae2e47d2bb8b19f765a693eaa9e5e8045b3925d"
+checksum = "472364b0e6f990c5d86b3fb5d99003898ae88af155b82575d6ca67ef554a9426"
 
 [[package]]
 name = "futures"
@@ -605,9 +605,9 @@ checksum = "2304e00983f87ffb38b55b444b5e3b60a884b5d30c0fca7d82fe33449bbe55ea"
 
 [[package]]
 name = "hermit-abi"
-version = "0.3.9"
+version = "0.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d231dfb89cfffdbc30e7fc41579ed6066ad03abda9e567ccafae602b97ec5024"
+checksum = "f154ce46856750ed433c8649605bf7ed2de3bc35fd9d2a9f30cddd873c80cb08"
 
 [[package]]
 name = "hex"
@@ -643,6 +643,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "hot-restart"
+version = "0.2.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a35c1ce67dc1d078f54ea1ed5293a49f11d63ff3a03b71c046319c31c9e4d243"
+
+[[package]]
 name = "http-compress"
 version = "2.13.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -661,9 +667,9 @@ checksum = "c206e4f9a9bc18a40b387ffdfee9b1204fb692da1eee32d35b6fa9f07447d960"
 
 [[package]]
 name = "http-type"
-version = "4.7.0"
+version = "4.10.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e1323e4bed6c8f56bc77fdba9141121568cd1fb399ad48fea92919a85c5601e9"
+checksum = "69c40d1bcd7d62bd8d7ba3495c77985ba1dd6f83615c07c3c0115ede19471148"
 dependencies = [
  "dashmap",
  "hex",
@@ -674,16 +680,15 @@ dependencies = [
  "serde-xml-rs",
  "serde_json",
  "serde_urlencoded",
- "std-macro-extensions",
  "tokio",
  "url",
 ]
 
 [[package]]
 name = "hyperlane"
-version = "5.8.0"
+version = "5.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "61cb0781fcf47dc16788eb0b35854de2bc7a7d55432abf89d78f52b9fa2e5117"
+checksum = "268c531ac2db87a5f2303626894c54cdc71258f0e4ef66888bdd45a4fb38d132"
 dependencies = [
  "http-type",
  "lombok-macros",
@@ -721,9 +726,9 @@ checksum = "c145707425cdd097e117e8b4ee8baeaf8eb265658a5c37d2c4aa0b24fd26a507"
 
 [[package]]
 name = "hyperlane-utils"
-version = "0.5.0"
+version = "0.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "435663d62a9b1cc9f41fa8d89448f8eae8bfe68016b3cefd8106526d3fd59993"
+checksum = "5e6031037d894539b963f2541e8c2ebdec5ddd00d235639beafef42bb28d6309"
 dependencies = [
  "ahash",
  "bin-encode-decode",
@@ -735,6 +740,7 @@ dependencies = [
  "future-fn",
  "futures",
  "hex",
+ "hot-restart",
  "hyperlane-broadcast",
  "hyperlane-log",
  "log",
@@ -749,6 +755,7 @@ dependencies = [
  "serde_urlencoded",
  "server-manager",
  "simd-json",
+ "std-macro-extensions",
  "twox-hash",
  "url",
  "urlencoding",
@@ -1047,9 +1054,9 @@ dependencies = [
 
 [[package]]
 name = "num_cpus"
-version = "1.16.0"
+version = "1.17.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4161fcb6d602d4d2081af7c3a45852d875a03dd337a6bfdd6e06407b61342a43"
+checksum = "91df4bbde75afed763b708b7eee1e8e7651e02d97f6d5dd763e89367e957b23b"
 dependencies = [
  "hermit-abi",
  "libc",
@@ -1400,9 +1407,9 @@ dependencies = [
 
 [[package]]
 name = "server-manager"
-version = "3.2.4"
+version = "3.4.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d6936d74a2263590ed722bdf27315b693b8a84a5dffdb3b47a9b7c0a7b50396b"
+checksum = "44ef1cee6952595d4726b88ffbb1535f123955c0af5c2dbf508c643efc684c94"
 dependencies = [
  "tokio",
 ]
@@ -1712,9 +1719,9 @@ checksum = "a8f112729512f8e442d81f95a8a7ddf2b7c6b8a1a6f509a95864142b30cab2d3"
 
 [[package]]
 name = "std-macro-extensions"
-version = "0.23.2"
+version = "0.25.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "aa17898d2c4216a85ad32abd51101b6eab0adef954ed1393c4557ba378625ade"
+checksum = "a35e64ebd4e130e82fbcd036b66007e97ab95803080c51286cf6ec5cf9c7d546"
 
 [[package]]
 name = "stringprep"
