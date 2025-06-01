@@ -18,8 +18,8 @@ exclude = [
 ]
 
 [dependencies]
-hyperlane = "5.11.0"
-hyperlane-utils = "0.11.0"
+hyperlane = "5.12.0"
+hyperlane-utils = "0.12.0"
 rand = "0.9.1"
 serde = "1.0.219"
 sqlx = { version = "0.8.6", features = ["runtime-tokio", "postgres"] }
