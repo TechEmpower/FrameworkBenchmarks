@@ -1,0 +1,23 @@
+{
+  "framework": "sib-seastar",
+  "tests": [
+    {
+      "default": {
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "framework": "Proxygen",
+        "language": "C++",
+        "flavor": "None",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "sib-seastar",
+        "notes": "",
+        "versus": "None"
+      }
+    }
+  ]
+}
