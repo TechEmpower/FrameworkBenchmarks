@@ -991,9 +991,9 @@ dependencies = [
 
 [[package]]
 name = "hyperlane-log"
-version = "1.16.10"
+version = "1.17.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "882149ef5ae7a912ed33f89c3b35a3b000a2a848a7c5cd160a3298193cefb561"
+checksum = "e13b62d620a3b339273b0af1433bb8631eecdc7310ee81db183876beb2b6f765"
 dependencies = [
  "file-operation",
  "hyperlane-time",
@@ -1018,9 +1018,9 @@ checksum = "c145707425cdd097e117e8b4ee8baeaf8eb265658a5c37d2c4aa0b24fd26a507"
 
 [[package]]
 name = "hyperlane-utils"
-version = "0.14.0"
+version = "0.15.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d26daca26f47551f1d5369cfbfe57ba4ba144e67945ef2c7e86545dbf1b26279"
+checksum = "403823835c33b49572d2ece876f7111f8059b5c2ed949a5dacbcf39c84f43b1b"
 dependencies = [
  "ahash",
  "bin-encode-decode",
