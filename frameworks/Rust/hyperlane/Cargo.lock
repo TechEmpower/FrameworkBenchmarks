@@ -938,9 +938,9 @@ checksum = "c206e4f9a9bc18a40b387ffdfee9b1204fb692da1eee32d35b6fa9f07447d960"
 
 [[package]]
 name = "http-type"
-version = "4.10.0"
+version = "4.10.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "69c40d1bcd7d62bd8d7ba3495c77985ba1dd6f83615c07c3c0115ede19471148"
+checksum = "d142300e68e039491f110c0493204474fa357fa92d8e9e609f087707a26074fa"
 dependencies = [
  "dashmap",
  "hex",
@@ -969,9 +969,9 @@ checksum = "df3b46402a9d5adb4c86a0cf463f42e19994e3ee891101b1841f30a545cb49a9"
 
 [[package]]
 name = "hyperlane"
-version = "5.12.1"
+version = "5.12.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "06f80d622527d5d55f396113acd7a78a099deb5a15b23d7ea57d9651422da35d"
+checksum = "58eb5f8a727becef89e5c610188075a3d296d9950b7297f353b87eeb0465b257"
 dependencies = [
  "http-type",
  "lombok-macros",
@@ -981,25 +981,33 @@ dependencies = [
 
 [[package]]
 name = "hyperlane-broadcast"
-version = "0.5.0"
+version = "0.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d10d26d30398580d6e5535a1f706507aeaa069a30f9959b5299dc066a112a396"
+checksum = "7764d7256c4a54e929d2d82176108a718b2493ec982b353e382971b1fa02707e"
 dependencies = [
  "dashmap",
- "lombok-macros",
  "tokio",
 ]
 
 [[package]]
 name = "hyperlane-log"
-version = "1.16.9"
+version = "1.16.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e822ed456ed2b07e3d038ed2275cabcce56651110bebb20c7d3fd699ce5c4602"
+checksum = "882149ef5ae7a912ed33f89c3b35a3b000a2a848a7c5cd160a3298193cefb561"
 dependencies = [
  "file-operation",
  "hyperlane-time",
- "lombok-macros",
  "tokio",
+]
+
+[[package]]
+name = "hyperlane-plugin-websocket"
+version = "0.4.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "573c885f47a83785d37a5d7793ed7c6cc22df07032833dacb0c10fcd9a46aca9"
+dependencies = [
+ "hyperlane",
+ "hyperlane-broadcast",
 ]
 
 [[package]]
@@ -1010,9 +1018,9 @@ checksum = "c145707425cdd097e117e8b4ee8baeaf8eb265658a5c37d2c4aa0b24fd26a507"
 
 [[package]]
 name = "hyperlane-utils"
-version = "0.12.0"
+version = "0.14.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8ccdba611d23b75413205b6d8d28cbdfb55b42bf3e06b43497931a78753dd7f9"
+checksum = "d26daca26f47551f1d5369cfbfe57ba4ba144e67945ef2c7e86545dbf1b26279"
 dependencies = [
  "ahash",
  "bin-encode-decode",
@@ -1027,6 +1035,7 @@ dependencies = [
  "hot-restart",
  "hyperlane-broadcast",
  "hyperlane-log",
+ "hyperlane-plugin-websocket",
  "log",
  "lombok-macros",
  "num_cpus",
@@ -1286,9 +1295,9 @@ checksum = "13dc2df351e3202783a1fe0d44375f7295ffb4049267b0f3018346dc122a1d94"
 
 [[package]]
 name = "lombok-macros"
-version = "1.11.4"
+version = "1.12.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "10cee2ce690915c2b491c9ea0d2d8e3daa3e30bcc55cc15fd9297b2566c4522e"
+checksum = "009c79e9d87f8b0a79b8350fc03ffeb9d4cefd632c47c3b7ea1f2fba72d70ade"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1628,11 +1637,10 @@ dependencies = [
 
 [[package]]
 name = "recoverable-thread-pool"
-version = "2.3.7"
+version = "2.3.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "47914cafb04d7ac1e20031c17f7831c282d7ed730c86be0480c4db6347b339c5"
+checksum = "61323b7a7b470393e0a2ef3383ac50c2e19012b4aacea1101051a7cf8dc593fc"
 dependencies = [
- "lombok-macros",
  "recoverable-spawn",
  "tokio",
 ]
