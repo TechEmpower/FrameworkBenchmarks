@@ -1,9 +1,11 @@
-import os
-import socket
 import multiprocessing
+import os
+import platform
+import socket
+
 from aiohttp import web
+
 from .main import create_app
-import uvloop
 
 SERVERS_COUNT = multiprocessing.cpu_count()
 BACKLOG = 2048
@@ -12,7 +14,9 @@ SOCKET_BACKLOG = BACKLOG * SERVERS_COUNT
 def start_server(sock, cpu_id):
     if hasattr(os, "sched_setaffinity"):
         os.sched_setaffinity(0, {cpu_id})
-    uvloop.install()
+    if platform.python_implementation() != "PyPy":
+        import uvloop
+        uvloop.install()
     app = create_app()
 
     web.run_app(app, sock=sock, backlog=BACKLOG, access_log=None)

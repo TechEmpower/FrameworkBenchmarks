@@ -33,9 +33,7 @@ default = []
 simd-json = ["dep:simd-json", "dep:mime", "dep:serde_path_to_error"]
 
 [dependencies]
-rama = { version = "0.2.0-alpha.11", default-features = false, features = [
-    "http-full",
-] }
+rama = { version = "0.2.0", default-features = false, features = ["http-full"] }
 deadpool = { version = "0.12", features = ["rt_tokio_1", "serde", "managed"] }
 deadpool-postgres = { version = "0.14", features = ["rt_tokio_1", "serde"] }
 dotenv = "0.15"

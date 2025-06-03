@@ -36,7 +36,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class App extends AbstractVerticle implements Handler<HttpServerRequest> {
+public class App extends VerticleBase implements Handler<HttpServerRequest> {
 
   private static final int NUM_PROCESSORS = Runtime.getRuntime().availableProcessors();
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(App.class);
@@ -147,7 +147,7 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
   }
 
   @Override
-  public void start(Promise<Void> startPromise) throws Exception {
+  public Future<?> start() throws Exception {
     int port = 8080;
     server = vertx
             .createHttpServer(new HttpServerOptions()
@@ -173,13 +173,11 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
     options.setPreparedStatementCacheMaxSize(1024);
     options.setPipeliningLimit(256); // Large pipelining means less flushing and we use a single connection anyway
     Future<?> clientsInit = initClients(options);
-    clientsInit
+    return clientsInit
             .transform(ar -> {
               databaseErr = ar.cause();
               return server.listen(port);
-            })
-            .<Void>mapEmpty()
-            .onComplete(startPromise);
+            });
   }
 
   private Future<?> initClients(PgConnectOptions options) {
@@ -275,8 +273,8 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
   }
 
   @Override
-  public void stop() {
-    if (server != null) server.close();
+  public Future<?> stop() throws Exception {
+    return server != null ? server.close() : super.stop();
   }
 
   private void sendError(HttpServerRequest req, Throwable cause) {
@@ -338,7 +336,7 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
     }
 
     private void handle() {
-      client.group(c -> {
+      client.group(/*queries, */c -> {
         for (int i = 0; i < queries; i++) {
           c.preparedQuery(SELECT_WORLD)
                   .execute(Tuple.of(boxedRandomWorldNumber()))
@@ -385,7 +383,7 @@ public class App extends AbstractVerticle implements Handler<HttpServerRequest> 
     }
 
     public void handle() {
-      client.group(c -> {
+      client.group(/*worldsToUpdate.length, */c -> {
         final PreparedQuery<RowSet<Row>> preparedQuery = c.preparedQuery(App.SELECT_WORLD);
         for (int i = 0; i < worldsToUpdate.length; i++) {
           final Integer id = boxedRandomWorldNumber();
