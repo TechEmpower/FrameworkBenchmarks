@@ -1,20 +1,23 @@
 use bytes::Bytes;
 use sib::network::http::{
+    h1::{H1Service, H1ServiceFactory},
     message::Status,
-    server::{H1ServiceFactory, HttpService},
     session::Session,
 };
-use std::fs;
+use std::{
+    fs,
+    io::{Read, Write},
+};
 
 #[global_allocator]
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
 struct H1Server<T>(pub T);
 
-struct H1Service;
+struct HService;
 
-impl HttpService for H1Service {
-    fn call(&mut self, session: &mut Session) -> std::io::Result<()> {
+impl H1Service for HService {
+    fn call<S: Read + Write>(&mut self, session: &mut Session<S>) -> std::io::Result<()> {
         session
             .status_code(Status::Ok)
             .header("Content-Type", "text/plain")?
@@ -25,11 +28,11 @@ impl HttpService for H1Service {
     }
 }
 
-impl H1ServiceFactory for H1Server<H1Service> {
-    type Service = H1Service;
+impl H1ServiceFactory for H1Server<HService> {
+    type Service = HService;
 
-    fn service(&self, _id: usize) -> H1Service {
-        H1Service
+    fn service(&self, _id: usize) -> HService {
+        HService
     }
 }
 
@@ -56,7 +59,7 @@ fn main() {
 
     // Pick a port and start the server
     let addr = "0.0.0.0:8080";
-    H1Server(H1Service)
+    H1Server(HService)
         .start(addr)
         .expect("h1 server failed to start")
         .join()
