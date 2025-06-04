@@ -1001,16 +1001,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "hyperlane-plugin-websocket"
-version = "0.4.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "573c885f47a83785d37a5d7793ed7c6cc22df07032833dacb0c10fcd9a46aca9"
-dependencies = [
- "hyperlane",
- "hyperlane-broadcast",
-]
-
-[[package]]
 name = "hyperlane-time"
 version = "0.5.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1018,9 +1008,9 @@ checksum = "c145707425cdd097e117e8b4ee8baeaf8eb265658a5c37d2c4aa0b24fd26a507"
 
 [[package]]
 name = "hyperlane-utils"
-version = "0.15.3"
+version = "0.16.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "60b80d64f39d942da7f4b9371dddbfd4568c5d7b1bdf52b83f954d961c6be802"
+checksum = "cce8fa4a2f74cb8204312604036aa86026f33f0b36a9343a69b53d5f68977978"
 dependencies = [
  "ahash",
  "bin-encode-decode",
@@ -1035,7 +1025,6 @@ dependencies = [
  "hot-restart",
  "hyperlane-broadcast",
  "hyperlane-log",
- "hyperlane-plugin-websocket",
  "log",
  "lombok-macros",
  "num_cpus",
