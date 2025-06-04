@@ -3,7 +3,7 @@ WORKDIR /t-io
 COPY pom.xml pom.xml
 COPY src src
 COPY script script
-RUN mvn clean package -q
+RUN mvn package -q
 
 FROM openjdk:21-jdk-slim
 WORKDIR /t-io/target/tio-http-server-benchmark
