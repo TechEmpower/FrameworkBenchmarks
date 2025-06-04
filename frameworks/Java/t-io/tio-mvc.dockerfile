@@ -7,6 +7,7 @@ RUN mvn package -q
 
 FROM openjdk:21-jdk-slim
 WORKDIR /t-io/target/tio-http-server-benchmark
+COPY --from=maven /t-io/target/tio-http-server-benchmark/ ./
 
 EXPOSE 8080
 
