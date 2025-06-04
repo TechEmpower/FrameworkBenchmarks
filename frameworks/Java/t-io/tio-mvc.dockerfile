@@ -15,6 +15,7 @@ RUN mvn clean package -q
 FROM openjdk:21-jdk-slim
 # 切换到与第一阶段输出目录对应的工作目录
 WORKDIR /t-io/target/tio-http-server-benchmark
+COPY --from=maven /t-io/target/tio-http-server-benchmark/ ./
 
 # 将第一阶段 build 中生成的整个目录复制过来，
 # 包含：
