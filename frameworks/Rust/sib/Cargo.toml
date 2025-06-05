@@ -13,7 +13,7 @@ readme = "README.md"
 
 [dependencies]
 sib = { git = "https://github.com/PooyaEimandar/sib", default-features = false, features = [
-    "http-server",
+    "h1-server",
 ] }
 bytes = { version = "1.10.1", default-features = false }
 num_cpus = { version = "1.16" }
