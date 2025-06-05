@@ -18,3 +18,7 @@ sib = { git = "https://github.com/PooyaEimandar/sib", default-features = false, 
 bytes = { version = "1.10.1", default-features = false }
 mimalloc = { version = "0.1.46", features = ["secure"] }
 num_cpus = { version = "1.16" }
+
+[profile.release]
+opt-level = 3
+codegen-units = 1
