@@ -27,6 +27,7 @@ READ_ROW_SQL = 'SELECT "randomnumber", "id" FROM "world" WHERE id = $1'
 READ_SELECT_ORM = select(World.randomnumber).where(World.id == bindparam("id"))
 READ_FORTUNES_ORM = select(Fortune.id, Fortune.message)
 WRITE_ROW_SQL = 'UPDATE "world" SET "randomnumber"=$2 WHERE id=$1'
+WRITE_ROW_BATCH_SQL = 'UPDATE "world" w SET "randomnumber"=u.new_val FROM (SELECT unnest($1::int[]) as id, unnest($2::int[]) as new_val) u WHERE w.id = u.id'
 
 template_path = Path(__file__).parent / 'templates' / 'fortune.jinja'
 template = jinja2.Template(template_path.read_text())
@@ -155,15 +156,20 @@ async def updates_raw(request):
     num_queries = get_num_queries(request)
     update_ids = sample(range(1, 10001), num_queries)
     update_ids.sort()
-    fetch_params = tuple((i, ) for i in update_ids)
-    updates = tuple(zip(update_ids, sample(range(1, 10001), num_queries)))
-    worlds = [{'id': row_id, 'randomNumber': number} for row_id, number in updates]
+
+    numbers = sample(range(1, 10001), num_queries)
+    fetch_params = [(i,) for i in update_ids]
+    row_updates = [*zip(update_ids, numbers)]
 
     async with request.app['pg'].acquire() as conn:
         # the result of this is the int previous random number which we don't actually use
         await conn.executemany(READ_ROW_SQL, fetch_params)
-        await conn.executemany(WRITE_ROW_SQL, updates)
+        if num_queries <= 5:
+            await conn.executemany(WRITE_ROW_SQL, row_updates)
+        else:
+            await conn.execute(WRITE_ROW_BATCH_SQL, update_ids, numbers)
 
+    worlds = [{'id': row_id, 'randomNumber': number} for row_id, number in row_updates]
     return json_response(worlds)
 
 
