@@ -60,7 +60,7 @@ fn main() {
     // Pick a port and start the server
     let addr = "0.0.0.0:8080";
     H1Server(HService)
-        .start(addr)
+        .start(addr, cpus)
         .expect("h1 server failed to start")
         .join()
         .expect("h1 failed on joining thread");
