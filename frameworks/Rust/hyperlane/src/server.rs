@@ -19,7 +19,7 @@ async fn init_server() {
     server.disable_nodelay().await;
     server.error_handle(|_: String| {}).await;
     server.http_line_buffer_size(256).await;
-    server.websocket_buffer_size(256).await;
+    server.ws_buffer_size(256).await;
     server.request_middleware(request_middleware::request).await;
     #[cfg(any(feature = "dev", feature = "plaintext"))]
     server.route("/plaintext", route::plaintext).await;
