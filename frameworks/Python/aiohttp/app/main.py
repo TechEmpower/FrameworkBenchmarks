@@ -49,10 +49,10 @@ def pg_dsn(dialect=None) -> str:
 async def db_ctx(app: web.Application):
     # number of gunicorn workers = multiprocessing.cpu_count() as per gunicorn_conf.py
     # max_connections = 2000 as per toolset/setup/linux/databases/postgresql/postgresql.conf:64
-    # give 10% leeway
-    max_size = min(1800 / multiprocessing.cpu_count(), 160)
-    max_size = max(int(max_size), 1)
-    min_size = max(int(max_size / 2), 1)
+    # but we have only 10k rows in the world table, so we must use a small connection pool
+    # also target machine has 56 cores
+    max_size = 3
+    min_size = 3
     print(f'connection pool: min size: {min_size}, max size: {max_size}, orm: {CONNECTION_ORM}')
     if CONNECTION_ORM:
         dsn = pg_dsn('asyncpg')
