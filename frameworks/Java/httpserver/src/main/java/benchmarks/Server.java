@@ -132,7 +132,7 @@ public class Server {
             System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "DEBUG");
         // create server
         HttpServer server = HttpServer.create(new InetSocketAddress(port), 1024 * 8);
-        server.setExecutor(Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()));
+        server.setExecutor(Executors.newVirtualThreadPerTaskExecutor());
         // add context handlers
         server.createContext("/plaintext", createPlaintextHandler());
         server.createContext("/json", createJSONHandler());
