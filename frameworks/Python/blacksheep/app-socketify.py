@@ -13,8 +13,9 @@ READ_ROW_SQL = 'SELECT "id", "randomnumber" FROM "world" WHERE id = %s'
 WRITE_ROW_SQL = 'UPDATE "world" SET "randomnumber"=%s WHERE id=%s'
 ADDITIONAL_ROW = [0, "Additional fortune added at request time."]
 CORE_COUNT = multiprocessing.cpu_count()
+MAX_DB_CONNECTIONS = 2000
 
-MAX_POOL_SIZE = CORE_COUNT * 2
+MAX_POOL_SIZE = min(CORE_COUNT * 2, MAX_DB_CONNECTIONS // CORE_COUNT, 32)
 MIN_POOL_SIZE = max(1, MAX_POOL_SIZE // 2)
 db_pool = None
 
