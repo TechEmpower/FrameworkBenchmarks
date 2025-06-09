@@ -969,9 +969,9 @@ checksum = "df3b46402a9d5adb4c86a0cf463f42e19994e3ee891101b1841f30a545cb49a9"
 
 [[package]]
 name = "hyperlane"
-version = "5.27.1"
+version = "5.27.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5a51968bf938b6bbb27958872968e9b6e6734df28269a17b9b1bb3c64f7041ee"
+checksum = "0ac6e7a9b7f17fd6f10200ffa9d28a6cb4bb468efb5c85dbfa5d3a226882e0c8"
 dependencies = [
  "http-type",
  "hyperlane-macros",
