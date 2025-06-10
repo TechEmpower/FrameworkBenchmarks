@@ -1,7 +1,6 @@
 import platform
 from operator import attrgetter, itemgetter
 from pathlib import Path
-from random import randint, sample
 
 import jinja2
 from aiohttp.web import Response
@@ -9,6 +8,7 @@ from sqlalchemy import bindparam, select
 from sqlalchemy.orm.attributes import flag_modified
 
 from .models import Fortune, World
+from .random_utils import random_id, random_unique_ids
 
 if platform.python_implementation() == "PyPy":
     from aiohttp.web import json_response
@@ -23,6 +23,7 @@ else:
 
 ADDITIONAL_FORTUNE_ORM = Fortune(id=0, message='Additional fortune added at request time.')
 ADDITIONAL_FORTUNE_ROW = {'id': 0, 'message': 'Additional fortune added at request time.'}
+JSON_MESSAGE = {'message': 'Hello, World!'}
 READ_ROW_SQL = 'SELECT "randomnumber", "id" FROM "world" WHERE id = $1'
 READ_SELECT_ORM = select(World.randomnumber).where(World.id == bindparam("id"))
 READ_FORTUNES_ORM = select(Fortune.id, Fortune.message)
@@ -34,6 +35,7 @@ template = jinja2.Template(template_path.read_text())
 sort_fortunes_orm = attrgetter('message')
 sort_fortunes_raw = itemgetter('message')
 
+db_query_id_params = [(i,) for i in range(0, 10002)]
 
 def get_num_queries(request):
     try:
@@ -51,14 +53,14 @@ async def json(request):
     """
     Test 1
     """
-    return json_response({'message': 'Hello, World!'})
+    return json_response(JSON_MESSAGE)
 
 
 async def single_database_query_orm(request):
     """
     Test 2 ORM
     """
-    id_ = randint(1, 10000)
+    id_ = random_id()
     async with request.app['db_session']() as sess:
         num = await sess.scalar(READ_SELECT_ORM, {"id": id_})
     return json_response({'id': id_, 'randomNumber': num})
@@ -68,7 +70,7 @@ async def single_database_query_raw(request):
     """
     Test 2 RAW
     """
-    id_ = randint(1, 10000)
+    id_ = random_id()
 
     async with request.app['pg'].acquire() as conn:
         r = await conn.fetchval(READ_ROW_SQL, id_)
@@ -81,7 +83,7 @@ async def multiple_database_queries_orm(request):
     """
     num_queries = get_num_queries(request)
 
-    ids = [randint(1, 10000) for _ in range(num_queries)]
+    ids = random_unique_ids(num_queries)
 
     result = []
     async with request.app['db_session']() as sess:
@@ -96,12 +98,13 @@ async def multiple_database_queries_raw(request):
     Test 3 RAW
     """
     num_queries = get_num_queries(request)
-
-    ids = [(randint(1, 10000), ) for _ in range(num_queries)]
+    ids = random_unique_ids(num_queries)
+    id_params = [db_query_id_params[id_] for id_ in ids]
 
     async with request.app['pg'].acquire() as conn:
-        rows = await conn.fetchmany(READ_ROW_SQL, ids)
-        result = [{'id': id_[0], 'randomNumber': row[0]} for id_, row in zip(ids, rows)]
+        rows = await conn.fetchmany(READ_ROW_SQL, id_params)
+
+    result = [{'id': id_, 'randomNumber': row[0]} for id_, row in zip(ids, rows)]
     return json_response(result)
 
 
@@ -135,9 +138,10 @@ async def updates(request):
     Test 5 ORM
     """
     num_queries = get_num_queries(request)
-    update_ids = sample(range(1, 10001), num_queries)
+    update_ids = random_unique_ids(num_queries)
     update_ids.sort()
-    updates = tuple(zip(update_ids, sample(range(1, 10001), num_queries)))
+
+    updates = [*zip(update_ids, random_unique_ids(num_queries))]
     worlds = [{'id': row_id, 'randomNumber': number} for row_id, number in updates]
 
     async with request.app['db_session'].begin() as sess:
@@ -154,12 +158,13 @@ async def updates_raw(request):
     Test 5 RAW
     """
     num_queries = get_num_queries(request)
-    update_ids = sample(range(1, 10001), num_queries)
+    update_ids = random_unique_ids(num_queries)
     update_ids.sort()
 
-    numbers = sample(range(1, 10001), num_queries)
-    fetch_params = [(i,) for i in update_ids]
+    numbers = random_unique_ids(num_queries)
     row_updates = [*zip(update_ids, numbers)]
+
+    fetch_params = [db_query_id_params[i] for i in update_ids]
 
     async with request.app['pg'].acquire() as conn:
         # the result of this is the int previous random number which we don't actually use
