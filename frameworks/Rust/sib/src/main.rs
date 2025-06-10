@@ -59,9 +59,23 @@ fn main() {
 
     // Pick a port and start the server
     let addr = "0.0.0.0:8080";
-    H1Server(HService)
-        .start(addr, cpus)
-        .expect("h1 server failed to start")
-        .join()
-        .expect("h1 failed on joining thread");
+    let mut threads = Vec::with_capacity(cpus);
+
+    for _ in 0..cpus {
+        let handle = std::thread::spawn(move || {
+            let id = std::thread::current().id();
+            println!("Listening {} on thread: {:?}", addr, id);
+            H1Server(HService)
+                .start(addr, cpus)
+                .expect(&format!("h1 server failed to start for thread {:?}", id))
+                .join()
+                .expect(&format!("h1 server failed to joining thread {:?}", id));
+        });
+        threads.push(handle);
+    }
+
+    // Wait for all threads to complete (they won’t unless crashed)
+    for handle in threads {
+        handle.join().expect("Thread panicked");
+    }
 }
