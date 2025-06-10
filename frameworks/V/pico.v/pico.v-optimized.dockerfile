@@ -12,4 +12,4 @@ RUN git clone https://github.com/S-YOU/pico.v src && cd src && git checkout v0.0
 
 EXPOSE 8088
 
-CMD ./main
+CMD sh run.sh

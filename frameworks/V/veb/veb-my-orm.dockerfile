@@ -3,7 +3,7 @@ RUN apt update && \
     apt install -y libpq-dev default-libmysqlclient-dev
 
 WORKDIR /app
-COPY ./veb-pg/* ./
+COPY ./veb-my-orm/* ./
 RUN v -prod -o veb .
 
 EXPOSE 8080
