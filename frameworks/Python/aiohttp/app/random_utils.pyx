@@ -1,62 +1,47 @@
 # cython: boundscheck=False
 # cython: wraparound=False
 # cython: initializedcheck=False
+# cython: cdivision=True
 
 from libc.stdlib cimport calloc, free
 
-import cython
-import os
+import random
 
 # Constants
-cdef unsigned int MAX_VALUE = 10000
+cdef const unsigned short MAX_VALUE = 10000
 # https://statmath.wu.ac.at/software/src/prng-3.0.2/doc/prng.html/Table_LCG.html
-cdef unsigned int MODULOS = 134217689
+cdef const unsigned int MODULOS = 134217689
+cdef const unsigned long LCG_MULTIPLIER = 3162696
+
 cdef unsigned int RANDOM_THRESHOLD = MODULOS - (MODULOS % MAX_VALUE)
-cdef unsigned int LCG_MULTIPLIER = 3162696
-cdef bint* seen = <bint*>calloc(MAX_VALUE + 1, sizeof(bint))  # Bit array simulation
+cdef char* seen = <char*>calloc(MAX_VALUE + 1, sizeof(char))  # Bit array simulation
 
-cdef unsigned long seed = 0
+cdef unsigned int seed = random.randint(1, MODULOS-1)
 
-cdef void _init_seed():
-    global seed
-    cdef bytes random_bytes = os.urandom(4)
-    seed = int.from_bytes(random_bytes, byteorder='little') % MODULOS
-
-    if seed == 0:
-        seed = 1  # Ensure seed is never zero to avoid low number cycle
-
-_init_seed()
-
-@cython.boundscheck(False)
-@cython.wraparound(False)
 cdef inline unsigned int _next_random() noexcept nogil:
     """Generate a pseudo-random number based on a linear congruential generator"""
     global seed
 
-    cdef unsigned long next_val = (<unsigned long>LCG_MULTIPLIER * seed) % MODULOS
+    cdef unsigned int next_val = (LCG_MULTIPLIER * seed) % MODULOS
 
     while next_val >= RANDOM_THRESHOLD:
-        next_val = (next_val * LCG_MULTIPLIER) % MODULOS
+        next_val = (LCG_MULTIPLIER * next_val) % MODULOS
 
     seed = next_val
     return seed
 
-@cython.boundscheck(False)
-@cython.wraparound(False)
-cpdef unsigned int random_id() noexcept nogil:
+cpdef unsigned short random_id() noexcept nogil:
     """Generate a pseudo-random number in range [1, MAX_VALUE]"""
     return 1 + (_next_random() % MAX_VALUE)
 
-@cython.boundscheck(False) 
-@cython.wraparound(False)
-cpdef list[unsigned int] random_unique_ids(int n):
+cpdef list[unsigned short] random_unique_ids(unsigned short n):
     """Generate n unique random IDs in range[1, 10001]"""
-    cdef list[int] result = [0] * n
-    cdef int candidate, count = 0
+    cdef list[unsigned short] result = [0] * n
+    cdef unsigned short candidate, count = 0
 
     try:
         while count < n:
-            candidate = random_id()
+            candidate = 1 + (_next_random() % MAX_VALUE)
 
             if seen[candidate] == 0:  # Not seen before
                 seen[candidate] = 1
