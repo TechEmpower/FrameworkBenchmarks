@@ -2,10 +2,10 @@
 # cython: wraparound=False
 # cython: initializedcheck=False
 
-from libc.stdlib cimport rand, srand, calloc, free
-from libc.time cimport time
+from libc.stdlib cimport calloc, free
 
 import cython
+import os
 
 # Constants
 cdef unsigned int MAX_VALUE = 10000
@@ -19,8 +19,8 @@ cdef unsigned long seed = 0
 
 cdef void _init_seed():
     global seed
-    srand(<unsigned long>time(NULL))
-    seed = rand() % MAX_VALUE
+    cdef bytes random_bytes = os.urandom(4)
+    seed = int.from_bytes(random_bytes, byteorder='little') % MODULOS
 
     if seed == 0:
         seed = 1  # Ensure seed is never zero to avoid low number cycle
