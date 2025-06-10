@@ -20,13 +20,13 @@
         <dependency>
             <groupId>tech.smartboot.feat</groupId>
             <artifactId>feat-cloud-starter</artifactId>
-            <version>0.9.0</version>
+            <version>1.1.0-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>io.github.smartboot.socket</groupId>
-            <artifactId>aio-pro</artifactId>
-            <version>1.5.62-SNAPSHOT</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>io.github.smartboot.socket</groupId>-->
+<!--            <artifactId>aio-pro</artifactId>-->
+<!--            <version>1.5.62-SNAPSHOT</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>tech.smartboot.servlet</groupId>
             <artifactId>servlet-core</artifactId>
