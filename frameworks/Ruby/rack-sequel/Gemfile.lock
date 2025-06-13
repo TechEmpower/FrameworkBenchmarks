@@ -8,7 +8,7 @@ GEM
     pg (1.5.9)
     puma (6.6.0)
       nio4r (~> 2.0)
-    rack (3.1.11)
+    rack (3.1.16)
     sequel (5.90.0)
       bigdecimal
     sequel_pg (1.17.1)
@@ -25,7 +25,7 @@ DEPENDENCIES
   mysql2 (~> 0.4)
   pg (~> 1.5)
   puma (~> 6.5)
-  rack (~> 3.0)
+  rack (~> 3.1)
   sequel (~> 5.0)
   sequel_pg (~> 1.6)
 
