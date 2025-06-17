@@ -4,7 +4,7 @@ RUN apt update && \
 
 WORKDIR /app
 COPY ./veb-pg/* ./
-RUN v -prod -o veb .
+RUN v -prod -cc clang -cflags '-std=gnu11 -Wall -O3 -march=native -mtune=native -flto' -o veb .
 
 EXPOSE 8080
 CMD ./veb
