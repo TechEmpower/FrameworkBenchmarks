@@ -117,18 +117,15 @@ impl PgConnection {
         });
         ids.sort();
 
-        let _ = (0..num)
-            .map(|idx| {
-                worlds.push(World {
-                    id: ids[idx],
-                    randomnumber: numbers[idx],
-                });
-                self.cl.query_one(&self.world, &[&ids[idx]])
-            })
-            .last()
-            .unwrap()
-            .await;
-        self.cl
+        (0..num).map(|idx| {
+            worlds.push(World {
+                id: ids[idx],
+                randomnumber: numbers[idx],
+            });
+            self.cl.query_one(&self.world, &[&ids[idx]])
+        });
+        let _ = self
+            .cl
             .query(&self.updates, &[&ids, &numbers])
             .await
             .unwrap();
