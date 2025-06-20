@@ -109,6 +109,7 @@ impl PgConnection {
         let mut ids = Vec::with_capacity(num);
         let mut numbers = Vec::with_capacity(num);
         let mut worlds = SmallVec::<[_; 32]>::new();
+        let mut queries = SmallVec::<[_; 32]>::new();
 
         (0..num).for_each(|_| {
             let w_id = (rng.generate::<u32>() % 10_000 + 1) as i32;
@@ -122,7 +123,7 @@ impl PgConnection {
                 id: ids[idx],
                 randomnumber: numbers[idx],
             });
-            let _ = self.cl.query_one(&self.world, &[&ids[idx]]);
+            queries.push(self.cl.query_one(&self.world, &[&ids[idx]]));
         });
         let _ = self
             .cl
