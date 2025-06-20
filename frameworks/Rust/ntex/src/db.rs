@@ -2,9 +2,9 @@ use std::{borrow::Cow, cell::RefCell};
 
 use nanorand::{Rng, WyRand};
 use ntex::util::{Bytes, BytesMut};
+use smallvec::SmallVec;
 use tokio_postgres::{connect, Client, Statement};
 use yarte::TemplateBytesTrait;
-use smallvec::SmallVec;
 
 use super::utils;
 
@@ -108,27 +108,30 @@ impl PgConnection {
         let mut rng = nanorand::tls_rng();
         let mut ids = Vec::with_capacity(num);
         let mut numbers = Vec::with_capacity(num);
-        let mut queries = SmallVec::<[_; 32]>::new();
+        let mut worlds = SmallVec::<[_; 32]>::new();
 
         (0..num).for_each(|_| {
             let w_id = (rng.generate::<u32>() % 10_000 + 1) as i32;
             ids.push(w_id);
             numbers.push((rng.generate::<u32>() % 10_000 + 1) as i32);
-            queries.push(self.cl.query_one(&self.world, &[&w_id]));
         });
         ids.sort();
 
-        for fut in queries.into_iter() {
-            fut.await.unwrap();
-        }
-
-        let mut worlds = Vec::with_capacity(num);
-        for row in self.cl.query(&self.updates, &[&ids, &numbers]).await.unwrap() {
-            worlds.push(World {
-                id: row.get(0),
-                randomnumber: row.get(1)
-            });
-        }
+        let _ = (0..num)
+            .map(|idx| {
+                worlds.push(World {
+                    id: ids[idx],
+                    randomnumber: numbers[idx],
+                });
+                self.cl.query_one(&self.world, &[&ids[idx]])
+            })
+            .last()
+            .unwrap()
+            .await;
+        self.cl
+            .query(&self.updates, &[&ids, &numbers])
+            .await
+            .unwrap();
 
         let mut body = self.buf.borrow_mut();
         utils::reserve(&mut body, 2 * 1024);
