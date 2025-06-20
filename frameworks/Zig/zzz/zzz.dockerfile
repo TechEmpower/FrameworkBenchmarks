@@ -9,8 +9,8 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-ARG ZIG_VER=0.14.0
-RUN wget https://ziglang.org/download/${ZIG_VER}/zig-linux-$(uname -m)-${ZIG_VER}.tar.xz
+ARG ZIG_VER=0.14.1
+RUN wget https://ziglang.org/download/${ZIG_VER}/zig-$(uname -m)-linux-${ZIG_VER}.tar.xz
 
 RUN tar -xvf zig-linux-$(uname -m)-${ZIG_VER}.tar.xz
 
