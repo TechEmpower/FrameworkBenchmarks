@@ -117,12 +117,12 @@ impl PgConnection {
         });
         ids.sort();
 
-        (0..num).map(|idx| {
+        (0..num).for_each(|idx| {
             worlds.push(World {
                 id: ids[idx],
                 randomnumber: numbers[idx],
             });
-            self.cl.query_one(&self.world, &[&ids[idx]])
+            let _ = self.cl.query_one(&self.world, &[&ids[idx]]);
         });
         let _ = self
             .cl
