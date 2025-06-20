@@ -10,7 +10,7 @@
     "mongoose": "8.9.5",
     "mysql2": "3.9.8",
     "pg": "8.5.0",
-    "pg-promise": "10.7.3",
+    "pg-promise": "11.5.5",
     "pug": "3.0.3",
     "postgres": "^3.4.3",
     "slow-json-stringify": "^2.0.1",
