@@ -12,9 +12,9 @@ RUN apt-get update && \
 ARG ZIG_VER=0.14.1
 RUN wget https://ziglang.org/download/${ZIG_VER}/zig-$(uname -m)-linux-${ZIG_VER}.tar.xz
 
-RUN tar -xvf zig-linux-$(uname -m)-${ZIG_VER}.tar.xz
+RUN tar -xvf zig-$(uname -m)-linux-${ZIG_VER}.tar.xz
 
-RUN mv zig-linux-$(uname -m)-${ZIG_VER} /usr/local/zig 
+RUN mv zig-$(uname -m)-linux-${ZIG_VER} /usr/local/zig 
 
 ENV PATH="/usr/local/zig:$PATH"
 
