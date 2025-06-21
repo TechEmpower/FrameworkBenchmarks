@@ -1020,9 +1020,9 @@ checksum = "c145707425cdd097e117e8b4ee8baeaf8eb265658a5c37d2c4aa0b24fd26a507"
 
 [[package]]
 name = "hyperlane-utils"
-version = "0.17.1"
+version = "0.18.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ebe33ccb4333deb4f3bb5f101cdc944dc04a7e238e78934e4162029dfc33ef84"
+checksum = "98bd421d7b580ddbca85a490f08973ead09b3dd3ac778d3a1cf5b3fe41599d86"
 dependencies = [
  "ahash",
  "bin-encode-decode",
