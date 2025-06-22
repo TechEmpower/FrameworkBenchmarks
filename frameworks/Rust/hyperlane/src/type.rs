@@ -1,4 +1,4 @@
-use crate::*;
+use super::*;
 
 pub type DbPoolConnection = Pool<Postgres>;
 pub type Queries = i32;

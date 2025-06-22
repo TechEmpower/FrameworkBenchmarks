@@ -1,14 +1,25 @@
+import platform
 from operator import attrgetter, itemgetter
 from pathlib import Path
 from random import randint, sample
 
 import jinja2
 from aiohttp.web import Response
-from orjson import dumps
 from sqlalchemy import bindparam, select
 from sqlalchemy.orm.attributes import flag_modified
 
 from .models import Fortune, World
+
+if platform.python_implementation() == "PyPy":
+    from aiohttp.web import json_response
+else:
+    from orjson import dumps
+
+    def json_response(payload):
+        return Response(
+            body=dumps(payload),
+            content_type="application/json",
+        )
 
 ADDITIONAL_FORTUNE_ORM = Fortune(id=0, message='Additional fortune added at request time.')
 ADDITIONAL_FORTUNE_ROW = {'id': 0, 'message': 'Additional fortune added at request time.'}
@@ -16,6 +27,7 @@ READ_ROW_SQL = 'SELECT "randomnumber", "id" FROM "world" WHERE id = $1'
 READ_SELECT_ORM = select(World.randomnumber).where(World.id == bindparam("id"))
 READ_FORTUNES_ORM = select(Fortune.id, Fortune.message)
 WRITE_ROW_SQL = 'UPDATE "world" SET "randomnumber"=$2 WHERE id=$1'
+WRITE_ROW_BATCH_SQL = 'UPDATE "world" w SET "randomnumber"=u.new_val FROM (SELECT unnest($1::int[]) as id, unnest($2::int[]) as new_val) u WHERE w.id = u.id'
 
 template_path = Path(__file__).parent / 'templates' / 'fortune.jinja'
 template = jinja2.Template(template_path.read_text())
@@ -25,21 +37,14 @@ sort_fortunes_raw = itemgetter('message')
 
 def get_num_queries(request):
     try:
-        num_queries = int(request.match_info.get('queries', 1))
-    except ValueError:
+        num_queries = int(request.match_info['queries'])
+    except (KeyError, ValueError):
         return 1
     if num_queries < 1:
         return 1
     if num_queries > 500:
         return 500
     return num_queries
-
-
-def json_response(payload):
-    return Response(
-        body=dumps(payload),
-        content_type="application/json",
-    )
 
 
 async def json(request):
@@ -151,15 +156,20 @@ async def updates_raw(request):
     num_queries = get_num_queries(request)
     update_ids = sample(range(1, 10001), num_queries)
     update_ids.sort()
-    fetch_params = tuple((i, ) for i in update_ids)
-    updates = tuple(zip(update_ids, sample(range(1, 10001), num_queries)))
-    worlds = [{'id': row_id, 'randomNumber': number} for row_id, number in updates]
+
+    numbers = sample(range(1, 10001), num_queries)
+    fetch_params = [(i,) for i in update_ids]
+    row_updates = [*zip(update_ids, numbers)]
 
     async with request.app['pg'].acquire() as conn:
         # the result of this is the int previous random number which we don't actually use
         await conn.executemany(READ_ROW_SQL, fetch_params)
-        await conn.executemany(WRITE_ROW_SQL, updates)
+        if num_queries <= 5:
+            await conn.executemany(WRITE_ROW_SQL, row_updates)
+        else:
+            await conn.execute(WRITE_ROW_BATCH_SQL, update_ids, numbers)
 
+    worlds = [{'id': row_id, 'randomNumber': number} for row_id, number in row_updates]
     return json_response(worlds)
 
 
