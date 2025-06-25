@@ -1,0 +1,2 @@
+nexios==2.4.14
+git+https://github.com/cirospaciari/socketify.py.git@main#socketify 
