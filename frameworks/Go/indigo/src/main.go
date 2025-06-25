@@ -35,9 +35,9 @@ func main() {
 
 	router.Resource("/json").Get(app.HandleJSON)
 	router.Resource("/db").Get(app.HandleDB)
-	router.Resource("/queries").Get(app.HandleQueries)
+	router.Resource("/query").Get(app.HandleQueries)
 	router.Resource("/update").Get(app.HandleUpdate)
-	router.Resource("/cached-worlds").Get(app.HandleCachedWorlds)
+	router.Resource("/cached-query").Get(app.HandleCachedWorlds)
 	router.Resource("/fortune").Get(app.HandleFortunes)
 	router.Resource("/plaintext").Get(app.HandlePlaintext)
 

@@ -5,9 +5,9 @@
       "default": {
         "json_url": "/json",
         "db_url": "/db",
-        "query_url": "/queries?n=",
+        "query_url": "/query?n=",
         "update_url": "/update?n=",
-        "cached_query_url": "/cached-worlds?n=",
+        "cached_query_url": "/cached-query?n=",
         "fortune_url": "/fortune",
         "plaintext_url": "/plaintext",
         "port": 8080,
