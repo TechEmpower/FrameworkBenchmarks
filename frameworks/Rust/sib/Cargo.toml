@@ -13,10 +13,10 @@ readme = "README.md"
 
 [dependencies]
 sib = { git = "https://github.com/PooyaEimandar/sib", default-features = false, features = [
-    "h1-server",
+    "net-h1-server",
 ] }
 bytes = { version = "1.10.1", default-features = false }
-mimalloc = { version = "0.1.46", features = ["secure"] }
+mimalloc = { version = "0.1.47", features = ["secure"] }
 num_cpus = { version = "1.16" }
 
 [profile.release]

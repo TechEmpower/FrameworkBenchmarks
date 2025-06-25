@@ -20,8 +20,8 @@ impl H1Service for HService {
     fn call<S: Read + Write>(&mut self, session: &mut Session<S>) -> std::io::Result<()> {
         session
             .status_code(Status::Ok)
-            .header("Content-Type", "text/plain")?
-            .header("Content-Length", "13")?
+            .header_str("Content-Type", "text/plain")?
+            .header_str("Content-Length", "13")?
             .body(&Bytes::from_static(b"Hello, World!"))
             .eom();
         Ok(())
@@ -66,7 +66,7 @@ fn main() {
             let id = std::thread::current().id();
             println!("Listening {} on thread: {:?}", addr, id);
             H1Server(HService)
-                .start(addr, cpus)
+                .start(addr, cpus, 0, None)
                 .expect(&format!("h1 server failed to start for thread {:?}", id))
                 .join()
                 .expect(&format!("h1 server failed to joining thread {:?}", id));
