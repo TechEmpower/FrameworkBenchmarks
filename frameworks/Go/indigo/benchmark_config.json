@@ -8,7 +8,7 @@
         "query_url": "/queries?n=",
         "update_url": "/update?n=",
         "cached_query_url": "/cached-worlds?n=",
-        "fortune_url": "/fortunes",
+        "fortune_url": "/fortune",
         "plaintext_url": "/plaintext",
         "port": 8080,
         "approach": "Realistic",
