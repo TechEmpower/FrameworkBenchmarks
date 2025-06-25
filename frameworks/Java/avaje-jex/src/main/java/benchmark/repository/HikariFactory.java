@@ -5,6 +5,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import io.avaje.config.Config;
 import io.avaje.inject.Bean;
 import io.avaje.inject.Factory;
+import java.util.concurrent.Executors;
 import javax.sql.DataSource;
 
 @Factory
@@ -22,8 +23,21 @@ public class HikariFactory {
       maxPoolSize = Config.getInt("postgresDefaultPoolSize");
     }
 
-    var hikari = new HikariDataSource(new HikariConfig("hikari.properties"));
-    hikari.setMaximumPoolSize(maxPoolSize);
-    return hikari;
+    maxPoolSize = Math.max(maxPoolSize, Runtime.getRuntime().availableProcessors() * 2);
+    HikariConfig hikariConfig = new HikariConfig("hikari.properties");
+
+    var vtThreadFactory = Thread.ofVirtual().factory();
+    hikariConfig.setThreadFactory(vtThreadFactory);
+    hikariConfig.setScheduledExecutor(
+        Executors.newScheduledThreadPool(maxPoolSize, vtThreadFactory));
+
+    // data source properties
+    hikariConfig.addDataSourceProperty("cachePrepStmts", "true");
+    hikariConfig.addDataSourceProperty("prepStmtCacheSize", "250");
+    hikariConfig.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+    hikariConfig.addDataSourceProperty("ssl", "false");
+    hikariConfig.addDataSourceProperty("tcpKeepAlive", "true");
+    hikariConfig.setMaximumPoolSize(maxPoolSize);
+    return new HikariDataSource(hikariConfig);
   }
 }

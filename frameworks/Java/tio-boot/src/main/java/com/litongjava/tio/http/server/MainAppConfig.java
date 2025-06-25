@@ -5,9 +5,9 @@ import com.litongjava.tio.boot.server.TioBootServer;
 import com.litongjava.tio.http.server.config.EhCachePluginConfig;
 import com.litongjava.tio.http.server.config.EnjoyEngineConfig;
 import com.litongjava.tio.http.server.config.MysqlDbConfig;
-import com.litongjava.tio.http.server.controller.CacheHandler;
-import com.litongjava.tio.http.server.controller.DbHandler;
-import com.litongjava.tio.http.server.controller.IndexHandler;
+import com.litongjava.tio.http.server.handler.CacheHandler;
+import com.litongjava.tio.http.server.handler.DbHandler;
+import com.litongjava.tio.http.server.handler.IndexHandler;
 import com.litongjava.tio.http.server.router.HttpRequestRouter;
 import com.litongjava.tio.utils.environment.EnvUtils;
 
@@ -38,7 +38,6 @@ public class MainAppConfig implements BootConfiguration {
     TioBootServer server = TioBootServer.me();
     HttpRequestRouter requestRouter = server.getRequestRouter();
     if (requestRouter != null) {
-      requestRouter.add("/", controller::index);
       requestRouter.add("/plaintext", controller::plaintext);
       requestRouter.add("/json", controller::json);
 

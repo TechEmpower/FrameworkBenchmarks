@@ -14,7 +14,7 @@
     <jooby.version>3.4.0</jooby.version>
     <netty.version>4.1.113.Final</netty.version>
     <dsl-json.version>2.0.2</dsl-json.version>
-    <postgresql.version>42.7.4</postgresql.version>
+    <postgresql.version>42.7.7</postgresql.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>22</maven.compiler.source>
     <maven.compiler.target>22</maven.compiler.target>
