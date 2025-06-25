@@ -57,7 +57,7 @@ func (app *App) HandleDB(request *http.Request) *http.Response {
 	return request.Respond().JSON(world)
 }
 
-func (app *App) HandleQueries(request *http.Request) *http.Response {
+func (app *App) HandleQuery(request *http.Request) *http.Response {
 	n, err := normalizeNumber(request.Params.Get("n"))
 	if err != nil {
 		return http.Error(request, err)
@@ -106,7 +106,7 @@ func (app *App) HandleUpdate(request *http.Request) *http.Response {
 	return request.Respond().JSON(&worlds)
 }
 
-func (app *App) HandleCachedWorlds(request *http.Request) *http.Response {
+func (app *App) HandleCachedQuery(request *http.Request) *http.Response {
 	n, err := normalizeNumber(request.Params.Get("n"))
 	if err != nil {
 		return http.Error(request, err)
@@ -121,7 +121,7 @@ func (app *App) HandleCachedWorlds(request *http.Request) *http.Response {
 	return request.Respond().JSON(&worlds)
 }
 
-func (app *App) HandleFortunes(request *http.Request) *http.Response {
+func (app *App) HandleFortune(request *http.Request) *http.Response {
 	fortunes, err := app.DB.GetFortunes(context.Background())
 	if err != nil {
 		return http.Error(request, err)

@@ -35,10 +35,10 @@ func main() {
 
 	router.Resource("/json").Get(app.HandleJSON)
 	router.Resource("/db").Get(app.HandleDB)
-	router.Resource("/query").Get(app.HandleQueries)
+	router.Resource("/query").Get(app.HandleQuery)
 	router.Resource("/update").Get(app.HandleUpdate)
-	router.Resource("/cached-query").Get(app.HandleCachedWorlds)
-	router.Resource("/fortune").Get(app.HandleFortunes)
+	router.Resource("/cached-query").Get(app.HandleCachedQuery)
+	router.Resource("/fortune").Get(app.HandleFortune)
 	router.Resource("/plaintext").Get(app.HandlePlaintext)
 
 	err = indigo.New(":8080").Serve(router)
