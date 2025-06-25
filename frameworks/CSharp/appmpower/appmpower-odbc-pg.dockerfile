@@ -30,7 +30,7 @@ COPY --from=build /app/out ./
 #TODOGITHUB
 RUN cp /usr/lib/x86_64-linux-gnu/libodbc* /app
 #TODOLOCAL
-RUN cp /usr/lib/aarch64-linux-gnu/libodbc* /app
+#RUN cp /usr/lib/aarch64-linux-gnu/libodbc* /app
 
 EXPOSE 8080
 
