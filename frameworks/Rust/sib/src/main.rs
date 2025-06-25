@@ -18,6 +18,16 @@ struct HService;
 
 impl H1Service for HService {
     fn call<S: Read + Write>(&mut self, session: &mut Session<S>) -> std::io::Result<()> {
+        if session.req_path() == Some("/json") {
+            // Respond with JSON
+            session
+                .status_code(Status::Ok)
+                .header_str("Content-Type", "application/json")?
+                .header_str("Content-Length", "27")?
+                .body(&Bytes::from_static(b"{\"message\":\"Hello, World!\"}"))
+                .eom();
+            return Ok(());
+        }
         session
             .status_code(Status::Ok)
             .header_str("Content-Type", "text/plain")?
