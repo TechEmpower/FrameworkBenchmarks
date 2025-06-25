@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:9.0.100 AS build
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 RUN apt-get update
 RUN apt-get -yqq install clang zlib1g-dev
 RUN apt-get update
@@ -8,7 +8,7 @@ COPY src .
 RUN dotnet publish -c Release -o out /p:Database=mysql
 
 # Construct the actual image that will run
-FROM mcr.microsoft.com/dotnet/aspnet:9.0.0 AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
 
 RUN apt-get update
 # The following installs standard versions unixodbc and pgsqlodbc
@@ -18,6 +18,7 @@ RUN apt-get update
 
 WORKDIR /odbc
 
+#TODOGITHUB
 RUN curl -L -o mariadb-connector-odbc-3.1.20-debian-bookworm-amd64.tar.gz https://downloads.mariadb.com/Connectors/odbc/connector-odbc-3.1.20/mariadb-connector-odbc-3.1.20-debian-bookworm-amd64.tar.gz
 RUN tar -xvzf mariadb-connector-odbc-3.1.20-debian-bookworm-amd64.tar.gz
 RUN cp mariadb-connector-odbc-3.1.20-debian-bookworm-amd64/lib/mariadb/libm* /usr/lib/
@@ -45,8 +46,10 @@ WORKDIR /app
 COPY --from=build /app/out ./
 
 RUN cp /usr/lib/libm* /app
-#RUN cp /usr/lib/aarch64-linux-gnu/libodbc* /app
+#TODOGITHUB
 RUN cp /usr/lib/x86_64-linux-gnu/libodbc* /app
+#TODOLOCAL
+#RUN cp /usr/lib/aarch64-linux-gnu/libodbc* /app
 
 EXPOSE 8080
 
