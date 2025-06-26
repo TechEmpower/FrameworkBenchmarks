@@ -938,9 +938,9 @@ checksum = "67f8cf4294ddfe85d2c2058f33caa9c82baa153a5826c293b2254ca293e6c11c"
 
 [[package]]
 name = "http-type"
-version = "4.24.1"
+version = "4.24.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "21c518bd37e8924bad5bd524382827cb29f9d7e2e37c825bf6f5bebeb54830c2"
+checksum = "6ae88a78ab4df0168da34d8cce9e3f95a031c150dd0ec503a6e2cd9f913fb819"
 dependencies = [
  "dashmap",
  "hex",
@@ -969,9 +969,9 @@ checksum = "df3b46402a9d5adb4c86a0cf463f42e19994e3ee891101b1841f30a545cb49a9"
 
 [[package]]
 name = "hyperlane"
-version = "5.33.1"
+version = "5.33.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dd4521ef34d936b84522abf1f0209decf432b689de2266f7b2a74b6aadb858be"
+checksum = "fa7e813097284b3f53342216580e519d249f680787713a531879c2b01127e571"
 dependencies = [
  "http-type",
  "hyperlane-macros",
