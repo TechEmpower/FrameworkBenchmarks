@@ -7,9 +7,9 @@ pub fn build(b: *std.Build) !void {
     const dep_opts = .{ .target = target, .optimize = optimize };
 
     const exe = b.addExecutable(.{
-        .name = "httpz",
+        .name = 'httpz',
         .root_source_file = b.path("src/main.zig"),
-        .target = target,
+        // .target = target, // Removed for Zig 0.14.0 compatibility
         .optimize = optimize,
     });
 
