@@ -95,7 +95,8 @@ async def multiple_db_queries_test(request):
 async def fortunes_test(request):
     async with db_pool.acquire() as connection:
         fortunes_fetch = await connection.fetch("SELECT * FROM Fortune")
-        fortunes = results.result()
+        # fortunes = fortunes_fetch.result()
+        fortunes = [list(item.values()) for item in fortunes_fetch.result()]
     fortunes.append(ADDITIONAL_ROW)
     fortunes.sort(key=lambda row: row[1])
     data = fortune_template.render(fortunes=fortunes)
@@ -110,8 +111,9 @@ async def db_updates_test(request):
     ), key=lambda x: x[1])
     worlds = [{"id": row_id, "randomNumber": number} for row_id, number in updates]
     async with db_pool.acquire() as connection:
+        statement = await connection.prepare(READ_ROW_SQL)
         for row_id, _ in updates:
-            await connection.fetch_val(READ_ROW_SQL, [row_id])
+            await statement.fetch_val([row_id])
         # await db_conn.executemany(WRITE_ROW_SQL, updates)
         await connection.execute_many(WRITE_ROW_SQL, updates)
     raise Exception("connect error")
