@@ -73,7 +73,7 @@ async def json_test(request):
 async def single_db_query_test(request):
     row_id = random.randint(1, 10000)
     async with db_pool.acquire() as connection:
-        number = await connection.fetch_row(
+        number = await connection.fetch_val(
             READ_ROW_SQL, [row_id]
         )
     return bs.json({'id': row_id, 'randomNumber': number})
@@ -85,7 +85,7 @@ async def multiple_db_queries_test(request):
     worlds = []
     async with db_pool.acquire() as connection:
         for row_id in row_ids:
-            number = await connection.fetch_row(
+            number = await connection.fetch_val(
                 READ_ROW_SQL, [row_id]
             )
             worlds.append({"id": row_id, "randomNumber": number})
@@ -111,7 +111,7 @@ async def db_updates_test(request):
     worlds = [{"id": row_id, "randomNumber": number} for row_id, number in updates]
     async with db_pool.acquire() as connection:
         for row_id, _ in updates:
-            await connection.fetch_row(READ_ROW_SQL, [row_id])
+            await connection.fetch_val(READ_ROW_SQL, [row_id])
         # await db_conn.executemany(WRITE_ROW_SQL, updates)
         await connection.execute_many(WRITE_ROW_SQL, updates)
     raise Exception("connect error")
