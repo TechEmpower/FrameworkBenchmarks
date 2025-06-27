@@ -1,5 +1,5 @@
 [framework]
-name = "httpserver"
+name = "ring-http-exchange"
 
 [main]
 urls.plaintext = "/plaintext"
@@ -12,19 +12,7 @@ os = "Linux"
 orm = "Raw"
 platform = "httpserver"
 webserver = "None"
-versus = ""
-
-[postgres]
-urls.fortune = "/fortunes"
-approach = "Realistic"
-classification = "Platform"
-database = "Postgres"
-database_os = "Linux"
-os = "Linux"
-orm = "Raw"
-platform = "httpserver"
-webserver = "None"
-versus = ""
+versus = "httpserver"
 
 
 [graalvm]
@@ -38,8 +26,7 @@ os = "Linux"
 orm = "Raw"
 platform = "httpserver"
 webserver = "None"
-versus = "httpserver"
-
+versus = "httpserver-graalvm"
 
 [robaho]
 urls.plaintext = "/plaintext"
@@ -52,21 +39,7 @@ os = "Linux"
 orm = "Raw"
 platform = "httpserver"
 webserver = "None"
-versus = "httpserver"
-
-
-[robaho-postgres]
-urls.fortune = "/fortunes"
-approach = "Realistic"
-classification = "Platform"
-database = "Postgres"
-database_os = "Linux"
-os = "Linux"
-orm = "Raw"
-platform = "httpserver"
-webserver = "None"
-versus = ""
-
+versus = "httpserver-robaho"
 
 [robaho-graalvm]
 urls.plaintext = "/plaintext"
@@ -79,4 +52,4 @@ os = "Linux"
 orm = "Raw"
 platform = "httpserver"
 webserver = "None"
-versus = "httpserver-robaho"
+versus = "httpserver-robaho-graalvm"
