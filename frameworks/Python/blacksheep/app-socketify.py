@@ -85,7 +85,7 @@ async def multiple_db_queries_test(request):
     worlds = []
     async with db_pool.acquire() as connection:
         for row_id in row_ids:
-            number = await number = await connection.fetch_row(
+            number = await connection.fetch_row(
                 READ_ROW_SQL, [row_id]
             )
             worlds.append({"id": row_id, "randomNumber": number})
