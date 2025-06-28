@@ -115,7 +115,7 @@ async def db_updates_test(request):
             await connection.fetch_val(READ_ROW_SQL, [row_id])
         # await db_conn.executemany(WRITE_ROW_SQL, updates)
         await connection.execute_many(WRITE_ROW_SQL, updates)
-    raise Exception("connect error")
+    return jsonify(worlds)
 
 @bs.get('/plaintext')
 async def plaintext_test(request):
