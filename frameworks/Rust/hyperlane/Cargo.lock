@@ -932,15 +932,15 @@ dependencies = [
 
 [[package]]
 name = "http-constant"
-version = "1.49.0"
+version = "1.50.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2ab0d43438c434e04c007b29b281fb9b85e669a605acf1257847ac4b8fe4114c"
+checksum = "087d27cd719e5a80b34b1fab3aead80a366ce4e903d198334ede177f391e1fbb"
 
 [[package]]
 name = "http-type"
-version = "4.25.0"
+version = "4.26.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "260397d77f120c957c6b1d33a07b38580844c3b2f3e4a6927161eca22ce3e2e8"
+checksum = "6831414384644bced5286ecba9ce813f72db3048e83b18f0e65f065e9d7fbe86"
 dependencies = [
  "dashmap",
  "hex",
@@ -969,12 +969,11 @@ checksum = "df3b46402a9d5adb4c86a0cf463f42e19994e3ee891101b1841f30a545cb49a9"
 
 [[package]]
 name = "hyperlane"
-version = "5.34.0"
+version = "5.38.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1c2ff96e31a5ca286e4226e3d03eea534f77bac1fd78f8aa496486b3f0d2c7bb"
+checksum = "2d2a00c9ad518a87243758d49877b481b88815102a7f4bc17fd28e67ccf67115"
 dependencies = [
  "http-type",
- "hyperlane-macros",
  "lombok-macros",
  "regex",
  "serde",
@@ -1003,9 +1002,9 @@ dependencies = [
 
 [[package]]
 name = "hyperlane-macros"
-version = "0.4.1"
+version = "0.5.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2321a4e27d729efe345507e1cfb6573881ce1f568e65f927b8115a55ad9b08f5"
+checksum = "9aa2ac7ff86962a5ea884473ecab95fa917c0df9870057bd2b34c1cb8d0dfcb2"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1020,9 +1019,9 @@ checksum = "c145707425cdd097e117e8b4ee8baeaf8eb265658a5c37d2c4aa0b24fd26a507"
 
 [[package]]
 name = "hyperlane-utils"
-version = "0.18.0"
+version = "0.19.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "98bd421d7b580ddbca85a490f08973ead09b3dd3ac778d3a1cf5b3fe41599d86"
+checksum = "5c5b3bed39f7357537c96a3da986317ea37cab022aaff5337c00b110db9a1101"
 dependencies = [
  "ahash",
  "bin-encode-decode",
@@ -1037,6 +1036,7 @@ dependencies = [
  "hot-restart",
  "hyperlane-broadcast",
  "hyperlane-log",
+ "hyperlane-macros",
  "log",
  "lombok-macros",
  "num_cpus",
