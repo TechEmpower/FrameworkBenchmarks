@@ -111,9 +111,8 @@ async def db_updates_test(request):
     ), key=lambda x: x[1])
     worlds = [{"id": row_id, "randomNumber": number} for row_id, number in updates]
     async with db_pool.acquire() as connection:
-        statement = await connection.prepare(READ_ROW_SQL)
         for row_id, _ in updates:
-            await statement.fetch_val([row_id])
+            await connection.fetch_val(READ_ROW_SQL, [row_id])
         # await db_conn.executemany(WRITE_ROW_SQL, updates)
         await connection.execute_many(WRITE_ROW_SQL, updates)
     raise Exception("connect error")
