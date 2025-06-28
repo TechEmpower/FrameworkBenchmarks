@@ -1,5 +1,5 @@
 
-# [Zap](https://github.com/zigzap/zap) - Blazingly fast backends in zig
+# [Zap](https://github.com/zigzap/zap) - Blazingly fast backends in zig 0.14
 
 ## Description
 
