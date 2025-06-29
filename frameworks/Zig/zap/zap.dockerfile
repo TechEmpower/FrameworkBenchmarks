@@ -1,4 +1,5 @@
-FROM fedora:40 AS build
+# Usinf zig 0.14.1
+FROM fedora:42 AS build
 
 WORKDIR /zap
 
