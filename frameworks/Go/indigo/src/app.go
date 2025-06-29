@@ -40,7 +40,7 @@ func (app *App) PopulateCache(ctx context.Context) error {
 }
 
 func (app *App) HandleJSON(request *http.Request) *http.Response {
-	return request.Respond().Header("Date", time.Now().Format(time.RFC1123)).Header("Server", "go").JSON(&models.Message{
+	return request.Respond().Header("Date", time.Now().Format(time.RFC1123)).Header("Server", "indigo").JSON(&models.Message{
 		Message: "Hello, World!",
 	})
 }
@@ -55,7 +55,7 @@ func (app *App) HandleDB(request *http.Request) *http.Response {
 		return http.Error(request, err)
 	}
 
-	return request.Respond().Header("Date", time.Now().Format(time.RFC1123)).Header("Server", "go").JSON(world)
+	return request.Respond().Header("Date", time.Now().Format(time.RFC1123)).Header("Server", "indigo").JSON(world)
 }
 
 func (app *App) HandleQuery(request *http.Request) *http.Response {
@@ -75,7 +75,7 @@ func (app *App) HandleQuery(request *http.Request) *http.Response {
 		return http.Error(request, err)
 	}
 
-	return request.Respond().Header("Date", time.Now().Format(time.RFC1123)).Header("Server", "go").JSON(&worlds)
+	return request.Respond().Header("Date", time.Now().Format(time.RFC1123)).Header("Server", "indigo").JSON(&worlds)
 }
 
 func (app *App) HandleUpdate(request *http.Request) *http.Response {
@@ -104,7 +104,7 @@ func (app *App) HandleUpdate(request *http.Request) *http.Response {
 		return http.Error(request, err)
 	}
 
-	return request.Respond().Header("Date", time.Now().Format(time.RFC1123)).Header("Server", "go").JSON(&worlds)
+	return request.Respond().Header("Date", time.Now().Format(time.RFC1123)).Header("Server", "indigo").JSON(&worlds)
 }
 
 func (app *App) HandleCachedQuery(request *http.Request) *http.Response {
@@ -119,7 +119,7 @@ func (app *App) HandleCachedQuery(request *http.Request) *http.Response {
 		worlds[i] = app.Cache[rand.Int32N(10000)]
 	}
 
-	return request.Respond().Header("Date", time.Now().Format(time.RFC1123)).Header("Server", "go").JSON(&worlds)
+	return request.Respond().Header("Date", time.Now().Format(time.RFC1123)).Header("Server", "indigo").JSON(&worlds)
 }
 
 func (app *App) HandleFortune(request *http.Request) *http.Response {
@@ -142,11 +142,11 @@ func (app *App) HandleFortune(request *http.Request) *http.Response {
 		return 0
 	})
 
-	return request.Respond().Header("Date", time.Now().Format(time.RFC1123)).Header("Server", "go").ContentType(mime.HTML).String(templates.HTMLFortunes(fortunes))
+	return request.Respond().Header("Date", time.Now().Format(time.RFC1123)).Header("Server", "indigo").ContentType(mime.HTML).String(templates.HTMLFortunes(fortunes))
 }
 
 func (app *App) HandlePlaintext(request *http.Request) *http.Response {
-	return request.Respond().Header("Date", time.Now().Format(time.RFC1123)).Header("Server", "go").String("Hello, World!")
+	return request.Respond().Header("Date", time.Now().Format(time.RFC1123)).Header("Server", "indigo").String("Hello, World!")
 }
 
 func normalizeNumber(nString string, found bool) (int, error) {
