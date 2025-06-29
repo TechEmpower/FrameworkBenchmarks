@@ -17,8 +17,8 @@ async fn init_server() {
     server.port(8080).await;
     server.disable_linger().await;
     server.disable_nodelay().await;
-    server.error_handler(|_: String| {}).await;
-    server.http_line_buffer_size(256).await;
+    server.error_handler(async |_: PanicInfo| {}).await;
+    server.http_buffer_size(256).await;
     server.ws_buffer_size(256).await;
     server.request_middleware(request_middleware::request).await;
     #[cfg(any(feature = "dev", feature = "plaintext"))]
