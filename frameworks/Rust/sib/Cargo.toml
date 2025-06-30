@@ -18,6 +18,8 @@ sib = { git = "https://github.com/PooyaEimandar/sib", default-features = false, 
 bytes = { version = "1.10.1", default-features = false }
 mimalloc = { version = "0.1.47", features = ["secure"] }
 num_cpus = { version = "1.16" }
+serde = { version = "1.0.219", default-features = false, features = ["derive"] }
+serde_json = { version = "1.0.140" }
 
 [profile.release]
 opt-level = 3

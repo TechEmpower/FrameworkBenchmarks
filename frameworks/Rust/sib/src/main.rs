@@ -12,6 +12,19 @@ use std::{
 #[global_allocator]
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
+#[derive(serde::Serialize)]
+struct JsonMessage<'a> {
+    message: &'a str,
+}
+
+impl Default for JsonMessage<'_> {
+    fn default() -> Self {
+        JsonMessage {
+            message: "Hello, World!",
+        }
+    }
+}
+
 struct H1Server<T>(pub T);
 
 struct HService;
@@ -20,11 +33,12 @@ impl H1Service for HService {
     fn call<S: Read + Write>(&mut self, session: &mut Session<S>) -> std::io::Result<()> {
         if session.req_path() == Some("/json") {
             // Respond with JSON
+            let json = serde_json::to_vec(&JsonMessage::default())?;
             session
                 .status_code(Status::Ok)
                 .header_str("Content-Type", "application/json")?
-                .header_str("Content-Length", "27")?
-                .body(&Bytes::from_static(b"{\"message\":\"Hello, World!\"}"))
+                .header_str("Content-Length", &json.len().to_string())?
+                .body(&Bytes::from(json))
                 .eom();
             return Ok(());
         }
