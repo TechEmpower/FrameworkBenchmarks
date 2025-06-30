@@ -8,6 +8,7 @@
     <SelfContained>true</SelfContained>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     
+    <!--TODOGITHUB-->
     <RuntimeIdentifier>linux-x64</RuntimeIdentifier> <!-- docker server -->
     <!--TODOLOCAL-->
     <!--<RuntimeIdentifier>linux-arm64</RuntimeIdentifier>--> <!-- docker local -->
@@ -36,7 +37,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Data.Odbc" Version="9.0.0" />
+    <RuntimeHostConfigurationOption Include="System.Threading.ThreadPool.HillClimbing.Disable" Value="true" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Data.Odbc" Version="9.0.6" />
   </ItemGroup>
 
 </Project>
