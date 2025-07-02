@@ -1,0 +1,130 @@
+[framework]
+name = "nexios"
+
+[default]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+urls.db = "/db"
+urls.query = "/queries?queries="
+urls.update = "/updates?queries="
+urls.fortune = "/fortunes"
+approach = "Realistic"
+classification = "Micro"
+database = "Postgres"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "None"
+webserver = "Uvicorn"
+versus = "fastapi"
+
+[gunicorn]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+urls.db = "/db"
+urls.query = "/queries?queries="
+urls.update = "/updates?queries="
+urls.fortune = "/fortunes"
+approach = "Realistic"
+classification = "Micro"
+database = "Postgres"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "None"
+webserver = "Gunicorn"
+versus = "fastapi"
+
+[uvicorn]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+urls.db = "/db"
+urls.query = "/queries?queries="
+urls.update = "/updates?queries="
+urls.fortune = "/fortunes"
+approach = "Realistic"
+classification = "Micro"
+database = "Postgres"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "None"
+webserver = "Uvicorn"
+versus = "fastapi"
+
+[granian]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+urls.db = "/db"
+urls.query = "/queries?queries="
+urls.update = "/updates?queries="
+urls.fortune = "/fortunes"
+approach = "Realistic"
+classification = "Micro"
+database = "Postgres"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "None"
+webserver = "Granian"
+versus = "fastapi"
+
+[socketify-asgi]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+urls.db = "/db"
+urls.query = "/queries?queries="
+urls.update = "/updates?queries="
+urls.fortune = "/fortunes"
+approach = "Realistic"
+classification = "Micro"
+database = "Postgres"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "None"
+webserver = "Socketify.py"
+versus = "fastapi"
+
+[framework.tags]
+tags = [
+  "python",
+  "asgi", 
+  "postgresql",
+  "orm",
+  "json",
+  "html",
+  "fortunes",
+  "updates"
+]
+
+[framework.test_implementations]
+implementations = [
+  { name = "nexios-uvicorn", dockerfile = "nexios-uvicorn.dockerfile", description = "Nexios with Uvicorn server" },
+  { name = "nexios-granian", dockerfile = "nexios-granian.dockerfile", description = "Nexios with Granian server (Rust-based ASGI server)" },
+  { name = "nexios-socketify", dockerfile = "nexios-socketify-asgi.dockerfile", description = "Nexios with Socketify ASGI server (C++-based)" }
+]
+
+[database]
+type = "postgresql"
+version = "15"
+host = "tfb-database"
+port = 5432
+database = "hello_world"
+username = "benchmarkdbuser"
+password = "benchmarkdbpass"
+
+[server]
+host = "0.0.0.0"
+port = 8080
+workers = "auto"
+
+[benchmark]
+tests = [
+  "json",
+  "db", 
+  "queries",
+  "fortunes",
+  "updates",
+  "plaintext"
+] 
