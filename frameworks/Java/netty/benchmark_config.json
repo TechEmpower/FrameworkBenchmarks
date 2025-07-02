@@ -18,7 +18,7 @@
       "database_os": "Linux",
       "display_name": "netty",
       "notes": "",
-      "versus": "netty"
+      "versus": ""
     },
     "loom": {
       "json_url": "/json",
@@ -35,7 +35,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "netty",
+      "display_name": "netty-loom",
       "notes": "",
       "versus": "netty"
     }
