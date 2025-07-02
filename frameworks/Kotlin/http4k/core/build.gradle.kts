@@ -4,9 +4,8 @@ plugins {
 }
 
 dependencies {
-    api(platform("org.http4k:http4k-bom:5.14.4.0"))
-    api("org.jetbrains.kotlin:kotlin-stdlib:1.9.23")
-    api("org.jetbrains.kotlin:kotlin-reflect:1.9.23")
+    api(platform("org.http4k:http4k-bom:6.1.0.1"))
+    api("org.jetbrains.kotlin:kotlin-reflect:2.1.10")
     api("org.http4k:http4k-core")
     api("org.http4k:http4k-format-argo")
     api("org.http4k:http4k-template-rocker")
