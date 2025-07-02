@@ -35,7 +35,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "jetty",
+      "display_name": "jetty-servlet",
       "notes": "Jetty 9.4 with ServletContext",
       "versus": "servlet"
     }
