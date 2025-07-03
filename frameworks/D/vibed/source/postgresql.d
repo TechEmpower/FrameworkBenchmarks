@@ -149,7 +149,6 @@ class WebInterface {
 		import std.uni : isNumber;
 
 		auto conn = client.lockConnection();
-		scope(exit)	destroy(conn);
 
 		int count = 1;
 		if (queries.length && isNumber(queries[0]))
@@ -174,8 +173,9 @@ class WebInterface {
 			// update random number
 			w.randomNumber = _uniformVariable(_gen);
 			qp_update.argsVariadic(w.randomNumber, id);
+
 			// persist to DB
-			conn.sendQueryPrepared(qp_update);
+			conn.execPrepared(qp_update);
 		}
 
 		// write response as JSON
