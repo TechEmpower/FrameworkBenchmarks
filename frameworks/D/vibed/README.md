@@ -12,7 +12,7 @@ This is the Vibe.D portion of a benchmarking test suite comparing a variety of w
 
 ## Infrastructure Software Versions
 The tests were run with:
-* [Vibe.D v0.9.4](http://vibed.org/)
+* [Vibe.D v0.10.2](http://vibed.org/)
 
 ## Test URLs
 ### JSON Encoding Test
