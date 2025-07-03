@@ -18,7 +18,25 @@ PostgresClient client;
 
 void main()
 {
+	auto connectionInfo = "host=tfb-database port=5432 "
+						~ "dbname=hello_world  user=benchmarkdbuser password=benchmarkdbpass";
+
+	client = new PostgresClient(connectionInfo, poolSize, (Connection cn){
+		cn.prepare("fortune_prpq", "SELECT id, message::text FROM Fortune");
+		cn.prepare("db_prpq", "SELECT randomNumber, id FROM world WHERE id = $1");
+		cn.prepare("db_update_prpq", "UPDATE world SET randomNumber = $1  WHERE id = $2");
+	} );
+
+	{
+		// Establishing each connection in the pool and performing the PREPARE procedures
+		LockedConnection[poolSize] conns;
+
+		foreach(ref c; conns)
+			c = client.lockConnection();
+	}
+
 	import std.datetime : seconds;
+
 	auto router = new URLRouter;
 	router.registerWebInterface(new WebInterface);
 	router.rebuild();
@@ -189,16 +207,4 @@ struct WorldResponse {
 struct FortuneResponse {
 	int id;
 	string message;
-}
-
-static this()
-{
-	import std.process : environment;
-	auto connectionInfo = "host=tfb-database port=5432 "
-						~ "dbname=hello_world  user=benchmarkdbuser password=benchmarkdbpass";
-	client = new PostgresClient(connectionInfo, poolSize, (Connection cn){
-		cn.prepare("fortune_prpq", "SELECT id, message::text FROM Fortune");
-		cn.prepare("db_prpq", "SELECT randomNumber, id FROM world WHERE id = $1");
-		cn.prepare("db_update_prpq", "UPDATE world SET randomNumber = $1  WHERE id = $2");
-	} );
 }
