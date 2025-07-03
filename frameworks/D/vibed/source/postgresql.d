@@ -84,7 +84,6 @@ class WebInterface {
 		int id = _uniformVariable(_gen);
 		QueryParams qp;
 		qp.preparedStatementName("db_prpq");
-		qp.resultFormat = ValueFormat.BINARY;
 		qp.argsVariadic(id);
 		immutable result = conn.execPrepared(qp).rangify.front;
 		auto w = WorldResponse(id, result[0].as!PGinteger);
@@ -114,7 +113,6 @@ class WebInterface {
 		scope data = new WorldResponse[count];
 		QueryParams qp;
 		qp.preparedStatementName("db_prpq");
-		qp.resultFormat = ValueFormat.BINARY;
 		foreach (ref w; data) {
 			int id = _uniformVariable(_gen);
 			qp.argsVariadic(id);
@@ -164,11 +162,9 @@ class WebInterface {
 		scope data = new WorldResponse[count];
 		QueryParams qp;
 		qp.preparedStatementName("db_prpq");
-		qp.resultFormat = ValueFormat.BINARY;
 
 		QueryParams qp_update;
 		qp_update.preparedStatementName("db_update_prpq");
-		qp_update.resultFormat = ValueFormat.BINARY;
 
 		foreach (ref w; data) {
 			int id = _uniformVariable(_gen);
