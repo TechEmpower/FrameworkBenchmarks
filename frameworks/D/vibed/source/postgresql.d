@@ -22,9 +22,9 @@ void main()
 						~ "dbname=hello_world  user=benchmarkdbuser password=benchmarkdbpass";
 
 	client = new PostgresClient(connectionInfo, poolSize, (Connection cn){
-		cn.prepare("fortune_prpq", "SELECT id, message::text FROM Fortune");
-		cn.prepare("db_prpq", "SELECT randomNumber, id FROM world WHERE id = $1");
-		cn.prepare("db_update_prpq", "UPDATE world SET randomNumber = $1  WHERE id = $2");
+		cn.prepareEx("fortune_prpq", "SELECT id, message::text FROM Fortune");
+		cn.prepareEx("db_prpq", "SELECT randomNumber, id FROM world WHERE id = $1");
+		cn.prepareEx("db_update_prpq", "UPDATE world SET randomNumber = $1  WHERE id = $2");
 	} );
 
 	{
