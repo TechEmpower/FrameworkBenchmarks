@@ -16,21 +16,7 @@ enum poolSize = 64;
 
 PostgresClient client;
 
-shared static this()
-{
-	import derelict.pq.pq;
-	import derelict.util.exception : ShouldThrow;
-	ShouldThrow myMissingSymCB( string symbolName ) { return ShouldThrow.No; }
-	DerelictPQ.missingSymbolCallback = &myMissingSymCB;
-}
-
 void main()
-{
-	runWorkerTaskDist(&runServer);
-	runApplication();
-}
-
-void runServer()
 {
 	import std.datetime : seconds;
 	auto router = new URLRouter;
@@ -42,6 +28,7 @@ void runServer()
 	settings.options |= HTTPServerOption.reusePort;
 	settings.port = 8080;
 	listenHTTP(settings, router);
+	runEventLoop();
 }
 
 class WebInterface {
