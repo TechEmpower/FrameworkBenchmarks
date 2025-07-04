@@ -575,9 +575,9 @@ checksum = "087d27cd719e5a80b34b1fab3aead80a366ce4e903d198334ede177f391e1fbb"
 
 [[package]]
 name = "http-type"
-version = "4.26.0"
+version = "4.27.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6831414384644bced5286ecba9ce813f72db3048e83b18f0e65f065e9d7fbe86"
+checksum = "6804e58f67d8afc41be9f546ae35f8505ee2695c0e27b6e94a67aae56017bd7d"
 dependencies = [
  "dashmap",
  "hex",
@@ -594,9 +594,9 @@ dependencies = [
 
 [[package]]
 name = "hyperlane"
-version = "5.39.0"
+version = "5.40.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2291a6f9a3d60bde6fd9c408313169ea589bce50a433cc6d4be9b83448de84bd"
+checksum = "b7581865927715597cb3ac428b2a6269880136370350469fab2bdc5c5e56b629"
 dependencies = [
  "http-type",
  "lombok-macros",
@@ -740,6 +740,17 @@ checksum = "cea70ddb795996207ad57735b50c5982d8844f38ba9ee5f1aedcfb708a2aa11e"
 dependencies = [
  "equivalent",
  "hashbrown 0.15.4",
+]
+
+[[package]]
+name = "io-uring"
+version = "0.7.8"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b86e202f00093dcba4275d4636b93ef9dd75d025ae560d2521b45ea28ab49013"
+dependencies = [
+ "bitflags",
+ "cfg-if",
+ "libc",
 ]
 
 [[package]]
@@ -1621,17 +1632,19 @@ checksum = "1f3ccbac311fea05f86f61904b462b55fb3df8837a366dfc601a0161d0532f20"
 
 [[package]]
 name = "tokio"
-version = "1.45.1"
+version = "1.46.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "75ef51a33ef1da925cea3e4eb122833cb377c61439ca401b770f54902b806779"
+checksum = "1140bb80481756a8cbe10541f37433b459c5aa1e727b4c020fbfebdc25bf3ec4"
 dependencies = [
  "backtrace",
  "bytes",
+ "io-uring",
  "libc",
  "mio",
  "parking_lot",
  "pin-project-lite",
  "signal-hook-registry",
+ "slab",
  "socket2",
  "tokio-macros",
  "windows-sys 0.52.0",
