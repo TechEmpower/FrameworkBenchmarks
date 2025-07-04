@@ -9,6 +9,15 @@ import asyncpg
 import jinja2
 import orjson
 
+PG_POOL_SIZE = 2
+
+
+class NoResetConnection(asyncpg.Connection):
+    __slots__ = ()
+
+    def get_reset_query(self):
+        return ""
+
 
 async def pg_setup():
     global pool
@@ -17,7 +26,10 @@ async def pg_setup():
         password=os.getenv('PGPASS', 'benchmarkdbpass'),
         database='hello_world',
         host='tfb-database',
-        port=5432
+        port=5432,
+        min_size=PG_POOL_SIZE,
+        max_size=PG_POOL_SIZE,
+        connection_class=NoResetConnection,
     )
 
 
@@ -77,10 +89,9 @@ async def route_queries(scope, proto):
 
     async with pool.acquire() as connection:
         statement = await connection.prepare(SQL_SELECT)
-        for row_id in row_ids:
-            number = await statement.fetchval(row_id)
-            worlds.append({'id': row_id, 'randomNumber': number})
+        rows = await statement.fetchmany([(v,) for v in row_ids])
 
+    worlds = [{'id': row_id, 'randomNumber': number[0]} for row_id, number in zip(row_ids, rows)]
     proto.response_bytes(
         200,
         JSON_HEADERS,
@@ -112,8 +123,7 @@ async def route_updates(scope, proto):
 
     async with pool.acquire() as connection:
         statement = await connection.prepare(SQL_SELECT)
-        for row_id, _ in updates:
-            await statement.fetchval(row_id)
+        await statement.executemany([(i[0],) for i in updates])
         await connection.executemany(SQL_UPDATE, updates)
 
     proto.response_bytes(
