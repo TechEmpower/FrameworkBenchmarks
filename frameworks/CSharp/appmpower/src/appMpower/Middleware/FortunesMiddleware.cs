@@ -70,7 +70,12 @@ public class FortunesMiddleware
             */
 
             byte[] byteArray = new byte[payloadLength];
-            Marshal.Copy(bytePointer, byteArray, 0, payloadLength);
+            //Marshal.Copy(bytePointer, json, 0, payloadLength);
+
+            fixed (byte* dest = byteArray)
+            {
+                Buffer.MemoryCopy((void*)bytePointer, dest, payloadLength, payloadLength);
+            }
 
             List<Fortune> fortunes = new List<Fortune>();
 

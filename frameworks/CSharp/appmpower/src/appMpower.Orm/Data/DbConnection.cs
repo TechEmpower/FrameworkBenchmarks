@@ -54,12 +54,12 @@ namespace appMpower.Orm.Data
          if (_keyed)
          {
             (_number, _odbcConnection, _keyedOdbcCommands) = 
-               DbConnectionsKeyed.GetConnectionBase(_connectionString).GetAwaiter().GetResult();
+               DbConnectionsKeyed.GetConnectionBase(_connectionString);
          }
          else
          {
-            (_number, _odbcConnection, _odbcCommands) = 
-               DbConnections.GetConnectionBase(_connectionString).GetAwaiter().GetResult();
+            (_number, _odbcConnection, _odbcCommands) =
+               DbConnections.GetConnectionBase(_connectionString);
          }
       }
 
