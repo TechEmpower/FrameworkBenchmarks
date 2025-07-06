@@ -1,0 +1,13 @@
+asyncpg==0.26.0
+gunicorn==23.0.0
+httptools==0.5.0
+idna==3.7
+Jinja2==3.1.4
+MarkupSafe==2.1.1
+python-dotenv==0.20.0
+PyYAML==6.0
+micropie==0.15
+uvicorn==0.20.0
+uvloop==0.17.0
+orjson==3.10.18
+multipart==1.2.1
