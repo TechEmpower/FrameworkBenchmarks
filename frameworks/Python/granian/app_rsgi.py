@@ -9,7 +9,7 @@ import asyncpg
 import jinja2
 import orjson
 
-PG_POOL_SIZE = 2
+PG_POOL_SIZE = 4
 
 
 class NoResetConnection(asyncpg.Connection):
@@ -88,8 +88,7 @@ async def route_queries(scope, proto):
     worlds = []
 
     async with pool.acquire() as connection:
-        statement = await connection.prepare(SQL_SELECT)
-        rows = await statement.fetchmany([(v,) for v in row_ids])
+        rows = await connection.fetchmany(SQL_SELECT, [(v,) for v in row_ids])
 
     worlds = [{'id': row_id, 'randomNumber': number[0]} for row_id, number in zip(row_ids, rows)]
     proto.response_bytes(
@@ -122,8 +121,7 @@ async def route_updates(scope, proto):
     worlds = [{'id': row_id, 'randomNumber': number} for row_id, number in updates]
 
     async with pool.acquire() as connection:
-        statement = await connection.prepare(SQL_SELECT)
-        await statement.executemany([(i[0],) for i in updates])
+        await connection.executemany(SQL_SELECT, [(i[0],) for i in updates])
         await connection.executemany(SQL_UPDATE, updates)
 
     proto.response_bytes(
