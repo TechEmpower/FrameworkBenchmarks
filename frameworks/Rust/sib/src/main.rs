@@ -1,7 +1,7 @@
 use bytes::Bytes;
 use sib::network::http::{
     h1::{H1Service, H1ServiceFactory},
-    message::Status,
+    util::Status,
     session::Session,
 };
 use std::{
