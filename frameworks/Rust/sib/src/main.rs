@@ -1,7 +1,7 @@
 use bytes::Bytes;
 use sib::network::http::{
     h1::{H1Service, H1ServiceFactory},
-    message::Status,
+    util::Status,
     session::Session,
 };
 use std::{
@@ -63,7 +63,7 @@ impl H1ServiceFactory for H1Server<HService> {
 fn main() {
     // Print number of CPU cores
     let cpus = num_cpus::get();
-    println!("CPU cores: {}", cpus);
+    println!("CPU cores: {cpus}");
 
     // Print total RAM in MB
     if let Ok(meminfo) = fs::read_to_string("/proc/meminfo") {
@@ -73,7 +73,7 @@ fn main() {
                 if parts.len() >= 2 {
                     if let Ok(kb) = parts[1].parse::<u64>() {
                         let mb = kb / 1024;
-                        println!("Total RAM: {} MB", mb);
+                        println!("Total RAM: {mb} MB");
                     }
                 }
                 break;
@@ -88,12 +88,12 @@ fn main() {
     for _ in 0..cpus {
         let handle = std::thread::spawn(move || {
             let id = std::thread::current().id();
-            println!("Listening {} on thread: {:?}", addr, id);
+            println!("Listening {addr} on thread: {id:?}");
             H1Server(HService)
-                .start(addr, cpus, 0, None)
-                .expect(&format!("h1 server failed to start for thread {:?}", id))
+                .start(addr, cpus, 0)
+                .unwrap_or_else(|_| panic!("h1 server failed to start for thread {id:?}"))
                 .join()
-                .expect(&format!("h1 server failed to joining thread {:?}", id));
+                .unwrap_or_else(|_| panic!("h1 server failed to joining thread {id:?}"));
         });
         threads.push(handle);
     }
