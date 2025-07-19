@@ -18,7 +18,7 @@
       "database_os": "Linux",
       "display_name": "servlet",
       "notes": "",
-      "versus": "servlet"
+      "versus": ""
     },
     "lib-native": {
       "json_url": "/json",
@@ -35,7 +35,7 @@
       "webserver": "Resin",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "servlet",
+      "display_name": "servlet-lib-native",
       "notes": "Using compiled native Resin library",
       "versus": "servlet",
       "tags": ["broken"]
@@ -57,7 +57,7 @@
       "webserver": "Resin",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "servlet",
+      "display_name": "servlet-mysql",
       "notes": ""
     },
     "postgresql": {
@@ -78,7 +78,7 @@
       "webserver": "Resin",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "servlet",
+      "display_name": "servlet-postgresql",
       "notes": "",
       "versus": "servlet-raw"
     }
