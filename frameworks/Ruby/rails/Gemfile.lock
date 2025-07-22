@@ -256,7 +256,7 @@ GEM
       mapping (~> 1.0)
     securerandom (0.4.1)
     stringio (3.1.5)
-    thor (1.3.2)
+    thor (1.4.0)
     timeout (0.4.3)
     traces (0.15.2)
     trilogy (2.8.1)
