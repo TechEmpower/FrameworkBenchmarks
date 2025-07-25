@@ -23,7 +23,7 @@ COPY --link . .
 EXPOSE 8080
 
 RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
-RUN composer require joanhey/adapterman:^0.6 --quiet
+RUN composer require joanhey/adapterman:^0.7 --quiet
 
 RUN sed -i 's|/index.php|/start.php|g' server.php
 
