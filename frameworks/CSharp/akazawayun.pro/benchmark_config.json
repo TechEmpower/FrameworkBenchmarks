@@ -1,0 +1,24 @@
+{
+    "framework": "akazawayun.pro",
+    "tests": [
+        {
+            "default": {
+                "plaintext_url": "/plaintext",
+                "json_url": "/json",
+                "port": 2022,
+                "approach": "Realistic",
+                "classification": "Platform",
+                "framework": "akazawayun.pro",
+                "webserver": "akazawayun.pro",
+                "platform": ".NET",
+                "language": "C#",
+                "flavor": "CoreCLR",
+                "os": "Linux",
+                "database_os": "Linux",
+                "orm": "Dapper",
+                "display_name": "akazawayun.pro",
+                "notes": ""
+            }
+        }
+    ]
+}
