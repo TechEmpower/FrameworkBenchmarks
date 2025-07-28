@@ -17,7 +17,9 @@ public class MvcApp {
       /** Template engine: */
       app.install(new RockerModule());
 
-      app.mvc(new Resource_(app.require(DataSource.class)));
+      Json.configure(app.getOutputFactory());
+
+      app.mvc(new Resource_(app.require(DataSource.class), app.getOutputFactory()));
     });
   }
 }
