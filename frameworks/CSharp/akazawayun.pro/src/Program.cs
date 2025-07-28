@@ -27,14 +27,14 @@ public class Program : IPostFunction
     {
         return HttpRes.HttpJson(new JsonResponse
         {
-            Message = "Hello, World!"
+            message = "Hello, World!"
         });
     }
 }
 
 public class JsonResponse
 {
-    public string? Message { get; set; }
+    public string? message { get; set; }
 }
 
 [JsonSerializable(typeof(JsonResponse))]
