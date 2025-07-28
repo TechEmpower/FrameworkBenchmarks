@@ -33,7 +33,7 @@ let date () =
 
 (* HTTP *)
 
-let _plaintext date reqd =
+let _plaintext reqd =
   let open H1 in
   let payload = "Hello, World!" in
   let headers =
@@ -41,11 +41,11 @@ let _plaintext date reqd =
       [ ("content-length", string_of_int (String.length payload))
       ; ("content-type", "text/plain")
       ; ("server", "httpcats")
-      ; ("date", !date) ] in
+      ; ("date", date ()) ] in
   let resp = Response.create ~headers `OK in
   Reqd.respond_with_string reqd resp payload
 
-let _json date reqd  =
+let _json reqd  =
   let open H1 in
   let obj = `Assoc [ ("message", `String "Hello, World!") ] in
   let payload = Yojson.to_string obj in
@@ -54,7 +54,7 @@ let _json date reqd  =
       [ ("content-length", string_of_int (String.length payload))
       ; ("content-type", "application/json")
       ; ("server", "httpcats")
-      ; ("date", !date) ] in
+      ; ("date", date ()) ] in
   let resp = Response.create ~headers `OK in
   Reqd.respond_with_string reqd resp payload
 
@@ -67,25 +67,19 @@ let _not_found reqd =
   let resp = Response.create ~headers `OK in
   Reqd.respond_with_string reqd resp moo
 
-let[@warning "-8"] handler date _
+let[@warning "-8"] handler _
     (`V1 reqd : [ `V1 of H1.Reqd.t | `V2 of H2.Reqd.t ]) =
   let open H1 in
   let request = Reqd.request reqd in
   match request.Request.target with
-  | "/plaintext" -> _plaintext date reqd
-  | "/json" -> _json date reqd
+  | "/plaintext" -> _plaintext reqd
+  | "/json" -> _json reqd
   | _ -> _not_found reqd
 
 let localhost_8080 = Unix.(ADDR_INET (inet_addr_any, 8080))
 
 let server stop =
-  let cell = ref (date ()) in
-  let prm = Miou.async @@ fun () ->
-    Miou_unix.sleep 1.;
-    cell := date () in
-  let handler = handler cell in
-  Httpcats.Server.clear ~parallel:false ~stop ~backlog:4096 ~handler localhost_8080;
-  Miou.cancel prm
+  Httpcats.Server.clear ~parallel:false ~stop ~backlog:4096 ~handler localhost_8080
 
 let () = Sys.set_signal Sys.sigpipe Sys.Signal_ignore
 
