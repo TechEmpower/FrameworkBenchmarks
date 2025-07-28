@@ -21,7 +21,7 @@ public class Program : IPostFunction
 
     public static ValueTask<HttpRes> plaintext(HttpReq _)
     {
-        return HttpRes.HttpOK("Hello, World!");
+        return HttpRes.HttpOK("Hello, World!", ".txt");
     }
     public static ValueTask<HttpRes> json(HttpReq _)
     {
