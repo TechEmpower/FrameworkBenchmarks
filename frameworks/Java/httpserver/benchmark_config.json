@@ -57,9 +57,7 @@
         "display_name": "httpserver-graalvm",
         "notes": "",
         "versus": "httpserver"
-      }
-    },
-    {
+      },
       "robaho": {
         "json_url": "/json",
         "plaintext_url": "/plaintext",

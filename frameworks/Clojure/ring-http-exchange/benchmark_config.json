@@ -20,9 +20,7 @@
         "display_name": "ring-http-exchange",
         "notes": "",
         "versus": "httpserver"
-      }
-    },
-    {
+      },
       "robaho": {
         "json_url": "/json",
         "plaintext_url": "/plaintext",
@@ -41,9 +39,7 @@
         "display_name": "ring-http-exchange-robaho",
         "notes": "",
         "versus": "httpserver-robaho"
-      }
-    },
-    {
+      },
       "graalvm": {
         "json_url": "/json",
         "plaintext_url": "/plaintext",
@@ -62,9 +58,7 @@
         "display_name": "ring-http-exchange-graalvm",
         "notes": "",
         "versus": "ring-http-exchange"
-      }
-    },
-    {
+      },
       "robaho-graalvm": {
         "json_url": "/json",
         "plaintext_url": "/plaintext",
