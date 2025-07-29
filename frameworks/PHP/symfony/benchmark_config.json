@@ -162,7 +162,7 @@
       "display_name": "symfony-frankenphp",
       "notes": "Use php 8.2",
       "versus": "php",
-      "tags": []
+      "tags": ["broken"]
     }
   }]
 }

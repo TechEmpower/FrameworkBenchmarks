@@ -182,7 +182,8 @@
       "database_os": "Linux",
       "display_name": "PHP-frankenphp",
       "notes": "",
-      "versus": "php"
+      "versus": "php",
+      "tags": ["broken"]
     },
     "workerman": {
       "json_url": "/json.php",
