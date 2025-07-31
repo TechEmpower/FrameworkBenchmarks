@@ -1,5 +1,5 @@
 {
-  "framework": "httpserver-robaho",
+  "framework": "tachyon-concept",
   "tests": [
     {
       "default": {
@@ -10,34 +10,35 @@
         "classification": "Platform",
         "database": "None",
         "framework": "None",
-        "language": "Java",
+        "language": "Rust",
         "flavor": "None",
-        "orm": "Raw",
-        "platform": "httpserver",
-        "webserver": "None",
+        "orm": "None",
+        "platform": "None",
+        "webserver": "Tachyon",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "httpserver-robaho",
+        "display_name": "Tachyon-Concept",
         "notes": "",
-        "versus": ""
+        "versus": "None"
       },
-      "postgres": {
-        "fortune_url": "/fortunes",
+      "ub": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Platform",
-        "database": "Postgres",
+        "database": "None",
         "framework": "None",
-        "language": "Java",
+        "language": "Rust",
         "flavor": "None",
-        "orm": "Raw",
-        "platform": "httpserver",
-        "webserver": "None",
+        "orm": "None",
+        "platform": "None",
+        "webserver": "Tachyon",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "httpserver-robaho-postgres",
+        "display_name": "Tachyon-Concept-UB",
         "notes": "",
-        "versus": ""
+        "versus": "None"
       }
     }
   ]
