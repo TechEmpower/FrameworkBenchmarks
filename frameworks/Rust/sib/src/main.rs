@@ -1,12 +1,9 @@
 use bytes::Bytes;
 use sib::network::http::{
-    h1::{H1Service, H1ServiceFactory},
-    message::Status,
-    session::Session,
+    server::HFactory, session::{HService, Session}, util::Status
 };
 use std::{
-    fs,
-    io::{Read, Write},
+    fs
 };
 
 #[global_allocator]
@@ -25,12 +22,10 @@ impl Default for JsonMessage<'_> {
     }
 }
 
-struct H1Server<T>(pub T);
+struct Server;
 
-struct HService;
-
-impl H1Service for HService {
-    fn call<S: Read + Write>(&mut self, session: &mut Session<S>) -> std::io::Result<()> {
+impl HService for Server {
+    fn call<S: Session>(&mut self, session: &mut S) -> std::io::Result<()> {
         if session.req_path() == Some("/json") {
             // Respond with JSON
             let json = serde_json::to_vec(&JsonMessage::default())?;
@@ -52,18 +47,20 @@ impl H1Service for HService {
     }
 }
 
-impl H1ServiceFactory for H1Server<HService> {
-    type Service = HService;
+impl HFactory for Server{
+    type Service = Server;
 
-    fn service(&self, _id: usize) -> HService {
-        HService
+    fn service(&self, _id: usize) -> Server {
+        Server
     }
 }
 
 fn main() {
     // Print number of CPU cores
     let cpus = num_cpus::get();
-    println!("CPU cores: {}", cpus);
+    println!("CPU cores: {cpus}");
+
+    sib::set_num_workers(cpus);
 
     // Print total RAM in MB
     if let Ok(meminfo) = fs::read_to_string("/proc/meminfo") {
@@ -73,7 +70,7 @@ fn main() {
                 if parts.len() >= 2 {
                     if let Ok(kb) = parts[1].parse::<u64>() {
                         let mb = kb / 1024;
-                        println!("Total RAM: {} MB", mb);
+                        println!("Total RAM: {mb} MB");
                     }
                 }
                 break;
@@ -88,12 +85,12 @@ fn main() {
     for _ in 0..cpus {
         let handle = std::thread::spawn(move || {
             let id = std::thread::current().id();
-            println!("Listening {} on thread: {:?}", addr, id);
-            H1Server(HService)
-                .start(addr, cpus, 0, None)
-                .expect(&format!("h1 server failed to start for thread {:?}", id))
+            println!("Listening {addr} on thread: {id:?}");
+            Server
+                .start_h1(addr, 0)
+                .unwrap_or_else(|_| panic!("h1 server failed to start for thread {id:?}"))
                 .join()
-                .expect(&format!("h1 server failed to joining thread {:?}", id));
+                .unwrap_or_else(|_| panic!("h1 server failed to joining thread {id:?}"));
         });
         threads.push(handle);
     }

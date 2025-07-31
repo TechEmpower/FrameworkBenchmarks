@@ -20,9 +20,7 @@
         "display_name": "oak",
         "notes": "",
         "versus": "nodejs"
-      }
-    },
-    {
+      },
       "postgresjs": {
         "json_url": "/json",
         "plaintext_url": "/plaintext",

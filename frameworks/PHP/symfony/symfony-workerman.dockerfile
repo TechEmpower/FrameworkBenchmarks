@@ -20,7 +20,7 @@ COPY --link . .
 RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --no-scripts --quiet
 RUN cp deploy/postgresql/.env . && composer dump-env prod && bin/console cache:clear
 
-COPY --link deploy/conf/cli-php.ini /etc/php/8.4/cli/php.ini
+COPY --link deploy/conf/cli-php.ini /etc/php/8.4/cli/conf.d/20-adapterman.ini
 
 EXPOSE 8080
 

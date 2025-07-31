@@ -12,14 +12,14 @@ categories = ["development-tools"]
 readme = "README.md"
 
 [dependencies]
-sib = { git = "https://github.com/PooyaEimandar/sib", default-features = false, features = [
+sib = { version = "0.0.10", default-features = false, features = [
     "net-h1-server",
 ] }
 bytes = { version = "1.10.1", default-features = false }
 mimalloc = { version = "0.1.47", features = ["secure"] }
-num_cpus = { version = "1.16" }
+num_cpus = { version = "1.17.0" }
 serde = { version = "1.0.219", default-features = false, features = ["derive"] }
-serde_json = { version = "1.0.140" }
+serde_json = { version = "1.0.141" }
 
 [profile.release]
 opt-level = 3
