@@ -26,10 +26,10 @@ func main() {
 	DB := NewDB(pool)
 	app := NewApp(DB)
 
-	// err = app.PopulateCache(context.Background())
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
+	err = app.PopulateCache(context.Background())
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	router := inbuilt.New()
 

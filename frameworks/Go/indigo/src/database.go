@@ -49,7 +49,7 @@ func (DB *DB) GetFortunes(ctx context.Context) ([]models.Fortune, error) {
 }
 
 func (DB *DB) FillWorldByID(ctx context.Context, world *models.World) error {
-	query := `SELECT randomNumber FROM World WHERE id = $1`
+	query := `SELECT randomNumber FROM World WHERE id = $1 LIMIT 1`
 
 	return DB.pool.QueryRow(
 		context.Background(),
@@ -59,9 +59,9 @@ func (DB *DB) FillWorldByID(ctx context.Context, world *models.World) error {
 }
 
 func (DB *DB) FillWorlds(ctx context.Context, worlds []models.World) error {
-	query := `SELECT id, randomNumber FROM World LIMIT $1`
+	query := `SELECT id, randomNumber FROM World`
 
-	rows, err := DB.pool.Query(ctx, query, len(worlds))
+	rows, err := DB.pool.Query(ctx, query)
 	if err != nil {
 		return err
 	}
@@ -89,7 +89,7 @@ func (DB *DB) FillWorldsByID(ctx context.Context, worlds []models.World) error {
 	}
 	defer connection.Release()
 
-	query := `SELECT randomNumber FROM World WHERE id = in($1`
+	query := `SELECT randomNumber FROM World WHERE id = $1 LIMIT 1`
 
 	i, world, err := 0, (*models.World)(nil), error(nil)
 

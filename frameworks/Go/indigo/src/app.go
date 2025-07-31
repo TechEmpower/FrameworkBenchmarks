@@ -95,6 +95,10 @@ func (app *App) HandleUpdate(request *http.Request) *http.Response {
 		return http.Error(request, err)
 	}
 
+	for i = range worlds {
+		worlds[i].RandomNumber = rand.IntN(10000) + 1
+	}
+
 	slices.SortFunc(worlds, func(a, b models.World) int {
 		return a.ID - b.ID
 	})

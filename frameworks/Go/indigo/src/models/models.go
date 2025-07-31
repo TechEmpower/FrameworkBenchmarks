@@ -10,8 +10,8 @@ type (
 	Worlds []World
 
 	World struct {
-		ID           int   `json:"id"`
-		RandomNumber int32 `json:"randomNumber"`
+		ID           int `json:"id"`
+		RandomNumber int `json:"randomNumber"`
 	}
 )
 
