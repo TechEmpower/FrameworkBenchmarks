@@ -13,6 +13,7 @@ pub async fn json(ctx: Context) {
     while let Ok(_) = ctx.http_from_stream(HTTP_BUFFER).await {
         run().await;
     }
+    ctx.closed().await;
 }
 
 pub async fn plaintext(ctx: Context) {
@@ -24,6 +25,7 @@ pub async fn plaintext(ctx: Context) {
     while let Ok(_) = ctx.http_from_stream(HTTP_BUFFER).await {
         run().await;
     }
+    ctx.closed().await;
 }
 
 pub async fn db(ctx: Context) {
@@ -40,6 +42,7 @@ pub async fn db(ctx: Context) {
     while let Ok(_) = ctx.http_from_stream(HTTP_BUFFER).await {
         run().await;
     }
+    ctx.closed().await;
 }
 
 pub async fn query(ctx: Context) {
@@ -63,6 +66,7 @@ pub async fn query(ctx: Context) {
     while let Ok(_) = ctx.http_from_stream(HTTP_BUFFER).await {
         run().await;
     }
+    ctx.closed().await;
 }
 
 pub async fn fortunes(ctx: Context) {
@@ -88,6 +92,7 @@ pub async fn fortunes(ctx: Context) {
     while let Ok(_) = ctx.http_from_stream(HTTP_BUFFER).await {
         run().await;
     }
+    ctx.closed().await;
 }
 
 pub async fn update(ctx: Context) {
@@ -110,6 +115,7 @@ pub async fn update(ctx: Context) {
     while let Ok(_) = ctx.http_from_stream(HTTP_BUFFER).await {
         run().await;
     }
+    ctx.closed().await;
 }
 
 pub async fn cached_query(ctx: Context) {
@@ -132,4 +138,5 @@ pub async fn cached_query(ctx: Context) {
     while let Ok(_) = ctx.http_from_stream(HTTP_BUFFER).await {
         run().await;
     }
+    ctx.closed().await;
 }
