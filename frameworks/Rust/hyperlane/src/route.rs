@@ -1,36 +1,49 @@
 use super::*;
 
 pub async fn json(ctx: Context) {
-    while let Ok(_) = ctx.http_from_stream(HTTP_BUFFER).await {
-        let json: Value = json!({
-            "message": RESPONSEDATA_STR
-        });
+    let json: Value = json!({
+        "message": RESPONSEDATA_STR
+    });
+    let run = || async {
         ctx.set_response_body(serde_json::to_string(&json).unwrap_or_default())
             .await;
         let _ = ctx.send().await;
+    };
+    run().await;
+    while let Ok(_) = ctx.http_from_stream(HTTP_BUFFER).await {
+        run().await;
     }
 }
 
 pub async fn plaintext(ctx: Context) {
+    ctx.set_response_body(RESPONSEDATA_BIN).await;
+    let run = || async {
+        let _ = ctx.send().await;
+    };
+    run().await;
     while let Ok(_) = ctx.http_from_stream(HTTP_BUFFER).await {
-        let _ = ctx.set_response_body(RESPONSEDATA_BIN).await.send().await;
+        run().await;
     }
 }
 
 pub async fn db(ctx: Context) {
     let db_connection: &DbPoolConnection = get_db_connection();
-    while let Ok(_) = ctx.http_from_stream(HTTP_BUFFER).await {
+    let run = || async {
         let query_row: QueryRow = random_world_row(db_connection).await;
         let _ = ctx
             .set_response_body(serde_json::to_string(&query_row).unwrap_or_default())
             .await
             .send()
             .await;
+    };
+    run().await;
+    while let Ok(_) = ctx.http_from_stream(HTTP_BUFFER).await {
+        run().await;
     }
 }
 
 pub async fn query(ctx: Context) {
-    while let Ok(_) = ctx.http_from_stream(HTTP_BUFFER).await {
+    let run = || async {
         let queries: Queries = ctx
             .get_request_query("q")
             .await
@@ -45,11 +58,15 @@ pub async fn query(ctx: Context) {
             .await
             .send()
             .await;
+    };
+    run().await;
+    while let Ok(_) = ctx.http_from_stream(HTTP_BUFFER).await {
+        run().await;
     }
 }
 
 pub async fn fortunes(ctx: Context) {
-    while let Ok(_) = ctx.http_from_stream(HTTP_BUFFER).await {
+    let run = || async {
         let all_rows: Vec<PgRow> = all_world_row().await;
         let mut fortunes_list: Vec<Fortunes> = all_rows
             .iter()
@@ -66,11 +83,15 @@ pub async fn fortunes(ctx: Context) {
         fortunes_list.sort_by(|it, next| it.message.cmp(&next.message));
         let res: String = FortunesTemplate::new(fortunes_list).to_string();
         let _ = ctx.set_response_body(res).await.send().await;
+    };
+    run().await;
+    while let Ok(_) = ctx.http_from_stream(HTTP_BUFFER).await {
+        run().await;
     }
 }
 
 pub async fn update(ctx: Context) {
-    while let Ok(_) = ctx.http_from_stream(HTTP_BUFFER).await {
+    let run = || async {
         let queries: Queries = ctx
             .get_request_query("q")
             .await
@@ -84,11 +105,15 @@ pub async fn update(ctx: Context) {
             .await
             .send()
             .await;
+    };
+    run().await;
+    while let Ok(_) = ctx.http_from_stream(HTTP_BUFFER).await {
+        run().await;
     }
 }
 
 pub async fn cached_query(ctx: Context) {
-    while let Ok(_) = ctx.http_from_stream(HTTP_BUFFER).await {
+    let run = || async {
         let count: Queries = ctx
             .get_request_query("c")
             .await
@@ -102,5 +127,9 @@ pub async fn cached_query(ctx: Context) {
             .await
             .send()
             .await;
+    };
+    run().await;
+    while let Ok(_) = ctx.http_from_stream(HTTP_BUFFER).await {
+        run().await;
     }
 }
