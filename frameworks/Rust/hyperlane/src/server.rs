@@ -17,24 +17,45 @@ async fn init_server() {
     server.port(8080).await;
     server.disable_linger().await;
     server.disable_nodelay().await;
-    server.error_handler(async |_: PanicInfo| {}).await;
-    server.http_buffer_size(256).await;
-    server.ws_buffer_size(256).await;
+    server.http_buffer(256).await;
+    server.ws_buffer(256).await;
+    server.panic_hook(async |_: Context| {}).await;
     server.request_middleware(request_middleware::request).await;
     #[cfg(any(feature = "dev", feature = "plaintext"))]
-    server.route("/plaintext", route::plaintext).await;
+    {
+        server.disable_http_hook("/plaintext").await;
+        server.route("/plaintext", route::plaintext).await;
+    }
     #[cfg(any(feature = "dev", feature = "json"))]
-    server.route("/json", route::json).await;
+    {
+        server.disable_http_hook("/json").await;
+        server.route("/json", route::json).await;
+    }
     #[cfg(any(feature = "dev", feature = "cached_query"))]
-    server.route("/cached-quer", route::cached_query).await;
+    {
+        server.disable_http_hook("/cached-quer").await;
+        server.route("/cached-quer", route::cached_query).await;
+    }
     #[cfg(any(feature = "dev", feature = "db"))]
-    server.route("/db", route::db).await;
+    {
+        server.disable_http_hook("/db").await;
+        server.route("/db", route::db).await;
+    }
     #[cfg(any(feature = "dev", feature = "query"))]
-    server.route("/query", route::query).await;
+    {
+        server.disable_http_hook("/query").await;
+        server.route("/query", route::query).await;
+    }
     #[cfg(any(feature = "dev", feature = "fortunes"))]
-    server.route("/fortunes", route::fortunes).await;
+    {
+        server.disable_http_hook("/fortunes").await;
+        server.route("/fortunes", route::fortunes).await;
+    }
     #[cfg(any(feature = "dev", feature = "update"))]
-    server.route("/upda", route::update).await;
+    {
+        server.disable_http_hook("/upda").await;
+        server.route("/upda", route::update).await;
+    }
     server.run().await.unwrap();
 }
 
