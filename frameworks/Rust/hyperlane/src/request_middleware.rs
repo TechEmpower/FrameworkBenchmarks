@@ -1,7 +1,9 @@
 use super::*;
 
 pub async fn request(ctx: Context) {
-    ctx.replace_response_header(CONNECTION, KEEP_ALIVE)
+    ctx.set_response_version(HttpVersion::HTTP1_1)
+        .await
+        .replace_response_header(CONNECTION, KEEP_ALIVE)
         .await
         .replace_response_header(SERVER, HYPERLANE)
         .await
