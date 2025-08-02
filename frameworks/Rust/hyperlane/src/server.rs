@@ -20,6 +20,7 @@ async fn init_server() {
     server.http_buffer(256).await;
     server.ws_buffer(256).await;
     server.panic_hook(async |_: Context| {}).await;
+
     server.request_middleware(request_middleware::request).await;
 
     server
