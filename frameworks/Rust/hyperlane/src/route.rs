@@ -17,6 +17,7 @@ pub async fn json(ctx: Context) {
 }
 
 pub async fn plaintext(ctx: Context) {
+    ctx.replace_response_header(CONTENT_TYPE, TEXT_PLAIN).await;
     ctx.set_response_body(RESPONSEDATA_BIN).await;
     let run = || async {
         let _ = ctx.send().await;
@@ -70,6 +71,11 @@ pub async fn query(ctx: Context) {
 }
 
 pub async fn fortunes(ctx: Context) {
+    ctx.replace_response_header(
+        CONTENT_TYPE,
+        ContentType::format_content_type_with_charset(TEXT_HTML, UTF8),
+    )
+    .await;
     let run = || async {
         let all_rows: Vec<PgRow> = all_world_row().await;
         let mut fortunes_list: Vec<Fortunes> = all_rows

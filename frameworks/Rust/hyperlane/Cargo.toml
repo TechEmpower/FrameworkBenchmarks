@@ -49,10 +49,3 @@ strip = "debuginfo"
 
 [features]
 dev = []
-json = []
-plaintext = []
-fortunes = []
-db = []
-query = []
-update = []
-cached_query = []

@@ -21,53 +21,54 @@ async fn init_server() {
     server.ws_buffer(256).await;
     server.panic_hook(async |_: Context| {}).await;
     server.request_middleware(request_middleware::request).await;
-    #[cfg(any(feature = "dev", feature = "plaintext"))]
-    {
-        server.disable_http_hook("/plaintext").await;
-        server.route("/plaintext", route::plaintext).await;
-    }
-    #[cfg(any(feature = "dev", feature = "json"))]
-    {
-        server.disable_http_hook("/json").await;
-        server.route("/json", route::json).await;
-    }
-    #[cfg(any(feature = "dev", feature = "cached_query"))]
-    {
-        server.disable_http_hook("/cached-quer").await;
-        server.route("/cached-quer", route::cached_query).await;
-    }
-    #[cfg(any(feature = "dev", feature = "db"))]
-    {
-        server.disable_http_hook("/db").await;
-        server.route("/db", route::db).await;
-    }
-    #[cfg(any(feature = "dev", feature = "query"))]
-    {
-        server.disable_http_hook("/query").await;
-        server.route("/query", route::query).await;
-    }
-    #[cfg(any(feature = "dev", feature = "fortunes"))]
-    {
-        server.disable_http_hook("/fortunes").await;
-        server.route("/fortunes", route::fortunes).await;
-    }
-    #[cfg(any(feature = "dev", feature = "update"))]
-    {
-        server.disable_http_hook("/upda").await;
-        server.route("/upda", route::update).await;
-    }
+
+    server
+        .disable_http_hook("/plaintext")
+        .await
+        .route("/plaintext", route::plaintext)
+        .await;
+
+    server
+        .disable_http_hook("/json")
+        .await
+        .route("/json", route::json)
+        .await;
+
+    server
+        .disable_http_hook("/cached-quer")
+        .await
+        .route("/cached-quer", route::cached_query)
+        .await;
+
+    server
+        .disable_http_hook("/db")
+        .await
+        .route("/db", route::db)
+        .await;
+
+    server
+        .disable_http_hook("/query")
+        .await
+        .route("/query", route::query)
+        .await;
+
+    server
+        .disable_http_hook("/fortunes")
+        .await
+        .route("/fortunes", route::fortunes)
+        .await;
+
+    server
+        .disable_http_hook("/upda")
+        .await
+        .route("/upda", route::update)
+        .await;
+
     server.run().await.unwrap();
 }
 
 async fn init() {
-    #[cfg(any(
-        feature = "dev",
-        feature = "db",
-        feature = "query",
-        feature = "update",
-        feature = "fortunes",
-        feature = "cached_query",
-    ))]
+    #[cfg(any(feature = "dev"))]
     init_db().await;
     init_server().await;
 }
