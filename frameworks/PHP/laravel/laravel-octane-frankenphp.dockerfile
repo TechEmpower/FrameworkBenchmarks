@@ -1,7 +1,6 @@
 FROM dunglas/frankenphp
  
 RUN install-php-extensions \
-	opcache \
 	pcntl \
     pdo_mysql \
 	zip > /dev/null
