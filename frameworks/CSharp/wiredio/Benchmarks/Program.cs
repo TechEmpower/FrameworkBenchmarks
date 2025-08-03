@@ -16,7 +16,7 @@ await builder
         context
             .Writer.Write("Content-Length:12\r\n"u8);
         context
-            .Writer.Write("Content-Type: application/json\r\nConnection: keep-alive\r\n\r\n"u8);
+            .Writer.Write("Content-Type: text/plain\r\nConnection: keep-alive\r\n\r\n"u8);
         context
             .Writer.Write("Hello World!\r\n"u8);
 
