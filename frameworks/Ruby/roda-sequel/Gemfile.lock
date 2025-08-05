@@ -11,7 +11,7 @@ GEM
     pg (1.5.9)
     puma (6.6.0)
       nio4r (~> 2.0)
-    rack (3.1.12)
+    rack (3.2.0)
     roda (3.90.0)
       rack
     sequel (5.90.0)
