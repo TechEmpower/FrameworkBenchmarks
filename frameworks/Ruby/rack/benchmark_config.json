@@ -65,6 +65,27 @@
         "display_name": "rack [falcon]",
         "notes": ""
       },
+      "itsi": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
+        "fortune_url": "/fortunes",
+        "update_url": "/updates?queries=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "orm": "raw",
+        "database": "Postgres",
+        "framework": "rack",
+        "language": "Ruby",
+        "platform": "Mri",
+        "webserver": "Itsi",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "rack [itsi]",
+        "notes": ""
+      },
       "jruby": {
         "json_url": "/json",
         "plaintext_url": "/plaintext",
