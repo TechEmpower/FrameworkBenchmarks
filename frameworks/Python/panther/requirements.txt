@@ -1,5 +1,6 @@
-panther==5.0.1
+panther==5.0.2
 cython==3.1.2
 asyncpg==0.30.0
 gunicorn==23.0.0
 uvloop==0.21.0
+uvicorn==0.27.0
