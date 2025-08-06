@@ -1,9 +1,5 @@
 const cero = require('0http')
-const low = require('0http/lib/server/low')
-
-const { router, server } = cero({
-  server: low()
-})
+const { router, server } = cero()
 
 router.on('GET', '/json', (req, res) => {
   res.setHeader('server', '0http')
@@ -19,4 +15,4 @@ router.on('GET', '/plaintext', (req, res) => {
   res.end('Hello, World!')
 })
 
-server.start(8080, socket => {})
+server.listen(8080)
