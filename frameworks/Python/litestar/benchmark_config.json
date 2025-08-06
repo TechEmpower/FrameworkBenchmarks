@@ -44,25 +44,6 @@
         "notes": "",
         "versus": "None"
       },
-      "socketify-asgi-pypy": {
-        "json_url": "/json",
-        "plaintext_url": "/plaintext",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Micro",
-        "database": "Postgres",
-        "framework": "Litestar",
-        "language": "Python",
-        "flavor": "Python3",
-        "orm": "Raw",
-        "platform": "asyncio",
-        "webserver": "Socketify.py",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "Litestar [Socketify.py ASGI PyPy3]",
-        "notes": "",
-        "versus": "None"
-      },
       "gunicorn": {
         "json_url": "/json",
         "db_url": "/db",
