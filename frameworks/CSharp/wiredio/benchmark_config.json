@@ -1,0 +1,24 @@
+{
+  "framework": "wiredio",
+  "tests": [
+    {
+      "default": {
+        "plaintext_url": "/plaintext",
+        "json_url": "/json",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "None",
+        "framework": "Wired.IO",
+        "language": "C#",
+        "orm": "None",
+        "platform": ".NET",
+        "webserver": "Wired.IO",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Wired.IO",
+        "notes": "Only plaintext and JSON benchmarks implemented"
+      }
+    }
+  ]
+}
