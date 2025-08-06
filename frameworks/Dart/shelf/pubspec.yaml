@@ -1,0 +1,7 @@
+name: shelfbenchmark
+description: A benchmark of pkg:shelf
+environment:
+  sdk: ^3.8.0
+
+dependencies:
+  shelf: ^1.0.0
