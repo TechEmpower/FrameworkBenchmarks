@@ -1,6 +1,7 @@
 module goravel
 
-go 1.22
+go 1.23.0
+
 toolchain go1.24.1
 
 require (
@@ -62,7 +63,7 @@ require (
 	github.com/go-redsync/redsync/v4 v4.8.1 // indirect
 	github.com/go-sql-driver/mysql v1.8.1 // indirect
 	github.com/go-stack/stack v1.8.0 // indirect
-	github.com/gofiber/fiber/v2 v2.52.4 // indirect
+	github.com/gofiber/fiber/v2 v2.52.9 // indirect
 	github.com/gofiber/template v1.8.3 // indirect
 	github.com/gofiber/template/html/v2 v2.1.1 // indirect
 	github.com/gofiber/utils v1.1.0 // indirect
@@ -107,7 +108,7 @@ require (
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-localereader v0.0.1 // indirect
-	github.com/mattn/go-runewidth v0.0.15 // indirect
+	github.com/mattn/go-runewidth v0.0.16 // indirect
 	github.com/microsoft/go-mssqldb v1.6.0 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/muesli/ansi v0.0.0-20230316100256-276c6243b2f6 // indirect
