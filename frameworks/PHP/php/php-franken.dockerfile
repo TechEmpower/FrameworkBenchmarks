@@ -7,7 +7,7 @@ RUN install-php-extensions \
     opcache > /dev/null
 
 
-COPY --link deploy/franken/Caddyfile /etc/caddy/Caddyfile
+COPY --link deploy/franken/Caddyfile /etc/frankenphp/Caddyfile
 COPY --link deploy/conf/php.ini /usr/local/etc/php/
 
 COPY --link . /php

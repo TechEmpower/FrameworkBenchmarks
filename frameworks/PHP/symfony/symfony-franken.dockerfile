@@ -1,4 +1,4 @@
-FROM dunglas/frankenphp
+FROM dunglas/frankenphp:php8.4
 
 # add additional extensions here:
 RUN install-php-extensions \
@@ -8,7 +8,7 @@ RUN install-php-extensions \
 
 COPY --from=composer/composer:latest-bin --link /composer /usr/local/bin/composer
 
-COPY --link deploy/Caddyfile /etc/caddy/Caddyfile
+COPY --link deploy/Caddyfile /etc/frankenphp/Caddyfile
 COPY --link deploy/conf/php.ini /usr/local/etc/php/
 
 WORKDIR /symfony
