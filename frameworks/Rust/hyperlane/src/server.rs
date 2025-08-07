@@ -64,7 +64,7 @@ async fn init_server() {
         .route("/upda", route::update)
         .await;
 
-    server.run().await.unwrap().get_wait_hook()().await;
+    server.run().await.unwrap().wait().await;
 }
 
 async fn init() {
