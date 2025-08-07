@@ -15,3 +15,4 @@ pub const KEY_ID: &str = "id";
 pub const KEY_RANDOM_NUMBER: &str = "randomnumber";
 pub const KEY_MESSAGE: &str = "message";
 pub const DB_MAX_CONNECTIONS: u32 = 100;
+pub const HTTP_BUFFER: usize = 256;
