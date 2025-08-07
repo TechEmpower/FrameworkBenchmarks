@@ -2,7 +2,7 @@
 
 ## Description
 
-> A lightweight, high-performance, and cross-platform rust http server library built on tokio, it simplifies modern web service development by providing built-in support for middleware, websocket, server-sent events (sse), and raw tcp communication, while offering a unified and ergonomic api across windows, linux, and macos, enabling developers to build robust, scalable, and event-driven network applications with minimal overhead and maximum flexibility.
+> A lightweight, high-performance, and cross-platform Rust HTTP server library built on Tokio. It simplifies modern web service development by providing built-in support for middleware, WebSocket, Server-Sent Events (SSE), and raw TCP communication. With a unified and ergonomic API across Windows, Linux, and MacOS, it enables developers to build robust, scalable, and event-driven network applications with minimal overhead and maximum flexibility.
 
 ## Database
 

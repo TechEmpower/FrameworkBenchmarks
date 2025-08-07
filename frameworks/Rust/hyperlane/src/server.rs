@@ -19,7 +19,6 @@ async fn init_server() {
     server.disable_nodelay().await;
     server.http_buffer(256).await;
     server.ws_buffer(256).await;
-    server.panic_hook(async |_: Context| {}).await;
 
     server.request_middleware(request_middleware::request).await;
 
@@ -65,7 +64,7 @@ async fn init_server() {
         .route("/upda", route::update)
         .await;
 
-    server.run().await.unwrap();
+    server.run().await.unwrap().get_wait_hook()().await;
 }
 
 async fn init() {
