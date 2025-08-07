@@ -60,15 +60,15 @@
       "framework": "Jooby",
       "language": "Java",
       "flavor": "None",
-      "platform": "Undertow",
+      "platform": "Netty",
       "database": "Postgres",
       "database_os": "Linux",
       "orm": "Raw",
       "webserver": "None",
       "os": "Linux",
-      "notes": "Jooby MVC using Undertow",
+      "notes": "Jooby MVC using Netty",
       "display_name": "jooby-jaxrs",
-      "versus": "undertow"
+      "versus": "netty"
     },
     "jetty": {
       "json_url": "/json",
