@@ -7,7 +7,7 @@ http:
   address: 0.0.0.0:8080
   pool:
     num_workers: 0
-    max_jobs: 500 # feel free to change this
+    max_jobs: 0
     supervisor:
       exec_ttl: 60s
   headers:
