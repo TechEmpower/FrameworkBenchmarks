@@ -15,11 +15,12 @@ COPY --link deploy/conf/php.ini /usr/local/etc/php/
 WORKDIR /symfony
 COPY --link . .
 
+RUN pecl install protobuf > /dev/null && echo "extension=protobuf.so" > /usr/local/etc/php/conf.d/protobuf.ini
+
 ENV APP_RUNTIME="Runtime\RoadRunnerSymfonyNyholm\Runtime"
 RUN composer require runtime/roadrunner-symfony-nyholm --update-no-dev --no-scripts --quiet
 RUN cp deploy/postgresql/.env . && composer dump-env prod && bin/console cache:clear
 
 EXPOSE 8080
 
-RUN rr -v
 ENTRYPOINT ["rr", "serve"]
