@@ -2,22 +2,21 @@
 version: "3"
 #https://github.com/roadrunner-server/roadrunner/blob/master/.rr.yaml
 
+#server:
+#  command: "php ./vendor/bin/rr-worker start --relay-dsn unix:///usr/local/var/run/rr-rpc.sock"
+#  relay: "unix:///usr/local/var/run/rr-rpc.sock"
 server:
-  command: "php ./vendor/bin/rr-worker start --relay-dsn unix:///usr/local/var/run/rr-rpc.sock"
-  relay: "unix:///usr/local/var/run/rr-rpc.sock"
+  command: "php artisan octane:roadrunner --server"
 logs:
   mode: production
   level: error
 http:
   address: 0.0.0.0:8080
   middleware: ["headers"]
+  headers:
+    response:
+      Server: "RoadRunner"
   pool:
     #max_jobs: 64 # feel free to change this
     supervisor:
       exec_ttl: 60s
-  headers:
-    response:
-      Server: "RoadRunner"
-
-
-
