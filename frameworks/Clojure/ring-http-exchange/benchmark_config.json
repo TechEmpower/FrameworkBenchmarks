@@ -20,9 +20,7 @@
         "display_name": "ring-http-exchange",
         "notes": "",
         "versus": "httpserver"
-      }
-    },
-    {
+      },
       "robaho": {
         "json_url": "/json",
         "plaintext_url": "/plaintext",
@@ -40,7 +38,45 @@
         "database_os": "Linux",
         "display_name": "ring-http-exchange-robaho",
         "notes": "",
+        "versus": "httpserver-robaho"
+      },
+      "graalvm": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "None",
+        "framework": "None",
+        "language": "Clojure",
+        "flavor": "None",
+        "orm": "None",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "ring-http-exchange-graalvm",
+        "notes": "",
         "versus": "ring-http-exchange"
+      },
+      "robaho-graalvm": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "None",
+        "framework": "None",
+        "language": "Clojure",
+        "flavor": "None",
+        "orm": "None",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "ring-http-exchange-robaho-graalvm",
+        "notes": "",
+        "versus": "ring-http-exchange-robaho"
       }
     }
   ]
