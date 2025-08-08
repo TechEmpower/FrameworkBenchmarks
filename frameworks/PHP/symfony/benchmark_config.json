@@ -63,7 +63,7 @@
       "webserver": "nginx",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "symfony-raw",
+      "display_name": "symfony [raw orm]",
       "notes": "",
       "versus": "php",
       "tags": []
@@ -87,7 +87,7 @@
       "webserver": "none",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "symfony-swoole",
+      "display_name": "symfony [swoole]",
       "notes": "",
       "versus": "swoole",
       "tags": []
@@ -111,7 +111,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "symfony-workerman",
+      "display_name": "symfony [workerman]",
       "notes": "",
       "versus": "php",
       "tags": []
@@ -135,7 +135,7 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "symfony-roadrunner",
+      "display_name": "symfony [roadrunner]",
       "notes": "",
       "versus": "php",
       "tags": []
@@ -159,7 +159,7 @@
       "webserver": "caddy",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "symfony-frankenphp",
+      "display_name": "symfony [frankenphp]",
       "notes": "Use php 8.2",
       "versus": "php",
       "tags": []
