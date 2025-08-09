@@ -1,6 +1,5 @@
 package com.hexagontk
 
-import com.hexagontk.core.Platform.systemFlag
 import com.hexagontk.core.media.TEXT_HTML
 import com.hexagontk.core.urlOf
 import com.hexagontk.http.server.jetty.JettyServletHttpServer
@@ -16,7 +15,6 @@ fun main() {
         sendDateHeader = settings.sendDateHeader,
         sendServerVersion = settings.sendServerVersion,
         sendXPoweredBy = settings.sendXPoweredBy,
-        useVirtualThreads = systemFlag("virtualThreads"),
     )
 
     val benchmark = Benchmark(engine, store, templateEngine, templateUrl, settings)
