@@ -125,7 +125,11 @@ pub async fn update(ctx: Context) {
 }
 
 pub async fn cached_query(ctx: Context) {
+    eprintln!("cached_query");
+    let _ = std::io::Write::flush(&mut std::io::stderr());
     let run = || async {
+        eprintln!("cached_query run");
+        let _ = std::io::Write::flush(&mut std::io::stderr());
         let count: Queries = ctx
             .get_request_query("c")
             .await
