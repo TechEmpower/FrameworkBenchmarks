@@ -9,7 +9,7 @@ import  juptune.core.util,
         juptune.http;
 
 import tests.common : log;
-import tests.plaintext;
+import tests.plaintext, tests.json;
 
 /++++ Constant config ++++/
 
@@ -73,6 +73,7 @@ void router() nothrow
         {
             FAILSAFE,
             plaintext,
+            json,
         }
 
         enum Method
@@ -84,6 +85,7 @@ void router() nothrow
         union RouteInput
         {
             PlainTextHeaderInput plaintext;
+            JsonHeaderInput json;
         }
 
         while(!juptuneEventLoopIsThreadCanceled())
@@ -159,6 +161,10 @@ void router() nothrow
                                     route = Route.plaintext;
                                     break;
 
+                                case "/json":
+                                    route = Route.json;
+                                    break;
+
                                 default:
                                     setError(404, "Not found");
                                     break;
@@ -196,6 +202,9 @@ void router() nothrow
                                 
                                 case plaintext:
                                     break;
+
+                                case json:
+                                    break;
                             }
                         });
                     }
@@ -218,6 +227,9 @@ void router() nothrow
                                 case FAILSAFE: break;
                                 
                                 case plaintext:
+                                    break;
+
+                                case json:
                                     break;
                             }
                         });
@@ -255,6 +267,10 @@ void router() nothrow
                         
                         case plaintext:
                             handlePlainText(input.plaintext, writer, writeSummary);
+                            break;
+
+                        case json:
+                            handleJson(input.json, writer, writeSummary);
                             break;
                     }
                 } while(!readSummary.connectionClosed && !writeSummary.connectionClosed);
