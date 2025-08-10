@@ -153,6 +153,7 @@ pub async fn init_db() {
         create_table().await;
         insert_records().await;
     }
+    let _ = get_db_connection();
     let _ = CACHE.get(0);
 }
 
