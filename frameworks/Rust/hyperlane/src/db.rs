@@ -153,7 +153,7 @@ pub async fn init_db() {
         create_table().await;
         insert_records().await;
     }
-    black_box(init_cache().await);
+    let _ = CACHE.get(0);
 }
 
 pub async fn random_world_row(db_pool: &DbPoolConnection) -> QueryRow {
