@@ -68,7 +68,6 @@ async fn init_server() {
 }
 
 async fn init() {
-    #[cfg(any(feature = "dev"))]
     init_db().await;
     init_server().await;
 }
