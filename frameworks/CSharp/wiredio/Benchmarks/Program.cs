@@ -18,7 +18,7 @@ await builder
         context
             .Writer.Write("Content-Type: text/plain\r\nConnection: keep-alive\r\n\r\n"u8);
         context
-            .Writer.Write("Hello World!\r\n"u8);
+            .Writer.Write("Hello, World!\r\n"u8);
 
         await context.Writer.FlushAsync();
     })
@@ -29,7 +29,7 @@ await builder
             .Status(ResponseStatus.Ok)
             .Content(new JsonContent(new
             {
-                Message = "Hello World!"
+                Message = "Hello, World!"
             }, JsonSerializerOptions.Default))
             .Type("application/json");
     })
