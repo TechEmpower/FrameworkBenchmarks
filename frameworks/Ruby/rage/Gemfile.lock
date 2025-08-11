@@ -61,4 +61,4 @@ DEPENDENCIES
   rage-rb (~> 1.10)
 
 BUNDLED WITH
-   2.6.2
+   2.7.0
