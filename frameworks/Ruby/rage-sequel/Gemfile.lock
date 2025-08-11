@@ -36,4 +36,4 @@ DEPENDENCIES
   sequel_pg (~> 1.6)
 
 BUNDLED WITH
-   2.6.2
+   2.7.0
