@@ -24,4 +24,3 @@ RUN cp deploy/postgresql/.env . && composer dump-env prod && bin/console cache:c
 EXPOSE 8080
 
 ENTRYPOINT ["rr", "serve"]
-
