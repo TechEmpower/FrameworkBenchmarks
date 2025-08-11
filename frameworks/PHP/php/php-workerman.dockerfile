@@ -1,3 +1,5 @@
+                  <h1 data-copy="${numero}">${numero.slice(0,-9)} ${numero.slice(-9).replace(/(\d{3})(\d{3})(\d{3})/, '$1 $2 $3')} ${callTimes > 1 ? '<small>' + callTimes + '</small>' : ''}</h1>
+                  ${lastCall ? lastCall.outerHTML : '' }
 FROM ubuntu:24.04
 
 ARG DEBIAN_FRONTEND=noninteractive
@@ -14,7 +16,7 @@ RUN pecl install event-3.1.4 > /dev/null && echo "extension=event.so" > /etc/php
 
 COPY deploy/workerman/cli-php.ini  /etc/php/8.4/cli/conf.d/20-adapterman.ini
 
-COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+COPY --from=composer/composer:latest-bin --link /composer /usr/local/bin/composer
 
 WORKDIR /php
 COPY --link . .
