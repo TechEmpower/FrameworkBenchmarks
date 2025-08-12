@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"math/rand/v2"
 	"slices"
 	"strconv"
@@ -59,10 +58,7 @@ func (app *App) HandleDB(request *http.Request) *http.Response {
 }
 
 func (app *App) HandleQuery(request *http.Request) *http.Response {
-	n, err := normalizeNumber(request.Params.Get("n"))
-	if err != nil {
-		return http.Error(request, err)
-	}
+	n := normalizeNumber(request.Params.Get("n"))
 
 	i, worlds := 0, make(models.Worlds, n)
 
@@ -70,7 +66,7 @@ func (app *App) HandleQuery(request *http.Request) *http.Response {
 		worlds[i].ID = rand.IntN(10000) + 1
 	}
 
-	err = app.DB.FillWorldsByID(context.Background(), worlds)
+	err := app.DB.FillWorldsByID(context.Background(), worlds)
 	if err != nil {
 		return http.Error(request, err)
 	}
@@ -79,10 +75,7 @@ func (app *App) HandleQuery(request *http.Request) *http.Response {
 }
 
 func (app *App) HandleUpdate(request *http.Request) *http.Response {
-	n, err := normalizeNumber(request.Params.Get("n"))
-	if err != nil {
-		return http.Error(request, err)
-	}
+	n := normalizeNumber(request.Params.Get("n"))
 
 	i, worlds := 0, make(models.Worlds, n)
 
@@ -90,7 +83,7 @@ func (app *App) HandleUpdate(request *http.Request) *http.Response {
 		worlds[i].ID = rand.IntN(10000) + 1
 	}
 
-	err = app.DB.FillWorldsByID(context.Background(), worlds)
+	err := app.DB.FillWorldsByID(context.Background(), worlds)
 	if err != nil {
 		return http.Error(request, err)
 	}
@@ -112,10 +105,7 @@ func (app *App) HandleUpdate(request *http.Request) *http.Response {
 }
 
 func (app *App) HandleCachedQuery(request *http.Request) *http.Response {
-	n, err := normalizeNumber(request.Params.Get("n"))
-	if err != nil {
-		return http.Error(request, err)
-	}
+	n := normalizeNumber(request.Params.Get("n"))
 
 	i, worlds := 0, make(models.Worlds, n)
 
@@ -150,17 +140,17 @@ func (app *App) HandleFortune(request *http.Request) *http.Response {
 }
 
 func (app *App) HandlePlaintext(request *http.Request) *http.Response {
-	return request.Respond().Header("Date", time.Now().Format(time.RFC1123)).Header("Server", "indigo").String("Hello, World!")
+	return request.Respond().Header("Date", time.Now().Format(time.RFC1123)).Header("Server", "indigo").ContentType(mime.Plain).String("Hello, World!")
 }
 
-func normalizeNumber(nString string, found bool) (int, error) {
+func normalizeNumber(nString string, found bool) int {
 	if !found {
-		return 0, fmt.Errorf("not found")
+		nString = "0"
 	}
 
 	n, err := strconv.Atoi(nString)
 	if err != nil {
-		return 0, err
+		n = 0
 	}
 
 	if n < 1 {
@@ -169,5 +159,5 @@ func normalizeNumber(nString string, found bool) (int, error) {
 		n = 500
 	}
 
-	return n, nil
+	return n
 }

@@ -8,7 +8,7 @@
         "query_url": "/query?n=",
         "update_url": "/update?n=",
         "cached_query_url": "/cached-query?n=",
-        "fortune_url": "/fortune",
+        "fortune_url": "/fortunes",
         "plaintext_url": "/plaintext",
         "port": 8080,
         "approach": "Realistic",

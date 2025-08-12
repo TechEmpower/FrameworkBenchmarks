@@ -38,7 +38,7 @@ func main() {
 	router.Resource("/query").Get(app.HandleQuery)
 	router.Resource("/update").Get(app.HandleUpdate)
 	router.Resource("/cached-query").Get(app.HandleCachedQuery)
-	router.Resource("/fortune").Get(app.HandleFortune)
+	router.Resource("/fortunes").Get(app.HandleFortune)
 	router.Resource("/plaintext").Get(app.HandlePlaintext)
 
 	err = indigo.New(":8080").Serve(router)
