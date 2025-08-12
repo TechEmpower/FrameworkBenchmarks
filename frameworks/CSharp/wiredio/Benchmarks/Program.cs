@@ -14,7 +14,7 @@ await builder
         context
             .Writer.Write("HTTP/1.1 200 OK\r\n"u8);
         context
-            .Writer.Write("Content-Length:12\r\n"u8);
+            .Writer.Write("Content-Length:13\r\n"u8);
         context
             .Writer.Write("Content-Type: text/plain\r\nConnection: keep-alive\r\n\r\n"u8);
         context
