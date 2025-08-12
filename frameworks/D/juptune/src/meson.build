@@ -7,6 +7,7 @@ project('juptune-tfb', 'd')
 srcs = files(
     './main.d',
     './tests/common.d',
+    './tests/json.d',
     './tests/plaintext.d',
 )
 

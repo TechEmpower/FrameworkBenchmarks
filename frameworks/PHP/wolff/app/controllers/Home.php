@@ -101,6 +101,7 @@ class Home extends \Wolff\Core\Controller
 		usort($fortunes, function ($left, $right) {
             return $left['message'] <=> $right['message'];
         });
+		$res->setHeader('Content-Type', 'text/html; charset=utf-8');
 		View::render('fortunes', [
 			'fortunes' => $fortunes,
 		]);
