@@ -1,41 +1,86 @@
-﻿using AkazawaYun.PRO7;
+﻿using AkazawaYun.AOT;
+using AkazawaYun.PRO7;
+using AkazawaYun.PRO7.AkazawaYunWebFunctionAOP;
 using AkazawaYun.PRO7.AkazawaYunWebInterceptor;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Intrinsics.Arm;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 
 namespace AkazawaYun.FrameworkBenchmarks;
 
-public class Program : IPostFunction
+internal class Program : IPostFunctionWrapper
 {
-    static async Task Main()
+    static readonly akzWebBuilder builder;
+    static readonly akzDbFactory mysql;
+
+
+    static Program()
     {
         akzJson.Config(null, Json.Default);
-        var server = await akzWebBuilder.Shared.Load().SetDefault().Build()
+        builder = akzWebBuilder.Shared.SetDefault()
+            .Build()
             .Config<IWebReceptor, akzWebInterceptor>(itc =>
             {
                 itc.AddInterceptor(new akzWebInterceptorNotOnlyPost());
-            }).Launch();
+            });
+        mysql = new akzDbBuilderII()
+            .SetServer("tfb-database")
+            .SetDatabase("hello_world")
+            .SetUser("benchmarkdbuser")
+            .SetPwd("benchmarkdbpass")
+            .SetOtherset("Maximum Pool Size=1024;SslMode=None;ConnectionReset=false;ConnectionIdlePingTime=900;ConnectionIdleTimeout=0;AutoEnlist=false;DefaultCommandTimeout=0;ConnectionTimeout=0;IgnorePrepare=false;")
+            .Build<Mysql>();
+    }
+    static async Task Main()
+    {
+        await builder.Launch();
         akzLog.Default = akzLog.Output.None;
         await Task.Delay(-1);
     }
 
 
-    public static ValueTask<HttpRes> plaintext(HttpReq _)
-    {
-        return HttpRes.HttpOK("Hello, World!", ".txt");
-    }
-    public static ValueTask<HttpRes> json(HttpReq _)
-    {
-        return HttpRes.HttpJson(new JsonResponse
-        {
-            message = "Hello, World!"
-        });
-    }
-}
 
-public class JsonResponse
-{
-    public string? message { get; set; }
-}
+    public static HttpRes plaintext() => HttpRes.HttpOK("Hello, World!", ".txt");
+    public static JsonResponse json() => new()
+    {
+        message = "Hello, World!"
+    };
+    [WebFunctionAopTry]
+    public static async Task<World> db()
+    {
+        await using IDb con = await mysql.Connect();
+        World obj = await WorldService.GetRandomWorld(con);
+        return obj;
+    }
+    [WebFunctionAopTry]
+    public static async Task<World[]> queries(string queries)
+    {
+        if (!int.TryParse(queries, out int count))
+            count = 1;
+        count = Math.Clamp(count, 1, 500);
 
-[JsonSerializable(typeof(JsonResponse))]
-public partial class Json : JsonSerializerContext { }
+        await using IDb con = await mysql.Connect();
+        var lst = await WorldService.GetWorlds(con, count);
+        return lst;
+    }
+    [WebFunctionAopTry]
+    public static async Task<World[]> updates(string queries)
+    {
+        if (!int.TryParse(queries, out int count))
+            count = 1;
+        count = Math.Clamp(count, 1, 500);
+
+        await using IDb con = await mysql.Connect();
+        var lst = await WorldService.GetWorlds(con, count);
+
+        foreach (var item in lst)
+            item.randomNumber = Random.Shared.Next(1, 10001);
+
+        await WorldService.SaveWorlds(con, lst);
+
+        return lst;
+    }
+
+
+}

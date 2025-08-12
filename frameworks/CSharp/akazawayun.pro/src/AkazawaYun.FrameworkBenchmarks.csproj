@@ -5,15 +5,17 @@
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <EnableSourceGenerator>true</EnableSourceGenerator>
   </PropertyGroup>
-  
+
   <PropertyGroup>
     <ConcurrentGarbageCollection>true</ConcurrentGarbageCollection>
     <ServerGarbageCollection>true</ServerGarbageCollection>
   </PropertyGroup>
-  
+
   <ItemGroup>
     <PackageReference Include="AkazawaYun.PRO" Version="1.13.25.727" />
+    <PackageReference Include="MySql.Data" Version="9.4.0" />
   </ItemGroup>
 
 </Project>
