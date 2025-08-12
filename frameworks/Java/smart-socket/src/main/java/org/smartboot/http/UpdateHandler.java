@@ -1,7 +1,7 @@
 package org.smartboot.http;
 
 
-import tech.smartboot.feat.core.common.utils.NumberUtils;
+import tech.smartboot.feat.core.common.FeatUtils;
 import tech.smartboot.feat.core.server.HttpHandler;
 import tech.smartboot.feat.core.server.HttpRequest;
 import tech.smartboot.feat.core.server.HttpResponse;
@@ -29,7 +29,7 @@ public class UpdateHandler implements HttpHandler {
     @Override
     public void handle(HttpRequest request) throws IOException {
         HttpResponse response = request.getResponse();
-        int queries = Math.min(Math.max(NumberUtils.toInt(request.getParameter("queries"), 1), 1), 500);
+        int queries = Math.min(Math.max(FeatUtils.toInt(request.getParameter("queries"), 1), 1), 500);
         World[] worlds = new World[queries];
         StringJoiner updateSql = new StringJoiner(
                 ", ",

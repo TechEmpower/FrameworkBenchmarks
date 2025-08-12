@@ -1,10 +1,10 @@
-FROM maven:3.6.1-jdk-11-slim as maven
+FROM maven:3-eclipse-temurin-24-alpine as maven
 WORKDIR /jetty
 COPY pom.xml pom.xml
 COPY src src
 RUN mvn compile assembly:single -q -P servlet
 
-FROM openjdk:11.0.3-jdk-slim
+FROM openjdk:25-jdk-slim
 WORKDIR /jetty
 COPY --from=maven /jetty/target/jetty-example-0.1-jar-with-dependencies.jar app.jar
 

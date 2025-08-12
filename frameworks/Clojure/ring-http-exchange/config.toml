@@ -1,0 +1,55 @@
+[framework]
+name = "ring-http-exchange"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+approach = "Realistic"
+classification = "Platform"
+database = "None"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "httpserver"
+webserver = "None"
+versus = "httpserver"
+
+
+[graalvm]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+approach = "Realistic"
+classification = "Platform"
+database = "None"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "httpserver"
+webserver = "None"
+versus = "httpserver-graalvm"
+
+[robaho]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+approach = "Realistic"
+classification = "Platform"
+database = "None"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "httpserver"
+webserver = "None"
+versus = "httpserver-robaho"
+
+[robaho-graalvm]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+approach = "Realistic"
+classification = "Platform"
+database = "None"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "httpserver"
+webserver = "None"
+versus = "httpserver-robaho-graalvm"
