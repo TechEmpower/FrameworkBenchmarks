@@ -31,4 +31,3 @@ RUN chmod -R 777 /php
 EXPOSE 8080
 
 CMD php start.php start
-
