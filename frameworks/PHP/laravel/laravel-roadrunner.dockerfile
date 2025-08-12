@@ -31,3 +31,4 @@ EXPOSE 8080
 # https://artisan.page/12.x/
 #ENTRYPOINT ["php", "artisan", "octane:roadrunner", "--host=0.0.0.0", "--port=8080", "--workers=auto", "--max-requests=10000", "--rr-config=/laravel/deploy/roadrunner/.rr.yaml"]
 ENTRYPOINT ["/laravel/rr", "serve", "-c", "/laravel/deploy/roadrunner/.rr.yaml"]
+
