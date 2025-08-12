@@ -1,5 +1,3 @@
-                  <h1 data-copy="${numero}">${numero.slice(0,-9)} ${numero.slice(-9).replace(/(\d{3})(\d{3})(\d{3})/, '$1 $2 $3')} ${callTimes > 1 ? '<small>' + callTimes + '</small>' : ''}</h1>
-                  ${lastCall ? lastCall.outerHTML : '' }
 FROM ubuntu:24.04
 
 ARG DEBIAN_FRONTEND=noninteractive
@@ -31,4 +29,3 @@ RUN chmod -R 777 /php
 EXPOSE 8080
 
 CMD php start.php start
-
