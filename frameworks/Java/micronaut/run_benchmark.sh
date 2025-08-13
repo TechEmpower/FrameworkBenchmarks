@@ -9,6 +9,7 @@ fi
 JAVA_OPTIONS="$JAVA_OPTIONS -server \
   -XX:+UseParallelGC \
   -XX:+UseNUMA \
+  -Djdk.trackAllThreads=false \
   -Dio.netty.buffer.checkBounds=false \
   -Dio.netty.buffer.checkAccessible=false \
   -Dvertx.disableMetrics=true \
