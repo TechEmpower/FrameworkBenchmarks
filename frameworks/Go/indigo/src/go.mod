@@ -1,6 +1,6 @@
 module indigo/app
 
-go 1.24.4
+go 1.25
 
 require (
 	github.com/indigo-web/indigo v0.17.1
