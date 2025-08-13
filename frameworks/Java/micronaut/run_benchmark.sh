@@ -6,7 +6,7 @@ else
   MN_ENV=benchmark,$MN_ENV
 fi
 
-JAVA_OPTIONS="-server \
+JAVA_OPTIONS="$JAVA_OPTIONS -server \
   -XX:+UseParallelGC \
   -XX:+UseNUMA \
   -Dio.netty.buffer.checkBounds=false \
