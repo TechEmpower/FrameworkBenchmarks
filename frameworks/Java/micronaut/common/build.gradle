@@ -36,8 +36,6 @@ dependencies {
 
     implementation("io.micronaut.views:micronaut-views-jte")
 
-    implementation("tools.profiler:async-profiler:4.1")
-
     runtimeOnly("ch.qos.logback:logback-classic")
     runtimeOnly("org.yaml:snakeyaml")
 }
