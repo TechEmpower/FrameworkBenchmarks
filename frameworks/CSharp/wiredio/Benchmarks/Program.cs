@@ -1,26 +1,21 @@
-﻿using System.Buffers;
-using System.Net;
+﻿using System.Net;
 using System.Text.Json;
 using Wired.IO.App;
 using Wired.IO.Http11.Response.Content;
 using Wired.IO.Protocol.Response;
+using StringContent = Wired.IO.Http11.Response.Content.StringContent;
 
 var builder = WiredApp.CreateBuilder();
 
 await builder
     .Endpoint(IPAddress.Any, 8080)
-    .MapGet("/plaintext", scope => async context =>
+    .MapGet("/plaintext", scope => context =>
     {
         context
-            .Writer.Write("HTTP/1.1 200 OK\r\n"u8);
-        context
-            .Writer.Write("Content-Length:13\r\n"u8);
-        context
-            .Writer.Write("Content-Type: text/plain\r\nConnection: keep-alive\r\n\r\n"u8);
-        context
-            .Writer.Write("Hello, World!\r\n"u8);
-
-        await context.Writer.FlushAsync();
+            .Respond()
+            .Status(ResponseStatus.Ok)
+            .Content(new StringContent("Hello, World!"))
+            .Type("text/plain");
     })
     .MapGet("/json", scope => context =>
     {
