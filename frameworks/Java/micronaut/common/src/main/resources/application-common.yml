@@ -6,6 +6,9 @@ micronaut:
     server-header: Micronaut
     date-header: false
     validate-url: false
+  http:
+    client:
+      event-loop-group: default
 
 netty:
   resource-leak-detector-level: DISABLED

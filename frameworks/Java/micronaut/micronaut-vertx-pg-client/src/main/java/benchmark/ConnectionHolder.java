@@ -1,6 +1,10 @@
 package benchmark;
 
 import io.micronaut.context.annotation.Property;
+import io.micronaut.core.util.SupplierUtil;
+import io.micronaut.http.netty.channel.loom.EventLoopVirtualThreadScheduler;
+import io.micronaut.http.netty.channel.loom.PrivateLoomSupport;
+import io.micronaut.scheduling.LoomSupport;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
@@ -10,6 +14,8 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.ServerChannel;
 import io.netty.channel.socket.DatagramChannel;
 import io.netty.channel.socket.InternetProtocolFamily;
+import io.netty.util.Attribute;
+import io.netty.util.AttributeKey;
 import io.netty.util.concurrent.FastThreadLocal;
 import io.netty.util.internal.ThreadExecutorMap;
 import io.vertx.core.Future;
@@ -23,46 +29,82 @@ import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.pgclient.PgConnection;
 import io.vertx.sqlclient.PoolOptions;
 import jakarta.inject.Singleton;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.SocketAddress;
+import java.util.List;
 import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Supplier;
+import java.util.stream.IntStream;
 
 @Singleton
 public class ConnectionHolder {
+    private static final Logger log = LoggerFactory.getLogger(ConnectionHolder.class);
     private final FastThreadLocal<Future<PgConnection>> conn = new FastThreadLocal<>();
+    private final AttributeKey<Future<PgConnection>> loomConn = AttributeKey.valueOf("vertx-pg-connection");
 
     @Property(name = "datasources.default.url") String url;
     @Property(name = "datasources.default.username") String user;
     @Property(name = "datasources.default.password") String password;
     @Property(name = "datasources.default.maximum-pool-size") int maxPoolSize;
 
+    private final Supplier<List<Future<PgConnection>>> pool = SupplierUtil.memoized(() -> {
+        Vertx vertx = Vertx.vertx();
+        return IntStream.range(0, maxPoolSize)
+                .mapToObj(i -> PgConnection.connect(vertx, connectOptions()))
+                .toList();
+    });
+
     public Future<PgConnection> get() {
-        Future<PgConnection> c = conn.get();
-        if (c == null) {
+        if (PrivateLoomSupport.isSupported() &&
+                LoomSupport.isVirtual(Thread.currentThread()) &&
+                PrivateLoomSupport.getScheduler(Thread.currentThread()) instanceof EventLoopVirtualThreadScheduler sch) {
 
-            PgConnectOptions connectOptions = PgConnectOptions.fromUri(url.substring(5))
-                    .setUser(user)
-                    .setPassword(password)
-                    .setCachePreparedStatements(true)
-                    .setTcpNoDelay(true)
-                    .setTcpQuickAck(true)
-                    .setPipeliningLimit(1024);
-            PoolOptions poolOptions = new PoolOptions();
-            poolOptions.setMaxSize(maxPoolSize);
+            Attribute<Future<PgConnection>> attr = sch.attributeMap().attr(loomConn);
+            Future<PgConnection> c = attr.get();
+            if (c == null) {
+                c = connect((EventLoop) sch.eventLoop());
+                attr.set(c);
+            }
+            return c;
+        } else if (ThreadExecutorMap.currentExecutor() instanceof EventLoop el) {
 
-            VertxBuilder builder = new VertxBuilder()
-                    .init();
-
-            EventLoop loop = (EventLoop) ThreadExecutorMap.currentExecutor();
-
-            Vertx vertx = builder
-                    .findTransport(new ExistingTransport(builder.findTransport(), loop))
-                    .vertx();
-
-            c = PgConnection.connect(vertx, connectOptions);
-            conn.set(c);
+            Future<PgConnection> c = conn.get();
+            if (c == null) {
+                c = connect(el);
+                conn.set(c);
+            }
+            return c;
+        } else {
+            List<Future<PgConnection>> l = pool.get();
+            return l.get(ThreadLocalRandom.current().nextInt(l.size()));
         }
-        return c;
+    }
+
+    private Future<PgConnection> connect(EventLoop loop) {
+        VertxBuilder builder = new VertxBuilder().init();
+        Vertx vertx = builder
+                .findTransport(new ExistingTransport(builder.findTransport(), loop))
+                .vertx();
+        return PgConnection.connect(vertx, connectOptions());
+    }
+
+    private PoolOptions poolOptions() {
+        PoolOptions poolOptions = new PoolOptions();
+        poolOptions.setMaxSize(maxPoolSize);
+        return poolOptions;
+    }
+
+    private PgConnectOptions connectOptions() {
+        return PgConnectOptions.fromUri(url.substring(5))
+                .setUser(user)
+                .setPassword(password)
+                .setCachePreparedStatements(true)
+                .setTcpNoDelay(true)
+                .setTcpQuickAck(true)
+                .setPipeliningLimit(1024);
     }
 
     private record ExistingTransport(Transport transport, EventLoop loop) implements Transport {
