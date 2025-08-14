@@ -34,7 +34,7 @@ dependencies {
         transitive = false
     }
 
-    implementation("io.micronaut.views:micronaut-views-jte")
+    implementation("gg.jte:jte")
 
     runtimeOnly("io.netty:netty-transport-native-io_uring::linux-x86_64")
 
