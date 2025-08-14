@@ -5,3 +5,4 @@ micronaut:
         loom-carrier: true
     loom-carrier:
       work-spill-threshold: 1000000
+      throughput-mode-threshold: 1000000
