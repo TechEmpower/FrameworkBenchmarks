@@ -6,6 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <EnableSourceGenerator>true</EnableSourceGenerator>
+    <PublishAot>false</PublishAot>
   </PropertyGroup>
 
   <PropertyGroup>

@@ -4,7 +4,7 @@ using System.Data.Common;
 
 namespace AkazawaYun.FrameworkBenchmarks;
 
-internal class Mysql : akzDbFactory
+class Mysql : akzDbFactory
 {
     protected override DbConnection NewConnection() => new MySqlConnection(ConString);
 }

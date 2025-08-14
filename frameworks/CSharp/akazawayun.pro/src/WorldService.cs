@@ -2,32 +2,44 @@
 
 namespace AkazawaYun.FrameworkBenchmarks;
 
-internal static class WorldService
+class WorldService
 {
-    public static async Task<World> GetRandomWorld(IDb con, Dictionary<string, object?>? shared = null)
+    static readonly int @id;
+    // SELECT id, randomNumber FROM world WHERE id=@id ;
+    public static readonly string SqlSelect = akzSqlinq<world>.Query().Select(m => new
     {
-        string sql = "SELECT id, randomNumber FROM world WHERE id = @id";
+        m.id,
+        m.randomNumber,
+    }).Where(m => m.id == @id).Build();
+    // UPDATE world SET randomNumber=@randomNumber WHERE id=@id ;
+    public static readonly string SqlUpdate = akzSqlinq<world>.Update().Set(m => new()
+    {
+        randomNumber = m.randomNumber,
+    }).Where(m => m.id == @id).Build();
+
+
+    public static async Task<world> GetRandomWorld(IDb con, IDictionary<string, object?>? shared = null)
+    {
         int id = Random.Shared.Next(1, 10001);
         shared ??= new DpSingleBuilder().Build();
         shared["id"] = id;
 
-        World? obj = await con.Find(sql, shared).ToWorld();
+        world? obj = await con.Find(SqlSelect, shared).Toworld();
         return obj!;
     }
-    public static async Task<World[]> GetWorlds(IDb con, int count)
+    public static async Task<world[]> GetWorlds(IDb con, int count)
     {
-        World[] lst = new World[count];
+        world[] lst = new world[count];
         var dp = new DpSingleBuilder().Build();
         for (int i = 0; i < count; i++)
         {
-            World obj = await GetRandomWorld(con, dp);
+            world obj = await GetRandomWorld(con, dp);
             lst[i] = obj;
         }
         return lst;
     }
-    public static async Task SaveWorlds(IDb con, World[] lst)
+    public static async Task SaveWorlds(IDb con, world[] lst)
     {
-        string sql = "UPDATE world SET randomNumber=@randomNumber WHERE id=@id ;";
-        await con.Execute(sql, lst.ToDp());
+        await con.Execute(SqlUpdate, lst.ToDp());
     }
 }

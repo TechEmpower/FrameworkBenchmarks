@@ -1,23 +1,23 @@
-﻿using AkazawaYun.AOT;
+﻿#pragma warning disable IDE1006
+
+using AkazawaYun.AOT;
 using AkazawaYun.PRO7;
 using AkazawaYun.PRO7.AkazawaYunWebFunctionAOP;
 using AkazawaYun.PRO7.AkazawaYunWebInterceptor;
 using System.Diagnostics.CodeAnalysis;
-using System.Runtime.Intrinsics.Arm;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace AkazawaYun.FrameworkBenchmarks;
 
-internal class Program : IPostFunctionWrapper
+class Program : IPostFunctionWrapper
 {
     static readonly akzWebBuilder builder;
     static readonly akzDbFactory mysql;
 
 
+    [UnconditionalSuppressMessage("Trimming", "IL2026")]
     static Program()
     {
-        akzJson.Config(null, Json.Default);
+        akzJson.Config(null, AotJsonContext.Default);
         builder = akzWebBuilder.Shared.SetDefault()
             .Build()
             .Config<IWebReceptor, akzWebInterceptor>(itc =>
@@ -26,10 +26,10 @@ internal class Program : IPostFunctionWrapper
             });
         mysql = new akzDbBuilderII()
             .SetServer("tfb-database")
-            .SetDatabase("hello_world")
             .SetUser("benchmarkdbuser")
             .SetPwd("benchmarkdbpass")
-            .SetOtherset("Maximum Pool Size=1024;SslMode=None;ConnectionReset=false;ConnectionIdlePingTime=900;ConnectionIdleTimeout=0;AutoEnlist=false;DefaultCommandTimeout=0;ConnectionTimeout=0;IgnorePrepare=false;")
+            .SetDatabase("hello_world")
+            .SetOtherset("SslMode=None;")
             .Build<Mysql>();
     }
     static async Task Main()
@@ -40,47 +40,51 @@ internal class Program : IPostFunctionWrapper
     }
 
 
-
     public static HttpRes plaintext() => HttpRes.HttpOK("Hello, World!", ".txt");
-    public static JsonResponse json() => new()
+    public static JsonModel json() => new()
     {
         message = "Hello, World!"
     };
+
     [WebFunctionAopTry]
-    public static async Task<World> db()
+    public static async Task<world> db()
     {
         await using IDb con = await mysql.Connect();
-        World obj = await WorldService.GetRandomWorld(con);
+        world obj = await WorldService.GetRandomWorld(con);
         return obj;
     }
     [WebFunctionAopTry]
-    public static async Task<World[]> queries(string queries)
+    public static async Task<world[]> queries(string queries)
     {
-        if (!int.TryParse(queries, out int count))
-            count = 1;
-        count = Math.Clamp(count, 1, 500);
+        int count = ParseCount(queries);
 
         await using IDb con = await mysql.Connect();
-        var lst = await WorldService.GetWorlds(con, count);
+        world[] lst = await WorldService.GetWorlds(con, count);
         return lst;
     }
     [WebFunctionAopTry]
-    public static async Task<World[]> updates(string queries)
+    public static async Task<world[]> updates(string queries)
     {
-        if (!int.TryParse(queries, out int count))
-            count = 1;
-        count = Math.Clamp(count, 1, 500);
+        int count = ParseCount(queries);
 
         await using IDb con = await mysql.Connect();
-        var lst = await WorldService.GetWorlds(con, count);
+        world[] lst = await WorldService.GetWorlds(con, count);
 
-        foreach (var item in lst)
-            item.randomNumber = Random.Shared.Next(1, 10001);
+        foreach (world obj in lst)
+            obj.randomNumber = Random.Shared.Next(1, 10001);
 
         await WorldService.SaveWorlds(con, lst);
 
         return lst;
     }
 
+
+    static int ParseCount(string queries)
+    {
+        if (!int.TryParse(queries, out int count))
+            count = 1;
+        count = Math.Clamp(count, 1, 500);
+        return count;
+    }
 
 }
