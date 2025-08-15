@@ -73,8 +73,10 @@
     "ldc-pgsql": {
       "db_url": "/db",
       "query_url": "/queries?queries=",
+      "plaintext_url": "/plaintext",
       "fortune_url": "/fortunes",
       "update_url": "/updates?queries=",
+      "json_url": "/json",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",

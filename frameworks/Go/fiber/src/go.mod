@@ -6,7 +6,7 @@ toolchain go1.24.1
 
 require (
 	github.com/goccy/go-json v0.10.5
-	github.com/gofiber/fiber/v2 v2.52.7
+	github.com/gofiber/fiber/v2 v2.52.9
 	github.com/jackc/pgx/v5 v5.7.4
 	github.com/valyala/quicktemplate v1.8.0
 )

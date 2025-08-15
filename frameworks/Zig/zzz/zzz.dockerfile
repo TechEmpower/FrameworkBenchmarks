@@ -26,7 +26,6 @@ COPY build.zig.zon build.zig.zon
 USER ziguser
 
 RUN zig build -Doptimize=ReleaseFast -Dcpu=native
-RUN ls
 
 FROM debian:12-slim
 

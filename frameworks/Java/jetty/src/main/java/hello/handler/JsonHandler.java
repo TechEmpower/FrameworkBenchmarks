@@ -1,34 +1,35 @@
 package hello.handler;
 
-import java.io.IOException;
-import java.util.Collections;
-import java.util.Map;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.eclipse.jetty.http.HttpField;
-import org.eclipse.jetty.http.HttpHeader;
-import org.eclipse.jetty.http.PreEncodedHttpField;
+import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Request;
-import org.eclipse.jetty.server.handler.AbstractHandler;
-import org.eclipse.jetty.util.ajax.JSON;
+import org.eclipse.jetty.server.Response;
+import org.eclipse.jetty.util.Callback;
+
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 
 
+public class JsonHandler extends Handler.Abstract {
 
-public class JsonHandler extends AbstractHandler
-{
-    private JSON json = new JSON();
-    HttpField contentType = new PreEncodedHttpField(HttpHeader.CONTENT_TYPE,"application/json");
+    private static final HttpField JSON_HEADER = new HttpField("Content-Type", "application/json");
+    private static final String JSON_RESPONSE = "{\"message\": \"Hello, World!\"}";
+
 
     @Override
-    public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
-    {
-        baseRequest.setHandled(true);
-        baseRequest.getResponse().getHttpFields().add(contentType);  
-        Map<String,String> map = Collections.singletonMap("message","Hello, World!");        
-        json.append(response.getWriter(),map);
-    }
+    public boolean handle(Request request, Response response, Callback callback) {
+        try {
+            response.setStatus(200);
+            response.getHeaders().add(JSON_HEADER);
 
+            byte[] contentBytes = JSON_RESPONSE.getBytes(StandardCharsets.UTF_8);
+            ByteBuffer contentBuffer = ByteBuffer.wrap(contentBytes);
+            response.getHeaders().put("Content-Length", String.valueOf(contentBytes.length));
+
+            response.write(true, contentBuffer, callback);
+        } catch (Exception e) {
+            callback.failed(e);
+        }
+        return true;
+    }
 }

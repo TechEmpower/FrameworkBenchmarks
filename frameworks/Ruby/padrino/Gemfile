@@ -13,5 +13,5 @@ group :puma, optional: true do
 end
 
 group :unicorn, optional: true do
-  gem 'unicorn', '~> 6.1', platforms: [:ruby, :mswin], require: false
+  gem 'unicorn', '~> 6.1', platforms: [:ruby, :windows], require: false
 end
