@@ -5,11 +5,11 @@ gem 'sequel', '~> 5.0'
 gem 'rack', '~> 3.1'
 
 group :mysql, optional: true do
-  gem 'mysql2', '~> 0.4', platforms: [:ruby, :mswin]
+  gem 'mysql2', '~> 0.4', platforms: [:ruby, :windows]
 end
 
 group :postgresql, optional: true do
-  gem 'pg', '~> 1.5', platforms: [:ruby, :mswin]
+  gem 'pg', '~> 1.5', platforms: [:ruby, :windows]
   gem 'sequel_pg', '~> 1.6', platforms: :ruby, require: false
 end
 
