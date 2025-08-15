@@ -1,5 +1,5 @@
 {
-  "framework": "clace",
+  "framework": "openrun",
   "tests": [
     {
       "default": {
@@ -8,13 +8,13 @@
         "port": 8080,
         "approach": "Realistic",
         "classification": "Micro",
-        "framework": "Clace",
+        "framework": "OpenRun",
         "language": "python",
         "flavor": "Starlark",
         "platform": "None",
-        "webserver": "Clace",
+        "webserver": "OpenRun",
         "os": "Linux",
-        "display_name": "Clace",
+        "display_name": "OpenRun",
         "notes": "",
         "versus": "None"
       }
