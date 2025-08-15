@@ -53,7 +53,9 @@ public class ConnectionHolder {
     @Property(name = "datasources.default.maximum-pool-size") int maxPoolSize;
 
     private final Supplier<List<Future<PgConnection>>> pool = SupplierUtil.memoized(() -> {
-        Vertx vertx = Vertx.vertx();
+        Vertx vertx = Vertx.builder()
+                .withTransport(vertxTransport())
+                .build();
         return IntStream.range(0, maxPoolSize)
                 .mapToObj(i -> PgConnection.connect(vertx, connectOptions()))
                 .toList();
@@ -88,9 +90,7 @@ public class ConnectionHolder {
     private Future<PgConnection> connect(EventLoop loop) {
         VertxBuilder builder = Vertx.builder();
 
-        io.vertx.core.transport.Transport original = Stream.of(io.vertx.core.transport.Transport.IO_URING, io.vertx.core.transport.Transport.NIO)
-                .filter(t -> t != null && t.available())
-                .findFirst().orElseThrow();
+        io.vertx.core.transport.Transport original = vertxTransport();
         ExistingTransport mapped = new ExistingTransport(original.implementation(), loop);
         io.vertx.core.transport.Transport tr = new io.vertx.core.transport.Transport() {
             @Override
@@ -117,6 +117,12 @@ public class ConnectionHolder {
                 .withTransport(tr)
                 .build();
         return PgConnection.connect(vertx, connectOptions());
+    }
+
+    private static io.vertx.core.transport.Transport vertxTransport() {
+        return Stream.of(io.vertx.core.transport.Transport.IO_URING, io.vertx.core.transport.Transport.NIO)
+                .filter(t -> t != null && t.available())
+                .findFirst().orElseThrow();
     }
 
     private PoolOptions poolOptions() {
