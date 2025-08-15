@@ -12,4 +12,4 @@ RUN git -b v0.0.1 --single-branch --depth 1 clone https://github.com/S-YOU/pico.
 
 EXPOSE 8088
 
-CMD ./main
+CMD sh run.sh
