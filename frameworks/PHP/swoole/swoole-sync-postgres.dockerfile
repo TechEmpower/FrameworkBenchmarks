@@ -11,14 +11,10 @@ RUN apt update -yqq > /dev/null \
     && LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php > /dev/null \
     && apt update -yqq > /dev/null \
     && apt install git libbrotli-dev php8.4-cli php8.4-pdo-pgsql php8.4-dev libpq-dev -y > /dev/null \
-    && cd /tmp && git clone https://github.com/swoole/swoole-src.git \
-    && cd /tmp/swoole-src/ && git checkout feat_llhttp \
-    && phpize > /dev/null \
-    && ./configure > /dev/null \
-    && make -j "$(nproc)" > /dev/null \
-    && make install > /dev/null \
+    && pecl install swoole > /dev/null \
     && echo "extension=swoole.so" > /etc/php/8.4/cli/conf.d/50-swoole.ini \
-    && echo "memory_limit=1024M" >> /etc/php/8.4/cli/php.ini
+    && echo "memory_limit=1024M" >> /etc/php/8.4/cli/php.ini \
+    && php --ri swoole
 
 WORKDIR /swoole
 

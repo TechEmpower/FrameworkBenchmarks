@@ -1,4 +1,8 @@
-use crate::*;
+use super::*;
+
+pub fn get_thread_count() -> usize {
+    num_cpus::get().max(1)
+}
 
 pub fn escape_html(input: &str) -> String {
     let mut result: String = String::new();

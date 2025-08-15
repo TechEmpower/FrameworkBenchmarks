@@ -1,0 +1,14 @@
+[framework]
+name = "wiredio"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+approach = "Realistic"
+classification = "Fullstack"
+os = "Linux"
+database_os = "Linux"
+orm = "None"
+platform = ".NET"
+webserver = "Wired.IO"
+versus = "None"

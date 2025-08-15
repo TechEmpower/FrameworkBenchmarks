@@ -1,0 +1,8 @@
+{
+  "imports": {
+    "oak": "jsr:@oak/oak@17.1.4",
+    "postgres": "https://deno.land/x/postgresjs@v3.4.5/mod.js",
+    "lru-cache": "jsr:@std/cache@0.2.0/lru-cache",
+    "html": "https://deno.land/x/literal_html@1.1.0/mod.ts"
+  }
+}

@@ -1,57 +1,63 @@
-import { Fortune, World } from "./models.ts";
+import { Router } from "oak";
+import { LruCache } from "lru-cache";
 import { NotFound, Ok } from "./helpers.ts";
+import type { Fortune, World } from "./types.ts";
 import {
-  getDbClient,
   parseQuery,
   randomNumber,
   renderTemplate,
 } from "./utils.ts";
-import { Router } from "./deps.ts";
-
-const cached_worlds = await (await getDbClient()).getManager().query(World)
-  .limit(10000).all();
+import { 
+  getWorld, 
+  bulkUpdate, 
+  allFortunes, 
+  getAllWorlds 
+} from "./postgres.ts";
 
 export const router = new Router()
   .get("/plaintext", (ctx) => Ok(ctx, "Hello, World!"))
-  .get("/json", (ctx) => Ok(ctx, { message: "Hello, World!" }))
-  .get("/db", async (ctx) => {
-    const world = await ctx.state.manager.query(World).where(
-      "id",
-      randomNumber(),
-    ).first();
+  .get("/json", (ctx) => Ok(ctx, { message: "Hello, World!" }));
+
+if (Deno.env.has("DATABASE")) {
+  const cache = new LruCache<number, World>(10_000);
+  (await getAllWorlds()).forEach(world => cache.set(world.id, world));
+  
+  router.get("/db", async (ctx) => {
+    const world = await getWorld(randomNumber());
     Ok(ctx, world);
   })
   .get("/queries", async (ctx) => {
-    const worlds = [];
+    const worldsPromises = [];
     const queries = parseQuery(ctx);
     for (let i = 0; i < queries; i++) {
-      const world = await ctx.state.manager.query(World).where(
-        "id",
-        randomNumber(),
-      ).first();
-      worlds.push(world);
+      worldsPromises.push(getWorld(randomNumber()));
     }
 
+    const worlds = await Promise.all(worldsPromises);
     Ok(ctx, worlds);
   })
   .get("/updates", async (ctx) => {
-    const worlds = [];
+    const worldsPromises: Promise<World>[] = [];
     const queries = parseQuery(ctx);
 
     for (let i = 0; i < queries; i++) {
-      const world = await ctx.state.manager.query(World).where(
-        "id",
-        randomNumber(),
-      ).first();
-      world.randomnumber = randomNumber();
-      worlds.push(world);
-
-      await ctx.state.manager.save(world);
+      const world = getWorld(randomNumber());
+      worldsPromises.push(world);
     }
-    Ok(ctx, worlds);
+
+    const worlds = await Promise.all(worldsPromises);
+
+    const newWorlds = worlds.map((world) => {
+      world.randomnumber = randomNumber();
+      return world;
+    });
+
+    await bulkUpdate(newWorlds);
+
+    Ok(ctx, newWorlds);
   })
   .get("/fortunes", async (ctx) => {
-    const fortunes: Fortune[] = await ctx.state.manager.query(Fortune).all();
+    const fortunes = await allFortunes();
     fortunes.push({
       id: 0,
       message: "Additional fortune added at request time.",
@@ -69,8 +75,10 @@ export const router = new Router()
     const worlds = [];
 
     for (let i = 0; i < queries; i++) {
-      worlds.push(cached_worlds[randomNumber()]);
+      worlds.push(cache.get(randomNumber()));
     }
     Ok(ctx, worlds);
   })
-  .get("/(.*)", (ctx) => NotFound(ctx));
+}
+
+router.get("/(.*)", (ctx) => NotFound(ctx));

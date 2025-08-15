@@ -1,7 +1,7 @@
 mod common;
 mod server;
 
-use axum::{http::StatusCode, response::IntoResponse, routing::get, Router};
+use axum::{response::IntoResponse, routing::get, Router};
 use common::models::Message;
 use dotenv::dotenv;
 use mimalloc::MiMalloc;
@@ -14,20 +14,22 @@ use axum::Json;
 #[cfg(feature = "simd-json")]
 use common::simd_json::Json;
 
+const HELLO_WORLD: &str = "Hello, World!";
+
 /// Return a plaintext static string.
 #[inline(always)]
 pub async fn plaintext() -> &'static str {
-    "Hello, World!"
+    &HELLO_WORLD
 }
 
 /// Return a JSON message.
 #[inline(always)]
 pub async fn json() -> impl IntoResponse {
     let message = Message {
-        message: "Hello, World!",
+        message: HELLO_WORLD,
     };
 
-    (StatusCode::OK, Json(message))
+    Json(message)
 }
 
 fn main() {

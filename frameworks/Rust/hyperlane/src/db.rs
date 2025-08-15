@@ -1,4 +1,4 @@
-use crate::*;
+use super::*;
 
 pub fn get_db_connection() -> &'static DbPoolConnection {
     &DB
@@ -8,7 +8,7 @@ pub fn get_db_connection() -> &'static DbPoolConnection {
 pub async fn create_database() {
     let db_pool: &DbPoolConnection = get_db_connection();
     let _ = query(&format!("CREATE DATABASE {};", DATABASE_NAME))
-        .execute(&db_pool)
+        .execute(db_pool)
         .await;
 }
 
@@ -21,7 +21,7 @@ pub async fn create_table() {
         );",
         TABLE_NAME_WORLD
     ))
-    .execute(&db_pool)
+    .execute(db_pool)
     .await;
     let _ = query(&format!(
         "CREATE TABLE IF NOT EXISTS {} (
@@ -29,7 +29,7 @@ pub async fn create_table() {
         );",
         TABLE_NAME_FORTUNE
     ))
-    .execute(&db_pool)
+    .execute(db_pool)
     .await;
 }
 
@@ -37,7 +37,7 @@ pub async fn create_table() {
 pub async fn insert_records() {
     let db_pool: &DbPoolConnection = get_db_connection();
     let row: PgRow = query(&format!("SELECT COUNT(*) FROM {}", TABLE_NAME_WORLD))
-        .fetch_one(&db_pool)
+        .fetch_one(db_pool)
         .await
         .unwrap();
     let count: i64 = row.get(0);
@@ -56,7 +56,7 @@ pub async fn insert_records() {
         TABLE_NAME_WORLD,
         values.join(",")
     );
-    let _ = query(&sql).execute(&db_pool).await;
+    let _ = query(&sql).execute(db_pool).await;
     let mut values: Vec<String> = Vec::new();
     for _ in 0..missing_count {
         let random_number: i32 = get_random_id();
@@ -67,7 +67,7 @@ pub async fn insert_records() {
         TABLE_NAME_FORTUNE,
         values.join(",")
     );
-    let _ = query(&sql).execute(&db_pool).await;
+    let _ = query(&sql).execute(db_pool).await;
 }
 
 pub async fn init_cache() -> Vec<QueryRow> {
@@ -153,7 +153,8 @@ pub async fn init_db() {
         create_table().await;
         insert_records().await;
     }
-    black_box(init_cache().await);
+    let _ = get_db_connection();
+    let _ = CACHE.get(0);
 }
 
 pub async fn random_world_row(db_pool: &DbPoolConnection) -> QueryRow {
