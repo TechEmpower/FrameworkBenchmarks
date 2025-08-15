@@ -1,8 +1,7 @@
 package main
 
 import (
-	"encoding/json"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -37,7 +36,7 @@ func Benchmark_Plaintext(b *testing.B) {
 	utils.AssertEqual(b, nil, err, "app.Test(req)")
 	utils.AssertEqual(b, 200, resp.StatusCode, "Status code")
 	utils.AssertEqual(b, fiber.MIMETextPlainCharsetUTF8, resp.Header.Get("Content-Type"))
-	body, _ := ioutil.ReadAll(resp.Body)
+	body, _ := io.ReadAll(resp.Body)
 	utils.AssertEqual(b, helloworldRaw, body)
 }
 
@@ -66,6 +65,6 @@ func Benchmark_JSON(b *testing.B) {
 	utils.AssertEqual(b, nil, err, "app.Test(req)")
 	utils.AssertEqual(b, 200, resp.StatusCode, "Status code")
 	utils.AssertEqual(b, fiber.MIMEApplicationJSON, resp.Header.Get("Content-Type"))
-	body, _ := ioutil.ReadAll(resp.Body)
+	body, _ := io.ReadAll(resp.Body)
 	utils.AssertEqual(b, `{"message":"Hello, World!"}`, string(body))
 }

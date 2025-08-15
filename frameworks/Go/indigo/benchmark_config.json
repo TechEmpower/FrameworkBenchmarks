@@ -1,0 +1,31 @@
+{
+  "framework": "indigo",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "db_url": "/db",
+        "query_url": "/query?n=",
+        "update_url": "/update?n=",
+        "cached_query_url": "/cached-query?n=",
+        "fortune_url": "/fortunes",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "Postgres",
+        "framework": "indigo",
+        "language": "Go",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Indigo",
+        "notes": "",
+        "versus": "go"
+      }
+    }
+  ]
+}
