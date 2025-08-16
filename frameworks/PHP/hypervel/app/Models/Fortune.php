@@ -6,9 +6,9 @@ namespace App\Models;
 
 use App\Models\Model;
 
-class World extends Model
+class Fortune extends Model
 {
-	protected ?string $table = 'World';
+	protected ?string $table = 'Fortune';
 
 	public bool $timestamps = false;
 }
