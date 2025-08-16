@@ -1,7 +1,6 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    base64 (0.2.0)
     bigdecimal (3.1.9)
     erubi (1.13.1)
     iodine (0.7.58)
@@ -27,7 +26,6 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  base64
   erubi (~> 1.12)
   iodine (~> 0.7)
   json (~> 2.8)
