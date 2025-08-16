@@ -12,15 +12,14 @@ fn runtime() -> Runtime {
 }
 
 async fn init_server() {
-    let config: ServerConfig = ServerConfig::new();
-    let server: Server = Server::new();
+    let config: ServerConfig = ServerConfig::new().await;
     config.host("0.0.0.0").await;
     config.port(8080).await;
     config.disable_nodelay().await;
     config.http_buffer(256).await;
     config.ws_buffer(256).await;
 
-    server.config(config).await;
+    let server: Server = Server::from(config).await;
 
     server.request_middleware(request_middleware::request).await;
 
