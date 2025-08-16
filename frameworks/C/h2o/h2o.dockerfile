@@ -6,14 +6,19 @@ FROM "ubuntu:${UBUNTU_VERSION}" AS compile
 
 RUN echo "[timing] Installing system packages: $(date)"
 ARG DEBIAN_FRONTEND=noninteractive
-RUN apt-get -yqq update && \
-    apt-get -yqq install \
+RUN apt-get install \
+      --no-install-recommends \
+      -qqUy \
       autoconf \
+      automake \
       bison \
+      bpftool \
       clang \
       cmake \
       curl \
       flex \
+      gcc \
+      libbpf-dev \
       libbrotli-dev \
       libcap-dev \
       libnuma-dev \
@@ -40,9 +45,7 @@ RUN curl -LSs "https://github.com/h2o/h2o/archive/${H2O_VERSION}.tar.gz" | \
       tar --strip-components=1 -xz && \
     cmake \
       -B build \
-      -DCMAKE_AR=/usr/bin/gcc-ar \
       -DCMAKE_C_FLAGS="-flto=auto -march=native -mtune=native" \
-      -DCMAKE_RANLIB=/usr/bin/gcc-ranlib \
       -DWITH_MRUBY=on \
       -G Ninja \
       -S . && \
@@ -79,8 +82,10 @@ FROM "ubuntu:${UBUNTU_VERSION}"
 
 RUN echo "[timing] Installing final system packages: $(date)"
 ARG DEBIAN_FRONTEND=noninteractive
-RUN apt-get -yqq update && \
-    apt-get -yqq install \
+RUN apt-get install \
+      --no-install-recommends \
+      -qqUy \
+      libbpf1 \
       libnuma1 \
       libpq5 \
       liburing2 \
