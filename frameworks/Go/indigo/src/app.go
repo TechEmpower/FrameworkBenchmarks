@@ -136,7 +136,7 @@ func (app *App) HandleFortune(request *http.Request) *http.Response {
 		return 0
 	})
 
-	return request.Respond().Header("Date", time.Now().Format(time.RFC1123)).Header("Server", "indigo").ContentType(mime.HTML).String(templates.HTMLFortunes(fortunes))
+	return request.Respond().Header("Date", time.Now().Format(time.RFC1123)).Header("Server", "indigo").ContentType(mime.HTML + "; charset=UTF-8").String(templates.HTMLFortunes(fortunes))
 }
 
 func (app *App) HandlePlaintext(request *http.Request) *http.Response {
