@@ -9,30 +9,29 @@ RUN apt-get -yqq update && \
     apt-get -yqq install \
       autoconf \
       bison \
+      clang \
       cmake \
       curl \
       flex \
-      g++ \
-      libbpfcc-dev \
       libbrotli-dev \
       libcap-dev \
       libnuma-dev \
       libpq-dev \
       libssl-dev \
+      libstdc++-15-dev \
       libtool \
+      liburing-dev \
       libuv1-dev \
       libwslay-dev \
       libyajl-dev \
       libz-dev \
-      llvm-dev \
       make \
       ninja-build \
       pkg-config \
-      rsync \
       ruby \
       systemtap-sdt-dev
 
-ARG H2O_VERSION=c54c63285b52421da2782f028022647fc2ea3dd1
+ARG H2O_VERSION=3b9b6a53cac8bcc6a25fb28df81ad295fc5f9402
 
 WORKDIR /tmp/h2o-build
 RUN curl -LSs "https://github.com/h2o/h2o/archive/${H2O_VERSION}.tar.gz" | \
@@ -78,8 +77,8 @@ RUN apt-get -yqq update && \
     apt-get -yqq install \
       libnuma1 \
       libpq5 \
-      libyajl2 && \
-    apt-get -yqq upgrade
+      liburing2 \
+      libyajl2
 ARG H2O_APP_PREFIX
 COPY --from=compile "${H2O_APP_PREFIX}" "${H2O_APP_PREFIX}/"
 COPY --from=compile /usr/local/lib/libmustache_c.so "${H2O_APP_PREFIX}/lib/"
