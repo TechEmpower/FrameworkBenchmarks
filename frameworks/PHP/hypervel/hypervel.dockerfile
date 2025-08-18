@@ -16,7 +16,6 @@ RUN mkdir -p bootstrap/cache \
             storage/framework/cache
 
 RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
-RUN php artisan optimize
 
 EXPOSE 9501
 
