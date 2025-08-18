@@ -11,7 +11,7 @@
     <parent>
         <artifactId>hserver-parent</artifactId>
         <groupId>cn.hserver</groupId>
-        <version>4.0.0-beta.2</version>
+        <version>4.0.0-beta.3</version>
     </parent>
 
     <properties>
