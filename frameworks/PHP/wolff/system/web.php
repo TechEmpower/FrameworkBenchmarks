@@ -14,6 +14,5 @@ Route::get('/queries', [ Controller\Home::class, 'queries' ]);
 Route::get('/update', [ Controller\Home::class, 'update' ]);
 Route::get('/fortunes', [ Controller\Home::class, 'fortunes' ]);
 
-Container::singleton('db', function() {
-    return new \Wolff\Core\DB;
-});
+
+Container::singleton('db', fn() => new \Wolff\Core\DB );

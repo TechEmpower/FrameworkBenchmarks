@@ -2,12 +2,12 @@
        xmlns:resin="http://caucho.com/ns/resin/core">
 
     <cluster id="">
-        <resin:import path="/resin/conf/app-default.xml" />
-        
-        <log name="" level="config" path="stdout:" timestamp="[%H:%M:%S.%s] " />
+        <resin:import path="/resin/conf/app-default.xml"/>
+
+        <log name="" level="config" path="stdout:" timestamp="[%H:%M:%S.%s] "/>
 
         <server id="">
-            <http port="8080" />
+            <http port="8080"/>
         </server>
 
         <host>

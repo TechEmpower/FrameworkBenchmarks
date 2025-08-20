@@ -12,7 +12,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 RUN apt-get install -y php-pear php8.4-dev libevent-dev > /dev/null
 RUN pecl install event-3.1.4 > /dev/null && echo "extension=event.so" > /etc/php/8.4/cli/conf.d/event.ini
 
-COPY deploy/conf/cli-php.ini /etc/php/8.4/cli/php.ini
+COPY --link deploy/conf/cli-php.ini /etc/php/8.4/cli/conf.d/20-adapterman.ini
 
 WORKDIR /yii2
 COPY --link . .

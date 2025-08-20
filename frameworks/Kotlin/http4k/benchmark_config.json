@@ -2,7 +2,7 @@
   "framework": "http4k",
   "tests": [
     {
-      "apache": {
+      "default": {
         "orm": "Raw",
         "database_os": "Linux",
         "cached_query_url": "/cached?queries=",

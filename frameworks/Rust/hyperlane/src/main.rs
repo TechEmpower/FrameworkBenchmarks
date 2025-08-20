@@ -16,6 +16,7 @@ pub(crate) use utils::*;
 
 pub(crate) use std::{fmt, hint::black_box, sync::Arc};
 
+pub(crate) use futures::{executor::block_on, future::join_all};
 pub(crate) use hyperlane::{
     tokio::{
         runtime::{Builder, Runtime},
@@ -25,15 +26,12 @@ pub(crate) use hyperlane::{
     },
     *,
 };
-pub(crate) use hyperlane_utils::{
-    futures::{executor::block_on, future::join_all},
-    once_cell::sync::Lazy,
-    serde::*,
-    serde_json::{Value, json},
-    *,
-};
+pub(crate) use hyperlane_time::*;
 pub(crate) use lazy::*;
+pub(crate) use once_cell::sync::Lazy;
 pub(crate) use rand::{Rng, SeedableRng, rng, rngs::SmallRng};
+pub(crate) use serde::*;
+pub(crate) use serde_json::{Value, json};
 pub(crate) use server::*;
 pub(crate) use sqlx::{
     postgres::{PgPoolOptions, PgRow},
