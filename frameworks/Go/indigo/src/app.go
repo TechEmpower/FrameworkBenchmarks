@@ -58,7 +58,7 @@ func (app *App) HandleDB(request *http.Request) *http.Response {
 }
 
 func (app *App) HandleQuery(request *http.Request) *http.Response {
-	n := normalizeNumber(request.Params.Get("n"))
+	n := normalizeNumber(request.Params.Lookup("n"))
 
 	i, worlds := 0, make(models.Worlds, n)
 
@@ -75,7 +75,7 @@ func (app *App) HandleQuery(request *http.Request) *http.Response {
 }
 
 func (app *App) HandleUpdate(request *http.Request) *http.Response {
-	n := normalizeNumber(request.Params.Get("n"))
+	n := normalizeNumber(request.Params.Lookup("n"))
 
 	i, worlds := 0, make(models.Worlds, n)
 
@@ -105,7 +105,7 @@ func (app *App) HandleUpdate(request *http.Request) *http.Response {
 }
 
 func (app *App) HandleCachedQuery(request *http.Request) *http.Response {
-	n := normalizeNumber(request.Params.Get("n"))
+	n := normalizeNumber(request.Params.Lookup("n"))
 
 	i, worlds := 0, make(models.Worlds, n)
 
