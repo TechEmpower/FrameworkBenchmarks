@@ -1,0 +1,7 @@
+name: dartfrogbenchmark
+description: A benchmark of pkg:dart_frog
+environment:
+  sdk: ^3.8.0
+
+dependencies:
+  dart_frog: ^1.0.0

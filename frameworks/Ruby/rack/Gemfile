@@ -33,7 +33,7 @@ group :pitchfork, optional: true do
 end
 
 group :puma, optional: true do
-  gem 'puma', '~> 6.5'
+  gem 'puma', '7.0.0.pre1'
 end
 
 group :unicorn, optional: true do

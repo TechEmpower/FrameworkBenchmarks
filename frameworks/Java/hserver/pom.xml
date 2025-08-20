@@ -11,8 +11,9 @@
     <parent>
         <artifactId>hserver-parent</artifactId>
         <groupId>cn.hserver</groupId>
-        <version>3.7.0</version>
+        <version>4.0.0-beta.3</version>
     </parent>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <version.hikaricp>3.3.1</version.hikaricp>
@@ -20,15 +21,14 @@
     </properties>
 
     <dependencies>
-        <!--    核心依赖-->
         <dependency>
-            <artifactId>hserver</artifactId>
+            <artifactId>hserver-web-starter</artifactId>
             <groupId>cn.hserver</groupId>
         </dependency>
-        <!--    web框架 -->
         <dependency>
-            <artifactId>hserver-plugin-web</artifactId>
-            <groupId>cn.hserver</groupId>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>2.0.17</version>
         </dependency>
         <dependency>
             <groupId>com.zaxxer</groupId>
@@ -44,7 +44,7 @@
     <build>
         <plugins>
             <plugin>
-                <artifactId>hserver-plugin-maven</artifactId>
+                <artifactId>hserver-maven</artifactId>
                 <groupId>cn.hserver</groupId>
             </plugin>
         </plugins>

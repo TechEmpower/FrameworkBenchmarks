@@ -1,7 +1,7 @@
 #!/bin/sh
 cd /root
 
-cat <<EOF > /root/clhome/clace.toml
+cat <<EOF > /root/openrun/openrun.toml
 [logging]
 console = false
 file = false
@@ -20,7 +20,7 @@ cors.allow_origin = ""
 EOF
 
 
-clace server start &
+openrun server start &
 sleep 2
-clace app create --auth=none --approve /clace /
+openrun app create --auth=none --approve /openrun /
 tail -f /dev/null

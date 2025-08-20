@@ -1,26 +1,16 @@
-ARG UBUNTU_VERSION=24.04
+ARG UBUNTU_VERSION=25.10
 
-ARG H2O_APP_PREFIX=/opt/h2o_app
+ARG H2O_APP_PREFIX=/opt/h2o-app
 
 FROM "ubuntu:${UBUNTU_VERSION}" AS compile
 
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get -yqq update && \
     apt-get -yqq install \
-      ca-certificates \
-      curl \
-      lsb-release && \
-    install -dm755 /usr/share/postgresql-common/pgdg && \
-    curl --fail -LSso /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc \
-      "https://www.postgresql.org/media/keys/ACCC4CF8.asc" && \
-    sh -c 'echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] \
-      https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > \
-      /etc/apt/sources.list.d/pgdg.list' && \
-    apt-get -yqq update && \
-    apt-get -yqq install \
       autoconf \
       bison \
       cmake \
+      curl \
       flex \
       g++ \
       libbpfcc-dev \
@@ -50,7 +40,7 @@ RUN curl -LSs "https://github.com/h2o/h2o/archive/${H2O_VERSION}.tar.gz" | \
     cmake \
       -B build \
       -DCMAKE_AR=/usr/bin/gcc-ar \
-      -DCMAKE_C_FLAGS="-flto -march=native -mtune=native" \
+      -DCMAKE_C_FLAGS="-flto=auto -march=native -mtune=native" \
       -DCMAKE_RANLIB=/usr/bin/gcc-ranlib \
       -DWITH_MRUBY=on \
       -G Ninja \
@@ -63,7 +53,8 @@ ARG MUSTACHE_C_REVISION=7fe52392879d0188c172d94bb4fde7c513d6b929
 WORKDIR /tmp/mustache-c-build
 RUN curl -LSs "https://github.com/x86-64/mustache-c/archive/${MUSTACHE_C_REVISION}.tar.gz" | \
       tar --strip-components=1 -xz && \
-    CFLAGS="-flto -march=native -mtune=native -O3" ./autogen.sh && \
+    CFLAGS="-flto=auto -march=native -mtune=native -O3 -Wno-implicit-function-declaration" \
+      ./autogen.sh && \
     make -j "$(nproc)" install
 
 ARG H2O_APP_PREFIX
@@ -82,25 +73,12 @@ RUN cmake \
 
 FROM "ubuntu:${UBUNTU_VERSION}"
 
-ARG POSTGRESQL_VERSION=17
-
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get -yqq update && \
     apt-get -yqq install \
-      ca-certificates \
-      curl \
-      lsb-release && \
-    install -dm755 /usr/share/postgresql-common/pgdg && \
-    curl --fail -LSso /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc \
-      "https://www.postgresql.org/media/keys/ACCC4CF8.asc" && \
-    sh -c 'echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] \
-      https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > \
-      /etc/apt/sources.list.d/pgdg.list' && \
-    apt-get -yqq update && \
-    apt-get -yqq install \
       libnuma1 \
-      libyajl2 \
-      "postgresql-client-${POSTGRESQL_VERSION}"
+      libpq5 \
+      libyajl2
 ARG H2O_APP_PREFIX
 COPY --from=compile "${H2O_APP_PREFIX}" "${H2O_APP_PREFIX}/"
 COPY --from=compile /usr/local/lib/libmustache_c.so "${H2O_APP_PREFIX}/lib/"
@@ -113,10 +91,10 @@ ARG TFB_TEST_NAME
 CMD ["taskset", \
      "-c", \
      "0", \
-     "/opt/h2o_app/bin/h2o_app", \
+     "/opt/h2o-app/bin/h2o-app", \
      "-a20", \
      "-d", \
      "dbname=hello_world host=tfb-database password=benchmarkdbpass sslmode=disable user=benchmarkdbuser", \
      "-f", \
-     "/opt/h2o_app/share/h2o_app/template", \
+     "/opt/h2o-app/share/h2o-app/template", \
      "-m1"]
