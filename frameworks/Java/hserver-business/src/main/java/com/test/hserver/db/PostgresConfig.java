@@ -1,7 +1,7 @@
 package com.test.hserver.db;
 
 
-import cn.hserver.core.ioc.annotation.ConfigurationProperties;
+import cn.hserver.core.config.annotation.ConfigurationProperties;
 
 @ConfigurationProperties
 public class PostgresConfig {

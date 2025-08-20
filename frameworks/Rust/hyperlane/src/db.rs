@@ -113,37 +113,19 @@ pub async fn connection_db() -> DbPoolConnection {
     pool
 }
 
-pub async fn get_update_data(
-    limit: Queries,
-) -> (String, Vec<QueryRow>, Vec<Queries>, Vec<Queries>) {
+pub async fn get_update_data(limit: Queries) -> (Vec<QueryRow>, Vec<i32>, Vec<i32>) {
     let db_pool: &DbPoolConnection = get_db_connection();
     let mut query_res_list: Vec<QueryRow> = Vec::with_capacity(limit as usize);
     let rows: Vec<QueryRow> = get_some_row_id(limit, db_pool).await;
-    let mut sql: String = String::with_capacity(rows.len() * 32);
-    sql.push_str(&format!(
-        "UPDATE {} SET randomNumber = CASE id ",
-        TABLE_NAME_WORLD
-    ));
     let mut id_list: Vec<i32> = Vec::with_capacity(rows.len());
-    let mut value_list: Vec<String> = Vec::with_capacity(rows.len());
     let mut random_numbers: Vec<i32> = Vec::with_capacity(rows.len());
-    for (i, row) in rows.iter().enumerate() {
+    for row in rows.iter() {
         let new_random_number: i32 = get_random_id() as i32;
         id_list.push(row.id);
         random_numbers.push(new_random_number);
-        value_list.push(format!("WHEN ${} THEN ${}", i * 2 + 1, i * 2 + 2));
         query_res_list.push(QueryRow::new(row.id, new_random_number));
     }
-    sql.push_str(&value_list.join(" "));
-    let id_params: String = (0..rows.len())
-        .map(|i| format!("${}", (rows.len() * 2 + 1) + i))
-        .collect::<Vec<_>>()
-        .join(",");
-    sql.push_str(&format!(
-        " ELSE randomNumber END WHERE id IN ({})",
-        id_params
-    ));
-    (sql, query_res_list, id_list, random_numbers)
+    (query_res_list, id_list, random_numbers)
 }
 
 pub async fn init_db() {
@@ -153,7 +135,8 @@ pub async fn init_db() {
         create_table().await;
         insert_records().await;
     }
-    black_box(init_cache().await);
+    let _ = get_db_connection();
+    let _ = CACHE.get(0);
 }
 
 pub async fn random_world_row(db_pool: &DbPoolConnection) -> QueryRow {
@@ -162,11 +145,8 @@ pub async fn random_world_row(db_pool: &DbPoolConnection) -> QueryRow {
 }
 
 pub async fn query_world_row(db_pool: &DbPoolConnection, id: Queries) -> QueryRow {
-    let sql: String = format!(
-        "SELECT id, randomNumber FROM {} WHERE id = {}",
-        TABLE_NAME_WORLD, id
-    );
-    if let Ok(rows) = query(&sql).fetch_one(db_pool).await {
+    let sql: &str = "SELECT id, randomNumber FROM World WHERE id = $1";
+    if let Ok(rows) = query(sql).bind(id).fetch_one(db_pool).await {
         let random_number: i32 = rows.get(KEY_RANDOM_NUMBER);
         return QueryRow::new(id as i32, random_number);
     }
@@ -175,15 +155,20 @@ pub async fn query_world_row(db_pool: &DbPoolConnection, id: Queries) -> QueryRo
 
 pub async fn update_world_rows(limit: Queries) -> Vec<QueryRow> {
     let db_pool: &DbPoolConnection = get_db_connection();
-    let (sql, data, id_list, random_numbers) = get_update_data(limit).await;
-    let mut query_builder = query(&sql);
-    for (id, random_number) in id_list.iter().zip(random_numbers.iter()) {
-        query_builder = query_builder.bind(id).bind(random_number);
+    let (data, id_list, random_numbers) = get_update_data(limit).await;
+    let sql: &str = "UPDATE World SET randomNumber = $1 WHERE id = $2";
+    let mut tasks: Vec<JoinHandle<_>> = Vec::with_capacity(limit as usize);
+    for (id, random_number) in id_list.into_iter().zip(random_numbers.into_iter()) {
+        let db_pool: Pool<Postgres> = db_pool.clone();
+        tasks.push(spawn(async move {
+            query(sql)
+                .bind(random_number)
+                .bind(id)
+                .execute(&db_pool)
+                .await
+        }));
     }
-    for id in &id_list {
-        query_builder = query_builder.bind(id);
-    }
-    let _ = query_builder.execute(db_pool).await;
+    join_all(tasks).await;
     data
 }
 
@@ -195,14 +180,10 @@ pub async fn all_world_row() -> Vec<PgRow> {
 }
 
 pub async fn get_some_row_id(limit: Queries, db_pool: &DbPoolConnection) -> Vec<QueryRow> {
-    let semaphore: Arc<Semaphore> = Arc::new(Semaphore::new(32));
     let tasks: Vec<_> = (0..limit)
         .map(|_| {
-            let semaphore: Arc<Semaphore> = semaphore.clone();
             let db_pool: Pool<Postgres> = db_pool.clone();
             spawn(async move {
-                let _permit: Result<OwnedSemaphorePermit, AcquireError> =
-                    semaphore.acquire_owned().await;
                 let id: i32 = get_random_id();
                 query_world_row(&db_pool, id).await
             })

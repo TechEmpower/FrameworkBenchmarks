@@ -15,13 +15,10 @@ RUN mkdir -p bootstrap/cache \
             storage/framework/views \
             storage/framework/cache
 
-COPY --link deploy/swoole/composer.json .
-
-RUN echo "APP_SWOOLE=true" >> .env
-
-RUN composer install -a --no-dev --quiet
+RUN composer require laravel/octane:2.11 --update-no-dev --no-scripts --quiet
+RUN php artisan octane:install --server="swoole"
 RUN php artisan optimize
 
 EXPOSE 8080
 
-ENTRYPOINT [ "php", "artisan", "swoole:http", "start" ]
+ENTRYPOINT ["php", "artisan", "octane:swoole", "--host=0.0.0.0", "--port=8080", "--workers=auto", "--task-workers=auto", "--max-requests=10000"]
