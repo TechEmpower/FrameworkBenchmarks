@@ -255,7 +255,7 @@ GEM
       console (~> 1.0)
       mapping (~> 1.0)
     securerandom (0.4.1)
-    stringio (3.1.5)
+    stringio (3.1.7)
     thor (1.4.0)
     timeout (0.4.3)
     traces (0.15.2)
