@@ -1,8 +1,8 @@
 CREATE TYPE fortune_t AS (id int, message text);
 
 create or replace function fortune_template(f fortune_t) returns text as $$
-   SELECT format('<tr><td>%s</td><td>%s</td></tr>', $1.id, regexp_replace($1.message, '<', '&lt;','g')); 
-$$ language sql volatile;
+   SELECT format('<tr><td>%s</td><td>%s</td></tr>', $1.id, regexp_replace($1.message, '<', '&lt;','g'));
+$$ language sql stable;
 
 create or replace function fortunes_template(fortunes fortune_t[]) returns text as $$
 WITH header AS (
@@ -11,7 +11,7 @@ WITH header AS (
 ), footer AS (
    SELECT 2,'</table></body></html>' as html
 ), fortunes AS (
-   SELECT unnest as fortune from unnest($1) 
+   SELECT unnest as fortune from unnest($1)
 ), additional AS (
    SELECT (-1, 'Additional fortune added at request time.')::fortune_t as f
 ), all_fortunes AS (
