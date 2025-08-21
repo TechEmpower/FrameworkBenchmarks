@@ -17,7 +17,7 @@ The tests were run with:
 ## Test URLs
 ### JSON
 
-http://localhost:3000/rpc/json
+http://localhost:3000/rpc/jsonser
 
 ### PLAINTEXT
 

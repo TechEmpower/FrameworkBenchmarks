@@ -3,7 +3,7 @@
   "tests": [
     {
       "default": {
-        "json_url": "/rpc/json",
+        "json_url": "/rpc/jsonser",
         "plaintext_url": "/rpc/plaintext",
         "db_url": "/rpc/db",
         "query_url": "/rpc/queries?queries=",
