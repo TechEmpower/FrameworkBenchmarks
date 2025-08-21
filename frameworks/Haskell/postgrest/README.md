@@ -37,7 +37,7 @@ http://localhost:8080/cached_query?queries=
 
 ### UPDATE Not Implemented
 
-http://localhost:3000/rpc/update?queries=
+http://localhost:3000/rpc/updates?queries=
 
 ### FORTUNES
 
