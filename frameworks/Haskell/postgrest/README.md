@@ -7,7 +7,7 @@
 * [DB](src/db.sql)
 * [QUERY](src/query.sql)
 * [CACHED QUERY] Not Implemented
-* [UPDATE] Not Implemented
+* [UPDATE](src/update.sql)
 * [FORTUNES](src/fortunes.sql)
 
 ## Important Libraries
@@ -31,13 +31,20 @@ http://localhost:3000/rpc/db
 
 http://localhost:3000/rpc/query?queries=
 
-### CACHED QUERY Not Implemented
+### CACHED QUERY - Not Implemented
 
 http://localhost:8080/cached_query?queries=
 
-### UPDATE Not Implemented
+### UPDATE - Not Working
 
 http://localhost:3000/rpc/updates?queries=
+
+Technically, this is implemented (maybe not correctly though).
+However, the benchmark issues this as a GET request.
+PostgREST sets the transaction to READ ONLY for GET requests,
+as they are supposed to be idempotent.
+Hence this results in an error. Calling the endpoint with POST
+works though.
 
 ### FORTUNES
 
