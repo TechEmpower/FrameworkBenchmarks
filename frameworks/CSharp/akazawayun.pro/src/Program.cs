@@ -21,14 +21,17 @@ class Program : IPostFunctionWrapper
             .Build()
             .Config<IWebReceptor, akzWebInterceptor>(itc =>
             {
+                itc.ClearInterceptor();
                 itc.AddInterceptor(new akzWebInterceptorNotOnlyPost());
             });
         mysql = new akzDbBuilderII()
-            .SetServer("tfb-database")
+            .SetServer("tfb-database:3306")
+            //.SetServer("localhost:3306")
             .SetUser("benchmarkdbuser")
             .SetPwd("benchmarkdbpass")
             .SetDatabase("hello_world")
-            .SetOtherset("SslMode=None;")
+            .SetCharset()
+            .SetOtherset()
             .Build<Mysql>();
     }
     static async Task Main()

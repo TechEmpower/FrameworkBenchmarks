@@ -15,7 +15,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AkazawaYun.PRO" Version="1.13.25.815" />
+    <PackageReference Include="AkazawaYun.PRO" Version="1.13.25.816" />
     <PackageReference Include="MySql.Data" Version="9.4.0" />
   </ItemGroup>
 
