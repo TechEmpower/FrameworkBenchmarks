@@ -1,16 +1,14 @@
 package com.test.hserver.controller;
 
 import cn.hserver.core.ioc.annotation.Autowired;
-import cn.hserver.plugin.web.annotation.Controller;
-import cn.hserver.plugin.web.annotation.GET;
-import cn.hserver.plugin.web.interfaces.HttpRequest;
-import cn.hserver.plugin.web.interfaces.HttpResponse;
+import cn.hserver.mvc.annotation.Controller;
+import cn.hserver.mvc.annotation.router.GET;
+import cn.hserver.mvc.request.Request;
+import cn.hserver.mvc.response.Response;
 import com.test.hserver.bean.Fortune;
 import com.test.hserver.bean.Message;
 import com.test.hserver.bean.World;
 import com.test.hserver.util.DateUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -34,19 +32,19 @@ public class TestController {
     private DataSource dataSource;
 
     @GET("/json")
-    public Message json(HttpResponse response) {
-        response.setHeader("Date", DateUtil.getTime());
+    public Message json(Response response) {
+        response.addHeader("Date", DateUtil.getTime());
         return new Message();
     }
 
     @GET("/plaintext")
-    public String plaintext(HttpResponse response) {
-        response.setHeader("Date", DateUtil.getTime());
+    public String plaintext(Response response) {
+        response.addHeader("Date", DateUtil.getTime());
         return HELLO;
     }
 
     @GET("/db")
-    public void db(HttpResponse response) throws SQLException {
+    public void db(Response response) throws SQLException {
         World result;
         try (Connection conn = dataSource.getConnection()) {
             try (final PreparedStatement statement = conn.prepareStatement(SELECT_WORLD)) {
@@ -57,12 +55,12 @@ public class TestController {
                 }
             }
         }
-        response.setHeader("Date", DateUtil.getTime());
+        response.addHeader("Date", DateUtil.getTime());
         response.sendJson(result);
     }
 
     @GET("/queries")
-    public void queries(HttpRequest request,HttpResponse response) throws Exception {
+    public void queries(Request request, Response response) throws Exception {
         World[] result = new World[getQueries(request.query("queries"))];
         try (Connection conn = dataSource.getConnection()) {
             for (int i = 0; i < result.length; i++) {
@@ -75,13 +73,13 @@ public class TestController {
                 }
             }
         }
-        response.setHeader("Date", DateUtil.getTime());
+        response.addHeader("Date", DateUtil.getTime());
         response.sendJson(result);
     }
 
 
     @GET("/updates")
-    public void updates(HttpRequest request,HttpResponse response) throws Exception {
+    public void updates(Request request,Response response) throws Exception {
         World[] result = new World[getQueries(request.query("queries"))];
         StringJoiner updateSql = new StringJoiner(
                 ", ",
@@ -110,12 +108,12 @@ public class TestController {
                 statement.executeUpdate();
             }
         }
-        response.setHeader("Date", DateUtil.getTime());
+        response.addHeader("Date", DateUtil.getTime());
         response.sendJson(result);
     }
 
     @GET("/fortunes")
-    public void fortunes(HttpResponse response) throws Exception {
+    public void fortunes(Response response) throws Exception {
         List<Fortune> fortunes = new ArrayList<>();
         try (Connection connection = dataSource.getConnection()) {
             try (PreparedStatement stt = connection.prepareStatement("select * from fortune")) {
@@ -128,7 +126,7 @@ public class TestController {
         }
         fortunes.add(new Fortune(0, "Additional fortune added at request time."));
         Collections.sort(fortunes);
-        response.setHeader("Date", DateUtil.getTime());
+        response.addHeader("Date", DateUtil.getTime());
         Map<String,Object> data=new HashMap<>();
         data.put("data",fortunes);
         response.sendTemplate("fortunes.ftl",data);

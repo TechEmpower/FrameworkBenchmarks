@@ -15,7 +15,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 RUN apt-get install -y php-pear php8.4-dev libevent-dev > /dev/null
 RUN pecl install event-3.1.4 > /dev/null && echo "extension=event.so" > /etc/php/8.4/cli/conf.d/event.ini
 
-COPY deploy/conf/cli-php.ini /etc/php/8.4/cli/php.ini
+COPY deploy/conf/cli-php.ini /etc/php/8.4/cli/conf.d/20-adapterman.ini
 
 WORKDIR /slim
 COPY --link . .
@@ -23,7 +23,7 @@ COPY --link . .
 EXPOSE 8080
 
 RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
-RUN composer require joanhey/adapterman:^0.6 --quiet
+RUN composer require joanhey/adapterman:^0.7 --quiet
 
 RUN sed -i 's|/index.php|/start.php|g' server.php
 

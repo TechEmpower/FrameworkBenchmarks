@@ -130,15 +130,7 @@ class HelloWorld
     ]
   end
 
-  if defined?(Unicorn)
-    def headers(content_type, body)
-      {
-        CONTENT_TYPE => content_type,
-        SERVER => SERVER_STRING,
-        CONTENT_LENGTH => body.bytesize.to_s
-      }
-    end
-  elsif defined?(Puma)
+  if defined?(Puma)
     def headers(content_type, _)
       {
         CONTENT_TYPE => content_type,
