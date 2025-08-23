@@ -12,4 +12,7 @@
         <appender-ref ref="STDOUT" />
     </root>
 
+    <logger name="io.netty.util.internal.PlatformDependent" level="debug"/>
+    <logger name="io.netty.buffer.PooledByteBufAllocator" level="debug"/>
+    <logger name="io.netty.buffer.AdaptiveByteBufAllocator" level="debug"/>
 </configuration>

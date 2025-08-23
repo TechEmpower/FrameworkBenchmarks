@@ -1,4 +1,4 @@
-﻿#pragma warning disable IDE1006,IL2026
+#pragma warning disable IDE1006,IL2026
 
 using AkazawaYun.AOT;
 using AkazawaYun.PRO7;

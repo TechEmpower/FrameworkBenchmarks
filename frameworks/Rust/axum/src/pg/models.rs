@@ -1,10 +1,12 @@
+use std::borrow::Cow;
+
 use serde::{Deserialize, Serialize};
 
 #[allow(non_snake_case)]
 #[derive(Clone, Debug, PartialEq, Deserialize, Serialize)]
 pub struct Fortune {
     pub id: i32,
-    pub message: String,
+    pub message: Cow<'static, str>,
 }
 
 #[allow(non_snake_case)]
