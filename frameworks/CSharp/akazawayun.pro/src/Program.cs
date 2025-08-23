@@ -1,4 +1,4 @@
-﻿#pragma warning disable IDE1006
+﻿#pragma warning disable IDE1006,IL2026
 
 using AkazawaYun.AOT;
 using AkazawaYun.PRO7;
@@ -14,7 +14,6 @@ class Program : IPostFunctionWrapper
     static readonly akzDbFactory mysql;
 
 
-    [UnconditionalSuppressMessage("Trimming", "IL2026")]
     static Program()
     {
         akzJson.Config(null, AotJsonContext.Default);
@@ -46,14 +45,14 @@ class Program : IPostFunctionWrapper
         message = "Hello, World!"
     };
 
-    [WebFunctionAopTry]
+    //[WebFunctionAopTry]
     public static async Task<world> db()
     {
         await using IDb con = await mysql.Connect();
         world obj = await WorldService.GetRandomWorld(con);
         return obj;
     }
-    [WebFunctionAopTry]
+    //[WebFunctionAopTry]
     public static async Task<world[]> queries(string queries)
     {
         int count = ParseCount(queries);
@@ -62,7 +61,7 @@ class Program : IPostFunctionWrapper
         world[] lst = await WorldService.GetWorlds(con, count);
         return lst;
     }
-    [WebFunctionAopTry]
+    //[WebFunctionAopTry]
     public static async Task<world[]> updates(string queries)
     {
         int count = ParseCount(queries);
@@ -82,7 +81,8 @@ class Program : IPostFunctionWrapper
     static int ParseCount(string queries)
     {
         if (!int.TryParse(queries, out int count))
-            count = 1;
+            return 1;
+
         count = Math.Clamp(count, 1, 500);
         return count;
     }
