@@ -9,7 +9,7 @@ ARG H2O_VERSION=c54c63285b52421da2782f028022647fc2ea3dd1
 ARG DEBIAN_FRONTEND=noninteractive
 ARG H2O_PREFIX
 WORKDIR /tmp/h2o-build
-RUN apt-get -yqq update && \
+RUN apt-get -yqq update > /dev/null && \
     apt-get -yqq install \
       cmake \
       curl \
@@ -33,14 +33,14 @@ RUN apt-get -yqq update && \
     cmake \
       -B build \
       -DCMAKE_AR=/usr/bin/gcc-ar \
-      -DCMAKE_C_FLAGS="-flto -march=native -mtune=native" \
+      -DCMAKE_C_FLAGS="-flto=auto -march=native -mtune=native" \
       -DCMAKE_INSTALL_PREFIX="${H2O_PREFIX}" \
       -DCMAKE_RANLIB=/usr/bin/gcc-ranlib \
       -DWITH_MRUBY=on \
       -G Ninja \
-      -S .  > /dev/null && \
+      -S . > /dev/null && \
     cmake --build build -j > /dev/null && \
-    cmake --install build  > /dev/null
+    cmake --install build > /dev/null
 
 FROM "ubuntu:${UBUNTU_VERSION}"
 
@@ -49,18 +49,18 @@ ARG PHP_VERSION=8.4
 ENV TZ=America/Los_Angeles
 
 ARG DEBIAN_FRONTEND=noninteractive
-RUN apt-get -yqq update  > /dev/null && \
+RUN apt-get -yqq update > /dev/null && \
     apt-get -yqq install \
       apt-utils \
-      software-properties-common  > /dev/null && \
+      software-properties-common > /dev/null && \
     LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php && \
-    apt-get -yqq update  > /dev/null && \
-    apt-get -yqq install > /dev/null \
+    apt-get -yqq update > /dev/null && \
+    apt-get -yqq install \
       "php${PHP_VERSION}" \
       "php${PHP_VERSION}-cli" \
       "php${PHP_VERSION}-common" \
       "php${PHP_VERSION}-fpm" \
-      "php${PHP_VERSION}-mysql"
+      "php${PHP_VERSION}-mysql" > /dev/null
 ARG H2O_PREFIX
 COPY --from=compile "${H2O_PREFIX}/bin/h2o" "${H2O_PREFIX}/bin/"
 COPY --from=compile "${H2O_PREFIX}/share" "${H2O_PREFIX}/share/"

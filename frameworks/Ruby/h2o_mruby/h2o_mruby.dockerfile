@@ -1,4 +1,4 @@
-ARG UBUNTU_VERSION=24.04
+ARG UBUNTU_VERSION=25.10
 
 ARG H2O_PREFIX=/opt/h2o
 
@@ -33,7 +33,7 @@ RUN apt-get -yqq update && \
     cmake \
       -B build \
       -DCMAKE_AR=/usr/bin/gcc-ar \
-      -DCMAKE_C_FLAGS="-flto -march=native -mtune=native" \
+      -DCMAKE_C_FLAGS="-flto=auto -march=native -mtune=native" \
       -DCMAKE_INSTALL_PREFIX="${H2O_PREFIX}" \
       -DCMAKE_RANLIB=/usr/bin/gcc-ranlib \
       -DWITH_MRUBY=on \

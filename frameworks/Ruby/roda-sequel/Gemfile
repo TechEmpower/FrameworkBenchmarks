@@ -1,6 +1,5 @@
 source "https://rubygems.org"
 
-gem 'base64' # required by passenger on Ruby 3.4
 gem "erubi", "~> 1.12"
 gem "json", "~> 2.8"
 gem "sequel", "~> 5.67"
