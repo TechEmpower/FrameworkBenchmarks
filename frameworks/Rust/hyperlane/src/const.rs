@@ -16,3 +16,6 @@ pub const KEY_RANDOM_NUMBER: &str = "randomnumber";
 pub const KEY_MESSAGE: &str = "message";
 pub const DB_MAX_CONNECTIONS: u32 = 100;
 pub const HTTP_BUFFER: usize = 256;
+pub const QUERY_DB_QUERY_KEY: &str = "q";
+pub const UPDATE_DB_QUERY_KEY: &str = "q";
+pub const CACHE_QUERY_KEY: &str = "c";
