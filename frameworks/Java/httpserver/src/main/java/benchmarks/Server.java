@@ -8,18 +8,23 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.Executors;
-import java.util.concurrent.SynchronousQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+
 import javax.sql.DataSource;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+
 import httl.Engine;
 import httl.Template;
 
@@ -72,7 +77,6 @@ public class Server {
             t.getResponseHeaders().add("Server", SERVER_NAME);
             t.sendResponseHeaders(200, HELLO_LENGTH);
             t.getResponseBody().write(HELLO_BYTES);
-            t.getResponseBody().flush();
             t.getResponseBody().close();
         };
     }
@@ -116,7 +120,6 @@ public class Server {
                 t.getResponseHeaders().add("Server", SERVER_NAME);
                 t.sendResponseHeaders(200, bytes.length);
                 t.getResponseBody().write(bytes);
-                t.getResponseBody().flush();
                 t.getResponseBody().close();
             } catch (SQLException | ParseException e) {
                 throw new IOException(e);
@@ -132,8 +135,7 @@ public class Server {
             System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "DEBUG");
         // create server
         HttpServer server = HttpServer.create(new InetSocketAddress(port), 1024 * 8);
-        server.setExecutor(Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()));
-        // add context handlers
+        server.setExecutor(Executors.newVirtualThreadPerTaskExecutor());
         server.createContext("/plaintext", createPlaintextHandler());
         server.createContext("/json", createJSONHandler());
         if (settings.contains("postgres")) {

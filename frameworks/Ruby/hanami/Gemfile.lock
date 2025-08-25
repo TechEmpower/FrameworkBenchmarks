@@ -122,7 +122,7 @@ GEM
     pg (1.5.9)
     puma (6.6.0)
       nio4r (~> 2.0)
-    rack (2.2.13)
+    rack (2.2.17)
     rake (13.2.1)
     rom (5.4.2)
       rom-changeset (~> 5.4)
@@ -178,4 +178,4 @@ DEPENDENCIES
   rom-sql (~> 3.6)
 
 BUNDLED WITH
-   2.6.2
+   2.7.0

@@ -1,7 +1,7 @@
 mod common;
 mod sqlx;
 
-use std::sync::Arc;
+use std::{borrow::Cow, sync::Arc};
 
 use ::sqlx::PgPool;
 use axum::{
@@ -80,7 +80,7 @@ async fn fortunes(State(AppState { db, .. }): State<AppState>) -> impl IntoRespo
 
     fortunes.push(Fortune {
         id: 0,
-        message: "Additional fortune added at request time.".to_string(),
+        message: Cow::Borrowed("Additional fortune added at request time."),
     });
 
     fortunes.sort_by(|a, b| a.message.cmp(&b.message));

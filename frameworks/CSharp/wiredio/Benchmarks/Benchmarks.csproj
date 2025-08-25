@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net9.0</TargetFramework>
+    <LangVersion>13.0</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <ServerGarbageCollection>true</ServerGarbageCollection>
+    <TieredPGO>true</TieredPGO>
+
+    <!-- Required for self-contained publish -->
+    <RuntimeIdentifier>linux-musl-x64</RuntimeIdentifier>
+    <SelfContained>true</SelfContained>
+    
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Wired.IO" Version="9.2.0" />
+  </ItemGroup>
+
+</Project>
