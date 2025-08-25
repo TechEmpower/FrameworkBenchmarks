@@ -49,7 +49,7 @@ pub async fn db(ctx: Context) {
 pub async fn query(ctx: Context) {
     let run = || async {
         let queries: Queries = ctx
-            .get_request_query("q")
+            .try_get_request_query(QUERY_DB_QUERY_KEY)
             .await
             .and_then(|queries| queries.parse::<Queries>().ok())
             .unwrap_or_default()
@@ -104,7 +104,7 @@ pub async fn fortunes(ctx: Context) {
 pub async fn update(ctx: Context) {
     let run = || async {
         let queries: Queries = ctx
-            .get_request_query("q")
+            .try_get_request_query(UPDATE_DB_QUERY_KEY)
             .await
             .and_then(|queries| queries.parse::<Queries>().ok())
             .unwrap_or_default()
@@ -127,13 +127,13 @@ pub async fn update(ctx: Context) {
 pub async fn cached_query(ctx: Context) {
     let run = || async {
         let count: Queries = ctx
-            .get_request_query("c")
+            .try_get_request_query(CACHE_QUERY_KEY)
             .await
             .and_then(|queries| queries.parse::<Queries>().ok())
             .unwrap_or_default()
             .min(ROW_LIMIT as Queries)
             .max(1);
-        let res: Vec<QueryRow> = CACHE.iter().take(count as usize).cloned().collect();
+        let res: Vec<&QueryRow> = CACHE.iter().take(count as usize).collect();
         ctx.set_response_body(serde_json::to_string(&res).unwrap_or_default())
             .await
             .send()
