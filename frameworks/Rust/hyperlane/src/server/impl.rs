@@ -1,15 +1,5 @@
 use super::*;
 
-pub type DbPoolConnection = Pool<Postgres>;
-pub type Queries = i32;
-
-#[allow(bad_style)]
-#[derive(Serialize, Default, Clone)]
-pub struct QueryRow {
-    pub id: Queries,
-    pub randomNumber: Queries,
-}
-
 impl QueryRow {
     pub fn new(id: Queries, random_number: Queries) -> Self {
         Self {
@@ -19,20 +9,11 @@ impl QueryRow {
     }
 }
 
-#[derive(Serialize)]
-pub struct Fortunes {
-    pub id: Queries,
-    pub message: String,
-}
-
 impl Fortunes {
     pub fn new(id: Queries, message: String) -> Self {
         Self { id, message }
     }
 }
-
-#[derive(Serialize)]
-pub struct FortunesTemplate(pub Vec<Fortunes>);
 
 impl FortunesTemplate {
     pub fn new(list: Vec<Fortunes>) -> Self {
