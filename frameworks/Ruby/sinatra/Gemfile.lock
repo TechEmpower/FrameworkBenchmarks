@@ -34,7 +34,6 @@ GEM
     minitest (5.25.5)
     mustermann (3.0.3)
       ruby2_keywords (~> 0.0.1)
-    mysql2 (0.5.6)
     nio4r (2.7.4)
     pg (1.5.9)
     puma (6.6.0)
@@ -58,6 +57,7 @@ GEM
       tilt (~> 2.0)
     tilt (2.6.0)
     timeout (0.4.3)
+    trilogy (2.9.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     uri (1.0.3)
@@ -71,10 +71,10 @@ DEPENDENCIES
   activerecord (~> 8.0)
   iodine (~> 0.7)
   json (~> 2.8)
-  mysql2 (~> 0.5)
   pg (~> 1.5)
   puma (~> 6.4)
   sinatra (~> 4.0)
+  trilogy (~> 2.9.0)
 
 BUNDLED WITH
    2.7.0
