@@ -12,7 +12,7 @@
     "lru-cache": "^10.0.1",
     "mariadb": "^3.2.0",
     "postgres": "^3.3.5",
-    "ultimate-express": "^2.0.6"
+    "ultimate-express": "^2.0.9"
   },
   "type": "module"
 }
