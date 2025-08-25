@@ -21,7 +21,7 @@ async fn init_server() {
 
     let server: Server = Server::from(config).await;
 
-    server.request_middleware(request_middleware::request).await;
+    server.request_middleware(middleware::request).await;
 
     server
         .disable_http_hook("/plaintext")
