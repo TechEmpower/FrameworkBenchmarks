@@ -4,6 +4,8 @@ import io.jooby.Context;
 import io.jooby.annotation.GET;
 import io.jooby.annotation.Path;
 import io.jooby.annotation.Dispatch;
+import io.jooby.output.Output;
+import io.jooby.output.OutputFactory;
 import views.fortunes;
 
 import javax.sql.DataSource;
@@ -28,14 +30,16 @@ public class Resource {
   private static final byte[] MESSAGE_BYTES = MESSAGE.getBytes(StandardCharsets.UTF_8);
 
   private final DataSource dataSource;
+  private final Output message;
 
-  public Resource(DataSource dataSource) {
+  public Resource(DataSource dataSource, OutputFactory factory) {
     this.dataSource = dataSource;
+    this.message = factory.wrap(MESSAGE_BYTES);
   }
 
   @GET @Path("/plaintext")
   public void plaintText(Context ctx) {
-    ctx.send(MESSAGE_BYTES);
+    ctx.send(message);
   }
 
   @GET @Path("/json")

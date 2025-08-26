@@ -25,4 +25,4 @@ ENV RAILS_ENV=production_mysql
 ENV PORT=8080
 ENV REDIS_URL=redis://localhost:6379/0
 CMD service redis-server start && \
-    rails server
+    bin/rails server

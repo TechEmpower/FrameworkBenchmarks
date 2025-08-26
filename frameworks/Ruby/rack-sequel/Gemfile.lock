@@ -2,13 +2,13 @@ GEM
   remote: https://rubygems.org/
   specs:
     bigdecimal (3.1.9)
-    json (2.11.3)
+    json (2.13.2)
     mysql2 (0.5.6)
     nio4r (2.7.4)
     pg (1.5.9)
     puma (6.6.0)
       nio4r (~> 2.0)
-    rack (3.1.11)
+    rack (3.2.0)
     sequel (5.90.0)
       bigdecimal
     sequel_pg (1.17.1)
@@ -25,9 +25,9 @@ DEPENDENCIES
   mysql2 (~> 0.4)
   pg (~> 1.5)
   puma (~> 6.5)
-  rack (~> 3.0)
+  rack (~> 3.1)
   sequel (~> 5.0)
   sequel_pg (~> 1.6)
 
 BUNDLED WITH
-   2.6.2
+   2.7.0

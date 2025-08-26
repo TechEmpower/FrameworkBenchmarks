@@ -46,7 +46,13 @@ public class CachingMiddleware
             {
                bytePointer = NativeMethods.DbById(i, out payloadLength, out handlePointer);
                json = new byte[payloadLength];
-               Marshal.Copy(bytePointer, json, 0, payloadLength);
+               //Marshal.Copy(bytePointer, json, 0, payloadLength);
+
+               fixed (byte* dest = json)
+               {
+                  Buffer.MemoryCopy((void*)bytePointer, dest, payloadLength, payloadLength);
+               }
+
                NativeMethods.FreeHandlePointer(handlePointer);
                _cache.Add(i, json);
             }
@@ -72,7 +78,13 @@ public class CachingMiddleware
             {
                bytePointer = NativeMethods.DbById(keys[i], out payloadLength, out handlePointer);
                json = new byte[payloadLength];
-               Marshal.Copy(bytePointer, json, 0, payloadLength);
+               //Marshal.Copy(bytePointer, json, 0, payloadLength);
+
+               fixed (byte* dest = json)
+               {
+                  Buffer.MemoryCopy((void*)bytePointer, dest, payloadLength, payloadLength);
+               }
+
                NativeMethods.FreeHandlePointer(handlePointer);
                _cache.Add(keys[i], json);
             }

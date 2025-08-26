@@ -1,0 +1,19 @@
+{% import "indigo/app/models" %}
+
+{% func HTMLFortunes(fortunes []models.Fortune) %}<!DOCTYPE html>
+<html>
+<head>
+<title>Fortunes</title>
+</head>
+<body>
+<table>
+<tr><th>id</th><th>message</th></tr>
+{% code i, fortune := 0, (*models.Fortune)(nil) %}
+{% for i = range fortunes %}
+{% code fortune = &fortunes[i] %}
+<tr><td>{%d fortune.ID %}</td><td>{%s fortune.Message %}</td></tr>
+{% endfor %}
+</table>
+</body>
+</html>
+{% endfunc %}

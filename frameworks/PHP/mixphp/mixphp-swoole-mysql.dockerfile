@@ -1,4 +1,4 @@
-FROM phpswoole/swoole:5.1.3-php8.3
+FROM phpswoole/swoole:6.0.2-php8.4
 
 RUN docker-php-ext-install pcntl opcache bcmath > /dev/null
 

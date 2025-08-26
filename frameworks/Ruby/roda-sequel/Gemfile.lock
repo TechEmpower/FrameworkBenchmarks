@@ -1,17 +1,15 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    base64 (0.2.0)
     bigdecimal (3.1.9)
     erubi (1.13.1)
     iodine (0.7.58)
-    json (2.11.3)
-    mysql2 (0.5.6)
+    json (2.13.2)
     nio4r (2.7.4)
     pg (1.5.9)
     puma (6.6.0)
       nio4r (~> 2.0)
-    rack (3.1.12)
+    rack (3.2.0)
     roda (3.90.0)
       rack
     sequel (5.90.0)
@@ -20,6 +18,7 @@ GEM
       pg (>= 0.18.0, != 1.2.0)
       sequel (>= 4.38.0)
     tilt (2.6.0)
+    trilogy (2.9.0)
 
 PLATFORMS
   ruby
@@ -27,17 +26,16 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  base64
   erubi (~> 1.12)
   iodine (~> 0.7)
   json (~> 2.8)
-  mysql2 (~> 0.5)
   pg (~> 1.4)
   puma (~> 6.2)
   roda (~> 3.66)
   sequel (~> 5.67)
   sequel_pg (~> 1.17)
   tilt (~> 2.1)
+  trilogy (~> 2.9.0)
 
 BUNDLED WITH
-   2.6.2
+   2.7.0

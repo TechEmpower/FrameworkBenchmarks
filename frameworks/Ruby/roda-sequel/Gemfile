@@ -1,6 +1,5 @@
 source "https://rubygems.org"
 
-gem 'base64' # required by passenger on Ruby 3.4
 gem "erubi", "~> 1.12"
 gem "json", "~> 2.8"
 gem "sequel", "~> 5.67"
@@ -8,11 +7,11 @@ gem "roda", "~> 3.66"
 gem "tilt", "~> 2.1", require: "tilt/erb"
 
 group :mysql, optional: true do
-  gem "mysql2", "~> 0.5", platforms: %i[ruby mswin]
+  gem 'trilogy', '~> 2.9.0', platforms: [:ruby, :windows]
 end
 
 group :postgresql, optional: true do
-  gem "pg", "~> 1.4", platforms: %i[ruby mswin]
+  gem "pg", "~> 1.4", platforms: %i[ruby windows]
   gem "sequel_pg", "~> 1.17", platforms: :ruby, require: false
 end
 
