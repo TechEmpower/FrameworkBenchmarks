@@ -78,7 +78,8 @@ RUN apt-get -yqq update && \
     apt-get -yqq install \
       libnuma1 \
       libpq5 \
-      libyajl2
+      libyajl2 && \
+    apt-get -yqq upgrade
 ARG H2O_APP_PREFIX
 COPY --from=compile "${H2O_APP_PREFIX}" "${H2O_APP_PREFIX}/"
 COPY --from=compile /usr/local/lib/libmustache_c.so "${H2O_APP_PREFIX}/lib/"
