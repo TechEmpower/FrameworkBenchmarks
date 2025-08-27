@@ -5,7 +5,7 @@ gem 'sequel', '~> 5.0'
 gem 'rack', '~> 3.1'
 
 group :mysql, optional: true do
-  gem 'mysql2', '~> 0.4', platforms: [:ruby, :windows]
+  gem 'trilogy', '~> 2.9', platforms: [:ruby, :windows]
 end
 
 group :postgresql, optional: true do
