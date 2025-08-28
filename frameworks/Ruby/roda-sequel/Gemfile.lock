@@ -35,7 +35,7 @@ DEPENDENCIES
   sequel (~> 5.67)
   sequel_pg (~> 1.17)
   tilt (~> 2.1)
-  trilogy (~> 2.9.0)
+  trilogy (~> 2.9)
 
 BUNDLED WITH
    2.7.0
