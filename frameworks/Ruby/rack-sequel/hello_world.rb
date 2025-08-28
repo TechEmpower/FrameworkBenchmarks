@@ -70,7 +70,7 @@ class HelloWorld
       html << <<~"HTML"
       <tr>
         <td>#{fortune.id}</td>
-        <td>#{Rack::Utils.escape_html(fortune.message)}</td>
+        <td>#{CGI.escape_html(fortune.message)}</td>
       </tr>
       HTML
     end
