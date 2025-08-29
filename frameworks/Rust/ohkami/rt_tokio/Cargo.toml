@@ -12,3 +12,4 @@ codegen-units = 1
 [dependencies]
 framework_benchmarks = { path = "..",      features = ["rt_tokio"] }
 tokio                = { version = "1.47", features = ["full"] }
+num_cpus             = { version = "1.17" }
