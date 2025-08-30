@@ -1,18 +1,10 @@
-# [Ohkami](https://github.com/kana-rus/ohkami) - Intuitive and Declarative Web Framework for Rust
+# [Ohkami](https://github.com/ohkami-rs/ohkami) - A performant, declarative, and runtime-flexible web framework for Rust
 
-## Description
+## Features
 
-> Build web app in intuitive and declarative code
-> - *macro-less and type-safe* APIs for intuitive and declarative code
-> - *multi runtime* support：`tokio`, `async-std`, `worker` (Cloudflare Workers)
-
-- [User Guide](https://docs.rs/ohkami/latest/ohkami/)
-- [API Documentation](https://docs.rs/ohkami/latest/ohkami/)
-- Cargo package: [ohkami](https://crates.io/crates/ohkami)
-
-## Database
-
-PostgreSQL with [sqlx](https://github.com/launchbadge/sqlx)
+> - *macro-less and type-safe* APIs for declarative, ergonomic code
+> - *runtime-flexible* ： `tokio`, `smol`, `nio`, `glommio` and `worker` (Cloudflare Workers), `lambda` (AWS Lambda)
+> - good performance, no-network testing, well-structured middlewares, Server-Sent Events, WebSocket, highly integrated OpenAPI document generation, ...
 
 ## Test URLs
 

@@ -23,27 +23,6 @@
                 "update_url":     "/updates?q=",
                 "plaintext_url":  "/plaintext"
             },
-            "rt_async-std": {
-                "dockerfile":     "rt_async-std.dockerfile",
-                "display_name":   "Ohkami [async-std]",
-                "framework":      "Ohkami",
-                "webserver":      "Ohkami",
-                "language":       "Rust",
-                "approach":       "Realistic",
-                "classification": "Micro",
-                "database":       "Postgres",
-                "orm":            "Raw",
-                "platform":       "None",
-                "os":             "Linux",
-                "database_os":    "Linux",
-                "port":           8000,
-                "json_url":       "/json",
-                "db_url":         "/db",
-                "query_url":      "/queries?q=",
-                "fortune_url":    "/fortunes",
-                "update_url":     "/updates?q=",
-                "plaintext_url":  "/plaintext"
-            },
             "rt_smol": {
                 "dockerfile":     "rt_smol.dockerfile",
                 "display_name":   "Ohkami [smol]",
