@@ -1,6 +1,7 @@
 FROM ruby:3.4
 
 ENV RUBY_YJIT_ENABLE=1
+ENV WEB_CONCURRENCY=auto
 
 # Use Jemalloc
 RUN apt-get update && \
