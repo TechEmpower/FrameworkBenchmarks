@@ -1,0 +1,3 @@
+(executable
+ (name httpun_eio)
+ (libraries httpun httpun-eio eio eio_main eio_linux yojson unix))
