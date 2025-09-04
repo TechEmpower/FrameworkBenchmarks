@@ -1,0 +1,11 @@
+{
+	"authors": [
+		"Andrea Fontana"
+	],
+	"dflags-ldc" : ["-static", "-nodefaultlib"],
+	"dependencies": {
+		"serverino": {"repository" : "git+https://github.com/trikko/serverino", "version" : "d866becd6fbac6680e4358f42ed4513b014a4559"}
+	},
+	"license": "proprietary",
+	"name": "serverino-benchmark"
+}
