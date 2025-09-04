@@ -27,7 +27,7 @@ void catchAll(Request request, Output output)
 		.create()
 		.enableServerSignature(true)
 		.setWorkers(4)
-		.setDaemonThreads(totalCPUs)
+		.setDaemonInstances(10)
 		.addListener("0.0.0.0", 8080);
 }
 
