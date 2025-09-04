@@ -3,7 +3,6 @@ GEM
   specs:
     bigdecimal (3.1.9)
     json (2.13.2)
-    mysql2 (0.5.6)
     nio4r (2.7.4)
     pg (1.5.9)
     puma (6.6.0)
@@ -14,6 +13,7 @@ GEM
     sequel_pg (1.17.1)
       pg (>= 0.18.0, != 1.2.0)
       sequel (>= 4.38.0)
+    trilogy (2.9.0)
 
 PLATFORMS
   ruby
@@ -22,12 +22,12 @@ PLATFORMS
 
 DEPENDENCIES
   json (~> 2.8)
-  mysql2 (~> 0.4)
   pg (~> 1.5)
   puma (~> 6.5)
   rack (~> 3.1)
   sequel (~> 5.0)
   sequel_pg (~> 1.6)
+  trilogy (~> 2.9)
 
 BUNDLED WITH
    2.7.0

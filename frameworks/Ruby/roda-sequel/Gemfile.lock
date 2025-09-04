@@ -5,7 +5,6 @@ GEM
     erubi (1.13.1)
     iodine (0.7.58)
     json (2.13.2)
-    mysql2 (0.5.6)
     nio4r (2.7.4)
     pg (1.5.9)
     puma (6.6.0)
@@ -19,6 +18,7 @@ GEM
       pg (>= 0.18.0, != 1.2.0)
       sequel (>= 4.38.0)
     tilt (2.6.0)
+    trilogy (2.9.0)
 
 PLATFORMS
   ruby
@@ -29,13 +29,13 @@ DEPENDENCIES
   erubi (~> 1.12)
   iodine (~> 0.7)
   json (~> 2.8)
-  mysql2 (~> 0.5)
   pg (~> 1.4)
   puma (~> 6.2)
   roda (~> 3.66)
   sequel (~> 5.67)
   sequel_pg (~> 1.17)
   tilt (~> 2.1)
+  trilogy (~> 2.9)
 
 BUNDLED WITH
    2.7.0

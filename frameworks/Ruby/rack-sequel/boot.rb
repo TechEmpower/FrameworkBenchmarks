@@ -8,12 +8,16 @@ Bundler.require(:default) # Load core modules
 def connect(dbtype)
   Bundler.require(dbtype) # Load database-specific modules
 
-  adapters = {
-    mysql: 'mysql2',
-    postgresql: 'postgres'
-  }
-
   opts = {}
+
+  if dbtype == :mysql
+    adapter = 'trilogy'
+    opts[:ssl] = true
+    opts[:ssl_mode] = 4 # Trilogy::SSL_PREFERRED_NOVERIFY
+    opts[:tls_min_version] = 3 # Trilogy::TLS_VERSION_12
+  else
+    adapter = 'postgresql'
+  end
 
   # Determine threading/thread pool size and timeout
   if defined?(Puma) && (threads = Puma.cli_config.options.fetch(:max_threads)) > 1
@@ -23,7 +27,7 @@ def connect(dbtype)
 
   Sequel.connect \
     '%{adapter}://%{host}/%{database}?user=%{user}&password=%{password}' % {
-      adapter: (dbtype == :mysql ? 'mysql2' : 'postgresql'),
+      adapter: adapter,
       host: 'tfb-database',
       database: 'hello_world',
       user: 'benchmarkdbuser',

@@ -44,6 +44,8 @@ RUN apt-get -yqq update && \
 
 FROM "ubuntu:${UBUNTU_VERSION}"
 
+ARG DEBIAN_FRONTEND=noninteractive
+RUN apt-get -yqq update && apt-get -yqq upgrade
 ARG H2O_PREFIX
 COPY --from=compile "${H2O_PREFIX}/bin/h2o" "${H2O_PREFIX}/bin/"
 COPY --from=compile "${H2O_PREFIX}/share" "${H2O_PREFIX}/share/"

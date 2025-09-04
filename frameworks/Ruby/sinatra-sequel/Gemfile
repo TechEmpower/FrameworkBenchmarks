@@ -5,7 +5,7 @@ gem 'sequel', '~> 5.0'
 gem 'sinatra', '~> 4.0', :require=>'sinatra/base'
 
 group :mysql, optional: true do
-  gem 'mysql2', '~> 0.5', :platforms=>[:ruby, :windows]
+  gem 'trilogy', '~> 2.9', platforms: [:ruby, :windows]
 end
 
 group :postgresql, optional: true do
