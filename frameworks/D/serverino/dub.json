@@ -1,0 +1,14 @@
+{
+	"authors": [
+		"Andrea Fontana"
+	],
+	"dependencies": {
+		"serverino": "~>0.7.19"
+	},
+	"dflags-ldc": [
+		"-static",
+		"-nodefaultlib"
+	],
+	"license": "proprietary",
+	"name": "serverino-benchmark"
+}
