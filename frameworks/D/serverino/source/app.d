@@ -1,5 +1,6 @@
 module app;
 
+import std.logger;
 import std.json;
 import serverino;
 import std.parallelism: totalCPUs;
@@ -25,6 +26,7 @@ void catchAll(Request request, Output output)
 {
 	return ServerinoConfig
 		.create()
+		.setLogLevel(LogLevel.off)
 		.enableServerSignature(true)
 		.setWorkers(4)
 		.setDaemonInstances(10)
