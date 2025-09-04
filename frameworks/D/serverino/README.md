@@ -1,5 +1,11 @@
 # serverino Benchmarking Test
 
+## About Serverino
+
+Serverino is a small and ready-to-go http server written in D.
+
+- Homepage: https://github.com/trikko/serverino
+
 ### Test Type Implementation Source Code
 
 * [JSON](source/app.d)
