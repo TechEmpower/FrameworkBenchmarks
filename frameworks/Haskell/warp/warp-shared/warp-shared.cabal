@@ -37,13 +37,13 @@ common deps
 --       tfb-types
 --     , tfb-hasql
 
--- executable warp-mysql-haskell
---   import: deps
---   main-is:
---     Main.hs
---   build-depends:
---       tfb-types
---     , tfb-mysql-haskell
+executable warp-mysql-haskell
+  import: deps
+  main-is:
+    Main.hs
+  build-depends:
+      tfb-types
+    , tfb-mysql-haskell
 
 executable warp-postgres-simple
   import: deps
