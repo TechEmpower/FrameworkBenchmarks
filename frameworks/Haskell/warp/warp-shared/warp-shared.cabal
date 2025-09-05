@@ -1,4 +1,4 @@
-cabal-version:       2.4
+cabal-version:       3.8
 -- `cabal-version` MUST match the version bundled with stack.
 -- run `stack exec -- cabal --version` to find out
 name:                warp-shared
@@ -23,32 +23,32 @@ common deps
     , text
     , attoparsec
     , buffer-builder
-    , type-of-html
+    , blaze-html
     , mwc-random
     , wai
     , warp
     , http-types
 
-executable warp-hasql
-  import: deps
-  main-is:
-    Main.hs
-  build-depends:
-      tfb-types
-    , tfb-hasql
+-- executable warp-hasql
+--   import: deps
+--   main-is:
+--     Main.hs
+--   build-depends:
+--       tfb-types
+--     , tfb-hasql
 
-executable warp-mysql-haskell
-  import: deps
-  main-is:
-    Main.hs
-  build-depends:
-      tfb-types
-    , tfb-mysql-haskell
+-- executable warp-mysql-haskell
+--   import: deps
+--   main-is:
+--     Main.hs
+--   build-depends:
+--       tfb-types
+--     , tfb-mysql-haskell
 
-executable warp-postgres-wire
+executable warp-postgres-simple
   import: deps
   main-is:
     Main.hs
   build-depends:
       tfb-types
-    , tfb-postgres-wire
+    , tfb-postgres-simple

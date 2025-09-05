@@ -1,10 +1,10 @@
-{-# LANGUAGE OverloadedStrings     #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 module Main where
 
-import qualified Lib
 import qualified GHC.Conc
-import           System.Environment (getArgs, lookupEnv)
+import qualified Lib
+import System.Environment (getArgs, lookupEnv)
 
 main :: IO ()
 main = do
@@ -15,11 +15,12 @@ main = do
     [x] -> pure x
     _ -> pure "0.0.0.0"
   numCaps <- GHC.Conc.getNumCapabilities
-  Lib.main $ Lib.Config {
-    Lib.configHost    = dbHost,
-    Lib.configName    = "hello_world",
-    Lib.configUser    = "benchmarkdbuser",
-    Lib.configPass    = "benchmarkdbpass",
-    Lib.configStripes = numCaps,
-    Lib.configPoolSize= 512
-  }
+  Lib.main $
+    Lib.Config
+      { Lib.configHost = dbHost,
+        Lib.configName = "hello_world",
+        Lib.configUser = "benchmarkdbuser",
+        Lib.configPass = "benchmarkdbpass",
+        Lib.configStripes = numCaps,
+        Lib.configPoolSize = 512
+      }

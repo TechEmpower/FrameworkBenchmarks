@@ -1,6 +1,6 @@
-name:                tfb-postgres-wire
+name:                tfb-postgres-simple
 version:             0.1.0.0
-homepage:            https://github.com/TechEmpower/FrameworkBenchmarks/tree/master/frameworks/Haskell/warp/shared/tfb-postgres-wire
+homepage:            https://github.com/TechEmpower/FrameworkBenchmarks/tree/master/frameworks/Haskell/warp/shared/tfb-postgres-simple
 license:             BSD3
 author:              Naushadh
 maintainer:          naushadh@protonmail.com
@@ -18,7 +18,7 @@ library
       base >= 4.7 && < 5
     , tfb-types
     , resource-pool
-    , postgres-wire
+    , postgresql-simple
     , bytestring
     , vector
     , text

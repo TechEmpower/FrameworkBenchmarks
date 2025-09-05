@@ -1,27 +1,28 @@
-{-# LANGUAGE OverloadedStrings     #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 
-module Lib (
-    main
-  , Db.Config(..)
-) where
+module Lib
+  ( main,
+    Db.Config (..),
+  )
+where
 
-import qualified TFB.Types as Types
-import qualified TFB.Db as Db
-import qualified Data.Either as Either
-import           Data.List (sortOn)
-import           Control.Monad (replicateM, join)
-
+import Control.Monad (join, replicateM)
+import Data.BufferBuilder.Json ((.=))
+import qualified Data.BufferBuilder.Json as Json
 import qualified Data.ByteString.Lazy as LBS
 import qualified Data.ByteString.Lazy.Char8 as LBSC
-import qualified Network.HTTP.Types.Status as Status
+import qualified Data.Either as Either
+import Data.List (sortOn)
 import qualified Network.HTTP.Types.Header as Header
+import qualified Network.HTTP.Types.Status as Status
 import qualified Network.Wai as Wai
 import qualified Network.Wai.Handler.Warp as Warp
-import qualified Data.BufferBuilder.Json as Json
-import           Data.BufferBuilder.Json ((.=))
 import qualified System.Random.MWC as MWC
-import qualified Html
-import           Html ((#))
+import qualified TFB.Db as Db
+import qualified TFB.Types as Types
+import qualified Text.Blaze.Html.Renderer.Utf8 as Html
+import qualified Text.Blaze.Html5 as Html
 
 -- entry point
 main :: Db.Config -> IO ()
@@ -41,18 +42,18 @@ app gen dbPool req respond = do
   let qParams = Wai.queryString req
   let mCount = Types.parseCount =<< join (lookup "queries" qParams)
   case (Wai.requestMethod req, Wai.pathInfo req) of
-    ("GET", ["plaintext"])
-      -> respond getPlaintext
-    ("GET", ["json"])
-      -> respond getJson
-    ("GET", ["db"])
-      -> respond =<< getWorld gen dbPool
-    ("GET", ["fortunes"])
-      -> respond =<< getFortunes dbPool
-    ("GET", ["queries"])
-      -> respond =<< getWorlds gen dbPool mCount
-    ("GET", ["updates"])
-      -> respond =<< updateWorlds gen dbPool mCount
+    ("GET", ["plaintext"]) ->
+      respond getPlaintext
+    ("GET", ["json"]) ->
+      respond getJson
+    ("GET", ["db"]) ->
+      respond =<< getWorld gen dbPool
+    ("GET", ["fortunes"]) ->
+      respond =<< getFortunes dbPool
+    ("GET", ["queries"]) ->
+      respond =<< getWorlds gen dbPool mCount
+    ("GET", ["updates"]) ->
+      respond =<< updateWorlds gen dbPool mCount
     _ -> respond routeNotFound
 
 -- * response helpers
@@ -68,7 +69,7 @@ contentJson = [(Header.hContentType, "application/json")]
 
 {-# SPECIALIZE respondJson :: Json.ObjectBuilder -> Wai.Response #-}
 {-# SPECIALIZE respondJson :: Types.World -> Wai.Response #-}
-respondJson :: Json.ToJson a => a -> Wai.Response
+respondJson :: (Json.ToJson a) => a -> Wai.Response
 respondJson = Wai.responseLBS Status.status200 contentJson . mkBs
   where
     mkBs = LBS.fromStrict . Json.encodeJson
@@ -76,8 +77,8 @@ respondJson = Wai.responseLBS Status.status200 contentJson . mkBs
 contentHtml :: Header.ResponseHeaders
 contentHtml = [(Header.hContentType, "text/html; charset=UTF-8")]
 
-respondHtml :: Types.FortunesHtml -> Wai.Response
-respondHtml = Wai.responseLBS Status.status200 contentHtml . Html.renderByteString
+respondHtml :: Html.Html -> Wai.Response
+respondHtml = Wai.responseBuilder Status.status200 contentHtml . Html.renderHtmlBuilder
 
 -- * error responses
 
@@ -138,20 +139,22 @@ getFortunes dbPool = do
   res <- Db.queryFortunes dbPool
   return $ case res of
     Left e -> respondDbError e
-    Right fs -> respondHtml $ do
+    Right fs ->
       let new = Types.Fortune 0 "Additional fortune added at request time."
-      let header = Html.tr_ $ Html.th_ (Html.Raw "id") # Html.th_ (Html.Raw "message")
-      let mkRow f = Html.tr_ $ Html.td_ (fromIntegral $ Types.fId f) # Html.td_ (Types.fMessage $ f)
-      let rows = fmap mkRow $ sortOn Types.fMessage (new : fs)
-      Html.doctype_ #
-        Html.html_ (
-          Html.head_ (
-            Html.title_ (Html.Raw "Fortunes")
-          ) #
-          Html.body_ ( Html.table_ $
-            header # rows
-          )
-        )
+          header = Html.tr $ do
+            Html.th $ Html.preEscapedToHtml ("id" :: String)
+            Html.th $ Html.preEscapedToHtml ("message" :: String)
+          mkRow f = Html.tr $ do
+            Html.td $ Html.toHtml ((fromIntegral $ Types.fId f) :: Int)
+            Html.td $ Html.toHtml (Types.fMessage f)
+          rows = (mkRow <$> sortOn Types.fMessage (new : fs))
+       in respondHtml $ Html.docTypeHtml $ do
+            Html.head $ do
+              Html.title $ Html.preEscapedToHtml ("Fortunes" :: String)
+            Html.body $ do
+              Html.table $ do
+                header
+                sequence_ rows
 {-# INLINE getFortunes #-}
 
 randomId :: MWC.GenIO -> IO Types.QId

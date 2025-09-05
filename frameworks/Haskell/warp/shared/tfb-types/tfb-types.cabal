@@ -19,5 +19,4 @@ library
     , bytestring
     , attoparsec
     , buffer-builder
-    , type-of-html
     , text
