@@ -9,6 +9,8 @@ create or replace function fortune_template("Fortune") returns text as $$
 $$ language sql immutable;
 
 create or replace function fortunes() returns "text/html" as $$
+   -- This is only necessary bc. of the benchmark: The domain gives us content-type: text/html,
+   -- but the benchmark explicitly tests for the charset in the content-type.
    select set_config('response.headers', '[{"Content-Type": "text/html; charset=utf-8"}]', true);
 
    select '<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>'
