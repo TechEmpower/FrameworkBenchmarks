@@ -12,7 +12,8 @@ extra-source-files:  README.md
 
 library
   hs-source-dirs:      .
-  default-language:    Haskell2010
+  default-language:    GHC2021
+  ghc-options:         -funbox-strict-fields
   exposed-modules:     TFB.Db
   build-depends:
       base >= 4.7 && < 5

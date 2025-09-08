@@ -1,4 +1,3 @@
-{-# OPTIONS -funbox-strict-fields #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 module TFB.Db
@@ -124,7 +123,7 @@ queryWorldById dbPool wId = Pool.withResource dbPool $ \conn -> do
   return $ case err of
     [] -> case oks of
       [] -> Left "World not found!"
-      ws -> pure $ head ws
+      w : _ -> pure w
     _ -> Left . mconcat $ err
   where
     s = "SELECT * FROM World WHERE id = ?"
@@ -172,4 +171,4 @@ queryFortunes dbPool = Pool.withResource dbPool $ \conn -> do
   let (err, oks) = Either.partitionEithers eFortunes
   return $ case err of
     [] -> pure oks
-    _ -> Left $ head err
+    w : _ -> Left w

@@ -5,22 +5,22 @@
 
 packages:
 - completed:
-    hackage: socket-0.8.3.0@sha256:c7c8433770729eef056445b15ceb0e77807ec3b0bea4e47a2f4c609bbeab2638,3414
+    hackage: buffer-builder-0.2.4.9@sha256:22600bcca6b8657865d1dce07cfa791767bdb6241c0cd5cadd6444678bf9a8a7,5257
     pantry-tree:
-      sha256: 718e90009b0023f73783ce0934cc6b9d03de6a28ba864130b7ebc5bfe5986cb6
-      size: 2064
+      sha256: f5eddef2db3cd6e0c2e2199a5a59cae0329b057045aa67705492d069f9e204f0
+      size: 1155
   original:
-    hackage: socket-0.8.3.0
+    hackage: buffer-builder-0.2.4.9
 - completed:
-    hackage: socket-unix-0.2.1.0@sha256:3f83390ee646e220ff7bbe53d4f56daaa44086dc379a908b655cca7d698bc1aa,2598
+    hackage: mysql-haskell-1.1.7@sha256:e1fc81c03063a50a169464e9983466249339c718b28012e2b69cd58e7c18487c,5498
     pantry-tree:
-      sha256: e71d03b0ac0a46c89a39acf0c06f1bcf56f80b277d89617a411ee4f64c1ad6dc
-      size: 848
+      sha256: 8720dcd88265638550d96b2ef560fafd1b708bcf196a1c3add5f98c82d014711
+      size: 4968
   original:
-    hackage: socket-unix-0.2.1.0
+    hackage: mysql-haskell-1.1.7
 snapshots:
 - completed:
-    sha256: 238fa745b64f91184f9aa518fe04bdde6552533d169b0da5256670df83a0f1a9
-    size: 721141
-    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/22/44.yaml
-  original: lts-22.44
+    sha256: 188228e10dbb5b533bae584049b112e72000902e64b17348679a69f92fbc0d32
+    size: 726076
+    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/24/9.yaml
+  original: lts-24.9

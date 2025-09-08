@@ -1,9 +1,6 @@
-{-# OPTIONS -funbox-strict-fields #-}
 {-# OPTIONS -Wno-orphans #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE TypeApplications #-}
 
 module TFB.Db
   ( Pool,
@@ -111,7 +108,7 @@ queryWorldByIdInner wId conn = do
   pure $ Either.either (Left . DbError . BSC.pack . show) mkW res
   where
     mkW [] = Left NotFound
-    mkW ws = pure . head $ ws
+    mkW (w : _) = pure w
 
 queryWorldById :: Pool -> Types.QId -> IO (Either Error Types.World)
 queryWorldById dbPool wId = Pool.withResource dbPool (queryWorldByIdInner wId)
