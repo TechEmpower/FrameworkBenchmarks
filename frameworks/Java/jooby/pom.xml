@@ -6,17 +6,17 @@
 
   <artifactId>jooby</artifactId>
   <groupId>com.techempower</groupId>
-  <version>3.0</version>
+  <version>4.0</version>
 
   <name>jooby</name>
 
   <properties>
-    <jooby.version>4.0.5</jooby.version>
+    <jooby.version>4.0.7</jooby.version>
     <dsl-json.version>2.0.2</dsl-json.version>
     <postgresql.version>42.7.7</postgresql.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>22</maven.compiler.source>
-    <maven.compiler.target>22</maven.compiler.target>
+    <maven.compiler.source>24</maven.compiler.source>
+    <maven.compiler.target>24</maven.compiler.target>
 
     <!-- Startup class -->
     <application.class>com.techempower.App</application.class>
