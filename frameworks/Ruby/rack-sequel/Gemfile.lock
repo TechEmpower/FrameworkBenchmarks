@@ -5,7 +5,7 @@ GEM
     json (2.13.2)
     nio4r (2.7.4)
     pg (1.5.9)
-    puma (6.6.0)
+    puma (7.0.2)
       nio4r (~> 2.0)
     rack (3.2.0)
     sequel (5.90.0)
@@ -23,7 +23,7 @@ PLATFORMS
 DEPENDENCIES
   json (~> 2.8)
   pg (~> 1.5)
-  puma (~> 6.5)
+  puma (~> 7.0)
   rack (~> 3.1)
   sequel (~> 5.0)
   sequel_pg (~> 1.6)
