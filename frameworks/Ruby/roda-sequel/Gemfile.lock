@@ -2,6 +2,7 @@ GEM
   remote: https://rubygems.org/
   specs:
     bigdecimal (3.1.9)
+    cgi (0.5.0)
     erubi (1.13.1)
     iodine (0.7.58)
     json (2.13.2)
@@ -26,6 +27,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  cgi
   erubi (~> 1.12)
   iodine (~> 0.7)
   json (~> 2.8)
