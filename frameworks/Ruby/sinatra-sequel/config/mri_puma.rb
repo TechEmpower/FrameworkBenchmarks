@@ -5,3 +5,7 @@ num_workers, num_threads = auto_tune
 
 workers num_workers
 threads num_threads, num_threads
+
+before_fork do
+  Sequel::DATABASES.each(&:disconnect)
+end
