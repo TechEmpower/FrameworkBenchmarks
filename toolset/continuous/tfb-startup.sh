@@ -20,10 +20,12 @@ git clone \
 echo "moving to tfb directory"
 cd $TFB_REPOPARENT/$TFB_REPONAME
 
-if [ -z "$TFB_RUN_ORDER" ]; then
+if [ -e "${TFB_REPOPARENT}/reverse-order" ]; then
   export TFB_RUN_ORDER="reverse"
+  sudo rm -rf "${TFB_REPOPARENT}/reverse-order"
 else
   unset TFB_RUN_ORDER
+  touch "${TFB_REPOPARENT}/reverse-order"
 fi
 
 echo "building tfb docker image"
