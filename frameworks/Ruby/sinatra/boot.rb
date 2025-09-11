@@ -33,12 +33,10 @@ def connect(dbtype)
 
   # Determine threading/thread pool size and timeout
   if defined?(Puma) && (threads = Puma.cli_config.options.fetch(:max_threads)) > 1
-    opts[:pool] = (2 * Math.log(threads)).floor
+    opts[:pool] = threads
     opts[:checkout_timeout] = 10
   else
-    # TODO: ActiveRecord doesn't have a single-threaded mode?
-    opts[:pool] = 1
-    opts[:checkout_timeout] = 0
+    opts[:pool] = 512
   end
 
   ActiveRecord::Base.establish_connection(opts)
