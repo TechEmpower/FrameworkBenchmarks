@@ -10,8 +10,12 @@ use quick_cache::sync::Cache;
 use rama::{
     Context,
     http::{
-        IntoResponse, StatusCode,
-        service::web::{Router, extract::Query},
+        StatusCode,
+        service::web::{
+            Router,
+            extract::Query,
+            response::{Html, IntoResponse},
+        },
     },
 };
 use rand::{SeedableRng, rng, rngs::SmallRng};
@@ -22,15 +26,15 @@ use yarte::Template;
 static GLOBAL: MiMalloc = MiMalloc;
 
 #[cfg(not(feature = "simd-json"))]
-use rama::http::response::Json;
+use rama::http::service::web::response::Json;
 #[cfg(feature = "simd-json")]
-use rama::http::response::Json;
+use rama::http::service::web::response::Json;
 
 mod server;
 
 use common::{
     get_env, random_id, random_ids,
-    utils::{Params, Utf8Html, parse_params},
+    utils::{Params, parse_params},
 };
 use sqlx::database::create_pool;
 use sqlx::models::Fortune;
@@ -91,7 +95,7 @@ async fn fortunes(ctx: Context<AppState>) -> impl IntoResponse {
 
     fortunes.sort_by(|a, b| a.message.cmp(&b.message));
 
-    Utf8Html(
+    Html(
         FortunesTemplate {
             fortunes: &fortunes,
         }
@@ -106,10 +110,12 @@ async fn cache(
 ) -> impl IntoResponse {
     let count = parse_params(params);
     let mut rng = SmallRng::from_rng(&mut rng());
-    let mut worlds: Vec<Option<World>> = Vec::with_capacity(count);
+    let mut worlds: Vec<World> = Vec::with_capacity(count);
 
     for id in random_ids(&mut rng, count) {
-        worlds.push(ctx.state().cache.get(&id));
+        if let Some(world) = ctx.state().cache.get(&id) {
+            worlds.push(world);
+        }
     }
 
     (StatusCode::OK, Json(worlds))

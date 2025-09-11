@@ -1,4 +1,3 @@
-import asyncio
 import os
 
 from operator import itemgetter
@@ -10,6 +9,15 @@ import asyncpg
 import jinja2
 import orjson
 
+PG_POOL_SIZE = 4
+
+
+class NoResetConnection(asyncpg.Connection):
+    __slots__ = ()
+
+    def get_reset_query(self):
+        return ""
+
 
 async def pg_setup():
     global pool
@@ -18,7 +26,10 @@ async def pg_setup():
         password=os.getenv('PGPASS', 'benchmarkdbpass'),
         database='hello_world',
         host='tfb-database',
-        port=5432
+        port=5432,
+        min_size=PG_POOL_SIZE,
+        max_size=PG_POOL_SIZE,
+        connection_class=NoResetConnection,
     )
 
 
@@ -98,11 +109,9 @@ async def route_queries(scope, receive, send):
     worlds = []
 
     async with pool.acquire() as connection:
-        statement = await connection.prepare(SQL_SELECT)
-        for row_id in row_ids:
-            number = await statement.fetchval(row_id)
-            worlds.append({'id': row_id, 'randomNumber': number})
+        rows = await connection.fetchmany(SQL_SELECT, [(v,) for v in row_ids])
 
+    worlds = [{'id': row_id, 'randomNumber': number[0]} for row_id, number in zip(row_ids, rows)]
     await send(JSON_RESPONSE)
     await send({
         'type': 'http.response.body',
@@ -135,9 +144,7 @@ async def route_updates(scope, receive, send):
     worlds = [{'id': row_id, 'randomNumber': number} for row_id, number in updates]
 
     async with pool.acquire() as connection:
-        statement = await connection.prepare(SQL_SELECT)
-        for row_id, _ in updates:
-            await statement.fetchval(row_id)
+        await connection.executemany(SQL_SELECT, [(i[0],) for i in updates])
         await connection.executemany(SQL_UPDATE, updates)
 
     await send(JSON_RESPONSE)

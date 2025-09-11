@@ -16,23 +16,27 @@ enum poolSize = 64;
 
 PostgresClient client;
 
-shared static this()
-{
-	import derelict.pq.pq;
-	import derelict.util.exception : ShouldThrow;
-	ShouldThrow myMissingSymCB( string symbolName ) { return ShouldThrow.No; }
-	DerelictPQ.missingSymbolCallback = &myMissingSymCB;
-}
-
 void main()
 {
-	runWorkerTaskDist(&runServer);
-	runApplication();
-}
+	auto connectionInfo = "host=tfb-database port=5432 "
+						~ "dbname=hello_world  user=benchmarkdbuser password=benchmarkdbpass";
 
-void runServer()
-{
+	client = new PostgresClient(connectionInfo, poolSize, (Connection cn){
+		cn.prepareEx("fortune_prpq", "SELECT id, message::text FROM Fortune");
+		cn.prepareEx("db_prpq", "SELECT randomNumber, id FROM world WHERE id = $1");
+		cn.prepareEx("db_update_prpq", "UPDATE world SET randomNumber = $1  WHERE id = $2");
+	} );
+
+	{
+		// Establishing each connection in the pool and performing the PREPARE procedures
+		LockedConnection[poolSize] conns;
+
+		foreach(ref c; conns)
+			c = client.lockConnection();
+	}
+
 	import std.datetime : seconds;
+
 	auto router = new URLRouter;
 	router.registerWebInterface(new WebInterface);
 	router.rebuild();
@@ -42,6 +46,7 @@ void runServer()
 	settings.options |= HTTPServerOption.reusePort;
 	settings.port = 8080;
 	listenHTTP(settings, router);
+	runEventLoop();
 }
 
 class WebInterface {
@@ -79,7 +84,6 @@ class WebInterface {
 		int id = _uniformVariable(_gen);
 		QueryParams qp;
 		qp.preparedStatementName("db_prpq");
-		qp.resultFormat = ValueFormat.BINARY;
 		qp.argsVariadic(id);
 		immutable result = conn.execPrepared(qp).rangify.front;
 		auto w = WorldResponse(id, result[0].as!PGinteger);
@@ -109,11 +113,9 @@ class WebInterface {
 		scope data = new WorldResponse[count];
 		QueryParams qp;
 		qp.preparedStatementName("db_prpq");
-		qp.resultFormat = ValueFormat.BINARY;
 		foreach (ref w; data) {
 			int id = _uniformVariable(_gen);
 			qp.argsVariadic(id);
-			immutable query = "SELECT randomNumber, id FROM world WHERE id = " ~  id.to!string;
 			immutable result = conn.execPrepared(qp).rangify.front;
 			w = WorldResponse(id, result[0].as!PGinteger);
 		}
@@ -147,7 +149,6 @@ class WebInterface {
 		import std.uni : isNumber;
 
 		auto conn = client.lockConnection();
-		scope(exit)	destroy(conn);
 
 		int count = 1;
 		if (queries.length && isNumber(queries[0]))
@@ -159,24 +160,22 @@ class WebInterface {
 		scope data = new WorldResponse[count];
 		QueryParams qp;
 		qp.preparedStatementName("db_prpq");
-		qp.resultFormat = ValueFormat.BINARY;
 
 		QueryParams qp_update;
 		qp_update.preparedStatementName("db_update_prpq");
-		qp_update.resultFormat = ValueFormat.BINARY;
 
 		foreach (ref w; data) {
 			int id = _uniformVariable(_gen);
 			qp.argsVariadic(id);
-			immutable query = "SELECT id, randomNumber FROM world WHERE id = " ~  id.to!string;
 			immutable result = conn.execPrepared(qp).rangify.front;
 			w = WorldResponse(id, result[0].as!PGinteger);
 
 			// update random number
 			w.randomNumber = _uniformVariable(_gen);
 			qp_update.argsVariadic(w.randomNumber, id);
+
 			// persist to DB
-			conn.sendQueryPrepared(qp_update);
+			conn.execPrepared(qp_update);
 		}
 
 		// write response as JSON
@@ -202,16 +201,4 @@ struct WorldResponse {
 struct FortuneResponse {
 	int id;
 	string message;
-}
-
-static this()
-{
-	import std.process : environment;
-	auto connectionInfo = "host=tfb-database port=5432 "
-						~ "dbname=hello_world  user=benchmarkdbuser password=benchmarkdbpass";
-	client = new PostgresClient(connectionInfo, poolSize, (Connection cn){
-		cn.prepare("fortune_prpq", "SELECT id, message::text FROM Fortune");
-		cn.prepare("db_prpq", "SELECT randomNumber, id FROM world WHERE id = $1");
-		cn.prepare("db_update_prpq", "UPDATE world SET randomNumber = $1  WHERE id = $2");
-	} );
 }

@@ -1,0 +1,2 @@
+gunicorn==23.0.0
+uvicorn-worker==0.3.0

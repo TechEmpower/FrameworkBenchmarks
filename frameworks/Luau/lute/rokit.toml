@@ -4,4 +4,4 @@
 # New tools can be added by running `rokit add <tool>` in a terminal.
 
 [tools]
-lute = "aatxe/lute@0.1.0-nightly.20250322"
+lute = "luau-lang/lute@0.1.0-nightly.20250506"

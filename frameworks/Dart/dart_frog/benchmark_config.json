@@ -1,0 +1,26 @@
+{
+  "framework": "dart_frog",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "None",
+        "framework": "dart_frog",
+        "language": "Dart",
+        "flavor": "None",
+        "orm": "None",
+        "platform": "dart_frog",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "dart_frog",
+        "notes": "",
+        "versus": "None"
+      }
+    }
+  ]
+}

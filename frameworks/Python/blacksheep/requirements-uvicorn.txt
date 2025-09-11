@@ -1,3 +1,7 @@
 uvloop==0.21.0
-uvicorn==0.34.1
+uvicorn==0.34.2
+uvicorn-worker
 httptools==0.6.4
+gunicorn==23.0.0
+msgspec==0.19.0
+asyncpg==0.30.0

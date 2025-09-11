@@ -16,13 +16,13 @@
     <dependency>
       <groupId>com.litongjava</groupId>
       <artifactId>tio-http-server</artifactId>
-      <version>3.7.3.v20250415-RELEASE</version>
+      <version>3.7.3.v20250501-RELEASE</version>
     </dependency>
 
     <dependency>
       <groupId>com.litongjava</groupId>
       <artifactId>tio-utils</artifactId>
-      <version>3.7.3.v20250415-RELEASE</version>
+      <version>3.7.3.v20250501-RELEASE</version>
     </dependency>
     <dependency>
       <groupId>com.litongjava</groupId>

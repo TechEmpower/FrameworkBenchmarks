@@ -11,8 +11,11 @@ static GLOBAL: MiMalloc = MiMalloc;
 #[cfg(feature = "simd-json")]
 use common::simd_json::Json;
 #[cfg(not(feature = "simd-json"))]
-use rama::http::response::Json;
-use rama::http::{IntoResponse, StatusCode, service::web::Router};
+use rama::http::service::web::response::Json;
+use rama::http::{
+    StatusCode,
+    service::web::{Router, response::IntoResponse},
+};
 
 /// Return a plaintext static string.
 #[inline(always)]

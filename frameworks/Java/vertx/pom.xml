@@ -10,8 +10,8 @@
 		<maven.compiler.target>17</maven.compiler.target>
 		<!-- the main class -->
 		<main.class>vertx.App</main.class>
-		<vertx.version>5.0.0.CR6</vertx.version>
-		<netty.version>4.2.0.Final</netty.version>
+		<vertx.version>5.0.0.CR8</vertx.version>
+		<netty.version>4.2.1.Final</netty.version>
 		<jackson.version>2.16.1</jackson.version>
 	</properties>
 

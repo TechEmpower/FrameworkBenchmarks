@@ -31,7 +31,7 @@ public class WorldRepository extends BaseRepository {
                 world.setRandomNumber(random.getNextRandom());
                 unis[i] = s.persist(world).map(v -> null);
             }
-            return Uni.combine().all().unis(unis).combinedWith(l -> null)
+            return Uni.combine().all().unis(unis).with(l -> null)
                     .flatMap(v -> s.flush())
                     .map(v -> null);
         });

@@ -1,0 +1,100 @@
+{
+    "name": "hypervel/hypervel",
+    "type": "project",
+    "keywords": [
+        "php",
+        "swoole",
+        "framework",
+        "hyperf",
+        "microservice",
+        "laravel",
+        "hypervel"
+    ],
+    "description": "A Laravel-style PHP framework with native coroutine support for ultra-high performance.",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.2",
+        "friendsofhyperf/tinker": "~3.1.0",
+        "hypervel/framework": "^0.2"
+    },
+    "require-dev": {
+        "fakerphp/faker": "^1.24.1",
+        "filp/whoops": "^2.15",
+        "friendsofphp/php-cs-fixer": "^3.57.2",
+        "hyperf/testing": "~3.1.0",
+        "hyperf/watcher": "~3.1.0",
+        "hypervel/devtool": "^0.2",
+        "mockery/mockery": "1.6.x-dev",
+        "nunomaduro/collision": "^8.5",
+        "phpstan/phpstan": "^1.11.5",
+        "phpunit/phpunit": "10.5.45",
+        "swoole/ide-helper": "~5.1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        },
+        "files": []
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        },
+        "files": [
+            "tests/helpers.php"
+        ]
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "suggest": {
+        "ext-redis": "Required to use Redis-based drivers, such as cache, session, queue, etc.",
+        "ext-fileinfo": "Required to use the Filesystem class.",
+        "ext-ftp": "Required to use the Flysystem FTP driver.",
+        "ext-hash": "Required to use the Filesystem class.",
+        "ext-pcntl": "Required to use all features of the queue worker.",
+        "ext-posix": "Required to use all features of the queue worker.",
+        "ably/ably-php": "Required to use the Ably broadcast driver (^1.0).",
+        "pusher/pusher-php-server": "Required to use the Pusher broadcast driver (^6.0|^7.0).",
+        "league/flysystem-path-prefixing": "Required to use the scoped driver (^3.3).",
+        "league/flysystem-read-only": "Required to use read-only disks (^3.3)",
+        "league/flysystem-aws-s3-v3": "Required to use the Flysystem S3 driver (^3.0).",
+        "flysystem-google-cloud-storage": "Required to use the Flysystem Google Cloud Storage driver (^3.0).",
+        "league/flysystem-ftp": "Required to use the Flysystem FTP driver (^3.0).",
+        "league/flysystem-sftp-v3": "Required to use the Flysystem SFTP driver (^3.0).",
+        "aws/aws-sdk-php": "Required to use the SQS queue driver, DynamoDb failed job storage, and SES mail driver (^3.322.9).",
+        "symfony/http-client": "Required to use the Symfony API mail transports (^6.2).",
+        "symfony/mailgun-mailer": "Required to enable support for the Mailgun mail transport (^6.2).",
+        "symfony/postmark-mailer": "Required to enable support for the Postmark mail transport (^6.2).",
+        "pda/pheanstalk": "Required to use the Beanstalk queue driver (^5.0)."
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true
+    },
+    "extra": {
+        "hypervel": {
+            "dont-discover": []
+        }
+    },
+    "scripts": {
+        "post-root-package-install": [
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+        ],
+        "post-create-project-cmd": [
+            "@php artisan key:generate --ansi",
+            "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\"",
+            "@php artisan migrate --graceful --ansi"
+        ],
+        "post-autoload-dump": [
+            "rm -rf runtime/container"
+        ],
+        "test": "phpunit -c phpunit.xml.dist --colors=always",
+        "cs-diff": "php-cs-fixer fix --path-mode=intersection `git diff --name-only --diff-filter=ACMRTUXB origin/main..HEAD`",
+        "cs-fix": "php-cs-fixer fix $1",
+        "analyse": "phpstan analyse --memory-limit 300M -c phpstan.neon",
+        "start": [
+            "Composer\\Config::disableProcessTimeout",
+            "php artisan start"
+        ]
+    }
+}

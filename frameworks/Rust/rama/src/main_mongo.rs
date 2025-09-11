@@ -17,10 +17,14 @@ use mongodb::{
     options::{ClientOptions, Compressor},
 };
 #[cfg(not(feature = "simd-json"))]
-use rama::http::response::Json;
+use rama::http::service::web::response::Json;
 use rama::http::{
-    IntoResponse, StatusCode,
-    service::web::{Router, extract::Query},
+    StatusCode,
+    service::web::{
+        Router,
+        extract::Query,
+        response::{Html, IntoResponse},
+    },
 };
 use rand::{SeedableRng, rng, rngs::SmallRng};
 use yarte::Template;
@@ -30,7 +34,7 @@ static GLOBAL: MiMalloc = MiMalloc;
 
 use common::{
     get_env,
-    utils::{Params, Utf8Html, parse_params},
+    utils::{Params, parse_params},
 };
 use mongo::database::{
     DatabaseConnection, fetch_fortunes, find_world_by_id, find_worlds, update_worlds,
@@ -101,7 +105,7 @@ async fn fortunes(DatabaseConnection(db): DatabaseConnection) -> impl IntoRespon
         })
         .collect();
 
-    Utf8Html(
+    Html(
         FortunesTemplate {
             fortunes: &fortune_infos,
         }
