@@ -1,4 +1,3 @@
-version: '3'
 services:
   tfb-database:
     build: 
@@ -14,3 +13,5 @@ services:
       context: .
     ports:
       - 3030:3000
+    depends_on:
+      - tfb-database
