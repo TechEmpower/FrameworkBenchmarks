@@ -8,6 +8,18 @@ COPY --link deploy/swoole/php.ini /usr/local/etc/php/
 WORKDIR /symfony
 COPY --link . .
 
+# We deal with concurrencies over 1k, which stream_select doesn't support.
+# libuv
+RUN apt-get install -yqq libuv1-dev > /dev/null \
+     && pecl install uv-beta > /dev/null
+RUN docker-php-ext-enable uv
+
+# libevent
+# RUN apt-get install -y libevent-dev > /dev/null \
+#    && pecl install event-3.1.4 > /dev/null
+# RUN docker-php-ext-enable event
+
+
 COPY --from=composer/composer:latest-bin --link /composer /usr/local/bin/composer
 
 #ENV APP_DEBUG 1
