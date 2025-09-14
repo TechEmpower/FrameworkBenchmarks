@@ -18,9 +18,9 @@ async fn init_server() {
         .await
         .port(8080)
         .await
-        .disable_nodelay()
-        .await
         .disable_linger()
+        .await
+        .disable_nodelay()
         .await
         .buffer(256)
         .await;
