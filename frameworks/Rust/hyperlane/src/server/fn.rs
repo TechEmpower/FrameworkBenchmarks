@@ -20,6 +20,8 @@ async fn init_server() {
         .await
         .disable_nodelay()
         .await
+        .disable_linger()
+        .await
         .buffer(256)
         .await;
     Server::from(config)
