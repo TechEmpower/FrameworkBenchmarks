@@ -21,7 +21,7 @@ class BenchmarkProcessor : HttpProcessor {
 	}
 
     override void handle(HttpRequest req) {
-		if (req.uri == "/hello") {
+		if (req.uri == "/plaintext") {
 			respondWith("Hello, world!", 200, plainText);
 		} else if(req.uri == "/json") {
 			jsonBuf.clear();
@@ -39,7 +39,7 @@ void server_worker(Socket client) {
         processor.run();
     }
     catch(Exception e) {
-        stderr.writeln(e);
+        debug stderr.writeln(e);
     }
 }
 
