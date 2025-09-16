@@ -1,9 +1,6 @@
-use bytes::Bytes;
 use sib::network::http::{
-    server::HFactory, session::{HService, Session}, util::Status
-};
-use std::{
-    fs
+    server::{H1Config, HFactory},
+    session::{HService, Session},
 };
 
 #[global_allocator]
@@ -26,28 +23,47 @@ struct Server;
 
 impl HService for Server {
     fn call<S: Session>(&mut self, session: &mut S) -> std::io::Result<()> {
-        if session.req_path() == Some("/json") {
+        use core::fmt::Write;
+        use sib::network::http::h1_session;
+        if session.req_path() == "/json" {
             // Respond with JSON
+            let mut res: heapless::String<192> = heapless::String::new();
             let json = serde_json::to_vec(&JsonMessage::default())?;
-            session
-                .status_code(Status::Ok)
-                .header_str("Content-Type", "application/json")?
-                .header_str("Content-Length", &json.len().to_string())?
-                .body(&Bytes::from(json))
-                .eom();
-            return Ok(());
+            write!(
+                res,
+                "HTTP/1.1 200 OK\r\n\
+                Server: sib\r\n\
+                Date: {}\r\n\
+                Content-Type: application/json\r\n\
+                Content-Length: {}\r\n\
+                \r\n\
+                    {}",
+                h1_session::CURRENT_DATE.load(),
+                &json.len().to_string(),
+                String::from_utf8_lossy(&json)
+            )
+            .unwrap();
+            session.write_all_eom(res.as_bytes())
+        } else {
+            let mut res: heapless::String<160> = heapless::String::new();
+            write!(
+                res,
+                "HTTP/1.1 200 OK\r\n\
+             Server: sib\r\n\
+             Date: {}\r\n\
+             Content-Type: text/plain\r\n\
+             Content-Length: 13\r\n\
+             \r\n\
+             Hello, World!",
+                h1_session::CURRENT_DATE.load()
+            )
+            .unwrap();
+            session.write_all_eom(res.as_bytes())
         }
-        session
-            .status_code(Status::Ok)
-            .header_str("Content-Type", "text/plain")?
-            .header_str("Content-Length", "13")?
-            .body(&Bytes::from_static(b"Hello, World!"))
-            .eom();
-        Ok(())
     }
 }
 
-impl HFactory for Server{
+impl HFactory for Server {
     type Service = Server;
 
     fn service(&self, _id: usize) -> Server {
@@ -56,27 +72,10 @@ impl HFactory for Server{
 }
 
 fn main() {
-    // Print number of CPU cores
+    let stack_size = 4 * 1024; // 4 KB stack
     let cpus = num_cpus::get();
-    println!("CPU cores: {cpus}");
 
-    sib::set_num_workers(cpus);
-
-    // Print total RAM in MB
-    if let Ok(meminfo) = fs::read_to_string("/proc/meminfo") {
-        for line in meminfo.lines() {
-            if line.starts_with("MemTotal:") {
-                let parts: Vec<&str> = line.split_whitespace().collect();
-                if parts.len() >= 2 {
-                    if let Ok(kb) = parts[1].parse::<u64>() {
-                        let mb = kb / 1024;
-                        println!("Total RAM: {mb} MB");
-                    }
-                }
-                break;
-            }
-        }
-    }
+    sib::init_global_poller(cpus, stack_size);
 
     // Pick a port and start the server
     let addr = "0.0.0.0:8080";
@@ -87,15 +86,21 @@ fn main() {
             let id = std::thread::current().id();
             println!("Listening {addr} on thread: {id:?}");
             Server
-                .start_h1(addr, 0)
-                .unwrap_or_else(|_| panic!("h1 server failed to start for thread {id:?}"))
+                .start_h1(
+                    addr,
+                    H1Config {
+                        io_timeout: std::time::Duration::from_secs(15),
+                        stack_size,
+                    },
+                )
+                .unwrap_or_else(|_| panic!("H1 server failed to start for thread {id:?}"))
                 .join()
-                .unwrap_or_else(|_| panic!("h1 server failed to joining thread {id:?}"));
+                .unwrap_or_else(|_| panic!("H1 server failed to join thread {id:?}"));
         });
         threads.push(handle);
     }
 
-    // Wait for all threads to complete (they won’t unless crashed)
+    // Wait for all threads to complete
     for handle in threads {
         handle.join().expect("Thread panicked");
     }
