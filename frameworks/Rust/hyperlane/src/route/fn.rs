@@ -5,7 +5,7 @@ pub async fn json(ctx: Context) {
         "message": RESPONSEDATA_STR
     });
     let run = || async {
-        ctx.set_response_body(serde_json::to_string(&json).unwrap_or_default())
+        ctx.set_response_body(&serde_json::to_vec(&json).unwrap_or_default())
             .await;
         ctx.send().await.unwrap();
     };
@@ -18,7 +18,7 @@ pub async fn json(ctx: Context) {
 
 pub async fn plaintext(ctx: Context) {
     ctx.set_response_header(CONTENT_TYPE, TEXT_PLAIN).await;
-    ctx.set_response_body(RESPONSEDATA_BIN).await;
+    ctx.set_response_body(&RESPONSEDATA_BIN).await;
     let run = || async {
         ctx.send().await.unwrap();
     };
@@ -33,7 +33,7 @@ pub async fn db(ctx: Context) {
     let db_connection: &DbPoolConnection = get_db_connection();
     let run = || async {
         let query_row: QueryRow = random_world_row(db_connection).await;
-        ctx.set_response_body(serde_json::to_string(&query_row).unwrap_or_default())
+        ctx.set_response_body(&serde_json::to_vec(&query_row).unwrap_or_default())
             .await
             .send()
             .await
@@ -57,7 +57,7 @@ pub async fn query(ctx: Context) {
             .max(1);
         let db_pool: &DbPoolConnection = get_db_connection();
         let data: Vec<QueryRow> = get_some_row_id(queries, db_pool).await;
-        ctx.set_response_body(serde_json::to_string(&data).unwrap_or_default())
+        ctx.set_response_body(&serde_json::to_vec(&data).unwrap_or_default())
             .await
             .send()
             .await
@@ -73,7 +73,7 @@ pub async fn query(ctx: Context) {
 pub async fn fortunes(ctx: Context) {
     ctx.set_response_header(
         CONTENT_TYPE,
-        ContentType::format_content_type_with_charset(TEXT_HTML, UTF8),
+        &ContentType::format_content_type_with_charset(TEXT_HTML, UTF8),
     )
     .await;
     let run = || async {
@@ -92,7 +92,7 @@ pub async fn fortunes(ctx: Context) {
         ));
         fortunes_list.sort_by(|it, next| it.message.cmp(&next.message));
         let res: String = FortunesTemplate::new(fortunes_list).to_string();
-        ctx.set_response_body(res).await.send().await.unwrap();
+        ctx.set_response_body(&res).await.send().await.unwrap();
     };
     run().await;
     while let Ok(_) = ctx.http_from_stream(HTTP_BUFFER).await {
@@ -111,7 +111,7 @@ pub async fn update(ctx: Context) {
             .min(ROW_LIMIT as Queries)
             .max(1);
         let res: Vec<QueryRow> = update_world_rows(queries).await;
-        ctx.set_response_body(serde_json::to_string(&res).unwrap_or_default())
+        ctx.set_response_body(&serde_json::to_vec(&res).unwrap_or_default())
             .await
             .send()
             .await
@@ -134,7 +134,7 @@ pub async fn cached_query(ctx: Context) {
             .min(ROW_LIMIT as Queries)
             .max(1);
         let res: Vec<&QueryRow> = CACHE.iter().take(count as usize).collect();
-        ctx.set_response_body(serde_json::to_string(&res).unwrap_or_default())
+        ctx.set_response_body(&serde_json::to_vec(&res).unwrap_or_default())
             .await
             .send()
             .await
