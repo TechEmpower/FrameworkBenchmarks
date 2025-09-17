@@ -1,20 +1,19 @@
 [package]
 name    = "framework_benchmarks"
-version = "0.21.0"
-edition = "2021"
+version = "0.24.0"
+edition = "2024"
 authors = ["kanarus <kanarus786@gmail.com>"]
 
 [dependencies]
-ohkami       = { version = "0.21" }
-yarte        = { optional = true, version = "0.15" }
-futures-util = { optional = true, version = "0.3"  }
-rand         = { optional = true, version = "0.8", features = ["small_rng"] }
-sqlx         = { optional = true, version = "0.8", features = ["postgres", "tls-native-tls"] }
+ohkami         = { version = "0.24" }
+tokio          = { optional = true, version = "1.47", features = ["rt"] }
+tokio-postgres = { optional = true, version = "0.7" }
+yarte          = { optional = true, version = "0.15" }
+futures-util   = { optional = true, version = "0.3"  }
+rand           = { optional = true, version = "0.8", features = ["small_rng"] }
 
 [features]
-db           = ["yarte", "futures-util", "rand", "sqlx"]
-rt_tokio     = ["ohkami/rt_tokio",     "db", "sqlx/runtime-tokio"]
-rt_async-std = ["ohkami/rt_async-std", "db", "sqlx/runtime-async-std"]
-rt_smol      = ["ohkami/rt_smol"]
-rt_glommio   = ["ohkami/rt_glommio"]
-rt_nio       = ["ohkami/rt_nio"]
+rt_tokio   = ["ohkami/rt_tokio", "tokio", "tokio-postgres", "yarte", "futures-util", "rand"]
+rt_smol    = ["ohkami/rt_smol"]
+rt_glommio = ["ohkami/rt_glommio"]
+rt_nio     = ["ohkami/rt_nio"]

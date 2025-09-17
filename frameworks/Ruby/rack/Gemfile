@@ -9,23 +9,23 @@ gem 'rack', '~> 3.0'
 gem 'connection_pool', '~> 2.4'
 gem 'jdbc-postgres', '~> 42.2', platforms: :jruby, require: 'jdbc/postgres'
 gem 'json', '~> 2.10'
-gem 'pg', '~> 1.5', platforms: %i[ruby mswin]
+gem 'pg', '~> 1.5', platforms: %i[ruby windows]
 gem 'sequel'
-gem 'sequel_pg', platforms: %i[ruby mswin]
+gem 'sequel_pg', platforms: %i[ruby windows]
 gem 'tzinfo-data', '1.2023.3'
 
 group :falcon, optional: true do
-  gem 'falcon', '~> 0.47', platforms: %i[ruby mswin]
+  gem 'falcon', '~> 0.47', platforms: %i[ruby windows]
 end
 
 group :iodine, optional: true do
-  gem 'iodine', '~> 0.7', platforms: %i[ruby mswin]
+  gem 'iodine', '~> 0.7', platforms: %i[ruby windows]
 end
 
 group :passenger, optional: true do
   gem 'base64' # required by passenger on Ruby 3.4
   gem 'logger' # required by passenger on Ruby 3.5
-  gem 'passenger', '~> 6.0', platforms: [:ruby, :mswin], require: false
+  gem 'passenger', '~> 6.0', platforms: [:ruby, :windows], require: false
 end
 
 group :pitchfork, optional: true do
@@ -33,15 +33,15 @@ group :pitchfork, optional: true do
 end
 
 group :puma, optional: true do
-  gem 'puma', '~> 6.5'
+  gem 'puma', '~> 7.0'
 end
 
 group :unicorn, optional: true do
   gem 'logger' # required by unicorn on Ruby 3.5
-  gem 'unicorn', '~> 6.1', platforms: %i[ruby mswin]
+  gem 'unicorn', '~> 6.1', platforms: %i[ruby windows]
 end
 
 group :development, optional: true do
   gem 'rack-test'
-  gem 'rubocop', platforms: %i[ruby mswin]
+  gem 'rubocop', platforms: %i[ruby windows]
 end

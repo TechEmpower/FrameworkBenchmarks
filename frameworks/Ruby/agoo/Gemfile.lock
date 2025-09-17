@@ -9,7 +9,7 @@ GEM
       ostruct (>= 0.2)
     ostruct (0.6.1)
     pg (1.5.9)
-    rack (3.1.11)
+    rack (3.2.0)
 
 PLATFORMS
   ruby
@@ -23,4 +23,4 @@ DEPENDENCIES
   rack
 
 BUNDLED WITH
-   2.6.2
+   2.7.0

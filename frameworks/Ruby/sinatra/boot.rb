@@ -15,21 +15,28 @@ def connect(dbtype)
   Bundler.require(dbtype) # Load database-specific modules
 
   opts = {
-    adapter: (dbtype == :mysql ? 'mysql2' : 'postgresql'),
     username: 'benchmarkdbuser',
     password: 'benchmarkdbpass',
     host: 'tfb-database',
     database: 'hello_world'
   }
 
+  if dbtype == :mysql
+    opts[:adapter] = 'trilogy'
+    opts[:ssl] = true
+    opts[:ssl_mode] = 4 # Trilogy::SSL_PREFERRED_NOVERIFY
+    opts[:tls_min_version] = 3 # Trilogy::TLS_VERSION_12
+  else
+    opts[:adapter] = 'postgresql'
+  end
+
+
   # Determine threading/thread pool size and timeout
   if defined?(Puma) && (threads = Puma.cli_config.options.fetch(:max_threads)) > 1
-    opts[:pool] = (2 * Math.log(threads)).floor
+    opts[:pool] = threads
     opts[:checkout_timeout] = 10
   else
-    # TODO: ActiveRecord doesn't have a single-threaded mode?
-    opts[:pool] = 1
-    opts[:checkout_timeout] = 0
+    opts[:pool] = 512
   end
 
   ActiveRecord::Base.establish_connection(opts)
@@ -44,7 +51,7 @@ class World < ActiveRecord::Base
   alias_attribute(:randomNumber, :randomnumber) \
     if connection.adapter_name.downcase.start_with?('postgres')
 
-  if connection.adapter_name.downcase.start_with?('mysql')
+  if connection.adapter_name.downcase.start_with?('trilogy')
     def self.upsert_all(attributes, on_duplicate: :update, update_only: nil, returning: nil, unique_by: nil, record_timestamps: nil)
       # On MySQL Batch updates verification isn't supported yet by TechEmpower.
       # https://github.com/TechEmpower/FrameworkBenchmarks/issues/5983

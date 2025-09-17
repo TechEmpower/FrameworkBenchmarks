@@ -1,7 +1,7 @@
 [package]
 name    = "framework_benchmarks-tokio"
 version = "0.0.0"
-edition = "2021"
+edition = "2024"
 authors = ["kanarus <kanarus786@gmail.com>"]
 
 [profile.release]
@@ -11,4 +11,5 @@ codegen-units = 1
 
 [dependencies]
 framework_benchmarks = { path = "..",      features = ["rt_tokio"] }
-tokio                = { version = "1.43", features = ["full"] }
+tokio                = { version = "1.47", features = ["full"] }
+num_cpus             = { version = "1.17" }

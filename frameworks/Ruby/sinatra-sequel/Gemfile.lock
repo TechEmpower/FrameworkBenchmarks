@@ -4,16 +4,15 @@ GEM
     base64 (0.2.0)
     bigdecimal (3.1.9)
     iodine (0.7.58)
-    json (2.11.3)
+    json (2.13.2)
     logger (1.6.6)
     mustermann (3.0.3)
       ruby2_keywords (~> 0.0.1)
-    mysql2 (0.5.6)
     nio4r (2.7.4)
     pg (1.5.9)
-    puma (6.6.0)
+    puma (7.0.2)
       nio4r (~> 2.0)
-    rack (3.1.14)
+    rack (3.2.0)
     rack-protection (4.1.1)
       base64 (>= 0.1.0)
       logger (>= 1.6.0)
@@ -35,6 +34,7 @@ GEM
       rack-session (>= 2.0.0, < 3)
       tilt (~> 2.0)
     tilt (2.6.0)
+    trilogy (2.9.0)
 
 PLATFORMS
   ruby
@@ -44,12 +44,12 @@ PLATFORMS
 DEPENDENCIES
   iodine (~> 0.7)
   json (~> 2.8)
-  mysql2 (~> 0.5)
   pg (~> 1.5)
-  puma (~> 6.4)
+  puma (~> 7.0)
   sequel (~> 5.0)
   sequel_pg (~> 1.6)
   sinatra (~> 4.0)
+  trilogy (~> 2.9)
 
 BUNDLED WITH
-   2.6.2
+   2.7.0
