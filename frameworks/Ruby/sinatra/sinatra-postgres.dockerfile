@@ -13,6 +13,7 @@ WORKDIR /sinatra
 ENV BUNDLE_WITH=postgresql:puma
 RUN bundle install --jobs=4 --gemfile=/sinatra/Gemfile
 
+ENV WEB_CONCURRENCY=auto
 ENV DBTYPE=postgresql
 
 EXPOSE 8080
