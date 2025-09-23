@@ -32,7 +32,7 @@ public class Program
            })
            .ConfigurePlugins(a =>
            {
-               a.UseCheckClear();
+               a.UseTcpSessionCheckClear();
 
                a.UseWebApi()
                .ConfigureConverter(converter =>
