@@ -16,3 +16,4 @@ gem "rake"
 gem "rom", "~> 5.3"
 gem "rom-sql", "~> 3.6"
 gem "pg"
+gem "ostruct" # required for Ruby 3.5
