@@ -20,4 +20,4 @@ This benchmark tests Celerio using the standard TechEmpower FrameworkBenchmarks 
 
 ## Author
 
-* [Oxule Rise](https://github.com/Oxule)
+* [Oxule](https://github.com/Oxule)
