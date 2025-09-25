@@ -1,10 +1,23 @@
-# [Celerio](https://github.com/Oxule/Celerio) benchmarks
+# Celerio Benchmarks
 
-* [Github](https://github.com/Oxule/Celerio)
-* [NuGet](https://www.nuget.org/packages/Celerio)
+Celerio is a modern C# framework designed for high-performance web applications based on Source Generation **only**.  
+This benchmark tests Celerio using the standard TechEmpower FrameworkBenchmarks suite.
+
+## Links
+
+- [GitHub](https://github.com/Oxule/Celerio)
+- [NuGet](https://www.nuget.org/packages/Celerio)
 
 ## Infrastructure Software Versions
 
-* C# 13.0
-* .NET 8
+- C# 12
+- .NET 8
 
+## Benchmarks Included
+
+- **Plaintext**
+- **JSON**
+
+## Author
+
+* [Oxule Rise](https://github.com/Oxule)
