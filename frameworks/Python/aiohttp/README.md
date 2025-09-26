@@ -12,7 +12,7 @@ All test implementations are located within ([./app](app)).
 
 ## Description
 
-aiohttp with [aiopg + sqlalchemy](http://aiopg.readthedocs.io/en/stable/sa.html) and 
+aiohttp with [sqlalchemy](https://docs.sqlalchemy.org/en/14/orm/extensions/asyncio.html) and
 separately [asyncpg](https://magicstack.github.io/asyncpg/current/) for database access.
  
 [uvloop](https://github.com/MagicStack/uvloop) is used for a more performant event loop.
@@ -22,7 +22,7 @@ separately [asyncpg](https://magicstack.github.io/asyncpg/current/) for database
 PostgreSQL.
 
 Two variants:
-* ORM using [aiopg + sqlalchemy](http://aiopg.readthedocs.io/en/stable/sa.html)
+* ORM using [sqlalchemy](https://docs.sqlalchemy.org/en/14/orm/extensions/asyncio.html)
 * RAW using [asyncpg](https://magicstack.github.io/asyncpg/current/)
 
 **To enabled "RAW" mode set the following environment variable:**

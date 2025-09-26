@@ -1,0 +1,22 @@
+{
+  "framework": "watson",
+  "tests": [{
+    "default": {
+      "plaintext_url": "/plaintext",
+      "json_url": "/json",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "None",
+      "framework": "Watson",
+      "language": "C#",
+      "orm": "Raw",
+      "platform": ".NET",
+      "webserver": "Watson",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Watson Webserver",
+      "notes": ""
+    }
+  }]
+}

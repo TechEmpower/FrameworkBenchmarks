@@ -28,8 +28,8 @@ This is the Vert.x portion of a [benchmarking test suite](../) comparing a varie
 
 ## Versions
 
-* [Java OpenJDK 1.8](http://openjdk.java.net/)
-* [vertx 3.6.0.CR1](http://vertx.io/)
+* [Java 11](https://jdk.java.net)
+* [vertx 4.1.3](http://vertx.io/)
 
 ## Test URLs
 

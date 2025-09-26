@@ -16,6 +16,7 @@ import javax.sql.DataSource;
 import org.apache.commons.text.StringEscapeUtils;
 
 import lombok.Data;
+import net.officefloor.cache.Cache;
 import net.officefloor.server.http.HttpHeaderValue;
 import net.officefloor.server.http.HttpResponse;
 import net.officefloor.server.http.ServerHttpConnection;
@@ -75,6 +76,28 @@ public class Logic {
 				response.send(worlds);
 			}
 		}
+	}
+
+	// ========== CACHED ==================
+
+	public void cached(@HttpQueryParameter("count") String queries, Cache<Integer, CachedWorld> cache,
+			ObjectResponse<CachedWorld[]> response) {
+		int count = getQueryCount(queries);
+
+		// Set up for unique numbers
+		ThreadLocalRandom random = ThreadLocalRandom.current();
+
+		// Obtain the list of cached worlds
+		CachedWorld[] worlds = new CachedWorld[count];
+		for (int i = 0; i < worlds.length; i++) {
+
+			// Obtain unique identifier
+			int randomNumber = random.nextInt(1, 10001);
+
+			// Obtain the cached world
+			worlds[i] = cache.get(randomNumber);
+		}
+		response.send(worlds);
 	}
 
 	// =========== UPDATES ===================

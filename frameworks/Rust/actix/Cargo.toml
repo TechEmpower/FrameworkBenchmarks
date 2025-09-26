@@ -1,59 +1,56 @@
 [package]
-name = "actix"
+name = "tfb-actix"
 version = "3.0.0"
 edition = "2018"
 
 [[bin]]
-name = "actix"
-path = "src/main.rs"
+name = "tfb-web"
+path = "src/main_web.rs"
 
 [[bin]]
-name = "actix-platform"
-path = "src/main_platform.rs"
+name = "tfb-web-diesel"
+path = "src/main_web_diesel.rs"
 
 [[bin]]
-name = "actix-diesel"
-path = "src/main_diesel.rs"
+name = "tfb-http"
+path = "src/main_http.rs"
 
 [[bin]]
-name = "actix-pg"
-path = "src/main_pg.rs"
-
-[[bin]]
-name = "actix-raw"
-path = "src/main_raw.rs"
+name = "tfb-server"
+path = "src/main_server.rs"
 
 [dependencies]
-actix = "0.10.0"
-actix-web = { version = "3.1.0", default-features = false }
-actix-http = { version = "2.0.0", default-features = false }
-actix-rt = "1.1.1"
-actix-codec = "0.3.0"
-actix-server = "1.0.4"
-actix-service = "1.0.6"
-snmalloc-rs = "0.2.6"
-askama = "0.8"
-yarte = { version = "0.14", features = ["bytes-buf"] }
-serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
-env_logger = "0.7"
-rand = { version = "0.7", features = ["small_rng"] }
-bytes = "0.5.3"
-num_cpus = "1.13.0"
-futures = "0.3.1"
+actix = "0.12"
+actix-web = { version = "4.0.0-rc.3", default-features = false, features = ["macros"] }
+actix-http = { version = "3.0.0-rc.2", default-features = false }
+actix-rt = "2"
+actix-codec = "0.4"
+actix-server = "2"
+actix-service = "2"
+
+askama = "0.11"
+bytes = "1"
+diesel = { version = "1.4", features = ["postgres"] }
+env_logger = "0.9"
+futures = "0.3.7"
 http = "0.2"
-simd-json = "0.3"
-simd-json-derive = "0.1.9"
-diesel = { version = "1.4.3", features = ["postgres"] }
-url = "2.1.1"
 log = { version = "0.4", features = ["release_max_level_debug"] }
-v_htmlescape = "0.10"
-tokio = "0.2"
-tokio-postgres = { git = "https://github.com/fafhrd91/rust-postgres.git" }
+num_cpus = "1.13"
+rand = { version = "0.8", features = ["small_rng"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+simd-json = "0.4"
+simd-json-derive = "0.2"
+snmalloc-rs = "0.2.6"
+tokio = { version = "1", features = ["full"] }
+tokio-postgres = "0.7.5"
+url = "2.1"
+v_htmlescape = "0.14"
+yarte = { version = "0.15", features = ["bytes-buf"] }
 
 [build-dependencies]
-askama = "0.8"
-bindgen = "0.42"
+askama = "0.11"
+bindgen = "0.59"
 
 [profile.release]
 lto = true

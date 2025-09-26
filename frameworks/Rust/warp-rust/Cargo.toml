@@ -5,10 +5,15 @@ authors = ["Konrad Borowski <konrad@borowski.pw>"]
 edition = "2018"
 
 [dependencies]
-futures = "0.3.1"
-rand = { version = "0.7.3", features = ["small_rng"] }
-serde = { version = "1.0.103", features = ["derive"] }
-tokio = { version = "0.2.21", features = ["macros", "rt-threaded"] }
-tokio-postgres = "0.5.1"
-warp = "0.2.3"
-yarte = "0.12.2"
+futures = "0.3.12"
+rand = { version = "0.8.2", features = ["small_rng"] }
+serde = { version = "1.0.120", features = ["derive"] }
+sqlx = { version = "0.5.1", features = ["runtime-tokio-rustls", "postgres"] }
+tokio = { version = "1.0.2", features = ["macros", "rt-multi-thread"] }
+warp = "0.3.0"
+yarte = "0.15.3"
+
+[profile.release]
+codegen-units = 1
+opt-level = 3
+lto = true

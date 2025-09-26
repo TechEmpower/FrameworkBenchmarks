@@ -1,10 +1,11 @@
-FROM hayd/alpine-deno:1.0.0
+FROM hayd/alpine-deno:latest
 
 EXPOSE 8080
 
 WORKDIR /app
 
 USER deno
+ENV DATABASE mongodb
 
 COPY ./src .
 

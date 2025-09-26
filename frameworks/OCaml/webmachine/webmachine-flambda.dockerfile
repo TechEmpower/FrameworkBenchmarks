@@ -1,6 +1,6 @@
-FROM ocurrent/opam:debian-10-ocaml-4.11-flambda
+FROM ocaml/opam:debian-10-ocaml-4.12-flambda
 
-ENV DIR webmachine
+ENV DIR project
 # https://blog.packagecloud.io/eng/2017/02/21/set-environment-variable-save-thousands-of-system-calls/
 ENV TZ  :/etc/localtime
 
@@ -9,14 +9,34 @@ ENV TZ  :/etc/localtime
 # https://blog.janestreet.com/memory-allocator-showdown/
 ENV OCAMLRUNPARAM a=2,o=240
 
-RUN sudo apt-get install -y libpq-dev libev-dev pkg-config m4
+ENV PKGS="\
+atdgen>=2.2.1 \
+atdgen-runtime>=2.2.1 \
+caqti>=1.6.0 \
+caqti-driver-postgresql>=1.6.0 \
+caqti-lwt>=1.6.0 \
+cohttp-lwt-unix>=4.0.0 \
+conf-libev>=4-12 \
+dune>=2.8.5 \
+httpaf>=0.7.1 \
+httpaf-lwt-unix>=0.7.1 \
+lwt>=5.4.1 \
+lwt_ppx>=2.0.2 \
+opium>=0.20.0 \
+ppx_deriving_yojson>=3.6.1 \
+ppx_rapper>=3.0.0 \
+tiny_httpd>=0.8 \
+tyxml>=4.5.0 \
+webmachine>=0.7.0 \
+yojson>=1.7.0 \
+"
+
+RUN \
+  opam update && \
+  opam depext $PKGS && \
+  opam install $PKGS
 
 WORKDIR /${DIR}
-
-COPY src/tfb.opam src/Makefile /${DIR}/
-COPY src/lib.opam src/Makefile /${DIR}/
-
-RUN make install
 
 COPY ./src /${DIR}
 
@@ -24,4 +44,4 @@ RUN sudo chown -R opam: . && make build
 
 EXPOSE 8080
 
-ENTRYPOINT _build/default/src/bin/tfb.exe
+ENTRYPOINT ["_build/default/src/bin/tfb.exe"]

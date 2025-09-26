@@ -7,6 +7,8 @@ import java.util.Collections;
 
 public final class World {
 
+    private static final String ID_KEY = "id";
+    private static final String ID_RANDOM_NUMBER = "randomNumber";
     private static final JsonBuilderFactory JSON = Json.createBuilderFactory(Collections.emptyMap());
 
     public int id;
@@ -18,6 +20,6 @@ public final class World {
     }
 
     public JsonObject toJson() {
-        return JSON.createObjectBuilder().add("id", id).add("randomNumber", randomNumber).build();
+        return JSON.createObjectBuilder().add(ID_KEY, id).add(ID_RANDOM_NUMBER, randomNumber).build();
     }
 }

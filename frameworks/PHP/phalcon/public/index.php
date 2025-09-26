@@ -1,102 +1,104 @@
 <?php
 
+use MongoDB\Client;
+use Phalcon\Db\Adapter\Pdo\Mysql;
+use Phalcon\DI\FactoryDefault;
+use Phalcon\Exception as PhalconException;
+use Phalcon\Http\Request;
+use Phalcon\Incubator\MongoDB\Mvc\Collection\Manager as MongoDBCollectionManager;
+use Phalcon\Loader;
+use Phalcon\Mvc\Application;
+use Phalcon\Mvc\Model\MetaData\Apc;
+use Phalcon\Mvc\Model\MetaData\Memory;
+use Phalcon\Mvc\View;
+use Phalcon\Mvc\View\Engine\Volt;
+
 define('APP_PATH', realpath('..'));
 require APP_PATH . "/vendor/autoload.php";
 
 try {
-
     // Load the config
     $config = include APP_PATH . "/app/config/config.php";
 
     // Register an autoloader
-    $loader = new \Phalcon\Loader();
-    $loader->registerDirs(array(
+    $loader = new Loader();
+    $loader->registerDirs([
         $config->application->controllersDir,
-        $config->application->modelsDir
-    ))->register();
+        $config->application->modelsDir,
+        $config->application->collectionsDir,
+    ])->register();
 
     // Create a DI
-    $di = new Phalcon\DI\FactoryDefault();
+    $di = new FactoryDefault();
 
     // Setting up the router
-    $di->set('router', require APP_PATH . '/app/config/routes.php');
+    $di->setShared('router', require APP_PATH . '/app/config/routes.php');
 
     //MetaData
-    $di->set('modelsMetadata', function(){
+    $di->setShared('modelsMetadata', function () {
         if (function_exists('apc_store')) {
-            return new Phalcon\Mvc\Model\MetaData\Apc();
-        } else {
-            return new Phalcon\Mvc\Model\MetaData\Memory(array(
-                'metaDataDir' => APP_PATH . "/app/compiled-templates/"
-            ));
+            return new Apc();
         }
+
+        return new Memory([
+            'metaDataDir' => APP_PATH . "/app/compiled-templates/"
+        ]);
     });
 
     // Setting up the view component (seems to be required even when not used)
-    $di->set('view', function() use ($config) {
-
-        $view = new \Phalcon\Mvc\View();
-
+    $di->setShared('view', function () use ($config) {
+        $view = new View();
         $view->setViewsDir($config->application->viewsDir);
-
-        $view->registerEngines(array(
-            ".volt" => function($view) {
-
-                $volt = new \Phalcon\Mvc\View\Engine\Volt($view);
-
-                $volt->setOptions(array(
+        $view->registerEngines([
+            ".volt" => function ($view) {
+                $volt = new Volt($view);
+                $volt->setOptions([
                     "path" => APP_PATH . "/app/compiled-templates/",
                     "extension" => ".compiled",
                     "separator" => '_',
-                ));
+                ]);
 
                 return $volt;
             }
-        ));
+        ]);
 
         return $view;
     });
 
     // Setting up the database connection
-    $di->set('db', function() use ($config) {
-
+    $di->setShared('db', function () use ($config) {
         $database = $config->database;
 
-        return new \Phalcon\Db\Adapter\Pdo\Mysql(array(
+        return new Mysql([
             'host' => $database->host,
             'username' => $database->username,
             'password' => $database->password,
             'dbname' => $database->name,
-            'options'  => array(
+            'options' => [
                 PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
                 PDO::ATTR_PERSISTENT => true,
-            )
-        ));
+            ],
+        ]);
     });
 
     // Setting up the mongodb connection
-    $di->set('mongo', function() use ($config) {
+    $di->setShared('mongo', function () use ($config) {
         $mongodbConfig = $config->mongodb;
+        $mongo = new Client($mongodbConfig->url);
 
-        $mongo = new \Phalcon\Db\Adapter\MongoDB\Client($mongodbConfig->url);
         return $mongo->selectDatabase($mongodbConfig->db);
     });
 
-    //Registering the collectionManager service
-    $di->set('collectionManager', function() {
-        // Setting a default EventsManager
-        $modelsManager = new Phalcon\Mvc\Collection\Manager();
-        $modelsManager->setEventsManager(new Phalcon\Events\Manager());
-        return $modelsManager;
-
-    }, true);
+    // Registering the mongoDB CollectionManager service
+    $di->setShared('collectionsManager', function () {
+        return new MongoDBCollectionManager();
+    });
 
     // Handle the request
-    $request = new Phalcon\Http\Request();
-    $application = new \Phalcon\Mvc\Application();
+    $request = new Request();
+    $application = new Application();
     $application->setDI($di);
     $application->handle($request->getURI())->send();
-
-} catch(\Phalcon\Exception $e) {
+} catch (PhalconException $e) {
     echo "PhalconException: ", $e->getMessage();
 }

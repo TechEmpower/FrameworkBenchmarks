@@ -1,0 +1,16 @@
+com.techempower.inverno.benchmark.appConfiguration {
+	boot {
+		reactor_prefer_vertx = true
+		accept_backlog = null
+	}
+	http_server { 
+		tls_enabled = false
+		server_port = 8080
+		h2c_enabled = false
+	}
+	db_database = "hello_world"
+	db_host = "tfb-database"
+	db_port = 5432
+	db_username = "benchmarkdbuser"
+	db_password = "benchmarkdbpass"
+}

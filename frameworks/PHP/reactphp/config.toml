@@ -1,0 +1,19 @@
+[framework]
+name = "reactphp"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+urls.db = "/db"
+urls.query = "/query?q="
+urls.update = "/update?q="
+urls.fortune = "/fortunes"
+approach = "Realistic"
+classification = "Platform"
+database = "MySQL"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "reactphp"
+webserver = "None"
+versus = "php"

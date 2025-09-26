@@ -1,5 +1,0 @@
-profile: service
-defaultPackage: benchmark
----
-testFramework: junit
-sourceLanguage: java

@@ -1,17 +1,12 @@
-name: hoge
-version: 0.1.0
+name: grip
+version: 0.1.1
 
 dependencies:
   grip:
     github: grip-framework/grip
 
-  jwt:
-    github: crystal-community/jwt
-    version: 1.4.1
-
   pg:
     github: will/crystal-pg
-    version: 0.20.0
 
 targets:
   grip:

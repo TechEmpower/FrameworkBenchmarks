@@ -19,7 +19,6 @@
 
 #include <assert.h>
 #include <ctype.h>
-#include <errno.h>
 #include <h2o.h>
 #include <mustache.h>
 #include <stdbool.h>
@@ -39,9 +38,9 @@
 #include "thread.h"
 #include "utility.h"
 
-#define ID_FIELD_NAME "id"
 #define FORTUNE_TABLE_NAME "Fortune"
 #define FORTUNE_QUERY "SELECT * FROM " FORTUNE_TABLE_NAME ";"
+#define ID_FIELD_NAME "id"
 #define MAX_IOVEC 64
 #define MESSAGE_FIELD_NAME "message"
 #define NEW_FORTUNE_ID "0"
@@ -438,7 +437,7 @@ void initialize_fortunes_handler(const config_t *config,
                                  h2o_access_log_filehandle_t *log_handle)
 {
 	mustache_template_t *template = NULL;
-	const size_t template_path_prefix_len = strlen(config->template_path);
+	const size_t template_path_prefix_len = config->template_path ? strlen(config->template_path) : 0;
 	char path[template_path_prefix_len + sizeof(TEMPLATE_PATH_SUFFIX)];
 
 	memcpy(path, config->template_path, template_path_prefix_len);

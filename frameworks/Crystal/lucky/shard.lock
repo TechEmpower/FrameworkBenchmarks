@@ -2,65 +2,65 @@ version: 2.0
 shards:
   avram:
     git: https://github.com/luckyframework/avram.git
-    version: 0.18.0
+    version: 0.21.0
 
-  blank:
-    git: https://github.com/kostya/blank.git
-    version: 0.1.0
+  backtracer:
+    git: https://github.com/sija/backtracer.cr.git
+    version: 1.2.1
 
   cry:
     git: https://github.com/luckyframework/cry.git
-    version: 0.4.2
+    version: 0.4.3
 
   db:
     git: https://github.com/crystal-lang/crystal-db.git
-    version: 0.10.0
+    version: 0.10.1
 
   dexter:
     git: https://github.com/luckyframework/dexter.git
-    version: 0.3.1
+    version: 0.3.3
 
   exception_page:
     git: https://github.com/crystal-loot/exception_page.git
-    version: 0.1.4
+    version: 0.2.0
 
   future:
     git: https://github.com/crystal-community/future.cr.git
-    version: 0.1.0
+    version: 1.0.0+git.commit.9fe168418c6884cb3552c13b004763eb4815ceb9
 
   habitat:
     git: https://github.com/luckyframework/habitat.git
-    version: 0.4.4
+    version: 0.4.7
 
   lucky:
     git: https://github.com/luckyframework/lucky.git
-    version: 0.25.0
-
-  lucky_cli:
-    git: https://github.com/luckyframework/lucky_cli.git
-    version: 0.25.0
+    version: 0.28.0
 
   lucky_router:
     git: https://github.com/luckyframework/lucky_router.git
-    version: 0.4.0
+    version: 0.5.0
+
+  lucky_task:
+    git: https://github.com/luckyframework/lucky_task.git
+    version: 0.1.0
 
   pg:
     git: https://github.com/will/crystal-pg.git
-    version: 0.22.1
+    version: 0.24.0
 
   pulsar:
     git: https://github.com/luckyframework/pulsar.git
-    version: 0.2.1
+    version: 0.2.2
 
   shell-table:
     git: https://github.com/luckyframework/shell-table.cr.git
-    version: 0.9.2+git.commit.078a04ea58ead5203bb435a3b5fff448ddabaeea
+    version: 0.9.3+git.commit.fefbc8b19d18630660b2653de755217597808b1b
 
   teeplate:
     git: https://github.com/luckyframework/teeplate.git
-    version: 0.8.2
+    version: 0.8.3
 
   wordsmith:
     git: https://github.com/luckyframework/wordsmith.git
-    version: 0.2.1
+    version: 0.3.0
 

@@ -5,8 +5,8 @@ This is the Play portion of a [benchmarking test suite](../) comparing a variety
 ### Data-Store/Database Mapping Test
 
 * [Database test controller](app/controllers/Application.java)
-* [Database World test model](app/models/World.java)
-* [Database Fortune test model](app/models/Fortune.java)
+* [Database World test model](app/models/tables/World.java)
+* [Database Fortune test model](app/models/tables/Fortune.java)
 
 ## Infrastructure Software Versions
 The tests were run with:

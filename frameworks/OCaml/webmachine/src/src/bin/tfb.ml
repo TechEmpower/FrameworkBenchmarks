@@ -166,7 +166,7 @@ let main () =
   (* https://github.com/mirage/ocaml-cohttp/issues/328#issuecomment-222583580 *)
   Lwt_io.set_default_buffer_size 0x10000;
   let nproc =
-    match Sys.getenv "CORE_COUNT" with
+    match Sys.getenv "APP_INSTANCES" with
     | x -> int_of_string x
     | exception Not_found ->
         Unix.open_process_in "getconf _NPROCESSORS_ONLN"

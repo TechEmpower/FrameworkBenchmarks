@@ -63,7 +63,7 @@ func main() {
 	if db != nil {
 		defer db.Close()
 		// http.HandleFunc("/fortune", handlers.FortuneHandler(db))
-		http.HandleFunc("/fortune", handlers.FortuneHandlerPool(db))
+		http.HandleFunc("/fortunes", handlers.FortuneHandlerPool(db))
 		// http.HandleFunc("/fortune-quick", handlers.FortuneQuickHandler(db))
 		http.HandleFunc("/fortune-quick", handlers.FortuneQuickHandlerPool(db))
 		if *easyjson {

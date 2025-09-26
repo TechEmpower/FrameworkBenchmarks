@@ -26,6 +26,10 @@
 			<artifactId>officejdbc_hikari</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>net.officefloor.cache</groupId>
+			<artifactId>officecache_constant</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<scope>provided</scope>

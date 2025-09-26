@@ -37,7 +37,7 @@ function query()
     $my = new php\ngx\mysql();
     yield from $my->connect(DB_HOST, DB_PORT, DB_USER, DB_PASS, DB_NAME);
     $query_count = 1;
-    $params      = ngx::query_args()['q'];
+    $params      = (int) ngx::query_args()['q'];
     if ($params > 1) {
         $query_count = min($params, 500);
     }
@@ -68,7 +68,7 @@ function update()
     $my = new php\ngx\mysql();
     yield from $my->connect(DB_HOST, DB_PORT, DB_USER, DB_PASS, DB_NAME);
     $query_count = 1;
-    $params      = ngx::query_args()['q'];
+    $params      = (int) ngx::query_args()['q'];
     if ($params > 1) {
         $query_count = min($params, 500);
     }

@@ -8,9 +8,10 @@ import (
 	"github.com/savsgio/atreugo/v11"
 )
 
-var bindHost string
-
-var prefork bool
+var (
+	bindHost string
+	prefork  bool
+)
 
 func init() { // nolint:gochecknoinits
 	flag.StringVar(&bindHost, "bind", ":8080", "set bind host")

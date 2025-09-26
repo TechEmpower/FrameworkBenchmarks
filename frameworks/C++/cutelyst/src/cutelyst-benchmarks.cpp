@@ -6,6 +6,7 @@
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlError>
 #include <QCoreApplication>
+#include <QTimer>
 #include <QThread>
 #include <QDebug>
 #include <QMutexLocker>
@@ -13,7 +14,6 @@
 
 #include <apool.h>
 
-#include "root.h"
 #include "jsontest.h"
 #include "singledatabasequerytest.h"
 #include "multipledatabasequeriestest.h"
@@ -38,7 +38,12 @@ bool cutelyst_benchmarks::init()
 {
     if (config(QStringLiteral("SendDate")).value<bool>()) {
         qDebug() << "Manually send date";
-        new Root(this);
+        auto dateT = new QTimer(this);
+        dateT->setInterval(1000);
+        dateT->setSingleShot(false);
+        connect(dateT, &QTimer::timeout, this, [=] {
+            defaultHeaders().setDateWithDateTime(QDateTime::currentDateTimeUtc());
+        });
     }
 
     auto view = new CuteleeView(this);
@@ -92,7 +97,7 @@ bool cutelyst_benchmarks::postFork()
         qDebug() << "ASql URI:" << uri.toString();
 
         APool::addDatabase(uri.toString());
-        APool::setDatabaseMaxIdleConnections(15);
+        APool::setDatabaseMaxIdleConnections(128);
     }
 
     qDebug() << "Connections" << QCoreApplication::applicationPid() << QThread::currentThread() << QSqlDatabase::connectionNames();

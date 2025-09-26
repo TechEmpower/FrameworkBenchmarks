@@ -13,7 +13,7 @@ class QueryController
     public function __invoke(Request $request, Response $response, $args)    
     {
     	$queryParams = $request->getQueryParams();
-    	$q = $queryParams['q'] ?? 0;
+    	$q = (int) $queryParams['q'] ?? 0;
         $query_count = $q > 1 ? min($q, 500) : 1;
 
     	while ($query_count--) {

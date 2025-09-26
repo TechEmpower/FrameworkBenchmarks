@@ -74,7 +74,21 @@ Laravel-swoole is an adapter layer between Swoole and Laravel/Lumen.  It provide
 Also because Laravel was written under php-fpm environment where the framework is reset between each request, sometimes state changes are not re-initialized between requests since it isn't necessary in an environment where the framework is terminated after each request.
 To handle this, Laravel-swoole creates a sandbox for each request with a copy of initial framework state so that any changes made by the request do not impact the state of other incoming requests.
 
-Brion Finlay 10/3/2018  
+benchmark support: [Brion Finlay](https://github.com/bfinlay) 10/3/2018
+
+# laravel-roadrunner Benchmarking Test
+
+The laravel-roadrunner test is a benchmark test of Laravel running on [Roadrunner](https://github.com/spiral/roadrunner).
+
+RoadRunner is an open-source (MIT licensed) high-performance PHP application server, load balancer, and process manager. It supports running as a service with the ability to extend its functionality on a per-project basis.
+
+RoadRunner includes PSR-7/PSR-17 compatible HTTP and HTTP/2 server and can be used to replace classic Nginx+FPM setup with much greater performance and flexibility.
+
+RoadRunner achieves performance improvements by reusing PHP instances so that the framework is not bootstrapped on each request.
+
+RoadRunner uses a synchronous model of execution rather than asynchronous for broader compatibility with libraries.
+
+benchmark support: [Brion Finlay](https://github.com/bfinlay) 4/16/2021
 
 ### Test Type Implementation Source Code
 
@@ -89,6 +103,8 @@ Brion Finlay 10/3/2018
 The tests were run with:
 * [Swoole](https://www.swoole.co.uk/)
 * [laravel-swoole](https://github.com/swooletw/laravel-swoole/wiki)
+* [Roadrunner](https://github.com/spiral/roadrunner)
+* [Roadrunner Laravel Bridge](https://github.com/spiral/roadrunner-laravel)
 * [Laravel](https://laravel.com/)
 
 ## Test URLs

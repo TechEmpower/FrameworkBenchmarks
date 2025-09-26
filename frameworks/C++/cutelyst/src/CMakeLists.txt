@@ -1,10 +1,23 @@
-cmake_minimum_required(VERSION 3.6.0 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.11.0 FATAL_ERROR)
 
 project(cutelyst_benchmarks LANGUAGES CXX)
 
+cmake_policy(SET CMP0069 NEW)
+
+include(FetchContent)
+
+FetchContent_Declare(
+  mimalloc
+  GIT_REPOSITORY https://github.com/microsoft/mimalloc.git
+  GIT_TAG        b3b0fb58326a96beea1f4872bc1489d1d9fda7e0 # v2.0.2
+)
+FetchContent_MakeAvailable(mimalloc)
+
 find_package(Qt5 5.6.0 REQUIRED COMPONENTS Core Network Sql)
-find_package(ASqlQt5 0.15.0 REQUIRED)
-find_package(Cutelyst2Qt5 2.12 REQUIRED)
+find_package(ASqlQt5 0.43.0 REQUIRED)
+find_package(Cutelyst3Qt5 3.1 REQUIRED)
+find_package(Cutelee6Qt5 6.0.0 REQUIRED)
+find_package(PostgreSQL REQUIRED)
 
 # Auto generate moc files
 set(CMAKE_AUTOMOC ON)
@@ -13,7 +26,7 @@ set(CMAKE_AUTOMOC ON)
 # to always look for includes there:
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 file(GLOB_RECURSE TEMPLATES_SRC root/*)
@@ -53,10 +66,19 @@ target_link_libraries(cutelyst_benchmarks
     ASqlQt5::Core
 )
 
-add_executable(cutelyst-benchmarks main.cpp)
+add_executable(cutelyst-benchmarks ${cutelyst_benchmarks_SRCS} main.cpp)
 target_link_libraries(cutelyst-benchmarks
+    PUBLIC
     Cutelyst::Core
-    Cutelyst::WSGI
+    Cutelyst::Server
+    Cutelyst::Utils::Sql
+    Cutelyst::View::Cutelee
+    Qt5::Core
     Qt5::Network
-    cutelyst_benchmarks
+    Qt5::Sql
+    ASqlQt5::Core
+    mimalloc
 )
+if (mimalloc_FOUND)
+    target_link_libraries(cutelyst-benchmarks PUBLIC mimalloc)
+endif ()

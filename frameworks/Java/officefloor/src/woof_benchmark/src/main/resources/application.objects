@@ -5,6 +5,9 @@
 		<property name="persistence.dependency" value="datasource" />
 	</managed-object>
 
+	<managed-object source="net.officefloor.cache.constant.ConstantCacheManagedObjectSource" />
+	<managed-object class="net.officefloor.benchmark.CachedWorldDataRetriever" /> 
+
 	<managed-object source="net.officefloor.jdbc.DataSourceManagedObjectSource">
 		<property-file path="datasource.properties" />
 	</managed-object>

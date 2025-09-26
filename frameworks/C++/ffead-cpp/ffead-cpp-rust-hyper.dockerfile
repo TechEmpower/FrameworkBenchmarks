@@ -1,9 +1,7 @@
-FROM sumeetchhetri/ffead-cpp-5.0-rust-base:5.2
+FROM sumeetchhetri/ffead-cpp-rust-base:6.0
 
 ENV IROOT=/installs
 
 WORKDIR /
 
-EXPOSE 8080
-
-CMD ./run_ffead.sh ffead-cpp-5.0 rust-hyper
+CMD ./run_ffead.sh ffead-cpp-6.0 rust-hyper

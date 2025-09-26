@@ -2,8 +2,7 @@
   "name": "dvaknheo/duckphp-benchmark",
   "type": "project",
 	"require" : {
-		"php" : "^7.2",
-		"dvaknheo/duckphp" : "1.2.7"
+		"dvaknheo/duckphp" : "1.2.10"
 	},
 	"autoload" : {
 		"psr-4" : {

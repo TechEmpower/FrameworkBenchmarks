@@ -1,19 +1,6 @@
 [framework]
 name = "aspnetcore"
 
-[pgo]
-urls.plaintext = "/plaintext"
-urls.json = "/json"
-approach = "Stripped"
-classification = "Platform"
-database = "None"
-database_os = "Linux"
-os = "Linux"
-orm = "Raw"
-platform = ".NET"
-webserver = "Kestrel"
-versus = "aspcore"
-
 [ado-pg]
 urls.db = "/db"
 urls.query = "/queries/"
@@ -28,6 +15,22 @@ orm = "Raw"
 platform = ".NET"
 webserver = "Kestrel"
 versus = "aspcore-ado-pg"
+
+[ado-my]
+urls.db = "/db"
+urls.query = "/queries/"
+urls.update = "/updates/"
+urls.fortune = "/fortunes"
+urls.cached_query = "/cached-worlds/"
+approach = "Realistic"
+classification = "Platform"
+database = "MySQL"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = ".NET"
+webserver = "Kestrel"
+versus = "aspcore-ado-my"
 
 [mw-ef-pg]
 urls.db = "/db/ef"
@@ -68,18 +71,6 @@ orm = "Raw"
 platform = ".NET"
 webserver = "Kestrel"
 versus = "aspcore"
-
-[pgo-pg-up]
-urls.update = "/updates/"
-approach = "Stripped"
-classification = "Platform"
-database = "Postgres"
-database_os = "Linux"
-os = "Linux"
-orm = "Raw"
-platform = ".NET"
-webserver = "Kestrel"
-versus = "aspcore-ado-pg-up"
 
 [mvc]
 urls.plaintext = "/mvc/plaintext"
@@ -242,21 +233,6 @@ database = "Postgres"
 database_os = "Linux"
 os = "Linux"
 orm = "Full"
-platform = ".NET"
-webserver = "Kestrel"
-versus = "aspcore-ado-pg"
-
-[pgo-pg]
-urls.db = "/db"
-urls.query = "/queries/"
-urls.fortune = "/fortunes"
-urls.cached_query = "/cached-worlds/"
-approach = "Stripped"
-classification = "Platform"
-database = "Postgres"
-database_os = "Linux"
-os = "Linux"
-orm = "Raw"
 platform = ".NET"
 webserver = "Kestrel"
 versus = "aspcore-ado-pg"

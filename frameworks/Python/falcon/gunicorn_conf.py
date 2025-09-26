@@ -2,11 +2,11 @@ import multiprocessing
 import os
 import sys
 
+
 _is_pypy = hasattr(sys, 'pypy_version_info')
 _is_travis = os.environ.get('TRAVIS') == 'true'
 
-# falcon only implements json and plain. Not wait DB.
-workers = multiprocessing.cpu_count()  # *3
+workers = int(multiprocessing.cpu_count() * 1.5)
 if _is_travis:
     workers = 2
 
@@ -16,7 +16,7 @@ errorlog = '-'
 pidfile = 'gunicorn.pid'
 
 if _is_pypy:
-    worker_class = "tornado"
+    worker_class = "sync"
 else:
     worker_class = "meinheld.gmeinheld.MeinheldWorker"
 
@@ -24,4 +24,3 @@ else:
         # Disalbe access log
         import meinheld.server
         meinheld.server.set_access_logger(None)
-

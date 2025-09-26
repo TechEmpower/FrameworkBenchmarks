@@ -3,19 +3,18 @@
 
 using Microsoft.EntityFrameworkCore;
 
-namespace Benchmarks.Data
+namespace Benchmarks.Data;
+
+public sealed class ApplicationDbContext : DbContext
 {
-    public sealed class ApplicationDbContext : DbContext
+    public ApplicationDbContext(DbContextOptions options)
+        : base(options)
     {
-        public ApplicationDbContext(DbContextOptions options)
-            : base(options)
-        {
-            ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
-            ChangeTracker.AutoDetectChangesEnabled = false;
-        }
-
-        public DbSet<World> World { get; set; }
-
-        public DbSet<Fortune> Fortune { get; set; }
+        ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+        ChangeTracker.AutoDetectChangesEnabled = false;
     }
+
+    public DbSet<World> World { get; set; }
+
+    public DbSet<Fortune> Fortune { get; set; }
 }

@@ -1,0 +1,22 @@
+{
+  "framework": "netcoreserver",
+  "tests": [{
+    "default": {
+      "plaintext_url": "/plaintext",
+      "json_url": "/json",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "None",
+      "framework": "NetCoreServer",
+      "language": "C#",
+      "orm": "Raw",
+      "platform": ".NET",
+      "webserver": "NetCoreServer",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "NetCoreServer",
+      "notes": ""
+    }
+  }]
+}

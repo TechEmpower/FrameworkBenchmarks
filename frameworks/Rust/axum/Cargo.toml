@@ -1,0 +1,51 @@
+[package]
+name = "axum"
+version = "0.1.2"
+authors = ["Dragos Varovici <dvarovici.work@gmail.com>"]
+edition = "2018"
+
+[[bin]]
+name = "axum"
+path = "src/main.rs"
+
+[[bin]]
+name = "axum-sqlx"
+path = "src/main_sqlx.rs"
+
+[[bin]]
+name = "axum-bb8"
+path = "src/main_bb8.rs"
+
+[[bin]]
+name = "axum-mongo"
+path = "src/main_mongo.rs"
+
+[dependencies]
+num_cpus = { version = "^1.13" }
+rand = { version = "^0.8", features = ["small_rng"]}
+yarte = { version = "^0.15" }
+async-stream = { version = "^0.3" }
+async-trait = { version = "0.1" }
+async-std = "1.10"
+futures = { version = "^0.3" }
+futures-util = { version = "^0.3" }
+dotenv = { version = "^0.15" }
+serde = { version = "^1", features = ["derive"] }
+serde_json = { version = "^1" }
+serde_derive = { version = "^1" }
+axum = { version = "^0.3" }
+tokio = { version = "1.0", features = ["full"] }
+hyper = "0.14"
+tower = { version = "0.4", features = ["util"] }
+tower-http = { version = "0.1", features = ["set-header"] }
+sqlx = { version = "^0.5", features = [ "postgres", "macros", "runtime-tokio-native-tls" ] }
+bb8 = "0.7"
+bb8-postgres = "0.7"
+tokio-postgres = "0.7"
+tokio-pg-mapper = "0.2"
+tokio-pg-mapper-derive = "0.2"
+mongodb = "2.0"
+
+[profile.release]
+lto = true
+codegen-units = 1

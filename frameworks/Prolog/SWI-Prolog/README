@@ -3,6 +3,3 @@ Prolog is a logic programming language associated with artificial intelligence a
 SWI-Prolog is a free implementation of the programming language Prolog, commonly used for teaching and semantic web applications
 
 This implementation uses the [HTTP Server libraries](https://www.swi-prolog.org/pldoc/man?section=httpserver) available with SWI-Prolog
-
-Currently only the /json and /plaintext endpoints have been implemented
-

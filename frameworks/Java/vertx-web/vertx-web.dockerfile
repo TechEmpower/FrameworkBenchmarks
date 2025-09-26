@@ -20,8 +20,11 @@ CMD java \
     -Dvertx.disableContextTimings=true                \
     -Dvertx.disableTCCL=true                          \
     -Dvertx.disableHttpHeadersValidation=true         \
+    -Dvertx.eventLoopPoolSize=$((`grep --count ^processor /proc/cpuinfo`)) \
+    -Dio.netty.buffer.checkBounds=false               \
+    -Dio.netty.buffer.checkAccessible=false           \
     -jar                                              \
-    target/vertx-web-benchmark-3.9.2-fat.jar          \
+    target/vertx-web-benchmark-4.1.5-fat.jar          \
     --instances                                       \
     `grep --count ^processor /proc/cpuinfo`           \
     --conf                                            \

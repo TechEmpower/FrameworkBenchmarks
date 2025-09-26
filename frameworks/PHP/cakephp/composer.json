@@ -5,8 +5,7 @@
     "type": "project",
     "license": "MIT",
     "require": {
-        "php": ">=7.2",
-        "cakephp/cakephp": "^4.0.2",
+        "cakephp/cakephp": "^4.3",
         "cakephp/plugin-installer": "^1.0"
     },
     "autoload": {
@@ -15,7 +14,6 @@
         }
     },
     "scripts": {
-        "post-autoload-dump": "Cake\\Composer\\Installer\\PluginInstaller::postAutoloadDump",
         "check": [
             "@test",
             "@cs-check"

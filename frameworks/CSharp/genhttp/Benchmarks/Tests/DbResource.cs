@@ -12,7 +12,7 @@ namespace Benchmarks.Tests
 
     public sealed class DbResource
     {
-        private static Random _Random = new Random();
+        private static readonly Random _Random = new();
 
         [ResourceMethod]
         public async ValueTask<World> GetRandomWorld()
@@ -21,7 +21,7 @@ namespace Benchmarks.Tests
 
             using var context = DatabaseContext.CreateNoTracking();
 
-            return await context.World.FirstOrDefaultAsync(w => w.Id == id);
+            return await context.World.FirstOrDefaultAsync(w => w.Id == id).ConfigureAwait(false);
         }
 
     }

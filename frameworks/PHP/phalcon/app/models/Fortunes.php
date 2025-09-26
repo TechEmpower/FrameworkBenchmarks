@@ -1,9 +1,10 @@
 <?php
 
+use Phalcon\Mvc\Model;
 use Phalcon\Mvc\Model\MetaData;
 use Phalcon\Db\Column;
 
-class Fortunes extends \Phalcon\Mvc\Model
+class Fortunes extends Model
 {
     public $id;
 
@@ -14,7 +15,7 @@ class Fortunes extends \Phalcon\Mvc\Model
         $this->setSource('Fortune');
     }
 
-    public function metaData()
+    public function metaData(): array
     {
         return [
             // Every column in the mapped table

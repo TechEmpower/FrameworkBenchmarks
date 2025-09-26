@@ -12,6 +12,9 @@
     <http-continuation path="/update" secure="false" x="80" y="275">
       <section name="Logic" input="update"/>
     </http-continuation>
+    <http-continuation path="/cached-worlds" secure="false" x="81" y="329">
+      <section name="Logic" input="cached"/>
+    </http-continuation>
   </http-continuations>
   <http-inputs>
   </http-inputs>
@@ -23,14 +26,15 @@
   </templates>
   <sections>
     <section name="Logic" source="net.officefloor.plugin.section.clazz.ClassSectionSource" location="net.officefloor.benchmark.Logic" x="281" y="140">
+      <input name="cached" parameter-type=""/>
       <input name="db" parameter-type=""/>
-      <input name="getEntry" parameter-type="net.officefloor.benchmark.Logic$GetEntry"/>
       <input name="json" parameter-type=""/>
       <input name="queries" parameter-type=""/>
       <input name="update" parameter-type=""/>
-      <input name="updateEntry" parameter-type="net.officefloor.benchmark.Logic$UpdateEntry"/>
     </section>
   </sections>
+  <procedures>
+  </procedures>
   <securities>
   </securities>
   <governances>

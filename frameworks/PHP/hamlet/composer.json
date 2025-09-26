@@ -1,13 +1,13 @@
 {
-  "minimum-stability": "dev",
   "config": {
     "optimize-autoloader": true,
     "classmap-authoritative": true
   },
   "require": {
-    "hamlet-framework/http" : "dev-master",
-    "hamlet-framework/db-mysql": "dev-master",
-    "cache/array-adapter": "^1"
+    "php": "^8",
+    "hamlet-framework/http" : "@stable",
+    "hamlet-framework/db-pdo": "@stable",
+    "cache/apcu-adapter": "@stable"
   },
   "autoload": {
     "psr-4": {

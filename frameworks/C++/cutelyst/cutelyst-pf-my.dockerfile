@@ -32,7 +32,7 @@ RUN sed -i "s|Driver=.*|Driver=${DRIVER}|g" /cutelyst.ini
 
 EXPOSE 8080
 
-CMD cutelyst-wsgi2 \
+CMD ${TROOT}/build/cutelyst-benchmarks \
     --ini /cutelyst.ini:uwsgi \
     --application ${CUTELYST_APP} \
     --processes=$(nproc) \

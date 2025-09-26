@@ -9,19 +9,20 @@ const (
 	worldsCount = 10000
 )
 
-var worldPool = &sync.Pool{
-	New: func() interface{} {
-		return new(World)
-	},
-}
-
-var worldsPool = &sync.Pool{
-	New: func() interface{} {
-		return &Worlds{
-			W: make([]World, 0, maxWorlds),
-		}
-	},
-}
+var (
+	worldPool = sync.Pool{
+		New: func() interface{} {
+			return new(World)
+		},
+	}
+	worldsPool = sync.Pool{
+		New: func() interface{} {
+			return &Worlds{
+				W: make([]World, 0, maxWorlds),
+			}
+		},
+	}
+)
 
 func acquireWorld() *World {
 	return worldPool.Get().(*World)

@@ -2,7 +2,7 @@
   "framework": "lapis",
   "tests": [{
     "default": {
-      "json_url": "/",
+      "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries?queries=",
       "fortune_url": "/fortunes",

@@ -35,12 +35,13 @@
     (->
       (donkey-core/create-donkey
         {:event-loops concurrency})
-      (donkey-core/create-server {:port          8080
-                                  :routes        [hello-world-route json-route]
-                                  :instances     concurrency
-                                  :compression   false
-                                  :decompression false
-                                  :date-header   true
-                                  :server-header true
-                                  :keep-alive    true})
+      (donkey-core/create-server {:port           8080
+                                  :routes         [hello-world-route json-route]
+                                  :instances      concurrency
+                                  :compression    false
+                                  :decompression  false
+                                  :accept-backlog 20000
+                                  :date-header    true
+                                  :server-header  true
+                                  :keep-alive     true})
       (donkey-server/start-sync))))

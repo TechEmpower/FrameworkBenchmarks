@@ -8,10 +8,11 @@ use Hyperf\Task\Task;
 use Hyperf\Task\TaskExecutor;
 use Hyperf\View\Engine\EngineInterface;
 use Hyperf\View\Mode;
+use Psr\Http\Message\ResponseInterface;
 
 class Render extends \Hyperf\View\Render
 {
-    public function render(string $template, array $data)
+    public function render(string $template, array $data = []): ResponseInterface
     {
         switch ($this->mode) {
             case Mode::SYNC:

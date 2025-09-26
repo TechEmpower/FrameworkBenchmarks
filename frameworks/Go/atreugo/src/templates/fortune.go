@@ -6,19 +6,20 @@ import (
 
 //go:generate qtc
 
-var fortunePool = &sync.Pool{
-	New: func() interface{} {
-		return new(Fortune)
-	},
-}
-
-var fortunesPool = &sync.Pool{
-	New: func() interface{} {
-		return &Fortunes{
-			F: make([]Fortune, 0, 16),
-		}
-	},
-}
+var (
+	fortunePool = sync.Pool{
+		New: func() interface{} {
+			return new(Fortune)
+		},
+	}
+	fortunesPool = sync.Pool{
+		New: func() interface{} {
+			return &Fortunes{
+				F: make([]Fortune, 0, 16),
+			}
+		},
+	}
+)
 
 // AcquireFortune returns new message from pool.
 func AcquireFortune() *Fortune {

@@ -2,7 +2,6 @@
 
 set -e
 
-CPU_COUNT=$(nproc)
 H2O_APP_PROFILE_PORT=54321
 H2O_APP_PROFILE_URL="http://127.0.0.1:$H2O_APP_PROFILE_PORT"
 SCRIPT_PATH=$(realpath "$0")
@@ -26,7 +25,7 @@ if [[ -z "$MUSTACHE_C_PREFIX" ]]; then
 fi
 
 # A hacky way to detect whether we are running in the physical hardware or the cloud environment.
-if [[ "$CPU_COUNT" -gt 16 ]]; then
+if [[ $(nproc) -gt 16 ]]; then
 	echo "Running h2o_app in the physical hardware environment."
 	DB_CONN=5
 else
@@ -38,8 +37,8 @@ build_h2o_app()
 {
 	cmake -DCMAKE_INSTALL_PREFIX="$H2O_APP_PREFIX" -DCMAKE_BUILD_TYPE=Release \
 	      -DCMAKE_PREFIX_PATH="${H2O_PREFIX};${MUSTACHE_C_PREFIX}" \
-	      -DCMAKE_C_FLAGS="-march=native $1" "$H2O_APP_SRC_ROOT"
-	make -j "$CPU_COUNT"
+	      -DCMAKE_C_FLAGS="-march=native $1" -G Ninja "$H2O_APP_SRC_ROOT"
+	cmake --build . --clean-first -j
 }
 
 run_curl()
@@ -77,10 +76,9 @@ install -d "$H2O_APP_BUILD_DIR"
 pushd "$H2O_APP_BUILD_DIR"
 build_h2o_app "-fprofile-generate"
 generate_profile_data
-make clean
 rm -f CMakeCache.txt
 build_h2o_app "-fprofile-use"
-make -j "$CPU_COUNT" install
+cmake --install .
 popd
 rm -rf "$H2O_APP_BUILD_DIR"
 echo "Maximum database connections per thread: $DB_CONN"

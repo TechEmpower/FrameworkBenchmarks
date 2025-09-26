@@ -17,7 +17,7 @@ namespace Benchmarks.Tests
     {
         private static readonly Random _Random = new Random();
 
-        private readonly MemoryCache _Cache = new MemoryCache(new MemoryCacheOptions() { ExpirationScanFrequency = TimeSpan.FromMinutes(60) });
+        private static readonly MemoryCache _Cache = new MemoryCache(new MemoryCacheOptions() { ExpirationScanFrequency = TimeSpan.FromMinutes(60) });
 
         private static readonly object[] _CacheKeys = Enumerable.Range(0, 10001).Select((i) => new CacheKey(i)).ToArray();
 
@@ -68,7 +68,7 @@ namespace Benchmarks.Tests
                 }
                 else
                 {
-                    var resolved = await context.World.FirstOrDefaultAsync(w => w.Id == id);
+                    var resolved = await context.World.FirstOrDefaultAsync(w => w.Id == id).ConfigureAwait(false);
 
                     _Cache.Set(key, resolved);
 

@@ -1,0 +1,20 @@
+{
+  "framework": "async-worker",
+  "tests": [{
+    "default": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "framework": "async-worker",
+      "language": "Python",
+      "flavor": "Python3",
+      "orm": "Raw",
+      "platform": "asyncio",
+      "os": "Linux",
+      "display_name": "async-worker",
+      "versus": "aiohttp"
+    }
+  }]
+}

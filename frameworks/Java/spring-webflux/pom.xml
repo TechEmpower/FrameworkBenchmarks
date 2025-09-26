@@ -21,7 +21,7 @@
         <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring-data-r2dbc.version>1.0.0.M2</spring-data-r2dbc.version>
-        <postgresql.version>42.2.5</postgresql.version>
+        <postgresql.version>42.3.3</postgresql.version>
         <pgclient.version>0.11.4</pgclient.version>
         <rxjava2-jdbc.version>0.2.4</rxjava2-jdbc.version>
         <r2dbc-postgresql.version>1.0.0.M7</r2dbc-postgresql.version>

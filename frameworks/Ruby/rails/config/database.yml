@@ -1,25 +1,23 @@
 ---
-_: &common
+default: &default
   database: hello_world
   username: benchmarkdbuser
   password: benchmarkdbpass
   host: tfb-database
   timeout: 5000
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
 
 development:
-  <<: *common
-  pool: 5
+  <<: *default
 
 test:
-  <<: *common
-  pool: 64
+  <<: *default
 
 production_mysql:
-  <<: *common
+  <<: *default
   adapter: mysql2
-  pool: 64
 
 production_postgresql:
-  <<: *common
+  <<: *default
   adapter: postgresql
-  pool: 64
+  encoding: unicode

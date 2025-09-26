@@ -1,0 +1,13 @@
+#declareref std::list<TeBkUmLpqQwAsyncFortune>* fortunes#
+<!DOCTYPE html>
+<html>
+<head><title>Fortunes</title></head>
+<body>
+<table>
+<tr><th>id</th><th>message</th></tr>
+#for(std::list<TeBkUmLpqQwAsyncFortune>::iterator it=fortunes->begin(); it != fortunes->end(); ++it)#
+<tr><td>${(*it).getId()}</td><td>${(*it).message}</td></tr>
+#rof#
+</table>
+</body>
+</html>

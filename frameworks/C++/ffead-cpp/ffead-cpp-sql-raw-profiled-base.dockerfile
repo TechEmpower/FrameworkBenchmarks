@@ -1,6 +1,6 @@
-FROM sumeetchhetri/ffead-cpp-5.0-base:5.2
+FROM sumeetchhetri/ffead-cpp-base:6.0
 LABEL maintainer="Sumeet Chhetri"
-LABEL version="5.2"
+LABEL version="6.0"
 LABEL description="SQL Raw Base ffead-cpp docker image with commit id - master"
 
 WORKDIR /tmp
@@ -79,7 +79,10 @@ ENV accept accept
 
 WORKDIR ${IROOT}
 
+COPY sql-profiled-util.sh ${IROOT}/
+RUN chmod 755 ${IROOT}/sql-profiled-util.sh
+RUN ./sql-profiled-util.sh nobatch noclang noasync
+
 COPY sql-profiled-install.sh install_ffead-cpp-sql-raw-profiled.sh ${IROOT}/
 RUN chmod 755 ${IROOT}/sql-profiled-install.sh ${IROOT}/install_ffead-cpp-sql-raw-profiled.sh
-
 RUN ./sql-profiled-install.sh

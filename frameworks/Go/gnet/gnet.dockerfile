@@ -1,4 +1,4 @@
-FROM golang:1.14
+FROM golang:1.17
 
 ENV GO111MODULE on
 
@@ -6,7 +6,7 @@ WORKDIR /gnet
 
 COPY ./src /gnet
 
-RUN go mod download
+RUN go mod tidy
 
 RUN go build -o app -gcflags="-l=4" -ldflags="-s -w" .
 

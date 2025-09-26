@@ -15,7 +15,7 @@ class FortuneModel extends BaseModel
     {
         $sql = 'SELECT id, message FROM fortune';
         $data = M::DB()->fetchAll($sql);
-        $ret = array_combine(array_column($data,'id'),array_column($data,'message'));
+        $ret = array_column($data, 'message', 'id');
         $ret[0] = 'Additional fortune added at request time.';
         asort($ret);
         return $ret;

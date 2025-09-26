@@ -1,6 +1,9 @@
-database:
-  name: hello_world
-  host: localhost
-  port: 5432
-  username: benchmarkdbuser
-  password: benchmarkdbpass
+vertx:
+  pg:
+    client:
+      port: 5432
+      host: localhost
+      database: hello_world
+      user: benchmarkdbuser
+      password: benchmarkdbpass
+      maxSize: 5

@@ -1,7 +1,7 @@
 # ================================
 # Build image
 # ================================
-FROM swift:5.1 as build
+FROM swift:5.5 as build
 WORKDIR /build
 
 # Copy entire repo into container
@@ -9,13 +9,13 @@ COPY ./app .
 
 # Compile with optimizations
 RUN swift build \
-	--enable-test-discovery \
-	-c release
+	-c release \
+	-Xswiftc -enforce-exclusivity=unchecked
 
 # ================================
 # Run image
 # ================================
-FROM ubuntu:18.04
+FROM swift:5.5-slim
 WORKDIR /run
 
 # Install Swift dependencies

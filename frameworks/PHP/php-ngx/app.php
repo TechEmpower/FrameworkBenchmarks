@@ -24,7 +24,7 @@ function query()
     ngx_header_set('Content-Type', 'application/json');
 
     $query_count = 1;
-    $params      = ngx::query_args()['q'];
+    $params      = (int) ngx::query_args()['q'];
     if ($params > 1) {
         $query_count = min($params, 500);
     }
@@ -42,7 +42,7 @@ function update()
     ngx_header_set('Content-Type', 'application/json');
 
     $query_count = 1;
-    $params      = ngx::query_args()['q'];
+    $params      = (int) ngx::query_args()['q'];
     if ($params > 1) {
         $query_count = min($params, 500);
     }

@@ -1,5 +1,8 @@
 <woof>
   <http-continuations>
+    <http-continuation path="/cached-worlds" secure="false" x="37" y="264">
+      <section name="Logic" input="cached"/>
+    </http-continuation>
     <http-continuation path="/db" secure="false" x="84" y="112">
       <section name="Logic" input="db"/>
     </http-continuation>
@@ -23,12 +26,15 @@
   </templates>
   <sections>
     <section name="Logic" source="net.officefloor.plugin.section.clazz.ClassSectionSource" location="net.officefloor.benchmark.Logic" x="258" y="122">
+      <input name="cached" parameter-type=""/>
       <input name="db" parameter-type=""/>
       <input name="json" parameter-type=""/>
       <input name="queries" parameter-type=""/>
       <input name="update" parameter-type=""/>
     </section>
   </sections>
+  <procedures>
+  </procedures>
   <securities>
   </securities>
   <governances>

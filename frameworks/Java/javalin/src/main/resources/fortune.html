@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head><title>Fortunes</title></head>
+<body>
+<table>
+    <tr>
+        <th>id</th>
+        <th>message</th>
+    </tr>
+    {% for fortune in list %}
+    <tr>
+        <td>{{ fortune.getId() }}</td>
+        <td>{{ fortune.getMessage() }}</td>
+    </tr>
+    {% endfor %}
+</table>
+</body>
+</html>

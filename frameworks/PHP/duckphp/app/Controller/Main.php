@@ -36,7 +36,7 @@ class Main
     }
     public function updates()
     {
-        $queries = C::GET('queries',1);
+        $queries = (int) C::GET('queries',1);
         $query_count = 1;
         if ($queries > 1) {
             $query_count = min($queries, 500);
@@ -47,7 +47,7 @@ class Main
     }
     public function queries()
     {
-        $queries = C::GET('queries',1);
+        $queries = (int) C::GET('queries',1);
         $query_count = 1;
         if ($queries > 1) {
             $query_count = min($queries, 500);

@@ -24,7 +24,6 @@ class KuRaw
             ]
         );
 
-        self::$db        = $pdo->prepare('SELECT id,randomNumber FROM World WHERE id = ?');
         self::$fortune   = $pdo->prepare('SELECT id,message FROM Fortune');
         self::$random    = $pdo->prepare('SELECT id,randomNumber FROM World WHERE id = ?');
         self::$instance  = $pdo;
@@ -42,9 +41,9 @@ class KuRaw
 
         if (!isset(self::$update[$rows])) {
             $sql = 'UPDATE world SET randomNumber = CASE id'
-                . str_repeat(' WHEN ?::INTEGER THEN ?::INTEGER ', $rows) .
-                'END WHERE id IN ('
-                . implode(', ', array_fill(0, $rows, '?::INTEGER')) . ')';
+                . str_repeat(' WHEN ?::INTEGER THEN ?::INTEGER ', $rows)
+                . 'END WHERE id IN ('
+                . str_repeat('?::INTEGER,', $rows - 1) . '?::INTEGER)';
 
             self::$update[$rows] = self::$instance->prepare($sql);
         }

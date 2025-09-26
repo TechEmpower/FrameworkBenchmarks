@@ -1,0 +1,19 @@
+[framework]
+name = "tide"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+urls.db = "/db"
+urls.query = "/queries/"
+urls.fortune = "/fortunes"
+urls.update = "/updates/"
+approach = "Realistic"
+classification = "Micro"
+database = "Postgres"
+database_os = "Linux"
+os = "Linux"
+orm = "Full"
+platform = "Rust"
+webserver = "tide"
+versus = "None"

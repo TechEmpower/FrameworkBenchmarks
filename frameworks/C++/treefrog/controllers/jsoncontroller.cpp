@@ -8,8 +8,7 @@ void JsonController::index()
 
 void JsonController::json()
 {
-    QVariantMap obj;
-    obj[QStringLiteral("message")] = "Hello, World!";
+    static QJsonObject obj {{"message", "Hello, World!"}};
     renderJson(obj);
 }
 

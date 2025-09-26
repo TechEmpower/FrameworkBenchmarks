@@ -3,15 +3,14 @@
 
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Benchmarks.Data
-{
-    [Table("world")]
-    public class World
-    {
-        [Column("id")]
-        public int Id { get; set; }
+namespace Benchmarks.Data;
 
-        [Column("randomnumber")]
-        public int RandomNumber { get; set; }
-    }
+[Table("world")]
+public class World
+{
+    [Column("id")]
+    public int Id { get; set; }
+
+    [Column("randomnumber")]
+    public int RandomNumber { get; set; }
 }

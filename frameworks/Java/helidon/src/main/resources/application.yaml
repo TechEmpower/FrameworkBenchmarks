@@ -2,7 +2,7 @@ server:
   port: 8080
   host: 0.0.0.0
 
-dataSource:
-  jdbcUrl: "jdbc:postgresql://tfb-database:5432/hello_world"
-  username: benchmarkdbuser
-  password: benchmarkdbpass
+host: "tfb-database"
+db: "hello_world"
+username: benchmarkdbuser
+password: benchmarkdbpass

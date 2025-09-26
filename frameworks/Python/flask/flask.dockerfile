@@ -1,10 +1,12 @@
-FROM python:3.6.6-stretch
+FROM python:3.8-buster
 
-ADD ./ /flask
 
-WORKDIR /flask
-
+RUN apt-get update
+RUN apt-get install libpq-dev python3-dev -y
+ADD ./requirements.txt /flask/requirements.txt
 RUN pip3 install -r /flask/requirements.txt
+ADD ./ /flask
+WORKDIR /flask
 
 EXPOSE 8080
 

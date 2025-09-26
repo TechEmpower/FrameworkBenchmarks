@@ -1,4 +1,4 @@
-FROM buildpack-deps:xenial
+FROM buildpack-deps:focal
 
 ENV LUA_VERSION="5.1"
 ENV LUA_MICRO="5"
@@ -33,7 +33,7 @@ RUN cd $LUAROCKS && \
     ./configure --prefix=$LUA_HOME --with-lua=$LUA_HOME && \
     make --quiet bootstrap
 
-ENV OPENRESTY_VERSION="1.11.2.1"
+ENV OPENRESTY_VERSION="1.19.9.1"
 ENV OPENRESTY=/openresty
 ENV OPENRESTY_HOME=$OPENRESTY-$OPENRESTY_VERSION
 

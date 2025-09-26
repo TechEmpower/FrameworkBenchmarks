@@ -1,13 +1,20 @@
 name: build
-on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+on: [ push, pull_request ]
 jobs:
   setup:
     runs-on: ubuntu-20.04
     steps:
+      # Required for workflow triggers like the auto-label for failing PRs
+      - name: Save PR number
+        if: github.event_name == 'pull_request'
+        run: |
+          mkdir -p ./pr
+          echo ${{ github.event.number }} > ./pr/NR
+      - uses: actions/upload-artifact@v2
+        if: github.event_name == 'pull_request'
+        with:
+          name: pr
+          path: pr/
       # Commit branch/name extraction from:
       # https://github.community/t/accessing-commit-message-in-pull-request-event/17158/8
       #
@@ -26,6 +33,7 @@ jobs:
           echo "COMMIT_MESSAGE<<EOF" >> $GITHUB_ENV
           echo "$(git log --format=%B -n 1 HEAD)" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
+          echo "PREVIOUS_COMMIT=$(git log --format=%H -n 1 HEAD~1)" >> $GITHUB_ENV
       # In case of a pull_request event, the commit we care about is HEAD^2, that
       # is, the second parent of the pull request merge commit.
       # The current branch name is directly given by GITHUB_HEAD_REF
@@ -33,8 +41,26 @@ jobs:
         if: github.event_name == 'pull_request'
         run: |
           echo "BRANCH_NAME=$GITHUB_HEAD_REF" >> $GITHUB_ENV
+          echo "TARGET_BRANCH_NAME=$(echo ${GITHUB_BASE_REF##*/})" >> $GITHUB_ENV
           echo "COMMIT_MESSAGE<<EOF" >> $GITHUB_ENV
           echo "$(git log --format=%B -n 1 HEAD^2)" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+          echo "PREVIOUS_COMMIT=$(git log --format=%H -n 1 HEAD^2~1)" >> $GITHUB_ENV
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '2.7'
+          architecture: 'x64'
+      - name: Get all changes vs master
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          echo "DIFF<<EOF" >> $GITHUB_ENV
+          echo "$(./toolset/github_actions/github_actions_diff.py)" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+      - name: Determine which (if any) tests need to be run
+        run: |
+          echo "RUN_TESTS<<EOF" >> $GITHUB_ENV
+          echo "$(grep -oP "github-actions-run-tests \K(.*)" <<< $DIFF || true)" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
       - id: event_out
         name: Write event outputs
@@ -45,6 +71,8 @@ jobs:
           COMMIT_MESSAGE="${COMMIT_MESSAGE//$'\r'/'%0D'}"
           echo "::set-output name=commit_message::$COMMIT_MESSAGE"
           echo "::set-output name=branch_name::$BRANCH_NAME"
+          echo "::set-output name=target_branch_name::$TARGET_BRANCH_NAME"
+          echo "::set-output name=previous_commit::$PREVIOUS_COMMIT"
       - id: verify_out
         name: Write verify job matrix
         run: |
@@ -53,15 +81,18 @@ jobs:
           # include:
           #   - TESTLANG: {lang}
           # with a TESTLANG object in the include array for each language under frameworks
-          VERIFY_MATRIX=$(ls -1 frameworks | jq -R | jq -sc "{include: map({TESTLANG: .})}")
+          VERIFY_MATRIX=$(ls -1 frameworks | jq -Rc '.+"/" | select(inside(env.RUN_TESTS))  | rtrimstr("/")' | jq -sc '{include: map({TESTLANG: .})}')
           echo "::set-output name=verify_matrix::$VERIFY_MATRIX"
     outputs:
       commit_message: ${{ steps.event_out.outputs.commit_message }}
       branch_name: ${{ steps.event_out.outputs.branch_name }}
+      target_branch_name: ${{ steps.event_out.outputs.target_branch_name }}
+      previous_commit: ${{ steps.event_out.outputs.previous_commit }}
       verify_matrix: ${{ steps.verify_out.outputs.verify_matrix }}
   verify:
     needs: setup
-    if: ${{ !contains(needs.setup.outputs.commit_message, '[ci skip]') }}
+    # The matrix check is necessary because an empty job matrix is otherwise considered a workflow failure
+    if: ${{ !contains(needs.setup.outputs.commit_message, '[ci skip]') && contains(needs.setup.outputs.verify_matrix, 'TESTLANG') }}
     runs-on: ubuntu-18.04
     strategy:
       matrix: ${{ fromJSON(needs.setup.outputs.verify_matrix) }}
@@ -73,6 +104,8 @@ jobs:
       TESTDIR: ${{ matrix.TESTDIR }}
       COMMIT_MESSAGE: ${{ needs.setup.outputs.commit_message }}
       BRANCH_NAME: ${{ needs.setup.outputs.branch_name }}
+      TARGET_BRANCH_NAME: ${{ needs.setup.outputs.target_branch_name }}
+      PREVIOUS_COMMIT: ${{ needs.setup.outputs.previous_commit }}
       PR_NUMBER: ${{ github.event.pull_request.number }}
     steps:
       - uses: actions/checkout@v2
@@ -82,8 +115,7 @@ jobs:
         with:
           python-version: '2.7'
           architecture: 'x64'
-      - id: get_diff
-        name: Get all changes vs master
+      - name: Get all changes vs master
         # Runs github_actions_diff, with the the output accessible in later steps
         run: |
           # Write the result to env.DIFF for later steps
@@ -119,3 +151,18 @@ jobs:
           # we'd like to try and do the diffing before github_actions_clean & setup.
           # This will run the tests exactly as you would in your own vm:
           docker network create tfb > /dev/null 2>&1 && docker run --network=tfb -v /var/run/docker.sock:/var/run/docker.sock --mount type=bind,source=`pwd`,target=/FrameworkBenchmarks techempower/tfb --mode verify --test-dir $RUN_TESTS --results-environment Github-Actions;
+  dependabot:
+    needs: verify
+    runs-on: ubuntu-latest
+    if: ${{ github.actor == 'dependabot[bot]' }}
+    steps:
+      - name: Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v1.1.1
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Enable auto-merge for Dependabot PRs
+        run: gh pr merge --auto --merge "$PR_URL"
+        env:
+          PR_URL: ${{github.event.pull_request.html_url}}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}

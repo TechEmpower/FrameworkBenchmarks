@@ -2,28 +2,17 @@
 
 namespace Benchmark;
 
-use Benchmark\Resources\{DbResource, FortuneResource, HelloJsonResource, HelloTextResource, QueriesResource, UpdateResource};
-use Cache\Adapter\PHPArray\ArrayCachePool;
+use Benchmark\Resources\{CachedQueriesResource, DbResource, FortuneResource, HelloJsonResource, HelloTextResource, QueriesResource, UpdateResource};
+use Cache\Adapter\Apcu\ApcuCachePool;
 use Hamlet\Database\Database;
 use Hamlet\Http\Applications\AbstractApplication;
 use Hamlet\Http\Requests\Request;
 use Hamlet\Http\Resources\{HttpResource, NotFoundResource};
-use Hamlet\Http\Responses\{Response, ServerErrorResponse};
 use Psr\Cache\CacheItemPoolInterface;
 
 class Application extends AbstractApplication
 {
-    /** @var CacheItemPoolInterface */
-    private $cache;
-
-    /** @var Database */
-    private $database;
-
-    public function __construct(Database $database)
-    {
-        $this->cache = new ArrayCachePool;
-        $this->database = $database;
-    }
+    public function __construct(private Database $database, private CacheItemPoolInterface|null $cache = null) {}
 
     public function findResource(Request $request): HttpResource
     {
@@ -36,6 +25,8 @@ class Application extends AbstractApplication
                 return new DbResource($this->database);
             case '/queries':
                 return new QueriesResource($this->database);
+            case '/cached-worlds':
+                return new CachedQueriesResource($this->getCache($request), $this->database);
             case '/fortunes':
                 return new FortuneResource($this->database);
             case '/update':
@@ -46,6 +37,9 @@ class Application extends AbstractApplication
 
     protected function getCache(Request $request): CacheItemPoolInterface
     {
+        if (!$this->cache) {
+            $this->cache = new ApcuCachePool;
+        }
         return $this->cache;
     }
 }

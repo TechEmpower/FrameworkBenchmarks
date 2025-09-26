@@ -23,6 +23,7 @@
 
 #include <h2o.h>
 #include <stdbool.h>
+#include <stddef.h>
 
 #include "global_data.h"
 

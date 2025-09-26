@@ -6,9 +6,9 @@
 
 namespace DuckPhpBenchmark\System;
 
-use DuckPhp\SingletonEx\SingletonEx;
+use DuckPhp\SingletonEx\SingletonExTrait;
 
 class BaseBusiness
 {
-    use SingletonEx;
+    use SingletonExTrait;
 }

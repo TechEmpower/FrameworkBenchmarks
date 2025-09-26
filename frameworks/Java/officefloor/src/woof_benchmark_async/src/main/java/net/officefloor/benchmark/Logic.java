@@ -3,10 +3,10 @@ package net.officefloor.benchmark;
 import java.io.IOException;
 import java.io.Writer;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.function.Consumer;
 
 import org.apache.commons.text.StringEscapeUtils;
 
@@ -14,45 +14,26 @@ import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 
-import io.r2dbc.spi.Batch;
-import io.r2dbc.spi.R2dbcTransientResourceException;
+import io.vertx.core.CompositeFuture;
+import io.vertx.core.Future;
+import io.vertx.sqlclient.Pool;
+import io.vertx.sqlclient.Row;
+import io.vertx.sqlclient.RowIterator;
+import io.vertx.sqlclient.RowSet;
+import io.vertx.sqlclient.Tuple;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import net.officefloor.frame.api.escalate.AsynchronousFlowTimedOutEscalation;
 import net.officefloor.frame.api.function.AsynchronousFlow;
-import net.officefloor.frame.api.function.FlowCallback;
-import net.officefloor.plugin.clazz.FlowInterface;
-import net.officefloor.r2dbc.R2dbcSource;
-import net.officefloor.server.http.HttpException;
 import net.officefloor.server.http.HttpHeaderValue;
 import net.officefloor.server.http.HttpResponse;
-import net.officefloor.server.http.HttpStatus;
 import net.officefloor.server.http.ServerHttpConnection;
 import net.officefloor.web.HttpQueryParameter;
 import net.officefloor.web.ObjectResponse;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 /**
  * Logic.
  */
 public class Logic {
-
-	static {
-		// Increase the buffer size
-		System.setProperty("reactor.bufferSize.small", String.valueOf(512));
-	}
-
-	private static final FlowCallback callback = (error) -> {
-		if (error == null) {
-			return;
-		} else if (error instanceof AsynchronousFlowTimedOutEscalation) {
-			throw new HttpException(HttpStatus.SERVICE_UNAVAILABLE);
-		} else {
-			System.out.println("ERROR: " + error.getClass().getName());
-			throw error;
-		}
-	};
 
 	/**
 	 * {@link Mustache} for /fortunes.
@@ -97,98 +78,94 @@ public class Logic {
 	@Data
 	@AllArgsConstructor
 	public class World {
-
 		private int id;
-
 		private int randomNumber;
 	}
 
-	@FlowInterface
-	public static interface DbFlows {
-		void dbService(FlowCallback callback);
-	}
-
-	public void db(DbFlows flows) {
-		flows.dbService(callback);
-	}
-
-	public void dbService(AsynchronousFlow async, R2dbcSource source, ObjectResponse<World> response)
-			throws SQLException {
-		source.getConnection().flatMap(
-				connection -> Mono.from(connection.createStatement("SELECT ID, RANDOMNUMBER FROM WORLD WHERE ID = $1")
-						.bind(0, ThreadLocalRandom.current().nextInt(1, 10001)).execute()))
-				.flatMap(result -> Mono.from(result.map((row, metadata) -> {
-					Integer id = row.get(0, Integer.class);
-					Integer number = row.get(1, Integer.class);
-					return new World(id, number);
-				}))).subscribe(world -> async.complete(() -> {
-					response.send(world);
-				}), handleError(async));
+	public void db(AsynchronousFlow async, Pool pool, ObjectResponse<World> response) throws SQLException {
+		Future<World> future = pool.withConnection((connection) -> {
+			return connection.preparedQuery("SELECT ID, RANDOMNUMBER FROM WORLD WHERE ID=$1")
+					.execute(Tuple.of(ThreadLocalRandom.current().nextInt(1, 10001))).map((rowSet) -> {
+						RowIterator<Row> rows = rowSet.iterator();
+						if (!rows.hasNext()) {
+							return null;
+						}
+						Row row = rows.next();
+						return new World(row.getInteger(0), row.getInteger(1));
+					});
+		});
+		complete(async, future, (world) -> response.send(world));
 	}
 
 	// ========== QUERIES ==================
 
-	@FlowInterface
-	public static interface QueriesFlows {
-		void queriesService(FlowCallback callback);
-	}
-
-	public void queries(QueriesFlows flows) {
-		flows.queriesService(callback);
-	}
-
-	public void queriesService(@HttpQueryParameter("queries") String queries, AsynchronousFlow async,
-			R2dbcSource source, ObjectResponse<List<World>> response) {
+	public void queries(@HttpQueryParameter("queries") String queries, AsynchronousFlow async, Pool pool,
+			ObjectResponse<List<World>> response) {
 		int queryCount = getQueryCount(queries);
-		source.getConnection().flatMap(connection -> {
-			return Flux.range(1, queryCount)
-					.flatMap(index -> connection.createStatement("SELECT ID, RANDOMNUMBER FROM WORLD WHERE ID = $1")
-							.bind(0, ThreadLocalRandom.current().nextInt(1, 10001)).execute())
-					.flatMap(result -> Flux.from(result.map((row, metadata) -> {
-						Integer id = row.get(0, Integer.class);
-						Integer number = row.get(1, Integer.class);
-						return new World(id, number);
-					}))).collectList();
-		}).subscribe(worlds -> async.complete(() -> {
-			response.send(worlds);
-		}), handleError(async));
+		Future<CompositeFuture> future = pool.withConnection((connection) -> {
+			@SuppressWarnings("rawtypes")
+			List<Future> futures = new ArrayList<>(queryCount);
+			for (int i = 0; i < queryCount; i++) {
+				futures.add(connection.preparedQuery("SELECT ID, RANDOMNUMBER FROM WORLD WHERE ID=$1")
+						.execute(Tuple.of(ThreadLocalRandom.current().nextInt(1, 10001))).map((rowSet) -> {
+							RowIterator<Row> rows = rowSet.iterator();
+							if (!rows.hasNext()) {
+								return null;
+							}
+							Row row = rows.next();
+							return new World(row.getInteger(0), row.getInteger(1));
+						}));
+			}
+			return CompositeFuture.all(futures);
+		});
+		complete(async, future, (worlds) -> response.send(worlds.list()));
 	}
 
 	// =========== UPDATES ===================
 
-	@FlowInterface
-	public static interface UpdateFlows {
-		void updateService(FlowCallback callback);
-	}
-
-	public void update(UpdateFlows flows) {
-		flows.updateService(callback);
-	}
-
-	public void updateService(@HttpQueryParameter("queries") String queries, AsynchronousFlow async, R2dbcSource source,
+	public void update(@HttpQueryParameter("queries") String queries, AsynchronousFlow async, Pool pool,
 			ObjectResponse<List<World>> response) {
 		int queryCount = getQueryCount(queries);
-		source.getConnection().flatMap(connection -> {
-			return Flux.range(1, queryCount)
-					.flatMap(index -> connection.createStatement("SELECT ID, RANDOMNUMBER FROM WORLD WHERE ID = $1")
-							.bind(0, ThreadLocalRandom.current().nextInt(1, 10001)).execute())
-					.flatMap(result -> Flux.from(result.map((row, metadata) -> {
-						Integer id = row.get(0, Integer.class);
-						Integer number = row.get(1, Integer.class);
-						return new World(id, number);
-					}))).collectList().flatMap(worlds -> {
-						Collections.sort(worlds, (a, b) -> a.id - b.id);
-						Batch batch = connection.createBatch();
-						for (World world : worlds) {
-							world.randomNumber = ThreadLocalRandom.current().nextInt(1, 10001);
-							batch.add("UPDATE WORLD SET RANDOMNUMBER = " + world.randomNumber + " WHERE ID = "
-									+ world.id);
-						}
-						return Mono.from(batch.execute()).map((result) -> worlds);
-					});
-		}).subscribe(worlds -> async.complete(() -> {
-			response.send(worlds);
-		}), handleError(async));
+		Future<List<World>> future = pool.withConnection((connection) -> {
+			@SuppressWarnings("rawtypes")
+			List<Future> futures = new ArrayList<>(queryCount);
+
+			// Run queries to get the worlds
+			for (int i = 0; i < queryCount; i++) {
+				futures.add(connection.preparedQuery("SELECT ID, RANDOMNUMBER FROM WORLD WHERE ID=$1")
+						.execute(Tuple.of(ThreadLocalRandom.current().nextInt(1, 10001))).map((rowSet) -> {
+							RowIterator<Row> rows = rowSet.iterator();
+							if (!rows.hasNext()) {
+								return null;
+							}
+							Row row = rows.next();
+
+							// Ensure change to random number to trigger update
+							int previousRandomNumber = row.getInteger(1);
+							int newRandomNumber;
+							do {
+								newRandomNumber = ThreadLocalRandom.current().nextInt(1, 10001);
+							} while (previousRandomNumber == newRandomNumber);
+
+							return new World(row.getInteger(0), newRandomNumber);
+						}));
+			}
+			return CompositeFuture.all(futures).flatMap((compositeFuture) -> {
+				List<World> worlds = compositeFuture.list();
+
+				// Sort worlds to avoid deadlocks on updates
+				Collections.sort(worlds, (a, b) -> a.id - b.id);
+
+				// All worlds obtained, so run update
+				List<Tuple> batch = new ArrayList<>(queryCount);
+				for (World update : worlds) {
+					batch.add(Tuple.of(update.randomNumber, update.id));
+				}
+				return connection.preparedQuery("UPDATE world SET randomnumber=$1 WHERE id=$2").executeBatch(batch)
+						.map((updates) -> worlds);
+			});
+		});
+		complete(async, future, (worlds) -> response.send(worlds));
 	}
 
 	// =========== FORTUNES ==================
@@ -204,25 +181,19 @@ public class Logic {
 		private String message;
 	}
 
-	@FlowInterface
-	public static interface FortunesFlows {
-		void fortunesService(FlowCallback callback);
-	}
+	public void fortunes(AsynchronousFlow async, Pool pool, ServerHttpConnection httpConnection) {
+		Future<RowSet<Row>> future = pool.withConnection((connection) -> {
+			return connection.preparedQuery("SELECT ID, MESSAGE FROM FORTUNE").execute();
+		});
+		complete(async, future, (rowSet) -> {
 
-	public void fortunes(FortunesFlows flows) {
-		flows.fortunesService(callback);
-	}
-
-	public void fortunesService(AsynchronousFlow async, R2dbcSource source, ServerHttpConnection httpConnection)
-			throws IOException, SQLException {
-		source.getConnection().flatMap(connection -> {
-			return Flux.from(connection.createStatement("SELECT ID, MESSAGE FROM FORTUNE").execute())
-					.flatMap(result -> Flux.from(result.map((row, metadata) -> {
-						Integer id = row.get(0, Integer.class);
-						String message = row.get(1, String.class);
-						return new Fortune(id, message);
-					}))).collectList();
-		}).subscribe(fortunes -> async.complete(() -> {
+			// Obtain the fortunes
+			List<Fortune> fortunes = new ArrayList<>(16);
+			RowIterator<Row> rows = rowSet.iterator();
+			while (rows.hasNext()) {
+				Row row = rows.next();
+				fortunes.add(new Fortune(row.getInteger(0), row.getString(1)));
+			}
 
 			// Additional fortunes
 			fortunes.add(new Fortune(0, "Additional fortune added at request time."));
@@ -232,8 +203,7 @@ public class Logic {
 			HttpResponse response = httpConnection.getResponse();
 			response.setContentType(TEXT_HTML, null);
 			this.fortuneMustache.execute(response.getEntityWriter(), fortunes);
-
-		}), handleError(async));
+		});
 	}
 
 	// =========== helper ===================
@@ -247,12 +217,20 @@ public class Logic {
 		}
 	}
 
-	private static Consumer<Throwable> handleError(AsynchronousFlow async) {
-		return (error) -> async.complete(() -> {
-			try {
-				throw error;
-			} catch (R2dbcTransientResourceException | AsynchronousFlowTimedOutEscalation overloadEx) {
-				throw new HttpException(HttpStatus.SERVICE_UNAVAILABLE);
+	@FunctionalInterface
+	private static interface Completion<T> {
+		void complete(T result) throws Exception;
+	}
+
+	private static <T> void complete(AsynchronousFlow async, Future<T> future, Completion<T> writeResponse) {
+		future.onComplete(result -> {
+			if (result.failed()) {
+				async.complete(() -> {
+					result.cause().printStackTrace();
+					throw result.cause();
+				});
+			} else {
+				async.complete(() -> writeResponse.complete(result.result()));
 			}
 		});
 	}

@@ -7,5 +7,5 @@ Avram.configure do |settings|
 
   # In production, allow lazy loading (N+1).
   # In development and test, raise an error if you forget to preload associations
-  settings.lazy_load_enabled = Lucky::Env.production?
+  settings.lazy_load_enabled = false
 end

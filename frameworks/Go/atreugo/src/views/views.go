@@ -139,7 +139,7 @@ func Updates(ctx *atreugo.RequestCtx) error {
 		return worlds.W[i].ID < worlds.W[j].ID
 	})
 
-	batch := &pgx.Batch{}
+	batch := new(pgx.Batch)
 
 	for i := 0; i < queries; i++ {
 		w := &worlds.W[i]

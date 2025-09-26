@@ -1,0 +1,5 @@
+gunicorn
+SQLAlchemy[postgresql]
+pyramid
+pyramid_chameleon
+orjson

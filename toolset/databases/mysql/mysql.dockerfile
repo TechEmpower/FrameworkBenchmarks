@@ -5,7 +5,7 @@ ADD my.cnf my.cnf
 ADD mysql.list mysql.list
 
 RUN cp mysql.list /etc/apt/sources.list.d/
-RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 8C718D3B5072E1F5
+RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 467B942D3A79BD29
 
 RUN apt-get update > /dev/null
 RUN apt-get install -yqq locales > /dev/null
@@ -32,15 +32,12 @@ RUN cp -R -p /var/lib/mysql /ssd/
 RUN cp -R -p /var/log/mysql /ssd/log
 RUN mkdir -p /var/run/mysqld
 
-# It may seem weird that we call `service mysql start` several times, but the RUN
-# directive is a 1-time operation for building this image. Subsequent RUN calls
-# do not see running processes from prior RUN calls; therefor, each command here
-# that relies on the mysql server running will explicitly start the server and
-# perform the work required.
 RUN chown -R mysql:mysql /var/lib/mysql /var/log/mysql /var/run/mysqld /ssd && \
-    mysqld & \
-    until mysql -uroot -psecret -e "exit"; do sleep 1; done && \
+    (mysqld &) && \
+    until mysqladmin -uroot -psecret ping; do sleep 1; done && \
     mysqladmin -uroot -psecret flush-hosts && \
-    mysql -uroot -psecret < create.sql
+    mysql -uroot -psecret < create.sql && \
+    mysqladmin -uroot -psecret shutdown && \
+    chown -R mysql:mysql /var/lib/mysql /var/log/mysql /var/run/mysqld /ssd
 
-CMD chown -R mysql:mysql /var/lib/mysql /var/log/mysql /var/run/mysqld /ssd && mysqld
+CMD ["mysqld"]

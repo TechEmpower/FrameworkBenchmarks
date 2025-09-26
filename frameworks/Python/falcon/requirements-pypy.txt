@@ -1,7 +1,5 @@
-falcon==1.4.1
-greenlet==0.4.14
-gunicorn==19.9.0
-python-mimeparse==1.6.0
-readline==6.2.4.1
-six==1.11.0
-tornado==4.5.3
+falcon==3.0.1
+gunicorn==20.1.0
+jinja2==3.0.3
+pony==0.7.14
+psycopg2cffi==2.9.0; implementation_name=='pypy'

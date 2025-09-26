@@ -18,7 +18,7 @@ namespace PlatformBenchmarks
         public void Dispose()
         {
 
-            System.Buffers.ArrayPool<byte>.Shared.Return(Data.Array);
+            //System.Buffers.ArrayPool<byte>.Shared.Return(Data.Array);
         }
 
         public string QueryString { get; set; }

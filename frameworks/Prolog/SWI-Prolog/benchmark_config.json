@@ -4,13 +4,18 @@
 		"default": {
 			"json_url": "/json",
 			"plaintext_url": "/plaintext",
+			"db_url": "/db",
+			"query_url": "/queries?queries=",
+      		"fortune_url": "/fortunes",
+      		"update_url": "/updates?queries=",
+			"cached_query_url": "/cached-worlds?queries=",
 			"port": 8080,
 			"approach": "Realistic",
 			"classification": "None",
-			"database": "None",
+			"database": "Postgres",
 			"framework": "SWI-Prolog",
 			"language": "Prolog",
-			"orm": "None",
+			"orm": "Raw",
 			"platform": "None",
 			"webserver": "SWI-Prolog",
 			"os": "Linux",
@@ -22,4 +27,3 @@
 		}
 	}]
 }
-
