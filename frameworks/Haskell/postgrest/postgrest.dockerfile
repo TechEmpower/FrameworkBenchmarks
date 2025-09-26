@@ -23,12 +23,10 @@ ENV PGRST_MAX_ROWS=
 ENV PGRST_PRE_REQUEST=
 ENV PGRST_ROLE_CLAIM_KEY=.role
 ENV PGRST_ROOT_SPEC=
-ENV PGRST_RAW_MEDIA_TYPES=
 
 ENV PGRST_DB_URI=postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world
 ENV PGRST_DB_SCHEMA=public
 ENV PGRST_DB_ANON_ROLE=benchmarkdbuser
-ENV PGRST_RAW_MEDIA_TYPES="text/html, text/plain"
 ENV PGRST_DB_POOL=64
 RUN mkdir /app
 COPY src /app
