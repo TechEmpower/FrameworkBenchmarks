@@ -1,14 +1,14 @@
-package io.edap.http;
+package io.edapx.http;
 
 import io.edap.http.model.Message;
-import io.edap.Edap;
-import io.edap.http.server.HttpServer;
-import io.edap.http.server.HttpServerBuilder;
+import io.edap.x.Edap;
+import io.edap.x.http.HttpServer;
+import io.edap.x.http.HttpServerBuilder;
 
 import java.io.IOException;
 
-import static io.edap.http.header.ContentTypeHeader.JSON;
-import static io.edap.http.header.ContentTypeHeader.PLAIN;
+import static io.edap.x.http.header.ContentType.JSON;
+import static io.edap.x.http.header.ContentType.PLAIN;
 
 public class Bootstrap {
 

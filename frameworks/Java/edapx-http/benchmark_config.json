@@ -1,43 +1,44 @@
 {
-  "framework": "firenio",
-  "tests": [{
+  "framework": "edapx-http",
+  "tests": [
+    {
       "default": {
-        
         "plaintext_url": "/plaintext",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Platform",
-        "database": "None",
-        "framework": "None",
-        "language": "Java",
-        "flavor": "None",
-        "orm": "None",
-        "platform": "firenio",
-        "webserver": "None",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "firenio",
-        "notes": "",
-        "versus": "firenio"
-      },
-      "http-lite": {
         "json_url": "/json",
-        
         "port": 8080,
         "approach": "Realistic",
         "classification": "Platform",
-        "database": "None",
+        "database": "Postgres",
         "framework": "None",
         "language": "Java",
         "flavor": "None",
-        "orm": "None",
-        "platform": "firenio",
+        "orm": "Raw",
+        "platform": "edap",
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "firenio-http-lite",
+        "display_name": "edapx-http",
         "notes": "",
-        "versus": "firenio-http-lite"
+        "versus": "edapx-http"
+      },
+      "fast":{
+        "plaintext_url": "/plaintext",
+        "json_url": "/json",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "Postgres",
+        "framework": "None",
+        "language": "Java",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "edap",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "edapx-http-fast",
+        "notes": "",
+        "versus": "edapx-http-fast"
       }
     }
   ]
