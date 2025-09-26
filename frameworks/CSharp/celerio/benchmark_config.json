@@ -1,0 +1,26 @@
+{
+  "framework": "celerio",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "None",
+        "framework": "Celerio",
+        "language": "CSharp",
+        "flavor": "None",
+        "orm": "None",
+        "platform": ".NET",
+        "webserver": "Celerio",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Celerio",
+        "notes": "",
+        "versus": "aspcore-mvc"
+      }
+    }
+  ]
+}
