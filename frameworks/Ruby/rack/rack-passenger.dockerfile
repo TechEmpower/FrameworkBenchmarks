@@ -9,7 +9,7 @@ ENV LD_PRELOAD=libjemalloc.so.2
 
 WORKDIR /rack
 
-COPY Gemfile ./
+COPY Gemfile* ./
 
 ENV BUNDLE_FORCE_RUBY_PLATFORM=true
 RUN bundle config set with 'passenger'
