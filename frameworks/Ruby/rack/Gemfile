@@ -16,6 +16,7 @@ gem 'tzinfo-data', '1.2023.3'
 
 group :falcon, optional: true do
   gem 'falcon', '~> 0.47', platforms: %i[ruby windows]
+  gem 'protocol-http1', git: 'https://github.com/socketry/protocol-http1', ref: 'read_line-error-handling'
 end
 
 group :iodine, optional: true do
