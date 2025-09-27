@@ -9,8 +9,8 @@
     "license": "MIT",
     "require": {
         "php": "^8.0",
-        "laravel/framework": "^9",
-        "hhxsv5/laravel-s": "~3.7.0"
+        "laravel/framework": "^12",
+        "hhxsv5/laravel-s": "~3.8.5"
     },
     "config": {
         "optimize-autoloader": true,
