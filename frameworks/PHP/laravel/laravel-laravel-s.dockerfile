@@ -2,7 +2,7 @@ FROM phpswoole/swoole:php8.4
 
 RUN apt-get -y update > /dev/null \
     && apt-get install -y libicu-dev > /dev/null \
-    && docker-php-ext-configure intl \
+    && docker-php-ext-configure intl  > /dev/null \
     && docker-php-ext-install intl
 
 RUN docker-php-ext-install pcntl opcache curl > /dev/null
