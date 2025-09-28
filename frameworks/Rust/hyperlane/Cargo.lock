@@ -555,9 +555,9 @@ checksum = "c10a92fc539f5fc3b2c5c3de4255e4f62f2768c9cd5a0e7879edf3d3b3189186"
 
 [[package]]
 name = "http-type"
-version = "5.4.3"
+version = "5.4.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "30aba9d0d56c9b62634b3074d8450d164f9f99b829df1942884491654368ad92"
+checksum = "063a939c0353308b3ea2b27c676b8dcb5efe121fe34899de7bc1fe5e8944bb77"
 dependencies = [
  "hex",
  "http-compress",
@@ -573,9 +573,9 @@ dependencies = [
 
 [[package]]
 name = "hyperlane"
-version = "9.4.4"
+version = "9.4.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5be294cf7ebe0164f6bff1d1b5ea1a26ce4b1b5d98c84b7013ba886c777eb8bd"
+checksum = "e132d66f36a5905f3594effaeb74aaa5bacdfb4c6e059db9676dbe52f093f90e"
 dependencies = [
  "http-type",
  "inventory",
@@ -1127,9 +1127,9 @@ dependencies = [
 
 [[package]]
 name = "regex"
-version = "1.11.2"
+version = "1.11.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "23d7fd106d8c02486a8d64e778353d1cffe08ce79ac2e82f540c86d0facf6912"
+checksum = "8b5288124840bee7b386bc413c487869b360b2b4ec421ea56425128692f2a82c"
 dependencies = [
  "aho-corasick",
  "memchr",
@@ -1139,9 +1139,9 @@ dependencies = [
 
 [[package]]
 name = "regex-automata"
-version = "0.4.9"
+version = "0.4.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "809e8dc61f6de73b46c85f4c96486310fe304c434cfa43669d7b40f711150908"
+checksum = "833eb9ce86d40ef33cb1306d8accf7bc8ec2bfea4355cbdebb3df68b40925cad"
 dependencies = [
  "aho-corasick",
  "memchr",
@@ -1200,9 +1200,9 @@ checksum = "94143f37725109f92c262ed2cf5e59bce7498c01bcc1502d7b9afe439a4e9f49"
 
 [[package]]
 name = "serde"
-version = "1.0.223"
+version = "1.0.228"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a505d71960adde88e293da5cb5eda57093379f64e61cf77bf0e6a63af07a7bac"
+checksum = "9a8e94ea7f378bd32cbbd37198a4a91436180c5bb472411e48b5ec2e2124ae9e"
 dependencies = [
  "serde_core",
  "serde_derive",
@@ -1222,18 +1222,18 @@ dependencies = [
 
 [[package]]
 name = "serde_core"
-version = "1.0.223"
+version = "1.0.228"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "20f57cbd357666aa7b3ac84a90b4ea328f1d4ddb6772b430caa5d9e1309bb9e9"
+checksum = "41d385c7d4ca58e59fc732af25c3983b67ac852c1a25000afe1175de458b67ad"
 dependencies = [
  "serde_derive",
 ]
 
 [[package]]
 name = "serde_derive"
-version = "1.0.223"
+version = "1.0.228"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3d428d07faf17e306e699ec1e91996e5a165ba5d6bce5b5155173e91a8a01a56"
+checksum = "d540f220d3187173da220f885ab66608367b6574e925011a9353e4badda91d79"
 dependencies = [
  "proc-macro2",
  "quote",
