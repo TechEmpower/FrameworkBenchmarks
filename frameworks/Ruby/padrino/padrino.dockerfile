@@ -7,6 +7,7 @@ COPY models models
 COPY .components .components
 COPY config.ru config.ru
 COPY Gemfile Gemfile
+COPY Gemfile.lock Gemfile.lock
 COPY Rakefile Rakefile
 
 RUN bundle config set with 'puma'

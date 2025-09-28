@@ -4,7 +4,7 @@ RUN apt-get update -y && apt-get install netbase -y
 
 WORKDIR /rack
 
-COPY Gemfile  ./
+COPY Gemfile*  ./
 
 RUN bundle config set with 'puma'
 RUN bundle install --jobs=8

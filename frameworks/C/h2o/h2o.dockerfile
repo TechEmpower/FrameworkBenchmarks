@@ -4,50 +4,55 @@ ARG H2O_APP_PREFIX=/opt/h2o-app
 
 FROM "ubuntu:${UBUNTU_VERSION}" AS compile
 
+RUN echo "[timing] Installing system packages: $(date)"
 ARG DEBIAN_FRONTEND=noninteractive
-RUN apt-get -yqq update && \
-    apt-get -yqq install \
+RUN apt-get install \
+      --no-install-recommends \
+      -qqUy \
       autoconf \
+      automake \
       bison \
+      bpftool \
+      clang \
       cmake \
       curl \
       flex \
-      g++ \
-      libbpfcc-dev \
+      gcc \
+      libbpf-dev \
       libbrotli-dev \
       libcap-dev \
       libnuma-dev \
       libpq-dev \
       libssl-dev \
+      libstdc++-15-dev \
       libtool \
+      liburing-dev \
       libuv1-dev \
       libwslay-dev \
       libyajl-dev \
       libz-dev \
-      llvm-dev \
       make \
       ninja-build \
       pkg-config \
-      rsync \
       ruby \
       systemtap-sdt-dev
 
-ARG H2O_VERSION=c54c63285b52421da2782f028022647fc2ea3dd1
+RUN echo "[timing] Building H2O: $(date)"
+ARG H2O_VERSION=3b9b6a53cac8bcc6a25fb28df81ad295fc5f9402
 
 WORKDIR /tmp/h2o-build
 RUN curl -LSs "https://github.com/h2o/h2o/archive/${H2O_VERSION}.tar.gz" | \
       tar --strip-components=1 -xz && \
     cmake \
       -B build \
-      -DCMAKE_AR=/usr/bin/gcc-ar \
       -DCMAKE_C_FLAGS="-flto=auto -march=native -mtune=native" \
-      -DCMAKE_RANLIB=/usr/bin/gcc-ranlib \
       -DWITH_MRUBY=on \
       -G Ninja \
       -S . && \
     cmake --build build -j && \
     cmake --install build
 
+RUN echo "[timing] Building mustache-c: $(date)"
 ARG MUSTACHE_C_REVISION=7fe52392879d0188c172d94bb4fde7c513d6b929
 
 WORKDIR /tmp/mustache-c-build
@@ -57,6 +62,7 @@ RUN curl -LSs "https://github.com/x86-64/mustache-c/archive/${MUSTACHE_C_REVISIO
       ./autogen.sh && \
     make -j "$(nproc)" install
 
+RUN echo "[timing] Building h2o-app: $(date)"
 ARG H2O_APP_PREFIX
 WORKDIR /tmp/build
 COPY CMakeLists.txt ../
@@ -70,16 +76,21 @@ RUN cmake \
       -S .. && \
     cmake --build . -j && \
     cmake --install .
+RUN echo "[timing] Finished compiling: $(date)"
 
 FROM "ubuntu:${UBUNTU_VERSION}"
 
+RUN echo "[timing] Installing final system packages: $(date)"
 ARG DEBIAN_FRONTEND=noninteractive
-RUN apt-get -yqq update && \
-    apt-get -yqq install \
+RUN apt-get install \
+      --no-install-recommends \
+      -qqUy \
+      libbpf1 \
       libnuma1 \
       libpq5 \
-      libyajl2 && \
-    apt-get -yqq upgrade
+      liburing2 \
+      libyajl2
+RUN echo "[timing] Copying h2o-app to its final location: $(date)"
 ARG H2O_APP_PREFIX
 COPY --from=compile "${H2O_APP_PREFIX}" "${H2O_APP_PREFIX}/"
 COPY --from=compile /usr/local/lib/libmustache_c.so "${H2O_APP_PREFIX}/lib/"
@@ -88,6 +99,7 @@ EXPOSE 8080
 ARG BENCHMARK_ENV
 ARG TFB_TEST_DATABASE
 ARG TFB_TEST_NAME
+RUN echo "[timing] Running h2o-app: $(date)"
 
 CMD ["taskset", \
      "-c", \

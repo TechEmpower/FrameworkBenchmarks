@@ -15,6 +15,7 @@ RUN bundle install --jobs=4 --gemfile=/sinatra/Gemfile
 
 ENV DBTYPE=mysql
 
+ENV WEB_CONCURRENCY=auto
 EXPOSE 8080
 
 CMD bundle exec puma -C config/mri_puma.rb -b tcp://0.0.0.0:8080 -e production

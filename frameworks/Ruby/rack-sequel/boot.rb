@@ -21,8 +21,10 @@ def connect(dbtype)
 
   # Determine threading/thread pool size and timeout
   if defined?(Puma) && (threads = Puma.cli_config.options.fetch(:max_threads)) > 1
-    opts[:max_connections] = (2 * Math.log(threads)).floor
+    opts[:max_connections] = threads
     opts[:pool_timeout] = 10
+  else
+    opts[:max_connections] = 512
   end
 
   Sequel.connect \
@@ -39,16 +41,11 @@ DB = connect ENV.fetch('DBTYPE').to_sym
 
 # Define ORM models
 class World < Sequel::Model(:World)
-  BY_ID = naked.where(id: :$id).prepare(:first, :world_by_id)
-  UPDATE = where(id: :$id).prepare(:update, :world_update, randomnumber: :$randomnumber)
-
   def_column_alias(:randomnumber, :randomNumber) if DB.database_type == :mysql
 
   def self.batch_update(worlds)
     if DB.database_type == :mysql
-      worlds.each do |world|
-        UPDATE.(id: world[:id], randomnumber: world[:randomnumber])
-      end
+      worlds.map(&:save_changes)
     else
       ids = []
       sql = String.new("UPDATE world SET randomnumber = CASE id ")
