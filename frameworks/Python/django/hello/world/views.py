@@ -3,7 +3,7 @@ from operator import itemgetter
 from functools import partial
 from orjson import dumps
 
-from django.http import HttpResponse
+from django.http import HttpResponse, StreamingHttpResponse
 from django.shortcuts import render
 
 from world.models import World, Fortune
@@ -25,7 +25,7 @@ def _get_queries(request):
 
 
 def plaintext(request):
-    return HttpResponse("Hello, World!", content_type="text/plain")
+    return StreamingHttpResponse("Hello, World!", content_type="text/plain")
 
 
 def json(request):
