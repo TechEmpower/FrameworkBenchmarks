@@ -1,7 +1,7 @@
 import random
 from operator import itemgetter
 from functools import partial
-from ujson import dumps as uj_dumps
+from orjson import dumps
 
 from django.http import HttpResponse
 from django.shortcuts import render
@@ -30,13 +30,13 @@ def plaintext(request):
 
 def json(request):
     return HttpResponse(
-        uj_dumps({"message": "Hello, World!"}), content_type="application/json"
+        dumps({"message": "Hello, World!"}), content_type="application/json"
     )
 
 
 def db(request):
     r = _random_int()
-    world = uj_dumps({"id": r, "randomNumber": World.objects.get(id=r).randomnumber})
+    world = dumps({"id": r, "randomNumber": World.objects.get(id=r).randomnumber})
     return HttpResponse(world, content_type="application/json")
 
 
@@ -49,7 +49,7 @@ def dbs(request):
 
     worlds = tuple(map(caller, range(queries)))
 
-    return HttpResponse(uj_dumps(worlds), content_type="application/json")
+    return HttpResponse(dumps(worlds), content_type="application/json")
 
 
 def fortunes(request):
@@ -71,4 +71,4 @@ def update(request):
 
     worlds = tuple(map(caller, range(queries)))
 
-    return HttpResponse(uj_dumps(worlds), content_type="application/json")
+    return HttpResponse(dumps(worlds), content_type="application/json")
