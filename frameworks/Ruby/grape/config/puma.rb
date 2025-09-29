@@ -1,11 +1,9 @@
 require_relative 'auto_tune'
 
 # FWBM only... use the puma_auto_tune gem in production!
-num_workers, num_threads = auto_tune
+_, num_threads = auto_tune
 
-workers num_workers
-
-threads 3, 3
+threads num_threads
 
 # Use the `preload_app!` method when specifying a `workers` number.
 # This directive tells Puma to first boot the application and load code

@@ -15,7 +15,7 @@ ENV LD_PRELOAD=libjemalloc.so.2
 
 WORKDIR /rack
 
-COPY Gemfile app.rb ./
+COPY Gemfile* app.rb ./
 
 RUN bundle install --jobs=4
 
