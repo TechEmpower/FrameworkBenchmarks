@@ -13,6 +13,7 @@ WORKDIR /sinatra-sequel
 ENV BUNDLE_WITH=mysql:puma
 RUN bundle install --jobs=4 --gemfile=/sinatra-sequel/Gemfile
 
+ENV WEB_CONCURRENCY=auto
 ENV DBTYPE=mysql
 
 EXPOSE 8080
