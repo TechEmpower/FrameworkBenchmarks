@@ -6,6 +6,7 @@ Benchmark for [khttp](https://github.com/karlivory/khttp) - a low-level HTTP/1.1
 
 * [JSON](./src/main.rs)
 * [PLAINTEXT](./src/main.rs)
+* [FORTUNES](./src/main.rs)
 
 ## Test URLs
 
@@ -16,3 +17,7 @@ http://localhost:8080/json
 ### PLAINTEXT
 
 http://localhost:8080/plaintext
+
+### FORTUNES
+
+http://localhost:8080/fortunes
