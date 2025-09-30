@@ -1,9 +1,9 @@
-FROM pypy:3.9-bullseye
+FROM pypy:3.13-bullseye
 
 ADD ./ /django
 
 WORKDIR /django
-RUN apt-get update; apt-get install libuv1 -y
+RUN apt-get update; apt-get install libuv1 zlib1g -y
 RUN pip install -r /django/requirements-socketify.txt
 
 EXPOSE 8080
