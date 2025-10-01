@@ -1,4 +1,4 @@
-FROM pypy:3.13-bullseye
+FROM pypy:3.11-slim
 
 ADD ./ /django
 
