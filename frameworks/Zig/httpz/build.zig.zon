@@ -1,4 +1,4 @@
-.{ .name = "Zap testing", .version = "0.1.1", .paths = .{
+.{ .name = .httpz_testing, .version = "0.2.0", .fingerprint = 0x586e7c8a6a8317c3, .paths = .{
     "build.zig",
     "build.zig.zon",
     "src",
