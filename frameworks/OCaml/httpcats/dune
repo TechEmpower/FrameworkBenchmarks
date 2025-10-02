@@ -1,0 +1,3 @@
+(executable
+ (name server)
+ (libraries httpcats yojson))
