@@ -1,15 +1,12 @@
-use std::convert::Infallible;
-
-use http::header::{CONTENT_LENGTH, CONTENT_TYPE, SERVER};
+use http::header::{CONTENT_LENGTH, CONTENT_TYPE};
 use http::Response;
-use http_body_util::combinators::BoxBody;
-use http_body_util::{BodyExt, Full};
+use http_body_util::Full;
 use hyper::body::Bytes;
 use serde::Serialize;
 use tokio_postgres::Row;
 
 use crate::db::POOL;
-use crate::{Error, Result, APPLICATION_JSON, SERVER_HEADER};
+use crate::{Error, Result, APPLICATION_JSON};
 
 static QUERY: &str = "SELECT id, randomnumber FROM world WHERE id = $1";
 
@@ -28,16 +25,15 @@ impl From<Row> for World {
     }
 }
 
-pub async fn get() -> Result<Response<BoxBody<Bytes, Infallible>>> {
+pub async fn get() -> Result<Response<Full<Bytes>>> {
     let id = fastrand::i32(1..10_000);
     let world = query_world(id).await?;
-    let json = serde_json::to_vec(&world)?;
-
+    let content = serde_json::to_vec(&world)?;
+    
     Response::builder()
-        .header(SERVER, SERVER_HEADER.clone())
         .header(CONTENT_TYPE, APPLICATION_JSON.clone())
-        .header(CONTENT_LENGTH, json.len())
-        .body(Full::from(json).boxed())
+        .header(CONTENT_LENGTH, content.len())
+        .body(content.into())
         .map_err(Error::from)
 }
 
