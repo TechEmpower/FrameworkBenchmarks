@@ -1,15 +1,15 @@
 {
-  "framework": "pico.v",
+  "framework": "picoev",
   "tests": [
     {
       "default": {
         "json_url": "/json",
         "plaintext_url": "/plaintext",
-        "port": 8088,
+        "port": 8080,
         "approach": "Realistic",
         "classification": "Micro",
         "database": "None",
-        "framework": "pico.v",
+        "framework": "picoev",
         "language": "V",
         "flavor": "None",
         "orm": "None",
@@ -17,18 +17,18 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "pico.v",
+        "display_name": "picoev",
         "notes": "",
         "versus": "None"
       },
       "optimized": {
         "json_url": "/json",
         "plaintext_url": "/plaintext",
-        "port": 8088,
+        "port": 8080,
         "approach": "Realistic",
         "classification": "Micro",
         "database": "None",
-        "framework": "pico.v",
+        "framework": "picoev",
         "language": "V",
         "flavor": "None",
         "orm": "None",
@@ -36,7 +36,7 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "pico.v",
+        "display_name": "picoev optimized",
         "notes": "",
         "versus": "None"
       }
