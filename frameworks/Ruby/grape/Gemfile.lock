@@ -63,7 +63,7 @@ GEM
     nio4r (2.7.4)
     puma (6.6.0)
       nio4r (~> 2.0)
-    rack (3.2.0)
+    rack (3.2.2)
     raindrops (0.20.1)
     ruby2_keywords (0.0.5)
     securerandom (0.4.1)
