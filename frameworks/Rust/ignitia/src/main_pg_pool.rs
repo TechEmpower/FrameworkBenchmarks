@@ -2,15 +2,14 @@ mod common;
 mod pg_pool;
 
 use common::{
-    get_env, random_id, random_ids,
-    utils::{parse_params, Params},
-    SELECT_ALL_FORTUNES, SELECT_WORLD_BY_ID, UPDATE_WORLDS,
+    SELECT_ALL_FORTUNES, SELECT_WORLD_BY_ID, UPDATE_WORLDS, get_env, random_id, random_ids,
+    utils::{Params, parse_params},
 };
-use futures_util::{stream::FuturesUnordered, TryStreamExt};
+use futures_util::{TryStreamExt, stream::FuturesUnordered};
 use ignitia::{Query, Response, Router, Server, State};
 use pg_pool::database::{create_pool, fetch_all_fortunes, fetch_world_by_id};
 use pg_pool::models::{Fortune, World};
-use rand::{rng, rngs::SmallRng, SeedableRng};
+use rand::{SeedableRng, rng, rngs::SmallRng};
 use yarte::Template;
 
 #[derive(Template)]
@@ -26,11 +25,27 @@ async fn db(State(pool): State<deadpool_postgres::Pool>) -> Response {
         Ok(client) => {
             let select = client.prepare_cached(SELECT_WORLD_BY_ID).await.unwrap();
             match fetch_world_by_id(&client, random_id, &select).await {
-                Ok(world) => Response::json(world),
-                Err(_) => Response::internal_error(),
+                Ok(world) => Response::json(world)
+                    .with_header("Server", "Ignitia")
+                    .with_header("Content-Type", "application/json")
+                    .with_header(
+                        "Date",
+                        httpdate::fmt_http_date(std::time::SystemTime::now()),
+                    ),
+                Err(_) => Response::internal_error()
+                    .with_header("Server", "Ignitia")
+                    .with_header(
+                        "Date",
+                        httpdate::fmt_http_date(std::time::SystemTime::now()),
+                    ),
             }
         }
-        Err(_) => Response::internal_error(),
+        Err(_) => Response::internal_error()
+            .with_header("Server", "Ignitia")
+            .with_header(
+                "Date",
+                httpdate::fmt_http_date(std::time::SystemTime::now()),
+            ),
     }
 }
 
@@ -51,11 +66,27 @@ async fn queries(
             }
 
             match future_worlds.try_collect::<Vec<World>>().await {
-                Ok(results) => Response::json(results),
-                Err(_) => Response::internal_error(),
+                Ok(results) => Response::json(results)
+                    .with_header("Server", "Ignitia")
+                    .with_header("Content-Type", "application/json")
+                    .with_header(
+                        "Date",
+                        httpdate::fmt_http_date(std::time::SystemTime::now()),
+                    ),
+                Err(_) => Response::internal_error()
+                    .with_header("Server", "Ignitia")
+                    .with_header(
+                        "Date",
+                        httpdate::fmt_http_date(std::time::SystemTime::now()),
+                    ),
             }
         }
-        Err(_) => Response::internal_error(),
+        Err(_) => Response::internal_error()
+            .with_header("Server", "Ignitia")
+            .with_header(
+                "Date",
+                httpdate::fmt_http_date(std::time::SystemTime::now()),
+            ),
     }
 }
 
@@ -79,11 +110,27 @@ async fn fortunes(State(pool): State<deadpool_postgres::Pool>) -> Response {
                     .call()
                     .expect("error rendering template");
                     Response::html(html)
+                        .with_header("Server", "Ignitia")
+                        .with_header("Content-Type", "text/html; charset=utf-8")
+                        .with_header(
+                            "Date",
+                            httpdate::fmt_http_date(std::time::SystemTime::now()),
+                        )
                 }
-                Err(_) => Response::internal_error(),
+                Err(_) => Response::internal_error()
+                    .with_header("Server", "Ignitia")
+                    .with_header(
+                        "Date",
+                        httpdate::fmt_http_date(std::time::SystemTime::now()),
+                    ),
             }
         }
-        Err(_) => Response::internal_error(),
+        Err(_) => Response::internal_error()
+            .with_header("Server", "Ignitia")
+            .with_header(
+                "Date",
+                httpdate::fmt_http_date(std::time::SystemTime::now()),
+            ),
     }
 }
 
@@ -120,14 +167,35 @@ async fn updates(
                         .collect();
 
                     match client.execute(&update, &[&ids, &nids]).await {
-                        Ok(_) => Response::json(worlds),
-                        Err(_) => Response::internal_error(),
+                        Ok(_) => Response::json(worlds)
+                            .with_header("Server", "Ignitia")
+                            .with_header("Content-Type", "application/json")
+                            .with_header(
+                                "Date",
+                                httpdate::fmt_http_date(std::time::SystemTime::now()),
+                            ),
+                        Err(_) => Response::internal_error()
+                            .with_header("Server", "Ignitia")
+                            .with_header(
+                                "Date",
+                                httpdate::fmt_http_date(std::time::SystemTime::now()),
+                            ),
                     }
                 }
-                Err(_) => Response::internal_error(),
+                Err(_) => Response::internal_error()
+                    .with_header("Server", "Ignitia")
+                    .with_header(
+                        "Date",
+                        httpdate::fmt_http_date(std::time::SystemTime::now()),
+                    ),
             }
         }
-        Err(_) => Response::internal_error(),
+        Err(_) => Response::internal_error()
+            .with_header("Server", "Ignitia")
+            .with_header(
+                "Date",
+                httpdate::fmt_http_date(std::time::SystemTime::now()),
+            ),
     }
 }
 

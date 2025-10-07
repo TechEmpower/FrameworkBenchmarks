@@ -1172,6 +1172,7 @@ dependencies = [
  "dotenv",
  "futures",
  "futures-util",
+ "httpdate",
  "ignitia",
  "mimalloc",
  "mongodb",

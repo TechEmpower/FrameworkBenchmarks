@@ -20,6 +20,7 @@ futures-util = "0.3.31"
 yarte = "0.15.7"
 mimalloc = "0.1.47"
 num_cpus = "1.17.0"
+httpdate = "1.0"
 
 [profile.release]
 lto = "fat"

@@ -20,7 +20,13 @@ pub struct FortunesTemplate<'a> {
 async fn db(State(conn): State<std::sync::Arc<PgConnection>>) -> Response {
     let id = random_id(&mut rng());
     match conn.fetch_world_by_id(id).await {
-        Ok(world) => Response::json(world),
+        Ok(world) => Response::json(world)
+            .with_header("Server", "Ignitia")
+            .with_header("Content-Type", "application/json")
+            .with_header(
+                "Date",
+                httpdate::fmt_http_date(std::time::SystemTime::now()),
+            ),
         Err(_) => Response::internal_error(),
     }
 }
@@ -31,8 +37,16 @@ async fn queries(
 ) -> Response {
     let q = parse_params(params);
     match conn.fetch_random_worlds(q).await {
-        Ok(results) => Response::json(results),
-        Err(_) => Response::internal_error(),
+        Ok(results) => Response::json(results)
+            .with_header("Server", "Ignitia")
+            .with_header("Content-Type", "application/json")
+            .with_header(
+                "Date",
+                httpdate::fmt_http_date(std::time::SystemTime::now()),
+            ),
+        Err(_) => Response::internal_error()
+            .with_header("Server", "Ignitia")
+            .with_header("Date", httpdate::fmt_http_date(std::time::SystemTime::now())),
     }
 }
 
@@ -45,8 +59,16 @@ async fn fortunes(State(conn): State<std::sync::Arc<PgConnection>>) -> Response 
             .call()
             .expect("error rendering template");
             Response::html(html)
+                .with_header("Server", "Ignitia")
+                .with_header("Content-Type", "text/html; charset=utf-8")
+                .with_header(
+                    "Date",
+                    httpdate::fmt_http_date(std::time::SystemTime::now()),
+                )
         }
-        Err(_) => Response::internal_error(),
+        Err(_) => Response::internal_error()
+            .with_header("Server", "Ignitia")
+            .with_header("Date", httpdate::fmt_http_date(std::time::SystemTime::now())),
     }
 }
 
@@ -56,8 +78,16 @@ async fn updates(
 ) -> Response {
     let q = parse_params(params);
     match conn.update_worlds(q).await {
-        Ok(worlds) => Response::json(worlds),
-        Err(_) => Response::internal_error(),
+        Ok(worlds) => Response::json(worlds)
+            .with_header("Server", "Ignitia")
+            .with_header("Content-Type", "application/json")
+            .with_header(
+                "Date",
+                httpdate::fmt_http_date(std::time::SystemTime::now()),
+            ),
+        Err(_) => Response::internal_error()
+            .with_header("Server", "Ignitia")
+            .with_header("Date", httpdate::fmt_http_date(std::time::SystemTime::now())),
     }
 }
 

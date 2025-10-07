@@ -8,13 +8,28 @@ const HELLO_WORLD: &str = "Hello, World!";
 #[inline(always)]
 async fn plaintext() -> Response {
     Response::text(HELLO_WORLD)
+        .with_header("Server", "Ignitia")
+        .with_header("Content-Type", "text/plain")
+        .with_header(
+            "Date",
+            httpdate::fmt_http_date(std::time::SystemTime::now()),
+        )
 }
 
 #[inline(always)]
 async fn json() -> Response {
-    Response::json(Message {
+    // Create new Message object for each request (no caching)
+    let message = Message {
         message: HELLO_WORLD,
-    })
+    };
+
+    Response::json(message)
+        .with_header("Server", "Ignitia")
+        .with_header("Content-Type", "application/json")
+        .with_header(
+            "Date",
+            httpdate::fmt_http_date(std::time::SystemTime::now()),
+        )
 }
 
 #[tokio::main]

@@ -5,15 +5,15 @@ use common::{
     get_env,
     models::{FortuneInfo, World},
     random_id,
-    utils::{parse_params, Params},
+    utils::{Params, parse_params},
 };
 use ignitia::{Query, Response, Router, Server, State};
 use mongo::database::{fetch_fortunes, find_world_by_id, find_worlds, update_worlds};
 use mongodb::{
-    options::{ClientOptions, Compressor},
     Client,
+    options::{ClientOptions, Compressor},
 };
-use rand::{rng, rngs::SmallRng, SeedableRng};
+use rand::{SeedableRng, rng, rngs::SmallRng};
 use std::time::Duration;
 use yarte::Template;
 
@@ -27,8 +27,16 @@ async fn db(State(db): State<mongodb::Database>) -> Response {
     let random_id = random_id(&mut rng());
 
     match find_world_by_id(db, random_id).await {
-        Ok(world) => Response::json(world),
-        Err(_) => Response::internal_error(),
+        Ok(world) => Response::json(world)
+            .with_header("Server", "Ignitia")
+            .with_header("Content-Type", "application/json")
+            .with_header(
+                "Date",
+                httpdate::fmt_http_date(std::time::SystemTime::now()),
+            ),
+        Err(_) => Response::internal_error()
+            .with_header("Server", "Ignitia")
+            .with_header("Date", httpdate::fmt_http_date(std::time::SystemTime::now())),
     }
 }
 
@@ -37,8 +45,16 @@ async fn queries(State(db): State<mongodb::Database>, Query(params): Query<Param
     let mut rng = SmallRng::from_rng(&mut rng());
 
     match find_worlds(db, &mut rng, q).await {
-        Ok(results) => Response::json(results),
-        Err(_) => Response::internal_error(),
+        Ok(results) => Response::json(results)
+            .with_header("Server", "Ignitia")
+            .with_header("Content-Type", "application/json")
+            .with_header(
+                "Date",
+                httpdate::fmt_http_date(std::time::SystemTime::now()),
+            ),
+        Err(_) => Response::internal_error()
+            .with_header("Server", "Ignitia")
+            .with_header("Date", httpdate::fmt_http_date(std::time::SystemTime::now())),
     }
 }
 
@@ -56,11 +72,21 @@ async fn updates(State(db): State<mongodb::Database>, Query(params): Query<Param
             }
 
             match update_worlds(db, updated_worlds.clone()).await {
-                Ok(_) => Response::json(updated_worlds),
-                Err(_) => Response::internal_error(),
+                Ok(_) => Response::json(updated_worlds)
+                    .with_header("Server", "Ignitia")
+                    .with_header("Content-Type", "application/json")
+                    .with_header(
+                        "Date",
+                        httpdate::fmt_http_date(std::time::SystemTime::now()),
+                    ),
+                Err(_) => Response::internal_error()
+                    .with_header("Server", "Ignitia")
+                    .with_header("Date", httpdate::fmt_http_date(std::time::SystemTime::now())),
             }
         }
-        Err(_) => Response::internal_error(),
+        Err(_) => Response::internal_error()
+            .with_header("Server", "Ignitia")
+            .with_header("Date", httpdate::fmt_http_date(std::time::SystemTime::now())),
     }
 }
 
@@ -74,8 +100,16 @@ async fn fortunes(State(db): State<mongodb::Database>) -> Response {
             .expect("error rendering template");
 
             Response::html(html)
+                .with_header("Server", "Ignitia")
+                .with_header("Content-Type", "text/html; charset=utf-8")
+                .with_header(
+                    "Date",
+                    httpdate::fmt_http_date(std::time::SystemTime::now()),
+                )
         }
-        Err(_) => Response::internal_error(),
+        Err(_) => Response::internal_error()
+            .with_header("Server", "Ignitia")
+            .with_header("Date", httpdate::fmt_http_date(std::time::SystemTime::now())),
     }
 }
 
