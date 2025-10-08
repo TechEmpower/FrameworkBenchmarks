@@ -1,3 +1,6 @@
+#[global_allocator]
+static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
+
 use khttp::{Headers, Method::*, RequestContext, ResponseHandle, Server, Status};
 use std::{ffi::CStr, io, ptr};
 use yarte::{Serialize, ywrite_html};
@@ -9,16 +12,6 @@ struct HelloMessage {
 
 fn main() {
     let mut app = Server::builder("0.0.0.0:8080").unwrap();
-
-    app.route(Get, "/plaintext", |_ctx, res| {
-        // headers
-        let mut headers = Headers::new();
-        headers.add(Headers::CONTENT_TYPE, b"text/plain");
-        headers.add("server", b"khttp");
-
-        // response
-        res.ok(&headers, "Hello, World!")
-    });
 
     app.route(Get, "/json", |_ctx, res| {
         // headers
