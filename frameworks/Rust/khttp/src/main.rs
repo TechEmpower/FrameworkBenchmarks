@@ -2,7 +2,7 @@
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
 use khttp::{Headers, Method::*, RequestContext, ResponseHandle, Server, Status};
-use std::{ffi::CStr, io, ptr};
+use std::{ffi::CStr, io, ptr, sync::LazyLock};
 use yarte::{Serialize, ywrite_html};
 
 #[derive(Serialize)]
@@ -10,15 +10,17 @@ struct HelloMessage {
     message: &'static str,
 }
 
+static JSON_HEADERS: LazyLock<Headers<'static>> = LazyLock::new(|| {
+    let mut headers = Headers::new();
+    headers.add(Headers::CONTENT_TYPE, b"application/json");
+    headers.add("server", b"khttp");
+    headers
+});
+
 fn main() {
     let mut app = Server::builder("0.0.0.0:8080").unwrap();
 
     app.route(Get, "/json", |_ctx, res| {
-        // headers
-        let mut headers = Headers::new();
-        headers.add(Headers::CONTENT_TYPE, b"application/json");
-        headers.add("server", b"khttp");
-
         // body
         let msg = HelloMessage {
             message: "Hello, World!",
@@ -27,7 +29,7 @@ fn main() {
         msg.to_bytes_mut(&mut buf);
 
         // response
-        res.ok(&headers, buf)
+        res.ok(&JSON_HEADERS, buf)
     });
 
     app.route(Get, "/fortunes", handle_fortunes);
