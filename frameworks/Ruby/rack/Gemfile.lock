@@ -85,8 +85,8 @@ GEM
       logger
       rack (>= 2.0)
     protocol-hpack (1.5.1)
-    protocol-http (0.49.0)
-    protocol-http1 (0.30.0)
+    protocol-http (0.54.0)
+    protocol-http1 (0.35.2)
       protocol-http (~> 0.22)
     protocol-http2 (0.22.1)
       protocol-hpack (~> 1.4)

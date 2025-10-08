@@ -1,0 +1,18 @@
+[package]
+name = "khttp-techempower"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+khttp = { version = "0.2", features = ["epoll"] }
+yarte = { version = "0.15", features = ["json"] }
+pq-sys = "0.7"
+
+[profile.release]
+opt-level = 3
+codegen-units = 1
+panic = 'abort'
+lto = true
+debug = false
+incremental = false
+overflow-checks = false

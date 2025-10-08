@@ -1,0 +1,27 @@
+{
+  "framework": "khttp",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "fortune_url": "/fortunes",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "Postgres",
+        "framework": "khttp",
+        "language": "Rust",
+        "flavor": "None",
+        "orm": "raw",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "khttp",
+        "notes": "",
+        "versus": "None"
+      }
+    }
+  ]
+}
