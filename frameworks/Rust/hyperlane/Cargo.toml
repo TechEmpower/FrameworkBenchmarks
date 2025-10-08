@@ -20,7 +20,7 @@ exclude = [
 
 [dependencies]
 futures = "0.3.31"
-hyperlane = "9.4.5"
+hyperlane = "9.5.0"
 hyperlane-time = "0.7.8"
 num_cpus = "1.17.0"
 once_cell = "1.21.3"
