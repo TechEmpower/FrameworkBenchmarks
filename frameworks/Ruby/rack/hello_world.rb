@@ -58,7 +58,7 @@ class HelloWorld
     buffer << TEMPLATE_PREFIX
 
     fortunes.each do |item|
-      buffer << "<tr><td>#{item[:id]}</td><td>#{Rack::Utils.escape_html(item[:message])}</td></tr>"
+      buffer << "<tr><td>#{item[:id]}</td><td>#{ERB::Escape.html_escape(item[:message])}</td></tr>"
     end
     buffer << TEMPLATE_POSTFIX
   end
