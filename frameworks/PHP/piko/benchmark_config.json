@@ -45,7 +45,7 @@
         "webserver": "nginx",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "Piko",
+        "display_name": "Piko Postgres",
         "notes": "",
         "versus": "None"
       }
