@@ -126,6 +126,15 @@
 							</transformers>
 							<artifactSet>
 							</artifactSet>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/versions/**/module-info.class</exclude>
+                                        <exclude>module-info.class</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
 							<outputFile>${project.build.directory}/${project.artifactId}-${project.version}-fat.jar</outputFile>
 						</configuration>
 					</execution>
