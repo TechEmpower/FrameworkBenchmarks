@@ -17,6 +17,8 @@ CMD export DBIP=`getent hosts tfb-database | awk '{ print $1 }'` && \
       -server \
       -XX:+UseNUMA \
       -XX:+UseParallelGC \
+      -XX:+UnlockDiagnosticVMOptions \
+      -XX:+DebugNonSafepoints \
       -Djava.lang.Integer.IntegerCache.high=10000 \
       -Dvertx.disableMetrics=true \
       -Dvertx.disableWebsockets=true \
