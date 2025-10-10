@@ -1,0 +1,16 @@
+{
+	"name": "piko/project-benchmark",
+	"description": "Application to be tested on the FrameworkBenchmarks.",
+	"type": "project",
+	"license": "MIT",
+	"require": {
+		"php": ">=8.0",
+		"piko/framework": "^3.4",
+		"piko/db-record": "^2.2"
+	},
+	"autoload": {
+		"psr-4": {
+			"app\\": ""
+		}
+	}
+}

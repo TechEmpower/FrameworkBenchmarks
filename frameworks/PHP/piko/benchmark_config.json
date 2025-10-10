@@ -1,0 +1,54 @@
+{
+  "framework": "piko",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "db_url": "/db",
+    		"query_url": "/queries?queries=",
+        "update_url": "/updates?queries=",
+    		"fortune_url": "/fortunes",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "mysql",
+        "framework": "Piko",
+        "language": "PHP",
+        "flavor": "None",
+        "orm": "Micro",
+        "platform": "None",
+        "webserver": "nginx",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Piko Mysql",
+        "notes": "",
+        "versus": "None"
+      },
+      "postgres": {
+        "dockerfile": "piko-postgres.dockerfile",
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "db_url": "/db",
+    		"query_url": "/queries?queries=",
+        "update_url": "/updates?queries=",
+    		"fortune_url": "/fortunes",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "postgres",
+        "framework": "Piko",
+        "language": "PHP",
+        "flavor": "None",
+        "orm": "Micro",
+        "platform": "None",
+        "webserver": "nginx",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Piko Postgres",
+        "notes": "",
+        "versus": "None"
+      }
+    }
+  ]
+}
