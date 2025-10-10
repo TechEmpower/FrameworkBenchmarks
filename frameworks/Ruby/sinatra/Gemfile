@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gem 'activerecord', '~> 8.0', require: 'active_record'
 gem 'json', '~> 2.8'
-gem 'sinatra', '~> 4.0', require: 'sinatra/base'
+gem 'sinatra', '~> 4.2', require: 'sinatra/base'
 
 group :mysql, optional: true do
   gem 'trilogy', '~> 2.9.0', platforms: [:ruby, :windows]
