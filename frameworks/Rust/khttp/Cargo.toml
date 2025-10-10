@@ -7,6 +7,7 @@ edition = "2024"
 khttp = { version = "0.2", features = ["epoll"] }
 yarte = { version = "0.15", features = ["json"] }
 pq-sys = "0.7"
+mimalloc = "0.1"
 
 [profile.release]
 opt-level = 3
