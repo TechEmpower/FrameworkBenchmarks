@@ -8,7 +8,8 @@ GEM
       bigdecimal (>= 3.0)
       ostruct (>= 0.2)
     ostruct (0.6.1)
-    pg (1.5.9)
+    pg (1.6.2)
+    pg (1.6.2-x86_64-linux)
     rack (3.2.0)
 
 PLATFORMS
