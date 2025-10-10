@@ -25,6 +25,24 @@
         "display_name": "Kit",
         "notes": "",
         "versus": "None"
+      },
+      "majavat": {
+        "fortune_url": "/majavat-fortunes",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "postgres",
+        "framework": "None",
+        "language": "Clojure",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "kit-majavat",
+        "notes": "",
+        "versus": "kit"
       }
     }
   ]

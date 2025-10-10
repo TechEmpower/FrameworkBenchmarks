@@ -1,12 +1,13 @@
-FROM maven:3-eclipse-temurin-24-alpine as maven
+FROM clojure:lein as lein
 WORKDIR /ring-http-exchange
-COPY pom.xml pom.xml
+COPY project.clj project.clj
+COPY resources resources
 COPY src src
-RUN mvn clean clojure:compile -P robaho package
+RUN lein with-profile robaho uberjar
 
 FROM ghcr.io/graalvm/graalvm-community:24
 WORKDIR /ring-http-exchange
-COPY --from=maven /ring-http-exchange/target/ring-http-server-1.0.0-jar-with-dependencies.jar app.jar
+COPY --from=lein /ring-http-exchange/target/ring-http-server-1.0.0-standalone.jar app.jar
 
 EXPOSE 8080
 

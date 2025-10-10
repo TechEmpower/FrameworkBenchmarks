@@ -3,6 +3,9 @@
     [clojure.core.cache :as cache]
     [next.jdbc :as jdbc]
     [next.jdbc.result-set :as rs]
+    [jj.majavat :as majavat]
+    [jj.majavat.renderer :refer [->InputStreamRenderer]]
+    [jj.majavat.renderer.sanitizer :refer [->Html]]
     [ring.util.http-response :as http-response]
     [selmer.parser :as parser]))
 
@@ -13,14 +16,23 @@
 (def ^:const HELLO_WORLD "Hello, World!")
 (def ^:const MAX_ID_ZERO_IDX 9999)
 (def ^:const CACHE_TTL (* 24 60 60))
-
+(def ^:private render-fortune (majavat/build-renderer "html/fortunes.html"
+                                                      {:renderer (->InputStreamRenderer
+                                                                   {:sanitizer (->Html)})}))
 (def selmer-opts {:custom-resource-path (clojure.java.io/resource "html")})
 
-(defn html-response
+(defn selmer-html-response
   [template & [params]]
   (-> (parser/render-file template params selmer-opts)
       (http-response/ok)
       (http-response/content-type "text/html; charset=utf-8")))
+
+(defn majavat-html-response
+  [context]
+  (-> (render-fortune context)
+      (http-response/ok)
+      (http-response/content-type "text/html; charset=utf-8")))
+
 
 (defn rand-id
   [n]
@@ -31,7 +43,7 @@
   "Parse provided string value of query count, clamping values to between 1 and 500."
   [^String queries]
   (let [n (try (Integer/parseInt queries)
-               (catch Exception _ 1))]                ; default to 1 on parse failure
+               (catch Exception _ 1))]                      ; default to 1 on parse failure
     (cond
       (< n 1) 1
       (> n 500) 500
@@ -101,7 +113,7 @@
 
 (defn update-db-handler
   [db-conn request]
-  (let [items   (db-multi-query-world! db-conn request)]
+  (let [items (db-multi-query-world! db-conn request)]
     (http-response/ok
       (mapv
         (fn [{:keys [id]}]
@@ -122,9 +134,16 @@
       []
       (range-from-req request))))
 
-(defn fortune-handler
+(defn selmer-fortune-handler
   [db-conn _request]
   (as-> (jdbc/execute! db-conn ["select * from \"Fortune\";"] jdbc-opts) fortunes
         (conj fortunes {:id 0 :message "Additional fortune added at request time."})
         (sort-by :message fortunes)
-        (html-response "fortunes.html" {:messages fortunes})))
+        (selmer-html-response "fortunes.html" {:messages fortunes})))
+
+(defn majavat-fortune-handler
+  [db-conn _request]
+  (as-> (jdbc/execute! db-conn ["select * from \"Fortune\";"] jdbc-opts) fortunes
+        (conj fortunes {:id 0 :message "Additional fortune added at request time."})
+        (sort-by :message fortunes)
+        (majavat-html-response {:messages fortunes})))
