@@ -80,7 +80,9 @@ GEM
       rack (>= 1.6.13)
       rackup (>= 2.0.0)
       rake (>= 12.3.3)
-    pg (1.5.9)
+    pg (1.6.2-arm64-darwin)
+    pg (1.6.2-x86_64-darwin)
+    pg (1.6.2-x86_64-linux)
     pitchfork (0.17.0)
       logger
       rack (>= 2.0)
