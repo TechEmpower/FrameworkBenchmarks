@@ -1,0 +1,7 @@
+name: relicbenchmark
+description: A benchmark of pkg:relic
+environment:
+  sdk: ^3.8.0
+
+dependencies:
+  relic: ^0.7.0
