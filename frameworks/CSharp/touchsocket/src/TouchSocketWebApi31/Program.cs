@@ -8,7 +8,7 @@ using TouchSocket.WebApi;
 
 using HttpContent = TouchSocket.Http.HttpContent;
 
-namespace TouchSocketWebApi;
+namespace TouchSocketWebApi31;
 
 public class Program
 {
@@ -60,7 +60,7 @@ public partial class ApiServer : SingletonRpcServer
     public async Task Plaintext(IWebApiCallContext callContext)
     {
        var response= callContext.HttpContext.Response;
-        response.SetStatus(200, "success");
+        response.SetStatus(200, "ok");
         response.Content= m_contentPlaintext;
         await response.AnswerAsync().ConfigureAwait(false);
     }
@@ -73,7 +73,7 @@ public partial class ApiServer : SingletonRpcServer
     }
 }
 
-[JsonSerializable(typeof(MyJson))]//实际类型1
+[JsonSerializable(typeof(MyJson))]
 internal partial class AppJsonSerializerContext : JsonSerializerContext
 {
 
