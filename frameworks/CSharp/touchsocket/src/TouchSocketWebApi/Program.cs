@@ -25,7 +25,6 @@ public class Program
                  options.SendPipeOptions = TransportOption.CreateSchedulerOptimizedPipeOptions();
              })
             .SetMaxCount(1000000)
-            .SetBacklog(1000)
            .ConfigureContainer(a =>
            {
                a.AddConsoleLogger();
@@ -36,28 +35,23 @@ public class Program
            })
            .ConfigurePlugins(a =>
            {
-               a.UseTcpSessionCheckClear();
-
-               a.UseWebApi()
-               .ConfigureConverter(converter =>
+               a.UseWebApi(options =>
                {
-                   converter.Clear();
-                   converter.AddSystemTextJsonSerializerFormatter(options =>
+                   options.ConfigureConverter(converter =>
                    {
-                       options.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default);
+                       converter.Clear();
+                       converter.AddSystemTextJsonSerializerFormatter(jsonOptions =>
+                       {
+                           jsonOptions.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default);
+                       });
                    });
                });
-
-#if DEBUG
-               a.UseSwagger()
-               .UseLaunchBrowser();
-#endif
 
                a.UseDefaultHttpServicePlugin();
            });
         });
 
-        IHost host = builder.Build();
+        var host = builder.Build();
         host.Run();
     }
 }
@@ -72,7 +66,7 @@ public partial class ApiServer : SingletonRpcServer
     [WebApi(Method = HttpMethodType.Get)]
     public async Task Plaintext(IWebApiCallContext callContext)
     {
-        HttpResponse response = callContext.HttpContext.Response;
+        var response = callContext.HttpContext.Response;
         response.SetStatus(200, "ok");
         response.Content = m_contentPlaintext;
         await response.AnswerAsync().ConfigureAwait(false);
@@ -86,7 +80,7 @@ public partial class ApiServer : SingletonRpcServer
     }
 }
 
-[JsonSerializable(typeof(MyJson))]//实际类型1
+[JsonSerializable(typeof(MyJson))]
 internal partial class AppJsonSerializerContext : JsonSerializerContext
 {
 
