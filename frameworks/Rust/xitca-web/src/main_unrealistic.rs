@@ -41,7 +41,7 @@ fn main() -> io::Result<()> {
 
         tokio::runtime::Builder::new_current_thread()
             .enable_all()
-            .build_local(&Default::default())
+            .build_local(Default::default())
             .unwrap()
             .block_on(async {
                 let socket = tokio::net::TcpSocket::new_v4()?;

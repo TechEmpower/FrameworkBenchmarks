@@ -46,24 +46,6 @@
         "notes": "",
         "versus": ""
       },
-      "wasm": {
-        "json_url": "/json",
-        "plaintext_url": "/plaintext",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Micro",
-        "database": "none",
-        "framework": "xitca-web",
-        "language": "rust",
-        "orm": "raw",
-        "platform": "none",
-        "webserver": "xitca-server",
-        "os": "linux",
-        "database_os": "linux",
-        "display_name": "xitca-web [wasm]",
-        "notes": "",
-        "versus": ""
-      },
       "orm": {
         "json_url": "/json",
         "plaintext_url": "/plaintext",

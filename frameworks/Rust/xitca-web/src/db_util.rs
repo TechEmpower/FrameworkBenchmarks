@@ -64,10 +64,11 @@ pub mod pg {
         .into_boxed_str()
     }
 
-    pub fn sort_update_params(params: &[[i32; 2]]) -> impl ExactSizeIterator<Item = i32> {
+    pub fn sort_update_params(params: &[[i32; 2]]) -> impl ExactSizeIterator<Item = i32> + Clone {
         let mut params = params.to_owned();
         params.sort_by(|a, b| a[0].cmp(&b[0]));
 
+        #[derive(Clone)]
         struct ParamIter<I>(I);
 
         impl<I> Iterator for ParamIter<I>
