@@ -2,25 +2,23 @@ using System.Text;
 using TouchSocket.Core;
 using TouchSocket.Http;
 using TouchSocket.Sockets;
+using static System.Net.Mime.MediaTypeNames;
 using HttpContent = TouchSocket.Http.HttpContent;
 
 namespace TouchSocketHttp;
 
 public class Program
 {
-    private static async Task Main(string[] args)
+    static async Task Main(string[] args)
     {
-        var port = 8080;
+        int port = 8080;
+
+        Console.WriteLine(DateHelper.DateString);
         var service = new MyHttpService();
 
         await service.SetupAsync(new TouchSocketConfig()
              .SetListenIPHosts(port)
              .SetNoDelay(true)
-             .SetTransportOption(options =>
-             {
-                 options.ReceivePipeOptions = TransportOption.CreateSchedulerOptimizedPipeOptions();
-                 options.SendPipeOptions = TransportOption.CreateSchedulerOptimizedPipeOptions();
-             })
              .SetMaxCount(1000000)
              .ConfigureContainer(a =>
              {
@@ -36,7 +34,7 @@ public class Program
     }
 }
 
-internal sealed class MyHttpService : HttpService<MyHttpSessionClient>
+sealed class MyHttpService : HttpService<MyHttpSessionClient>
 {
     protected override MyHttpSessionClient NewClient()
     {
@@ -44,10 +42,10 @@ internal sealed class MyHttpService : HttpService<MyHttpSessionClient>
     }
 }
 
-internal sealed class MyHttpSessionClient : HttpSessionClient
+sealed class MyHttpSessionClient : HttpSessionClient
 {
-    private readonly HttpContent m_contentPlaintext = new StringHttpContent("Hello, World!", Encoding.UTF8, "text/plain");
-    private readonly HttpContent m_contentJson = new StringHttpContent("{\"message\":\"Hello, World!\"}", Encoding.UTF8, "application/json");
+    private readonly HttpContent m_contentPlaintext = new StringHttpContent("Hello, World!", Encoding.UTF8, $"text/plain");
+    private readonly HttpContent m_contentJson = new StringHttpContent("{\"message\":\"Hello, World!\"}", Encoding.UTF8, $"application/json");
 
     protected override async Task OnReceivedHttpRequest(HttpContext httpContext)
     {
@@ -59,9 +57,9 @@ internal sealed class MyHttpSessionClient : HttpSessionClient
             case "/plaintext":
                 {
                     response.StatusCode = 200;
-                    response.StatusMessage = "ok";
+                    response.StatusMessage = "success";
                     response.Headers.Add(HttpHeaders.Server, "T");
-                    response.Headers.Add(HttpHeaders.Date, HttpExtensions.CurrentHttpDate);
+                    response.Headers.Add(HttpHeaders.Date, DateHelper.DateString);
                     response.Content = m_contentPlaintext;
                     await response.AnswerAsync().ConfigureAwait(false);
                 }
@@ -69,9 +67,9 @@ internal sealed class MyHttpSessionClient : HttpSessionClient
             case "/json":
                 {
                     response.StatusCode = 200;
-                    response.StatusMessage = "ok";
+                    response.StatusMessage = "success";
                     response.Headers.Add(HttpHeaders.Server, "T");
-                    response.Headers.Add(HttpHeaders.Date, HttpExtensions.CurrentHttpDate);
+                    response.Headers.Add(HttpHeaders.Date, DateHelper.DateString);
                     response.Content = m_contentJson;
                     await response.AnswerAsync().ConfigureAwait(false);
                 }
@@ -83,3 +81,19 @@ internal sealed class MyHttpSessionClient : HttpSessionClient
         }
     }
 }
+
+static class DateHelper
+{
+    static Timer m_timer;
+    static DateHelper()
+    {
+        DateString = DateTime.UtcNow.ToGMTString();
+        m_timer = new Timer((state) =>
+            {
+                DateString = DateTime.UtcNow.ToGMTString();
+            }, null, 0, 1000);
+    }
+
+    public static string DateString { get; private set; }
+}
+
