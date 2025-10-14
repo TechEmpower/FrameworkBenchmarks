@@ -5,25 +5,21 @@ using TouchSocket.Http;
 using TouchSocket.Rpc;
 using TouchSocket.Sockets;
 using TouchSocket.WebApi;
+
 using HttpContent = TouchSocket.Http.HttpContent;
 
-namespace TouchSocketWebApi;
+namespace TouchSocketWebApi31;
 
 public class Program
 {
     public static void Main(string[] args)
     {
-        HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
+        var builder = Host.CreateApplicationBuilder(args);
 
         builder.Services.AddServiceHostedService<IHttpService, HttpService>(config =>
         {
             config.SetListenIPHosts(8080)
             .SetNoDelay(true)
-             .SetTransportOption(options =>
-             {
-                 options.ReceivePipeOptions = TransportOption.CreateSchedulerOptimizedPipeOptions();
-                 options.SendPipeOptions = TransportOption.CreateSchedulerOptimizedPipeOptions();
-             })
             .SetMaxCount(1000000)
            .ConfigureContainer(a =>
            {
@@ -35,18 +31,15 @@ public class Program
            })
            .ConfigurePlugins(a =>
            {
-               a.UseWebApi(options =>
+               a.UseWebApi()
+               .ConfigureConverter(converter =>
                {
-                   options.ConfigureConverter(converter =>
+                   converter.Clear();
+                   converter.AddSystemTextJsonSerializerFormatter(options =>
                    {
-                       converter.Clear();
-                       converter.AddSystemTextJsonSerializerFormatter(jsonOptions =>
-                       {
-                           jsonOptions.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default);
-                       });
+                       options.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default);
                    });
                });
-
                a.UseDefaultHttpServicePlugin();
            });
         });
@@ -59,16 +52,16 @@ public class Program
 public partial class ApiServer : SingletonRpcServer
 {
     private readonly HttpContent m_contentPlaintext = new StringHttpContent("Hello, World!", Encoding.UTF8, $"text/plain");
-
+   
     public static MyJson MyJson { get; set; } = new MyJson() { Message = "Hello, World!" };
 
     [Router("/plaintext")]
     [WebApi(Method = HttpMethodType.Get)]
     public async Task Plaintext(IWebApiCallContext callContext)
     {
-        var response = callContext.HttpContext.Response;
+       var response= callContext.HttpContext.Response;
         response.SetStatus(200, "ok");
-        response.Content = m_contentPlaintext;
+        response.Content= m_contentPlaintext;
         await response.AnswerAsync().ConfigureAwait(false);
     }
 
