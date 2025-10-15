@@ -8,6 +8,20 @@ using Unhinged;
 
 #pragma warning disable CA2014
 
+/* (MDA2AV)Dev notes:
+ * 
+ * Wired.IO Platform benchmark using [Unhinged - https://github.com/MDA2AV/Unhinged] epoll engine.
+ *
+ * This test was created purely for benchmark/comparison between .NET solutions.
+ * It should not be considered EVER as a go-to framework to build any kind of webserver!
+ * For such purpose please use the main Wired.IO framework [Wired.IO - https://github.com/MDA2AV/Wired.IO].
+ *
+ * This benchmarks follows the JsonSerialization and PlainText rules imposed by the TechEmpower team.
+ *
+ * The Http parsing by the Unhinged engine is still naive(work in progress), yet it's development will not have any impact
+ * on these benchmarks results as the extra request parsing overhead is much smaller than the read/send syscalls'.
+ */
+
 namespace Platform;
 
 [SkipLocalsInit]
@@ -17,16 +31,30 @@ internal static class Program
     {
         var builder = UnhingedEngine
             .CreateBuilder()
-            .SetNWorkersSolver(() => Environment.ProcessorCount - 2)    // Number of working threads, depends on a lot of things
-            .SetBacklog(16384)                      // Accept up to 16384 connections
-            .SetMaxEventsPerWake(512)               // Max 512 epoll events per wake (quite overkill)
-            .SetMaxNumberConnectionsPerWorker(512)  // Max 512 connection per thread
             .SetPort(8080)
-            .SetSlabSizes(32 * 1024, 32 * 1024) // 32KB slabs to handle high pipeline depth
+            
+            
+            // Number of working threads
+            // Reasoning behind  Environment.ProcessorCount / 2
+            // It's the number of real cpu cores not cpu threads
+            // This can improve the cache hits on L1/L2 since only one thread
+            // is running per cpu core.
+            .SetNWorkersSolver(() => Environment.ProcessorCount/2)  
+            
+            // Accept up to 16384 connections
+            .SetBacklog(16384) 
+            
+            // Max 512 epoll events per wake (quite overkill)
+            .SetMaxEventsPerWake(512)         
+            
+            // Max 512 connection per thread
+            .SetMaxNumberConnectionsPerWorker(512)
+            
+            // 32KB in and 16KB out slabs to handle 16 pipeline depth
+            .SetSlabSizes(32 * 1024, 16 * 1024)
             .InjectRequestHandler(RequestHandler);
         
         var engine = builder.Build();
-        
         engine.Run();
     }
 
