@@ -28,7 +28,7 @@ internal class Program
             {
                 ctx
                     .Respond()
-                    .Type("application/json"u8)
+                    .Type("text/plain"u8)
                     .Content(_plainTextBody);
             })
             .Build()
