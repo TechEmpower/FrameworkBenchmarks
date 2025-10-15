@@ -86,15 +86,12 @@
   message text.
   Return a `CompletableFuture` with the results."
   []
-    (try
-      (d/chain (query-fortunes)
-               (fn [fortunes]
-                 (sort-by :message
-                          (conj fortunes
-                                {:id      0
-                                 :message "Additional fortune added at request time."}))))
-      (catch Exception e
-        (.getStackTrace ^Exception e))))
+  (d/chain (query-fortunes)
+           (fn [fortunes]
+             (sort-by :message
+                      (conj fortunes
+                            {:id      0
+                             :message "Additional fortune added at request time."})))))
 
 (defn- update-and-persist [queries]
   (d/chain' (run-queries queries)
