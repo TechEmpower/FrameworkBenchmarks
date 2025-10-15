@@ -47,8 +47,8 @@ internal static class Program
             // Max 512 epoll events per wake (quite overkill)
             .SetMaxEventsPerWake(512)         
             
-            // Max 512 connection per thread
-            .SetMaxNumberConnectionsPerWorker(512)
+            // Max 1024 connection per thread
+            .SetMaxNumberConnectionsPerWorker(1024)
             
             // 32KB in and 16KB out slabs to handle 16 pipeline depth
             .SetSlabSizes(32 * 1024, 16 * 1024)
