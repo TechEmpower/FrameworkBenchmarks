@@ -1,10 +1,10 @@
-FROM clojure:openjdk-11-lein-2.9.3 as lein
+FROM clojure:lein as lein
 WORKDIR /donkey
 COPY src src
 COPY project.clj project.clj
 RUN lein uberjar
 
-FROM openjdk:11.0.9.1-jdk-slim
+FROM openjdk:25-jdk-slim
 COPY --from=lein /donkey/target/hello-donkey-standalone.jar  app.jar
 
 EXPOSE 8080
