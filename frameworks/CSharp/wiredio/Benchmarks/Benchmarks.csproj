@@ -17,7 +17,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Wired.IO" Version="9.2.0" />
+    <PackageReference Include="Wired.IO" Version="9.5.0" />
   </ItemGroup>
 
 </Project>
