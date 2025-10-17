@@ -46,6 +46,10 @@ as they are supposed to be idempotent.
 Hence this results in an error. Calling the endpoint with POST
 works though.
 
-### FORTUNES
+### FORTUNES - Disabled
 
 http://localhost:3000/rpc/fortunes.html
+
+This is supposed to work, but somehow the benchmark harness
+doesn't count the queries correctly?
+Was not able to figure this one out.
