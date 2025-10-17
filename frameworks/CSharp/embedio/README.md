@@ -6,17 +6,17 @@ See the [project website](https://github.com/unosquare/embedio) for more informa
 
 **Language**
 
-* C# 9.0
+* C# 13.0
 
 **Platforms**
 
-* .NET 5
+* .NET 9
 
 **Web Servers**
 
 * [EmbedIO](https://github.com/unosquare/embedio)
 
-## Paths & Source for Tests
+## Paths \& Source for Tests
 
 * [Plaintext](Benchmarks/Program.cs): "/plaintext"
 * [JSON](Benchmarks/Program.cs): "/json"

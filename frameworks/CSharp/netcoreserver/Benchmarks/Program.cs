@@ -8,7 +8,7 @@ namespace Benchmarks
     public static class Program
     {
 
-        private static readonly ManualResetEvent _WaitEvent = new ManualResetEvent(false);
+        private static readonly ManualResetEvent WaitEvent = new(false);
 
         public static int Main(string[] args)
         {
@@ -18,12 +18,12 @@ namespace Benchmarks
             {
                 AppDomain.CurrentDomain.ProcessExit += (_, __) =>
                 {
-                    _WaitEvent.Set();
+                    WaitEvent.Set();
                 };
 
                 server.Start();
 
-                _WaitEvent.WaitOne();
+                WaitEvent.WaitOne();
 
                 return 0;
             }
