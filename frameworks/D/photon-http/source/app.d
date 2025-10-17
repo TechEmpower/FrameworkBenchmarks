@@ -2,7 +2,12 @@ import std.stdio;
 import std.socket;
 import std.array;
 
-import asdf.serialization;
+import mir.ser;
+import mir.ser.json;
+
+import std.range.primitives;
+
+import glow.xbuf;
 
 import photon, photon.http;
 
@@ -14,10 +19,10 @@ struct Message
 class BenchmarkProcessor : HttpProcessor {
     HttpHeader[] plainText = [HttpHeader("Content-Type", "text/plain; charset=utf-8")];
     HttpHeader[] json = [HttpHeader("Content-Type", "application/json")];
-    Appender!(char[]) jsonBuf;
+    Buffer!char jsonBuf;
     this(Socket sock) {
 		super(sock);
-		jsonBuf = appender!(char[]);
+		jsonBuf = Buffer!char(256);
 	}
 
     override void handle(HttpRequest req) {
@@ -25,7 +30,7 @@ class BenchmarkProcessor : HttpProcessor {
 			respondWith("Hello, world!", 200, plainText);
 		} else if(req.uri == "/json") {
 			jsonBuf.clear();
-			Message("Hello, World!").serializeToJsonPretty!""(jsonBuf);
+			serializeJsonPretty!""(jsonBuf, Message("Hello, World!"));
 			respondWith(jsonBuf.data, 200, json);
 		} else {
 			respondWith("Not found", 404, plainText);
