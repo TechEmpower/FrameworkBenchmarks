@@ -7,7 +7,7 @@
 * [DB](src/db.sql)
 * [QUERY](src/query.sql)
 * [CACHED QUERY] Not Implemented
-* [UPDATE] Not Implemented
+* [UPDATE](src/update.sql)
 * [FORTUNES](src/fortunes.sql)
 
 ## Important Libraries
@@ -17,7 +17,7 @@ The tests were run with:
 ## Test URLs
 ### JSON
 
-http://localhost:3000/rpc/json
+http://localhost:3000/rpc/jsonser
 
 ### PLAINTEXT
 
@@ -31,14 +31,25 @@ http://localhost:3000/rpc/db
 
 http://localhost:3000/rpc/query?queries=
 
-### CACHED QUERY Not Implemented
+### CACHED QUERY - Not Implemented
 
 http://localhost:8080/cached_query?queries=
 
-### UPDATE Not Implemented
+### UPDATE - Not Working
 
-http://localhost:3000/rpc/update?queries=
+http://localhost:3000/rpc/updates?queries=
 
-### FORTUNES
+Technically, this is implemented (maybe not correctly though).
+However, the benchmark issues this as a GET request.
+PostgREST sets the transaction to READ ONLY for GET requests,
+as they are supposed to be idempotent.
+Hence this results in an error. Calling the endpoint with POST
+works though.
+
+### FORTUNES - Disabled
 
 http://localhost:3000/rpc/fortunes.html
+
+This is supposed to work, but somehow the benchmark harness
+doesn't count the queries correctly?
+Was not able to figure this one out.
