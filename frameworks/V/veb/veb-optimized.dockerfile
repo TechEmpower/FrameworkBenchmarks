@@ -4,7 +4,8 @@ RUN apt update && \
 
 WORKDIR /app
 COPY ./veb-pg/* ./
+COPY run.sh ./
 RUN v -prod -o veb .
 
 EXPOSE 8080
-CMD ./veb
+CMD sh run.sh
