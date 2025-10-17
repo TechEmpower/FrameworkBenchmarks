@@ -14,7 +14,7 @@
       "database": "Postgres",
       "framework": "Warp",
       "language": "Haskell",
-      "flavor": "GHC967",
+      "flavor": "GHC910",
       "orm": "Raw",
       "platform": "Wai",
       "webserver": "Wai",
@@ -38,7 +38,7 @@
       "database": "Postgres",
       "framework": "Warp",
       "language": "Haskell",
-      "flavor": "GHC967",
+      "flavor": "GHC910",
       "orm": "Raw",
       "platform": "Wai",
       "webserver": "Wai",
@@ -47,7 +47,7 @@
       "display_name": "Warp+Hasql",
       "notes": "Uses libpq system dependency.",
       "dockerfile": "warp-shared.dockerfile",
-      "tags": ["broken"]
+      "tags": []
     },
     "mysql-haskell": {
       "json_url": "/json",
@@ -62,7 +62,7 @@
       "database": "MySQL",
       "framework": "Warp",
       "language": "Haskell",
-      "flavor": "GHC967",
+      "flavor": "GHC910",
       "orm": "Raw",
       "platform": "Wai",
       "webserver": "Wai",

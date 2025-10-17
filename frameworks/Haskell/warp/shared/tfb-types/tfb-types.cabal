@@ -15,7 +15,7 @@ library
   default-language:    Haskell2010
   exposed-modules:     TFB.Types
   build-depends:
-      base >= 4.7 && < 5
+      base >= 4.18 && < 5
     , bytestring
     , attoparsec
     , buffer-builder

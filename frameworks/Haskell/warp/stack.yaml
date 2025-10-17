@@ -1,8 +1,8 @@
-resolver: lts-24.9
+resolver: lts-24.11
 
 packages:
 - ./shared/tfb-types
-# - ./shared/tfb-hasql
+- ./shared/tfb-hasql
 - ./shared/tfb-mysql-haskell
 - ./shared/tfb-postgres-simple
 - ./warp-shared

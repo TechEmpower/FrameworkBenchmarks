@@ -18,7 +18,7 @@ common deps
   default-language:    GHC2021
   ghc-options:         -Wall -threaded -rtsopts -O2 -funbox-strict-fields
   build-depends:
-      base >= 4.7 && < 5
+      base >= 4.18 && < 5
     , bytestring
     , text
     , attoparsec
@@ -29,13 +29,13 @@ common deps
     , warp
     , http-types
 
--- executable warp-hasql
---   import: deps
---   main-is:
---     Main.hs
---   build-depends:
---       tfb-types
---     , tfb-hasql
+executable warp-hasql
+  import: deps
+  main-is:
+    Main.hs
+  build-depends:
+      tfb-types
+    , tfb-hasql
 
 executable warp-mysql-haskell
   import: deps

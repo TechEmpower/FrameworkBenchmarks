@@ -16,7 +16,7 @@ library
   ghc-options:         -funbox-strict-fields
   exposed-modules:     TFB.Db
   build-depends:
-      base >= 4.7 && < 5
+      base >= 4.18 && < 5
     , tfb-types
     , resource-pool
     , postgresql-simple
