@@ -1,10 +1,8 @@
 ﻿using System.Net;
 using System.Text.Json;
-
 using Wired.IO.App;
 using Wired.IO.Http11.Response.Content;
 using Wired.IO.Protocol.Response;
-
 using StringContent = Wired.IO.Http11.Response.Content.StringContent;
 
 var builder = WiredApp.CreateBuilder();
