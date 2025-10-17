@@ -1,4 +1,4 @@
-FROM sbtscala/scala-sbt:eclipse-temurin-21.0.6_7_1.10.11_2.13.16 AS builder
+FROM sbtscala/scala-sbt:eclipse-temurin-21.0.8_9_1.11.7_2.13.17 AS builder
 WORKDIR /http4s
 COPY blaze/project project
 COPY blaze/src src
@@ -10,7 +10,7 @@ RUN sbt assembly -batch && \
     rm -Rf ~/.sbt && \
     rm -Rf ~/.ivy2 && \
     rm -Rf /var/cache
-    
+
 FROM openjdk:21
 WORKDIR /http4s
 COPY --from=builder /http4s/http4s-assembly-1.0.jar /http4s/http4s-assembly-1.0.jar
