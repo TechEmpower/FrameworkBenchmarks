@@ -7,7 +7,7 @@
 		"mir-ion": "~>2.3.4",
 		"xbuf" : "~>0.2.1",
 		"photon": "~>0.18.5",
-		"photon-http": "~>0.6.7"
+		"photon-http": "~>0.6.8"
 	},
 	"description": "Benchmark of photon-http",
 	"license": "BSL-1.0",

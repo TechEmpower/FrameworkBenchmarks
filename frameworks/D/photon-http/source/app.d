@@ -27,13 +27,13 @@ class BenchmarkProcessor : HttpProcessor {
 
     override void handle(HttpRequest req) {
 		if (req.uri == "/plaintext") {
-			respondWith("Hello, world!", 200, plainText);
+			respondWith("Hello, world!", HttpStatus.OK, plainText);
 		} else if(req.uri == "/json") {
 			jsonBuf.clear();
 			serializeJsonPretty!""(jsonBuf, Message("Hello, World!"));
-			respondWith(jsonBuf.data, 200, json);
+			respondWith(jsonBuf.data, HttpStatus.OK, json);
 		} else {
-			respondWith("Not found", 404, plainText);
+			respondWith("Not found", HttpStatus.NotFound, plainText);
 		}
     }
 }
