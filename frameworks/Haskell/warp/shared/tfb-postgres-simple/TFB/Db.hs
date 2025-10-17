@@ -16,18 +16,19 @@ where
 
 import Control.Exception (catch, try)
 import Control.Monad (forM)
-import qualified Data.Bifunctor as Bi
+import Data.Bifunctor qualified as Bi
 import Data.ByteString (ByteString)
-import qualified Data.ByteString.Char8 as BSC
-import qualified Data.Either as Either
-import qualified Data.Pool as Pool
+import Data.ByteString.Char8 qualified as BSC
+import Data.Either qualified as Either
+import Data.Pool qualified as Pool
 import Database.PostgreSQL.Simple (SomePostgreSqlException)
-import qualified Database.PostgreSQL.Simple as PG
+import Database.PostgreSQL.Simple qualified as PG
 import Database.PostgreSQL.Simple.FromRow (FromRow (fromRow), field)
-import qualified System.IO.Error as Error
-import qualified TFB.Types as Types
+import System.IO.Error qualified as Error
+import TFB.Types qualified as Types
 
 -------------------------------------------------------------------------------
+
 -- * Database
 
 data Config
@@ -99,6 +100,7 @@ mkPool c =
         (configPoolSize c)
 
 -------------------------------------------------------------------------------
+
 -- * World
 
 queryWorldByIdInner :: Types.QId -> Connection -> IO (Either Error Types.World)
@@ -143,6 +145,7 @@ updateWorlds dbPool wsUpdates = Pool.withResource dbPool $ \conn -> do
   pure $ Bi.bimap (DbError . BSC.pack . show) (const $ map (uncurry Types.World) worlds) res
 
 -------------------------------------------------------------------------------
+
 -- * Fortunes
 
 queryFortunes :: Pool -> IO (Either Error [Types.Fortune])

@@ -2,8 +2,8 @@
 
 module Main where
 
-import qualified GHC.Conc
-import qualified Lib
+import GHC.Conc qualified
+import Lib qualified
 import System.Environment (getArgs, lookupEnv)
 
 main :: IO ()

@@ -8,20 +8,20 @@ where
 
 import Control.Monad (join, replicateM)
 import Data.BufferBuilder.Json ((.=))
-import qualified Data.BufferBuilder.Json as Json
-import qualified Data.ByteString.Lazy as LBS
-import qualified Data.ByteString.Lazy.Char8 as LBSC
-import qualified Data.Either as Either
+import Data.BufferBuilder.Json qualified as Json
+import Data.ByteString.Lazy qualified as LBS
+import Data.ByteString.Lazy.Char8 qualified as LBSC
+import Data.Either qualified as Either
 import Data.List (sortOn)
-import qualified Network.HTTP.Types.Header as Header
-import qualified Network.HTTP.Types.Status as Status
-import qualified Network.Wai as Wai
-import qualified Network.Wai.Handler.Warp as Warp
-import qualified System.Random.MWC as MWC
-import qualified TFB.Db as Db
-import qualified TFB.Types as Types
-import qualified Text.Blaze.Html.Renderer.Utf8 as Html
-import qualified Text.Blaze.Html5 as Html
+import Network.HTTP.Types.Header qualified as Header
+import Network.HTTP.Types.Status qualified as Status
+import Network.Wai qualified as Wai
+import Network.Wai.Handler.Warp qualified as Warp
+import System.Random.MWC qualified as MWC
+import TFB.Db qualified as Db
+import TFB.Types qualified as Types
+import Text.Blaze.Html.Renderer.Utf8 qualified as Html
+import Text.Blaze.Html5 qualified as Html
 
 -- entry point
 main :: Db.Config -> IO ()

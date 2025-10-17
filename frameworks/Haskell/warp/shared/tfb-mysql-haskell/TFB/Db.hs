@@ -14,14 +14,14 @@ where
 
 import Control.Monad (forM, forM_)
 import Data.ByteString (ByteString)
-import qualified Data.ByteString.Char8 as BSC
-import qualified Data.Either as Either
-import qualified Data.Pool as Pool
+import Data.ByteString.Char8 qualified as BSC
+import Data.Either qualified as Either
+import Data.Pool qualified as Pool
 import Data.Text (Text)
-import qualified Data.Text as Text
-import qualified Database.MySQL.Base as MySQL
-import qualified System.IO.Streams as Streams
-import qualified TFB.Types as Types
+import Data.Text qualified as Text
+import Database.MySQL.Base qualified as MySQL
+import System.IO.Streams qualified as Streams
+import TFB.Types qualified as Types
 
 -------------------------------------------------------------------------------
 
