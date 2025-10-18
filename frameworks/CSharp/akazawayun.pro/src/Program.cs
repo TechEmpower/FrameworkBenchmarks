@@ -17,16 +17,16 @@ class Program : IPostFunctionWrapper
     static Program()
     {
         akzJson.Config(null, AotJsonContext.Default);
-        builder = akzWebBuilder.Shared.SetDefault()
+        builder = akzWebBuilder.Shared.SetPort(8080).SetDefault()
             .Build()
             .Config<IWebReceptor, akzWebInterceptor>(itc =>
             {
                 itc.ClearInterceptor();
-                itc.AddInterceptor(new akzWebInterceptorNotOnlyPost());
+                itc.AddInterceptor(new akzWebInterceptorAsPost());
             });
         mysql = new akzDbBuilderII()
-            .SetServer("tfb-database:3306")
-            //.SetServer("localhost:3306")
+            .SetServer("tfb-database")
+            //.SetServer("localhost")
             .SetUser("benchmarkdbuser")
             .SetPwd("benchmarkdbpass")
             .SetDatabase("hello_world")
@@ -90,4 +90,14 @@ class Program : IPostFunctionWrapper
         return count;
     }
 
+}
+
+
+public class akzWebInterceptorAsPost : WebInterceptor
+{
+    public override ValueTask<InterceptorHttpRes> Intercept(IHttpContext http)
+    {
+        http.Method = "POST";
+        return InterceptorHttpRes.No();
+    }
 }
