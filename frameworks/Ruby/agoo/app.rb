@@ -7,13 +7,17 @@ require 'pg'
 require 'rack'
 
 $pool = ConnectionPool.new(size: 1, timeout: 5) do
-          PG::Connection.new({
-                                 dbname:   'hello_world',
-                                 host:     'tfb-database',
-                                 user:     'benchmarkdbuser',
-                                 password: 'benchmarkdbpass'
-                             })
-        end
+  conn = PG::Connection.new({
+    dbname:   'hello_world',
+    host:     'tfb-database',
+    user:     'benchmarkdbuser',
+    password: 'benchmarkdbpass'
+  })
+  conn.set_error_verbosity(PG::PQERRORS_VERBOSE)
+  conn.prepare('select_world', 'SELECT * FROM world WHERE id = $1')
+  conn.prepare('select_fortune', 'SELECT id, message FROM fortune')
+  conn
+end
 
 QUERY_RANGE = (1..10_000).freeze
 ALL_IDS = QUERY_RANGE.to_a
@@ -43,11 +47,7 @@ class BaseHandler
 
   def self.get_one_record(id = get_one_random_number)
     $pool.with do |conn|
-      conn.exec_params(<<-SQL, [id]).first
-
-        SELECT * FROM world WHERE id = $1
-
-      SQL
+      conn.exec_prepared('select_world', [id]).first
     end
   end
 
@@ -114,15 +114,12 @@ class DbHandler < BaseHandler
   end
 end
 
+
 class FortunesHandler < BaseHandler
   def self.call(_req)
     f_1 = $pool.with do |conn|
-            conn.exec(<<-SQL)
-
-              SELECT id, message FROM fortune
-
-            SQL
-          end
+      conn.exec_prepared('select_fortune', [])
+    end
 
     f_2 = f_1.map(&:to_h).
             append({ 'id' => '0', 'message' => 'Additional fortune added at request time.' }).
@@ -192,21 +189,20 @@ class UpdatesHandler < BaseHandler
 end
 
 Agoo::Log.configure({
-                        classic:  true,
-                        colorize: true,
-                        console:  true,
-                        dir:      '',
-                        states:   {
-                            DEBUG:    false,
-                            INFO:     false,
-
-                            connect:  false,
-                            eval:     false,
-                            push:     false,
-                            request:  false,
-                            response: false
-                        }
-                    })
+  classic:  true,
+  colorize: true,
+  console:  true,
+  dir:      '',
+  states:   {
+    DEBUG:    false,
+    INFO:     false,
+    connect:  false,
+    eval:     false,
+    push:     false,
+    request:  false,
+    response: false
+  }
+})
 
 worker_count = 4
 worker_count = ENV['AGOO_WORKER_COUNT'].to_i if ENV.key?('AGOO_WORKER_COUNT')
