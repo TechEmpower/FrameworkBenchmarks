@@ -20,7 +20,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Wired.IO" Version="9.5.0" />
+        <PackageReference Include="Wired.IO" Version="9.5.3" />
     </ItemGroup>
 
 </Project>

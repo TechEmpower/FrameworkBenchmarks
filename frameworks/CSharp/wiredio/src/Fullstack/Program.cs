@@ -13,6 +13,7 @@ internal class Program
 
         await expressBuilder
             .Port(8080)
+            .NoScopedEndpoints()
             .MapGet("/json", scope => async ctx =>
             {
                 var payload = new JsonMessage { Message = JsonBody };
