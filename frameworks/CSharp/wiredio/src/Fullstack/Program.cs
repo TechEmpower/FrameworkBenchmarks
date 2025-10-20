@@ -14,7 +14,7 @@ internal class Program
         await expressBuilder
             .Port(8080)
             .NoScopedEndpoints()
-            .MapGet("/json", scope => async ctx =>
+            .MapGet("/json", _ => async ctx =>
             {
                 var payload = new JsonMessage { Message = JsonBody };
                 var myHandler = CreateBoundHandler(ctx.Writer, payload);
@@ -25,7 +25,7 @@ internal class Program
                     .Content(myHandler, 27);
 
             })
-            .MapGet("/plaintext", scope => async ctx =>
+            .MapGet("/plaintext", _ => async ctx =>
             {
                 ctx
                     .Respond()
