@@ -4,8 +4,8 @@ COPY pom.xml pom.xml
 COPY src src
 COPY public public
 COPY conf conf
-RUN mvn package -q -P netty
+RUN mvn package -q -P vertx
 
 EXPOSE 8080
 
-CMD ["java", "-server", "-Xms2g", "-Xmx2g", "-XX:+UseNUMA", "-XX:+UseParallelGC", "--enable-native-access=ALL-UNNAMED", "--add-opens=java.base/java.lang=ALL-UNNAMED", "--sun-misc-unsafe-memory-access=allow", "-Dio.netty.disableHttpHeadersValidation=true", "-Dio.netty.buffer.checkBounds=false", "-Dio.netty.buffer.checkAccessible=false", "-Dio.netty.noUnsafe=false", "-Dio.netty.eventLoopGroup=single", "-cp", "target/jooby.jar", "com.techempower.ReactivePg"]
+CMD ["java", "-server", "-Xms2g", "-Xmx2g", "-XX:+UseNUMA", "-XX:+UseParallelGC", "--enable-native-access=ALL-UNNAMED", "--add-opens=java.base/java.lang=ALL-UNNAMED", "--sun-misc-unsafe-memory-access=allow", "-Dio.netty.disableHttpHeadersValidation=true", "-Dio.netty.buffer.checkBounds=false", "-Dio.netty.buffer.checkAccessible=false", "-Dio.netty.noUnsafe=false", "-Dio.netty.eventLoopGroup=single", "-Djava.lang.Integer.IntegerCache.high=10000", "-Dvertx.disableMetrics=true", "-Dvertx.disableContextTimings=true", "-cp", "target/jooby.jar", "com.techempower.ReactivePg", "vertx"]
