@@ -63,7 +63,7 @@
       "notes": "",
       "versus": "uvicorn"
     },
-    "wrk": {
+    "nogil": {
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 8080,
@@ -77,7 +77,7 @@
       "webserver": "granian",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "granian [rsgi wrk]",
+      "display_name": "granian [rsgi nogil]",
       "notes": "",
       "versus": "uvicorn"
     }

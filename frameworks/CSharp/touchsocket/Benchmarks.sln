@@ -1,11 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.31717.71
+# Visual Studio Version 18
+VisualStudioVersion = 18.0.11109.219 d18.0-oob
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TouchSocketWebApi", "src\TouchSocketWebApi\TouchSocketWebApi.csproj", "{6BD9363A-D77F-5D90-8444-2BC37495C920}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TouchSocketHttp", "src\TouchSocketHttp\TouchSocketHttp.csproj", "{A7FB43AB-672B-8854-68D7-C2B383B0BC04}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TouchSocketHttp31", "src\TouchSocketHttp31\TouchSocketHttp31.csproj", "{DE261A06-A254-FD54-4ACF-EE4D4352BA77}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TouchSocketWebApi31", "src\TouchSocketWebApi31\TouchSocketWebApi31.csproj", "{6B6A57CE-1F69-FA6E-7458-0A4B6AB60683}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{A7FB43AB-672B-8854-68D7-C2B383B0BC04}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A7FB43AB-672B-8854-68D7-C2B383B0BC04}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A7FB43AB-672B-8854-68D7-C2B383B0BC04}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE261A06-A254-FD54-4ACF-EE4D4352BA77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE261A06-A254-FD54-4ACF-EE4D4352BA77}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE261A06-A254-FD54-4ACF-EE4D4352BA77}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE261A06-A254-FD54-4ACF-EE4D4352BA77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B6A57CE-1F69-FA6E-7458-0A4B6AB60683}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B6A57CE-1F69-FA6E-7458-0A4B6AB60683}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B6A57CE-1F69-FA6E-7458-0A4B6AB60683}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B6A57CE-1F69-FA6E-7458-0A4B6AB60683}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

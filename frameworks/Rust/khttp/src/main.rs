@@ -1,5 +1,12 @@
+#[global_allocator]
+static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
+
 use khttp::{Headers, Method::*, RequestContext, ResponseHandle, Server, Status};
-use std::{ffi::CStr, io, ptr};
+use pq_sys::{
+    ConnStatusType, ExecStatusType, PGconn, PQclear, PQconnectdb, PQerrorMessage, PQexecPrepared,
+    PQfinish, PQgetlength, PQgetvalue, PQntuples, PQprepare, PQresultStatus, PQstatus,
+};
+use std::{ffi::CStr, io, ptr, sync::LazyLock};
 use yarte::{Serialize, ywrite_html};
 
 #[derive(Serialize)]
@@ -7,25 +14,17 @@ struct HelloMessage {
     message: &'static str,
 }
 
+static JSON_HEADERS: LazyLock<Headers<'static>> = LazyLock::new(|| {
+    let mut headers = Headers::new();
+    headers.add(Headers::CONTENT_TYPE, b"application/json");
+    headers.add("server", b"khttp");
+    headers
+});
+
 fn main() {
     let mut app = Server::builder("0.0.0.0:8080").unwrap();
 
-    app.route(Get, "/plaintext", |_ctx, res| {
-        // headers
-        let mut headers = Headers::new();
-        headers.add(Headers::CONTENT_TYPE, b"text/plain");
-        headers.add("server", b"khttp");
-
-        // response
-        res.ok(&headers, "Hello, World!")
-    });
-
     app.route(Get, "/json", |_ctx, res| {
-        // headers
-        let mut headers = Headers::new();
-        headers.add(Headers::CONTENT_TYPE, b"application/json");
-        headers.add("server", b"khttp");
-
         // body
         let msg = HelloMessage {
             message: "Hello, World!",
@@ -34,7 +33,7 @@ fn main() {
         msg.to_bytes_mut(&mut buf);
 
         // response
-        res.ok(&headers, buf)
+        res.ok(&JSON_HEADERS, buf)
     });
 
     app.route(Get, "/fortunes", handle_fortunes);
@@ -63,11 +62,6 @@ fn handle_fortunes(_ctx: RequestContext, res: &mut ResponseHandle) -> io::Result
 // /fortunes query implementation using postgres (libpq)
 // ---------------------------------------------------------------------
 
-use pq_sys::{
-    ConnStatusType, ExecStatusType, PGconn, PQclear, PQconnectdb, PQerrorMessage, PQexecPrepared,
-    PQfinish, PQgetlength, PQgetvalue, PQntuples, PQprepare, PQresultStatus, PQstatus,
-};
-
 const DB_CONNINFO: &CStr = c"postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
 const PG_FORTUNES_SQL: &CStr = c"SELECT id, message FROM fortune";
 const PG_FORTUNES_PREPARED_STMT: &CStr = c"s_fortunes";
@@ -78,7 +72,7 @@ struct Fortune<'a> {
     message: &'a str,
 }
 
-fn fetch_fortunes_html() -> Result<Vec<u8>, String> {
+fn fetch_fortunes_html() -> Result<Vec<u8>, &'static str> {
     PG_CONN.with(|pg| unsafe {
         let res = PQexecPrepared(
             pg.conn,
@@ -90,11 +84,11 @@ fn fetch_fortunes_html() -> Result<Vec<u8>, String> {
             1,                                  // resultFormat = 1 (binary)
         );
         if res.is_null() {
-            return Err("PQexecPrepared returned null".to_owned());
+            return Err("PQexecPrepared returned null");
         }
         if PQresultStatus(res) != ExecStatusType::PGRES_TUPLES_OK {
             PQclear(res);
-            return Err("PQexecPrepared non-ok result status".to_owned());
+            return Err("PQexecPrepared non-ok result status");
         }
 
         let rows = PQntuples(res);
@@ -164,7 +158,6 @@ impl PgConnection {
                 PQfinish(conn);
                 panic!("PQprepare returned null");
             }
-
             let st = PQresultStatus(res);
             PQclear(res);
             if st != ExecStatusType::PGRES_COMMAND_OK {

@@ -2,15 +2,16 @@ ARG UBUNTU_VERSION=24.04
 
 ARG H2O_PREFIX=/opt/h2o
 
-FROM "ubuntu:${UBUNTU_VERSION}" AS compile
+FROM "buildpack-deps:${UBUNTU_VERSION}" AS compile
 
 ARG H2O_VERSION=3b9b6a53cac8bcc6a25fb28df81ad295fc5f9402
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG H2O_PREFIX
 WORKDIR /tmp/h2o-build
-RUN apt-get -yqq update > /dev/null && \
-    apt-get -yqq install \
+RUN apt-get install \
+      --no-install-recommends \
+      -qqUy \
       cmake \
       curl \
       g++ \
@@ -21,6 +22,7 @@ RUN apt-get -yqq update > /dev/null && \
       libuv1-dev \
       libwslay-dev \
       libz-dev \
+      make \
       ninja-build \
       pkg-config \
       ruby \
@@ -29,10 +31,8 @@ RUN apt-get -yqq update > /dev/null && \
       tar --strip-components=1 -xz > /dev/null && \
     cmake \
       -B build \
-      -DCMAKE_AR=/usr/bin/gcc-ar \
       -DCMAKE_C_FLAGS="-flto=auto -march=native -mtune=native" \
       -DCMAKE_INSTALL_PREFIX="${H2O_PREFIX}" \
-      -DCMAKE_RANLIB=/usr/bin/gcc-ranlib \
       -DWITH_MRUBY=on \
       -G Ninja \
       -S . > /dev/null && \
@@ -46,13 +46,15 @@ ARG PHP_VERSION=8.4
 ENV TZ=America/Los_Angeles
 
 ARG DEBIAN_FRONTEND=noninteractive
-RUN apt-get -yqq update > /dev/null && \
-    apt-get -yqq install \
+RUN apt-get install \
+      --no-install-recommends \
+      -qqUy \
       apt-utils \
       software-properties-common > /dev/null && \
     LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php && \
-    apt-get -yqq update > /dev/null && \
-    apt-get -yqq install \
+    apt-get install \
+      --no-install-recommends \
+      -qqUy \
       liburing2 \
       "php${PHP_VERSION}" \
       "php${PHP_VERSION}-cli" \
