@@ -95,7 +95,7 @@ GEM
     protocol-rack (0.11.2)
       protocol-http (~> 0.43)
       rack (>= 1.0)
-    puma (7.0.2)
+    puma (7.1.0)
       nio4r (~> 2.0)
     racc (1.8.1)
     rack (3.2.2)
@@ -156,7 +156,7 @@ DEPENDENCIES
   passenger (~> 6.1)
   pg (~> 1.5)
   pitchfork (~> 0.17)
-  puma (~> 7.0)
+  puma (~> 7.1)
   rack (~> 3.0)
   rack-test
   rubocop
