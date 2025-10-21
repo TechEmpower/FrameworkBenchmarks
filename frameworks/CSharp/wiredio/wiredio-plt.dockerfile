@@ -2,8 +2,8 @@
 FROM mcr.microsoft.com/dotnet/sdk:9.0-alpine AS build
 RUN apk add --no-cache clang build-base zlib-dev linux-headers
 WORKDIR /src
-COPY src/Fullstack/ ./Fullstack/
-WORKDIR /src/Fullstack
+COPY src/Platform/ ./Platform/
+WORKDIR /src/Platform
 RUN dotnet publish -c Release \
     -r linux-musl-x64 \
     --self-contained true \
@@ -17,6 +17,6 @@ FROM mcr.microsoft.com/dotnet/runtime-deps:9.0-alpine
 ENV URLS=http://+:8080
 WORKDIR /app
 COPY --from=build /app/out ./
-RUN chmod +x ./Fullstack
+RUN chmod +x ./Platform
 EXPOSE 8080
-ENTRYPOINT ["./Fullstack"]
+ENTRYPOINT ["./Platform"]
