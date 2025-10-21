@@ -6,7 +6,7 @@ COPY . /
 
 RUN clj -Sforce -T:build all
 
-FROM azul/zulu-openjdk-alpine:17
+FROM openjdk:25-jdk-slim
 
 COPY --from=build /target/te-bench-standalone.jar /te-bench/te-bench-standalone.jar
 
