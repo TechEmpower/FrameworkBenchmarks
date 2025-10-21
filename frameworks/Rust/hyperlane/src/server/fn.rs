@@ -13,59 +13,40 @@ fn runtime() -> Runtime {
 
 async fn init_server() {
     let config: ServerConfig = ServerConfig::new().await;
-    config.host("0.0.0.0").await;
-    config.port(8080).await;
-    config.disable_nodelay().await;
-    config.http_buffer(256).await;
-    config.ws_buffer(256).await;
-
-    let server: Server = Server::from(config).await;
-
-    server.request_middleware(middleware::request).await;
-
-    server
-        .disable_http_hook("/plaintext")
+    config
+        .host("0.0.0.0")
+        .await
+        .port(8080)
+        .await
+        .disable_linger()
+        .await
+        .disable_nodelay()
+        .await
+        .buffer(256)
+        .await;
+    Server::from(config)
+        .await
+        .request_middleware(middleware::request)
         .await
         .route("/plaintext", route::plaintext)
-        .await;
-
-    server
-        .disable_http_hook("/json")
         .await
         .route("/json", route::json)
-        .await;
-
-    server
-        .disable_http_hook("/cached-quer")
         .await
         .route("/cached-quer", route::cached_query)
-        .await;
-
-    server
-        .disable_http_hook("/db")
         .await
         .route("/db", route::db)
-        .await;
-
-    server
-        .disable_http_hook("/query")
         .await
         .route("/query", route::query)
-        .await;
-
-    server
-        .disable_http_hook("/fortunes")
         .await
         .route("/fortunes", route::fortunes)
-        .await;
-
-    server
-        .disable_http_hook("/upda")
         .await
         .route("/upda", route::update)
+        .await
+        .run()
+        .await
+        .unwrap()
+        .wait()
         .await;
-
-    server.run().await.unwrap().wait().await;
 }
 
 async fn init() {

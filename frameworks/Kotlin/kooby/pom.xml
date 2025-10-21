@@ -7,16 +7,16 @@
 
   <artifactId>kooby</artifactId>
   <groupId>com.techempower</groupId>
-  <version>3.0</version>
+  <version>4.0</version>
 
   <name>kooby: jooby+kotlin</name>
 
   <properties>
-    <jooby.version>4.0.5</jooby.version>
+    <jooby.version>4.0.7</jooby.version>
     <postgresql.version>42.7.7</postgresql.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>22</maven.compiler.source>
-    <maven.compiler.target>22</maven.compiler.target>
+    <maven.compiler.source>24</maven.compiler.source>
+    <maven.compiler.target>24</maven.compiler.target>
     <kotlin.version>2.2.0</kotlin.version>
 
     <!-- Startup class -->

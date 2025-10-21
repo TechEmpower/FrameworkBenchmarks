@@ -7,7 +7,7 @@ pub fn get_db_connection() -> &'static DbPoolConnection {
 #[cfg(feature = "dev")]
 pub async fn create_database() {
     let db_pool: &DbPoolConnection = get_db_connection();
-    let _ = db_query(&format!("CREATE DATABASE {};", DATABASE_NAME))
+    let _ = db_query(&format!("CREATE DATABASE {DATABASE_NAME};"))
         .execute(db_pool)
         .await;
 }
@@ -16,18 +16,16 @@ pub async fn create_database() {
 pub async fn create_table() {
     let db_pool: &DbPoolConnection = get_db_connection();
     let _ = db_query(&format!(
-        "CREATE TABLE IF NOT EXISTS {} (
+        "CREATE TABLE IF NOT EXISTS {TABLE_NAME_WORLD} (
             id SERIAL PRIMARY KEY, randomNumber INT NOT NULL
-        );",
-        TABLE_NAME_WORLD
+        );"
     ))
     .execute(db_pool)
     .await;
     let _ = db_query(&format!(
-        "CREATE TABLE IF NOT EXISTS {} (
+        "CREATE TABLE IF NOT EXISTS {TABLE_NAME_FORTUNE} (
             id SERIAL PRIMARY KEY, message VARCHAR NOT NULL
-        );",
-        TABLE_NAME_FORTUNE
+        );"
     ))
     .execute(db_pool)
     .await;
@@ -36,7 +34,7 @@ pub async fn create_table() {
 #[cfg(feature = "dev")]
 pub async fn insert_records() {
     let db_pool: &DbPoolConnection = get_db_connection();
-    let row: PgRow = db_query(&format!("SELECT COUNT(*) FROM {}", TABLE_NAME_WORLD))
+    let row: PgRow = db_query(&format!("SELECT COUNT(*) FROM {TABLE_NAME_WORLD}"))
         .fetch_one(db_pool)
         .await
         .unwrap();
@@ -49,22 +47,20 @@ pub async fn insert_records() {
     let mut values: Vec<String> = Vec::new();
     for _ in 0..missing_count {
         let random_number: i32 = get_random_id();
-        values.push(format!("(DEFAULT, {})", random_number));
+        values.push(format!("(DEFAULT, {random_number})"));
     }
     let sql: String = format!(
-        "INSERT INTO {} (id, randomNumber) VALUES {}",
-        TABLE_NAME_WORLD,
+        "INSERT INTO {TABLE_NAME_WORLD} (id, randomNumber) VALUES {}",
         values.join(",")
     );
     let _ = db_query(&sql).execute(db_pool).await;
     let mut values: Vec<String> = Vec::new();
     for _ in 0..missing_count {
         let random_number: i32 = get_random_id();
-        values.push(format!("(DEFAULT, {})", random_number));
+        values.push(format!("(DEFAULT, {random_number})"));
     }
     let sql: String = format!(
-        "INSERT INTO {} (id, message) VALUES {}",
-        TABLE_NAME_FORTUNE,
+        "INSERT INTO {TABLE_NAME_FORTUNE} (id, message) VALUES {}",
         values.join(",")
     );
     let _ = db_query(&sql).execute(db_pool).await;
@@ -73,10 +69,7 @@ pub async fn insert_records() {
 pub async fn init_cache() -> Vec<QueryRow> {
     let mut res: Vec<QueryRow> = Vec::with_capacity(RANDOM_MAX as usize);
     let db_pool: &DbPoolConnection = get_db_connection();
-    let sql: String = format!(
-        "SELECT id, randomNumber FROM {} LIMIT {}",
-        TABLE_NAME_WORLD, RANDOM_MAX
-    );
+    let sql: String = format!("SELECT id, randomNumber FROM {TABLE_NAME_WORLD} LIMIT {RANDOM_MAX}");
     if let Ok(rows) = db_query(&sql).fetch_all(db_pool).await {
         for row in rows {
             let id: i32 = row.get(KEY_ID);
@@ -91,13 +84,7 @@ pub async fn connection_db() -> DbPoolConnection {
     let db_url: &str = match option_env!("POSTGRES_URL") {
         Some(it) => it,
         _ => &format!(
-            "{}://{}:{}@{}:{}/{}",
-            DATABASE_TYPE,
-            DATABASE_USER_NAME,
-            DATABASE_USER_PASSWORD,
-            DATABASE_HOST,
-            DATABASE_PORT,
-            DATABASE_NAME
+            "{DATABASE_TYPE}://{DATABASE_USER_NAME}:{DATABASE_USER_PASSWORD}@{DATABASE_HOST}:{DATABASE_PORT}/{DATABASE_NAME}"
         ),
     };
     let pool_size: u32 = (get_thread_count() as u32).min(DB_MAX_CONNECTIONS);
@@ -174,7 +161,7 @@ pub async fn update_world_rows(limit: Queries) -> Vec<QueryRow> {
 
 pub async fn all_world_row() -> Vec<PgRow> {
     let db_pool: &DbPoolConnection = get_db_connection();
-    let sql: String = format!("SELECT id, message FROM {}", TABLE_NAME_FORTUNE);
+    let sql: String = format!("SELECT id, message FROM {TABLE_NAME_FORTUNE}");
     let res: Vec<PgRow> = db_query(&sql).fetch_all(db_pool).await.unwrap_or_default();
     return res;
 }

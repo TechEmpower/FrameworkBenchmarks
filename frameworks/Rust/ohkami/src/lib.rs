@@ -1,68 +1,67 @@
 mod fangs;
 mod models;
-#[cfg(feature = "db")] mod postgres;
-#[cfg(feature = "db")] mod templates;
+#[cfg(feature = "rt_tokio")] mod postgres;
+#[cfg(feature = "rt_tokio")] mod templates;
 
 use {
     fangs::SetServer,
     models::Message,
     ohkami::prelude::*,
-    ohkami::format::JSON,
 };
-#[cfg(feature = "db")] use {
+#[cfg(feature = "rt_tokio")] use {
     models::{Fortune, World, WorldsMeta},
     postgres::Postgres,
     templates::FortunesTemplate,
-    ohkami::format::Query,
 };
 
 pub async fn ohkami() -> Ohkami {
-    #[cfg(feature = "db")] {
-        Ohkami::new((
-            SetServer,
-            Postgres::init().await,
-            "/json"     .GET(json_serialization),
-            "/db"       .GET(single_database_query),
-            "/queries"  .GET(multiple_database_query),
-            "/fortunes" .GET(fortunes),
-            "/updates"  .GET(database_updates),
-            "/plaintext".GET(plaintext),
-        ))
-    }
-    #[cfg(not(feature = "db"))] {
-        Ohkami::new((
-            SetServer,
-            "/json"     .GET(json_serialization),
-            "/plaintext".GET(plaintext),
-        ))
-    }
+    Ohkami::new((
+        SetServer,
+        #[cfg(feature = "rt_tokio")]
+        Context::new(Postgres::new().await),
+        
+        "/plaintext".GET(plaintext),
+        "/json".GET(json_serialization),
+        #[cfg(feature = "rt_tokio")]
+        "/db".GET(single_database_query),
+        #[cfg(feature = "rt_tokio")]
+        "/queries".GET(multiple_database_query),
+        #[cfg(feature = "rt_tokio")]
+        "/fortunes".GET(fortunes),
+        #[cfg(feature = "rt_tokio")]
+        "/updates".GET(database_updates),
+    ))
 }
 
-async fn json_serialization() -> JSON<Message> {
-    JSON(Message {
+async fn plaintext() -> &'static str {
+    "Hello, World!"
+}
+
+async fn json_serialization() -> Json<Message> {
+    Json(Message {
         message: "Hello, World!"
     })
 }
 
-#[cfg(feature = "db")]
+#[cfg(feature = "rt_tokio")]
 async fn single_database_query(
     Context(db): Context<'_, Postgres>,
-) -> JSON<World> {
+) -> Json<World> {
     let world = db.select_random_world().await;
-    JSON(world)
+    Json(world)
 }
 
-#[cfg(feature = "db")]
+#[cfg(feature = "rt_tokio")]
 async fn multiple_database_query(
     Query(q): Query<WorldsMeta<'_>>,
     Context(db): Context<'_, Postgres>,
-) -> JSON<Vec<World>> {
+) -> Json<Vec<World>> {
     let n = q.parse();
     let worlds = db.select_n_random_worlds(n).await;
-    JSON(worlds)
+    Json(worlds)
 }
 
-#[cfg(feature = "db")]
+#[cfg(feature = "rt_tokio")]
 async fn fortunes(
     Context(db): Context<'_, Postgres>,
 ) -> FortunesTemplate {
@@ -75,17 +74,12 @@ async fn fortunes(
     FortunesTemplate { fortunes }
 }
 
-#[cfg(feature = "db")]
+#[cfg(feature = "rt_tokio")]
 async fn database_updates(
     Query(q): Query<WorldsMeta<'_>>,
     Context(db): Context<'_, Postgres>,
-) -> JSON<Vec<World>> {
+) -> Json<Vec<World>> {
     let n = q.parse();
-    let mut worlds = db.select_n_random_worlds(n).await;
-    db.update_random_ids_of_worlds(&mut worlds).await;
-    JSON(worlds)
-}
-
-async fn plaintext() -> &'static str {
-    "Hello, World!"
+    let worlds = db.update_randomnumbers_of_n_worlds(n).await;
+    Json(worlds)
 }

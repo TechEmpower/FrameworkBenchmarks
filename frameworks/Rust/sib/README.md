@@ -2,8 +2,7 @@
 
 ## Description
 
-A high-performance, secure, and cross-platform modules optimized for efficiency, scalability, and reliability.
-SIB supports HTTP/1.1 as well as HTTP/3, and uses coroutine-based concurrency via [may](https://github.com/Xudong-Huang/may) along with zero-copy request/response handling, aiming for the lowest possible overhead.
+Sib supports HTTP/1.1, HTTP/2, and HTTP/3. It uses coroutines and io_uring, along with zero-copy request/response handling, to achieve the lowest possible overhead.
 
 ## Test URLs
 

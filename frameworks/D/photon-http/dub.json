@@ -1,0 +1,14 @@
+{
+	"authors": [
+		"Dmitry Olshansky"
+	],
+	"copyright": "Copyright © 2025, Dmitry Olshansky",
+	"dependencies": {
+		"asdf": "~>0.7.17",
+		"photon": "~>0.18.5",
+		"photon-http": "~>0.6.0"
+	},
+	"description": "Benchmark of photon-http",
+	"license": "BSL-1.0",
+	"name": "photon-http-benchmark"
+}

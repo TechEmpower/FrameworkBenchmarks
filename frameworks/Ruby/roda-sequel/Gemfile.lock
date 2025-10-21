@@ -2,14 +2,18 @@ GEM
   remote: https://rubygems.org/
   specs:
     bigdecimal (3.1.9)
+    cgi (0.5.0)
+    concurrent-ruby (1.3.5)
     erubi (1.13.1)
     iodine (0.7.58)
     json (2.13.2)
     nio4r (2.7.4)
-    pg (1.5.9)
+    pg (1.6.2)
+    pg (1.6.2-x86_64-darwin)
+    pg (1.6.2-x86_64-linux)
     puma (6.6.0)
       nio4r (~> 2.0)
-    rack (3.2.0)
+    rack (3.2.3)
     roda (3.90.0)
       rack
     sequel (5.90.0)
@@ -26,6 +30,8 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  cgi
+  concurrent-ruby
   erubi (~> 1.12)
   iodine (~> 0.7)
   json (~> 2.8)
@@ -35,7 +41,7 @@ DEPENDENCIES
   sequel (~> 5.67)
   sequel_pg (~> 1.17)
   tilt (~> 2.1)
-  trilogy (~> 2.9.0)
+  trilogy (~> 2.9)
 
 BUNDLED WITH
    2.7.0

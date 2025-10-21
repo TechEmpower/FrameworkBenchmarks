@@ -13,7 +13,7 @@ a variety of web platforms.
 The tests will be run with:
 
 * [Ruby 3.4](http://www.ruby-lang.org)
-* [Puma 6](http://puma.io)
+* [Puma 7](http://puma.io)
 * [Rack 3](http://rack.rubyforge.org)
 * [Sequel 5](http://sequel.jeremyevans.net)
 * [MySQL 5.5](https://www.mysql.com)
