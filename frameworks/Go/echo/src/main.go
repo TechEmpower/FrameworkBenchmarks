@@ -1,9 +1,11 @@
 package main
 
 import (
-	"database/sql"
+	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"html/template"
 	"io"
 	"log"
@@ -13,7 +15,6 @@ import (
 	"strconv"
 
 	"github.com/labstack/echo/v4"
-	_ "github.com/lib/pq"
 )
 
 type (
@@ -79,10 +80,7 @@ const (
 
 var (
 	// Database
-	db                *sql.DB
-	worldSelectStmt   *sql.Stmt
-	worldUpdateStmt   *sql.Stmt
-	fortuneSelectStmt *sql.Stmt
+	db *pgxpool.Pool
 
 	// Template
 	Template = &StdTemplate{
@@ -120,8 +118,9 @@ func (h *handler) json() echo.HandlerFunc {
 // Test 2: Single database query
 func (h *handler) db() echo.HandlerFunc {
 	return func(c echo.Context) error {
+		ctx := c.Request().Context()
 		world := new(World)
-		if err := fetchRandomWorld(world); err != nil {
+		if err := fetchRandomWorld(ctx, world); err != nil {
 			return err
 		}
 
@@ -134,10 +133,11 @@ func (h *handler) db() echo.HandlerFunc {
 // Test 3: Multiple database queries
 func (h *handler) queries() echo.HandlerFunc {
 	return func(c echo.Context) error {
+		ctx := c.Request().Context()
 		n := getQueryCount(c.QueryParam("n"))
 		worlds := make([]World, n)
 		for i := 0; i < n; i++ {
-			if err := fetchRandomWorld(&worlds[i]); err != nil {
+			if err := fetchRandomWorld(ctx, &worlds[i]); err != nil {
 				return err
 			}
 		}
@@ -151,7 +151,8 @@ func (h *handler) queries() echo.HandlerFunc {
 // Test 4: Fortunes
 func (h *handler) fortunes() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		rows, err := fortuneSelectStmt.Query()
+		ctx := c.Request().Context()
+		rows, err := db.Query(ctx, fortuneSelect)
 		if err != nil {
 			return fmt.Errorf("Error preparing statement: %v", err)
 		}
@@ -172,18 +173,19 @@ func (h *handler) fortunes() echo.HandlerFunc {
 // Test 5: Database updates
 func (h *handler) updates() echo.HandlerFunc {
 	return func(c echo.Context) error {
+		ctx := c.Request().Context()
 		n := getQueryCount(c.QueryParam("n"))
 		worlds := make([]World, n)
 		for i := 0; i < n; i++ {
 			// Fetch and modify
 			w := &worlds[i]
-			if err := fetchRandomWorld(&worlds[i]); err != nil {
+			if err := fetchRandomWorld(ctx, &worlds[i]); err != nil {
 				return err
 			}
 			w.RandomNumber = uint16(randomWorldNum())
 
 			// Update
-			if _, err := worldUpdateStmt.Exec(w.RandomNumber, w.ID); err != nil {
+			if _, err := db.Exec(ctx, worldUpdate, w.RandomNumber, w.ID); err != nil {
 				return fmt.Errorf("Error updating world row: %v", err)
 			}
 		}
@@ -221,9 +223,9 @@ func (h *handler) plaintext() echo.HandlerFunc {
 	}
 }
 
-func fetchRandomWorld(w *World) error {
+func fetchRandomWorld(ctx context.Context, w *World) error {
 	n := randomWorldNum()
-	return worldSelectStmt.QueryRow(n).Scan(&w.ID, &w.RandomNumber)
+	return db.QueryRow(ctx, worldSelect, n).Scan(&w.ID, &w.RandomNumber)
 }
 
 func randomWorldNum() int {
@@ -241,8 +243,8 @@ func getQueryCount(q string) int {
 	return n
 }
 
-func fetchFortunes(rows *sql.Rows) (Fortunes, error) {
-	fortunes := make(Fortunes, 0, 16)
+func fetchFortunes(rows pgx.Rows) (Fortunes, error) {
+	fortunes := make(Fortunes, 0)
 	for rows.Next() { // Fetch rows
 		f := new(Fortune)
 		if err := rows.Scan(&f.ID, &f.Message); err != nil {
@@ -267,24 +269,17 @@ func InitPostgres() {
 	host := "tfb-database"
 
 	var err error
-	db, err = sql.Open("postgres", fmt.Sprintf(connectionString, host))
+
+	dbCfg, err := pgxpool.ParseConfig(fmt.Sprintf(connectionString, host))
+	if err != nil {
+		log.Fatalf("Error reading database connection string: %v", err)
+	}
+	dbCfg.MaxConns = maxConnections
+	dbCfg.MinConns = maxConnections
+
+	db, err = pgxpool.NewWithConfig(context.Background(), dbCfg)
 	if err != nil {
 		log.Fatalf("Error opening database: %v", err)
-	}
-	db.SetMaxIdleConns(maxConnections)
-	db.SetMaxOpenConns(maxConnections)
-
-	worldSelectStmt, err = db.Prepare(worldSelect)
-	if err != nil {
-		log.Fatal(err)
-	}
-	worldUpdateStmt, err = db.Prepare(worldUpdate)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fortuneSelectStmt, err = db.Prepare(fortuneSelect)
-	if err != nil {
-		log.Fatal(err)
 	}
 }
 

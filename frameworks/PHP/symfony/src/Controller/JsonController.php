@@ -7,9 +7,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class JsonController
 {
-    /**
-     * @Route("/json")
-     */
+    #[Route('/json')]
+
     public function json(): JsonResponse
     {
         return new JsonResponse(['message' => 'Hello, World!']);

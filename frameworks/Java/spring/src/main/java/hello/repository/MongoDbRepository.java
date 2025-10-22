@@ -1,41 +1,48 @@
 package hello.repository;
 
-import hello.model.Fortune;
-import hello.model.World;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Profile;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.stereotype.Component;
-
+import java.util.ArrayList;
 import java.util.List;
 
-@Component
+import org.springframework.context.annotation.Profile;
+import org.springframework.data.mongodb.core.BulkOperations;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.stereotype.Repository;
+
+import com.mongodb.bulk.BulkWriteResult;
+import hello.Utils;
+import hello.model.Fortune;
+import hello.model.World;
+
+@Repository
 @Profile("mongo")
 public class MongoDbRepository implements DbRepository {
-    private final Logger log = LoggerFactory.getLogger(getClass());
-    private final MongoTemplate mongoTemplate;
+	private final MongoTemplate mongoTemplate;
 
-    public MongoDbRepository(MongoTemplate mongoTemplate) {
-        this.mongoTemplate = mongoTemplate;
-    }
+	public MongoDbRepository(MongoTemplate mongoTemplate) {
+		this.mongoTemplate = mongoTemplate;
+	}
 
+	@Override
+	public World getWorld(int id) {
+		return mongoTemplate.findById(id, World.class);
+	}
 
-    @Override
-    public World getWorld(int id) {
-        log.debug("getWorld({})", id);
-        return mongoTemplate.findById(id, World.class);
-    }
+	@Override
+	public void updateWorlds(List<World> worlds) {
+		BulkOperations bulkOps = mongoTemplate.bulkOps(BulkOperations.BulkMode.UNORDERED, World.class);
+		for (World world : worlds) {
+			Query query = new Query().addCriteria(new Criteria("_id").is(world.id));
+			Update update = new Update().set("randomNumber", world.randomNumber);
+			bulkOps.updateOne(query, update);
+		}
+		bulkOps.execute();
+	}
 
-
-    @Override
-    public World updateWorld(World world, int randomNumber) {
-        world.randomnumber = randomNumber;
-        return mongoTemplate.save(world);
-    }
-
-    @Override
-    public List<Fortune> fortunes() {
-        return mongoTemplate.findAll(Fortune.class);
-    }
+	@Override
+	public List<Fortune> fortunes() {
+		return mongoTemplate.findAll(Fortune.class);
+	}
 }

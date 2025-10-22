@@ -25,6 +25,7 @@
       "query_url": "/queries?queries=",
       "fortune_url": "/fortunes",
       "update_url": "/updates?queries=",
+      "cached_query_url": "/cached-queries?count=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",

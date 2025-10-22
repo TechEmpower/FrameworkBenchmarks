@@ -1,10 +1,17 @@
-source 'http://rubygems.org'
+source 'https://rubygems.org'
 
-gem 'mysql2', '0.4.10'
-gem "unicorn", '5.3.0'
-gem 'puma', '3.12.6'
-gem 'json', '1.8.6'
+gem 'mysql2', '> 0.5'
+gem 'json'
+gem 'activerecord', '>= 7.1', :require => 'active_record'
+
 gem 'slim', '2.0.3'
-gem 'dm-mysql-adapter', '1.2.0'
-gem 'dm-core', '1.2.1'
-gem 'padrino', '0.14.3'
+gem 'padrino', git: 'https://github.com/padrino/padrino-framework.git'
+gem 'rack'
+
+group :puma, optional: true do
+  gem 'puma', '~> 6.4', require: false
+end
+
+group :unicorn, optional: true do
+  gem 'unicorn', '~> 6.1', platforms: [:ruby, :windows], require: false
+end

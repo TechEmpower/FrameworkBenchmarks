@@ -1,39 +1,17 @@
 import com.github.jasync.sql.db.ConnectionPoolConfiguration
+import com.github.jasync.sql.db.QueryResult
 import com.github.jasync.sql.db.SuspendingConnection
 import com.github.jasync.sql.db.asSuspending
 import com.github.jasync.sql.db.postgresql.PostgreSQLConnectionBuilder
-import io.ktor.application.call
-import io.ktor.application.install
-import io.ktor.features.DefaultHeaders
-import io.ktor.html.Placeholder
-import io.ktor.html.Template
-import io.ktor.html.insert
-import io.ktor.html.respondHtmlTemplate
-import io.ktor.http.ContentType
-import io.ktor.response.respondText
-import io.ktor.routing.get
-import io.ktor.routing.routing
-import io.ktor.server.engine.embeddedServer
-import io.ktor.server.netty.Netty
-import io.reactiverse.kotlin.pgclient.getConnectionAwait
-import io.reactiverse.kotlin.pgclient.preparedBatchAwait
-import io.reactiverse.kotlin.pgclient.preparedQueryAwait
-import io.reactiverse.pgclient.*
+import io.ktor.server.application.*
+import io.ktor.server.html.*
+import io.ktor.server.plugins.defaultheaders.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
+import kotlinx.coroutines.*
 import kotlinx.html.*
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.JSON
-import kotlinx.serialization.list
-import java.lang.IllegalArgumentException
 import kotlin.random.Random
 import kotlin.random.nextInt
-
-@Serializable
-data class Message(val message: String)
-
-@Serializable
-data class World(val id: Int, val randomNumber: Int)
-
-data class Fortune(val id: Int, val message: String)
 
 val rand = Random(1)
 
@@ -44,73 +22,48 @@ interface Repository {
 }
 
 class JasyncRepository() : Repository {
-    private val dbConfig: ConnectionPoolConfiguration
-    private val db: SuspendingConnection
-
-    init {
-        dbConfig = ConnectionPoolConfiguration(
-            "tfb-database",
-            database = "hello_world",
-            username = "benchmarkdbuser",
-            password = "benchmarkdbpass",
-            maxActiveConnections = 64
-        )
-        db = PostgreSQLConnectionBuilder.createConnectionPool(dbConfig).asSuspending
+    companion object {
+        const val WORLD_QUERY = "select id, randomNumber from world where id = ?"
+        const val FORTUNES_QUERY = "select id, message from fortune"
+        const val UPDATE_QUERY = "update world set randomNumber = ? where id = ?"
     }
+
+    private val dbConfig: ConnectionPoolConfiguration = ConnectionPoolConfiguration(
+        "tfb-database",
+        database = "hello_world",
+        username = "benchmarkdbuser",
+        password = "benchmarkdbpass",
+        maxActiveConnections = 64
+    )
+    private val db: SuspendingConnection = PostgreSQLConnectionBuilder.createConnectionPool(dbConfig).asSuspending
 
     override suspend fun getWorld(): World {
         val worldId = rand.nextInt(1, 10000)
-        val result = db.sendPreparedStatement("select id, randomNumber from world where id = ?", listOf(worldId))
+        val result = db.sendPreparedStatement(WORLD_QUERY, listOf(worldId))
         val row = result.rows.first()
         return World(row.getInt(0)!!, row.getInt(1)!!)
     }
 
     override suspend fun getFortunes(): List<Fortune> {
-        val results = db.sendPreparedStatement("select id, message from fortune")
+        val results = db.sendPreparedStatement(FORTUNES_QUERY)
         return results.rows.map { Fortune(it.getInt(0)!!, it.getString(1)!!) }
     }
 
     override suspend fun updateWorlds(worlds: List<World>) {
-        worlds.forEach { world ->
-            db.sendPreparedStatement(
-                "update world set randomNumber = ? where id = ?",
-                listOf(world.randomNumber, world.id)
-            )
+        coroutineScope {
+            val jobs = ArrayList<Deferred<QueryResult>>(worlds.size)
+            worlds.forEach { world ->
+                val deferred = async(Dispatchers.IO) {
+                    db.sendPreparedStatement(
+                        UPDATE_QUERY,
+                        listOf(world.randomNumber, world.id)
+                    )
+                }
+                jobs.add(deferred)
+            }
+
+            jobs.awaitAll()
         }
-    }
-}
-
-class ReactivePGRepository : Repository {
-    private val db: PgPool
-
-    init {
-        val poolOptions = PgPoolOptions()
-        poolOptions.apply {
-            host = "tfb-database"
-            database = "hello_world"
-            user = "benchmarkdbuser"
-            password = "benchmarkdbpass"
-            maxSize = 64
-            cachePreparedStatements = true
-        }
-        db = PgClient.pool(poolOptions)
-    }
-
-    override suspend fun getFortunes(): List<Fortune> {
-        val results = db.preparedQueryAwait("select id, message from fortune")
-        return results.map { Fortune(it.getInteger(0), it.getString(1)) }
-    }
-
-    override suspend fun getWorld(): World {
-        val worldId = rand.nextInt(1, 10000)
-        val result = db.preparedQueryAwait("select id, randomNumber from world where id = $1", Tuple.of(worldId))
-        val row = result.first()
-        return World(row.getInteger(0), row.getInteger(1)!!)
-    }
-
-    override suspend fun updateWorlds(worlds: List<World>) {
-        val batch = worlds.map { Tuple.of(it.id, it.randomNumber) }
-        db.preparedBatchAwait("update world set randomNumber = $1 where id = $2", batch)
     }
 }
 
@@ -132,7 +85,7 @@ class MainTemplate : Template<HTML> {
     }
 }
 
-class FortuneTemplate(val fortunes: List<Fortune>, val main: MainTemplate = MainTemplate()) : Template<HTML> {
+class FortuneTemplate(private val fortunes: List<Fortune>, private val main: MainTemplate = MainTemplate()) : Template<HTML> {
     override fun HTML.apply() {
         insert(main) {
             content {
@@ -153,61 +106,46 @@ class FortuneTemplate(val fortunes: List<Fortune>, val main: MainTemplate = Main
     }
 }
 
-fun main(args: Array<String>) {
-    val db = when(args.firstOrNull()) {
-        "jasync-sql" -> JasyncRepository()
-        "reactive-pg" -> ReactivePGRepository()
-        else -> throw IllegalArgumentException("Must specify a postgres client")
-    }
+fun Application.main() {
 
-    val messageSerializer = Message.serializer()
-    val worldSerializer = World.serializer()
+    val db = JasyncRepository()
 
-    val server = embeddedServer(Netty, 8080, configure = {
-        shareWorkGroup = true
-    }) {
-        install(DefaultHeaders)
-        routing {
-            get("/plaintext") {
-                call.respondText("Hello, World!")
-            }
+    install(DefaultHeaders)
+    routing {
+        get("/plaintext") {
+            call.respondText("Hello, World!")
+        }
 
-            get("/json") {
-                call.respondText(
-                    JSON.stringify(messageSerializer, Message("Hello, World!")),
-                    ContentType.Application.Json
-                )
-            }
+        get("/json") {
+            call.respondJson(Message("Hello, World!"))
+        }
 
-            get("/db") {
-                call.respondText(JSON.stringify(worldSerializer, db.getWorld()), ContentType.Application.Json)
-            }
+        get("/db") {
+            call.respondJson(db.getWorld())
+        }
 
-            get("/query/") {
-                val queries = call.parameters["queries"]?.toBoxedInt(1..500) ?: 1
-                val worlds = (1..queries).map { db.getWorld() }
-                call.respondText(JSON.stringify(worldSerializer.list, worlds), ContentType.Application.Json)
-            }
+        get("/query/") {
+            val queries = call.parameters["queries"]?.toBoxedInt(1..500) ?: 1
+            val worlds = (1..queries).map { db.getWorld() }
+            call.respondJson(worlds)
+        }
 
-            get("/fortunes") {
-                val newFortune = Fortune(0, "Additional fortune added at request time.")
-                val fortunes = db.getFortunes().toMutableList()
-                fortunes.add(newFortune)
-                fortunes.sortBy { it.message }
-                call.respondHtmlTemplate(FortuneTemplate(fortunes)) { }
-            }
+        get("/fortunes") {
+            val newFortune = Fortune(0, "Additional fortune added at request time.")
+            val fortunes = db.getFortunes().toMutableList()
+            fortunes.add(newFortune)
+            fortunes.sortBy { it.message }
+            call.respondHtmlTemplate(FortuneTemplate(fortunes)) { }
+        }
 
-            get("/updates") {
-                val queries = call.parameters["queries"]?.toBoxedInt(1..500) ?: 1
-                val worlds = (1..queries).map { db.getWorld() }
-                val newWorlds = worlds.map { it.copy(randomNumber = rand.nextInt(1..10000)) }
+        get("/updates") {
+            val queries = call.parameters["queries"]?.toBoxedInt(1..500) ?: 1
+            val worlds = (1..queries).map { db.getWorld() }
+            val newWorlds = worlds.map { it.copy(randomNumber = rand.nextInt(1..10000)) }
 
-                db.updateWorlds(newWorlds)
+            db.updateWorlds(newWorlds)
 
-                call.respondText(JSON.stringify(worldSerializer.list, newWorlds), ContentType.Application.Json)
-            }
+            call.respondJson(newWorlds)
         }
     }
-
-    server.start(wait = true)
 }

@@ -1,14 +1,6 @@
-FROM openjdk:11-jdk
+FROM sbtscala/scala-sbt:eclipse-temurin-21.0.6_7_1.10.11_2.12.20
 
-ARG SBT_VERSION=1.2.8
-
-RUN \
-  curl -L -o sbt-$SBT_VERSION.deb https://dl.bintray.com/sbt/debian/sbt-$SBT_VERSION.deb && \
-  dpkg -i sbt-$SBT_VERSION.deb && \
-  rm sbt-$SBT_VERSION.deb && \
-  apt-get update && \
-  apt-get install sbt && \
-  sbt sbtVersion
+ARG SBT_VERSION=1.8.2
 
 WORKDIR /vertx
 COPY src src

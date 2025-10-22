@@ -1,4 +1,4 @@
-FROM hseeberger/scala-sbt:8u265_1.3.13_2.13.3
+FROM sbtscala/scala-sbt:eclipse-temurin-21.0.6_7_1.10.11_2.13.16
 
 WORKDIR /akka-http-slick-postgres
 

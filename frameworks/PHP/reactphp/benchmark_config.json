@@ -1,12 +1,9 @@
 {
   "framework": "reactphp",
+  "maintainers": ["WyriHaximus"],
   "tests": [{
     "default": {
       "json_url": "/json",
-      "db_url": "/db",
-      "query_url": "/query?q=",
-      "fortune_url": "/fortunes",
-      "update_url": "/update?q=",
       "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
@@ -20,9 +17,28 @@
       "webserver": "None",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "reactphp",
+      "display_name": "reactphp [libevent]",
       "notes": "",
       "versus": "php"
+    },
+    "libuv": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "framework": "reactphp",
+      "language": "PHP",
+      "flavor": "PHP8",
+      "database": "MySQL",
+      "orm": "Raw",
+      "platform": "reactphp",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "reactphp [libuv]",
+      "notes": "",
+      "versus": "reactphp"
     }
   }]
 }

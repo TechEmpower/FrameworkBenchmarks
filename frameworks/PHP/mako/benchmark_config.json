@@ -1,0 +1,28 @@
+{
+  "framework": "mako",
+  "tests": [{
+    "default": {
+      "plaintext_url": "/plaintext",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "fortune_url": "/fortunes",
+      "update_url": "/update?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "MySQL",
+      "framework": "mako",
+      "language": "PHP",
+      "flavor": "PHP8",
+      "orm": "Full",
+      "platform": "FPM/FastCGI",
+      "webserver": "nginx",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "mako",
+      "notes": "",
+      "versus": "php"
+    }
+  }]
+}

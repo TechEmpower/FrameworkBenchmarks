@@ -17,7 +17,6 @@ The tests were run with:
 * [Padrino 0.12.3](http://www.padrinorb.com/)
 * [Rack 1.5.2](http://rack.github.com/)
 * [Unicorn 4.8.3](http://unicorn.bogomips.org/)
-* [TorqBox 0.1.7](http://torquebox.org/torqbox/)
 * [Puma 3.9](http://puma.io/)
 * [Thin 1.6.2](http://code.macournoyer.com/thin/)
 

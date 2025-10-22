@@ -48,10 +48,8 @@
       "versus": "tornado"
     },
     "postgresql-raw": {
-      "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries?queries=",
-      "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",
@@ -66,7 +64,8 @@
       "database_os": "Linux",
       "display_name": "Tornado",
       "notes": "",
-      "versus": "tornado"
+      "versus": "tornado",
+      "tags": ["broken"]
     },
     "py3": {
       "json_url": "/json",
@@ -92,10 +91,8 @@
       "versus": "tornado"
     },
     "py3-uvloop": {
-      "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries?queries=",
-      "plaintext_url": "/plaintext",
       "fortune_url": "/fortunes",
       "update_url": "/updates?queries=",
       "port": 8080,

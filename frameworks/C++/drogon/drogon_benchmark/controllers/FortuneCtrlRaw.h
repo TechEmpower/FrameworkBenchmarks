@@ -1,17 +1,18 @@
 #pragma once
 #include <drogon/HttpSimpleController.h>
 #include <drogon/IOThreadStorage.h>
+#include <string_view>
 
 using namespace drogon;
 struct Fortune
 {
-    Fortune(string_view &&id, string_view &&message)
+    Fortune(std::string_view &&id, std::string_view &&message)
         : id_(std::move(id)), message_(std::move(message))
     {
     }
     Fortune() = default;
-    string_view id_;
-    string_view message_;
+    std::string_view id_;
+    std::string_view message_;
 };
 class FortuneCtrlRaw : public drogon::HttpSimpleController<FortuneCtrlRaw>
 {

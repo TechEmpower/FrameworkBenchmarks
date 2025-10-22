@@ -5,13 +5,13 @@ More information is available at [ktor.io](http://ktor.io).
 
 # Setup
 
-* Java 8
-* MySQL server
+* Java 21
+* Postgres server
 
 # Requirements
 
 * Maven 3
-* JDK 8
+* JDK 21
 * Kotlin
 * ktor
 * netty 
@@ -38,6 +38,8 @@ Please note that the server holds tty so you may need nohup. See `setup.sh` for 
 # Contact
 
 [Leonid Stashevsky](https://github.com/e5l)
+
+[Bruce Hamilton](https://github.com/bjhham)
 
 [Sergey Mashkov](https://github.com/cy6erGn0m)
 

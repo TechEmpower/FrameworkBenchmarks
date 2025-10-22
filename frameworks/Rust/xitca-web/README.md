@@ -1,8 +1,8 @@
-# An experimental http library.
+# An experimental http library/web framework
 
-## Description.
+## Description
 
-An alternative http library inspired by actix and hyper. Implementation is rewritten with similar style and types.
+An alternative http library and web framework inspired by hyper. Implementation is rewritten with similar style and types.
 
 ## Database
 

@@ -1,0 +1,19 @@
+# frozen_string_literal: true
+
+source "https://rubygems.org"
+
+gem "hanami", "~> 2.2"
+gem "hanami-router", "~> 2.2"
+gem "hanami-controller", "~> 2.2"
+gem "hanami-db", "~> 2.2"
+gem "hanami-validations", "~> 2.2"
+gem "hanami-view", "~> 2.2"
+
+gem "dry-types", "~> 1.0", ">= 1.6.1"
+gem "puma"
+gem "rake"
+
+gem "rom", "~> 5.3"
+gem "rom-sql", "~> 3.6"
+gem "pg"
+gem "ostruct" # required for Ruby 3.5

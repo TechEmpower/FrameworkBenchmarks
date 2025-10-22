@@ -19,6 +19,25 @@
         "display_name": "Nginx",
         "notes": "",
         "versus": ""
+      },
+      "njs": {
+        "plaintext_url": "/plaintext",
+        "json_url": "/json",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "framework": "njs",
+        "language": "C",
+        "flavor": "Njs",
+        "orm": "Raw",
+        "platform": "None",
+        "database": "none",
+        "webserver": "nginx",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Nginx-njs",
+        "notes": "",
+        "versus": "nginx"
       }
     }
   ]

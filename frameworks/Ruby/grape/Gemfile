@@ -1,10 +1,8 @@
-source 'http://rubygems.org'
+source 'https://rubygems.org'
 
-gem 'mysql2', '0.4.10'
-gem 'unicorn', '5.3.0'
-gem 'puma', '3.12.6'
-gem 'activerecord', '5.1.5', :require => 'active_record'
-gem 'activerecord-import', "~> 0.18.1"
-gem 'grape', '1.1.0'
-gem 'rack', '1.6.12'
-gem 'json', '2.1.0'
+gem 'mysql2', '0.5.6'
+gem 'unicorn', '6.1.0'
+gem 'puma', '~> 6.5'
+gem 'activerecord', '~> 8.0.0', :require => 'active_record'
+gem 'grape', '2.1.1'
+gem 'json', '~> 2.9'

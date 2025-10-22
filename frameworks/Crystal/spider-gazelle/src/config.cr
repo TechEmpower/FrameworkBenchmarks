@@ -1,9 +1,6 @@
 # Application dependencies
 require "action-controller"
-
-require "granite/adapter/pg"
-Granite.settings.logger = Logger.new(nil)
-Granite::Adapters << Granite::Adapter::Pg.new({name: "pg", url: ENV["DATABASE_URL"]})
+require "pg-orm"
 
 # Application code
 require "./controllers/application"
@@ -12,6 +9,9 @@ require "./models/*"
 
 # Server required after application controllers
 require "action-controller/server"
+
+# Configure PG Database connection
+PgORM::Database.parse(ENV["DATABASE_URL"])
 
 # Configure session cookies
 # NOTE:: Change these from defaults

@@ -1,0 +1,2 @@
+# Do not format auto-generated code
+ignore = ["api_sdk"]

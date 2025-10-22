@@ -37,7 +37,7 @@ var (
 	// Templates
 	tmpl = template.Must(template.
 		ParseFiles("templates/layout.html",
-		"templates/fortune.html"))
+			"templates/fortune.html"))
 
 	// Database
 	worldStatement   *sql.Stmt
@@ -146,7 +146,7 @@ func fortunes(c web.C, w http.ResponseWriter, r *http.Request) {
 		log.Fatalf("Error preparing statement: %v", err)
 	}
 
-	fortunes := make(Fortunes, 0, 16)
+	fortunes := make(Fortunes, 0)
 
 	for rows.Next() {
 		fortune := Fortune{}

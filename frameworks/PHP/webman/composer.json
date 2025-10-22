@@ -25,21 +25,33 @@
   },
   "require": {
     "php": ">=7.2",
-    "workerman/webman-framework": "^1.0",
+    "workerman/webman-framework": "dev-master",
     "monolog/monolog": "^2.0",
-    "vlucas/phpdotenv": ">=4.1,<6.0"
+    "vlucas/phpdotenv": ">=4.1,<6.0",
+    "workerman/workerman": "dev-master"
   },
   "suggest": {
     "ext-event": "For better performance. "
   },
   "autoload": {
+    "psr-4": {
+      "": "./",
+      "App\\": "./app"
+    },
     "files": [
       "./support/helpers.php"
     ]
   },
   "scripts": {
-    "post-autoload-dump": [
-      "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+    "post-package-install": [
+      "support\\Plugin::install"
+    ],
+    "post-package-update": [
+      "support\\Plugin::install"
+    ],
+    "pre-package-uninstall": [
+      "support\\Plugin::uninstall"
     ]
-  }
+  },
+  "minimum-stability": "dev"
 }

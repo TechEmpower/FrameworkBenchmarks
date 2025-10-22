@@ -1,0 +1,36 @@
+env:
+  pg.connection:
+    user: PGUSER
+    password: PGPASS
+
+web:
+  resources:
+    /db:
+      get: pg.single_database_query
+    /queries:
+      get: pg.multiple_database_queries
+    /fortunes:
+      get: pg.fortunes
+    /updates:
+      get: pg.database_updates
+
+pg:
+  cls: pg.PG
+  connection:
+    dsn: postgresql://tfb-database:5432/hello_world
+    username: benchmarkdbuser
+    password: benchmarkdbpass
+
+templates:
+  cls: pg.Templates
+  fortune: |
+    <!DOCTYPE html>
+    <html>
+    <head><title>Fortunes</title></head>
+    <body>
+    <table>
+    <tr><th>id</th><th>message</th></tr>
+    {% for fortune in fortunes %}<tr><td>{{ fortune[0] }}</td><td>{{ fortune[1]|e }}</td></tr>
+    {% endfor %}</table>
+    </body>
+    </html>

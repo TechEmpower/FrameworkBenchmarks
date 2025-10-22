@@ -1,4 +1,4 @@
-(lang dune 2.7)
+(lang dune 3.9)
 (name webmachine-tfb)
 
 (generate_opam_files true)

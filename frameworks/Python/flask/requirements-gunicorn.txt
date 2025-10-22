@@ -1,0 +1,4 @@
+-r requirements.txt
+greenlet<0.5
+gunicorn==23.0.0
+meinheld==1.0.2

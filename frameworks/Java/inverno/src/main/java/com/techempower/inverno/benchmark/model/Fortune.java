@@ -1,5 +1,8 @@
 package com.techempower.inverno.benchmark.model;
 
+import com.dslplatform.json.CompiledJson;
+
+@CompiledJson
 public final class Fortune implements Comparable<Fortune> {
 
 	private final int id;

@@ -15,7 +15,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/v5"
 )
 
 const (
@@ -132,7 +132,7 @@ func fortunes(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fortunes := make(Fortunes, 0, 16)
+	fortunes := make(Fortunes, 0)
 	for rows.Next() { //Fetch rows
 		fortune := Fortune{}
 		if err := rows.Scan(&fortune.ID, &fortune.Message); err != nil {

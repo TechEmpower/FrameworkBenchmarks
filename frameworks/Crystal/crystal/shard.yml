@@ -7,7 +7,7 @@ crystal: "~> 1.0"
 dependencies:
   pg:
     github: will/crystal-pg
-    version: ~> 0.23.2
+    version: ~> 0.28.0
   radix:
     github: luislavena/radix
     version: ~> 0.4.1

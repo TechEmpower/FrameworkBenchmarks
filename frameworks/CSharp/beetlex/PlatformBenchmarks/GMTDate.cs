@@ -1,4 +1,5 @@
-﻿using BeetleX.Buffers;
+﻿
+using BeetleX.Light.Memory;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -48,7 +49,7 @@ namespace PlatformBenchmarks
             }
         }
 
-        public ArraySegment<byte> DATE
+        public Memory<byte> DATE
         {
             get;
             set;
@@ -94,18 +95,20 @@ namespace PlatformBenchmarks
             }, null, 1000, 1000);
         }
 
-        private ArraySegment<byte> GetData()
+        private Memory<byte> GetData()
         {
             return GetData(DateTime.Now);
         }
 
-        public void Write(PipeStream stream)
+
+
+        public void Write(IStreamWriter stream)
         {
-            var data = DATE;
-            stream.Write(data.Array, 0, data.Count);
+
+            stream.Write(DATE.Span);
         }
 
-        private ArraySegment<byte> GetData(DateTime date)
+        private Memory<byte> GetData(DateTime date)
         {
             date = date.ToUniversalTime();
             int offset13 = 0;
@@ -189,7 +192,7 @@ namespace PlatformBenchmarks
             buffer[offset13] = _n;
             offset13++;
 
-            return new ArraySegment<byte>(GTM_BUFFER, 0, offset13);
+            return new Memory<byte>(GTM_BUFFER, 0, offset13);
         }
     }
 

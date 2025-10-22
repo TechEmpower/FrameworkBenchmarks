@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 
-	"go-std/src/templates"
+	"go-std/app/templates"
 )
 
 const (

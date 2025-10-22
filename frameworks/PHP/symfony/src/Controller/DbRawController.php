@@ -18,9 +18,8 @@ class DbRawController
         $this->connection = $connection;
     }
 
-    /**
-     * @Route("/raw/db")
-     */
+    #[Route('/raw/db')]
+
     public function db(): JsonResponse
     {
         $statement = $this->connection->prepare('SELECT id,randomNumber FROM World WHERE id = ?');
@@ -29,9 +28,8 @@ class DbRawController
         return new JsonResponse($world->fetchAssociative());
     }
 
-    /**
-     * @Route("/raw/queries")
-     */
+    #[Route('/raw/queries')]
+
     public function queries(Request $request): JsonResponse
     {
         $queries = (int) $request->query->get('queries', 1);
@@ -49,9 +47,8 @@ class DbRawController
         return new JsonResponse($worlds);
     }
 
-    /**
-     * @Route("/raw/updates")
-     */
+    #[Route('/raw/updates')]
+
     public function updates(Request $request): JsonResponse
     {
         $queries = (int) $request->query->get('queries', 1);

@@ -1,8 +1,0 @@
----
-  :encoding: utf8
-  :host: tfb-database
-  :database: hello_world
-  :username: benchmarkdbuser
-  :password: benchmarkdbpass
-  :pool: 256
-  :timeout: 5000

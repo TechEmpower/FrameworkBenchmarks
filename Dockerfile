@@ -1,26 +1,57 @@
-FROM buildpack-deps:bionic
+FROM ubuntu:24.04
 
+ARG DEBIAN_FRONTEND=noninteractive
+# WARNING: DON'T PUT A SPACE AFTER ANY BACKSLASH OR APT WILL BREAK
 # One -q produces output suitable for logging (mostly hides
 # progress indicators)
-RUN apt-get -yqq update
+RUN apt-get -yqq update && \
+    apt-get -yqq install \
+      -o Dpkg::Options::="--force-confdef" \
+      -o Dpkg::Options::="--force-confold" \
+      cloc \
+      curl \
+      gcc \
+      git-core \
+      gosu \
+      iproute2 \
+      # Needed for mysqlclient
+      libmysqlclient-dev \
+      libpq-dev \
+      pkg-config \
+      python3 \
+      python3-colorama \
+      python3-dev \
+      python3-dnspython \
+      python3-packaging \
+      python3-pip \
+      python3-psutil \
+      python3-psycopg2 \
+      python3-requests \
+      siege \
+      software-properties-common && \
+    # Ubuntu's equivalent packages are too old and/or broken.
+    pip3 install \
+      --break-system-packages \
+      docker==7.0.0 \
+      mysqlclient==2.2.4 \
+      pymongo==4.7.2
 
-# WARNING: DONT PUT A SPACE AFTER ANY BACKSLASH OR APT WILL BREAK
-RUN apt-get -yqq install -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
-  git-core \
-  cloc dstat                    `# Collect resource usage statistics` \
-  python-dev \
-  python-pip \
-  software-properties-common \
-  libmysqlclient-dev            `# Needed for MySQL-python`
+# Collect resource usage statistics
+ARG DOOL_VERSION=v1.3.1
 
-RUN pip install colorama==0.3.1 requests MySQL-python psycopg2-binary pymongo docker==4.0.2 psutil
+WORKDIR /tmp
+RUN curl -LSs "https://github.com/scottchiefbaker/dool/archive/${DOOL_VERSION}.tar.gz" | \
+      tar --strip-components=1 -xz && \
+    ./install.py
 
-RUN apt-get install -yqq siege
+# create group and user
+ARG GROUP_ID
+ARG USER_ID
 
-# Fix for docker-py trying to import one package from the wrong location
-RUN cp -r /usr/local/lib/python2.7/dist-packages/backports/ssl_match_hostname/ /usr/lib/python2.7/dist-packages/backports
+RUN groupadd -g "$GROUP_ID" user || true && \
+    useradd -m -u "$USER_ID" -g "$GROUP_ID" -s /bin/bash user || true
 
-ENV PYTHONPATH /FrameworkBenchmarks
-ENV FWROOT /FrameworkBenchmarks
+ENV FWROOT=/FrameworkBenchmarks USER_ID="$USER_ID"
+ENV PYTHONPATH="$FWROOT"
 
-ENTRYPOINT ["python", "/FrameworkBenchmarks/toolset/run-tests.py"]
+ENTRYPOINT ["/FrameworkBenchmarks/entrypoint.sh"]

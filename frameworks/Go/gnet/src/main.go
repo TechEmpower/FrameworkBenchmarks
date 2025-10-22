@@ -1,20 +1,18 @@
 package main
 
 import (
+	"bytes"
+	"errors"
 	"flag"
 	"fmt"
 	"log"
 	"runtime"
+	"strconv"
 	"sync/atomic"
 	"time"
 
 	"github.com/evanphx/wildcat"
 	"github.com/panjf2000/gnet/v2"
-)
-
-var (
-	errMsg      = "Internal Server Error"
-	errMsgBytes = []byte(errMsg)
 )
 
 type httpServer struct {
@@ -26,13 +24,64 @@ type httpServer struct {
 }
 
 type httpCodec struct {
-	parser *wildcat.HTTPParser
-	buf    []byte
+	parser        *wildcat.HTTPParser
+	contentLength int
+	buf           []byte
+}
+
+var CRLF = []byte("\r\n\r\n")
+
+func (hc *httpCodec) parse(data []byte) (int, error) {
+	// Perform a legit HTTP request parsing.
+	bodyOffset, err := hc.parser.Parse(data)
+	if err != nil {
+		return 0, err
+	}
+
+	// First check if the Content-Length header is present.
+	contentLength := hc.getContentLength()
+	if contentLength > -1 {
+		return bodyOffset + contentLength, nil
+	}
+
+	// If the Content-Length header is not found,
+	// we need to find the end of the body section.
+	if idx := bytes.Index(data, CRLF); idx != -1 {
+		return idx + 4, nil
+	}
+
+	return 0, errors.New("invalid http request")
+}
+
+var contentLengthKey = []byte("Content-Length")
+
+func (hc *httpCodec) getContentLength() int {
+	if hc.contentLength != -1 {
+		return hc.contentLength
+	}
+
+	val := hc.parser.FindHeader(contentLengthKey)
+	if val != nil {
+		i, err := strconv.ParseInt(string(val), 10, 0)
+		if err == nil {
+			hc.contentLength = int(i)
+		}
+	}
+
+	return hc.contentLength
+}
+
+func (hc *httpCodec) resetParser() {
+	hc.contentLength = -1
+}
+
+func (hc *httpCodec) reset() {
+	hc.resetParser()
+	hc.buf = hc.buf[:0]
 }
 
 func (hc *httpCodec) appendResponse() {
 	hc.buf = append(hc.buf, "HTTP/1.1 200 OK\r\nServer: gnet\r\nContent-Type: text/plain\r\nDate: "...)
-	//hc.buf = time.Now().AppendFormat(hc.buf, "Mon, 02 Jan 2006 15:04:05 GMT")
 	hc.buf = append(hc.buf, NowTimeFormat()...)
 	hc.buf = append(hc.buf, "\r\nContent-Length: 13\r\n\r\nHello, World!"...)
 }
@@ -53,23 +102,19 @@ func (hs *httpServer) OnTraffic(c gnet.Conn) gnet.Action {
 	buf, _ := c.Next(-1)
 
 pipeline:
-	headerOffset, err := hc.parser.Parse(buf)
+	nextOffset, err := hc.parse(buf)
 	if err != nil {
-		c.Write(errMsgBytes)
-		return gnet.Close
+		goto response
 	}
+	hc.resetParser()
 	hc.appendResponse()
-	bodyLen := int(hc.parser.ContentLength())
-	if bodyLen == -1 {
-		bodyLen = 0
-	}
-	buf = buf[headerOffset+bodyLen:]
+	buf = buf[nextOffset:]
 	if len(buf) > 0 {
 		goto pipeline
 	}
-
+response:
 	c.Write(hc.buf)
-	hc.buf = hc.buf[:0]
+	hc.reset()
 	return gnet.None
 }
 

@@ -1,0 +1,21 @@
+[framework]
+name = "today"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+urls.db = "/db"
+urls.query = "/queries?queries="
+urls.update = "/updates?queries="
+urls.fortune = "/fortunes"
+urls.cached_query = "/cached-queries?count="
+approach = "Realistic"
+classification = "Fullstack"
+database = "mysql"
+database_os = "Linux"
+display_name = "today"
+os = "Linux"
+orm = "raw"
+platform = "Netty"
+webserver = "None"
+versus = "None"

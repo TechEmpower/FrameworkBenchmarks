@@ -1,0 +1,49 @@
+name: Ping Maintainers
+on:
+  workflow_run:
+    workflows: [ "get-maintainers"]
+    types:
+      - completed
+permissions:
+  pull-requests: write
+jobs:
+  ping_maintainers:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: 'Download maintainers artifact'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            let artifacts = await github.rest.actions.listWorkflowRunArtifacts({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               run_id: ${{github.event.workflow_run.id }},
+            });
+            let matchArtifact = artifacts.data.artifacts.filter((artifact) => {
+              return artifact.name == "maintainers"
+            })[0];
+            let download = await github.rest.actions.downloadArtifact({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               artifact_id: matchArtifact.id,
+               archive_format: 'zip',
+            });
+            let fs = require('fs');
+            fs.writeFileSync('${{github.workspace}}/maintainers.zip', Buffer.from(download.data));
+      - run: unzip maintainers.zip
+      - name: Ping maintainers
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            let fs = require('fs');
+            let issue_number = Number(fs.readFileSync('./NR'));
+            let maintainers_comment = fs.readFileSync('./maintainers.md', 'utf8');
+            if (maintainers_comment) {
+              await github.rest.issues.createComment({
+                issue_number: issue_number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: maintainers_comment
+              });
+            }

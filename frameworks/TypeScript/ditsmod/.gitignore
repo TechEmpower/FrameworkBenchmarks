@@ -1,0 +1,8 @@
+/node_modules
+dist*
+*.log
+.env
+.pnp*
+nodemon.json
+package-lock.json
+bun.lockb

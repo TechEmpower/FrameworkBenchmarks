@@ -1,41 +1,35 @@
-const knex = require("knex")({
-  client: "mysql2",
-  connection: {
-    host: "tfb-database",
-    user: "benchmarkdbuser",
-    password: "benchmarkdbpass",
-    database: "hello_world"
-  }
-});
+const { createPool } = require("mariadb");
+
+const clientOpts = {
+  host: process.env.MYSQL_HOST,
+  user: process.env.MYSQL_USER,
+  password: process.env.MYSQL_PSWD,
+  database: process.env.MYSQL_DBNAME,
+};
+
+const pool = createPool({ ...clientOpts, connectionLimit: 1 });
+const execute = (text, values) => pool.execute(text, values || undefined);
 
 async function allFortunes() {
-  return knex("Fortune").select("*");
+  return execute("select id, message from fortune", []);
 }
 
 async function getWorld(id) {
-  return knex("World")
-    .first()
-    .where({ id });
+  return execute("select id, randomNumber from world where id = ?", [id]).then(
+    (arr) => arr[0]
+  );
 }
 
-async function saveWorlds(worlds) {
-  const updates = [];
-
-  worlds.forEach(world => {
-    const { id, randomNumber } = world;
-
-    updates.push(
-      knex("World")
-        .update({ randomNumber })
-        .where({ id })
-    );
-  });
-
-  return Promise.all(updates);
+async function bulkUpdate(worlds) {
+  const sql = "update world set randomNumber = ? where id = ?";
+  const values = worlds
+    .map((world) => [world.randomnumber, world.id])
+    .sort((a, b) => (a[0] < b[0] ? -1 : 1));
+  return pool.batch(sql, values);
 }
 
 module.exports = {
   getWorld,
-  saveWorlds,
-  allFortunes
+  bulkUpdate,
+  allFortunes,
 };

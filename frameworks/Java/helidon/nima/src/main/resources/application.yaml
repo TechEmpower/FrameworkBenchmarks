@@ -1,0 +1,42 @@
+#
+# Copyright (c) 2022, 2024 Oracle and/or its affiliates.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+server:
+  host: 0.0.0.0
+  port: 8080
+  backlog: 8192
+  write-queue-length: 8192
+  smart-async-writes: true
+  connection-options:
+    read-timeout: PT0S
+    connect-timeout: PT0S
+    tcp-no-delay: true
+  protocols:
+    "http_1_1":
+      validate-request-headers: false
+      validate-response-headers: false
+      validate-path: false
+      recv-log: false
+      send-log: false
+
+host: "tfb-database"
+db: "hello_world"
+username: benchmarkdbuser
+password: benchmarkdbpass
+db-repository: "pgclient"     # "pgclient" (default) or "hikari"
+pgclient-connection-pool:
+  size-factor: 1.0            # size = available-processors * size-factor
+

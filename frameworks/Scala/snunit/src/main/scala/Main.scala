@@ -1,35 +1,37 @@
-import snunit._
-import upickle.default._
+import com.github.plokhotnyuk.jsoniter_scala.core.*
+import com.github.plokhotnyuk.jsoniter_scala.macros.*
+import snunit.*
 
-case class Message(message: String)
+final case class Message(message: String) derives ConfiguredJsonValueCodec
 
-object Message {
-  implicit val messageRW: ReadWriter[Message] = macroRW[Message]
-}
+final val applicationJson = Headers("Content-Type" -> "application/json")
+final val textPlain = Headers("Content-Type" -> "text/plain")
 
-object Main {
-  def main(args: Array[String]): Unit = {
-    AsyncServerBuilder()
-      .withRequestHandler(req =>
-        if (req.method == Method.GET && req.path == "/plaintext")
+inline def notFound(req: Request) = req.send(
+  statusCode = StatusCode.NotFound,
+  content = "Not found",
+  headers = textPlain
+)
+
+@main
+def main =
+  SyncServerBuilder
+    .setRequestHandler(req =>
+      if (req.method == Method.GET) {
+        if(req.target == "/plaintext")
           req.send(
             statusCode = StatusCode.OK,
             content = "Hello, World!",
-            headers = Seq("Content-Type" -> "text/plain")
+            headers = textPlain
           )
-        else if (req.method == Method.GET && req.path == "/json")
+        else if(req.target == "/json")
           req.send(
             statusCode = StatusCode.OK,
-            content = stream(Message("Hello, World!")),
-            headers = Seq.empty
+            content = writeToArray(Message("Hello, World!")),
+            headers = applicationJson
           )
-        else
-          req.send(
-            statusCode = StatusCode.NotFound,
-            content = "Not found",
-            headers = Seq("Content-Type" -> "text/plain")
-          )
-      )
-      .build()
-  }
-}
+        else notFound(req)
+      } else notFound(req)
+    )
+    .build()
+    .listen()

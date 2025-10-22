@@ -1,5 +1,5 @@
 <?php
-require_once '/ngx_php7/t/lib/mysql.php';
+require_once '/ngx-php/t/lib/mysql.php';
 
 define('DB_HOST', gethostbyname('tfb-database'));
 define('DB_PORT', '3306');

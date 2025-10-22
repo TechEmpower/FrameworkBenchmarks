@@ -14,15 +14,15 @@
       "framework": "kooby: jooby+kotlin",
       "language": "Kotlin",
       "flavor": "None",
-      "platform": "Undertow",
+      "platform": "Netty",
       "database": "Postgres",
       "database_os": "Linux",
       "orm": "Raw",
       "webserver": "None",
       "os": "Linux",
-      "notes": "Jooby with Kotlin and Undertow",
+      "notes": "Jooby with Kotlin and Netty",
       "display_name": "kooby",
-      "versus": "undertow"
+      "versus": "netty"
     }
   }]
 }

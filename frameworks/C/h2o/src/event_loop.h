@@ -27,11 +27,14 @@
 
 #include "global_data.h"
 
+#define CONN_NUM_SAMPLES 512
+
 typedef enum {
-	SHUTDOWN
+	SHUTDOWN,
+	TASK
 } message_type_t;
 
-typedef struct thread_context_t thread_context_t;
+struct thread_context_t;
 
 typedef struct {
 	h2o_socket_t *h2o_https_socket;
@@ -39,6 +42,10 @@ typedef struct {
 	size_t conn_num;
 	h2o_accept_ctx_t h2o_accept_ctx;
 	h2o_context_t h2o_ctx;
+	h2o_linklist_t local_messages;
+	size_t accepted_conn_num;
+	size_t conn_num_sample[CONN_NUM_SAMPLES];
+	size_t conn_num_sample_idx;
 } event_loop_t;
 
 typedef struct {
@@ -46,11 +53,19 @@ typedef struct {
 	h2o_multithread_message_t super;
 } message_t;
 
-void event_loop(thread_context_t *ctx);
+typedef struct {
+	message_t super;
+	void *arg;
+	void (*task)(void *);
+} task_message_t;
+
+void event_loop(struct thread_context_t *ctx);
 void free_event_loop(event_loop_t *event_loop, h2o_multithread_receiver_t *h2o_receiver);
 void initialize_event_loop(bool is_main_thread,
                            global_data_t *global_data,
                            h2o_multithread_receiver_t *h2o_receiver,
                            event_loop_t *loop);
+void send_local_message(message_t *msg, h2o_linklist_t *local_messages);
+void send_message(message_t *msg, h2o_multithread_receiver_t *h2o_receiver);
 
 #endif // EVENT_LOOP_H_

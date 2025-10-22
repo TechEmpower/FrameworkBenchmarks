@@ -1,0 +1,82 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    activemodel (8.0.2.1)
+      activesupport (= 8.0.2.1)
+    activerecord (8.0.2.1)
+      activemodel (= 8.0.2.1)
+      activesupport (= 8.0.2.1)
+      timeout (>= 0.4.0)
+    activesupport (8.0.2.1)
+      base64
+      benchmark (>= 0.3)
+      bigdecimal
+      concurrent-ruby (~> 1.0, >= 1.3.1)
+      connection_pool (>= 2.2.5)
+      drb
+      i18n (>= 1.6, < 2)
+      logger (>= 1.4.2)
+      minitest (>= 5.1)
+      securerandom (>= 0.3)
+      tzinfo (~> 2.0, >= 2.0.5)
+      uri (>= 0.13.1)
+    base64 (0.3.0)
+    benchmark (0.4.1)
+    bigdecimal (3.2.2)
+    concurrent-ruby (1.3.5)
+    connection_pool (2.5.3)
+    drb (2.2.3)
+    i18n (1.14.7)
+      concurrent-ruby (~> 1.0)
+    iodine (0.7.58)
+    json (2.13.2)
+    logger (1.7.0)
+    minitest (5.25.5)
+    mustermann (3.0.4)
+      ruby2_keywords (~> 0.0.1)
+    nio4r (2.7.4)
+    pg (1.6.2)
+    pg (1.6.2-x86_64-darwin)
+    pg (1.6.2-x86_64-linux)
+    puma (7.0.2)
+      nio4r (~> 2.0)
+    rack (3.2.3)
+    rack-protection (4.2.0)
+      base64 (>= 0.1.0)
+      logger (>= 1.6.0)
+      rack (>= 3.0.0, < 4)
+    rack-session (2.1.1)
+      base64 (>= 0.1.0)
+      rack (>= 3.0.0)
+    ruby2_keywords (0.0.5)
+    securerandom (0.4.1)
+    sinatra (4.2.0)
+      logger (>= 1.6.0)
+      mustermann (~> 3.0)
+      rack (>= 3.0.0, < 4)
+      rack-protection (= 4.2.0)
+      rack-session (>= 2.0.0, < 3)
+      tilt (~> 2.0)
+    tilt (2.6.1)
+    timeout (0.4.3)
+    trilogy (2.9.0)
+    tzinfo (2.0.6)
+      concurrent-ruby (~> 1.0)
+    uri (1.0.3)
+
+PLATFORMS
+  ruby
+  x86_64-darwin-23
+  x86_64-linux
+
+DEPENDENCIES
+  activerecord (~> 8.0)
+  iodine (~> 0.7)
+  json (~> 2.8)
+  pg (~> 1.5)
+  puma (~> 7.0)
+  sinatra (~> 4.2)
+  trilogy (~> 2.9.0)
+
+BUNDLED WITH
+   2.7.0

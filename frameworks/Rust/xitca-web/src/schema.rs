@@ -1,11 +1,11 @@
-table! {
+diesel::table! {
     world (id) {
         id -> Integer,
         randomnumber -> Integer,
     }
 }
 
-table! {
+diesel::table! {
     fortune (id) {
         id -> Integer,
         message -> Text,

@@ -1,4 +1,4 @@
-FROM perl:5.26
+FROM perl:5.40
 
 WORKDIR /mojo
 
@@ -19,3 +19,4 @@ ADD ./app.pl ./
 EXPOSE 8080
 
 CMD hypnotoad -f /mojo/app.pl
+

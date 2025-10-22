@@ -1,0 +1,10 @@
+[package]
+name = "api"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+application = { path = "../api_sdk" }
+tokio = { version = "1", features = ["full"] }
+hyper = "0.14"
+snmalloc-rs = "0.2.6"

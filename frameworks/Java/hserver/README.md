@@ -2,12 +2,15 @@
 This is the HServer portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
 
 ### Tests
-* [HServer JSON test source](src/main/java/com/test/hserver/controller/TestController.java)
+* [JSON test source](src/main/java/com/test/hserver/controller/TestController.java)
 * [Plaintext test source](src/main/java/com/test/hserver/controller/TestController.java)
+* [Data-Store test source](src/main/java/com/test/hserver/controller/TestController.java)
+* [Data-Update test source](src/main/java/com/test/hserver/controller/TestController.java)
+* [Fortunes test source](src/main/java/com/test/hserver/controller/TestController.java)
 
 ## Infrastructure Software Versions
 
-* [HServer 2.9.73](https://gitee.com/HServer/HServer)
+* [HServer](https://gitee.com/HServer/HServer)
 * [Java OpenJDK 1.8](http://openjdk.java.net/)
 
 ## Test URLs

@@ -1,6 +1,6 @@
 # Symfony 4 Benchmarking Test
 
-This is the Symfony 4 portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
+This is the Symfony 6 portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
 
 
 ### Plaintext Test

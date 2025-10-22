@@ -1,9 +1,22 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <title>@Model.Meta.Title</title>
+    <title>Fortunes</title>
 </head>
 <body>
-    @Model.Content
+
+<table>
+    <tr>
+        <th>id</th>
+        <th>message</th>
+    </tr>
+    {for cookie in cookies:
+    <tr>
+        <td>{ cookie.id }</td>
+        <td>{ cookie.message }</td>
+    </tr>
+    }
+</table>
+
 </body>
 </html>

@@ -5,7 +5,7 @@ import requests
 from colorama import Fore
 from toolset.utils.output_helper import log
 
-class AbstractTestType:
+class AbstractTestType(metaclass=abc.ABCMeta):
     '''
     Interface between a test type (json, query, plaintext, etc) and
     the rest of TFB. A test type defines a number of keys it expects
@@ -15,7 +15,6 @@ class AbstractTestType:
     passes an argument list of ['spam'], then after parsing there will
     exist a member `X.spam = 'foobar'`.
     '''
-    __metaclass__ = abc.ABCMeta
 
     def __init__(self,
                  config,
@@ -29,6 +28,7 @@ class AbstractTestType:
         self.args = args
         self.headers = ""
         self.body = ""
+        self.status = None
 
         if accept_header is None:
             self.accept_header = self.accept('json')
@@ -40,12 +40,6 @@ class AbstractTestType:
         self.warned = None
 
     @classmethod
-    @abc.abstractmethod
-    def url(self):
-        pass
-
-    @classmethod
-    @abc.abstractmethod
     def accept(self, content_type):
         return {
             'json':
@@ -71,7 +65,7 @@ class AbstractTestType:
                 "A %s requires the benchmark_config.json to contain %s" %
                 (self.name, self.args))
 
-    def request_headers_and_body(self, url):
+    def request_headers_and_body_and_status(self, url):
         '''
         Downloads a URL and returns the HTTP response headers
         and body content as a tuple
@@ -83,7 +77,8 @@ class AbstractTestType:
 
         self.headers = r.headers
         self.body = r.content
-        return self.headers, self.body
+        self.status = r.status_code
+        return self.headers, self.body, self.status
 
     def output_headers_and_body(self):
         log(str(self.headers))

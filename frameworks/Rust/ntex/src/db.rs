@@ -1,28 +1,29 @@
-use std::{borrow::Cow, fmt::Write as FmtWrite};
+use std::{borrow::Cow, cell::RefCell};
 
-use futures::{Future, FutureExt};
-use nanorand::{WyRand, Rng};
-use ntex::util::{join_all, Bytes, BytesMut};
+use nanorand::{Rng, WyRand};
+use ntex::util::{Bytes, BytesMut};
 use smallvec::SmallVec;
-use tokio_postgres::types::ToSql;
 use tokio_postgres::{connect, Client, Statement};
-use yarte::{ywrite_html, Serialize};
+use yarte::TemplateBytesTrait;
 
-#[cfg(target_os = "macos")]
-use serde_json as simd_json;
+use super::utils;
 
-use crate::utils::Writer;
-
-#[derive(Copy, Clone, Serialize, Debug, serde::Serialize)]
+#[derive(Copy, Clone, Debug, sonic_rs::Serialize)]
 pub struct World {
     pub id: i32,
     pub randomnumber: i32,
 }
 
-#[derive(serde::Serialize, Debug)]
+#[derive(Debug, sonic_rs::Serialize)]
 pub struct Fortune {
     pub id: i32,
     pub message: Cow<'static, str>,
+}
+
+#[derive(yarte::TemplateBytes)]
+#[template(path = "fortune.hbs")]
+pub struct FortunesTemplate<'a> {
+    pub fortunes: &'a Vec<Fortune>,
 }
 
 /// Postgres interface
@@ -31,7 +32,9 @@ pub struct PgConnection {
     fortune: Statement,
     world: Statement,
     rng: WyRand,
-    updates: Vec<Statement>,
+    updates: Statement,
+    buf: RefCell<BytesMut>,
+    fbuf: RefCell<Vec<Fortune>>,
 }
 
 impl PgConnection {
@@ -39,27 +42,12 @@ impl PgConnection {
         let (cl, conn) = connect(db_url)
             .await
             .expect("can not connect to postgresql");
-        ntex::rt::spawn(conn.map(|_| ()));
+        ntex::rt::spawn(async move {
+            let _ = conn.await;
+        });
 
         let fortune = cl.prepare("SELECT * FROM fortune").await.unwrap();
-        let mut updates = Vec::new();
-        for num in 1..=500u16 {
-            let mut pl: u16 = 1;
-            let mut q = String::new();
-            q.push_str("UPDATE world SET randomnumber = CASE id ");
-            for _ in 1..=num {
-                let _ = write!(&mut q, "when ${} then ${} ", pl, pl + 1);
-                pl += 2;
-            }
-            q.push_str("ELSE randomnumber END WHERE id IN (");
-            for _ in 1..=num {
-                let _ = write!(&mut q, "${},", pl);
-                pl += 1;
-            }
-            q.pop();
-            q.push(')');
-            updates.push(cl.prepare(&q).await.unwrap());
-        }
+        let updates = cl.prepare("UPDATE world w SET randomnumber = u.new_val FROM (SELECT unnest($1::int[]) as id, unnest($2::int[]) as new_val) u WHERE w.id = u.id").await.unwrap();
         let world = cl.prepare("SELECT * FROM world WHERE id=$1").await.unwrap();
 
         PgConnection {
@@ -68,110 +56,112 @@ impl PgConnection {
             world,
             updates,
             rng: WyRand::new(),
+            buf: RefCell::new(BytesMut::with_capacity(10 * 1024 * 1024)),
+            fbuf: RefCell::new(Vec::with_capacity(64)),
         }
     }
 }
 
 impl PgConnection {
-    pub fn get_world(&self) -> impl Future<Output = Bytes> {
+    pub async fn get_world(&self) -> Bytes {
         let random_id = (self.rng.clone().generate::<u32>() % 10_000 + 1) as i32;
-        self.cl.query(&self.world, &[&random_id]).map(|rows| {
-            let rows = rows.unwrap();
-            let mut body = BytesMut::new();
-            simd_json::to_writer(
-                Writer(&mut body),
-                &World {
-                    id: rows[0].get(0),
-                    randomnumber: rows[0].get(1),
-                },
-            )
+
+        let row = self.cl.query_one(&self.world, &[&random_id]).await.unwrap();
+
+        let mut body = self.buf.borrow_mut();
+        utils::reserve(&mut body, 1024);
+        sonic_rs::to_writer(
+            utils::BytesWriter(&mut body),
+            &World {
+                id: row.get(0),
+                randomnumber: row.get(1),
+            },
+        )
+        .unwrap();
+        body.split().freeze()
+    }
+
+    pub async fn get_worlds(&self, num: usize) -> Bytes {
+        let mut rng = self.rng.clone();
+        let mut queries = Vec::with_capacity(num);
+        (0..num).for_each(|_| {
+            let w_id = (rng.generate::<u32>() % 10_000 + 1) as i32;
+            queries.push(self.cl.query_one(&self.world, &[&w_id]));
+        });
+
+        let mut worlds = Vec::with_capacity(num);
+        for fut in queries {
+            let row = fut.await.unwrap();
+            worlds.push(World {
+                id: row.get(0),
+                randomnumber: row.get(1),
+            })
+        }
+
+        let mut body = self.buf.borrow_mut();
+        utils::reserve(&mut body, 2 * 1024);
+        sonic_rs::to_writer(utils::BytesWriter(&mut body), &worlds[..]).unwrap();
+        body.split().freeze()
+    }
+
+    pub async fn update(&self, num: usize) -> Bytes {
+        let mut rng = nanorand::tls_rng();
+        let mut ids = Vec::with_capacity(num);
+        let mut numbers = Vec::with_capacity(num);
+        let mut worlds = SmallVec::<[_; 32]>::new();
+        let mut queries = SmallVec::<[_; 32]>::new();
+
+        (0..num).for_each(|_| {
+            let w_id = (rng.generate::<u32>() % 10_000 + 1) as i32;
+            ids.push(w_id);
+            numbers.push((rng.generate::<u32>() % 10_000 + 1) as i32);
+        });
+        ids.sort();
+
+        (0..num).for_each(|idx| {
+            worlds.push(World {
+                id: ids[idx],
+                randomnumber: numbers[idx],
+            });
+            queries.push(self.cl.query_one(&self.world, &[&ids[idx]]));
+        });
+        let _ = self
+            .cl
+            .query(&self.updates, &[&ids, &numbers])
+            .await
             .unwrap();
-            body.freeze()
-        })
+
+        let mut body = self.buf.borrow_mut();
+        utils::reserve(&mut body, 2 * 1024);
+        sonic_rs::to_writer(utils::BytesWriter(&mut body), &worlds[..]).unwrap();
+        body.split().freeze()
     }
 
-    pub fn get_worlds(&self, num: u16) -> impl Future<Output = Vec<World>> {
-        let mut futs = Vec::with_capacity(num as usize);
-        let mut rng = self.rng.clone();
-        for _ in 0..num {
-            let w_id = (rng.generate::<u32>() % 10_000 + 1) as i32;
-            futs.push(self.cl.query(&self.world, &[&w_id]));
+    pub async fn tell_fortune(&self) -> Bytes {
+        let rows = self.cl.query_raw(&self.fortune, &[]).await.unwrap();
+
+        let mut fortunes = self.fbuf.borrow_mut();
+        fortunes.push(Fortune {
+            id: 0,
+            message: Cow::Borrowed("Additional fortune added at request time."),
+        });
+        fortunes.extend(rows.iter().map(|row| Fortune {
+            id: row.get(0),
+            message: Cow::Owned(row.get(1)),
+        }));
+        fortunes.sort_by(|it, next| it.message.cmp(&next.message));
+
+        let mut body = std::mem::replace(&mut *self.buf.borrow_mut(), BytesMut::new());
+        utils::reserve(&mut body, 4 * 1024);
+
+        FortunesTemplate {
+            fortunes: &fortunes,
         }
+        .write_call(&mut body);
+        fortunes.clear();
 
-        async move {
-            let mut worlds: Vec<World> = Vec::with_capacity(num as usize);
-            for item in join_all(futs).await {
-                let rows = item.unwrap();
-                worlds.push(World {
-                    id: rows[0].get(0),
-                    randomnumber: rows[0].get(1),
-                })
-            }
-            worlds
-        }
-    }
-
-    pub fn update(&self, num: u16) -> impl Future<Output = Vec<World>> {
-        let mut futs = Vec::with_capacity(num as usize);
-        let mut rng = self.rng.clone();
-        for _ in 0..num {
-            let w_id = (rng.generate::<u32>() % 10_000 + 1) as i32;
-            futs.push(self.cl.query(&self.world, &[&w_id]));
-        }
-
-        let cl = self.cl.clone();
-        let st = self.updates[(num as usize) - 1].clone();
-        async move {
-            let mut worlds: Vec<World> = Vec::with_capacity(num as usize);
-            for q in join_all(futs).await {
-                let q = q.unwrap();
-                let id = (rng.generate::<u32>() % 10_000 + 1) as i32;
-                worlds.push(World {
-                    id: q[0].get(0),
-                    randomnumber: id,
-                })
-            }
-
-            let mut params: Vec<&dyn ToSql> = Vec::with_capacity(num as usize * 3);
-            for w in &worlds {
-                params.push(&w.id);
-                params.push(&w.randomnumber);
-            }
-            for w in &worlds {
-                params.push(&w.id);
-            }
-            let _ = cl
-                .query(&st, &params)
-                .await
-                .map_err(|e| log::error!("{:?}", e));
-
-            worlds
-        }
-    }
-
-    pub fn tell_fortune(&self) -> impl Future<Output = Bytes> {
-        let fut = self.cl.query_raw(&self.fortune, &[]);
-
-        async move {
-            let rows = fut.await.unwrap();
-            let mut fortunes: SmallVec<[_; 32]> = smallvec::smallvec![Fortune {
-                id: 0,
-                message: Cow::Borrowed("Additional fortune added at request time."),
-            }];
-
-            for row in rows {
-                fortunes.push(Fortune {
-                    id: row.get(0),
-                    message: Cow::Owned(row.get(1)),
-                });
-            }
-
-            fortunes.sort_by(|it, next| it.message.cmp(&next.message));
-
-            let mut buf = Vec::with_capacity(2048);
-            ywrite_html!(buf, "{{> fortune }}");
-
-            Bytes::from(buf)
-        }
+        let result = body.split().freeze();
+        let _ = std::mem::replace(&mut *self.buf.borrow_mut(), body);
+        result
     }
 }

@@ -2,20 +2,23 @@
 
 ### Test Type Implementation Source Code
 
-* [JSON](src/main/java/com/techempower/inverno/benchmark/internal/Handler.java)
-* [PLAINTEXT](src/main/java/com/techempower/inverno/benchmark/internal/Handler.java)
-* [DB](src/main/java/com/techempower/inverno/benchmark/internal/Handler.java)
-* [QUERY](src/main/java/com/techempower/inverno/benchmark/internal/Handler.java)
-* [CACHED QUERY](src/main/java/com/techempower/inverno/benchmark/internal/Handler.java)
-* [UPDATE](src/main/java/com/techempower/inverno/benchmark/internal/Handler.java)
-* [FORTUNES](src/main/java/com/techempower/inverno/benchmark/internal/Handler.java)
+* [JSON](src/main/java/com/techempower/inverno/benchmark/internal/Controller.java)
+* [PLAINTEXT](src/main/java/com/techempower/inverno/benchmark/internal/Controller.java)
+* [DB](src/main/java/com/techempower/inverno/benchmark/internal/Controller.java)
+* [QUERY](src/main/java/com/techempower/inverno/benchmark/internal/Controller.java)
+* [CACHED QUERY](src/main/java/com/techempower/inverno/benchmark/internal/Controller.java)
+* [UPDATE](src/main/java/com/techempower/inverno/benchmark/internal/Controller.java)
+* [FORTUNES](src/main/java/com/techempower/inverno/benchmark/internal/Controller.java)
 
 ## Important Libraries
+
 The tests were run with:
-* [Java OpenJDK 16](https://openjdk.java.net/)
-* [Inverno 1.4.1](https://inverno.io)
+* [Java OpenJDK 21](https://openjdk.java.net/)
+* [Inverno 1.12.0](https://inverno.io)
+* [DSL-JSON 2.0.2](https://github.com/ngs-doo/dsl-json)
 
 ## Test URLs
+
 ### JSON
 
 http://localhost:8080/json

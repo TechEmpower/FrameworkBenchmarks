@@ -1,0 +1,4 @@
+
+dependencies {
+    api("com.hexagontk:core:$hexagonVersion")
+}

@@ -10,12 +10,12 @@ the [Python README](../).
 
 ## Description
 
-[BlackSheep](https://github.com/RobertoPrevato/BlackSheep) is a fast HTTP Server/Client microframework for Python [asyncio](https://docs.python.org/3/library/asyncio.html), using [Cython](https://cython.org), 
+[BlackSheep](https://github.com/Neoteroi/BlackSheep) is a fast HTTP Server/Client microframework for Python [asyncio](https://docs.python.org/3/library/asyncio.html), using [Cython](https://cython.org), 
 [`uvloop`](https://magic.io/blog/uvloop-blazing-fast-python-networking/), and 
 [`httptools`](https://github.com/MagicStack/httptools). 
 
 <p align="left">
-  <a href="#blacksheep"><img width="320" height="271" src="https://raw.githubusercontent.com/RobertoPrevato/BlackSheep/master/black-sheep.svg?sanitize=true" alt="Black Sheep"></a>
+  <a href="#blacksheep"><img width="320" height="271" src="https://raw.githubusercontent.com/Neoteroi/BlackSheep/master/black-sheep.svg?sanitize=true" alt="Black Sheep"></a>
 </p>
 
 
@@ -35,4 +35,4 @@ All of the test implementations are located within a single file ([app.py](app.p
 
 ## Resources
 
-* [Repo](https://github.com/RobertoPrevato/BlackSheep)
+* [Repo](https://github.com/Neoteroi/BlackSheep)

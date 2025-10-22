@@ -8,13 +8,13 @@ Saphir is a fast and lightweight web framework that aims to give lowlevel contro
 
 ### Test Type Implementation Source Code
 
-* [JSON](src/json.rs)
-* [PLAINTEXT](src/plain.rs)
-* [DB](src/main.rs)
-* [QUERY](src/main.rs)
-* [CACHED QUERY](src/main.rs)
-* [UPDATE](src/main.rs)
-* [FORTUNES](src/main.rs)
+* [JSON](src/controller.rs)
+* [PLAINTEXT](src/controller.rs)
+* [DB](src/controller.rs)
+* [QUERY](src/controller.rs)
+* [CACHED QUERY](src/controller.rs)
+* [UPDATE](src/controller.rs)
+* [FORTUNES](src/controller.rs)
 
 ## Test URLs
 ### JSON
@@ -35,11 +35,11 @@ http://localhost:8080/plaintext
 
 ### ~~CACHED QUERY~~
 
-~~http://localhost:8080/cached_query?queries=~~
+~~http://localhost:8080/cached-worlds?count=~~
 
 ### ~~UPDATE~~
 
-~~http://localhost:8080/update?queries=~~
+~~http://localhost:8080/bulk-update?queries=~~
 
 ### ~~FORTUNES~~
 

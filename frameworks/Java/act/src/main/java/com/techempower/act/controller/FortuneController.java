@@ -49,7 +49,7 @@ public class FortuneController {
         List<Fortune> fortunes = dao.findAllAsList();
         fortunes.add(new Fortune(0, "Additional fortune added at request time."));
         Collections.sort(fortunes);
-        renderTemplate("fortunes", fortunes);
+        renderTemplate("fortunes.html", fortunes);
     }
 
 }

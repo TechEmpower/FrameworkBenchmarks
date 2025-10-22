@@ -5,32 +5,29 @@ This is the Codeigniter PHP portion of a [benchmarking test suite](../) comparin
 ### JSON Encoding Test
 Uses the PHP standard [JSON encoder](http://www.php.net/manual/en/function.json-encode.php).
 
-* [JSON test controller](application/controllers/bench.php)
+* [JSON test controller](app/Controllers/Bench.php)
 
 
 ### Data-Store/Database Mapping Test
 Uses the db abstraction class from Codeigniter
 
-* [DB test controller](application/controllers/bench.php)
+* [DB test controller](app/Controllers/Bench.php)
 
 
 ## Infrastructure Software Versions
 The tests were run with:
 
-* [Codeigniter Version 3.1.11](http://ellislab.com/codeigniter)
-* [PHP Version 7.4](http://www.php.net/) with FPM and APC
-* [nginx 1.16.1](http://nginx.org/)
-* [MySQL 8](https://dev.mysql.com/)
+* [Codeigniter Version 4](https://www.codeigniter.com)
 
 ## Test URLs
 ### JSON Encoding Test
 
-http://localhost/index.php/bench/json
+http://localhost/json
 
 ### Data-Store/Database Mapping Test
 
-http://localhost/index.php/bench/db
+http://localhost/db
 
 ### Variable Query Test
     
-http://localhost/index.php/bench/db/2
+http://localhost/queries/2

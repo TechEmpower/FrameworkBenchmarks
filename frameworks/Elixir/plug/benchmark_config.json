@@ -19,7 +19,7 @@
         "language": "Elixir",
         "flavor": "None",
         "orm": "Full",
-        "platform": "BEAM",
+        "platform": "beam",
         "webserver": "cowboy",
         "os": "Linux",
         "database_os": "Linux",

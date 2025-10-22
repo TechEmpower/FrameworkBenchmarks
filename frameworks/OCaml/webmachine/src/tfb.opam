@@ -6,7 +6,7 @@ license: "MIT"
 homepage: "https://github.com/TechEmpower/FrameworkBenchmarks"
 bug-reports: "https://github.com/TechEmpower/FrameworkBenchmarks/issues"
 depends: [
-  "dune" {>= "2.7" & >= "2.8.5"}
+  "dune" {>= "3.9" & >= "2.8.5"}
   "webmachine" {>= "0.7.0"}
   "lwt" {>= "5.4.1"}
   "conf-libev" {>= "4-12"}

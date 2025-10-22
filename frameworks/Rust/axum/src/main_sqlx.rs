@@ -1,73 +1,86 @@
-extern crate serde_derive;
-extern crate dotenv;
-#[macro_use]
-extern crate async_trait;
-
-mod models_common;
-mod models_sqlx;
-mod database_sqlx;
-mod utils;
-mod server;
 mod common;
+mod sqlx;
 
-use dotenv::dotenv;
-use std::env;
-use crate::database_sqlx::{DatabaseConnection};
+use std::{borrow::Cow, sync::Arc};
+
+use ::sqlx::PgPool;
 use axum::{
-    extract::{Query},
+    extract::{Query, State},
     http::StatusCode,
     response::IntoResponse,
     routing::get,
-    AddExtensionLayer, Json, Router,
+    Router,
 };
-use axum::http::{header, HeaderValue};
-use tower_http::set_header::SetResponseHeaderLayer;
-use hyper::Body;
-use rand::rngs::SmallRng;
-use rand::{SeedableRng};
-use sqlx::PgPool;
+use dotenv::dotenv;
+use quick_cache::sync::Cache;
+use rand::{rngs::SmallRng, rng, SeedableRng};
+use sqlx::models::World;
 use yarte::Template;
+use mimalloc::MiMalloc;
 
-use models_sqlx::{World, Fortune};
-use database_sqlx::create_pool;
-use utils::{Params, parse_params, random_number, Utf8Html};
+#[global_allocator]
+static GLOBAL: MiMalloc = MiMalloc;
 
-async fn db(DatabaseConnection(mut conn): DatabaseConnection) -> impl IntoResponse {
-    let mut rng = SmallRng::from_entropy();
-    let number = random_number(&mut rng);
+#[cfg(not(feature = "simd-json"))]
+use axum::Json;
+#[cfg(feature = "simd-json")]
+use common::simd_json::Json;
 
-    let world : World = sqlx::query_as("SELECT id, randomnumber FROM World WHERE id = $1").bind(number)
-        .fetch_one(&mut conn).await.ok().expect("error loading world");
+mod server;
+
+use common::{
+    get_env, random_id, random_ids,
+    utils::{parse_params, Params, Utf8Html},
+};
+use sqlx::database::create_pool;
+use sqlx::models::Fortune;
+
+#[derive(Template)]
+#[template(path = "fortunes.html.hbs")]
+pub struct FortunesTemplate<'a> {
+    pub fortunes: &'a Vec<Fortune>,
+}
+
+async fn db(State(AppState { db, .. }): State<AppState>) -> impl IntoResponse {
+    let id = random_id(&mut rng());
+    let world: World = ::sqlx::query_as(common::SELECT_WORLD_BY_ID)
+        .bind(id)
+        .fetch_one(&mut *db.acquire().await.unwrap())
+        .await
+        .expect("error loading world");
 
     (StatusCode::OK, Json(world))
 }
 
-async fn queries(DatabaseConnection(mut conn): DatabaseConnection, Query(params): Query<Params>) -> impl IntoResponse {
-    let q = parse_params(params);
+async fn queries(
+    State(AppState { db, .. }): State<AppState>,
+    Query(params): Query<Params>,
+) -> impl IntoResponse {
+    let mut rng = SmallRng::from_rng(&mut rng());
+    let count = parse_params(params);
+    let mut worlds: Vec<World> = Vec::with_capacity(count);
 
-    let mut rng = SmallRng::from_entropy();
-
-    let mut results = Vec::with_capacity(q as usize);
-
-    for _ in 0..q {
-        let query_id = random_number(&mut rng);
-
-        let result :World =  sqlx::query_as("SELECT * FROM World WHERE id = $1").bind(query_id)
-            .fetch_one(&mut conn).await.ok().expect("error loading world");
-
-        results.push(result);
+    for id in random_ids(&mut rng, count) {
+        let world: World = ::sqlx::query_as(common::SELECT_WORLD_BY_ID)
+            .bind(id)
+            .fetch_one(&mut *db.acquire().await.unwrap())
+            .await
+            .expect("error loading world");
+        worlds.push(world);
     }
 
-    (StatusCode::OK, Json(results))
+    (StatusCode::OK, Json(worlds))
 }
 
-async fn fortunes(DatabaseConnection(mut conn): DatabaseConnection) -> impl IntoResponse {
-    let mut fortunes: Vec<Fortune> = sqlx::query_as("SELECT * FROM Fortune").fetch_all(&mut conn).await
-        .ok().expect("Could not load Fortunes");
+async fn fortunes(State(AppState { db, .. }): State<AppState>) -> impl IntoResponse {
+    let mut fortunes: Vec<Fortune> = ::sqlx::query_as(common::SELECT_ALL_FORTUNES)
+        .fetch_all(&mut *db.acquire().await.unwrap())
+        .await
+        .expect("error loading Fortunes");
 
     fortunes.push(Fortune {
         id: 0,
-        message: "Additional fortune added at request time.".to_string(),
+        message: Cow::Borrowed("Additional fortune added at request time."),
     });
 
     fortunes.sort_by(|a, b| a.message.cmp(&b.message));
@@ -81,62 +94,62 @@ async fn fortunes(DatabaseConnection(mut conn): DatabaseConnection) -> impl Into
     )
 }
 
-async fn updates(DatabaseConnection(mut conn): DatabaseConnection, Query(params): Query<Params>) -> impl IntoResponse {
-    let q = parse_params(params);
-
-    let mut rng = SmallRng::from_entropy();
-
-    let mut results = Vec::with_capacity(q as usize);
-
-    for _ in 0..q {
-        let query_id = random_number(&mut rng);
-        let mut result :World =  sqlx::query_as("SELECT * FROM World WHERE id = $1").bind(query_id)
-            .fetch_one(&mut conn).await.ok().expect("error loading world");
-
-        result.random_number = random_number(&mut rng);
-        results.push(result);
+async fn cache(
+    State(AppState { cache, .. }): State<AppState>,
+    Query(params): Query<Params>,
+) -> impl IntoResponse {
+    let count = parse_params(params);
+    let mut rng = SmallRng::from_rng(&mut rng());
+    let mut worlds: Vec<Option<World>> = Vec::with_capacity(count);
+    
+    for id in random_ids(&mut rng, count) {
+        worlds.push(cache.get(&id));
     }
 
-    for w in &results {
-        sqlx::query("UPDATE World SET randomnumber = $1 WHERE id = $2")
-            .bind(w.random_number).bind(w.id)
-            .execute(&mut conn)
-            .await.ok().expect("could not update world");
-    }
+    (StatusCode::OK, Json(worlds))
+}
 
-    (StatusCode::OK, Json(results))
+/// Pre-load the cache with all worlds.
+async fn preload_cache(AppState { db, cache }: &AppState) {
+    let worlds: Vec<World> = ::sqlx::query_as(common::SELECT_ALL_CACHED_WORLDS)
+        .fetch_all(&mut *db.acquire().await.unwrap())
+        .await
+        .expect("error loading worlds");
+
+    for world in worlds {
+        cache.insert(world.id, world);
+    }
+}
+
+/// Application state
+#[derive(Clone)]
+struct AppState {
+    db: PgPool,
+    cache: Arc<Cache<i32, World>>,
 }
 
 #[tokio::main]
 async fn main() {
     dotenv().ok();
 
-    let database_url = env::var("AXUM_TECHEMPOWER_DATABASE_URL").ok()
-        .expect("AXUM_TECHEMPOWER_DATABASE_URL environment variable was not set");
+    let database_url: String = get_env("POSTGRES_URL");
+    let max_pool_size: u32 = get_env("POSTGRES_MAX_POOL_SIZE");
+    let min_pool_size: u32 = get_env("POSTGRES_MIN_POOL_SIZE");
 
-    // setup connection pool
-    let pool = create_pool(database_url).await;
+    let state = AppState {
+        db: create_pool(database_url, max_pool_size, min_pool_size).await,
+        cache: Arc::new(Cache::new(10_000))
+    };
 
-    let app = router(pool).await;
+    // Prime the cache with CachedWorld objects
+    preload_cache(&state).await;
 
-    server::builder()
-        .serve(app.into_make_service())
-        .await
-        .unwrap();
-}
-
-async fn router(pool: PgPool) -> Router {
-    Router::new()
+    let app = Router::new()
         .route("/fortunes", get(fortunes))
         .route("/db", get(db))
         .route("/queries", get(queries))
-        .route("/updates", get(updates))
-        .layer(AddExtensionLayer::new(pool))
-        .layer(SetResponseHeaderLayer::<_, Body>::if_not_present(header::SERVER, HeaderValue::from_static("Axum")))
-}
+        .route("/cached-queries", get(cache))
+        .with_state(state);
 
-#[derive(Template)]
-#[template(path = "fortunes.html.hbs")]
-pub struct FortunesTemplate<'a> {
-    pub fortunes: &'a Vec<Fortune>,
+    server::serve_hyper(app, Some(8000)).await
 }

@@ -1,5 +1,6 @@
 {
   "framework": "urweb",
+  "maintainers": ["achlipala"],
   "tests": [{
     "default": {
       "display_name": "urweb",
@@ -42,7 +43,7 @@
     },
     "cache": {
       "setup_file": "setup-postgresql",
-      "cached_query_url": "/queries/",
+      "cached_query_url": "/cached_queries/",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
@@ -57,7 +58,7 @@
     },
     "mysql-cache": {
       "setup_file": "setup-mysql",
-      "cached_query_url": "/queries/",
+      "cached_query_url": "/cached_queries/",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",

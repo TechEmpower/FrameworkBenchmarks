@@ -4,7 +4,12 @@ const Sequelize = require('sequelize');
 const sequelize = new Sequelize('hello_world', 'benchmarkdbuser', 'benchmarkdbpass', {
   host: 'tfb-database',
   dialect: 'mysql',
-  logging: false
+  logging: false,
+  pool: {
+    max: 50,
+    min: 0,
+    idle: 10000
+  }
 });
 
 const Worlds = sequelize.define('World', {

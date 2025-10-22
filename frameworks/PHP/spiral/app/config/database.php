@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -7,19 +8,17 @@
  */
 declare(strict_types=1);
 
-use Spiral\Database\Driver;
+use Cycle\Database\Config;
 
 return [
-    'default'   => 'default',
+    'default' => 'default',
     'databases' => [
         'default' => ['driver' => 'mysql'],
     ],
-    'drivers'   => [
-        'mysql' => [
-            'driver'     => Driver\MySQL\MySQLDriver::class,
-            'connection' => 'mysql:host=tfb-database:3306;charset=utf8;dbname=hello_world',
-            'username'   => 'benchmarkdbuser',
-            'password'   => 'benchmarkdbpass',
-        ],
-    ]
+    'drivers' => [
+        'mysql' => new Config\MySQLDriverConfig(
+            connection: new Config\MySQL\DsnConnectionConfig(env('DB_DSN')),
+            queryCache: true
+        ),
+    ],
 ];

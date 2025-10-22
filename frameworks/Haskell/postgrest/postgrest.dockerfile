@@ -1,10 +1,10 @@
-FROM postgrest/postgrest:latest
+FROM postgrest/postgrest:latest AS builder
 
 FROM alpine
 RUN apk add postgresql-client bash
 
-COPY --from=0 /usr/local/bin/postgrest /usr/local/bin/postgrest
-COPY --from=0 /etc/postgrest.conf /etc/postgrest.conf
+COPY --from=builder /bin/postgrest /usr/local/bin/postgrest
+COPY postgrest.conf /etc/postgrest.conf
 
 ENV PGRST_DB_SCHEMA=public
 ENV PGRST_DB_ANON_ROLE=

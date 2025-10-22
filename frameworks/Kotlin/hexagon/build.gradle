@@ -1,46 +1,34 @@
 
 plugins {
-    id "org.jetbrains.kotlin.jvm" version "1.6.10"
+    id "org.jetbrains.kotlin.jvm" version "2.2.20" apply false
+    id "org.graalvm.buildtools.native" version "0.11.1" apply false
 }
+
+version = "1.0.0"
+description = "TFB benchmark"
+group = "com.hexagontk"
 
 ext {
-    hexagonVersion = "2.0.5"
-    hikariVersion = "5.0.1"
-    jettyVersion = "11.0.8"
-    postgresqlVersion = "42.3.3"
+    hexagonVersion = "4.2.4"
+    jettyVersion = "12.1.1"
+    nettyVersion = "4.2.6.Final"
+
+    hikariVersion = "7.0.2"
+    postgresqlVersion = "42.7.8"
+    vertxVersion = "5.0.4"
     cache2kVersion = "2.6.1.Final"
 
-    gradleScripts = "https://raw.githubusercontent.com/hexagonkt/hexagon/$hexagonVersion/gradle"
+    applicationClass = "com.hexagontk.BenchmarkKt"
+    modules = "java.naming,java.sql,java.management"
+    gradleScripts = "https://raw.githubusercontent.com/hexagontk/hexagon/$hexagonVersion/gradle"
 }
 
-apply(from: "$gradleScripts/kotlin.gradle")
-apply(from: "$gradleScripts/application.gradle")
+subprojects {
+    version = rootProject.version
 
-apply(plugin: "war")
-
-defaultTasks("installDist")
-
-application {
-    mainClass.set("com.hexagonkt.BenchmarkKt")
+    apply(from: "$gradleScripts/kotlin.gradle")
 }
 
-war {
-    archiveFileName = "ROOT.war"
-}
-
-installDist.dependsOn("war")
-
-dependencies {
-    implementation("com.hexagonkt:http_server_netty:$hexagonVersion")
-    implementation("com.hexagonkt:http_server_jetty:$hexagonVersion")
-    implementation("com.hexagonkt:templates_pebble:$hexagonVersion")
-    implementation("com.hexagonkt:logging_slf4j_jul:$hexagonVersion")
-    implementation("com.hexagonkt:serialization_jackson_json:$hexagonVersion")
-
-    implementation("org.cache2k:cache2k-core:$cache2kVersion")
-    implementation("com.zaxxer:HikariCP:$hikariVersion")
-    implementation("org.postgresql:postgresql:$postgresqlVersion")
-
-    // providedCompile excludes the dependency only in the WAR, not in the distribution
-    providedCompile("org.eclipse.jetty:jetty-webapp:$jettyVersion") { exclude module: "slf4j-api" }
+tasks.wrapper {
+    gradleVersion = "9.1.0"
 }

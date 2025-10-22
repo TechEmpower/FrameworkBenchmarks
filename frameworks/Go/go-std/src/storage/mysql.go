@@ -7,7 +7,7 @@ import (
 	"math/rand"
 	"sort"
 
-	"go-std/src/templates"
+	"go-std/app/templates"
 
 	_ "github.com/go-sql-driver/mysql" // postgresql import
 )
@@ -101,7 +101,7 @@ func (mysql MySQL) GetFortunes() ([]templates.Fortune, error) {
 		return nil, fmt.Errorf("can't query fortunes: %s", err)
 	}
 
-	fortunes := make([]templates.Fortune, 0, 16)
+	fortunes := make([]templates.Fortune, 0)
 	var fortune templates.Fortune
 	for rows.Next() {
 		if err = rows.Scan(&fortune.ID, &fortune.Message); err != nil {

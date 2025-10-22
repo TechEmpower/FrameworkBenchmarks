@@ -10,6 +10,7 @@ import mir.random.engine.xorshift : Xorshift;
 
 import std.conv : ConvException, to;
 import std.array;
+import std.exception : enforce;
 
 enum worldSize = 10000;
 
@@ -70,7 +71,9 @@ class WebInterface {
 	{
 		struct Q { int _id; }
 		auto query = Q(_uniformVariable(_gen));
-		auto w = WorldResponse(_worldCollection.findOne!World(query));
+		auto world = _worldCollection.findOne!World(query);
+		enforce(!world.isNull(), "expected world, found none.");
+		auto w = WorldResponse(world.get);
 		res.writeJsonBody(w, HTTPStatus.ok, "application/json");
 	}
 
@@ -91,7 +94,9 @@ class WebInterface {
 		foreach (ref w; data) {
 			static struct Q { int _id; }
 			auto query = Q(_uniformVariable(_gen));
-			w = WorldResponse(_worldCollection.findOne!World(query));
+			auto world = _worldCollection.findOne!World(query);
+			enforce(!world.isNull(), "expected world, found none.");
+			w = WorldResponse(world.get);
 		}
 
 		// write response as JSON
@@ -123,7 +128,9 @@ class WebInterface {
 		foreach (ref w; data) {
 			static struct Q { int _id; }
 			auto query = Q(_uniformVariable(_gen));
-			w = WorldResponse(_worldCollection.findOne!World(query));
+			auto world = _worldCollection.findOne!World(query);
+			enforce(!world.isNull(), "expected world, found none.");
+			w = WorldResponse(world.get);
 
 			// update random number
 			w.randomNumber = _uniformVariable(_gen);

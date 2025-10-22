@@ -4,7 +4,7 @@
   <body>
     <table>
       <tr><th>id</th><th>message</th></tr>
-      <% for item in items { %><tr><td><%= item.id %></td><td><%= &*item.message %></td></tr><% } %>
+      <% for item in self.items { %><tr><td><%= item.id %></td><td><%= &*item.message %></td></tr><% } %>
     </table>
   </body>
 </html>

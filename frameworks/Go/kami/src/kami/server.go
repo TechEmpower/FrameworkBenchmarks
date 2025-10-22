@@ -129,7 +129,7 @@ func fortuneHandler(ctx context.Context, w http.ResponseWriter, r *http.Request)
 		log.Fatalf("Error preparing statement: %v", err)
 	}
 
-	fortunes := make(Fortunes, 0, 16)
+	fortunes := make(Fortunes, 0)
 	for rows.Next() { //Fetch rows
 		fortune := Fortune{}
 		if err := rows.Scan(&fortune.Id, &fortune.Message); err != nil {

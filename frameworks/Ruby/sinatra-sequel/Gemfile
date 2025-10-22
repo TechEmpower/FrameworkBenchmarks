@@ -1,21 +1,23 @@
 source 'https://rubygems.org'
 
-gem 'json', '~> 2.0'
-gem 'passenger', '~> 5.1', :platforms=>[:ruby, :mswin], :require=>false
-gem 'puma', '~> 3.9', :require=>false
+gem 'json', '~> 2.8'
 gem 'sequel', '~> 5.0'
-gem 'sinatra', '~> 2.0', :require=>'sinatra/base'
-gem 'slim', '~> 3.0'
-gem 'torquebox-web', '>= 4.0.0.beta3', '< 5', :platforms=>:jruby, :require=>false
-gem 'unicorn', '~> 5.2', :platforms=>[:ruby, :mswin], :require=>false
+gem 'sinatra', '~> 4.0', :require=>'sinatra/base'
 
-group :mysql do
-  gem 'jdbc-mysql', '~> 5.1', :platforms=>:jruby, :require=>'jdbc/mysql'
-  gem 'mysql2', '~> 0.4', :platforms=>[:ruby, :mswin]
+group :mysql, optional: true do
+  gem 'trilogy', '~> 2.9', platforms: [:ruby, :windows]
 end
 
-group :postgresql do
-  gem 'jdbc-postgres', '~> 9.4', :platforms=>:jruby, :require=>'jdbc/postgres'
-  gem 'pg', '~> 0.19', :platforms=>[:ruby, :mswin]
+group :postgresql, optional: true do
+  gem 'pg', '~> 1.5', :platforms=>[:ruby, :windows]
   gem 'sequel_pg', '~> 1.6', :platforms=>:ruby, :require=>false
+end
+
+group :iodine, optional: true do
+  gem 'iodine', '~> 0.7', platforms: [:ruby, :windows], require: false
+end
+
+group :puma, optional: true do
+  gem 'puma', '~> 7.0', require: false
+  gem 'concurrent-ruby' # used by Puma for auto-tuning
 end

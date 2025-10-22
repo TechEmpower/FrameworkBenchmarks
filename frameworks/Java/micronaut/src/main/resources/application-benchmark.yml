@@ -1,9 +1,0 @@
-vertx:
-    pg:
-        client:
-            port: 5432
-            host: tfb-database
-            database: hello_world
-            user: benchmarkdbuser
-            password: benchmarkdbpass
-            maxSize: 5

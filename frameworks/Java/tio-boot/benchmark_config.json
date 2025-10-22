@@ -1,0 +1,29 @@
+{
+  "framework": "tio-boot",
+  "tests": [{
+    "default": {
+      "plaintext_url": "/plaintext",
+      "json_url": "/json",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "fortune_url": "/fortunes",
+      "update_url": "/updates?queries=",
+      "cached_query_url" : "/cachedQuery?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "MySQL",
+      "framework": "tio-boot",
+      "language": "Java",
+      "flavor": "None",
+      "orm": "Raw",
+      "platform": "t-io",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "tio-boot",
+      "notes": "tio-boot",
+      "versus": "t-io"
+    }
+  }]
+}

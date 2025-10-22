@@ -1,0 +1,24 @@
+{
+	# Debug
+    {$CADDY_DEBUG}
+
+	frankenphp {
+		#worker /path/to/your/worker.php
+		{$FRANKENPHP_CONFIG}
+	}
+}
+
+:8080
+
+route {
+
+    # FrankenPHP!
+    # disable static files for this benchmark
+    # by using php instead of php_server
+    @phpFiles path *.php
+    php @phpFiles {
+        root /php
+    }
+
+    respond 404
+}

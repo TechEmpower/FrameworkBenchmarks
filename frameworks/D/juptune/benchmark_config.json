@@ -1,0 +1,26 @@
+{
+  "framework": "juptune",
+  "tests": [
+    {
+      "default": {
+        "plaintext_url": "/plaintext",
+        "json_url": "/json",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "None",
+        "framework": "juptune",
+        "language": "D",
+        "flavor": "ldc2",
+        "orm": "None",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Juptune",
+        "notes": "",
+        "versus": "None"
+      }
+    }
+  ]
+}

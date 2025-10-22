@@ -1,10 +1,11 @@
-FROM python:2.7.15-stretch
+FROM python:3.9-bullseye
 
-ADD ./ /uw
+RUN apt-get update -yqq
+RUN apt-get install python3-dev -y
 
 WORKDIR /uw
-
-RUN pip install -r /uw/requirements.txt
+COPY ./ /uw
+RUN pip3 install -U pip; pip3 install -r /uw/requirements.txt
 
 EXPOSE 8080
 

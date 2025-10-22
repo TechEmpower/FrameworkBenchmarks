@@ -1,11 +1,15 @@
-const fastify = require("fastify")();
+const fastify = require("fastify")({ logger: false, keepAliveTimeout: 0 });
 const handlers = require("./handlers");
 
-fastify.register(require("point-of-view"), {
+fastify.setErrorHandler((error, request, reply) => {
+  console.log(error)
+  reply.status(500).send({ ok: false })
+})
+
+fastify.register(require("@fastify/view"), {
   engine: {
-    ejs: require("handlebars")
-  },
-  templates: __dirname + "/views"
+    handlebars: require("handlebars")
+  }
 });
 
 fastify.addHook('onRequest', (request, reply, done) => {
@@ -94,12 +98,12 @@ if (database) {
   fastify.get("/updates", updateSchema, routerHandler.updates);
 }
 
-fastify.listen(8080, "0.0.0.0", err => {
+fastify.listen({ port: 8080, host: "0.0.0.0" }, (err, address) => {
   if (err) {
     throw err;
   }
 
   console.log(
-    `Worker started and listening on http://0.0.0.0:8080 ${new Date().toISOString()}`
+    `Worker started and listening on ${address} ${new Date().toISOString()}`
   );
 });

@@ -1,0 +1,24 @@
+{
+	{$CADDY_GLOBAL_OPTIONS}
+
+	admin {$CADDY_SERVER_ADMIN_HOST}:{$CADDY_SERVER_ADMIN_PORT}
+
+	frankenphp {
+		worker "{$APP_PUBLIC_PATH}/frankenphp-worker.php" {$CADDY_SERVER_WORKER_COUNT}
+	}
+}
+
+{$CADDY_SERVER_SERVER_NAME} {
+	route {
+		# Mercure configuration is injected here...
+		{$CADDY_SERVER_EXTRA_DIRECTIVES}
+
+		# FrankenPHP!
+		# disable static files for this benchmark
+		# by using php instead of php_server
+		rewrite frankenphp-worker.php
+		php {
+			root "{$APP_PUBLIC_PATH}"
+		}
+	}
+}

@@ -21,9 +21,9 @@ class FortunesController
         $this->fortuneRepository = $fortuneRepository;
     }
 
-    /**
-     * @Route("/fortunes")
-     */
+    #[Route('/fortunes')]
+
+
     public function fortunes(): Response
     {
         $fortunes = $this->fortuneRepository->findBy([]);

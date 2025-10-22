@@ -1,0 +1,28 @@
+{
+  "framework": "akazawayun.pro",
+  "tests": [
+    {
+      "default": {
+        "display_name": "akazawayun.pro",
+        "framework": "akazawayun.pro",
+        "webserver": "akazawayun.pro",
+        "plaintext_url": "/post/plaintext",
+        "json_url": "/post/json",
+        "db_url": "/post/db",
+        "query_url": "/post/queries?queries=",
+        "update_url": "/post/updates?queries=",
+        "port": 2022,
+        "classification": "Micro",
+        "approach": "Realistic",
+        "platform": ".NET",
+        "language": "C#",
+        "flavor": "CoreCLR",
+        "os": "Linux",
+        "database_os": "Linux",
+        "database": "MySQL",
+        "orm": "Micro",
+        "notes": ""
+      }
+    }
+  ]
+}

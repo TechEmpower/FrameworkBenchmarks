@@ -14,15 +14,16 @@
       "database": "Postgres",
       "framework": "Warp",
       "language": "Haskell",
-      "flavor": "GHC683",
+      "flavor": "GHC910",
       "orm": "Raw",
       "platform": "Wai",
       "webserver": "Wai",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "Warp+Postgres-wire",
+      "display_name": "Warp+Postgres-simple",
       "notes": "Pure haskell.",
-      "dockerfile": "warp-shared.dockerfile"
+      "dockerfile": "warp-shared.dockerfile",
+      "tags": []
     },
     "hasql": {
       "json_url": "/json",
@@ -37,7 +38,7 @@
       "database": "Postgres",
       "framework": "Warp",
       "language": "Haskell",
-      "flavor": "GHC683",
+      "flavor": "GHC910",
       "orm": "Raw",
       "platform": "Wai",
       "webserver": "Wai",
@@ -45,7 +46,8 @@
       "database_os": "Linux",
       "display_name": "Warp+Hasql",
       "notes": "Uses libpq system dependency.",
-      "dockerfile": "warp-shared.dockerfile"
+      "dockerfile": "warp-shared.dockerfile",
+      "tags": []
     },
     "mysql-haskell": {
       "json_url": "/json",
@@ -60,7 +62,7 @@
       "database": "MySQL",
       "framework": "Warp",
       "language": "Haskell",
-      "flavor": "GHC683",
+      "flavor": "GHC910",
       "orm": "Raw",
       "platform": "Wai",
       "webserver": "Wai",
@@ -68,7 +70,8 @@
       "database_os": "Linux",
       "display_name": "Warp+mysql-haskell",
       "notes": "Pure Haskell.",
-      "dockerfile": "warp-shared.dockerfile"
+      "dockerfile": "warp-shared.dockerfile",
+      "tags": ["broken"]
     }
   }]
 }

@@ -1,11 +1,24 @@
-FROM ruby:2.4
+FROM ruby:3.5-rc
 
-ADD ./ /rack
+ENV RUBY_YJIT_ENABLE=1
+ENV RUBY_THREAD_TIMESLICE=10
+
+# Use Jemalloc
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends libjemalloc2
+ENV LD_PRELOAD=libjemalloc.so.2
 
 WORKDIR /rack
 
-RUN bundle install --jobs=4 --gemfile=/rack/Gemfile --path=/rack/rack/bundle
+COPY Gemfile* ./
+
+ENV BUNDLE_FORCE_RUBY_PLATFORM=true
+RUN bundle config set with 'puma'
+RUN bundle install --jobs=8
+
+COPY . .
 
 EXPOSE 8080
+ENV WEB_CONCURRENCY=auto
 
-CMD bundle exec puma -t 8:32 -w 8 --preload -b tcp://0.0.0.0:8080 -e production
+CMD bundle exec puma -C config/puma.rb -b tcp://0.0.0.0:8080 -e production

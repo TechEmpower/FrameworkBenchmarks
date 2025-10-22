@@ -1,22 +1,31 @@
 <?php
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
+
 declare(strict_types=1);
 
-mb_internal_encoding('UTF-8');
-error_reporting(E_ALL | E_STRICT);
-ini_set('display_errors', 'stderr');
+use App\App;
+use Spiral\Core\Container;
+use Spiral\Core\Options;
 
-//Composer
+\mb_internal_encoding('UTF-8');
+\error_reporting(E_ALL ^ E_DEPRECATED);
+\ini_set('display_errors', 'stderr');
+
+// Register Composer's auto loader.
 require __DIR__ . '/vendor/autoload.php';
 
-//Initiating shared container, bindings, directories and etc
-$app = \App\App::init(['root' => __DIR__]);
+// Initialize shared container, bindings, directories and etc.
+$options = new Options();
+$options->validateArguments = false;
+$options->allowSingletonsRebinding = true;
+$container = new Container(options: $options);
+$app = App::create(
+    directories: ['root' => __DIR__],
+    container: $container,
+)->run();
 
-if ($app != null) {
-    $app->serve();
+if ($app === null) {
+    exit(255);
 }
+
+$code = (int)$app->serve();
+exit($code);

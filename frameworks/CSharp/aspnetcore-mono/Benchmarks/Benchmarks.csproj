@@ -25,6 +25,7 @@
 
     <PackageReference Include="Dapper" Version="2.0.90" />
     <PackageReference Include="MySqlConnector" Version="1.0.1" />
+    <PackageReference Include="Npgsql" Version="8.0.3" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.0-rc1" />
     <PackageReference Include="System.IO.Pipelines" Version="5.0.0-rc.1.20451.14" />
   </ItemGroup>

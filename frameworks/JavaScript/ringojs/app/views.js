@@ -44,7 +44,7 @@ app.get('/dbquery/:queries?', function(request, queries) {
    return response.json(worlds);
 });
 
-app.get('/fortune', function() {
+app.get('/fortunes', function() {
    const fortunes = models.store.query('select Fortune.* from Fortune');
    fortunes.push({
       id: 0,

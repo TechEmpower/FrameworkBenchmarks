@@ -5,11 +5,14 @@ use support\Request;
 use support\bootstrap\Date;
 use support\bootstrap\db\Raw as Db;
 use support\Response;
-use PDO;
+use function json_encode;
+use function max;
+use function min;
+use function mt_rand;
 
 class Index
 {
-    public function plaintext($request)
+    public function plaintext()
     {
         return new Response(200, [
             'Content-Type' => 'text/plain',
@@ -18,7 +21,7 @@ class Index
     }
 
 
-    public function json($request)
+    public function json()
     {
         return new Response(200, [
             'Content-Type' => 'application/json',
@@ -26,10 +29,10 @@ class Index
         ], json_encode(['message' => 'Hello, World!']));
     }
 
-    public function db($request)
+    public function db()
     {
-        $statement = Db::$statement;
-        $statement->execute([\mt_rand(1, 10000)]);
+        $statement = Db::$random;
+        $statement->execute([mt_rand(1, 10000)]);
 
         return new Response(200, [
             'Content-Type' => 'application/json',
@@ -37,19 +40,19 @@ class Index
         ], json_encode($statement->fetch()));
     }
 
-    public function fortunes($request)
+    public function fortunes()
     {
         $fortune = Db::$fortune;
 
         $fortune->execute();
 
-        $arr    = $fortune->fetchAll(PDO::FETCH_KEY_PAIR);
+        $arr    = $fortune->fetchAll(\PDO::FETCH_KEY_PAIR);
         $arr[0] = 'Additional fortune added at request time.';
         \asort($arr);
 
         $html = '';
         foreach ($arr as $id => $message) {
-            $message = \htmlspecialchars($message, ENT_QUOTES, 'UTF-8');
+            $message = \htmlspecialchars($message, \ENT_QUOTES, 'UTF-8');
             $html .= "<tr><td>$id</td><td>$message</td></tr>";
         }
 
@@ -59,18 +62,15 @@ class Index
         );
     }
 
-    public function queries($request, $q = 1)
+    public function queries(Request $request, $q = 1)
     {
-        $statement = Db::$statement;
+        $statement = Db::$random;
 
-        $query_count = 1;
-        if ((int) $q > 1) {
-            $query_count = \min($q, 500);
-        }
+        $query_count = min(max((int) $q, 1), 500);
 
         $arr = [];
         while ($query_count--) {
-            $statement->execute([\mt_rand(1, 10000)]);
+            $statement->execute([mt_rand(1, 10000)]);
             $arr[] = $statement->fetch();
         }
 
@@ -80,44 +80,33 @@ class Index
         ], json_encode($arr));
     }
 
-    public function updates($request, $q = 1)
+    public function updates(Request $request, $q = 1)
     {
+        static $updates = [];
+
         $random = Db::$random;
-        $update = Db::$update;
+        $pdo = Db::$pdo;
+        $count = min(max((int) $q, 1), 500);
 
-        $query_count = 1;
-        if ((int) $q > 1) {
-            $query_count = \min($q, 500);
-        }
-
-        $arr = [];
-
-        while ($query_count--) {
-            $id = \mt_rand(1, 10000);
+        $worlds = $keys = $values = [];
+        for ($i = 0; $i < $count; ++ $i) {
+            $values[] = $keys[] = $id = mt_rand(1, 10000);
             $random->execute([$id]);
-
-            //$random->fetchColumn(); //
-            //$world = ['id' => $id, 'randomNumber' => \mt_rand(1, 10000)]; //
-
-            $world = ['id' => $id, 'randomNumber' => $random->fetchColumn()];
-            $update->execute(
-                [$world['randomNumber'] = mt_rand(1, 10000), $id]
-            );
-
-            $arr[] = $world;
+            $row = $random->fetch();
+            $values[] = $row['randomNumber'] = mt_rand(1, 10000);
+            $worlds[] = $row;
         }
-
-        /*$pdo = Db::$pdo;
-        $pdo->beginTransaction();
-        foreach($arr as $world) {
-             $update->execute([$world['randomNumber'], $world['id']]);
+        if (!isset($updates[$count])) {
+            $sql = 'UPDATE World SET randomNumber = CASE id' . str_repeat(' WHEN ?::INTEGER THEN ?::INTEGER ', $count) . 'END WHERE id IN (' . str_repeat('?::INTEGER,', $count - 1) . '?::INTEGER)';
+            $updates[$count] = $pdo->prepare($sql);
         }
-        $pdo->commit();*/
+        $updates[$count]->execute([...$values, ...$keys]);
 
         return new Response(200, [
             'Content-Type' => 'application/json',
             'Date'         => Date::$date
-        ], \json_encode($arr));
+        ], json_encode($worlds));
+
     }
 
 

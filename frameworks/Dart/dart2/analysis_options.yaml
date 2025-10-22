@@ -1,7 +1,8 @@
-include: package:pedantic/analysis_options.yaml
+include: package:lints/recommended.yaml
 analyzer:
-  strong-mode:
-    implicit-casts: false
+  language:
+    strict-casts: true
+
 linter:
   rules:
     - avoid_dynamic_calls

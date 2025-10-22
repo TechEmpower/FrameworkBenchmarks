@@ -14,7 +14,12 @@ const bodyParser = require('body-parser');
 const sequelize = new Sequelize('hello_world', 'benchmarkdbuser', 'benchmarkdbpass', {
   host: 'tfb-database',
   dialect: 'mysql',
-  logging: false
+  logging: false,
+  pool: {
+    max: 50,
+    min: 0,
+    idle: 10000
+  }
 });
 
 const World = sequelize.define('world', {
@@ -43,7 +48,7 @@ const Fortune = sequelize.define('Fortune', {
     freezeTableName: true
   });
 
-if (cluster.isMaster) {
+if (cluster.isPrimary) {
   // Fork workers.
   for (let i = 0; i < numCPUs; i++) {
     cluster.fork();

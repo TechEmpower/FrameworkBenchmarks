@@ -1,0 +1,71 @@
+description = "benchmark"
+
+apply plugin: 'java'
+apply plugin: 'application'
+apply plugin: 'infra.application'
+
+configure(allprojects) {
+  group = "cn.taketoday.benchmark"
+
+  repositories {
+    mavenLocal()
+    mavenCentral()
+    maven { url = "https://oss.sonatype.org/content/repositories/snapshots/" }
+  }
+}
+
+dependencies {
+  implementation 'cn.taketoday:today-starter-netty'
+  implementation 'cn.taketoday:today-starter-json'
+  implementation 'cn.taketoday:today-starter-jdbc'
+  implementation 'cn.taketoday:today-starter-web'
+  implementation 'cn.taketoday:today-starter-freemarker'
+
+  implementation 'mysql:mysql-connector-java'
+
+  implementation 'ch.qos.logback:logback-classic'
+  implementation 'com.github.ben-manes.caffeine:caffeine'
+
+  implementation('io.netty:netty-transport-native-epoll') {
+    artifact {
+      classifier = 'linux-x86_64'
+    }
+  }
+
+  implementation('io.netty.incubator:netty-incubator-transport-native-io_uring:0.0.21.Final') {
+    artifact {
+      classifier = 'linux-x86_64'
+    }
+  }
+
+//  implementation('io.netty:netty-transport-native-kqueue') {
+//    artifact {
+//      classifier = 'osx-aarch_64'
+//    }
+//  }
+
+}
+
+java {
+  sourceCompatibility = JavaVersion.VERSION_21
+  targetCompatibility = JavaVersion.VERSION_21
+}
+
+application {
+  mainClass = 'cn.taketoday.benchmark.BenchmarkApplication'
+  applicationDefaultJvmArgs = [
+      "-server",
+      "-Xms2G",
+      "-Xmx2G",
+      "-XX:+UseNUMA",
+      "-XX:+UseStringDeduplication",
+      "-Dinfra.profiles.active=test",
+      "-Dio.netty.buffer.checkBounds=false",
+      "-Dio.netty.buffer.checkAccessible=false",
+      "-Dio.netty.leakDetection.level=disabled",
+      "-Dio.netty.iouring.iosqeAsyncThreshold=32000",
+      "-Djava.lang.Integer.IntegerCache.high=10000",
+      "--add-opens=java.base/java.nio=ALL-UNNAMED",
+      "--add-opens=java.base/sun.nio.ch=ALL-UNNAMED"
+  ]
+}

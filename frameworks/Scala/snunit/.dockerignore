@@ -3,7 +3,7 @@
 
 # Allow files and directories
 !/build.sbt
-!/config.sh
+!/conf.json
 !/project/build.properties
 !/project/plugins.sbt
 !/src

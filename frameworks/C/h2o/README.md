@@ -1,28 +1,37 @@
-# h2o
+# h2o-app
 
-This is a framework implementation using the [H2O](https://h2o.examp1e.net) HTTP server. It builds directly on top of `libh2o` instead of running the standalone server.
+This is a framework implementation using the [H2O](https://h2o.examp1e.net) HTTP server. It
+builds directly on top of `libh2o` instead of running the standalone server.
 
 ## Requirements
 
-[CMake](https://cmake.org), [H2O](https://h2o.examp1e.net), [libpq](https://www.postgresql.org), [mustache-c](https://github.com/x86-64/mustache-c), [OpenSSL](https://www.openssl.org), [YAJL](https://lloyd.github.io/yajl)
+[bpftool](https://bpftool.dev/),
+[Clang](https://clang.llvm.org/),
+[CMake](https://cmake.org/),
+[GNU C Library](https://www.gnu.org/software/libc),
+[H2O](https://h2o.examp1e.net/),
+[libbpf](https://github.com/libbpf/libbpf),
+[libpq](https://www.postgresql.org/),
+[Linux](https://kernel.org/),
+[mustache-c](https://github.com/x86-64/mustache-c),
+[numactl](https://github.com/numactl/numactl),
+[OpenSSL](https://www.openssl.org/),
+[YAJL](https://lloyd.github.io/yajl)
 
 ## Test implementations
 
-The test implementations are located into the `src/handlers` directory.
+The test implementations are located into the [src/handlers](src/handlers) directory - refer to
+the `initialize_*_handler*()` functions.
 
 ## Performance tuning
 
-If the test environment changes, it will probably be necessary to tune some of the framework settings in order to achieve the best performance possible. The most significant parameter is the maximum number of database connections per thread, which is controlled by the `DB_CONN` variable in the `h2o.sh` script.
+If the test environment changes, it will probably be necessary to tune some of the framework
+settings in order to achieve the best performance possible. The most significant parameters are the
+maximum number of database connections per thread and the maximum number of pipelined database
+queries per database connection, which are controlled by the `-m` and the `-e` command-line
+options respectively.
 
 ## Performance issues
-
-### Database tests
-
-`libpq` does not support command pipelining, and implementing anything equivalent on top of it conflicts with the requirements.
-
-### Database updates
-
-In the Citrine environment the database connection settings that improve the performance on the updates test make the other database results worse, and vice versa.
 
 ### Plaintext
 
@@ -30,4 +39,4 @@ In the Citrine environment the database connection settings that improve the per
 
 ## Contact
 
-Anton Kirilov <antonvkirilov@gmail.com>
+Anton Kirilov <antonvkirilov@proton.me>

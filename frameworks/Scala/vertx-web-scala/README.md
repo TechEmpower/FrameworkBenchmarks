@@ -13,8 +13,8 @@ This is the Vert.x Web Scala portion of a [benchmarking test suite](../) compari
 
 ## Versions
 
-* [Java OpenJDK 11](https://openjdk.java.net/)
-* [Vert.x 3.7](https://vertx.io/)
+* [Java OpenJDK 17](https://openjdk.java.net/)
+* [Vert.x 3.9](https://vertx.io/)
 
 ## Test URLs
 

@@ -4,7 +4,6 @@ package handlers
 
 import (
 	json "encoding/json"
-
 	easyjson "github.com/mailru/easyjson"
 	jlexer "github.com/mailru/easyjson/jlexer"
 	jwriter "github.com/mailru/easyjson/jwriter"
@@ -18,7 +17,7 @@ var (
 	_ easyjson.Marshaler
 )
 
-func easyjson89aae3efDecodeGoStdSrc(in *jlexer.Lexer, out *Message) {
+func easyjson4086215fDecodeGoStdSrcHandlers(in *jlexer.Lexer, out *Message) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -29,7 +28,7 @@ func easyjson89aae3efDecodeGoStdSrc(in *jlexer.Lexer, out *Message) {
 	}
 	in.Delim('{')
 	for !in.IsDelim('}') {
-		key := in.UnsafeString()
+		key := in.UnsafeFieldName(true)
 		in.WantColon()
 		if in.IsNull() {
 			in.Skip()
@@ -49,18 +48,13 @@ func easyjson89aae3efDecodeGoStdSrc(in *jlexer.Lexer, out *Message) {
 		in.Consumed()
 	}
 }
-func easyjson89aae3efEncodeGoStdSrc(out *jwriter.Writer, in Message) {
+func easyjson4086215fEncodeGoStdSrcHandlers(out *jwriter.Writer, in Message) {
 	out.RawByte('{')
 	first := true
 	_ = first
 	{
 		const prefix string = ",\"message\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		out.RawString(prefix[1:])
 		out.String(string(in.Message))
 	}
 	out.RawByte('}')
@@ -69,23 +63,23 @@ func easyjson89aae3efEncodeGoStdSrc(out *jwriter.Writer, in Message) {
 // MarshalJSON supports json.Marshaler interface
 func (v Message) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjson89aae3efEncodeGoStdSrc(&w, v)
+	easyjson4086215fEncodeGoStdSrcHandlers(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v Message) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjson89aae3efEncodeGoStdSrc(w, v)
+	easyjson4086215fEncodeGoStdSrcHandlers(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *Message) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjson89aae3efDecodeGoStdSrc(&r, v)
+	easyjson4086215fDecodeGoStdSrcHandlers(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *Message) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjson89aae3efDecodeGoStdSrc(l, v)
+	easyjson4086215fDecodeGoStdSrcHandlers(l, v)
 }
