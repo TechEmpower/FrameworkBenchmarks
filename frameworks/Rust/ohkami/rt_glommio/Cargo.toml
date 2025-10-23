@@ -1,7 +1,7 @@
 [package]
 name    = "framework_benchmarks-glommio"
 version = "0.0.0"
-edition = "2021"
+edition = "2024"
 authors = ["kanarus <kanarus786@gmail.com>"]
 
 [profile.release]
@@ -12,4 +12,4 @@ codegen-units = 1
 [dependencies]
 framework_benchmarks = { path = "..", features = ["rt_glommio"] }
 glommio              = { version = "0.9" }
-num_cpus             = { version = "1.16" }
+num_cpus             = { version = "1.17" }

@@ -72,8 +72,9 @@ impl Client {
         let mut worlds = Vec::with_capacity(len);
 
         while let Some(mut item) = res.try_next().await? {
-            let row = item.try_next().await?.ok_or_else(not_found)?;
-            worlds.push(World::new(row.get(0), row.get(1)));
+            while let Some(row) = item.try_next().await? {
+                worlds.push(World::new(row.get(0), row.get(1)));
+            }
         }
 
         Ok(worlds)

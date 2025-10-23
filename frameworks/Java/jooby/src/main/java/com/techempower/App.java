@@ -27,7 +27,7 @@ public class App extends Jooby {
 
   private static final String MESSAGE = "Hello, World!";
 
-  private static final byte[] MESSAGE_BYTES = MESSAGE.getBytes(StandardCharsets.US_ASCII);
+  private static final byte[] MESSAGE_BYTES = MESSAGE.getBytes(StandardCharsets.UTF_8);
 
   {
     /** Database: */

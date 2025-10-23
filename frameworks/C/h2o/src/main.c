@@ -26,6 +26,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <bpf/bpf.h>
+#include <bpf/libbpf.h>
 #include <h2o/serverutil.h>
 #include <sys/resource.h>
 #include <sys/signalfd.h>
@@ -38,6 +40,7 @@
 #include "global_data.h"
 #include "list.h"
 #include "request_handler.h"
+#include "socket_load_balancer.h"
 #include "thread.h"
 #include "tls.h"
 #include "utility.h"
@@ -81,6 +84,8 @@ static void free_global_data(global_data_t *global_data)
 	if (global_data->file_logger)
 		global_data->file_logger->dispose(global_data->file_logger);
 
+	close(global_data->bpf_fd);
+	socket_load_balancer__destroy(global_data->socket_load_balancer);
 	cleanup_request_handlers(&global_data->request_handler_data);
 	h2o_config_dispose(&global_data->h2o_config);
 
@@ -93,6 +98,7 @@ static int initialize_global_data(const config_t *config, global_data_t *global_
 	sigset_t signals;
 
 	memset(global_data, 0, sizeof(*global_data));
+	global_data->bpf_fd = -1;
 	global_data->buffer_prototype._initial_buf.capacity = H2O_SOCKET_INITIAL_INPUT_BUFFER_SIZE;
 	global_data->memory_alignment = get_maximum_cache_line_size();
 	CHECK_ERRNO(sigemptyset, &signals);
@@ -132,6 +138,20 @@ static int initialize_global_data(const config_t *config, global_data_t *global_
 
 		if (log_handle)
 			global_data->file_logger = h2o_access_log_register(pathconf, log_handle);
+	}
+
+	global_data->socket_load_balancer = socket_load_balancer__open();
+
+	if (global_data->socket_load_balancer) {
+		global_data->socket_load_balancer->data->thread_num = config->thread_num;
+
+		if (socket_load_balancer__load(global_data->socket_load_balancer)) {
+			socket_load_balancer__destroy(global_data->socket_load_balancer);
+			global_data->socket_load_balancer = NULL;
+		}
+		else
+			global_data->bpf_fd =
+				bpf_program__fd(global_data->socket_load_balancer->progs.socket_load_balancer);
 	}
 
 	global_data->global_thread_data = initialize_global_thread_data(config, global_data);
