@@ -4,7 +4,7 @@ COPY nima/src src
 COPY nima/pom.xml pom.xml
 RUN mvn package -q
 
-FROM openjdk:22-rc-jdk-slim
+FROM openjdk:25-jdk-slim
 WORKDIR /helidon
 COPY --from=maven /helidon/target/libs libs
 COPY --from=maven /helidon/target/benchmark-nima.jar app.jar

@@ -28,7 +28,6 @@ class PgDb
     @world_select = @connection['SELECT id, randomNumber FROM World WHERE id = ?', :$id].prepare(:select, :select_by_id)
     @world_update = @connection['UPDATE World SET randomNumber = ? WHERE id = ?', :$random_number, :$id].prepare(:update,
                                                                                                                  :update_by_id)
-
     @fortune_select = @connection['SELECT id, message FROM Fortune'].prepare(:select, :select_all)
   end
 

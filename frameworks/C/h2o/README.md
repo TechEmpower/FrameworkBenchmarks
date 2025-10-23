@@ -1,13 +1,22 @@
-# h2o
+# h2o-app
 
 This is a framework implementation using the [H2O](https://h2o.examp1e.net) HTTP server. It
 builds directly on top of `libh2o` instead of running the standalone server.
 
 ## Requirements
 
-[CMake](https://cmake.org), [H2O](https://h2o.examp1e.net), [libpq](https://www.postgresql.org),
-[mustache-c](https://github.com/x86-64/mustache-c), [numactl](https://github.com/numactl/numactl),
-[OpenSSL](https://www.openssl.org), [YAJL](https://lloyd.github.io/yajl)
+[bpftool](https://bpftool.dev/),
+[Clang](https://clang.llvm.org/),
+[CMake](https://cmake.org/),
+[GNU C Library](https://www.gnu.org/software/libc),
+[H2O](https://h2o.examp1e.net/),
+[libbpf](https://github.com/libbpf/libbpf),
+[libpq](https://www.postgresql.org/),
+[Linux](https://kernel.org/),
+[mustache-c](https://github.com/x86-64/mustache-c),
+[numactl](https://github.com/numactl/numactl),
+[OpenSSL](https://www.openssl.org/),
+[YAJL](https://lloyd.github.io/yajl)
 
 ## Test implementations
 
@@ -30,4 +39,4 @@ options respectively.
 
 ## Contact
 
-Anton Kirilov <antonvkirilov@gmail.com>
+Anton Kirilov <antonvkirilov@proton.me>
