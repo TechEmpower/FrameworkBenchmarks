@@ -34,6 +34,15 @@ class Program : IPostFunctionWrapper
     static async Task Main()
     {
         await builder.Launch();
+
+        akzLog.Inf("[API SELF-TEST]");
+        string url = "http://localhost:8080/plaintext";
+        akzLog.Inf(" REQ URL :" + url);
+        string res = await akzHttpClient.Shared.Get(url).FetchString();
+        akzLog.Inf(" RES LEN :" + res.Length);
+        akzLog.Inf(" RES BODY:" + res);
+        akzLog.Inf("[OK, I WORK FINE]");
+
         akzLog.Default = akzLog.Output.None;
         await Task.Delay(-1);
     }
