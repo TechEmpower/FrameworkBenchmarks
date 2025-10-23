@@ -2,9 +2,6 @@
 
 using AkazawaYun.AOT;
 using AkazawaYun.PRO7;
-using AkazawaYun.PRO7.AkazawaYunWebFunctionAOP;
-using AkazawaYun.PRO7.AkazawaYunWebInterceptor;
-using System.Diagnostics.CodeAnalysis;
 
 namespace AkazawaYun.FrameworkBenchmarks;
 
@@ -17,7 +14,7 @@ class Program : IPostFunctionWrapper
     static Program()
     {
         akzJson.Config(null, AotJsonContext.Default);
-        builder = akzWebBuilder.Shared.SetPort(8080).SetDefault()
+        builder = akzWebBuilder.Shared.SetPort(8080)
             .Build()
             .Config<IWebReceptor, akzWebInterceptor>(itc =>
             {
