@@ -1,9 +1,7 @@
-FROM postgres:17-bookworm
+FROM postgres:18-trixie
 
 ENV PGDATA=/ssd/postgresql \
     POSTGRES_DB=hello_world \
-    POSTGRES_HOST_AUTH_METHOD=md5 \
-    POSTGRES_INITDB_ARGS=--auth-host=md5 \
     POSTGRES_PASSWORD=benchmarkdbpass \
     POSTGRES_USER=benchmarkdbuser
 
