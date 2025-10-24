@@ -205,7 +205,7 @@ GEM
     psych (5.2.3)
       date
       stringio
-    puma (6.6.0)
+    puma (7.1.0)
       nio4r (~> 2.0)
     racc (1.8.1)
     rack (3.2.0)
@@ -287,7 +287,7 @@ DEPENDENCIES
   iodine (~> 0.7)
   pg (~> 1.5)
   pitchfork (~> 0.17)
-  puma (~> 6.5)
+  puma (~> 7.1)
   rails (~> 8.1.0.beta1)
   redis (~> 5.0)
   trilogy (~> 2.8.1)
