@@ -15,7 +15,7 @@
 
            ;; HTML templating
            selmer/selmer                    {:mvn/version "1.12.62"}
-           org.clojars.jj/majavat           {:mvn/version "1.12.1"}
+           org.clojars.jj/majavat           {:mvn/version "1.12.3"}
 
            ;; Database
            org.postgresql/postgresql        {:mvn/version "42.7.8"}
