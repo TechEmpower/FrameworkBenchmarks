@@ -18,6 +18,6 @@ group :iodine, optional: true do
 end
 
 group :puma, optional: true do
-  gem 'puma', '~> 7.0', require: false
+  gem 'puma', '~> 7.1', require: false
   gem 'concurrent-ruby' # used by Puma for auto-tuning
 end
