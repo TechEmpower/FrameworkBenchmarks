@@ -1,0 +1,28 @@
+{
+  "framework": "nano-web",
+  "tests": [
+    {
+      "default": {
+        "dockerfile": "nano-web.dockerfile",
+        "docker_cmd": "/app/nano-web serve /public --port 8000",
+        "json_url": "/json",
+        "plaintext_url": "/plaintext.txt",
+        "port": 8000,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "none",
+        "framework": "nano-web",
+        "language": "Rust",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "Rust",
+        "webserver": "Hyper",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "nano-web",
+        "notes": "Static file server serving pre-loaded files from memory with zero-copy",
+        "versus": "None"
+      }
+    }
+  ]
+}
