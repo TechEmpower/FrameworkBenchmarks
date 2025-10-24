@@ -6,11 +6,11 @@ See the [project website](https://github.com/jchristn/WatsonWebserver) for more 
 
 **Language**
 
-* C# 9.0
+* C# 13.0
 
 **Platforms**
 
-* .NET 5
+* .NET 9
 
 **Web Servers**
 
