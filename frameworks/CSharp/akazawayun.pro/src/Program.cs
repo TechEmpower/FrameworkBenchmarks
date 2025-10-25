@@ -23,9 +23,11 @@ class Program : IPostFunctionWrapper
             });
         mysql = new akzDbBuilderII()
             .SetServer("tfb-database")
-            //.SetServer("localhost")
+            //.SetServer("localhost:3306")
             .SetUser("benchmarkdbuser")
+            //.SetUser("root")
             .SetPwd("benchmarkdbpass")
+            //.SetPwd("123456")
             .SetDatabase("hello_world")
             .SetCharset()
             .SetOtherset()
@@ -97,7 +99,6 @@ class Program : IPostFunctionWrapper
     }
 
 }
-
 
 public class akzWebInterceptorAsPost : WebInterceptor
 {
