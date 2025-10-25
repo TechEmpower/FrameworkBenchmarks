@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -15,7 +15,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AkazawaYun.PRO" Version="1.14.25.1025" />
+    <PackageReference Include="AkazawaYun.PRO" Version="1.14.25.1026" />
     <PackageReference Include="MySql.Data" Version="9.5.0" />
   </ItemGroup>
 
