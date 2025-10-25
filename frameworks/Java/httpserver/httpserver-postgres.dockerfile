@@ -1,4 +1,4 @@
-FROM maven:3-eclipse-temurin-24-alpine as maven
+FROM maven:3-eclipse-temurin-25-alpine as maven
 WORKDIR /httpserver
 COPY pom.xml pom.xml
 COPY src src

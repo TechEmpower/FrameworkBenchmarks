@@ -4,7 +4,7 @@
     [next.jdbc :as jdbc]
     [next.jdbc.result-set :as rs]
     [jj.majavat :as majavat]
-    [jj.majavat.renderer :refer [->InputStreamRenderer]]
+    [jj.majavat.renderer :refer [->StringRenderer]]
     [jj.majavat.renderer.sanitizer :refer [->Html]]
     [ring.util.http-response :as http-response]
     [selmer.parser :as parser]))
@@ -17,7 +17,7 @@
 (def ^:const MAX_ID_ZERO_IDX 9999)
 (def ^:const CACHE_TTL (* 24 60 60))
 (def ^:private render-fortune (majavat/build-renderer "html/fortunes.html"
-                                                      {:renderer (->InputStreamRenderer
+                                                      {:renderer (->StringRenderer
                                                                    {:sanitizer (->Html)})}))
 (def selmer-opts {:custom-resource-path (clojure.java.io/resource "html")})
 
