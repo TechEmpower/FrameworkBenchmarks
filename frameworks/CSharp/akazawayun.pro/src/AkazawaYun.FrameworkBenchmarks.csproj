@@ -12,8 +12,6 @@
   <PropertyGroup>
     <ConcurrentGarbageCollection>true</ConcurrentGarbageCollection>
     <ServerGarbageCollection>true</ServerGarbageCollection>
-    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <DockerfileContext>..\..\..\..\..\..\AkazawaYun.FrameworkBenchmarks</DockerfileContext>
   </PropertyGroup>
 
   <ItemGroup>

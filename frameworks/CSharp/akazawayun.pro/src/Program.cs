@@ -43,7 +43,7 @@ class Program : IPostFunctionWrapper
         akzLog.Inf(" RES BODY:" + res);
         akzLog.Inf("[OK, I WORK FINE]");
 
-        akzLog.Default = akzLog.Output.None;
+        akzLog.Default = akzLog.Output.NoneButWar;
         await Task.Delay(-1);
     }
 
