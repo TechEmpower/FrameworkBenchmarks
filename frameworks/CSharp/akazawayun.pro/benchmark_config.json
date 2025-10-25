@@ -8,7 +8,7 @@
         "webserver": "akazawayun.pro",
         "plaintext_url": "/plaintext",
         "json_url": "/json",
-        "port": 2022,
+        "port": 8080,
         "classification": "Micro",
         "approach": "Realistic",
         "platform": ".NET",

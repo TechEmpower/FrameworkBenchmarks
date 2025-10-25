@@ -9,7 +9,7 @@ class Program : IPostFunctionWrapper
 {
     static readonly akzWebBuilder builder;
     static readonly akzDbFactory mysql;
-    const int port = 2022;
+    const int port = 8080;
 
     static Program()
     {
