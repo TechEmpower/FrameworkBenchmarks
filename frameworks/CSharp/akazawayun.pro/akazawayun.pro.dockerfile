@@ -9,5 +9,5 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0 AS runtime
 WORKDIR /app
 COPY --from=publish /app/publish .
 
-EXPOSE 8080
+EXPOSE 2022
 ENTRYPOINT ["dotnet", "AkazawaYun.FrameworkBenchmarks.dll"]

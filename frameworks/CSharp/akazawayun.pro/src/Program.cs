@@ -9,12 +9,12 @@ class Program : IPostFunctionWrapper
 {
     static readonly akzWebBuilder builder;
     static readonly akzDbFactory mysql;
-
+    const int port = 2022;
 
     static Program()
     {
         akzJson.Config(null, AotJsonContext.Default);
-        builder = akzWebBuilder.Shared.SetPort(8080)
+        builder = akzWebBuilder.Shared.SetPort(port)
             .Build()
             .Config<IWebReceptor, akzWebInterceptor>(itc =>
             {
@@ -36,7 +36,7 @@ class Program : IPostFunctionWrapper
         await builder.Launch();
 
         akzLog.Inf("[API SELF-TEST]");
-        string url = "http://localhost:8080/plaintext";
+        string url = $"http://localhost:{port}/plaintext";
         akzLog.Inf(" REQ URL :" + url);
         string res = await akzHttpClient.Shared.Get(url).FetchString();
         akzLog.Inf(" RES LEN :" + res.Length);

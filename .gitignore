@@ -69,3 +69,4 @@ benchmark.cfg
 
 # python
 .venv/
+frameworks/CSharp/akazawayun.pro/Dockerfile
