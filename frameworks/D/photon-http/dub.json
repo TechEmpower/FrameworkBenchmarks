@@ -4,9 +4,11 @@
 	],
 	"copyright": "Copyright © 2025, Dmitry Olshansky",
 	"dependencies": {
+		"dpq2": "~>1.2.4",
+		"mir-random": "~>2.2.20",
 		"mir-ion": "~>2.3.4",
 		"xbuf" : "~>0.2.1",
-		"photon": "~>0.18.5",
+		"photon": "~>0.18.10",
 		"photon-http": "~>0.6.8"
 	},
 	"description": "Benchmark of photon-http",
