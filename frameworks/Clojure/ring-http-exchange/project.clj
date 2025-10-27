@@ -8,7 +8,7 @@
                  [org.clojure/tools.logging "1.3.0"]
                  [org.clojars.jj/ring-http-exchange "1.2.4"]
                  [seancorfield/next.jdbc "1.2.659"]
-                 [org.clojars.jj/majavat "1.12.1"]
+                 [org.clojars.jj/majavat "1.12.3"]
                  [hikari-cp "3.3.0"]
                  [org.postgresql/postgresql "42.7.8"]
                  [metosin/jsonista "0.3.13"]
