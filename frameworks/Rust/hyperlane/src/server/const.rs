@@ -1,5 +1,5 @@
 pub(crate) const RESPONSEDATA_STR: &str = "Hello, World!";
-pub(crate) const RESPONSEDATA_BIN: &[u8] = b"Hello, World!\r\n";
+pub(crate) const RESPONSEDATA_BIN: &[u8] = b"Hello, World!";
 pub(crate) const DATABASE_TYPE: &str = "postgres";
 pub(crate) const DATABASE_HOST: &str = "tfb-database";
 pub(crate) const DATABASE_USER_NAME: &str = "benchmarkdbuser";
