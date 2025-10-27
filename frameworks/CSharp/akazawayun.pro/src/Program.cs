@@ -2,9 +2,6 @@
 
 using AkazawaYun.AOT;
 using AkazawaYun.PRO7;
-using AkazawaYun.PRO7.AkazawaYunWebFunctionAOP;
-using AkazawaYun.PRO7.AkazawaYunWebInterceptor;
-using System.Diagnostics.CodeAnalysis;
 
 namespace AkazawaYun.FrameworkBenchmarks;
 
@@ -12,23 +9,25 @@ class Program : IPostFunctionWrapper
 {
     static readonly akzWebBuilder builder;
     static readonly akzDbFactory mysql;
-
+    const int port = 8080;
 
     static Program()
     {
         akzJson.Config(null, AotJsonContext.Default);
-        builder = akzWebBuilder.Shared.SetDefault()
+        builder = akzWebBuilder.Shared.SetPort(port)
             .Build()
             .Config<IWebReceptor, akzWebInterceptor>(itc =>
             {
                 itc.ClearInterceptor();
-                itc.AddInterceptor(new akzWebInterceptorNotOnlyPost());
+                itc.AddInterceptor(new akzWebInterceptorAsPost());
             });
         mysql = new akzDbBuilderII()
-            .SetServer("tfb-database:3306")
+            .SetServer("tfb-database")
             //.SetServer("localhost:3306")
             .SetUser("benchmarkdbuser")
+            //.SetUser("root")
             .SetPwd("benchmarkdbpass")
+            //.SetPwd("123456")
             .SetDatabase("hello_world")
             .SetCharset()
             .SetOtherset()
@@ -37,7 +36,16 @@ class Program : IPostFunctionWrapper
     static async Task Main()
     {
         await builder.Launch();
-        akzLog.Default = akzLog.Output.None;
+
+        akzLog.Inf("[API SELF-TEST]");
+        string url = $"http://localhost:{port}/plaintext";
+        akzLog.Inf(" REQ URL :" + url);
+        string res = await akzHttpClient.Shared.Get(url).FetchString();
+        akzLog.Inf(" RES LEN :" + res.Length);
+        akzLog.Inf(" RES BODY:" + res);
+        akzLog.Inf("[OK, I WORK FINE]");
+
+        akzLog.Default = akzLog.Output.NoneButWar;
         await Task.Delay(-1);
     }
 
@@ -90,4 +98,13 @@ class Program : IPostFunctionWrapper
         return count;
     }
 
+}
+
+public class akzWebInterceptorAsPost : WebInterceptor
+{
+    public override ValueTask<InterceptorHttpRes> Intercept(IHttpContext http)
+    {
+        http.Method = "POST";
+        return InterceptorHttpRes.No();
+    }
 }
