@@ -10,12 +10,12 @@
                  [seancorfield/next.jdbc "1.2.659"]
                  [org.clojars.jj/majavat "1.12.3"]
                  [hikari-cp "3.3.0"]
+                 [org.clojars.jj/boa-sql "1.0.0"]
+                 [io.netty/netty-transport-native-epoll "4.2.7.Final" :classifier "linux-x86_64"]
                  [org.postgresql/postgresql "42.7.8"]
                  [metosin/jsonista "0.3.13"]
                  ]
 
   :profiles {:robaho {:dependencies [[io.github.robaho/httpserver "1.0.28"]]}}
   :resource-paths ["resources"]
-  :main ring-http-exchange.benchmark
-
-  )
+  :main ring-http-exchange.benchmark)
