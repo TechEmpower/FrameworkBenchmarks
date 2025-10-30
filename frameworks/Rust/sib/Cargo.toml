@@ -12,7 +12,7 @@ categories = ["development-tools"]
 readme = "README.md"
 
 [dependencies]
-sib = { version = "0.0.12", default-features = false, features = [
+sib = { version = "0.0.15", default-features = false, features = [
     "net-h1-server",
 ] }
 bytes = { version = "1.10.1", default-features = false }

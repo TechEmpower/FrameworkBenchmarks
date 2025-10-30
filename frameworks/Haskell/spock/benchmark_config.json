@@ -14,7 +14,7 @@
       "database": "Postgres",
       "framework": "Spock",
       "language": "Haskell",
-      "flavor": "GHC710",
+      "flavor": "GHC810",
       "orm": "Raw",
       "platform": "Wai",
       "webserver": "Warp",
@@ -23,7 +23,7 @@
       "display_name": "Spock",
       "notes": "",
       "versus": "",
-      "tags": ["broken"]
+      "tags": []
     }
   }]
 }
