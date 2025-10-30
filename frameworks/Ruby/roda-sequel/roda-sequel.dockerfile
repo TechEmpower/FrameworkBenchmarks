@@ -15,9 +15,10 @@ ENV BUNDLE_FORCE_RUBY_PLATFORM=true
 RUN bundle config set with 'mysql puma'
 RUN bundle install --jobs=8
 
+ENV RACK_ENV=production
 ENV DBTYPE=mysql
 
 ENV WEB_CONCURRENCY=auto
 EXPOSE 8080
 
-CMD bundle exec puma -C config/mri_puma.rb -b tcp://0.0.0.0:8080 -e production
+CMD bundle exec puma -C config/mri_puma.rb -b tcp://0.0.0.0:8080

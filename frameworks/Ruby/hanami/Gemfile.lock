@@ -123,7 +123,7 @@ GEM
     pg (1.5.9)
     puma (6.6.0)
       nio4r (~> 2.0)
-    rack (2.2.17)
+    rack (2.2.19)
     rake (13.2.1)
     rom (5.4.2)
       rom-changeset (~> 5.4)

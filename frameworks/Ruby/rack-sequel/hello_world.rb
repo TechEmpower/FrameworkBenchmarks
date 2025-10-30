@@ -70,7 +70,7 @@ class HelloWorld
       html << <<~"HTML"
       <tr>
         <td>#{fortune.id}</td>
-        <td>#{CGI.escape_html(fortune.message)}</td>
+        <td>#{ERB::Escape.html_escape(fortune.message)}</td>
       </tr>
       HTML
     end

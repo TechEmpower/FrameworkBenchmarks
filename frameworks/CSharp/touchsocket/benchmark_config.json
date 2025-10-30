@@ -8,6 +8,7 @@
         "port": 8080,
         "approach": "Realistic",
         "classification": "Fullstack",
+        "database": "Postgres",
         "framework": "touchsocket.webapi",
         "language": "C#",
         "orm": "Raw",
@@ -38,6 +39,44 @@
         "display_name": "touchsocket.http",
         "notes": "",
         "versus": "aspnetcore"
+      },
+      "http31": {
+        "plaintext_url": "/plaintext",
+        "json_url": "/json",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "Postgres",
+        "framework": "touchsocket.http31",
+        "language": "C#",
+        "orm": "Micro",
+        "platform": ".NET",
+        "flavor": "CoreCLR",
+        "webserver": "touchsocket",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "touchsocket.http31",
+        "notes": "",
+        "versus": "aspnetcore"
+      },
+      "webapi31": {
+        "plaintext_url": "/plaintext",
+        "json_url": "/json",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "Postgres",
+        "framework": "touchsocket.webapi31",
+        "language": "C#",
+        "orm": "Raw",
+        "platform": ".NET",
+        "flavor": "CoreCLR",
+        "webserver": "touchsocket",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "touchsocket.webapi31",
+        "notes": "",
+        "versus": "aspnetcore-mvc"
       }
     }
   ]
