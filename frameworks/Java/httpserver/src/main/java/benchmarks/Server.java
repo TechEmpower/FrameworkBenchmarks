@@ -61,14 +61,14 @@ public class Server {
         return new HikariDataSource(config);
     }
 
-    private static Template loadTemplate(String filename) throws IOException, ParseException {
+    private static Template loadTemplate() throws IOException, ParseException {
         Properties props = new Properties();
         props.put("import.packages", "java.util," + Fortune.class.getPackage().getName());
         props.put("input.encoding", "UTF-8");
         props.put("output.encoding", "UTF-8");
         props.put("precompiled", "false");
         Engine engine = Engine.getEngine(props);
-        return engine.getTemplate(filename);
+        return engine.getTemplate("/fortunes.template.httl");
     }
 
     private static HttpHandler createPlaintextHandler() {
@@ -102,7 +102,7 @@ public class Server {
     }
 
     private static HttpHandler createFortunesHandler(DataSource ds) throws IOException, ParseException {
-        Template template = loadTemplate("/fortunes.template.httl");
+        Template template = loadTemplate();
         return t -> {
             try {
                 // query db
@@ -127,7 +127,7 @@ public class Server {
         };
     }
 
-    public static void main(String[] args) throws Exception {
+    static void main(String[] args) throws Exception {
         // parse arguments
         String settings = args.length > 0 ? args[0] : "";
         int port = args.length > 1 ? Integer.parseInt(args[1]) : 8080;
