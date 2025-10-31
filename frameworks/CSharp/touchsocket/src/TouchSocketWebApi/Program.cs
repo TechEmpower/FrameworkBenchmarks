@@ -18,12 +18,6 @@ public class Program
         builder.Services.AddServiceHostedService<IHttpService, HttpService>(config =>
         {
             config.SetListenIPHosts(8080)
-            .SetNoDelay(true)
-             .SetTransportOption(options =>
-             {
-                 options.ReceivePipeOptions = TransportOption.CreateSchedulerOptimizedPipeOptions();
-                 options.SendPipeOptions = TransportOption.CreateSchedulerOptimizedPipeOptions();
-             })
             .SetMaxCount(1000000)
            .ConfigureContainer(a =>
            {
