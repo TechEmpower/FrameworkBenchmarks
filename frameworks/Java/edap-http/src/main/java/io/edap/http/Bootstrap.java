@@ -15,11 +15,18 @@ public class Bootstrap {
     static final byte[] PLAIN_TEXT_CONTENT = "Hello, World!".getBytes();
 
     public static void main(String[] args) throws IOException {
-
+        HttpHandleOption option = new HttpHandleOption();
+        String lazyParseHeaderStr = System.getProperty("lazyParseHeader", "false");
+        if (Boolean.parseBoolean(lazyParseHeaderStr)) {
+            option.setLazyParseHeader(true);
+        }
         HttpServer httpServer = new HttpServerBuilder()
                 .listen(8080)
-                .req("/plaintext", (req, resp) -> resp.contentType(PLAIN).write(PLAIN_TEXT_CONTENT))
-                .get("/json", (req, resp) -> resp.contentType(JSON).write(new Message("Hello, World!")))
+                .req("/plaintext", (req, resp) ->
+						resp.contentType(PLAIN).write(PLAIN_TEXT_CONTENT), option)
+                .get("/json", (req, resp) -> {
+                    	resp.contentType(JSON).write(new Message("Hello, World!"));
+                }, option)
                 .build();
         Edap edap = new Edap();
         edap.addServer(httpServer);
