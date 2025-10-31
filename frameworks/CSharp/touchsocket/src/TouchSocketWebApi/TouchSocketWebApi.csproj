@@ -4,6 +4,7 @@
 		<TargetFramework>net9.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
+		<ServerGarbageCollection>true</ServerGarbageCollection>
 		<UserSecretsId>dotnet-WorkerService1-19b37b17-6043-4334-ad9a-9e0e3c670da3</UserSecretsId>
 	</PropertyGroup>
 
