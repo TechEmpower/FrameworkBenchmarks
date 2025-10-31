@@ -7,6 +7,8 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends libjemalloc2
 ENV LD_PRELOAD=libjemalloc.so.2
 
+RUN apt-get install -yqq nginx
+
 WORKDIR /rack
 
 COPY Gemfile* ./
@@ -19,4 +21,5 @@ COPY . .
 
 EXPOSE 8080
 
-CMD bundle exec pitchfork -c config/pitchfork.rb -o 0.0.0.0 -p 8080 -E production
+CMD nginx -c /rack/config/nginx.conf && \
+    bundle exec pitchfork -c config/pitchfork.rb -E production

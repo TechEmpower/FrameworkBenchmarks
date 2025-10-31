@@ -3,43 +3,54 @@
 
 module Main where
 
+import qualified GHC.Conc
 import           Control.Concurrent.Async
 import           Control.Monad.IO.Class
 import           Data.Aeson                    hiding (json)
 import           Data.List                     (sort)
 import           Data.Maybe                    (catMaybes, fromMaybe)
-import           Data.Pool
+import           Data.Pool                     (Pool)
+import qualified Data.Pool                     as Pool
 import qualified Database.PostgreSQL.Simple    as PG
 import           GHC.Exts
 import           Network.HTTP.Types.Status
 import           Text.Blaze.Html.Renderer.Utf8
 import qualified Text.Blaze.Html5              as H
-import           Web.Spock.Safe
+import           Web.Spock
 
 import           Models.Fortune
 import           Models.World
 import           Views.Fortune
+import Web.Spock.Config
 
 
-creds :: PG.ConnectInfo
-creds =
-    PG.ConnectInfo
-        { PG.connectHost     = "tfb-database"
-        , PG.connectPort     = 5432
-        , PG.connectUser     = "benchmarkdbuser"
-        , PG.connectPassword = "benchmarkdbpass"
-        , PG.connectDatabase = "hello_world"
-        }
+poolCfg :: Int -> PoolCfg
+poolCfg numStripes = PoolCfg
+    { pc_stripes = numStripes
+    , pc_resPerStripe = 20
+    , pc_keepOpenTime = 20
+    }
 
 
-poolCfg :: PoolCfg
-poolCfg = PoolCfg 50 50 60
+mkPool :: PoolCfg -> IO (Pool PG.Connection)
+mkPool cfg = Pool.createPool
+            dbConnect
+            PG.close
+            (pc_stripes cfg)
+            (pc_keepOpenTime cfg)
+            (pc_resPerStripe cfg)
 
-pcconn :: ConnBuilder PG.Connection
-pcconn = ConnBuilder (PG.connect creds) PG.close poolCfg
-
-dbConn :: PoolOrConn PG.Connection
-dbConn = PCConn pcconn
+dbConnect :: IO PG.Connection
+dbConnect = PG.connect creds
+  where
+    creds =
+        PG.ConnectInfo
+            { PG.connectHost     = "tfb-database"
+            , PG.connectPort     = 5432
+            , PG.connectUser     = "benchmarkdbuser"
+            , PG.connectPassword = "benchmarkdbpass"
+            , PG.connectDatabase = "hello_world"
+            }
 
 
 blaze :: MonadIO m => H.Html -> ActionCtxT ctx m a
@@ -77,7 +88,7 @@ test2 = do
 test3 :: Pool PG.Connection -> ActionCtxT ctx (WebStateM PG.Connection b ()) a
 test3 pool = do
     queries <- getQueriesNumber
-    worlds <- liftIO $ mapConcurrently (const (withResource pool getRandomWorld)) [1..queries]
+    worlds <- liftIO $ mapConcurrently (const (Pool.withResource pool getRandomWorld)) [1..queries]
     setHeader "Content-Type" "application/json"
     lazyBytes $ encode worlds
 {-# INLINE test3 #-}
@@ -95,8 +106,8 @@ test4 = do
 test5 :: Pool PG.Connection -> ActionCtxT ctx (WebStateM PG.Connection b ()) a
 test5 pool = do
     queries <- getQueriesNumber
-    worlds <- liftIO $ mapConcurrently (const (withResource pool getRandomWorld)) [1..queries]
-    updatedWorlds <- liftIO $ mapConcurrently (withResource pool . updateWorldRandom) (catMaybes worlds)
+    worlds <- liftIO $ mapConcurrently (const (Pool.withResource pool getRandomWorld)) [1..queries]
+    updatedWorlds <- liftIO $ mapConcurrently (Pool.withResource pool . updateWorldRandom) (catMaybes worlds)
     setHeader "Content-Type" "application/json"
     lazyBytes $ encode updatedWorlds
 {-# INLINE test5 #-}
@@ -111,10 +122,11 @@ test6 = do
 
 main :: IO ()
 main = do
-    pool <- createPool (cb_createConn pcconn) (cb_destroyConn pcconn)
-                       (pc_stripes poolCfg) (pc_keepOpenTime poolCfg)
-                       (pc_resPerStripe poolCfg)
-    runSpock 3000 $ spock (defaultSpockCfg Nothing dbConn ()) $ do
+    numCaps <- GHC.Conc.getNumCapabilities
+    let numStripes = max 1 numCaps
+    pool <- mkPool (poolCfg numStripes)
+    spockCfg <- defaultSpockCfg () (PCPool pool) ()
+    runSpock 3000 $ spock spockCfg $ do
         get "json"        test1
         get "db"          test2
         get "queries"   $ test3 pool

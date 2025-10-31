@@ -3,7 +3,7 @@
   (:require
     [jsonista.core :as json]
     [jj.majavat :as majavat]
-    [jj.majavat.renderer :refer [->InputStreamRenderer]]
+    [jj.majavat.renderer :refer [->StringRenderer]]
     [jj.majavat.renderer.sanitizer :refer [->Html]]
     [ring-http-exchange.core :as server]
     [next.jdbc :as jdbc]
@@ -34,7 +34,7 @@
                                                      "Content-Type" "text/plain"}
                                            :body    "Hello, World!"})
 (def ^:private render-fortune (majavat/build-renderer "fortune.html"
-                                                      {:renderer (->InputStreamRenderer
+                                                      {:renderer (->StringRenderer
                                                                    {:sanitizer (->Html)})}))
 
 (defn -main
