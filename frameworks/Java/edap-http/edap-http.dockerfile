@@ -2,7 +2,7 @@ FROM maven:3.9.11-amazoncorretto-21 as maven
 WORKDIR /edap-http
 COPY pom.xml pom.xml
 COPY src src
-RUN mvn compile assembly:single
+RUN mvn compile assembly:single -q
 
 FROM amazoncorretto:21.0.8
 WORKDIR /edap-http
