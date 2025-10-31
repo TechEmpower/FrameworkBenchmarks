@@ -2,31 +2,44 @@
 
 include __DIR__ . '/vendor/autoload.php';
 
-use Ripple\Http\Server;
+use Ripple\Database\Interface\AbstractResultSet;
+use Ripple\Database\MySQL\Client;
+use Ripple\Net\Http\Server;
+use Ripple\Net\Http\Server\Request;
+use Ripple\Sync\Channel;
+use Ripple\Sync\WaitGroup;
+use Ripple\Worker;
 use Ripple\Worker\Manager;
+use Ripple\Net\Http;
 
-use function Co\repeat;
+use function Co\go;
 use function Co\wait;
 
 class Setup
 {
-    public static PDO    $pdo;
+    /**
+     * @var string
+     */
     public static string $dateFormatted;
 
-    public static PDOStatement $queryWorldWhereID;
-    public static PDOStatement $updateWorldRandomNumber;
-    public static PDOStatement $queryFortune;
+    /**
+     * @var null|callable
+     */
+    private static $fortunesRenderer = null;
 
+    /**
+     * @return void
+     */
     public static function dateRefresh(): void
     {
         try {
             $date = new DateTime('now', new DateTimeZone('GMT'));
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             return;
         }
+
         Setup::$dateFormatted = $date->format('D, d M Y H:i:s T');
     }
-
 
     /**
      * @return int
@@ -36,13 +49,12 @@ class Setup
         try {
             return \random_int(1, 10000);
         } catch (Throwable $e) {
-            return mt_rand(1, 10000);
+            return \mt_rand(1, 10000);
         }
     }
 
     /**
      * @param mixed $value
-     *
      * @return int
      */
     public static function clamp(mixed $value): int
@@ -57,37 +69,71 @@ class Setup
     }
 
     /**
-     * @param string $template
-     * @param array  $data
-     *
+     * @param array $rows
      * @return string
      */
-    public static function render(string $template, array $data = []): string
+    public static function renderFortunes(array $rows): string
     {
-        foreach ($data as $key => $value) {
-            $$key = $value;
+        if (self::$fortunesRenderer === null) {
+            $code = \file_get_contents(__DIR__ . '/fortunes.php');
+            if ($code === false) {
+                return '';
+            }
+
+            $renderer = static function (array $scope) use ($code): string {
+                foreach ($scope as $key => $value) {
+                    $$key = $value;
+                }
+                \ob_start();
+
+                eval('?>' . $code);
+                return (string) \ob_get_clean();
+            };
+
+            self::$fortunesRenderer = $renderer;
         }
 
-        \ob_start();
-        include $template;
-        return \ob_get_clean();
+        /** @var callable $renderer */
+        $renderer = self::$fortunesRenderer;
+        return $renderer(['rows' => $rows]);
     }
 }
 
 $manager = new Manager();
-$worker  = new class() extends \Ripple\Worker {
-    /*** @var \Ripple\Http\Server */
-    public Server $server;
+$worker = new class () extends Worker {
+    /**
+     * @var Server
+     */
+    private Server $server;
 
     /**
-     * @param \Ripple\Worker\Manager $manager
-     *
+     * @var Channel
+     */
+    private Channel $STM_queryWorldWhereID;
+
+    /**
+     * @var Channel
+     */
+    private Channel $STM_updateWorldRandomNumber;
+
+    /**
+     * @var Channel
+     */
+    private Channel $STM_queryFortune;
+
+    /**
      * @return void
      */
-    public function register(Manager $manager): void
+    public function register(): void
     {
-        $this->count  = 64;
-        $this->server = new Server('http://0.0.0.0:8080');
+        $this->count = 32;
+        $context = \stream_context_create([
+            'socket' => [
+                'so_reuseport' => 1,
+                'so_reuseaddr' => 1
+            ]
+        ]);
+        $this->server = Http::server('http://0.0.0.0:8080', $context);
     }
 
     /**
@@ -96,101 +142,154 @@ $worker  = new class() extends \Ripple\Worker {
     public function boot(): void
     {
         Setup::dateRefresh();
-        repeat(static fn () => Setup::dateRefresh(), 1);
+        go(static function () {
+            while (1) {
+                \Co\sleep(1);
+                Setup::dateRefresh();
+            }
+        });
 
-        Setup::$pdo = new \PDO(
-            'mysql:host=tfb-database;port=3306;dbname=hello_world',
-            'benchmarkdbuser',
-            'benchmarkdbpass',
-            [
-                \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
-                \PDO::ATTR_EMULATE_PREPARES   => false,
-                \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION,
-            ]
-        );
+        $this->STM_queryWorldWhereID = new Channel(10);
+        $this->STM_updateWorldRandomNumber = new Channel(10);
+        $this->STM_queryFortune = new Channel(10);
 
-        Setup::$queryWorldWhereID       = Setup::$pdo->prepare('SELECT id, randomNumber FROM World WHERE id = ?');
-        Setup::$updateWorldRandomNumber = Setup::$pdo->prepare('UPDATE World SET randomNumber = ? WHERE id = ?');
-        Setup::$queryFortune            = Setup::$pdo->prepare('SELECT * FROM `Fortune`');
-        $this->server->onRequest(fn (Server\Request $request) => $this->onRequest($request));
+        for ($i = 0; $i < 10; $i++) {
+            $client = new Client(
+                'mysql:host=tfb-database;port=3306;dbname=hello_world',
+                'benchmarkdbuser',
+                'benchmarkdbpass',
+            );
+
+            $this->STM_queryWorldWhereID->send($client->prepare('SELECT id, randomNumber FROM World WHERE id = ?'));
+            $this->STM_updateWorldRandomNumber->send($client->prepare('UPDATE World SET randomNumber = ? WHERE id = ?'));
+            $this->STM_queryFortune->send($client->prepare('SELECT * FROM `Fortune`'));
+        }
+
+        $this->server->onRequest = fn (Request $request) => $this->onRequest($request);
         $this->server->listen();
     }
 
     /**
-     * @param \Ripple\Http\Server\Request $request
-     *
+     * @param Request $request
      * @return void
      */
-    public function onRequest(Server\Request $request): void
+    public function onRequest(Request $request): void
     {
         switch ($request->SERVER['REQUEST_URI']) {
             case '/json':
-                $request->respondJson(
-                    ['message' => 'Hello, World!'],
-                    ['Date' => Setup::$dateFormatted]
-                );
-                break;
+                {
+                    $request->respondJson(
+                        ['message' => 'Hello, World!'],
+                        ['Date' => Setup::$dateFormatted]
+                    );
+                    break;
+                }
 
             case '/db':
-                $statement = Setup::$queryWorldWhereID;
-                $statement->execute([Setup::randomInt()]);
-                $request->respondJson($statement->fetch(), ['Date' => Setup::$dateFormatted]);
-                break;
+                {
+                    $statement = $this->STM_queryWorldWhereID->receive();
+                    $statement->execute([Setup::randomInt()]);
+                    $request->respondJson($statement->fetch(AbstractResultSet::ASSOC_ARRAY), ['Date' => Setup::$dateFormatted]);
+                    $this->STM_queryWorldWhereID->send($statement);
+                    break;
+                }
 
             case '/queries':
-                $queries   = Setup::clamp($request->GET['queries'] ?? 1);
-                $results   = [];
-                $statement = Setup::$queryWorldWhereID;
-                while ($queries--) {
-                    $statement->execute([Setup::randomInt()]);
-                    $results[] = $statement->fetch();
+                {
+                    $queries = Setup::clamp($request->GET['queries'] ?? 1);
+                    $results = [];
+
+                    $waitGroup = new WaitGroup();
+                    $waitGroup->add($queries);
+
+                    while ($queries--) {
+                        go(function () use (&$results, $waitGroup) {
+                            $statement = $this->STM_queryWorldWhereID->receive();
+
+                            $statement->execute([Setup::randomInt()]);
+                            $results[] = $statement->fetch(AbstractResultSet::ASSOC_ARRAY);
+
+                            $this->STM_queryWorldWhereID->send($statement);
+                            $waitGroup->done();
+                        });
+                    }
+
+                    $waitGroup->wait();
+
+                    $request->respondJson($results, ['Date' => Setup::$dateFormatted]);
+                    break;
                 }
-                $request->respondJson($results, ['Date' => Setup::$dateFormatted]);
 
-                break;
             case '/fortunes':
-                $rows   = Setup::$pdo->query('SELECT * FROM `Fortune`')?->fetchAll();
-                $rows[] = ['id' => 0, 'message' => 'Additional fortune added at request time.'];
-                \usort($rows, function ($a, $b) {
-                    return $a['message'] <=> $b['message'];
-                });
+                {
+                    $statement = $this->STM_queryFortune->receive();
+                    $statement->execute();
+                    $rows = $statement->fetchAll(AbstractResultSet::ASSOC_ARRAY);
+                    $this->STM_queryFortune->send($statement);
 
-                $request->respondHtml(
-                    Setup::render('fortunes.php', ['rows' => $rows]),
-                    [
-                        'Date'         => Setup::$dateFormatted,
-                        'Content-Type' => 'text/html; charset=UTF-8'
-                    ]
-                );
-                break;
+                    $rows[] = ['id' => 0, 'message' => 'Additional fortune added at request time.'];
+                    \usort($rows, function ($a, $b) {
+                        return $a['message'] <=> $b['message'];
+                    });
+
+                    $request->respondHtml(
+                        Setup::renderFortunes($rows),
+                        [
+                            'Date' => Setup::$dateFormatted,
+                            'Content-Type' => 'text/html; charset=UTF-8'
+                        ]
+                    );
+                    break;
+                }
 
             case '/updates':
-                $queries   = Setup::clamp($request->GET['queries'] ?? 1);
-                $results   = [];
-                $statement = Setup::$queryWorldWhereID;
-                $update    = Setup::$updateWorldRandomNumber;
-                while ($queries--) {
-                    $statement->execute([Setup::randomInt()]);
-                    $row                 = $statement->fetch();
-                    $row['randomNumber'] = Setup::randomInt();
-                    $results[]           = $row;
-                    $update->execute([$row['randomNumber'], $row['id']]);
+                {
+                    $queries = Setup::clamp($request->GET['queries'] ?? 1);
+                    $results = [];
+
+                    $waitGroup = new WaitGroup();
+                    $waitGroup->add($queries);
+
+                    while ($queries--) {
+                        go(function () use (&$results, $waitGroup) {
+                            $statement = $this->STM_queryWorldWhereID->receive();
+                            $update = $this->STM_updateWorldRandomNumber->receive();
+
+                            $statement->execute([Setup::randomInt()]);
+                            $row = $statement->fetch(AbstractResultSet::ASSOC_ARRAY);
+                            $row['randomNumber'] = Setup::randomInt();
+                            $results[] = $row;
+                            $update->execute([$row['randomNumber'], $row['id']]);
+
+                            $this->STM_queryWorldWhereID->send($statement);
+                            $this->STM_updateWorldRandomNumber->send($update);
+
+                            $waitGroup->done();
+                        });
+                    }
+
+                    $waitGroup->wait();
+                    $request->respondJson($results, ['Date' => Setup::$dateFormatted]);
+
+                    break;
                 }
-                $request->respondJson($results, ['Date' => Setup::$dateFormatted]);
-                break;
 
             case '/plaintext':
-                $request->respond(
-                    'Hello, World!',
-                    [
-                        'Content-Type' => 'text/plain; charset=utf-8',
-                        'Date'         => Setup::$dateFormatted
-                    ]
-                );
-                break;
+                {
+                    $request->respond(
+                        'Hello, World!',
+                        [
+                            'Content-Type' => 'text/plain; charset=utf-8',
+                            'Date' => Setup::$dateFormatted
+                        ]
+                    );
+                    break;
+                }
 
             default:
-                $request->respond('Not Found', [], 404);
+                {
+                    $request->respond('Not Found', [], 404);
+                }
         }
     }
 };

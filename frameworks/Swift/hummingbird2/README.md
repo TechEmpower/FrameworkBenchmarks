@@ -13,7 +13,7 @@ Hummingbird 2 is a lightweight, flexible HTTP server framework written in Swift.
 
 ## Important Libraries
 This version of Hummingbird requires
-* [Swift 5.10](https://swift.org)  
+* [Swift 6.0](https://swift.org)  
 * [SwiftNIO 2.x](https://github.com/apple/swift-nio/)
 In these tests for database access it uses
 * [PostgresKit 2.21](https://github.com/vapor/postgres-nio/)

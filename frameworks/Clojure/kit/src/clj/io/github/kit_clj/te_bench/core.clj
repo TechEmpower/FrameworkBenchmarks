@@ -17,11 +17,10 @@
 
 ;; log uncaught exceptions in threads
 (Thread/setDefaultUncaughtExceptionHandler
-  (reify Thread$UncaughtExceptionHandler
-    (uncaughtException [_ thread ex]
-      (log/error {:what :uncaught-exception
-                  :exception ex
-                  :where (str "Uncaught exception on" (.getName thread))}))))
+  (fn [thread ex]
+    (log/error {:what      :uncaught-exception
+                :exception ex
+                :where     (str "Uncaught exception on" (.getName thread))})))
 
 (defonce system (atom nil))
 
