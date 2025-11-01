@@ -16,4 +16,4 @@ COPY --from=build /app/out ./
 
 EXPOSE 8080
 
-ENTRYPOINT ["dotnet", "App.dll", "newtonsoft"]
+ENTRYPOINT ["dotnet", "App.dll", "fsharpfriendly"]
