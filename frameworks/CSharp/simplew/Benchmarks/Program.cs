@@ -16,7 +16,7 @@ internal static class Program
         await Task.Delay(-1);
     }
     
-    public class JsonController : Controller {
+    public class BenchmarksController : Controller {
         [Route("GET", "/json")]
         public object Json() {
             return new { message = "Hello World !" };
