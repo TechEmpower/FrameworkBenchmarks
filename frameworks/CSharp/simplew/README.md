@@ -1,6 +1,6 @@
-# GenHTTP Tests on Linux
+# SimpleW Tests on Linux
 
-See the [GenHTTP website](https://genhttp.org) for more information.
+See the [SimpleW website](https://stratdev3.github.io/SimpleW/) for more information.
 
 ## Infrastructure Software Versions
 
@@ -12,15 +12,7 @@ See the [GenHTTP website](https://genhttp.org) for more information.
 
 * .NET 8/9
 
-**Web Servers**
-
-* [GenHTTP](https://github.com/Kaliumhexacyanoferrat/GenHTTP)
-
 ## Paths & Source for Tests
 
-* [Plaintext](Benchmarks/Program.cs): "/plaintext"
-* [JSON](Benchmarks/Tests/JsonResource.cs): "/json"
-* [DB](Benchmarks/Tests/DbResource.cs): "/db"
-* [Queries](Benchmarks/Tests/QueryResource.cs): "/queries"
-* [Updates](Benchmarks/Tests/UpdateResource.cs): "/updates"
-* [Fortunes](Benchmarks/Tests/FortuneHandler.cs): "/fortunes"
+* [Plaintext](Benchmarks/Program.cs): "/api/plaintext"
+* [JSON](Benchmarks/Tests/JsonResource.cs): "/api/json"
