@@ -3,21 +3,21 @@
   :description "TechEmpower Luminus benchmark"
   :url "https://github.com/TechEmpower/FrameworkBenchmarks"
 
-  :dependencies [[org.clojure/clojure "1.10.0"]
-                 [cheshire "5.7.0"]
-                 [selmer "1.10.7"]
-                 [metosin/ring-http-response "0.8.2"]
-                 [org.webjars/bootstrap "4.2.1"]
-                 [org.clojure/tools.logging "0.4.1"]
-                 [compojure "1.5.2"]
-                 [mount "0.1.11"]
-                 [cprop "0.1.10"]
-                 [org.clojure/tools.cli "0.3.5"]
-                 [luminus-immutant "0.2.3"]
-                 [luminus-migrations "0.3.0"]
-                 [conman "0.6.3"]
-                 [org.postgresql/postgresql "42.2.5"]
-                 [luminus-log4j "0.1.5"]]
+  :dependencies [[org.clojure/clojure "1.12.3"]
+                 [cheshire "6.1.0"]
+                 [selmer "1.12.67"]
+                 [metosin/ring-http-response "0.9.5"]
+                 [org.webjars/bootstrap "5.3.8"]
+                 [org.clojure/tools.logging "1.3.0"]
+                 [compojure "1.7.2"]
+                 [mount "0.1.23"]
+                 [cprop "0.1.21"]
+                 [org.clojure/tools.cli "1.2.245"]
+                 [luminus-immutant "0.2.5"]
+                 [luminus-migrations "0.7.5"]
+                 [conman "0.9.6"]
+                 [org.postgresql/postgresql "42.7.8"]
+                 [luminus-log4j "0.1.7"]]
 
   :min-lein-version "2.0.0"
 
