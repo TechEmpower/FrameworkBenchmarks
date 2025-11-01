@@ -1,8 +1,8 @@
 (ns hello.handler
-  (:require [compojure.core :refer [routes wrap-routes]]
+  (:require [compojure.core :refer [routes]]
+            [compojure.route :as route]
             [hello.layout :refer [error-page]]
-            [hello.routes.home :refer [default-routes io-routes]]
-            [compojure.route :as route]))
+            [hello.routes.home :refer [default-routes io-routes]]))
 
 (def default-handler
   (routes

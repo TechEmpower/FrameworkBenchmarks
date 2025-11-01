@@ -1,10 +1,9 @@
 (ns hello.db.core
   (:require
-    [cheshire.core :refer [generate-string parse-string]]
-    [clojure.java.jdbc :as jdbc]
     [conman.core :as conman]
     [hello.config :refer [env]]
-    [mount.core :refer [defstate]]))
+    [mount.core :refer [defstate]])
+  (:import (java.sql BatchUpdateException)))
 
 (defstate ^:dynamic *db*
           :start (conman/connect!
@@ -53,7 +52,7 @@
   (let [w {:id id :randomnumber (unchecked-inc ^long (rand-int 9999))}]
     (try
         (update-world! w)
-        (catch java.sql.BatchUpdateException e
+        (catch BatchUpdateException e
           (throw (.getNextException e))))
     w))
 

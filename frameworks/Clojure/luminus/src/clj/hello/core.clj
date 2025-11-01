@@ -1,6 +1,5 @@
 (ns hello.core
   (:require [hello.handler :as handler]
-            [luminus.repl-server :as repl]
             [luminus.http-server :as http]
             [hello.config :refer [env]]
             [clojure.tools.cli :refer [parse-opts]]
@@ -27,14 +26,6 @@
                   handler/io-handler {:path "/io" :dispatch? false})
                 :stop
                 (http/stop http-server))
-
-(mount/defstate repl-server
-                :start
-                (when-let [nrepl-port (env :nrepl-port)]
-                  (repl/start {:port nrepl-port}))
-                :stop
-                (when repl-server
-                  (repl/stop repl-server)))
 
 (defn stop-app []
   (doseq [component (:stopped (mount/stop))]
