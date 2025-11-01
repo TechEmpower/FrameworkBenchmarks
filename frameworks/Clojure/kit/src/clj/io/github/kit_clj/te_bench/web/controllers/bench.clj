@@ -4,6 +4,7 @@
     [next.jdbc :as jdbc]
     [next.jdbc.result-set :as rs]
     [jj.majavat :as majavat]
+    [jj.sql.boa :as boa]
     [jj.majavat.renderer :refer [->StringRenderer]]
     [jj.majavat.renderer.sanitizer :refer [->Html]]
     [ring.util.http-response :as http-response]
@@ -19,6 +20,7 @@
 (def ^:private render-fortune (majavat/build-renderer "html/fortunes.html"
                                                       {:renderer (->StringRenderer
                                                                    {:sanitizer (->Html)})}))
+(def query-fortunes (boa/execute (boa/->NextJdbcAdapter) "sql/fortunes.sql"))
 (def selmer-opts {:custom-resource-path (clojure.java.io/resource "html")})
 
 (defn selmer-html-response
@@ -143,7 +145,7 @@
 
 (defn majavat-fortune-handler
   [db-conn _request]
-  (as-> (jdbc/execute! db-conn ["select * from \"Fortune\";"] jdbc-opts) fortunes
+  (as-> (query-fortunes db-conn) fortunes
         (conj fortunes {:id 0 :message "Additional fortune added at request time."})
         (sort-by :message fortunes)
         (majavat-html-response {:messages fortunes})))
