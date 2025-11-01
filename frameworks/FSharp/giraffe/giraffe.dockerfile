@@ -1,9 +1,9 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.0.204 AS build
+FROM mcr.microsoft.com/dotnet/sdk:9.0.306 AS build
 WORKDIR /app
 COPY src/App .
 RUN dotnet publish -c Release -o out
 
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
 ENV ASPNETCORE_URLS http://+:8080
 
 # Full PGO
