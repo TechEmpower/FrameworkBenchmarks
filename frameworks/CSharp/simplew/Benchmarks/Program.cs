@@ -19,12 +19,12 @@ internal static class Program
     public class BenchmarksController : Controller {
         [Route("GET", "/json")]
         public object Json() {
-            return new { message = "Hello World !" };
+            return new { message = "Hello, World !" };
         }
         
         [Route("GET", "/plaintext")]
         public object Plaintext() {
-            return "Hello World !" ;
+            return "Hello, World !" ;
         }
     }
 }
