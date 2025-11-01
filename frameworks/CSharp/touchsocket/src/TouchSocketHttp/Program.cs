@@ -15,12 +15,6 @@ public class Program
 
         await service.SetupAsync(new TouchSocketConfig()
              .SetListenIPHosts(port)
-             .SetNoDelay(true)
-             .SetTransportOption(options =>
-             {
-                 options.ReceivePipeOptions = TransportOption.CreateSchedulerOptimizedPipeOptions();
-                 options.SendPipeOptions = TransportOption.CreateSchedulerOptimizedPipeOptions();
-             })
              .SetMaxCount(1000000)
              .ConfigureContainer(a =>
              {
