@@ -15,7 +15,7 @@ class Program : IPostFunctionWrapper
     {
         akzJson.Config(null, AotJsonContext.Default);
         builder = akzWebBuilder.Shared.SetPort(port).SetDev()
-            .Add<ISemaphore, akzSemaphore>(() => null)
+            .Add<akzXmlSummary, akzXmlSummary>(() => null)
             .Build()
             .Config<IWebListener, akzHttpListenerVBase>(lis => lis.LogLevel = 0)
             .Config<IWebReceptor, akzWebInterceptor>(itc =>
