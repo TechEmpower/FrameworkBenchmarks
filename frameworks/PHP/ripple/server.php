@@ -5,7 +5,7 @@ include __DIR__ . '/vendor/autoload.php';
 use Ripple\Database\Interface\AbstractResultSet;
 use Ripple\Database\MySQL\Client;
 use Ripple\Net\Http\Server;
-use Ripple\Net\Http\Server\Request;
+use Ripple\Net\Http\Request;
 use Ripple\Sync\Channel;
 use Ripple\Sync\WaitGroup;
 use Ripple\Worker;
