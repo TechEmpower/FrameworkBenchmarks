@@ -3,16 +3,19 @@
   "tests": [
     {
       "default": {
+        "update_url": "/updates?queries=",
+        "query_url": "/queries?queries=",
+        "db_url": "/db",
         "json_url": "/json",
         "plaintext_url": "/plaintext",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Platform",
-        "database": "None",
+        "database": "Postgres",
         "framework": "None",
         "language": "D",
         "flavor": "None",
-        "orm": "None",
+        "orm": "raw",
         "platform": "None",
         "webserver": "None",
         "os": "Linux",
