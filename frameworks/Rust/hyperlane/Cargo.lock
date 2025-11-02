@@ -10,9 +10,9 @@ checksum = "320119579fcad9c21884f5c4861d16174d0e06250625266f50fe6898340abefa"
 
 [[package]]
 name = "aho-corasick"
-version = "1.1.3"
+version = "1.1.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8e60d3430d3a69478ad0993f19238d2df97c507009a52b3c10addcd7f6bcb916"
+checksum = "ddd31a130427c27518df266943a5308ed92d4b226cc639f5a8f1002816174301"
 dependencies = [
  "memchr",
 ]
@@ -549,10 +549,11 @@ dependencies = [
 
 [[package]]
 name = "hyperlane"
-version = "10.11.1"
+version = "10.11.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2f395fe020580eedcdadf295792d5036dac81582253cfab484164352760f6a86"
+checksum = "2c042df01c9d47727269228fa5bacbb25504a6785539c0e5942dd8b2541c33a0"
 dependencies = [
+ "aho-corasick",
  "http-type",
  "inventory",
  "lombok-macros",
