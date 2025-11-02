@@ -38,7 +38,7 @@ GEM
     pg (1.6.2)
     pg (1.6.2-x86_64-darwin)
     pg (1.6.2-x86_64-linux)
-    puma (7.0.2)
+    puma (7.1.0)
       nio4r (~> 2.0)
     rack (3.2.3)
     rack-protection (4.2.0)
@@ -74,7 +74,7 @@ DEPENDENCIES
   iodine (~> 0.7)
   json (~> 2.8)
   pg (~> 1.5)
-  puma (~> 7.0)
+  puma (~> 7.1)
   sinatra (~> 4.2)
   trilogy (~> 2.9.0)
 

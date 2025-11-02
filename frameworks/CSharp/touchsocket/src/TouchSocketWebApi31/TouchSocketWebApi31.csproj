@@ -6,8 +6,8 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<InvariantGlobalization>true</InvariantGlobalization>
 		<!--<PublishAot>true</PublishAot>-->
-		<UserSecretsId>dotnet-TouchSocketWebApi-987c185f-10b1-452b-beb7-47d798a5a131</UserSecretsId>
 		<ServerGarbageCollection>true</ServerGarbageCollection>
+		<UserSecretsId>dotnet-TouchSocketWebApi-987c185f-10b1-452b-beb7-47d798a5a131</UserSecretsId>
 	</PropertyGroup>
 
 	<ItemGroup>
