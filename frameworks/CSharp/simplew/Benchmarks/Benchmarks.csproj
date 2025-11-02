@@ -14,7 +14,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="SimpleW" Version="16.0.0" />
+      <PackageReference Include="SimpleW" Version="16.1.0" />
     </ItemGroup>
 
 </Project>

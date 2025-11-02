@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers.Text;
 using System.Net;
 using System.Threading.Tasks;
 using SimpleW;
@@ -19,12 +20,29 @@ internal static class Program
     public class BenchmarksController : Controller {
         [Route("GET", "/json")]
         public object Json() {
-            return new { message = "Hello, World !" };
+            return Response.MakeResponse(
+                new { message = "Hello, World !" }, // object will be serialized
+                addHeaders: new Dictionary<string, string>()
+                {
+                    { "Server", "SimpleW" },
+                    { "Date", DateTime.Now.ToString("R") }
+                }
+                // compress parameter is default to null, so no compression
+            );
         }
-        
+
         [Route("GET", "/plaintext")]
         public object Plaintext() {
-            return "Hello, World !" ;
+            return Response.MakeResponse(
+                "Hello, World !",
+                "text/plain",
+                addHeaders: new Dictionary<string, string>()
+                {
+                    { "Server", "SimpleW" },
+                    { "Date", DateTime.Now.ToString("R") }
+                }
+                // compress parameter is default to null, so no compression
+            );
         }
     }
 }
