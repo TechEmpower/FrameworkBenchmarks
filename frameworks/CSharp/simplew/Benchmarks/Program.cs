@@ -21,7 +21,7 @@ internal static class Program
         [Route("GET", "/json")]
         public object Json() {
             return Response.MakeResponse(
-                new { message = "Hello, World !" }, // object will be serialized
+                new { message = "Hello, World!" }, // object will be serialized
                 addHeaders: new Dictionary<string, string>()
                 {
                     { "Server", "SimpleW" },
@@ -34,7 +34,7 @@ internal static class Program
         [Route("GET", "/plaintext")]
         public object Plaintext() {
             return Response.MakeResponse(
-                "Hello, World !",
+                "Hello, World!",
                 "text/plain",
                 addHeaders: new Dictionary<string, string>()
                 {
