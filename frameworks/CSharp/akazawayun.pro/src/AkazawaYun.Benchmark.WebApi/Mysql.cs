@@ -2,7 +2,7 @@
 using MySql.Data.MySqlClient;
 using System.Data.Common;
 
-namespace AkazawaYun.FrameworkBenchmarks;
+namespace AkazawaYun.Benchmark.WebApi;
 
 class Mysql : akzDbFactory
 {

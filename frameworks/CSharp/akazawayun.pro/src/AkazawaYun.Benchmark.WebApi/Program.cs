@@ -3,7 +3,7 @@
 using AkazawaYun.AOT;
 using AkazawaYun.PRO7;
 
-namespace AkazawaYun.FrameworkBenchmarks;
+namespace AkazawaYun.Benchmark.WebApi;
 
 class Program : IPostFunctionWrapper
 {
