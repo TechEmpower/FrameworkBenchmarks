@@ -4,6 +4,8 @@ import std.array;
 import std.algorithm;
 import std.conv;
 import std.ascii;
+import core.stdc.stdlib;
+import core.stdc.string;
 
 import mir.ser;
 import mir.ser.json;
@@ -14,13 +16,14 @@ import std.range.primitives;
 
 import glow.xbuf;
 
-import photon, photon.http;
+import photon, photon.http, photon.mustache;
 
 import mir.random : unpredictableSeedOf;
 import mir.random.variable : UniformVariable;
 import mir.random.engine.xorshift : Xorshift;
 
 import dpq2;
+import dpq2.conv.to_d_types;
 
 struct Message {
     string message;
@@ -29,6 +32,11 @@ struct Message {
 struct WorldResponse {
 	int id;
 	int randomNumber;
+}
+
+struct FortuneResponse {
+	int id;
+	string message;
 }
 
 enum connectionInfo = "host=tfb-database port=5432 "
@@ -41,7 +49,8 @@ shared Pool!Connection connectionPool;
 class BenchmarkProcessor : HttpProcessor {
     HttpHeader[] plainTextHeaders = [HttpHeader("Content-Type", "text/plain; charset=utf-8")];
     HttpHeader[] jsonHeaders = [HttpHeader("Content-Type", "application/json")];
-    Buffer!char jsonBuf;
+    HttpHeader[] htmlHeaders = [HttpHeader("Content-Type", "text/html; charset=utf-8")];
+    Buffer!char outBuf;
     Buffer!WorldResponse worlds;
     UniformVariable!uint uniformVariable;
     Xorshift gen;
@@ -50,7 +59,7 @@ class BenchmarkProcessor : HttpProcessor {
 		super(sock);
         gen = Xorshift(unpredictableSeed!uint);
 		uniformVariable = UniformVariable!uint(1, worldSize);
-		jsonBuf = Buffer!char(256);
+		outBuf = Buffer!char(256);
         worlds = Buffer!WorldResponse(500);
 	}
 
@@ -65,6 +74,8 @@ class BenchmarkProcessor : HttpProcessor {
             queries(req.uri);
         } else if(req.uri.startsWith("/updates")) {
             updates(req.uri);
+        } else if(req.uri == "/fortunes") {
+            fortunes();
         }
         else {
 			respondWith("Not found", HttpStatus.NotFound, plainTextHeaders);
@@ -76,13 +87,13 @@ class BenchmarkProcessor : HttpProcessor {
     }
 
     final void json() {
-        jsonBuf.clear();
-        serializeJsonPretty!""(jsonBuf, Message("Hello, World!"));
-        respondWith(jsonBuf.data, HttpStatus.OK, jsonHeaders);
+        outBuf.clear();
+        serializeJsonPretty!""(outBuf, Message("Hello, World!"));
+        respondWith(outBuf.data, HttpStatus.OK, jsonHeaders);
     }
 
     final void db() {
-        jsonBuf.clear();
+        outBuf.clear();
         int id = uniformVariable(gen);
         auto c = connectionPool.acquire();
         scope(exit) connectionPool.release(c);
@@ -91,13 +102,13 @@ class BenchmarkProcessor : HttpProcessor {
 		qp.argsVariadic(id);
 		immutable result = c.execPrepared(qp).rangify.front;
 		auto w = WorldResponse(id, result[0].as!PGinteger);
-        serializeJsonPretty!""(jsonBuf, w);
-        respondWith(jsonBuf.data, HttpStatus.OK, jsonHeaders);
+        serializeJsonPretty!""(outBuf, w);
+        respondWith(outBuf.data, HttpStatus.OK, jsonHeaders);
     }
 
     // GET /queries?queries=...
     final void queries(const(char)[] uri) {
-        jsonBuf.clear();
+        outBuf.clear();
         worlds.clear();
         auto c = connectionPool.acquire();
         scope(exit) connectionPool.release(c);
@@ -118,13 +129,13 @@ class BenchmarkProcessor : HttpProcessor {
 			immutable result = c.execPrepared(qp).rangify.front;
 			worlds.put(WorldResponse(id, result[0].as!PGinteger));
 		}
-        serializeJsonPretty!""(jsonBuf, worlds.data);
-        respondWith(jsonBuf.data, HttpStatus.OK, jsonHeaders);
+        serializeJsonPretty!""(outBuf, worlds.data);
+        respondWith(outBuf.data, HttpStatus.OK, jsonHeaders);
     }
     
     // GET /updates?queries=...
     final void updates(const(char)[] uri) {
-        jsonBuf.clear();
+        outBuf.clear();
         worlds.clear();
         auto c = connectionPool.acquire();
         scope(exit) connectionPool.release(c);
@@ -157,9 +168,42 @@ class BenchmarkProcessor : HttpProcessor {
 			c.execPrepared(qp_update);
             worlds.put(w);
 		}
-        serializeJsonPretty!""(jsonBuf, worlds.data);
-        respondWith(jsonBuf.data, HttpStatus.OK, jsonHeaders);
+        serializeJsonPretty!""(outBuf, worlds.data);
+        respondWith(outBuf.data, HttpStatus.OK, jsonHeaders);
     }
+
+    final void fortunes() {
+        outBuf.clear();
+        auto c = connectionPool.acquire();
+        scope(exit) connectionPool.release(c);
+        import std.algorithm : map, sort;
+
+		auto buf = Buffer!FortuneResponse(20);
+		QueryParams qp;
+		qp.preparedStatementName("fortune_prpq");
+		auto result = c.execPrepared(qp).rangify;
+		foreach (ref f; result) {
+            buf.put(FortuneResponse(f[0].as!PGinteger, f[1].data.alloced));
+        }
+		buf.put(FortuneResponse(0, "Additional fortune added at request time"));
+        auto data = buf.data;
+		data.sort!((a, b) => a.message < b.message);
+		mustache!(import("template.mustache"))(data, outBuf);
+        foreach (ref v; data) {
+            if (v.id != 0) dealloc(v.message);
+        }
+        respondWith(outBuf.data, HttpStatus.OK, htmlHeaders);
+    }
+}
+
+string alloced(const(ubyte)[] data) {
+    void* ptr = malloc(data.length);
+    memcpy(ptr, data.ptr, data.length);
+    return (cast(immutable(char)*)ptr)[0..data.length];
+}
+
+void dealloc(const(char)[] slice) {
+    free(cast(void*)slice.ptr);
 }
 
 void server_worker(Socket client) {
@@ -201,6 +245,7 @@ void main() {
     initPhoton();
     connectionPool = pool(poolSize, 15.seconds, () {
         auto c = new Connection(connectionInfo);
+        c.prepareEx("fortune_prpq", "SELECT id, message::text FROM Fortune");
         c.prepareEx("db_prpq", "SELECT randomNumber, id FROM world WHERE id = $1");
         c.prepareEx("db_update_prpq", "UPDATE world SET randomNumber = $1  WHERE id = $2");
         return c;

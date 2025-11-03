@@ -3,6 +3,7 @@
   "tests": [
     {
       "default": {
+        "fortune_url": "/fortunes",
         "update_url": "/updates?queries=",
         "query_url": "/queries?queries=",
         "db_url": "/db",
