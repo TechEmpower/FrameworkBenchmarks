@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36310.24 d17.14
+VisualStudioVersion = 17.14.36310.24
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AkazawaYun.FrameworkBenchmarks", "src/AkazawaYun.FrameworkBenchmarks.csproj", "{BB5587FE-E4A0-851D-6025-F5FF0EC54525}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AkazawaYun.Benchmark.WebApi", "src\AkazawaYun.Benchmark.WebApi\AkazawaYun.Benchmark.WebApi.csproj", "{BB5587FE-E4A0-851D-6025-F5FF0EC54525}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AkazawaYun.Benchmark.Platform", "src\AkazawaYun.Benchmark.Platform\AkazawaYun.Benchmark.Platform.csproj", "{E7CA7DF7-F4AB-47EC-BF2B-1148058CDF43}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{BB5587FE-E4A0-851D-6025-F5FF0EC54525}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BB5587FE-E4A0-851D-6025-F5FF0EC54525}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BB5587FE-E4A0-851D-6025-F5FF0EC54525}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E7CA7DF7-F4AB-47EC-BF2B-1148058CDF43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E7CA7DF7-F4AB-47EC-BF2B-1148058CDF43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E7CA7DF7-F4AB-47EC-BF2B-1148058CDF43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E7CA7DF7-F4AB-47EC-BF2B-1148058CDF43}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
