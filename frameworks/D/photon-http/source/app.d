@@ -76,8 +76,7 @@ class BenchmarkProcessor : HttpProcessor {
             updates(req.uri);
         } else if(req.uri == "/fortunes") {
             fortunes();
-        }
-        else {
+        } else {
 			respondWith("Not found", HttpStatus.NotFound, plainTextHeaders);
 		}
     }
@@ -185,7 +184,7 @@ class BenchmarkProcessor : HttpProcessor {
 		foreach (ref f; result) {
             buf.put(FortuneResponse(f[0].as!PGinteger, f[1].data.alloced));
         }
-		buf.put(FortuneResponse(0, "Additional fortune added at request time"));
+		buf.put(FortuneResponse(0, "Additional fortune added at request time."));
         auto data = buf.data;
 		data.sort!((a, b) => a.message < b.message);
 		mustache!(import("template.mustache"))(data, outBuf);
