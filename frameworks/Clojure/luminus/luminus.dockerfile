@@ -1,13 +1,15 @@
-FROM clojure:lein-2.8.1
+FROM clojure:lein as lein
 WORKDIR /luminus
 COPY env env
+COPY project.clj project.clj
 COPY resources resources
 COPY src src
-COPY test test
-COPY Procfile Procfile
-COPY project.clj project.clj
 RUN lein uberjar
 
-EXPOSE 3000
+FROM openjdk:25-jdk-slim
+WORKDIR /luminus
+COPY --from=lein /luminus/target/hello.jar app.jar
 
-CMD ["java", "-server", "-jar", "target/hello.jar"]
+EXPOSE 8080
+
+CMD ["java", "-server", "-XX:+UseParallelGC", "-jar", "app.jar"]

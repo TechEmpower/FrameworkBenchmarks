@@ -3,7 +3,7 @@
 using AkazawaYun.AOT;
 using AkazawaYun.PRO7;
 
-namespace AkazawaYun.FrameworkBenchmarks;
+namespace AkazawaYun.Benchmark.WebApi;
 
 class Program : IPostFunctionWrapper
 {
@@ -14,8 +14,10 @@ class Program : IPostFunctionWrapper
     static Program()
     {
         akzJson.Config(null, AotJsonContext.Default);
-        builder = akzWebBuilder.Shared.SetPort(port)
+        builder = akzWebBuilder.Shared.SetPort(port).SetDev()
+            .Add<akzXmlSummary, akzXmlSummary>(() => null)
             .Build()
+            .Config<IWebListener, akzHttpListenerVBase>(lis => lis.LogLevel = 0)
             .Config<IWebReceptor, akzWebInterceptor>(itc =>
             {
                 itc.ClearInterceptor();
