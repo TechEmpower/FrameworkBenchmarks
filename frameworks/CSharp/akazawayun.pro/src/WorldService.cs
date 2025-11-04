@@ -1,6 +1,6 @@
 ﻿using AkazawaYun.PRO7;
 
-namespace AkazawaYun.Benchmark.WebApi;
+namespace AkazawaYun.FrameworkBenchmarks;
 
 class WorldService
 {
