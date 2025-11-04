@@ -5,7 +5,7 @@ COPY resources resources
 COPY src src
 RUN lein with-profile robaho uberjar
 
-FROM openjdk:25-jdk-slim
+FROM amazoncorretto:25
 WORKDIR /ring-http-exchange
 COPY --from=lein /ring-http-exchange/target/ring-http-server-1.0.0-standalone.jar app.jar
 

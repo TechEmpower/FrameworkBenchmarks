@@ -6,7 +6,7 @@ COPY resources resources
 COPY src src
 RUN lein uberjar
 
-FROM openjdk:25-jdk-slim
+FROM amazoncorretto:25
 WORKDIR /luminus
 COPY --from=lein /luminus/target/hello.jar app.jar
 
