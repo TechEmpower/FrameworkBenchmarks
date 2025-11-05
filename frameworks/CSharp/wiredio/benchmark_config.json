@@ -36,6 +36,23 @@
         "database_os": "Linux",
         "display_name": "Wired.IO [Unhinged]",
         "notes": "Not a framework"
+      },
+      "gen": {
+        "plaintext_url": "/plaintext",
+        "json_url": "/json",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "None",
+        "framework": "GenHttp",
+        "language": "C#",
+        "orm": "None",
+        "platform": ".NET",
+        "webserver": "Unhinged",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "genhttp [Unhinged]",
+        "notes": "Adapter"
       }
     }
   ]
