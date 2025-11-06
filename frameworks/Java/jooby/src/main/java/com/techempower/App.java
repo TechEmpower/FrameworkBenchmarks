@@ -5,7 +5,6 @@ import static com.techempower.Util.randomWorld;
 import static io.jooby.ExecutionMode.EVENT_LOOP;
 import static io.jooby.MediaType.JSON;
 
-import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.PreparedStatement;

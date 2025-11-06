@@ -110,10 +110,9 @@ public class ReactivePg extends Jooby {
     private void selectWorlds(Context ctx, int queries, Consumer<List<World>> consumer) {
         sqlClient.group(
                 client -> {
-                    var statement = client.preparedQuery(SELECT_WORLD);
                     List<World> worlds = new ArrayList<>(queries);
                     for (int i = 0; i < queries; i++) {
-                        statement
+                        client.preparedQuery(SELECT_WORLD)
                                 .execute(Tuple.of(Util.boxedRandomWorld()))
                                 .map(rs -> new World(rs.iterator().next().getInteger(0), Util.boxedRandomWorld()))
                                 .onComplete(
