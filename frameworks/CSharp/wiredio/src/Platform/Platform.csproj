@@ -20,6 +20,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Unhinged" Version="9.0.2" />
+      <PackageReference Include="Unhinged" Version="9.0.5" />
     </ItemGroup>
 </Project>
