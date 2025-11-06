@@ -61,9 +61,9 @@ GEM
       mustermann (>= 1.0.0)
     mysql2 (0.5.6)
     nio4r (2.7.4)
-    puma (6.6.0)
+    puma (7.1.0)
       nio4r (~> 2.0)
-    rack (3.1.12)
+    rack (3.2.3)
     raindrops (0.20.1)
     ruby2_keywords (0.0.5)
     securerandom (0.4.1)
@@ -86,8 +86,8 @@ DEPENDENCIES
   grape (= 2.1.1)
   json (~> 2.9)
   mysql2 (= 0.5.6)
-  puma (~> 6.5)
+  puma (~> 7.1)
   unicorn (= 6.1.0)
 
 BUNDLED WITH
-   2.6.2
+   2.7.0

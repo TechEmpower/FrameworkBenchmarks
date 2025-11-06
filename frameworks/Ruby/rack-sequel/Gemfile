@@ -3,16 +3,17 @@ source 'https://rubygems.org'
 gem 'json', '~> 2.8'
 gem 'sequel', '~> 5.0'
 gem 'rack', '~> 3.1'
+gem "concurrent-ruby"
 
 group :mysql, optional: true do
-  gem 'mysql2', '~> 0.4', platforms: [:ruby, :mswin]
+  gem 'trilogy', '~> 2.9', platforms: [:ruby, :windows]
 end
 
 group :postgresql, optional: true do
-  gem 'pg', '~> 1.5', platforms: [:ruby, :mswin]
+  gem 'pg', '~> 1.5', platforms: [:ruby, :windows]
   gem 'sequel_pg', '~> 1.6', platforms: :ruby, require: false
 end
 
 group :puma, optional: true do
-  gem 'puma', '~> 6.5', require: false
+  gem 'puma', '~> 7.0', require: false
 end

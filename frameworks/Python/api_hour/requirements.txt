@@ -1,4 +1,4 @@
-aiohttp==3.10.11
+aiohttp==3.12.14
 -e git+https://github.com/Eyepea/aiohttp_jinja2.git@c9675e5c1e1ee7741b30aea8d8fbffcde016c7a0#egg=aiohttp_jinja2-master
 aiopg==0.7.0
 -e git+https://github.com/Eyepea/API-Hour.git@577abbdcbb8cc2810dad46e260b338b15db4d0e3#egg=api_hour-master
@@ -15,5 +15,5 @@ requests==2.32.4
 requests-futures==0.9.5
 setproctitle==1.1.8
 ujson==1.33
-aiomysql==0.0.7
+aiomysql==0.3.0
 PyMySQL==1.1.1

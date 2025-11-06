@@ -7,9 +7,9 @@ public class World implements Comparable<World> {
 
   private int id;
 
-  private int randomNumber;
+  private Integer randomNumber;
 
-  public World(int id, int randomNumber) {
+  public World(int id, Integer randomNumber) {
     this.id = id;
     this.randomNumber = randomNumber;
   }
@@ -18,7 +18,7 @@ public class World implements Comparable<World> {
     return id;
   }
 
-  public int getRandomNumber() {
+  public Integer getRandomNumber() {
     return randomNumber;
   }
 

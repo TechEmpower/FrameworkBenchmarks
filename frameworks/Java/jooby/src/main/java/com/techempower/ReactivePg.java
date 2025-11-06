@@ -1,135 +1,188 @@
 package com.techempower;
 
-import static com.techempower.Util.randomWorld;
 import static io.jooby.ExecutionMode.EVENT_LOOP;
 import static io.jooby.MediaType.JSON;
+import static io.jooby.Reified.getParameterized;
+import static java.util.stream.IntStream.range;
 
 import java.util.*;
+import java.util.function.Consumer;
 
-import com.fizzed.rocker.RockerOutputFactory;
-import com.techempower.rocker.BufferRockerOutput;
 import io.jooby.*;
-import io.jooby.rocker.DataBufferOutput;
 import io.jooby.rocker.RockerModule;
-import io.vertx.sqlclient.Row;
-import io.vertx.sqlclient.RowIterator;
-import io.vertx.sqlclient.Tuple;
+import io.jooby.vertx.pgclient.VertxPgConnectionModule;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Handler;
+import io.vertx.sqlclient.*;
+import io.vertx.sqlclient.impl.SqlClientInternal;
 
 public class ReactivePg extends Jooby {
-  {
-    /** Reduce the number of resources due we do reactive processing. */
-    setServerOptions(
-        new ServerOptions()
-            .setIoThreads(Runtime.getRuntime().availableProcessors() + 1)
-            .setWorkerThreads(Runtime.getRuntime().availableProcessors() + 1)
-    );
+    private final PreparedQuery<RowSet<Row>> selectWorldQuery;
+    private final PreparedQuery<RowSet<Row>> selectFortuneQuery;
+    private final List<PreparedQuery<RowSet<Row>>> updateWorldQuery;
+    private final SqlClientInternal sqlClient;
 
-    /** PG client: */
-    PgClient client = new PgClient(getConfig().getConfig("db"));
+    {
+        /** PG client: */
+        install(new VertxPgConnectionModule().prepare(statements()));
 
-    /** Template engine: */
-    install(new RockerModule());
+        /** Template engine: */
+        install(new RockerModule());
+        Json.configure(getOutputFactory());
 
-    /** Single query: */
-    get("/db", ctx -> {
-      client.selectWorld(Tuple.of(randomWorld()), rsp -> {
-        if (rsp.succeeded()) {
-          RowIterator<Row> rs = rsp.result().iterator();
-          Row row = rs.next();
-          ctx.setResponseType(JSON)
-              .send(Json.encode(new World(row.getInteger(0), row.getInteger(1))));
-        } else {
-          ctx.sendError(rsp.cause());
-        }
-      });
-      return ctx;
-    }).setNonBlocking(true);
+        this.selectWorldQuery = require(PreparedQueryType, "selectWorld");
+        this.selectFortuneQuery = require(PreparedQueryType, "selectFortune");
+        this.updateWorldQuery = require(PreparedQueryTypeList, "updateWorld");
+        this.sqlClient = require(SqlClientInternal.class);
 
-    /** Multiple queries: */
-    get("/queries", ctx -> {
-      int queries = Util.queries(ctx);
-      var result = new ArrayList<World>(queries);
-      client.selectWorlds(queries, rsp -> {
-        if (rsp.succeeded()) {
-          RowIterator<Row> rs = rsp.result().iterator();
-          Row row = rs.next();
-          result.add(new World(row.getInteger(0), row.getInteger(1)));
-        } else {
-          sendError(ctx, rsp.cause());
-        }
-        // ready?
-        if (result.size() == queries) {
-          ctx.setResponseType(JSON)
-              .send(Json.encode(result));
-        }
-      });
-      return ctx;
-    }).setNonBlocking(true);
-
-    /** Update queries: */
-    get("/updates", ctx -> {
-      int queries = Util.queries(ctx);
-      World[] result = new World[queries];
-      client.selectWorldForUpdate(queries, (index, statement) -> {
-        int id = randomWorld();
-        statement.execute(Tuple.of(id), selectCallback -> {
-          if (selectCallback.failed()) {
-            sendError(ctx, selectCallback.cause());
-            return;
-          }
-          result[index] = new World(
-              selectCallback.result().iterator().next().getInteger(0),
-              randomWorld());
-          if (index == queries - 1) {
-            client.updateWorld(result, updateCallback -> {
-              if (updateCallback.failed()) {
-                sendError(ctx, updateCallback.cause());
-              } else {
-                ctx.setResponseType(JSON)
-                    .send(Json.encode(result));
-              }
-            });
-          }
+        /** Single query: */
+        get("/db", ctx -> {
+            selectWorldQuery
+                    .execute(Tuple.of(Util.boxedRandomWorld()))
+                    .onComplete(
+                            rsp -> {
+                                if (rsp.succeeded()) {
+                                    var rs = rsp.result().iterator();
+                                    var row = rs.next();
+                                    ctx.setResponseType(JSON)
+                                            .send(Json.encode(new World(row.getInteger(0), row.getInteger(1))));
+                                } else {
+                                    ctx.sendError(rsp.cause());
+                                }
+                            });
+            return ctx;
         });
-      });
-      return ctx;
-    }).setNonBlocking(true);
 
-    /** Fortunes: */
-    var factory = BufferRockerOutput.factory();
-    get("/fortunes", ctx -> {
-      client.fortunes(rsp -> {
-        if (rsp.succeeded()) {
-          RowIterator<Row> rs = rsp.result().iterator();
-          List<Fortune> fortunes = new ArrayList<>();
+        /** Multiple queries: */
+        get("/queries", ctx -> {
+            int queries = Util.queries(ctx);
+            selectWorlds(ctx, queries, result -> ctx.setResponseType(JSON).send(Json.encode(result)));
+            return ctx;
+        });
 
-          while (rs.hasNext()) {
-            Row row = rs.next();
-            fortunes.add(new Fortune(row.getInteger(0), row.getString(1)));
-          }
+        /** Update queries: */
+        get("/updates", ctx -> {
+            int queries = Util.queries(ctx);
+            selectWorlds(
+                    ctx,
+                    queries,
+                    result -> {
+                        updateWorld(
+                                result,
+                                ar -> {
+                                    if (ar.failed()) {
+                                        sendError(ctx, ar.cause());
+                                    } else {
+                                        ctx.setResponseType(JSON).send(Json.encode(result));
+                                    }
+                                });
+                    });
+            return ctx;
+        });
 
-          fortunes.add(new Fortune(0, "Additional fortune added at request time."));
-          Collections.sort(fortunes);
+        /** Fortunes: */
+        get("/fortunes", ctx -> {
+            selectFortuneQuery.execute()
+                    .onComplete(rsp -> {
+                        if (rsp.succeeded()) {
+                            RowIterator<Row> rs = rsp.result().iterator();
+                            List<Fortune> fortunes = new ArrayList<>();
 
-          /** render view: */
-          views.fortunes template = views.fortunes.template(fortunes);
-          ctx.setResponseType(MediaType.html)
-              .send(template.render(factory).toBuffer());
-        } else {
-          sendError(ctx, rsp.cause());
-        }
-      });
-      return ctx;
-    }).setNonBlocking(true);
-  }
+                            while (rs.hasNext()) {
+                                Row row = rs.next();
+                                fortunes.add(new Fortune(row.getInteger(0), row.getString(1)));
+                            }
 
-  private void sendError(Context ctx, Throwable cause) {
-    if (!ctx.isResponseStarted()) {
-      ctx.sendError(cause);
+                            fortunes.add(new Fortune(0, "Additional fortune added at request time."));
+                            Collections.sort(fortunes);
+
+                            /** render view: */
+                            ctx.setResponseType(MediaType.html)
+                                    .render(views.fortunes.template(fortunes));
+                        } else {
+                            sendError(ctx, rsp.cause());
+                        }
+                    });
+            return ctx;
+        });
     }
-  }
 
-  public static void main(String[] args) {
-    runApp(args, EVENT_LOOP, ReactivePg::new);
-  }
+    private void selectWorlds(Context ctx, int queries, Consumer<List<World>> consumer) {
+        sqlClient.group(
+                client -> {
+                    var statement = client.preparedQuery(SELECT_WORLD);
+                    List<World> worlds = new ArrayList<>(queries);
+                    for (int i = 0; i < queries; i++) {
+                        statement
+                                .execute(Tuple.of(Util.boxedRandomWorld()))
+                                .map(rs -> new World(rs.iterator().next().getInteger(0), Util.boxedRandomWorld()))
+                                .onComplete(
+                                        ar -> {
+                                            if (ar.succeeded()) {
+                                                worlds.add(ar.result());
+                                                if (worlds.size() == queries) {
+                                                    consumer.accept(worlds);
+                                                }
+                                            } else {
+                                                sendError(ctx, ar.cause());
+                                            }
+                                        });
+                    }
+                });
+    }
+
+    private void updateWorld(List<World> worlds, Handler<AsyncResult<RowSet<Row>>> handler) {
+        Collections.sort(worlds);
+        int len = worlds.size();
+        List<Object> arguments = new ArrayList<>();
+        for (var world : worlds) {
+            arguments.add(world.getId());
+            arguments.add(world.getRandomNumber());
+        }
+        updateWorldQuery.get(len - 1).execute(Tuple.wrap(arguments)).onComplete(handler);
+    }
+
+    private void sendError(Context ctx, Throwable cause) {
+        if (!ctx.isResponseStarted()) {
+            ctx.sendError(cause);
+        }
+    }
+
+    private Map<String, List<String>> statements() {
+        return Map.of(
+                "selectWorld", List.of(SELECT_WORLD),
+                "selectFortune", List.of(SELECT_FORTUNE),
+                "updateWorld",
+                range(0, 500).map(i -> i + 1).mapToObj(this::buildAggregatedUpdateQuery).toList());
+    }
+
+    private String buildAggregatedUpdateQuery(int len) {
+        var sql = new StringBuilder();
+        sql.append("UPDATE WORLD SET RANDOMNUMBER = CASE ID");
+        for (int i = 0; i < len; i++) {
+            int offset = (i * 2) + 1;
+            sql.append(" WHEN $").append(offset).append(" THEN $").append(offset + 1);
+        }
+        sql.append(" ELSE RANDOMNUMBER");
+        sql.append(" END WHERE ID IN ($1");
+        for (int i = 1; i < len; i++) {
+            int offset = (i * 2) + 1;
+            sql.append(",$").append(offset);
+        }
+        sql.append(")");
+        return sql.toString();
+    }
+
+    private static final String SELECT_WORLD = "SELECT id, randomnumber from WORLD where id=$1";
+    private static final String SELECT_FORTUNE = "SELECT id, message from FORTUNE";
+
+    private static final Reified<PreparedQuery<RowSet<Row>>> PreparedQueryType =
+            getParameterized(PreparedQuery.class, getParameterized(RowSet.class, Row.class));
+
+    private static final Reified<List<PreparedQuery<RowSet<Row>>>> PreparedQueryTypeList =
+            Reified.list(PreparedQueryType);
+
+    public static void main(String[] args) {
+        runApp(args, EVENT_LOOP, ReactivePg::new);
+    }
 }

@@ -8,9 +8,9 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^7.3|^8.1",
-        "laravel/framework": "^9",
-        "hhxsv5/laravel-s": "~3.7.0"
+        "php": "^8.0",
+        "laravel/framework": "^12",
+        "hhxsv5/laravel-s": "~3.8.5"
     },
     "config": {
         "optimize-autoloader": true,
@@ -27,7 +27,7 @@
             "App\\": "app/"
         }
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "prefer-stable": true,
     "scripts": {
         "post-autoload-dump": [
@@ -42,5 +42,3 @@
         ]
     }
 }
-
-

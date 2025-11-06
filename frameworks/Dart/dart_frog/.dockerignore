@@ -1,0 +1,9 @@
+# From https://hub.docker.com/_/dart
+.dockerignore
+Dockerfile
+build/
+.dart_tool/
+.git/
+.github/
+.gitignore
+.packages

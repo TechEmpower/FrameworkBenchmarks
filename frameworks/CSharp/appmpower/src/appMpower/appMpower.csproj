@@ -9,14 +9,15 @@
   <ItemGroup>
     <None Include="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
 
+    <!--TODOLOCAL-->
     <!--
-    <Content Include="../appMpower.Orm/bin/Release/net8.0/appMpower.Orm.dll">
+    <Content Include="../appMpower.Orm/bin/Release/net9.0/appMpower.Orm.dll">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content> 
     -->
-    <!--TODOLOCAL-->
+    <!--TODOLOCAL AOT-->
     <!--
-    <Content Include="../appMpower.Orm/bin/Release/net8.0/osx-arm64/native/appMpower.Orm.dylib">
+    <Content Include="../appMpower.Orm/bin/Release/net9.0/osx-arm64/native/appMpower.Orm.dylib">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content> 
     -->

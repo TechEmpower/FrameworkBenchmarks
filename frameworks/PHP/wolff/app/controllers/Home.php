@@ -25,15 +25,10 @@ class Home extends \Wolff\Core\Controller
 
 	public function db(Request $req, Response $res)
 	{
-		$random_id = mt_rand(1, 10000);
-		/** @var \Wolff\Core\DB */
-		$db = Container::get('db');
-		$row = $db->select('World', 'id = ?', $random_id)[0];
+		$row = Container::get('db')->select('World', 'id = ?', mt_rand(1, 10000))[0];
+
 		$res->setHeader('Content-Type', 'application/json');
-		$res->writeJson([
-			'id' => $row['id'],
-			'randomNumber' => $row['randomNumber']
-		]);
+		$res->writeJson($row);
 	}
 
 	public function queries(Request $req, Response $res)
@@ -50,13 +45,7 @@ class Home extends \Wolff\Core\Controller
 		
 		$worlds = [];
 		for ($i = 0; $i < $queries; ++$i) {
-			$random_id = mt_rand(1, 10000);
-			$row = $db->select('World', 'id = ?', $random_id)[0];
-			$world = [
-				'id' => $row['id'],
-				'randomNumber' => $row['randomNumber']
-			];
-			$worlds[] = $world;
+			$worlds[] = $db->select('World', 'id = ?', mt_rand(1, 10000))[0];
 		}
 		$res->setHeader('Content-Type', 'application/json');
 		$res->writeJson($worlds);
@@ -80,11 +69,10 @@ class Home extends \Wolff\Core\Controller
 			$random_update_id = mt_rand(1, 10000);
 			$row = $db->select('World', 'id = ?', $random_id)[0];
 			$db->query('UPDATE World SET randomNumber = ? WHERE id = ?', $random_update_id, $row['id']);
-			$world = [
-				'id' => $row['id'],
-				'randomNumber' => $random_update_id
-			];
-			$worlds[] = $world;
+			$worlds[] = [
+						'id' => $row['id'],
+						'randomNumber' => $random_update_id
+						];
 		}
 		$res->setHeader('Content-Type', 'application/json');
 		$res->writeJson($worlds);
@@ -93,14 +81,11 @@ class Home extends \Wolff\Core\Controller
 	public function fortunes(Request $req, Response $res)
 	{
 
-		/** @var \Wolff\Core\DB */
-		$db = Container::get('db');
-
-		$fortunes = $db->select('Fortune');
+		$fortunes = Container::get('db')->select('Fortune');
 		$fortunes[] = [ 'id' => 0, 'message' => 'Additional fortune added at request time.' ];
-		usort($fortunes, function ($left, $right) {
-            return $left['message'] <=> $right['message'];
-        });
+		usort($fortunes, fn($left, $right) => $left['message'] <=> $right['message'] );
+		
+		$res->setHeader('Content-Type', 'text/html; charset=utf-8');
 		View::render('fortunes', [
 			'fortunes' => $fortunes,
 		]);

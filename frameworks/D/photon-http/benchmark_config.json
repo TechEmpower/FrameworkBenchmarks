@@ -1,0 +1,30 @@
+{
+  "framework": "photon-http",
+  "tests": [
+    {
+      "default": {
+        "fortune_url": "/fortunes",
+        "update_url": "/updates?queries=",
+        "query_url": "/queries?queries=",
+        "db_url": "/db",
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "Postgres",
+        "framework": "None",
+        "language": "D",
+        "flavor": "None",
+        "orm": "raw",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "photon-http",
+        "notes": "",
+        "versus": "None"
+      }
+    }
+  ]
+}

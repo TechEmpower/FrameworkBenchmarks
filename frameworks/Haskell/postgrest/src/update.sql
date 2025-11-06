@@ -1,4 +1,4 @@
-create or replace function update(queries text default '') returns jsonb as $$
+create or replace function updates(queries text default '') returns jsonb as $$
 DECLARE
    r "World"%ROWTYPE;
    j jsonb := jsonb_build_array();
@@ -6,11 +6,10 @@ DECLARE
    rnd_id int;
    count int;
 BEGIN
-   SET TRANSACTION READ WRITE;
    IF queries ~ '^[1-9]\d{0,2}$' THEN
       count := CAST(queries as int);
-   ELSE 
-      count := 1;   
+   ELSE
+      count := 1;
    END IF;
    IF count > 500 THEN
       count := 500;

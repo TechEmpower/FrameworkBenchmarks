@@ -1,0 +1,21 @@
+{
+  "framework": "brahma-firelight",
+  "tests": [{
+    "default": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "framework": "brahma-firelight",
+      "language": "TypeScript",
+      "flavor": "bun",
+      "platform": "bun",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "brahma-firelight",
+      "versus": "nodejs"
+    }
+  }]
+}

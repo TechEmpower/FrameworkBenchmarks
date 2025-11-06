@@ -9,9 +9,9 @@ gem 'padrino', git: 'https://github.com/padrino/padrino-framework.git'
 gem 'rack'
 
 group :puma, optional: true do
-  gem 'puma', '~> 6.4', require: false
+  gem 'puma', '~> 7.1', require: false
 end
 
 group :unicorn, optional: true do
-  gem 'unicorn', '~> 6.1', platforms: [:ruby, :mswin], require: false
+  gem 'unicorn', '~> 6.1', platforms: [:ruby, :windows], require: false
 end

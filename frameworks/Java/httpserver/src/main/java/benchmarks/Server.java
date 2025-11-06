@@ -8,18 +8,23 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.Executors;
-import java.util.concurrent.SynchronousQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+
 import javax.sql.DataSource;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+
 import httl.Engine;
 import httl.Template;
 
@@ -56,14 +61,14 @@ public class Server {
         return new HikariDataSource(config);
     }
 
-    private static Template loadTemplate(String filename) throws IOException, ParseException {
+    private static Template loadTemplate() throws IOException, ParseException {
         Properties props = new Properties();
         props.put("import.packages", "java.util," + Fortune.class.getPackage().getName());
         props.put("input.encoding", "UTF-8");
         props.put("output.encoding", "UTF-8");
         props.put("precompiled", "false");
         Engine engine = Engine.getEngine(props);
-        return engine.getTemplate(filename);
+        return engine.getTemplate("/fortunes.template.httl");
     }
 
     private static HttpHandler createPlaintextHandler() {
@@ -72,7 +77,6 @@ public class Server {
             t.getResponseHeaders().add("Server", SERVER_NAME);
             t.sendResponseHeaders(200, HELLO_LENGTH);
             t.getResponseBody().write(HELLO_BYTES);
-            t.getResponseBody().flush();
             t.getResponseBody().close();
         };
     }
@@ -98,7 +102,7 @@ public class Server {
     }
 
     private static HttpHandler createFortunesHandler(DataSource ds) throws IOException, ParseException {
-        Template template = loadTemplate("/fortunes.template.httl");
+        Template template = loadTemplate();
         return t -> {
             try {
                 // query db
@@ -116,7 +120,6 @@ public class Server {
                 t.getResponseHeaders().add("Server", SERVER_NAME);
                 t.sendResponseHeaders(200, bytes.length);
                 t.getResponseBody().write(bytes);
-                t.getResponseBody().flush();
                 t.getResponseBody().close();
             } catch (SQLException | ParseException e) {
                 throw new IOException(e);
@@ -124,7 +127,7 @@ public class Server {
         };
     }
 
-    public static void main(String[] args) throws Exception {
+    static void main(String[] args) throws Exception {
         // parse arguments
         String settings = args.length > 0 ? args[0] : "";
         int port = args.length > 1 ? Integer.parseInt(args[1]) : 8080;
@@ -133,7 +136,6 @@ public class Server {
         // create server
         HttpServer server = HttpServer.create(new InetSocketAddress(port), 1024 * 8);
         server.setExecutor(Executors.newVirtualThreadPerTaskExecutor());
-        // add context handlers
         server.createContext("/plaintext", createPlaintextHandler());
         server.createContext("/json", createJSONHandler());
         if (settings.contains("postgres")) {

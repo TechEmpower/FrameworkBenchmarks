@@ -1,11 +1,11 @@
-FROM debian:buster-slim AS pre-build
+FROM debian:bookworm-slim as pre-build
 RUN apt update
 RUN apt upgrade -y
 RUN apt install -y g++ curl make tar gzip libfindbin-libs-perl
 
 FROM pre-build AS builder
 WORKDIR /build
-RUN sh -c "$(curl -sSL https://raw.githubusercontent.com/just-js/just/0.1.8/install.sh)"
+RUN sh -c "$(curl -sSL https://raw.githubusercontent.com/just-js/just/0.1.13/install.sh)"
 RUN make -C just install
 ENV JUST_HOME=/build/just
 ENV JUST_TARGET=/build/just

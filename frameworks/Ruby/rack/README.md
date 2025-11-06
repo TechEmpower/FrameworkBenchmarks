@@ -15,7 +15,7 @@ The tests were run with:
 * [JRuby 9.4](http://jruby.org/)
 * [Rack 3.1](http://rack.github.com/)
 * [Unicorn 6.1.0](http://unicorn.bogomips.org/)
-* [Puma 6.4](http://puma.io/)
+* [Puma 7](http://puma.io/)
 * [Iodine](https://github.com/boazsegev/iodine)
 * [Falcon](https://github.com/socketry/falcon)
 * [Pitchfork](https://github.com/Shopify/pitchfork)

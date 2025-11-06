@@ -1,7 +1,7 @@
 #
 # BUILD
 #
-FROM container-registry.oracle.com/graalvm/native-image:24-muslib-ol9 as build
+FROM container-registry.oracle.com/graalvm/native-image:25-muslib-ol10 as build
 USER root
 WORKDIR /hexagon
 

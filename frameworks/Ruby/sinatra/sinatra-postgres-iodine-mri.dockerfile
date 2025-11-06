@@ -13,6 +13,7 @@ WORKDIR /sinatra
 ENV BUNDLE_WITH=postgresql:iodine
 RUN bundle install --jobs=4 --gemfile=/sinatra/Gemfile
 
+ENV APP_ENV=production
 ENV DBTYPE=postgresql
 
 EXPOSE 8080

@@ -5,9 +5,9 @@ use std::net::{Ipv4Addr, SocketAddr};
 use std::sync::Arc;
 use std::thread;
 
-use socket2::{Domain, SockAddr, Socket};
 use hyper::server::conn::http1::Builder;
 use hyper_util::rt::TokioIo;
+use socket2::{Domain, SockAddr, Socket};
 use tokio::{net::TcpListener, runtime};
 use viz::{Responder, Router, Tree};
 
@@ -31,12 +31,11 @@ pub async fn serve(router: Router) -> Result<(), Box<dyn Error + Send + Sync>> {
         let tree = tree.clone();
 
         tokio::spawn(async move {
-            http
-                .serve_connection(
-                    TokioIo::new(tcp),
-                    Responder::<Arc<SocketAddr>>::new(tree, None),
-                )
-                .await
+            http.serve_connection(
+                TokioIo::new(tcp),
+                Responder::<Arc<SocketAddr>>::new(tree, None),
+            )
+            .await
         });
     }
 }
@@ -52,7 +51,7 @@ fn create_socket(addr: SocketAddr) -> Result<Socket, io::Error> {
     #[cfg(unix)]
     socket.set_reuse_port(true)?;
     socket.set_reuse_address(true)?;
-    socket.set_nodelay(true)?;
+    socket.set_tcp_nodelay(true)?;
     socket.set_nonblocking(true)?;
     socket.bind(&addr)?;
     socket.listen(backlog)?;

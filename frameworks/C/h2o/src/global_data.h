@@ -30,6 +30,7 @@
 #include "handlers/request_handler_data.h"
 
 struct global_thread_data_t;
+struct socket_load_balancer;
 struct thread_context_t;
 
 typedef struct config_t {
@@ -55,8 +56,10 @@ typedef struct {
 	h2o_logger_t *file_logger;
 	struct global_thread_data_t *global_thread_data;
 	h2o_socket_t *signals;
+	struct socket_load_balancer *socket_load_balancer;
 	SSL_CTX *ssl_ctx;
 	size_t memory_alignment;
+	int bpf_fd;
 	int signal_fd;
 	h2o_buffer_prototype_t buffer_prototype;
 	h2o_globalconf_t h2o_config;
