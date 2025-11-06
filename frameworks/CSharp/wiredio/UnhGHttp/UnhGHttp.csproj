@@ -17,7 +17,7 @@
 
     <ItemGroup>
       <PackageReference Include="GenHTTP.Modules.Layouting" Version="9.8.0" />
-      <PackageReference Include="Unhinged.GenHttp.Experimental" Version="9.8.2" />
+      <PackageReference Include="Unhinged.GenHttp.Experimental" Version="9.8.3" />
     </ItemGroup>
 
 </Project>
