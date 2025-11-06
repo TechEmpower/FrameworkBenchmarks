@@ -4,7 +4,7 @@ COPY pom.xml pom.xml
 COPY src src
 RUN mvn install -q
 
-FROM openjdk:21-jdk-slim
+FROM openjdk:25-ea-slim-bullseye
 WORKDIR /smart-socket
 COPY --from=maven /smart-socket/target/smart-socket-benchmark-1.0.jar app.jar
 
