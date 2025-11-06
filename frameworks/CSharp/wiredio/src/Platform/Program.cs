@@ -58,14 +58,19 @@ internal static class Program
         engine.Run();
     }
 
-    private static void RequestHandler(Connection connection)
+    private const string Json = "/json";
+    private const string PlainText = "/plaintext";
+
+    private static ValueTask RequestHandler(Connection connection)
     {
         // FNV-1a Hashed routes to avoid string allocations
-        if(connection.HashedRoute == 291830056)          // /json
+        if(connection.H1HeaderData.Route == Json)          // /json
             CommitJsonResponse(connection);
        
-        else if (connection.HashedRoute == 3454831873)   // /plaintext
+        else if (connection.H1HeaderData.Route == PlainText)   // /plaintext
             CommitPlainTextResponse(connection);
+        
+        return  ValueTask.CompletedTask;
     }
     
     [ThreadStatic] private static Utf8JsonWriter? t_utf8JsonWriter;
