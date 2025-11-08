@@ -1,4 +1,4 @@
-FROM maven:3.9.9-eclipse-temurin-24-noble as maven
+FROM maven:3.9.11-eclipse-temurin-25-noble as maven
 WORKDIR /kooby
 COPY pom.xml pom.xml
 COPY src src

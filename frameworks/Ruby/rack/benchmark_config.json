@@ -20,7 +20,7 @@
         "webserver": "Puma",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "rack-puma-mri-sequel-raw",
+        "display_name": "rack [puma]",
         "notes": ""
       },
       "iodine": {
@@ -41,28 +41,7 @@
         "webserver": "Iodine",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "rack-iodine-mri-sequel-raw",
-        "notes": ""
-      },
-      "unicorn": {
-        "json_url": "/json",
-        "plaintext_url": "/plaintext",
-        "db_url": "/db",
-        "query_url": "/queries?queries=",
-        "fortune_url": "/fortunes",
-        "update_url": "/updates?queries=",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Platform",
-        "orm": "raw",
-        "database": "Postgres",
-        "framework": "rack",
-        "language": "Ruby",
-        "platform": "Mri",
-        "webserver": "Unicorn",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "rack-unicorn-mri-sequel-raw",
+        "display_name": "rack [iodine]",
         "notes": ""
       },
       "falcon": {
@@ -83,7 +62,7 @@
         "webserver": "Falcon",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "rack-falcon-mri-sequel-raw",
+        "display_name": "rack [falcon]",
         "notes": ""
       },
       "jruby": {
@@ -104,7 +83,7 @@
         "webserver": "Puma",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "rack-puma-jruby-sequel-raw",
+        "display_name": "rack [jruby, puma]",
         "notes": ""
       },
       "passenger": {
@@ -125,7 +104,7 @@
         "webserver": "Passenger",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "rack-passenger-mri-sequel-raw",
+        "display_name": "rack [passenger]",
         "notes": ""
       },
       "pitchfork": {
@@ -146,7 +125,7 @@
         "webserver": "Pitchfork",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "rack-pitchfork-mri-sequel-raw",
+        "display_name": "rack [pitchfork]",
         "notes": ""
       }
     }

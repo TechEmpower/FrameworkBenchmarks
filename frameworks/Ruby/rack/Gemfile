@@ -35,11 +35,6 @@ group :puma, optional: true do
   gem 'puma', '~> 7.1'
 end
 
-group :unicorn, optional: true do
-  gem 'logger' # required by unicorn on Ruby 3.5
-  gem 'unicorn', '~> 6.1', platforms: %i[ruby windows]
-end
-
 group :development, optional: true do
   gem 'rack-test'
   gem 'rubocop', platforms: %i[ruby windows]
