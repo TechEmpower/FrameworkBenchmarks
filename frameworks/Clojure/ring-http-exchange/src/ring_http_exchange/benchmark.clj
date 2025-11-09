@@ -15,14 +15,13 @@
 (def query-fortunes (boa/execute (boa/->NextJdbcAdapter) "fortune.sql"))
 
 (def db-spec {:auto-commit        true
-              :read-only          false
-              :connection-timeout 30000
+              :read-only          true
+              :connection-timeout 10000
               :validation-timeout 5000
               :idle-timeout       600000
               :max-lifetime       1800000
-              :minimum-idle       10
-              :maximum-pool-size  520
-              :minimum-pool-size  512
+              :minimum-idle       16
+              :maximum-pool-size  64
               :register-mbeans    false
               :jdbcUrl            "jdbc:postgresql://tfb-database/hello_world?user=benchmarkdbuser&password=benchmarkdbpass"})
 
