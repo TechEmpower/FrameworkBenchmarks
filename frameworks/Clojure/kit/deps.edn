@@ -19,6 +19,7 @@
 
            ;; Database
            org.postgresql/postgresql        {:mvn/version "42.7.8"}
+           org.clojars.jj/boa-sql           {:mvn/version "1.0.0"}
 
 
            ;; kit Libs

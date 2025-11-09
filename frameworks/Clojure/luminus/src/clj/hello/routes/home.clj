@@ -1,11 +1,10 @@
 (ns hello.routes.home
-  (:require [hello.layout :as layout]
+  (:require [cheshire.core :refer [generate-string]]
+            [compojure.core :refer [GET defroutes]]
             [hello.db.core :as db]
-            [compojure.core :refer [defroutes GET]]
+            [hello.layout :as layout]
             [ring.util.http-response :as response]
-            [clojure.java.io :as io]
-            [ring.util.response :refer [content-type]]
-            [cheshire.core :refer [generate-string]]))
+            [ring.util.response :refer [content-type]]))
 
 (defn encode-json-response [rsp]
   (-> rsp

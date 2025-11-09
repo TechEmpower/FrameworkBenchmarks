@@ -1,0 +1,17 @@
+root = true
+
+[*.{fs,fsi,fsx}]
+indent_size = 4
+indent_style = space
+max_line_length = 90
+fsharp_space_before_uppercase_invocation = true
+fsharp_space_before_member = true
+fsharp_space_before_colon = false
+fsharp_space_before_semicolon = false
+fsharp_multiline_bracket_style = stroustrup
+fsharp_newline_between_type_definition_and_members = true
+fsharp_align_function_signature_to_indentation = true
+fsharp_alternative_long_member_definitions = true
+fsharp_multi_line_lambda_closing_newline = true
+fsharp_experimental_keep_indent_in_branch = true
+fsharp_bar_before_discriminated_union_declaration = true

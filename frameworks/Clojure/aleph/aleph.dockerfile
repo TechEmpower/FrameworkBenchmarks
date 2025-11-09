@@ -4,7 +4,7 @@ COPY src src
 COPY project.clj project.clj
 RUN lein uberjar
 
-FROM openjdk:25-jdk-slim
+FROM amazoncorretto:25
 
 WORKDIR /aleph
 COPY --from=lein /aleph/target/hello-aleph-standalone.jar app.jar

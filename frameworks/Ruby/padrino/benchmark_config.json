@@ -19,7 +19,7 @@
       "webserver": "Puma",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "padrino-puma-mri",
+      "display_name": "padrino [puma]",
       "notes": "",
       "versus": "rack-puma-mri"
     },
@@ -41,7 +41,7 @@
       "webserver": "Unicorn",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "padrino-unicorn",
+      "display_name": "padrino [unicorn]",
       "notes": "",
       "versus": "rack-unicorn"
     }
