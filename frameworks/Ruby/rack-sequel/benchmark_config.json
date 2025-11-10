@@ -18,7 +18,7 @@
         "webserver": "Puma",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "rack-sequel-puma-mri",
+        "display_name": "rack-sequel [puma, mysql]",
         "versus": "rack-puma-mri",
         "notes": ""
       },
@@ -38,7 +38,7 @@
         "webserver": "Puma",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "rack-sequel-postgres-puma-mri",
+        "display_name": "rack-sequel [puma, postgres]",
         "versus": null,
         "notes": ""
       }
