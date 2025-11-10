@@ -20,7 +20,7 @@
       "webserver": "Puma",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "rails-postgresql",
+      "display_name": "rails [puma, postgres]",
       "notes": "",
       "versus": ""
     },
@@ -41,7 +41,7 @@
       "webserver": "Puma",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "rails-mysql",
+      "display_name": "rails [puma, mysql]",
       "notes": "",
       "versus": "rack-puma-mri"
     },
@@ -64,7 +64,7 @@
       "webserver": "Falcon",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "rails-falcon",
+      "display_name": "rails [falcon]",
       "notes": "",
       "versus": "rack-falcon-mri-sequel-raw"
     },
@@ -87,11 +87,11 @@
       "webserver": "Iodine",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "rails-iodine",
+      "display_name": "rails [iodine]",
       "notes": "",
       "versus": "rack-iodine-mri-sequel-raw"
     },
-    "agoo": {
+    "pitchfork": {
       "db_url": "/db",
       "json_url": "/json",
       "query_url": "/queries?queries=",
@@ -107,12 +107,12 @@
       "language": "Ruby",
       "orm": "Full",
       "platform": "Rack",
-      "webserver": "Agoo",
+      "webserver": "Pitchfork",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "rails-agoo",
+      "display_name": "rails [pitchfork]",
       "notes": "",
-      "versus": ""
+      "versus": "rack-pitchfork-mri-sequel-raw"
     }
   }]
 }

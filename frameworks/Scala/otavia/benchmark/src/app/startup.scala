@@ -2,7 +2,7 @@ package app
 
 import app.controller.DBController.*
 import app.controller.FortuneController.*
-import app.controller.{DBController, FortuneController}
+import app.controller.*
 import app.model.*
 import app.util.FortunesRender
 import cc.otavia.core.actor.ChannelsActor.{Bind, ChannelEstablished}
@@ -28,18 +28,20 @@ private class ServerMain(val port: Int = 8080) extends MainActor(Array.empty) {
 
     override def main0(stack: NoticeStack[MainActor.Args]): StackYield = stack.state match
         case _: StartState =>
+            val messageResponseSerde  = HttpResponseSerde.json(summon[JsonSerde[Message]])
             val worldResponseSerde    = HttpResponseSerde.json(summon[JsonSerde[World]])
             val worldsResponseSerde   = HttpResponseSerde.json(JsonSerde.derived[Seq[World]])
             val fortunesResponseSerde = HttpResponseSerde(new FortunesRender(), MediaType.TEXT_HTML_UTF8)
 
             val dbController      = autowire[DBController]()
             val fortuneController = autowire[FortuneController]()
+            val jsonController    = autowire[JsonController]()
 
             val routers = Seq(
               // Test 6: plaintext
               constant[Array[Byte]](GET, "/plaintext", "Hello, World!".getBytes(UTF_8), BytesSerde, TEXT_PLAIN_UTF8),
               // Test 1: JSON serialization
-              constant[Message](GET, "/json", Message("Hello, World!"), summon[JsonSerde[Message]], APP_JSON),
+              get("/json", jsonController, () => JsonController.JsonRequest, messageResponseSerde),
               // Test 2: Single database query.
               get("/db", dbController, () => new SingleQueryRequest(), worldResponseSerde),
               // Test 3: Multiple database queries
@@ -67,4 +69,5 @@ private class ServerMain(val port: Int = 8080) extends MainActor(Array.empty) {
     system.buildActor(() => new Connection(url, user, password), global = true, num = poolSize)
     system.buildActor(() => new DBController(), global = true, num = system.actorWorkerSize)
     system.buildActor(() => new FortuneController(), global = true, num = system.actorWorkerSize)
+    system.buildActor(() => new JsonController(), global = true, num = system.actorWorkerSize)
     system.buildActor(() => new ServerMain())

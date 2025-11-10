@@ -13,8 +13,9 @@ class BenchmarksController < ApplicationController
   end
 
   def queries
+    ids = requested_ids
     worlds = DB.synchronize do
-      requested_ids.map do |id|
+      ids.map do |id|
         World.with_pk(id)
       end
     end
@@ -34,9 +35,10 @@ class BenchmarksController < ApplicationController
 
   def updates
     worlds = nil
+    ids = requested_ids
 
     DB.synchronize do
-      worlds = requested_ids.map do |id|
+      worlds = ids.map do |id|
         world = World.with_pk(id)
         new_value = random_id
         new_value = random_id while new_value == world.randomnumber

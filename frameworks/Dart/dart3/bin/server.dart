@@ -2,24 +2,22 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:isolate';
 
-final _encoder = JsonUtf8Encoder();
-
-void main(List<String> _) async {
-  /// Create an [Isolate] containinig an [HttpServer]
+void main(List<String> args) async {
+  /// Create an [Isolate] containing an [HttpServer]
   /// for each processor after the first
   for (var i = 1; i < Platform.numberOfProcessors; i++) {
-    await Isolate.spawn(_startServer, _);
+    await Isolate.spawn(_startServer, args);
   }
 
   /// Create a [HttpServer] for the first processor
-  await _startServer(_);
+  await _startServer(args);
 }
 
 /// Creates and setup a [HttpServer]
 Future<void> _startServer(List<String> _) async {
   /// Binds the [HttpServer] on `0.0.0.0:8080`.
   final server = await HttpServer.bind(
-    InternetAddress('0.0.0.0', type: InternetAddressType.IPv4),
+    InternetAddress.anyIPv4,
     8080,
     shared: true,
   );
@@ -51,39 +49,35 @@ void _sendResponse(
   int statusCode, {
   ContentType? type,
   List<int> bytes = const [],
-}) =>
-    request.response
-      ..statusCode = statusCode
-      ..headers.contentType = type
-      ..headers.date = DateTime.now()
-      ..contentLength = bytes.length
-      ..add(bytes)
-      ..close();
+}) => request.response
+  ..statusCode = statusCode
+  ..headers.contentType = type
+  ..headers.date = DateTime.now()
+  ..contentLength = bytes.length
+  ..add(bytes)
+  ..close();
 
 /// Completes the given [request] by writing the [response] as JSON.
 void _sendJson(HttpRequest request, Object response) => _sendResponse(
-      request,
-      HttpStatus.ok,
-      type: ContentType.json,
-      bytes: _encoder.convert(response),
-    );
+  request,
+  HttpStatus.ok,
+  type: ContentType.json,
+  bytes: _jsonEncoder.convert(response),
+);
 
 /// Completes the given [request] by writing the [response] as plain text.
 void _sendText(HttpRequest request, String response) => _sendResponse(
-      request,
-      HttpStatus.ok,
-      type: ContentType.text,
-      bytes: utf8.encode(response),
-    );
+  request,
+  HttpStatus.ok,
+  type: ContentType.text,
+  bytes: utf8.encode(response),
+);
 
 /// Responds with the JSON test to the [request].
-void _jsonTest(HttpRequest request) => _sendJson(
-      request,
-      const {'message': 'Hello, World!'},
-    );
+void _jsonTest(HttpRequest request) =>
+    _sendJson(request, const {'message': 'Hello, World!'});
 
 /// Responds with the plaintext test to the [request].
-void _plaintextTest(HttpRequest request) => _sendText(
-      request,
-      'Hello, World!',
-    );
+void _plaintextTest(HttpRequest request) => _sendText(request, 'Hello, World!');
+
+final _jsonEncoder = JsonUtf8Encoder();

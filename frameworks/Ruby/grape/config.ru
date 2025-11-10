@@ -35,6 +35,7 @@ module Acme
   end
 
   class DatabaseQueries < Grape::API
+    logger nil
     helpers do
       def bounded_queries
         queries = params[:queries].to_i
@@ -48,13 +49,13 @@ module Acme
     end
 
     get '/db' do
-      ActiveRecord::Base.connection_pool.with_connection do
+      ActiveRecord::Base.with_connection do
         World.find(rand1).attributes
       end
     end
 
     get '/query' do
-      ActiveRecord::Base.connection_pool.with_connection do
+      ActiveRecord::Base.with_connection do
         ALL_IDS.sample(bounded_queries).map do |id|
           World.find(id)
         end
@@ -63,7 +64,7 @@ module Acme
 
     get '/updates' do
       worlds =
-        ActiveRecord::Base.connection_pool.with_connection do
+        ActiveRecord::Base.with_connection do
           ALL_IDS.sample(bounded_queries).map do |id|
             world = World.find(id)
             new_value = rand1
@@ -77,9 +78,10 @@ module Acme
 
   class API < Grape::API
     before do
-      header 'Date', Time.now.httpdate
+      header 'Date', Time.now.httpdate if defined?(Puma)
       header 'Server', 'WebServer'
     end
+    logger nil
     content_type :json, 'application/json'
     format :json
 

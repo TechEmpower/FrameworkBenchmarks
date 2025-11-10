@@ -1,23 +1,35 @@
-# see https://roadrunner.dev/docs/intro-config
-version: "3"
-#https://github.com/roadrunner-server/roadrunner/blob/master/.rr.yaml
+# see https://docs.roadrunner.dev/docs/general/config
+# https://github.com/roadrunner-server/roadrunner/blob/master/.rr.yaml
 
-server:
-  command: "php ./vendor/bin/rr-worker start --relay-dsn unix:///usr/local/var/run/rr-rpc.sock"
-  relay: "unix:///usr/local/var/run/rr-rpc.sock"
-logs:
-  mode: production
-  level: error
+version: "3"
+
 http:
   address: 0.0.0.0:8080
-  middleware: ["headers"]
   pool:
-    #max_jobs: 64 # feel free to change this
+    num_workers: 0
+    max_jobs: 0
     supervisor:
       exec_ttl: 60s
   headers:
     response:
       Server: "RoadRunner"
+  middleware: ["headers"]
 
+server:
+  command: "php /laravel/vendor/bin/roadrunner-worker"
+  #command: "php /laravel/vendor/bin/roadrunner-worker start --relay-dsn unix:///usr/local/var/run/rr-rpc.sock"
+  #relay: "unix:///usr/local/var/run/rr-rpc.sock"
 
+  env:
+    - APP_ENV: production
+    - APP_BASE_PATH: "/laravel"
+    - LARAVEL_OCTANE: "1"
 
+rpc:
+  listen: tcp://127.0.0.1:6001
+
+logs:
+  mode: production
+  level: error
+  output: stdout
+  #encoding: json

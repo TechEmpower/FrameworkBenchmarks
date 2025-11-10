@@ -1,4 +1,4 @@
-FROM sbtscala/scala-sbt:eclipse-temurin-17.0.5_8_1.8.2_2.12.17
+FROM sbtscala/scala-sbt:eclipse-temurin-21.0.6_7_1.10.11_2.12.20
 
 ARG SBT_VERSION=1.8.2
 

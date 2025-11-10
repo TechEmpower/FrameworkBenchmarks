@@ -13,7 +13,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.html.*
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
@@ -70,7 +69,7 @@ enum class ExposedMode {
 
 fun main(args: Array<String>) {
     val exposedMode = valueOf(args.first())
-    embeddedServer(Netty, port = 8080) { module(exposedMode) }.start(wait = true)
+    embeddedServer(Netty, port = 9090) { module(exposedMode) }.start(wait = true)
 }
 
 fun Application.module(exposedMode: ExposedMode) {

@@ -28,6 +28,7 @@ class AbstractTestType(metaclass=abc.ABCMeta):
         self.args = args
         self.headers = ""
         self.body = ""
+        self.status = None
 
         if accept_header is None:
             self.accept_header = self.accept('json')
@@ -64,7 +65,7 @@ class AbstractTestType(metaclass=abc.ABCMeta):
                 "A %s requires the benchmark_config.json to contain %s" %
                 (self.name, self.args))
 
-    def request_headers_and_body(self, url):
+    def request_headers_and_body_and_status(self, url):
         '''
         Downloads a URL and returns the HTTP response headers
         and body content as a tuple
@@ -76,7 +77,8 @@ class AbstractTestType(metaclass=abc.ABCMeta):
 
         self.headers = r.headers
         self.body = r.content
-        return self.headers, self.body
+        self.status = r.status_code
+        return self.headers, self.body, self.status
 
     def output_headers_and_body(self):
         log(str(self.headers))

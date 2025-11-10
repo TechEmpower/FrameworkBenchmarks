@@ -15,9 +15,19 @@ class HelloWorld < Roda
     rand(MAX_PK) + 1
   end
 
+  if defined?(Puma)
+    def set_default_headers(response)
+      response[DATE_HEADER] = Time.now.httpdate
+      response[SERVER_HEADER] = SERVER_STRING
+    end
+  else
+    def set_default_headers(response)
+      response[SERVER_HEADER] = SERVER_STRING
+    end
+  end
+
   route do |r|
-    response[DATE_HEADER] = Time.now.httpdate
-    response[SERVER_HEADER] = SERVER_STRING if SERVER_STRING
+    set_default_headers(response)
 
     # Test type 1: JSON serialization
     r.is "json" do
@@ -34,9 +44,10 @@ class HelloWorld < Roda
     # Test type 3: Multiple database queries
     r.is "queries" do
       response[CONTENT_TYPE] = JSON_TYPE
+      ids = ALL_IDS.sample(bounded_queries)
       worlds =
         DB.synchronize do
-          ALL_IDS.sample(bounded_queries).map do |id|
+          ids.map do |id|
             World.with_pk(id).values
           end
         end
@@ -59,9 +70,10 @@ class HelloWorld < Roda
     r.is "updates" do
       response[CONTENT_TYPE] = JSON_TYPE
       worlds = []
+      ids = ALL_IDS.sample(bounded_queries)
       DB.synchronize do
         worlds =
-          ALL_IDS.sample(bounded_queries).map do |id|
+          ids.map do |id|
             world = World.with_pk(id)
             new_value = rand1
             new_value = rand1 while new_value == world.randomnumber

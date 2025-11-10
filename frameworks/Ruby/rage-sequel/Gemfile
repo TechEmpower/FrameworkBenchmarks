@@ -5,3 +5,4 @@ gem "rage-rb", "~> 1.10"
 gem "pg", "~> 1.0"
 gem 'sequel', '~> 5.0'
 gem 'sequel_pg', '~> 1.6', platforms: :ruby, require: false
+gem 'logger' # required for ruby 3.5

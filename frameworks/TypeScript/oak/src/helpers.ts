@@ -1,4 +1,5 @@
-import { Context, ResponseBody, Status } from "./deps.ts";
+import { Context, Status } from "oak";
+import { ResponseBody } from "oak/response";
 
 export function Ok(ctx: Context, body: ResponseBody) {
   ctx.response.status = Status.OK;

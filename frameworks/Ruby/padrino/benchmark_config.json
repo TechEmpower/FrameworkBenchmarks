@@ -19,16 +19,16 @@
       "webserver": "Puma",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "padrino-puma-mri",
+      "display_name": "padrino [puma]",
       "notes": "",
       "versus": "rack-puma-mri"
     },
     "unicorn": {
       "json_url": "/json",
-      "db_url": "/db", 
-      "query_url": "/queries?queries=", 
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
       "fortune_url": "/fortunes",
-      "update_url": "/updates?queries=", 
+      "update_url": "/updates?queries=",
       "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Realistic",
@@ -41,7 +41,7 @@
       "webserver": "Unicorn",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "padrino-unicorn",
+      "display_name": "padrino [unicorn]",
       "notes": "",
       "versus": "rack-unicorn"
     }

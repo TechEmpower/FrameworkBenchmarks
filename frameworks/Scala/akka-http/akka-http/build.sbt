@@ -6,7 +6,7 @@ name := "akka-http-benchmark"
 
 version := "0.1.0-SNAPSHOT"
 
-scalaVersion := "2.13.8"
+scalaVersion := "2.13.16"
 
 val akkaV = "2.6.19"
 val akkaHttpV = "10.2.9"

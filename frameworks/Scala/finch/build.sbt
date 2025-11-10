@@ -2,7 +2,7 @@ lazy val finchVersion = "0.27.0"
 
 name := """techempower-benchmarks-finch"""
 version := finchVersion
-scalaVersion := "2.12.7"
+scalaVersion := "2.12.20"
 
 libraryDependencies ++= Seq(
   "com.github.finagle" %% "finchx-core" % finchVersion,

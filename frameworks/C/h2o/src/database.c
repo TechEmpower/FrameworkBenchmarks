@@ -186,7 +186,7 @@ static int flush_connection(h2o_socket_cb cb, db_conn_t *conn)
 
 	if (send_status < 0)
 		LIBRARY_ERROR("PQflush", PQerrorMessage(conn->conn));
-	else if (send_status)
+	else if (send_status && !h2o_socket_is_writing(conn->sock))
 		h2o_socket_notify_write(conn->sock, cb);
 
 	return send_status < 0;

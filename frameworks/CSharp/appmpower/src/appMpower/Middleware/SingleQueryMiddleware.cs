@@ -35,7 +35,13 @@ public class SingleQueryMiddleware
 
             IntPtr bytePointer = NativeMethods.Db(out payloadLength, out handlePointer);
             byte[] json = new byte[payloadLength];
-            Marshal.Copy(bytePointer, json, 0, payloadLength);
+            //Marshal.Copy(bytePointer, json, 0, payloadLength);
+
+            fixed (byte* dest = json)
+            {
+                Buffer.MemoryCopy((void*)bytePointer, dest, payloadLength, payloadLength);
+            }
+
             NativeMethods.FreeHandlePointer(handlePointer);
 
             response.Headers.Add(

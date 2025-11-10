@@ -20,7 +20,7 @@
         "webserver": "Puma",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "roda-sequel-puma-mri",
+        "display_name": "roda-sequel [puma, mysql]",
         "versus": "rack-sequel-puma-mri",
         "notes": ""
       },
@@ -40,7 +40,7 @@
         "webserver": "Puma",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "roda-sequel-postgres-puma-mri",
+        "display_name": "roda-sequel [puma, postgres]",
         "versus": "rack-sequel-postgres-puma-mri",
         "notes": ""
       },
@@ -62,28 +62,8 @@
         "webserver": "Iodine",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "roda-sequel-postgres-iodine-mri",
+        "display_name": "roda-sequel [iodine, postgres]",
         "versus": "rack-sequel-postgres-iodine-mri",
-        "notes": ""
-      },
-      "postgres-unicorn-mri": {
-        "db_url": "/db",
-        "query_url": "/queries?queries=",
-        "fortune_url": "/fortunes",
-        "update_url": "/updates?queries=",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Micro",
-        "database": "Postgres",
-        "framework": "roda-sequel",
-        "language": "Ruby",
-        "orm": "Full",
-        "platform": "Rack",
-        "webserver": "Unicorn",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "roda-sequel-postgres-unicorn-mri",
-        "versus": "rack-sequel-postgres-unicorn-mri",
         "notes": ""
       }
     }

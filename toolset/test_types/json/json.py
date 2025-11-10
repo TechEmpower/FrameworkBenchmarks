@@ -1,5 +1,5 @@
 from toolset.test_types.abstract_test_type import AbstractTestType
-from toolset.test_types.verifications import basic_body_verification, verify_headers, verify_helloworld_object
+from toolset.test_types.verifications import basic_body_verification, verify_status, verify_headers, verify_helloworld_object
 
 class TestType(AbstractTestType):
     def __init__(self, config):
@@ -23,7 +23,7 @@ class TestType(AbstractTestType):
         '''
 
         url = base_url + self.json_url
-        headers, body = self.request_headers_and_body(url)
+        headers, body, status = self.request_headers_and_body_and_status(url)
 
         response, problems = basic_body_verification(body, url)
 
@@ -38,7 +38,8 @@ class TestType(AbstractTestType):
             return problems
 
         problems += verify_helloworld_object(response, url)
-        problems += verify_headers(self.request_headers_and_body, headers, url, should_be='json')
+        problems += verify_status(self.request_headers_and_body_and_status, status, url)
+        problems += verify_headers(self.request_headers_and_body_and_status, headers, url, should_be='json')
 
         if len(problems) > 0:
             return problems

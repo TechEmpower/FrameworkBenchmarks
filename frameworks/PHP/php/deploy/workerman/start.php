@@ -2,7 +2,7 @@
 
 use Adapterman\Adapterman;
 use Workerman\Worker;
-use Workerman\Lib\Timer;
+use Workerman\Timer;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
@@ -10,6 +10,7 @@ Adapterman::init();
 // WebServer
 $web = new Worker("http://0.0.0.0:8080");
 $web->count = (int) shell_exec('nproc') * 4;
+$web->reusePort = true;
 $web->name = 'workerman';
 
 define('WEBROOT', '/php/');

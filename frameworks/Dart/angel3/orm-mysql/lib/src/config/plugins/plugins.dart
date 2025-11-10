@@ -1,4 +1,3 @@
-/// Custom plugins go here.
 import 'dart:async';
 import 'package:angel3_framework/angel3_framework.dart';
 import 'orm.dart' as orm;

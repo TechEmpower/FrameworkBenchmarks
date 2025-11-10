@@ -1,17 +1,12 @@
 package com.test.hserver.controller;
 
-import cn.hserver.core.ioc.annotation.Autowired;
-import cn.hserver.plugin.web.annotation.Controller;
-import cn.hserver.plugin.web.annotation.GET;
-import cn.hserver.plugin.web.interfaces.HttpRequest;
-import cn.hserver.plugin.web.interfaces.HttpResponse;
+import cn.hserver.core.context.IocApplicationContext;
+
+import cn.hserver.mvc.context.WebContext;
 import com.test.hserver.bean.Fortune;
 import com.test.hserver.bean.Message;
 import com.test.hserver.bean.World;
 import com.test.hserver.util.DateUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -25,37 +20,34 @@ import static com.test.hserver.util.Util.randomWorld;
 /**
  * @author hxm
  */
-@Controller
 public class TestController {
     private static final String HELLO = "Hello, World!";
     private static final String SELECT_WORLD = "select * from world where id=?";
 
-    @Autowired
-    private DataSource dataSource;
+    private static DataSource dataSource;
 
-
-    @GET("/jso2n")
-    private   Message jso2n(long ud,int a,HttpResponse response) {
-        response.setHeader("Date", DateUtil.getTime());
-        return new Message();
+    public static DataSource getDataSource() {
+           if (dataSource == null) {
+               dataSource= IocApplicationContext.getBean(DataSource.class);
+           }
+            return dataSource;
     }
 
-    @GET("/json")
-    public Message json(HttpResponse response) {
-        response.setHeader("Date", DateUtil.getTime());
-        return new Message();
+
+    public static void json(WebContext webContext) {
+        webContext.response.addHeader("Date", DateUtil.getTime());
+        webContext.response.sendJson(new Message());
     }
 
-    @GET("/plaintext")
-    public String plaintext(HttpResponse response) {
-        response.setHeader("Date", DateUtil.getTime());
-        return HELLO;
+    public static void plaintext(WebContext webContext) {
+        webContext.response.addHeader("Date", DateUtil.getTime());
+        webContext.response.sendText(HELLO);
+
     }
 
-    @GET("/db")
-    public void db(HttpResponse response) throws SQLException {
+    public static void db(WebContext webContext) throws SQLException {
         World result;
-        try (Connection conn = dataSource.getConnection()) {
+        try (Connection conn = getDataSource().getConnection()) {
             try (final PreparedStatement statement = conn.prepareStatement(SELECT_WORLD)) {
                 statement.setInt(1, randomWorld());
                 try (ResultSet rs = statement.executeQuery()) {
@@ -64,14 +56,13 @@ public class TestController {
                 }
             }
         }
-        response.setHeader("Date", DateUtil.getTime());
-        response.sendJson(result);
+        webContext.response.addHeader("Date", DateUtil.getTime());
+        webContext.response.sendJson(result);
     }
 
-    @GET("/queries")
-    public void queries(HttpRequest request,HttpResponse response) throws Exception {
-        World[] result = new World[getQueries(request.query("queries"))];
-        try (Connection conn = dataSource.getConnection()) {
+    public static void queries(WebContext webContext) throws Exception {
+        World[] result = new World[getQueries(webContext.request.query("queries"))];
+        try (Connection conn = getDataSource().getConnection()) {
             for (int i = 0; i < result.length; i++) {
                 try (final PreparedStatement statement = conn.prepareStatement(SELECT_WORLD)) {
                     statement.setInt(1, randomWorld());
@@ -82,20 +73,19 @@ public class TestController {
                 }
             }
         }
-        response.setHeader("Date", DateUtil.getTime());
-        response.sendJson(result);
+        webContext.response.addHeader("Date", DateUtil.getTime());
+        webContext.response.sendJson(result);
     }
 
 
-    @GET("/updates")
-    public void updates(HttpRequest request,HttpResponse response) throws Exception {
-        World[] result = new World[getQueries(request.query("queries"))];
+    public static void updates(WebContext webContext) throws Exception {
+        World[] result = new World[getQueries(webContext.request.query("queries"))];
         StringJoiner updateSql = new StringJoiner(
                 ", ",
                 "UPDATE world SET randomNumber = temp.randomNumber FROM (VALUES ",
                 " ORDER BY 1) AS temp(id, randomNumber) WHERE temp.id = world.id");
 
-        try (Connection connection = dataSource.getConnection()) {
+        try (Connection connection = getDataSource().getConnection()) {
             try (PreparedStatement statement = connection.prepareStatement(SELECT_WORLD)) {
                 for (int i = 0; i < result.length; i++) {
                     statement.setInt(1, randomWorld());
@@ -117,14 +107,13 @@ public class TestController {
                 statement.executeUpdate();
             }
         }
-        response.setHeader("Date", DateUtil.getTime());
-        response.sendJson(result);
+        webContext.response.addHeader("Date", DateUtil.getTime());
+        webContext.response.sendJson(result);
     }
 
-    @GET("/fortunes")
-    public void fortunes(HttpResponse response) throws Exception {
+    public static void fortunes(WebContext webContext) throws Exception {
         List<Fortune> fortunes = new ArrayList<>();
-        try (Connection connection = dataSource.getConnection()) {
+        try (Connection connection = getDataSource().getConnection()) {
             try (PreparedStatement stt = connection.prepareStatement("select * from fortune")) {
                 try (ResultSet rs = stt.executeQuery()) {
                     while (rs.next()) {
@@ -135,9 +124,9 @@ public class TestController {
         }
         fortunes.add(new Fortune(0, "Additional fortune added at request time."));
         Collections.sort(fortunes);
-        response.setHeader("Date", DateUtil.getTime());
+        webContext.response.addHeader("Date", DateUtil.getTime());
         Map<String,Object> data=new HashMap<>();
         data.put("data",fortunes);
-        response.sendTemplate("fortunes.ftl",data);
+        webContext.response.sendTemplate("fortunes.ftl",data);
     }
 }

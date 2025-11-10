@@ -1,0 +1,13 @@
+[framework]
+name = "aroma.js"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+approach = "Realistic"
+classification = "Micro"
+database_os = "Linux"
+os = "Linux"
+platform = "nodejs"
+webserver = "None"
+versus = "nodejs"

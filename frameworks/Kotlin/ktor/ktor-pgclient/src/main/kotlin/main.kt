@@ -1,31 +1,15 @@
-import io.ktor.http.*
 import io.ktor.server.application.*
-import io.ktor.server.engine.*
 import io.ktor.server.html.*
-import io.ktor.server.netty.*
 import io.ktor.server.plugins.defaultheaders.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import io.vertx.kotlin.coroutines.await
 import io.vertx.kotlin.coroutines.coAwait
 import io.vertx.pgclient.PgBuilder
 import io.vertx.pgclient.PgConnectOptions
-import io.vertx.pgclient.PgPool
 import io.vertx.sqlclient.PoolOptions
 import io.vertx.sqlclient.Tuple
 import kotlinx.html.*
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import java.util.concurrent.ThreadLocalRandom
-
-@Serializable
-data class Message(val message: String)
-
-@Serializable
-data class World(val id: Int, val randomNumber: Int)
-
-data class Fortune(val id: Int, val message: String)
 
 val rand: ThreadLocalRandom
     get() = ThreadLocalRandom.current()
@@ -125,54 +109,45 @@ class FortuneTemplate(
     }
 }
 
-fun main() {
+fun Application.main() {
     val db = PgclientRepository()
 
-    val server = embeddedServer(Netty, 8080, configure = {
-        shareWorkGroup = true
-    }) {
-        install(DefaultHeaders)
-        routing {
-            get("/plaintext") {
-                call.respondText("Hello, World!")
-            }
+    install(DefaultHeaders)
+    routing {
+        get("/plaintext") {
+            call.respondText("Hello, World!")
+        }
 
-            get("/json") {
-                call.respondText(
-                    Json.encodeToString(Message("Hello, World!")),
-                    ContentType.Application.Json
-                )
-            }
+        get("/json") {
+            call.respondJson(Message("Hello, World!"))
+        }
 
-            get("/db") {
-                call.respondText(Json.encodeToString(db.getWorld()), ContentType.Application.Json)
-            }
+        get("/db") {
+            call.respondJson(db.getWorld())
+        }
 
-            get("/query") {
-                val queries = call.parameters["queries"]?.toBoxedInt(1..500) ?: 1
-                val worlds = List(queries) { db.getWorld() }
-                call.respondText(Json.encodeToString(worlds), ContentType.Application.Json)
-            }
+        get("/query") {
+            val queries = call.parameters["queries"]?.toBoxedInt(1..500) ?: 1
+            val worlds = List(queries) { db.getWorld() }
+            call.respondJson(worlds)
+        }
 
-            get("/fortunes") {
-                val newFortune = Fortune(0, "Additional fortune added at request time.")
-                val fortunes = db.getFortunes().toMutableList()
-                fortunes.add(newFortune)
-                fortunes.sortBy { it.message }
-                call.respondHtmlTemplate(FortuneTemplate(fortunes)) { }
-            }
+        get("/fortunes") {
+            val newFortune = Fortune(0, "Additional fortune added at request time.")
+            val fortunes = db.getFortunes().toMutableList()
+            fortunes.add(newFortune)
+            fortunes.sortBy { it.message }
+            call.respondHtmlTemplate(FortuneTemplate(fortunes)) { }
+        }
 
-            get("/updates") {
-                val queries = call.parameters["queries"]?.toBoxedInt(1..500) ?: 1
-                val worlds = List(queries) { db.getWorld() }
-                val newWorlds = worlds.map { it.copy(randomNumber = rand.nextInt(1, 10001)) }
+        get("/updates") {
+            val queries = call.parameters["queries"]?.toBoxedInt(1..500) ?: 1
+            val worlds = List(queries) { db.getWorld() }
+            val newWorlds = worlds.map { it.copy(randomNumber = rand.nextInt(1, 10001)) }
 
-                db.updateWorlds(newWorlds)
+            db.updateWorlds(newWorlds)
 
-                call.respondText(Json.encodeToString(newWorlds), ContentType.Application.Json)
-            }
+            call.respondJson(newWorlds)
         }
     }
-
-    server.start(wait = true)
 }

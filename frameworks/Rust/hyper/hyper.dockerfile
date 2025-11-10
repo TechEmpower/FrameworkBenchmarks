@@ -1,11 +1,8 @@
-FROM rust:1.67
+FROM rust:1.85 AS hyper
 
-ADD ./ /hyper
-WORKDIR /hyper
-
-RUN cargo clean
-RUN RUSTFLAGS="-C target-cpu=native" cargo build --release
-
+WORKDIR /src
+COPY . .
+RUN RUSTFLAGS="-C target-cpu=native" cargo install --path . --locked
 EXPOSE 8080
-
-CMD ["./target/release/hyper-techempower"]
+CMD ["hyper-techempower"]
+HEALTHCHECK CMD curl --fail http://localhost:8080/ping || exit 1

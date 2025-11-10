@@ -1,18 +1,18 @@
-FROM ubuntu:20.04
+FROM ubuntu:24.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update -yqq && apt-get install -yqq software-properties-common > /dev/null
-RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php
+RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php > /dev/null
 RUN apt-get update -yqq > /dev/null && \
-    apt-get install -yqq git php8.3-cli php8.3-mongodb php8.3-xml php8.3-mbstring > /dev/null
+    apt-get install -yqq git php8.4-cli php8.4-mongodb php8.4-xml php8.4-mbstring > /dev/null
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
-RUN apt-get install -y php-pear php8.3-dev libevent-dev > /dev/null
-RUN pecl install event-3.1.3 > /dev/null && echo "extension=event.so" > /etc/php/8.3/cli/conf.d/event.ini
+RUN apt-get install -y php-pear php8.4-dev libevent-dev > /dev/null
+RUN pecl install event-3.1.4 > /dev/null && echo "extension=event.so" > /etc/php/8.4/cli/conf.d/event.ini
 
-COPY deploy/conf/php-async.ini /etc/php/8.3/cli/php.ini
+COPY deploy/conf/php-async.ini /etc/php/8.4/cli/php.ini
 
 ADD ./ /ubiquity
 
@@ -31,8 +31,8 @@ RUN chmod 777 -R /ubiquity/.ubiquity/*
 
 COPY deploy/conf/workerman/mongo/workerServices.php app/config/workerServices.php
 
-RUN echo "opcache.preload=/ubiquity/app/config/preloader.script.php" >> /etc/php/8.3/cli/php.ini
-RUN echo "opcache.jit_buffer_size=128M\nopcache.jit=tracing\n" >> /etc/php/8.3/cli/php.ini
+RUN echo "opcache.preload=/ubiquity/app/config/preloader.script.php" >> /etc/php/8.4/cli/php.ini
+RUN echo "opcache.jit_buffer_size=128M\nopcache.jit=tracing\n" >> /etc/php/8.4/cli/php.ini
 
 EXPOSE 8080
 

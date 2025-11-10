@@ -11,52 +11,32 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>8</java.version>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
-        <maven.compiler.compilerVersion>8</maven.compiler.compilerVersion>
+        <java.version>21</java.version>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <maven.compiler.compilerVersion>21</maven.compiler.compilerVersion>
         <edap.version>0.1-SNAPSHOT</edap.version>
-        <edap.name>edapx</edap.name>
+        <edap.name>edap</edap.name>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>io.edap</groupId>
-            <artifactId>${edap.name}-http</artifactId>
+            <artifactId>${edap.name}-http-server</artifactId>
             <version>${edap.version}</version>
         </dependency>
     </dependencies>
 
     <repositories>
         <repository>
-            <id>central</id>
-            <name>Central Repository</name>
-            <url>https://repo.maven.apache.org/maven2</url>
-        </repository>
-        <repository>
-            <id>sonatype-nexus-snapshots</id>
-            <name>Sonatype Nexus Snapshots</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </repository>
-    </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>central</id>
-            <name>Central Repository</name>
-            <url>https://repo.maven.apache.org/maven2</url>
-        </pluginRepository>
-        <pluginRepository>
-            <id>sonatype-nexus-snapshots</id>
-            <name>Sonatype Nexus Snapshots</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
+            <id>ossrh</id>
+            <name>ossrh</name>
+            <url>https://central.sonatype.com/repository/maven-snapshots/</url>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
-        </pluginRepository>
-    </pluginRepositories>
+        </repository>
+    </repositories>
     <build>
         <plugins>
 
@@ -67,8 +47,8 @@
                 <version>3.8.0</version>
                 <configuration>
                     <debug>false</debug>
-                    <source>8</source>
-                    <target>8</target>
+                    <source>21</source>
+                    <target>21</target>
                 </configuration>
             </plugin>
 
