@@ -19,6 +19,10 @@ public class Program
         {
             config.SetListenIPHosts(8080)
             .SetMaxCount(1000000)
+            .SetTransportOption(options =>
+            {
+                options.BufferOnDemand = false;
+            })
            .ConfigureContainer(a =>
            {
                a.AddConsoleLogger();

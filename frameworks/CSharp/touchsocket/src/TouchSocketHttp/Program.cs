@@ -16,6 +16,10 @@ public class Program
         await service.SetupAsync(new TouchSocketConfig()
              .SetListenIPHosts(port)
              .SetMaxCount(1000000)
+              .SetTransportOption(options =>
+              {
+                  options.BufferOnDemand = false;
+              })
              .ConfigureContainer(a =>
              {
                  a.AddConsoleLogger();
