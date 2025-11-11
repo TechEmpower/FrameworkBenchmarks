@@ -19,6 +19,10 @@ public class Program
         {
             config.SetListenIPHosts(8080)
             .SetMaxCount(1000000)
+            .SetTransportOption(options =>
+            {
+                options.BufferOnDemand = true;
+            })
            .ConfigureContainer(a =>
            {
                a.AddConsoleLogger();
@@ -45,7 +49,7 @@ public class Program
            });
         });
 
-        var host = builder.Build();
+        IHost host = builder.Build();
         host.Run();
     }
 }
@@ -60,7 +64,7 @@ public partial class ApiServer : SingletonRpcServer
     [WebApi(Method = HttpMethodType.Get)]
     public async Task Plaintext(IWebApiCallContext callContext)
     {
-        var response = callContext.HttpContext.Response;
+        HttpResponse response = callContext.HttpContext.Response;
         response.SetStatus(200, "ok");
         response.Content = m_contentPlaintext;
         await response.AnswerAsync().ConfigureAwait(false);
