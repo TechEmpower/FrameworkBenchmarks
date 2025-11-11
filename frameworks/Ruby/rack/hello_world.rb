@@ -6,6 +6,7 @@ require_relative 'pg_db'
 require_relative 'config/auto_tune'
 require 'rack'
 require 'json'
+require 'erb'
 
 if RUBY_PLATFORM == 'java'
   DEFAULT_DATABASE_URL = 'jdbc:postgresql://tfb-database/hello_world?user=benchmarkdbuser&password=benchmarkdbpass'
