@@ -1,9 +1,11 @@
-﻿using EmbedIO;
-using Swan.Logging;
-using System;
+﻿using System;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+
+using EmbedIO;
+
+using Swan.Logging;
 
 namespace Benchmarks
 {
@@ -21,7 +23,7 @@ namespace Benchmarks
 
     public static class Program
     {
-        private static readonly ManualResetEvent _WaitEvent = new ManualResetEvent(false);
+        private static readonly ManualResetEvent WaitEvent = new(false);
 
         public static async Task<int> Main(string[] args)
         {
@@ -60,12 +62,12 @@ namespace Benchmarks
             {
                 AppDomain.CurrentDomain.ProcessExit += (_, __) =>
                 {
-                    _WaitEvent.Set();
+                    WaitEvent.Set();
                 };
 
                 await server.RunAsync();
 
-                _WaitEvent.WaitOne();
+                WaitEvent.WaitOne();
 
                 return 0;
             }
