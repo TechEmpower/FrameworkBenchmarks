@@ -21,7 +21,7 @@
       "webserver": "GenHTTP",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "GenHTTP",
+      "display_name": "genhttp [internal]",
       "notes": ""
     }
   },
@@ -45,7 +45,7 @@
         "webserver": "Kestrel",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "ASP.NET Core [GenHTTP]",
+        "display_name": "genhttp [kestrel]",
         "notes": ""
       }
     }]
