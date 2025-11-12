@@ -30,6 +30,7 @@
       "symfony/polyfill-mbstring":"*",
       "symfony/polyfill-intl-idn": "*",
       "symfony/polyfill-intl-normalizer": "*",
+      "symfony/polyfill-intl-grapheme": "*",
       "symfony/polyfill-iconv": "*",
       "symfony/polyfill-php72": "*",
       "symfony/polyfill-php73": "*",

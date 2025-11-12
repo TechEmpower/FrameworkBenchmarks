@@ -8,7 +8,7 @@ RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php > /dev/null && \
 
 RUN apt-get install -yqq nginx git unzip curl \
     php8.4-cli php8.4-fpm php8.4-mysql  \
-    php8.4-mbstring php8.4-xml php8.4-curl php8.4-dev > /dev/null
+    php8.4-mbstring php8.4-xml php8.4-curl > /dev/null
 
 COPY --from=composer/composer:latest-bin --link /composer /usr/local/bin/composer
 
