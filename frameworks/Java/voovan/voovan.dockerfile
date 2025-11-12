@@ -5,7 +5,7 @@ COPY src src
 COPY config/framework.properties config/framework.properties
 RUN mvn package -q
 
-FROM openjdk:25-ea-slim-bullseye
+FROM amazoncorretto:25
 WORKDIR /voovan
 COPY --from=maven /voovan/target/voovan-bench-0.1-jar-with-dependencies.jar app.jar
 COPY --from=maven /voovan/config/framework.properties config/framework.properties

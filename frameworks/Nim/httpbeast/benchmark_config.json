@@ -19,6 +19,7 @@
         "database_os": "Linux",
         "display_name": "HttpBeast",
         "notes": "",
+        "tags": ["broken"],
         "versus": "None"
       }
     }

@@ -18,14 +18,14 @@ module Common =
         Database=hello_world;
         User Id=benchmarkdbuser;
         Password=benchmarkdbpass;
-        SSL Mode=Disable;
         Maximum Pool Size=1024;
         NoResetOnClose=true;
         Enlist=false;
-        Max Auto Prepare=4;
-        Multiplexing=true;
-        Write Coalescing Buffer Threshold Bytes=1000
+        Max Auto Prepare=4
         """
+
+    [<Literal>]
+    let MultiplexedConnectionString = ConnectionString + ";Multiplexing=true"
 
     [<Struct>]
     type JsonMode =
@@ -46,8 +46,43 @@ module Common =
 
         member _.Next () = rnd.Next (min, max)
 
-    [<Literal>]
-    let MaxDegreeOfParallelism = 3
+    // Cache SQL strings for bulk updates to avoid rebuilding on every request
+    // This module generates and caches SQL UPDATE statements that use PostgreSQL's
+    // VALUES clause to update multiple rows in a single statement.
+    module BatchUpdateSql =
+        let private cache = Array.zeroCreate<string> 501
+
+        let get (count: int) =
+            match cache.[count] with
+            | null ->
+                let lastIndex = count - 1
+
+                // Build the VALUES clause: (@Id_0, @Rn_0), (@Id_1, @Rn_1), ...
+                // Each pair represents (id, new_randomnumber) for one row
+                let valueClauses =
+                    List.init lastIndex (fun i -> sprintf "(@Id_%d, @Rn_%d), " i i)
+                    |> String.concat ""
+
+                // The final SQL uses a CTE-like VALUES construct to update multiple rows:
+                // UPDATE world SET randomnumber = temp.randomnumber
+                // FROM (VALUES ...) AS temp(id, randomnumber)
+                // WHERE temp.id = world.id
+                let sql =
+                    sprintf
+                        """
+                        UPDATE world
+                        SET randomnumber = temp.randomnumber
+                        FROM (VALUES %s(@Id_%d, @Rn_%d) ORDER BY 1)
+                        AS temp(id, randomnumber)
+                        WHERE temp.id = world.id
+                        """
+                        valueClauses
+                        lastIndex
+                        lastIndex
+
+                cache.[count] <- sql
+                sql
+            | sql -> sql
 
 [<RequireQualifiedAccess>]
 module HtmlViews =
@@ -87,10 +122,12 @@ module HttpHandlers =
         message = "Additional fortune added at request time."
     }
 
-    let private fortunes: HttpHandler =
+    let fortunes: HttpHandler =
         fun _ ctx ->
             task {
-                use conn = new NpgsqlConnection (ConnectionString)
+                let dataSource = ctx.GetService<NpgsqlDataSource> ()
+                use conn = dataSource.CreateConnection ()
+                do! conn.OpenAsync ()
 
                 let! data = conn.QueryAsync<Fortune> ("SELECT id, message FROM fortune")
 
@@ -106,11 +143,13 @@ module HttpHandlers =
                 return! ctx.WriteBytesAsync bytes
             }
 
-    let private db: HttpHandler =
+    let db: HttpHandler =
         fun _ ctx ->
             task {
                 let rnd = ctx.GetService<RandomUtil> ()
-                use conn = new NpgsqlConnection (ConnectionString)
+                let dataSource = ctx.GetService<NpgsqlDataSource> ()
+                use conn = dataSource.CreateConnection ()
+                do! conn.OpenAsync ()
 
                 let! data =
                     conn.QuerySingleAsync<World> (
@@ -121,7 +160,43 @@ module HttpHandlers =
                 return! ctx.WriteJsonAsync data
             }
 
-    let private queries: HttpHandler =
+    let queries: HttpHandler =
+        fun _ ctx ->
+            task {
+                let queryParam =
+                    ctx.TryGetQueryStringValue "queries"
+                    |> Option.map (fun value ->
+                        match System.Int32.TryParse value with
+                        | true, intValue ->
+                            if intValue < 1 then 1
+                            elif intValue > 500 then 500
+                            else intValue
+                        | false, _ -> 1
+                    )
+                    |> Option.defaultValue 1
+
+                let rnd = ctx.GetService<RandomUtil> ()
+                let dataSource = ctx.GetService<NpgsqlDataSource> ()
+
+                use conn = dataSource.CreateConnection ()
+                do! conn.OpenAsync ()
+
+                // Read all rows sequentially
+                let results = Array.zeroCreate<World> queryParam
+
+                for i in 0 .. queryParam - 1 do
+                    let! world =
+                        conn.QuerySingleAsync<World> (
+                            "SELECT id, randomnumber FROM world WHERE id = @Id",
+                            {| Id = rnd.Next () |}
+                        )
+
+                    results.[i] <- world
+
+                return! ctx.WriteJsonAsync results
+            }
+
+    let updates: HttpHandler =
         fun _ ctx ->
             task {
                 let queryParam =
@@ -138,29 +213,57 @@ module HttpHandlers =
 
                 let rnd = ctx.GetService<RandomUtil> ()
 
-                let! res =
-                    Array.init queryParam (fun _ -> rnd.Next ())
-                    |> Array.map (fun id ->
-                        use conn = new NpgsqlConnection (ConnectionString)
+                // Use multiplexed connection for updates (more efficient for sequential ops)
+                use conn = new NpgsqlConnection (MultiplexedConnectionString)
+                do! conn.OpenAsync ()
 
+                // Read all rows sequentially
+                let readResults = Array.zeroCreate<World> queryParam
+
+                for i in 0 .. queryParam - 1 do
+                    let! world =
                         conn.QuerySingleAsync<World> (
                             "SELECT id, randomnumber FROM world WHERE id = @Id",
-                            {| Id = id |}
+                            {| Id = rnd.Next () |}
                         )
-                        |> Async.AwaitTask
-                    )
-                    |> fun computations ->
-                        Async.Parallel (computations, MaxDegreeOfParallelism)
 
-                return! ctx.WriteJsonAsync res
+                    readResults.[i] <- world
+
+                // Update random numbers functionally
+                let updatedData =
+                    readResults
+                    |> Array.map (fun data -> { data with randomNumber = rnd.Next () })
+
+                // Build bulk update parameters functionally
+                // We use a single UPDATE statement with a VALUES clause to update all rows at once.
+                //
+                // Example SQL for 2 rows:
+                // UPDATE world SET randomnumber = temp.randomnumber
+                // FROM (VALUES (@Id_0, @Rn_0), (@Id_1, @Rn_1) ORDER BY 1) AS temp(id, randomnumber)
+                // WHERE temp.id = world.id
+                let updateParams =
+                    updatedData
+                    |> Array.mapi (fun i data -> [
+                        sprintf "@Id_%d" i, box data.id // Parameter for the id
+                        sprintf "@Rn_%d" i, box data.randomNumber // Parameter for the new random number
+                    ])
+                    |> Array.collect List.toArray // Flatten the list of parameter pairs
+                    |> dict // Convert to dictionary for Dapper
+
+                // Execute bulk update using Dapper
+                let sql = BatchUpdateSql.get queryParam
+                let! _ = conn.ExecuteAsync (sql, updateParams)
+
+                return! ctx.WriteJsonAsync updatedData
             }
 
     let endpoints: Endpoint list = [
-        route "/plaintext" (text "Hello, World!")
         route "/json" (json {| message = "Hello, World!" |})
         route "/db" db
         route "/queries" queries
         route "/fortunes" fortunes
+        route "/updates" updates
+        route "/plaintext" (text "Hello, World!")
     ]
 
 
@@ -173,6 +276,7 @@ module Main =
     open Microsoft.Extensions.Logging
     open System.Text.Json
     open Newtonsoft.Json
+    open Npgsql
 
     [<EntryPoint>]
     let main args =
@@ -202,6 +306,7 @@ module Main =
         builder.Services
             .AddSingleton(jsonSerializer)
             .AddSingleton<RandomUtil>(rnd)
+            .AddSingleton<NpgsqlDataSource>(NpgsqlDataSource.Create (ConnectionString))
             .AddGiraffe ()
         |> ignore
 

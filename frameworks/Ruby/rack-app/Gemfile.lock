@@ -1,0 +1,51 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    concurrent-ruby (1.3.5)
+    date (3.5.0)
+    erb (5.1.3)
+    io-console (0.8.1)
+    irb (1.15.3)
+      pp (>= 0.6.0)
+      rdoc (>= 4.0.0)
+      reline (>= 0.4.2)
+    json (2.15.2)
+    logger (1.7.0)
+    nio4r (2.7.5)
+    pp (0.6.3)
+      prettyprint
+    prettyprint (0.2.0)
+    psych (5.2.6)
+      date
+      stringio
+    puma (7.1.0)
+      nio4r (~> 2.0)
+    rack (3.2.4)
+    rack-app (11.0.2)
+      rack (>= 3.0.0)
+      rackup
+    rackup (2.2.1)
+      rack (>= 3)
+    rdoc (6.15.1)
+      erb
+      psych (>= 4.0.0)
+      tsort
+    reline (0.6.2)
+      io-console (~> 0.5)
+    stringio (3.1.7)
+    tsort (0.2.0)
+
+PLATFORMS
+  arm64-darwin-24
+  ruby
+
+DEPENDENCIES
+  concurrent-ruby
+  irb
+  json (~> 2.10)
+  logger
+  puma (~> 7.1)
+  rack-app
+
+BUNDLED WITH
+   2.7.2
