@@ -5,11 +5,11 @@ ENV GENHTTP_ENGINE_NAME=INTERNAL
 ENV GENHTTP_ENGINE_PACKAGE=GenHTTP.Core
 
 # copy csproj and restore as distinct layers
-COPY internal/*.csproj .
+COPY Benchmarks/*.csproj .
 RUN dotnet restore -r linux-musl-x64
 
 # copy and publish app and libraries
-COPY internal/ .
+COPY Benchmarks/ .
 RUN dotnet publish -c release -o /app -r linux-musl-x64 --no-restore --self-contained
 
 # final stage/image
