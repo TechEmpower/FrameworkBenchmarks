@@ -4,11 +4,7 @@ FROM ubuntu:24.04
 COPY concurrency.sh pipeline.lua pipeline.sh query.sh ./
 
 ARG DEBIAN_FRONTEND=noninteractive
-RUN apt-get -yqq update >/dev/null && \
-    apt-get -yqq install >/dev/null \
-      curl \
-      wrk && \
-    chmod 777 concurrency.sh pipeline.sh query.sh
+RUN apt-get install --no-install-recommends -qqUy curl wrk > /dev/null
 
 # Environment vars required by the wrk scripts with nonsense defaults
 ENV accept=accept \

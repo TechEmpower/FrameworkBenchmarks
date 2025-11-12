@@ -24,7 +24,7 @@ public class Util {
     return 1 + ThreadLocalRandom.current().nextInt(10000);
   }
 
-  public static int boxedRandomWorld() {
+  public static Integer boxedRandomWorld() {
     final int rndValue = ThreadLocalRandom.current().nextInt(1, 10001);
     return BOXED_RND[rndValue - 1];
   }

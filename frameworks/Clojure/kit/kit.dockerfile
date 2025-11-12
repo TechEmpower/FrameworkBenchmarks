@@ -6,7 +6,7 @@ COPY . /
 
 RUN clj -Sforce -T:build all
 
-FROM openjdk:25-jdk-slim
+FROM amazoncorretto:25
 
 COPY --from=build /target/te-bench-standalone.jar /te-bench/te-bench-standalone.jar
 

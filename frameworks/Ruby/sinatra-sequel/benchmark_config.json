@@ -18,7 +18,7 @@
         "webserver": "Puma",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "sinatra-sequel-puma-mri",
+        "display_name": "sinatra-sequel [puma, mysql]",
         "versus": "rack-sequel-puma-mri",
         "notes": ""
       },
@@ -38,7 +38,7 @@
         "webserver": "Puma",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "sinatra-sequel-postgres-puma-mri",
+        "display_name": "sinatra-sequel [puma, postgres]",
         "versus": "rack-sequel-postgres-puma-mri",
         "notes": ""
       },
@@ -58,7 +58,7 @@
         "webserver": "Iodine",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "sinatra-sequel-postgres-iodine-mri",
+        "display_name": "sinatra-sequel [iodine, postgres]",
         "versus": "rack-sequel-postgres-iodine-mri",
         "notes": ""
       }

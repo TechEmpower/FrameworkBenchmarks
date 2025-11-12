@@ -4,7 +4,7 @@ COPY src src
 COPY project.clj project.clj
 RUN lein uberjar
 
-FROM openjdk:25-jdk-slim
+FROM amazoncorretto:25
 COPY --from=lein /donkey/target/hello-donkey-standalone.jar  app.jar
 
 EXPOSE 8080
