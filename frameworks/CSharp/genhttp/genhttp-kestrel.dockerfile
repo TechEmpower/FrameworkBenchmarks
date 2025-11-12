@@ -15,9 +15,15 @@ RUN dotnet publish -c release -o /app -r linux-musl-x64 --no-restore --self-cont
 # final stage/image
 FROM mcr.microsoft.com/dotnet/runtime-deps:10.0-alpine
 
-ENV DOTNET_GCDynamicAdaptationMode=0
-ENV DOTNET_ReadyToRun=0
-ENV DOTNET_HillClimbing_Disable=1
+ENV DOTNET_GCDynamicAdaptationMode=0 \
+    DOTNET_EnableDiagnostics=0 \
+    COMPlus_EnableDiagnostics=0 \
+    COMPlus_DbgEnableMiniDump=0 \
+    COMPlus_DbgEnableMiniDumpCollection=0 \
+    COMPlus_DbgMiniDumpType=0 \
+    DOTNET_TieredPGO=0 \
+    DOTNET_TC_QuickJitForLoops=1 \
+    DOTNET_TC_QuickJit=1    
 
 WORKDIR /app
 COPY --from=build /app .

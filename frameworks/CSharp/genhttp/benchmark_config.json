@@ -1,5 +1,6 @@
 {
-  "framework": "genhttp",
+  "framework": "genhttp",  
+  "maintainers": ["Kaliumhexacyanoferrat"],
   "tests": [{
     "default": {
       "plaintext_url": "/plaintext",
@@ -44,7 +45,7 @@
         "webserver": "Kestrel",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "GenHTTP [Kestrel]",
+        "display_name": "ASP.NET Core [GenHTTP]",
         "notes": ""
       }
     }]
