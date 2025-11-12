@@ -20,6 +20,7 @@
       "database_os": "Linux",
       "display_name": "fuel",
       "notes": "",
+      "tags": ["broken"],
       "versus": "php"
     }
   }]

@@ -39,6 +39,7 @@
       "database_os": "Linux",
       "display_name": "plack-async",
       "notes": "",
+      "tags": ["broken"],
       "versus": "plack"
     }
   }]
