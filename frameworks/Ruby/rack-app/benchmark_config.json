@@ -1,0 +1,27 @@
+{
+  "framework": "rack-app",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
+        "fortune_url": "/fortunes",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "orm": "Full",
+        "database": "Postgres",
+        "framework": "rack-app",
+        "language": "Ruby",
+        "platform": "Mri",
+        "webserver": "Iodine",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "rack-app",
+        "notes": ""
+      }
+    }
+  ]
+}

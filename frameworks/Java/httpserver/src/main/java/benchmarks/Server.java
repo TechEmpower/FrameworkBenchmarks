@@ -52,12 +52,23 @@ public class Server {
     }
 
     private static DataSource createPostgresDataSource() throws ClassNotFoundException {
-        Class.forName("org.postgresql.Driver");
         HikariConfig config = new HikariConfig();
+
         config.setJdbcUrl("jdbc:postgresql://tfb-database:5432/hello_world");
         config.setUsername("benchmarkdbuser");
         config.setPassword("benchmarkdbpass");
-        config.setMaximumPoolSize(512);
+
+        config.setMaximumPoolSize(64);
+        config.setMinimumIdle(16);
+
+        config.setConnectionTimeout(10000);
+        config.setIdleTimeout(600000);
+        config.setMaxLifetime(1800000);
+
+        config.setAutoCommit(true);
+
+        config.setPoolName("PostgreSQL-HikariCP-Pool");
+
         return new HikariDataSource(config);
     }
 

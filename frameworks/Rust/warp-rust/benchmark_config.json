@@ -22,6 +22,7 @@
         "database_os": "Linux",
         "display_name": "warp-rust",
         "notes": "",
+        "tags": ["broken"],
         "versus": "None"
       }
     }

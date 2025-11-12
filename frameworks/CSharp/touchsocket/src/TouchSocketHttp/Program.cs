@@ -10,12 +10,16 @@ public class Program
 {
     private static async Task Main(string[] args)
     {
-        var port = 8080;
+        int port = 8080;
         var service = new MyHttpService();
 
         await service.SetupAsync(new TouchSocketConfig()
              .SetListenIPHosts(port)
              .SetMaxCount(1000000)
+              .SetTransportOption(options =>
+              {
+                  options.BufferOnDemand = true;
+              })
              .ConfigureContainer(a =>
              {
                  a.AddConsoleLogger();

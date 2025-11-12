@@ -22,6 +22,10 @@ group :iodine, optional: true do
   gem 'iodine', '~> 0.7', platforms: %i[ruby windows]
 end
 
+group :itsi, optional: true do
+  gem 'itsi'
+end
+
 group :passenger, optional: true do
   gem 'logger' # required by passenger on Ruby 3.5
   gem 'passenger', '~> 6.1', platforms: [:ruby, :windows], require: false
