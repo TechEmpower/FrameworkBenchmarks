@@ -1,15 +1,15 @@
 FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS build
 WORKDIR /source
 
-ENV GENHTTP_ENGINE_NAME=INTERNAL
-ENV GENHTTP_ENGINE_PACKAGE=GenHTTP.Core
+ENV GENHTTP_ENGINE_NAME=KESTREL
+ENV GENHTTP_ENGINE_PACKAGE=GenHTTP.Core.Kestrel
 
 # copy csproj and restore as distinct layers
-COPY internal/*.csproj .
+COPY kestrel/*.csproj .
 RUN dotnet restore -r linux-musl-x64
 
 # copy and publish app and libraries
-COPY internal/ .
+COPY kestrel/ .
 RUN dotnet publish -c release -o /app -r linux-musl-x64 --no-restore --self-contained
 
 # final stage/image
