@@ -70,11 +70,11 @@ if (isset($_SERVER['SERVER_ADDR'])) {
 }
 
 // operation constants
-define('OB_HOST_STATS',1);
-define('OB_SYS_CACHE',2);
-define('OB_USER_CACHE',3);
-define('OB_SYS_CACHE_DIR',4);
-define('OB_VERSION_CHECK',9);
+const OB_HOST_STATS = 1;
+const OB_SYS_CACHE = 2;
+const OB_USER_CACHE = 3;
+const OB_SYS_CACHE_DIR = 4;
+const OB_VERSION_CHECK = 9;
 
 // check validity of input variables
 $vardom=array(
