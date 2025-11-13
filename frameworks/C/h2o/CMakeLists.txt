@@ -19,9 +19,8 @@ find_path(PQ_INCLUDE postgresql/libpq-fe.h REQUIRED)
 find_path(YAJL_INCLUDE yajl/yajl_gen.h REQUIRED)
 find_program(BPFTOOL_BIN bpftool REQUIRED)
 find_program(CLANG_BIN clang REQUIRED)
-include_directories(src ${CMAKE_BINARY_DIR}/generated-headers ${BPF_INCLUDE} ${H2O_INCLUDE})
-include_directories(${MUSTACHE_C_INCLUDE} ${NUMA_INCLUDE} ${OPENSSL_INCLUDE} ${PQ_INCLUDE})
-include_directories(${YAJL_INCLUDE})
+include_directories(src ${CMAKE_BINARY_DIR} ${BPF_INCLUDE} ${H2O_INCLUDE} ${MUSTACHE_C_INCLUDE})
+include_directories(${NUMA_INCLUDE} ${OPENSSL_INCLUDE} ${PQ_INCLUDE} ${YAJL_INCLUDE})
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 add_compile_definitions(H2O_USE_LIBUV=0)
@@ -32,7 +31,7 @@ set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -D_FORTIFY_SOURCE=2")
 set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O3")
 set(CMAKE_C_FLAGS_RELWITHDEBINFO "${CMAKE_C_FLAGS_RELWITHDEBINFO} -O3")
 add_custom_command(
-  OUTPUT ${CMAKE_BINARY_DIR}/generated-headers/socket_load_balancer.h
+  OUTPUT ${CMAKE_BINARY_DIR}/socket_load_balancer.h
   COMMAND ${CLANG_BIN}
             -c
             -DNDEBUG
@@ -47,12 +46,12 @@ add_custom_command(
             ${WARNING_OPTIONS}
             ${CMAKE_CURRENT_SOURCE_DIR}/src/bpf/socket_load_balancer.c
   COMMAND ${BPFTOOL_BIN} gen skeleton ${CMAKE_BINARY_DIR}/socket_load_balancer.o >
-            ${CMAKE_BINARY_DIR}/generated-headers/socket_load_balancer.h
+            ${CMAKE_BINARY_DIR}/socket_load_balancer.h
   DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/src/bpf/socket_load_balancer.c
   VERBATIM)
 add_custom_target(
   generated_headers
-  DEPENDS ${CMAKE_BINARY_DIR}/generated-headers/socket_load_balancer.h)
+  DEPENDS ${CMAKE_BINARY_DIR}/socket_load_balancer.h)
 file(GLOB_RECURSE HANDLER_SOURCES "src/handlers/*.c")
 file(GLOB SOURCES "src/*.c")
 add_executable(${PROJECT_NAME} ${HANDLER_SOURCES} ${SOURCES})

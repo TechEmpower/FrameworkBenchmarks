@@ -2,11 +2,12 @@
 name = "giraffe"
 
 [main]
-urls.plaintext = "/plaintext"
 urls.json = "/json"
 urls.db = "/db"
 urls.query = "/queries?queries="
 urls.fortune = "/fortunes"
+urls.update = "/updates?queries="
+urls.plaintext = "/plaintext"
 approach = "Realistic"
 classification = "fullstack"
 database = "Postgres"

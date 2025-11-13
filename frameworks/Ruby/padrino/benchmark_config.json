@@ -3,28 +3,6 @@
   "tests": [{
     "default": {
       "json_url": "/json",
-      "db_url": "/db", 
-      "query_url": "/queries?queries=", 
-      "fortune_url": "/fortunes",
-      "update_url": "/updates?queries=", 
-      "plaintext_url": "/plaintext",
-      "port": 8080,
-      "approach": "Realistic",
-      "classification": "Micro",
-      "database": "MySQL",
-      "framework": "padrino",
-      "language": "Ruby",
-      "orm": "Full",
-      "platform": "Rack",
-      "webserver": "Puma",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "padrino [puma]",
-      "notes": "",
-      "versus": "rack-puma-mri"
-    },
-    "unicorn": {
-      "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries?queries=",
       "fortune_url": "/fortunes",
@@ -38,12 +16,12 @@
       "language": "Ruby",
       "orm": "Full",
       "platform": "Rack",
-      "webserver": "Unicorn",
+      "webserver": "Iodine",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "padrino [unicorn]",
+      "display_name": "padrino",
       "notes": "",
-      "versus": "rack-unicorn"
+      "versus": "rack-iodine"
     }
   }]
 }

@@ -198,7 +198,7 @@
 			"display_name": "ffead-cpp [pg-raw-async-prof-pool-m]",
 			"notes": "async memory profiled",
 			"versus": "",
-			"tags": []
+			"tags": ["broken"]
 		},
 		"postgresql-raw-async-clibpqb-profiled": {
 			"db_url": "/t4/d",
@@ -301,7 +301,7 @@
 			"display_name": "ffead-cpp [pg-raw-async-qw-prof-pool-m]",
 			"notes": "async memory profiled",
 			"versus": "",
-			"tags": []
+			"tags": ["broken"]
 		}
 	}]
 }

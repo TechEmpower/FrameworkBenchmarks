@@ -22,7 +22,8 @@
       "database_os": "Linux",
       "display_name": "wildfly-ee",
       "notes": "",
+      "tags": ["broken"],
       "versus": ""
-    }   
+    }
   }]
 }
