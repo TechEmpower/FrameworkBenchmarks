@@ -1,8 +1,8 @@
 FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS build
 WORKDIR /source
 
-ENV GENHTTP_ENGINE_NAME=INTERNAL
-ENV GENHTTP_ENGINE_PACKAGE=GenHTTP.Core
+ENV GENHTTP_ENGINE_NAME=KESTREL
+ENV GENHTTP_ENGINE_PACKAGE=GenHTTP.Core.Kestrel
 
 # copy csproj and restore as distinct layers
 COPY Benchmarks/*.csproj .
