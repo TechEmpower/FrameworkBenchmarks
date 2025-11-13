@@ -11,7 +11,7 @@ module HelloWorld
 
     def set_headers(*, response)
       response.headers['Server'] = 'hanami'
-      response.headers['Date'] = Time.now.httpdate
+      response.headers['Date'] = Time.now.httpdate if defined?(Puma)
     end
   end
 end
