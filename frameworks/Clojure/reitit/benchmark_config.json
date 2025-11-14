@@ -54,7 +54,8 @@
       "database_os": "Linux",
       "display_name": "reitit-async",
       "notes": "",
-      "versus": "undertow"
+      "versus": "undertow",
+      "tags": ["broken"]
     }
   }]
 }

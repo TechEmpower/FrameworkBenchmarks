@@ -4,7 +4,7 @@ COPY project.clj project.clj
 COPY src src
 RUN lein uberjar
 
-FROM openjdk:25-jdk-slim
+FROM amazoncorretto:25
 WORKDIR /reitit
 COPY --from=lein /reitit/target/hello-reitit-standalone.jar app.jar
 
