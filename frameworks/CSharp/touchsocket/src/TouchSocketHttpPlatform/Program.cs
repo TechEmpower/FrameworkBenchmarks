@@ -20,10 +20,20 @@ internal class Program
     private static async Task Main(string[] args)
     {
         var server = new MyServer();
-        await server.StartAsync(8080);
+        await server.SetupAsync(new TouchSocketConfig()
+            .SetListenIPHosts(8080)
+            .SetMaxCount(1000000)
+            .ConfigureContainer(a =>
+            {
+                a.AddConsoleLogger();
+            }));
 
+        await server.StartAsync();
         Console.WriteLine("HTTP服务器已启动，端口: 8080");
-        Console.ReadLine();
-        server.SafeDispose();
+        
+        while (true)
+        {
+            Console.ReadLine();
+        }
     }
 }
