@@ -23,7 +23,7 @@ internal class Program
         await server.StartAsync(8080);
 
         Console.WriteLine("HTTP服务器已启动，端口: 8080");
-        Console.ReadKey();
+        Console.ReadLine();
         server.SafeDispose();
     }
 }
