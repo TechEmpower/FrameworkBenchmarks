@@ -1,7 +1,6 @@
 using System.Text;
 using TouchSocket.Core;
 using TouchSocket.Http;
-using TouchSocket.Sockets;
 using HttpContent = TouchSocket.Http.HttpContent;
 
 namespace TouchSocketHttp;
@@ -18,7 +17,7 @@ public class Program
              .SetMaxCount(1000000)
               .SetTransportOption(options =>
               {
-                  options.BufferOnDemand = true;
+                  options.BufferOnDemand = false;
               })
              .ConfigureContainer(a =>
              {
