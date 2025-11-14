@@ -5,7 +5,6 @@
 		<Nullable>enable</Nullable>
 		<OutputType>Exe</OutputType>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<ServerGarbageCollection>true</ServerGarbageCollection>
 		<UserSecretsId>dotnet-TouchSocketWebApi-987c185f-10b1-452b-beb6-47d798a5a131</UserSecretsId>
 	</PropertyGroup>
 

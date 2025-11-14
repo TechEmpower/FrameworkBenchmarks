@@ -12,7 +12,7 @@
 
 using TouchSocket.Sockets;
 
-namespace HttpServerLinePerformanceConsoleApp;
+namespace TouchSocketHttpPlatform;
 
 internal sealed class MyServer : TcpService<MyTcpSessionClientBase>
 {

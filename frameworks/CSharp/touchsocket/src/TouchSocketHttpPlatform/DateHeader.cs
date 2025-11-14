@@ -15,7 +15,7 @@ using System.Diagnostics;
 using TouchSocket.Core;
 using TouchSocket.Sockets;
 
-namespace HttpServerLinePerformanceConsoleApp;
+namespace TouchSocketHttpPlatform;
 
 internal static class DateHeader
 {

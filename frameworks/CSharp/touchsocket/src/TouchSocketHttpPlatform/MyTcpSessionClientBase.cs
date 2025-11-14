@@ -15,7 +15,7 @@ using System.IO.Pipelines;
 using System.Runtime.CompilerServices;
 using TouchSocket.Sockets;
 
-namespace HttpServerLinePerformanceConsoleApp;
+namespace TouchSocketHttpPlatform;
 
 /// <summary>
 /// 路由类型
