@@ -1,15 +1,20 @@
 package com.example.starter.handlers
 
+import com.example.starter.helpers.PeriodicResolver
 import com.example.starter.models.Message
 import com.example.starter.utils.serialize
-import io.vertx.ext.web.RoutingContext
+import io.vertx.core.Future
+import io.vertx.core.http.HttpServerRequest
 
 class MessageHandler : AbstractHandler() {
-    fun readDefaultMessage(ctx: RoutingContext) {
-        ctx.json().end(DEFAULT_MESSAGE.serialize(), NULL_HANDLER)
-    }
+    fun readDefaultMessage(req: HttpServerRequest): Future<Void> = req
+        .response().apply {
+            headers().setAll(PeriodicResolver.json)
+        }
+        .end(Message(MESSAGE).serialize())
 
     companion object {
-        private val DEFAULT_MESSAGE = Message("Hello, World!")
+        const val MESSAGE: String = "Hello, World!"
+        val DEFAULT_MESSAGE = Message(MESSAGE)
     }
 }
