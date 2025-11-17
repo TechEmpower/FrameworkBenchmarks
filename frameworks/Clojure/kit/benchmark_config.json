@@ -43,6 +43,24 @@
         "display_name": "kit-majavat",
         "notes": "",
         "versus": "kit"
+      },
+      "hiccup": {
+        "fortune_url": "/hiccup-fortunes",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "postgres",
+        "framework": "None",
+        "language": "Clojure",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "kit-hiccup",
+        "notes": "",
+        "versus": "kit"
       }
     }
   ]
