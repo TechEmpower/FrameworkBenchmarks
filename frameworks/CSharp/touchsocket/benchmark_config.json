@@ -77,6 +77,25 @@
         "display_name": "touchsocket.webapi31",
         "notes": "",
         "versus": "aspnetcore-mvc"
+      },
+      "httpplatform": {
+        "plaintext_url": "/plaintext",
+        "json_url": "/json",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "Postgres",
+        "framework": "touchsocket.httpplatform",
+        "language": "C#",
+        "orm": "Micro",
+        "platform": ".NET",
+        "flavor": "CoreCLR",
+        "webserver": "touchsocket",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "touchsocket.httpplatform",
+        "notes": "High-performance custom pipeline-based implementation variant.",
+        "versus": "aspnetcore"
       }
     }
   ]
