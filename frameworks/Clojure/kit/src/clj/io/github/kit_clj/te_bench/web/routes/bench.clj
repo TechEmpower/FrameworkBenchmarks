@@ -17,7 +17,10 @@
    ["/queries" {:get (partial bench/multi-db-handler db-conn)}]
    ["/updates" {:get (partial bench/update-db-handler db-conn)}]
    ["/cached-queries" {:get (partial bench/cached-query-handler db-conn cache)}]
-   ["/fortunes" {:get (partial bench/fortune-handler db-conn)}]])
+   ["/fortunes" {:get (partial bench/selmer-fortune-handler db-conn)}]
+   ["/majavat-fortunes" {:get (partial bench/majavat-fortune-handler db-conn)}]
+   ["/hiccup-fortunes" {:get (partial bench/hiccup-fortune-handler db-conn)}]
+   ])
 
 (defmethod ig/init-key :reitit.routes/bench
   [_ {:keys [base-path]
@@ -25,10 +28,7 @@
       :as   opts}]
   [base-path
    {:muuntaja   formats/instance
-    :middleware [;; query-params & form-params
-                 parameters/parameters-middleware
-                 ;; encoding response body
+    :middleware [parameters/parameters-middleware
                  muuntaja/format-response-middleware
-                 ;; default header middleware
                  default-headers/default-headers-middleware]}
    (bench-routes opts)])

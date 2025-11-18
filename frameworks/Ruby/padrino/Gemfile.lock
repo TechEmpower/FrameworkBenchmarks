@@ -66,8 +66,8 @@ GEM
     drb (2.2.1)
     i18n (1.14.7)
       concurrent-ruby (~> 1.0)
+    iodine (0.7.58)
     json (2.11.3)
-    kgio (2.11.4)
     logger (1.6.6)
     mail (2.8.1)
       mini_mime (>= 0.1.1)
@@ -93,10 +93,7 @@ GEM
       timeout
     net-smtp (0.5.1)
       net-protocol
-    nio4r (2.7.4)
-    puma (6.6.0)
-      nio4r (~> 2.0)
-    rack (3.1.12)
+    rack (3.1.18)
     rack-protection (4.1.1)
       base64 (>= 0.1.0)
       logger (>= 1.6.0)
@@ -106,7 +103,6 @@ GEM
       rack (>= 3.0.0)
     rackup (2.2.1)
       rack (>= 3)
-    raindrops (0.20.1)
     ruby2_keywords (0.0.5)
     securerandom (0.4.1)
     sinatra (4.1.1)
@@ -125,9 +121,6 @@ GEM
     timeout (0.4.3)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
-    unicorn (6.1.0)
-      kgio (~> 2.6)
-      raindrops (~> 0.7)
     uri (1.0.3)
 
 PLATFORMS
@@ -137,13 +130,12 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord (>= 7.1)
+  iodine (~> 0.7)
   json
   mysql2 (> 0.5)
   padrino!
-  puma (~> 6.4)
   rack
   slim (= 2.0.3)
-  unicorn (~> 6.1)
 
 BUNDLED WITH
    2.7.0

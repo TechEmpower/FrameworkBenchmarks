@@ -18,7 +18,7 @@
       "webserver": "Puma",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "grape-puma-mri",
+      "display_name": "grape [puma]",
       "notes": "",
       "versus": "rack-puma-mri"
     },
@@ -39,7 +39,7 @@
       "webserver": "Unicorn",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "grape-unicorn-mri",
+      "display_name": "grape [unicorn]",
       "notes": "",
       "versus": "rack-unicorn-mri"
     }

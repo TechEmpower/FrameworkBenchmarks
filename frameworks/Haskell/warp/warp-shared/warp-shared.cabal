@@ -1,4 +1,4 @@
-cabal-version:       2.4
+cabal-version:       3.8
 -- `cabal-version` MUST match the version bundled with stack.
 -- run `stack exec -- cabal --version` to find out
 name:                warp-shared
@@ -15,15 +15,15 @@ extra-source-files:  README.md
 common deps
   hs-source-dirs:      src
   other-modules:       Lib
-  default-language:    Haskell2010
+  default-language:    GHC2021
   ghc-options:         -Wall -threaded -rtsopts -O2 -funbox-strict-fields
   build-depends:
-      base >= 4.7 && < 5
+      base >= 4.18 && < 5
     , bytestring
     , text
     , attoparsec
     , buffer-builder
-    , type-of-html
+    , blaze-html
     , mwc-random
     , wai
     , warp
@@ -45,10 +45,10 @@ executable warp-mysql-haskell
       tfb-types
     , tfb-mysql-haskell
 
-executable warp-postgres-wire
+executable warp-postgres-simple
   import: deps
   main-is:
     Main.hs
   build-depends:
       tfb-types
-    , tfb-postgres-wire
+    , tfb-postgres-simple

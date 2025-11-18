@@ -9,6 +9,10 @@ RUN dotnet restore -r linux-musl-x64
 COPY sisk/ .
 RUN dotnet publish -c release -o /app -r linux-musl-x64
 
+ENV DOTNET_GCDynamicAdaptationMode=0
+ENV DOTNET_ReadyToRun=0
+ENV DOTNET_HillClimbing_Disable=1
+
 # final stage/image
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app

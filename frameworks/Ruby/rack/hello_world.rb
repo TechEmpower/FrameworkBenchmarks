@@ -6,6 +6,7 @@ require_relative 'pg_db'
 require_relative 'config/auto_tune'
 require 'rack'
 require 'json'
+require 'erb'
 
 if RUBY_PLATFORM == 'java'
   DEFAULT_DATABASE_URL = 'jdbc:postgresql://tfb-database/hello_world?user=benchmarkdbuser&password=benchmarkdbpass'
@@ -44,6 +45,10 @@ class HelloWorld
   def initialize
     if defined?(Puma) && (threads = Puma.cli_config.options.fetch(:max_threads)) > 1
       max_connections = threads
+    elsif defined?(Itsi)
+      require_relative 'config/auto_tune'
+      _num_workers, num_threads = auto_tune
+      max_connections = num_threads
     else
       max_connections = 512
     end
@@ -58,7 +63,7 @@ class HelloWorld
     buffer << TEMPLATE_PREFIX
 
     fortunes.each do |item|
-      buffer << "<tr><td>#{item[:id]}</td><td>#{Rack::Utils.escape_html(item[:message])}</td></tr>"
+      buffer << "<tr><td>#{item[:id]}</td><td>#{ERB::Escape.html_escape(item[:message])}</td></tr>"
     end
     buffer << TEMPLATE_POSTFIX
   end
@@ -101,15 +106,7 @@ class HelloWorld
     ]
   end
 
-  if defined?(Unicorn)
-    def headers(content_type, body)
-      {
-        CONTENT_TYPE => content_type,
-        SERVER => SERVER_STRING,
-        CONTENT_LENGTH => body.bytesize.to_s
-      }
-    end
-  elsif defined?(Falcon) || defined?(Puma)
+  if defined?(Falcon) || defined?(Puma)
     def headers(content_type, _)
       {
         CONTENT_TYPE => content_type,

@@ -19,6 +19,7 @@
         "database_os": "Linux",
         "display_name": "Salvo",
         "notes": "",
+        "tags": ["broken"],
         "versus": "None"
       },
       "diesel": {
@@ -39,6 +40,7 @@
         "database_os": "Linux",
         "display_name": "Salvo [postgres-diesel]",
         "notes": "",
+        "tags": ["broken"],
         "versus": "None"
       },
       "pg": {
@@ -59,6 +61,7 @@
         "database_os": "Linux",
         "display_name": "Salvo [postgres]",
         "notes": "",
+        "tags": ["broken"],
         "versus": "None"
       },
       "pg-pool": {
@@ -79,6 +82,7 @@
         "database_os": "Linux",
         "display_name": "Salvo [postgres-deadpool]",
         "notes": "",
+        "tags": ["broken"],
         "versus": "None"
       },
       "mongo": {
@@ -99,6 +103,7 @@
         "database_os": "Linux",
         "display_name": "Salvo [mongodb]",
         "notes": "",
+        "tags": ["broken"],
         "versus": "None"
       },
       "mongo-raw": {
@@ -118,6 +123,7 @@
         "database_os": "Linux",
         "display_name": "Salvo [mongodb-raw]",
         "notes": "",
+        "tags": ["broken"],
         "versus": "None"
       },
       "sqlx": {
@@ -136,6 +142,7 @@
         "database_os": "Linux",
         "display_name": "Salvo [postgres-sqlx]",
         "notes": "",
+        "tags": ["broken"],
         "versus": "None"
       },
       "lru": {
@@ -153,6 +160,7 @@
         "database_os": "Linux",
         "display_name": "Salvo [lru]",
         "notes": "",
+        "tags": ["broken"],
         "versus": "None"
       }
     }

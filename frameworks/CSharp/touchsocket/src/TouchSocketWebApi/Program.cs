@@ -3,7 +3,6 @@ using System.Text.Json.Serialization;
 using TouchSocket.Core;
 using TouchSocket.Http;
 using TouchSocket.Rpc;
-using TouchSocket.Sockets;
 using TouchSocket.WebApi;
 using HttpContent = TouchSocket.Http.HttpContent;
 
@@ -18,14 +17,11 @@ public class Program
         builder.Services.AddServiceHostedService<IHttpService, HttpService>(config =>
         {
             config.SetListenIPHosts(8080)
-            .SetNoDelay(true)
-             .SetTransportOption(options =>
-             {
-                 options.ReceivePipeOptions = TransportOption.CreateSchedulerOptimizedPipeOptions();
-                 options.SendPipeOptions = TransportOption.CreateSchedulerOptimizedPipeOptions();
-             })
             .SetMaxCount(1000000)
-            .SetBacklog(1000)
+            .SetTransportOption(options =>
+            {
+                options.BufferOnDemand = false;
+            })
            .ConfigureContainer(a =>
            {
                a.AddConsoleLogger();
@@ -36,22 +32,17 @@ public class Program
            })
            .ConfigurePlugins(a =>
            {
-               a.UseTcpSessionCheckClear();
-
-               a.UseWebApi()
-               .ConfigureConverter(converter =>
+               a.UseWebApi(options =>
                {
-                   converter.Clear();
-                   converter.AddSystemTextJsonSerializerFormatter(options =>
+                   options.ConfigureConverter(converter =>
                    {
-                       options.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default);
+                       converter.Clear();
+                       converter.AddSystemTextJsonSerializerFormatter(jsonOptions =>
+                       {
+                           jsonOptions.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default);
+                       });
                    });
                });
-
-#if DEBUG
-               a.UseSwagger()
-               .UseLaunchBrowser();
-#endif
 
                a.UseDefaultHttpServicePlugin();
            });
@@ -86,7 +77,7 @@ public partial class ApiServer : SingletonRpcServer
     }
 }
 
-[JsonSerializable(typeof(MyJson))]//实际类型1
+[JsonSerializable(typeof(MyJson))]
 internal partial class AppJsonSerializerContext : JsonSerializerContext
 {
 

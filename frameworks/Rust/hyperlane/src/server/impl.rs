@@ -34,7 +34,7 @@ impl fmt::Display for FortunesTemplate {
                 tem.id,
                 escape_html(&tem.message)
             );
-            let _ = write!(f, "{}", row);
+            let _ = write!(f, "{row}");
         }
         let _ = write!(f, "</table></body></html>");
         Ok(())

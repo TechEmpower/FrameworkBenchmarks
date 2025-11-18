@@ -47,6 +47,7 @@
 				"os": "Linux",
 				"database_os": "Linux",
 				"display_name": "OfficeFloor-r2dbc",
+				"tags": ["broken"],
 				"notes": ""
 			},
 			"sqlclient": {
@@ -69,6 +70,7 @@
 				"os": "Linux",
 				"database_os": "Linux",
 				"display_name": "OfficeFloor-sqlclient",
+				"tags": ["broken"],
 				"notes": ""
 			},
 			"rawsqlclient": {
@@ -91,6 +93,7 @@
 				"os": "Linux",
 				"database_os": "Linux",
 				"display_name": "OfficeFloor-rawsqlclient",
+				"tags": ["broken"],
 				"notes": ""
 			},
 			"async": {
@@ -162,6 +165,7 @@
 				"database_os": "Linux",
 				"display_name": "OfficeFloor-thread_affinity",
 				"notes": "",
+				"tags": ["broken"],
 				"versus": "OfficeFloor-r2dbc"
 			},
 			"netty": {

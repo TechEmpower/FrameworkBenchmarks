@@ -1,7 +1,6 @@
 using System.Text;
 using TouchSocket.Core;
 using TouchSocket.Http;
-using TouchSocket.Sockets;
 using HttpContent = TouchSocket.Http.HttpContent;
 
 namespace TouchSocketHttp;
@@ -11,18 +10,15 @@ public class Program
     private static async Task Main(string[] args)
     {
         int port = 8080;
-        MyHttpService service = new MyHttpService();
+        var service = new MyHttpService();
 
         await service.SetupAsync(new TouchSocketConfig()
              .SetListenIPHosts(port)
-             .SetNoDelay(true)
-             .SetTransportOption(options =>
-             {
-                 options.ReceivePipeOptions = TransportOption.CreateSchedulerOptimizedPipeOptions();
-                 options.SendPipeOptions = TransportOption.CreateSchedulerOptimizedPipeOptions();
-             })
              .SetMaxCount(1000000)
-             .SetBacklog(1000)
+              .SetTransportOption(options =>
+              {
+                  options.BufferOnDemand = false;
+              })
              .ConfigureContainer(a =>
              {
                  a.AddConsoleLogger();
@@ -52,8 +48,8 @@ internal sealed class MyHttpSessionClient : HttpSessionClient
 
     protected override async Task OnReceivedHttpRequest(HttpContext httpContext)
     {
-        HttpRequest request = httpContext.Request;
-        HttpResponse response = httpContext.Response;
+        var request = httpContext.Request;
+        var response = httpContext.Response;
 
         switch (request.RelativeURL)
         {

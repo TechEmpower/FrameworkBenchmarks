@@ -18,7 +18,7 @@ class PgDb
   attr_reader :connection
 
   def initialize(connection_string = nil, max_connections = 512)
-    @connection = Sequel.connect(connection_string, max_connections: max_connections, sql_log_level: :warning)
+    @connection = Sequel.connect(connection_string, max_connections: max_connections)
     Sequel.extension :fiber_concurrency if defined?(Falcon)
 
     prepare_statements
@@ -53,13 +53,6 @@ class PgDb
     end
   end
 
-  def select_random_numbers(count)
-    count = validate_count(count)
-    ALL_IDS.sample(count).map do |id|
-      @world_random_select.call(randomvalue: random_id, id: id).first
-    end
-  end
-
   def select_worlds(count)
     count = validate_count(count)
     ALL_IDS.sample(count).map do |id|
@@ -78,8 +71,7 @@ class PgDb
     else
       select_worlds(count)
     end
-    #values = []
-    ids=[]
+    ids = []
     sql = String.new("UPDATE world SET randomnumber = CASE id ")
     results.each do |r|
       r[:randomnumber] = random_id

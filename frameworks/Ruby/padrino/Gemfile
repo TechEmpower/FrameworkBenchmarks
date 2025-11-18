@@ -8,10 +8,6 @@ gem 'slim', '2.0.3'
 gem 'padrino', git: 'https://github.com/padrino/padrino-framework.git'
 gem 'rack'
 
-group :puma, optional: true do
-  gem 'puma', '~> 6.4', require: false
-end
-
-group :unicorn, optional: true do
-  gem 'unicorn', '~> 6.1', platforms: [:ruby, :windows], require: false
+group :iodine, optional: true do
+  gem "iodine", "~> 0.7", require: false
 end
