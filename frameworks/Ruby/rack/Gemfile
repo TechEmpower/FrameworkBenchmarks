@@ -15,7 +15,7 @@ gem 'sequel_pg', platforms: %i[ruby windows]
 gem 'tzinfo-data', '1.2023.3'
 
 group :falcon, optional: true do
-  gem 'falcon', '~> 0.47', platforms: %i[ruby windows]
+  gem 'falcon', '~> 0.52', platforms: %i[ruby windows]
 end
 
 group :iodine, optional: true do
