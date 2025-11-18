@@ -1,0 +1,7 @@
+
+apply(from: "$gradleScripts/application.gradle")
+
+dependencies {
+    api(project(":store_pgclient"))
+    api("com.hexagontk.http:http_server_jdk:$hexagonVersion")
+}

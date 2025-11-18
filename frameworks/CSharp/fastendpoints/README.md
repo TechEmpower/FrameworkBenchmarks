@@ -5,11 +5,11 @@ This includes tests for plaintext and json serialization.
 
 **Language**
 
-* C# 12.0
+* C# 13.0
 
 **Platforms**
 
-* .NET 8 (Windows and Linux)
+* .NET 9 (Windows and Linux)
 
 **Web Servers**
 
@@ -18,7 +18,7 @@ This includes tests for plaintext and json serialization.
 **Web Stack**
 
 * [FastEndpoints](https://fast-endpoints.com/)
-* ASP.NET 8
+* ASP.NET 9
 
 ## Paths & Source for Tests
 

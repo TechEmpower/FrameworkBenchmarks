@@ -99,6 +99,7 @@ func fortunes(c *gin.Context) {
 		c.AbortWithError(500, err)
 		return
 	}
+	defer rows.Close() // Ensure rows are closed
 
 	fortunes := make(Fortunes, 0)
 	for rows.Next() { //Fetch rows

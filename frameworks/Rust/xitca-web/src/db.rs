@@ -3,14 +3,14 @@ mod db_util;
 
 use core::cell::RefCell;
 
-use xitca_postgres::{iter::AsyncLendingIterator, pipeline::Pipeline, pool::Pool, statement::Statement, Execute};
+use xitca_postgres::{Execute, iter::AsyncLendingIterator, pipeline::Pipeline, pool::Pool, statement::Statement};
 
 use super::{
     ser::{Fortune, Fortunes, World},
-    util::{HandleResult, DB_URL},
+    util::{DB_URL, HandleResult},
 };
 
-use db_util::{not_found, sort_update_params, update_query_from_num, Shared, FORTUNE_STMT, WORLD_STMT};
+use db_util::{FORTUNE_STMT, Shared, WORLD_STMT, not_found, sort_update_params, update_query_from_num};
 
 pub struct Client {
     pool: Pool,

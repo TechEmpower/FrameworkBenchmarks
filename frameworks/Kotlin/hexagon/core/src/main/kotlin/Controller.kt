@@ -1,21 +1,21 @@
-package com.hexagonkt
+package com.hexagontk
 
-import com.hexagonkt.core.fieldsMapOf
-import com.hexagonkt.core.media.APPLICATION_JSON
-import com.hexagonkt.core.media.TEXT_HTML
-import com.hexagonkt.core.media.TEXT_PLAIN
-import com.hexagonkt.http.model.ContentType
-import com.hexagonkt.http.model.Header
-import com.hexagonkt.http.model.Headers
-import com.hexagonkt.http.server.callbacks.DateCallback
-import com.hexagonkt.http.handlers.HttpContext
-import com.hexagonkt.http.handlers.PathHandler
-import com.hexagonkt.http.handlers.path
-import com.hexagonkt.model.*
-import com.hexagonkt.serialization.jackson.json.Json
-import com.hexagonkt.serialization.serialize
-import com.hexagonkt.store.BenchmarkStore
-import com.hexagonkt.templates.TemplatePort
+import com.hexagontk.core.fieldsMapOf
+import com.hexagontk.core.media.APPLICATION_JSON
+import com.hexagontk.core.media.TEXT_HTML
+import com.hexagontk.core.media.TEXT_PLAIN
+import com.hexagontk.http.model.ContentType
+import com.hexagontk.http.model.Field
+import com.hexagontk.http.model.Headers
+import com.hexagontk.http.server.callbacks.DateCallback
+import com.hexagontk.http.handlers.HttpContext
+import com.hexagontk.http.handlers.PathHandler
+import com.hexagontk.http.handlers.path
+import com.hexagontk.model.*
+import com.hexagontk.serialization.jackson.json.Json
+import com.hexagontk.serialization.serialize
+import com.hexagontk.store.BenchmarkStore
+import com.hexagontk.templates.TemplatePort
 import java.net.URL
 import java.util.concurrent.ThreadLocalRandom
 import kotlin.text.Charsets.UTF_8
@@ -35,7 +35,7 @@ class Controller(
     private val json: ContentType = ContentType(APPLICATION_JSON)
     private val html: ContentType = ContentType(TEXT_HTML, charset = UTF_8)
 
-    private val headers = Headers(Header("server", "Hexagon"))
+    private val headers = Headers(Field("server", "Hexagon"))
 
     val path: PathHandler by lazy {
         path {
@@ -105,7 +105,7 @@ class Controller(
         ok(body.serialize(Json.raw), contentType = json)
 
     private fun HttpContext.getWorldsCount(parameter: String): Int =
-        request.queryParameters[parameter]?.string()?.toIntOrNull().let {
+        request.queryParameters[parameter]?.text?.toIntOrNull().let {
             when {
                 it == null -> 1
                 it < 1 -> 1

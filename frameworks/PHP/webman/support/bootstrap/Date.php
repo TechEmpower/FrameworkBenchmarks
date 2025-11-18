@@ -30,9 +30,9 @@ class Date implements Bootstrap {
      */
     public static function start($worker)
     {
-        self::$date = gmdate('D, d M Y H:i:s').' GMT';
+        self::$date = gmdate(DATE_RFC7231);
         Timer::add(1, function() {
-            self::$date = gmdate('D, d M Y H:i:s').' GMT';
+            self::$date = gmdate(DATE_RFC7231);
         });
     }
 

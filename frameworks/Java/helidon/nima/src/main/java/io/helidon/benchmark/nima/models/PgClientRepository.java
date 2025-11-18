@@ -2,7 +2,6 @@ package io.helidon.benchmark.nima.models;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import io.helidon.config.Config;
 import io.vertx.core.Future;
@@ -15,14 +14,12 @@ import io.vertx.sqlclient.RowSet;
 import io.vertx.sqlclient.Tuple;
 
 import static io.helidon.benchmark.nima.models.DbRepository.randomWorldNumber;
-import static io.helidon.benchmark.nima.models.PgClientConnectionPool.PgClientConnection.UPDATE_QUERIES;
+import static io.helidon.benchmark.nima.models.PgClientConnection.UPDATE_QUERIES;
 
 public class PgClientRepository implements DbRepository {
-    private static final Logger LOGGER = Logger.getLogger(PgClientRepository.class.getName());
 
     private final PgClientConnectionPool connectionPool;
 
-    @SuppressWarnings("unchecked")
     public PgClientRepository(Config config) {
         VertxOptions vertxOptions = new VertxOptions()
                 .setPreferNativeTransport(true)
@@ -41,7 +38,7 @@ public class PgClientRepository implements DbRepository {
                 .setTcpQuickAck(true)
                 .setTcpKeepAlive(true)
                 .setPipeliningLimit(100000);
-        connectionPool = new PgClientConnectionPool(vertx, connectOptions);
+        connectionPool = PgClientConnectionPool.create(vertx, connectOptions, config);
     }
 
     @Override

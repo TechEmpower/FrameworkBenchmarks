@@ -6,14 +6,14 @@ mod db_util;
 
 use std::cell::RefCell;
 
-use xitca_postgres::{iter::AsyncLendingIterator, pipeline::Pipeline, statement::Statement, Execute};
+use xitca_postgres::{Execute, iter::AsyncLendingIterator, pipeline::Pipeline, statement::Statement};
 
 use super::{
     ser::{Fortune, Fortunes, World},
-    util::{HandleResult, DB_URL},
+    util::{DB_URL, HandleResult},
 };
 
-use db_util::{not_found, sort_update_params, update_query_from_num, Shared, FORTUNE_STMT, WORLD_STMT};
+use db_util::{FORTUNE_STMT, Shared, WORLD_STMT, not_found, sort_update_params, update_query_from_num};
 
 pub struct Client {
     cli: xitca_postgres::Client,
@@ -36,7 +36,7 @@ pub async fn create() -> HandleResult<Client> {
 
     let mut updates = vec![Statement::default()];
 
-    for update in (1..=500).map(update_query_from_num).into_iter() {
+    for update in (1..=500).map(update_query_from_num) {
         let stmt = Statement::named(&update, &[]).execute(&cli).await?.leak();
         updates.push(stmt);
     }
@@ -61,20 +61,18 @@ impl Client {
     pub async fn get_worlds(&self, num: u16) -> HandleResult<Vec<World>> {
         let len = num as usize;
 
-        let mut res = Vec::with_capacity(len);
-
-        {
-            let (ref mut rng, ..) = *self.shared.borrow_mut();
-            for _ in 0..len {
-                let stream = self.world.bind([rng.gen_id()]).query(&self.cli).await?;
-                res.push(stream);
-            }
+        let mut res = {
+            let (ref mut rng, ref mut buf) = *self.shared.borrow_mut();
+            // unrealistic as all queries are sent with only one sync point.
+            let mut pipe = Pipeline::unsync_with_capacity_from_buf(len, buf);
+            (0..num).try_for_each(|_| self.world.bind([rng.gen_id()]).query(&mut pipe))?;
+            pipe.query(&self.cli)?
         };
 
         let mut worlds = Vec::with_capacity(len);
 
-        for mut stream in res {
-            let row = stream.try_next().await?.ok_or_else(not_found)?;
+        while let Some(mut item) = res.try_next().await? {
+            let row = item.try_next().await?.ok_or_else(not_found)?;
             worlds.push(World::new(row.get(0), row.get(1)));
         }
 

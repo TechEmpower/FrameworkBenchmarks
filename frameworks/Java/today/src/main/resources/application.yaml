@@ -30,12 +30,9 @@ datasource:
   type: com.zaxxer.hikari.HikariDataSource
   driver-class-name: com.mysql.cj.jdbc.Driver
   hikari:
-    maximum-pool-size: 20
-    max-lifetime: 120000
+    maximum-pool-size: 256
     connection-test-query: 'select 1'
 
 logging:
   level:
     root: OFF
-  pattern:
-    dateformat: 'yyyy-MM-dd HH:mm:ss.SSS'

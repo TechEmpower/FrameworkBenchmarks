@@ -1,4 +1,4 @@
-FROM ruby:3.4
+FROM ruby:3.5-rc
 
 ENV RUBY_YJIT_ENABLE=1
 
@@ -9,7 +9,7 @@ ENV LD_PRELOAD=libjemalloc.so.2
 
 WORKDIR /rack
 
-COPY Gemfile ./
+COPY Gemfile* ./
 
 ENV BUNDLE_FORCE_RUBY_PLATFORM=true
 RUN bundle config set with 'unicorn'

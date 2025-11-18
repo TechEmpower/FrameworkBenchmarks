@@ -9,7 +9,7 @@ This is the ZIO Http portion of a [benchmarking test suite](../) comparing a var
 
 ## Versions
 
-* [Java OpenJDK 11](https://openjdk.java.net/)
+* [Java OpenJDK 21](https://openjdk.java.net/)
 
 ## Test URLs
 

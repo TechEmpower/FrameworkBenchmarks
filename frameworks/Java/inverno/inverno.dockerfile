@@ -2,7 +2,7 @@ FROM maven:3.9.9-eclipse-temurin-21 as maven
 WORKDIR /inverno
 COPY src src
 COPY pom.xml pom.xml
-RUN mvn package -q -Pio.inverno.io_uring
+RUN mvn package -q -Pio.inverno.epoll
 
 EXPOSE 8080
 

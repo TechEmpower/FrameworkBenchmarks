@@ -9,7 +9,7 @@ KB_PER_WORKER = 128 * 1_024 # average of peak PSS of single-threaded processes (
 MIN_WORKERS = 2
 MAX_WORKERS_PER_VCPU = 1.25 # virtual/logical
 MIN_THREADS_PER_WORKER = 1
-MAX_THREADS = Integer(ENV['MAX_CONCURRENCY'] || 8)
+MAX_THREADS = Integer(ENV['MAX_CONCURRENCY'] || 256)
 
 def meminfo(arg)
   File.open('/proc/meminfo') do |f|

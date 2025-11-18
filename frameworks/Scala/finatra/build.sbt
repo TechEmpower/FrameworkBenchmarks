@@ -4,7 +4,7 @@ name := "techempower-benchmarks-finatra"
 organization := "com.twitter"
 version := finatraVersion
 
-scalaVersion := "2.12.12"
+scalaVersion := "2.12.20"
 
 resolvers ++= Seq(
   Resolver.sonatypeRepo("releases")

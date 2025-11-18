@@ -30,7 +30,7 @@ class TestType(AbstractTestType):
         expected_rows = 12 * expected_queries
 
         url = base_url + self.fortune_url
-        headers, body = self.request_headers_and_body(url)
+        headers, body, status = self.request_headers_and_body_and_status(url)
 
         _, problems = basic_body_verification(body, url, is_json_check=False)
 
@@ -49,7 +49,7 @@ class TestType(AbstractTestType):
         (valid, diff) = parser.isValidFortune(self.name, body.decode())
 
         if valid:
-            problems += verify_headers(self.request_headers_and_body, headers, url, should_be='html')
+            problems += verify_headers(self.request_headers_and_body_and_status, headers, url, should_be='html')
             if len(problems) == 0:
                 problems += verify_queries_count(self, "fortune", url, concurrency, repetitions, expected_queries, expected_rows)
             if len(problems) == 0:

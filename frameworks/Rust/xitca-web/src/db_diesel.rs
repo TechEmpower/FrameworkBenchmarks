@@ -10,7 +10,7 @@ use diesel::{prelude::*, r2d2};
 
 use crate::{
     ser::{Fortune, Fortunes, World},
-    util::{HandleResult, Rand, DB_URL},
+    util::{DB_URL, HandleResult, Rand},
 };
 
 use db_util::{not_found, update_query_from_ids};

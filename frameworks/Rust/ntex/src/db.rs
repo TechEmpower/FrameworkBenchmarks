@@ -1,9 +1,8 @@
-#![allow(clippy::uninit_vec)]
-use std::{borrow::Cow, cell::RefCell, fmt::Write as FmtWrite};
+use std::{borrow::Cow, cell::RefCell};
 
 use nanorand::{Rng, WyRand};
 use ntex::util::{Bytes, BytesMut};
-use tokio_postgres::types::ToSql;
+use smallvec::SmallVec;
 use tokio_postgres::{connect, Client, Statement};
 use yarte::TemplateBytesTrait;
 
@@ -33,7 +32,7 @@ pub struct PgConnection {
     fortune: Statement,
     world: Statement,
     rng: WyRand,
-    updates: Vec<Statement>,
+    updates: Statement,
     buf: RefCell<BytesMut>,
     fbuf: RefCell<Vec<Fortune>>,
 }
@@ -48,24 +47,7 @@ impl PgConnection {
         });
 
         let fortune = cl.prepare("SELECT * FROM fortune").await.unwrap();
-        let mut updates = Vec::new();
-        for num in 1..=500u16 {
-            let mut pl: u16 = 1;
-            let mut q = String::new();
-            q.push_str("UPDATE world SET randomnumber = CASE id ");
-            for _ in 1..=num {
-                let _ = write!(&mut q, "when ${} then ${} ", pl, pl + 1);
-                pl += 2;
-            }
-            q.push_str("ELSE randomnumber END WHERE id IN (");
-            for _ in 1..=num {
-                let _ = write!(&mut q, "${},", pl);
-                pl += 1;
-            }
-            q.pop();
-            q.push(')');
-            updates.push(cl.prepare(&q).await.unwrap());
-        }
+        let updates = cl.prepare("UPDATE world w SET randomnumber = u.new_val FROM (SELECT unnest($1::int[]) as id, unnest($2::int[]) as new_val) u WHERE w.id = u.id").await.unwrap();
         let world = cl.prepare("SELECT * FROM world WHERE id=$1").await.unwrap();
 
         PgConnection {
@@ -124,30 +106,30 @@ impl PgConnection {
 
     pub async fn update(&self, num: usize) -> Bytes {
         let mut rng = nanorand::tls_rng();
-        let mut queries = Vec::with_capacity(num);
+        let mut ids = Vec::with_capacity(num);
+        let mut numbers = Vec::with_capacity(num);
+        let mut worlds = SmallVec::<[_; 32]>::new();
+        let mut queries = SmallVec::<[_; 32]>::new();
+
         (0..num).for_each(|_| {
             let w_id = (rng.generate::<u32>() % 10_000 + 1) as i32;
-            queries.push(self.cl.query_one(&self.world, &[&w_id]));
+            ids.push(w_id);
+            numbers.push((rng.generate::<u32>() % 10_000 + 1) as i32);
         });
+        ids.sort();
 
-        let mut worlds = Vec::with_capacity(num);
-        for fut in queries.into_iter() {
-            let row = fut.await.unwrap();
+        (0..num).for_each(|idx| {
             worlds.push(World {
-                id: row.get(0),
-                randomnumber: (rng.generate::<u32>() % 10_000 + 1) as i32,
+                id: ids[idx],
+                randomnumber: numbers[idx],
             });
-        }
-
-        let mut params: Vec<&dyn ToSql> = Vec::with_capacity(num * 3);
-        for w in &worlds {
-            params.push(&w.id);
-            params.push(&w.randomnumber);
-        }
-        for w in &worlds {
-            params.push(&w.id);
-        }
-        let _ = self.cl.query(&self.updates[num - 1], &params).await;
+            queries.push(self.cl.query_one(&self.world, &[&ids[idx]]));
+        });
+        let _ = self
+            .cl
+            .query(&self.updates, &[&ids, &numbers])
+            .await
+            .unwrap();
 
         let mut body = self.buf.borrow_mut();
         utils::reserve(&mut body, 2 * 1024);
@@ -173,7 +155,7 @@ impl PgConnection {
         utils::reserve(&mut body, 4 * 1024);
 
         FortunesTemplate {
-            fortunes: &*fortunes,
+            fortunes: &fortunes,
         }
         .write_call(&mut body);
         fortunes.clear();

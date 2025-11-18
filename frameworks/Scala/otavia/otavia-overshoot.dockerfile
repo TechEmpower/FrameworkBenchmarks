@@ -1,7 +1,8 @@
-FROM nightscape/scala-mill:eclipse-temurin-17.0.8.1_1-jdk-focal_0.11.6_3.3.0
+FROM nightscape/scala-mill:eclipse-temurin-21.0.6_7-jdk-jammy_0.12.10
 WORKDIR /otavia
 COPY benchmark benchmark
 COPY build.sc build.sc
+COPY .mill-version .mill-version
 ENV COURSIER_REPOSITORIES=ivy2Local|central
 RUN mill benchmark.assembly
 

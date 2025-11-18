@@ -1,11 +1,13 @@
-FROM gradle:8.6.0-jdk17 as build
-COPY --chown=gradle:gradle . /home/gradle/src
-WORKDIR /home/gradle/src
-RUN gradle installInfraDist --no-daemon
+FROM gradle:8.13.0-jdk21 as build
+COPY --chown=gradle:gradle . /infra-src
+WORKDIR /infra-src
+RUN gradle installDist --no-daemon
 
-FROM openjdk:21
+#FROM openjdk:21
+FROM bellsoft/liberica-openjre-debian:21.0.5
+RUN apt install findutils
 WORKDIR /today
-COPY --from=build /home/gradle/src/build/install/today-infra-app/ ./
+COPY --from=build /infra-src/build/install/today/ ./
 
 EXPOSE 8080
 ENTRYPOINT "./bin/today"

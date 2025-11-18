@@ -1,16 +1,16 @@
 description = "benchmark"
 
-apply plugin: "java"
-apply plugin: "application"
-apply plugin: 'cn.taketoday.application'
-apply plugin: 'io.spring.dependency-management'
+apply plugin: 'java'
+apply plugin: 'application'
+apply plugin: 'infra.application'
 
 configure(allprojects) {
   group = "cn.taketoday.benchmark"
 
   repositories {
+    mavenLocal()
     mavenCentral()
-    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+    maven { url = "https://oss.sonatype.org/content/repositories/snapshots/" }
   }
 }
 
@@ -24,8 +24,15 @@ dependencies {
   implementation 'mysql:mysql-connector-java'
 
   implementation 'ch.qos.logback:logback-classic'
+  implementation 'com.github.ben-manes.caffeine:caffeine'
 
   implementation('io.netty:netty-transport-native-epoll') {
+    artifact {
+      classifier = 'linux-x86_64'
+    }
+  }
+
+  implementation('io.netty.incubator:netty-incubator-transport-native-io_uring:0.0.21.Final') {
     artifact {
       classifier = 'linux-x86_64'
     }
@@ -40,23 +47,24 @@ dependencies {
 }
 
 java {
-  sourceCompatibility = JavaVersion.VERSION_17
-  targetCompatibility = JavaVersion.VERSION_17
+  sourceCompatibility = JavaVersion.VERSION_21
+  targetCompatibility = JavaVersion.VERSION_21
 }
 
 application {
   mainClass = 'cn.taketoday.benchmark.BenchmarkApplication'
   applicationDefaultJvmArgs = [
       "-server",
+      "-Xms2G",
+      "-Xmx2G",
       "-XX:+UseNUMA",
-      "-XX:+UseG1GC",
-      "-XX:+DisableExplicitGC",
-      "-XX:-StackTraceInThrowable",
       "-XX:+UseStringDeduplication",
       "-Dinfra.profiles.active=test",
       "-Dio.netty.buffer.checkBounds=false",
       "-Dio.netty.buffer.checkAccessible=false",
       "-Dio.netty.leakDetection.level=disabled",
+      "-Dio.netty.iouring.iosqeAsyncThreshold=32000",
+      "-Djava.lang.Integer.IntegerCache.high=10000",
       "--add-opens=java.base/java.nio=ALL-UNNAMED",
       "--add-opens=java.base/sun.nio.ch=ALL-UNNAMED"
   ]

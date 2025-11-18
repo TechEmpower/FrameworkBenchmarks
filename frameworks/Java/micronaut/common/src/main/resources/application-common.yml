@@ -6,6 +6,20 @@ micronaut:
     server-header: Micronaut
     date-header: false
     validate-url: false
+    netty:
+      parent:
+        event-loop-group: default
+        prefer-native-transport: true
+      worker:
+        event-loop-group: default
+        prefer-native-transport: true
+  http:
+    client:
+      event-loop-group: default
+  netty:
+    event-loops:
+      default:
+        prefer-native-transport: true
 
 netty:
   resource-leak-detector-level: DISABLED

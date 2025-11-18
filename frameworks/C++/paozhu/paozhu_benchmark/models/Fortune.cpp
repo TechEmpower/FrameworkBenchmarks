@@ -1,5 +1,6 @@
-#include "mysqlmodel.hpp" 
-#include "fortunebase.h"
+
+#include "fortune_mysql.h"
+#include "fortune_base.h"
 #include "Fortune.h"
 
 /* 如果此文件存在不会自动覆盖，没有则会自动生成。
@@ -8,9 +9,8 @@
 	 
  namespace orm{
  
-
-			 Fortune::Fortune(std::string dbtag):mysqlclientDB(dbtag){}
-			 Fortune::Fortune():mysqlclientDB(){}
+			 Fortune::Fortune(std::string dbtag):fortune_mysql(dbtag){ mod=this; }
+			 Fortune::Fortune():fortune_mysql(){ mod=this; }
 
 
 	  }

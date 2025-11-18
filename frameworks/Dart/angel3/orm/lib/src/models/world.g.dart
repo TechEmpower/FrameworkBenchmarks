@@ -26,7 +26,10 @@ class WorldMigration extends Migration {
 // **************************************************************************
 
 class WorldQuery extends Query<World, WorldQueryWhere> {
-  WorldQuery({Query? parent, Set<String>? trampoline}) : super(parent: parent) {
+  WorldQuery({
+    Query? parent,
+    Set<String>? trampoline,
+  }) : super(parent: parent) {
     trampoline ??= <String>{};
     trampoline.add(tableName);
     _where = WorldQueryWhere(this);
@@ -51,7 +54,10 @@ class WorldQuery extends Query<World, WorldQueryWhere> {
 
   @override
   List<String> get fields {
-    const _fields = ['id', 'randomNumber'];
+    const _fields = [
+      'id',
+      'randomNumber',
+    ];
     return _selectedFields.isEmpty
         ? _fields
         : _fields.where((field) => _selectedFields.contains(field)).toList();
@@ -77,9 +83,9 @@ class WorldQuery extends Query<World, WorldQueryWhere> {
       return Optional.empty();
     }
     var model = World(
-        id: fields.contains('id') ? (row[0] as int?) : null,
-        randomNumber:
-            fields.contains('randomNumber') ? (row[1] as int?) : null);
+      id: fields.contains('id') ? mapToInt(row[0]) : null,
+      randomNumber: fields.contains('randomNumber') ? mapToInt(row[1]) : null,
+    );
     return Optional.of(model);
   }
 
@@ -91,8 +97,14 @@ class WorldQuery extends Query<World, WorldQueryWhere> {
 
 class WorldQueryWhere extends QueryWhere {
   WorldQueryWhere(WorldQuery query)
-      : id = NumericSqlExpressionBuilder<int>(query, 'id'),
-        randomNumber = NumericSqlExpressionBuilder<int>(query, 'randomNumber');
+      : id = NumericSqlExpressionBuilder<int>(
+          query,
+          'id',
+        ),
+        randomNumber = NumericSqlExpressionBuilder<int>(
+          query,
+          'randomNumber',
+        );
 
   final NumericSqlExpressionBuilder<int> id;
 
@@ -100,7 +112,10 @@ class WorldQueryWhere extends QueryWhere {
 
   @override
   List<SqlExpressionBuilder> get expressionBuilders {
-    return [id, randomNumber];
+    return [
+      id,
+      randomNumber,
+    ];
   }
 }
 
@@ -115,11 +130,13 @@ class WorldQueryValues extends MapQueryValues {
   }
 
   set id(int? value) => values['id'] = value;
+
   int? get randomNumber {
     return (values['randomNumber'] as int?);
   }
 
   set randomNumber(int? value) => values['randomNumber'] = value;
+
   void copyFrom(World model) {
     id = model.id;
     randomNumber = model.randomNumber;
@@ -132,7 +149,10 @@ class WorldQueryValues extends MapQueryValues {
 
 @generatedSerializable
 class World extends _World {
-  World({this.id, this.randomNumber});
+  World({
+    this.id,
+    this.randomNumber,
+  });
 
   @override
   int? id;
@@ -140,7 +160,10 @@ class World extends _World {
   @override
   int? randomNumber;
 
-  World copyWith({int? id, int? randomNumber}) {
+  World copyWith({
+    int? id,
+    int? randomNumber,
+  }) {
     return World(
         id: id ?? this.id, randomNumber: randomNumber ?? this.randomNumber);
   }
@@ -154,7 +177,10 @@ class World extends _World {
 
   @override
   int get hashCode {
-    return hashObjects([id, randomNumber]);
+    return hashObjects([
+      id,
+      randomNumber,
+    ]);
   }
 
   @override
@@ -192,8 +218,10 @@ class WorldSerializer extends Codec<World, Map> {
 
   @override
   WorldEncoder get encoder => const WorldEncoder();
+
   @override
   WorldDecoder get decoder => const WorldDecoder();
+
   static World fromMap(Map map) {
     return World(
         id: map['id'] as int?, randomNumber: map['randomNumber'] as int?);
@@ -201,14 +229,17 @@ class WorldSerializer extends Codec<World, Map> {
 
   static Map<String, dynamic> toMap(_World? model) {
     if (model == null) {
-      return {};
+      throw FormatException("Required field [model] cannot be null");
     }
     return {'id': model.id, 'randomNumber': model.randomNumber};
   }
 }
 
 abstract class WorldFields {
-  static const List<String> allFields = <String>[id, randomNumber];
+  static const List<String> allFields = <String>[
+    id,
+    randomNumber,
+  ];
 
   static const String id = 'id';
 

@@ -2,12 +2,12 @@ package cn.taketoday.benchmark.model;
 
 import java.util.Objects;
 
-import cn.taketoday.jdbc.persistence.Column;
-import cn.taketoday.jdbc.persistence.Id;
-import cn.taketoday.jdbc.persistence.Table;
+import infra.persistence.Column;
+import infra.persistence.Id;
+import infra.persistence.Table;
 
 @Table("world")
-public class World {
+public class World implements Comparable<World> {
 
   @Id
   private Integer id;
@@ -15,7 +15,8 @@ public class World {
   @Column("randomNumber")
   private Integer randomNumber;
 
-  public World() { }
+  public World() {
+  }
 
   public World(Integer id, Integer randomNumber) {
     this.id = id;
@@ -52,4 +53,10 @@ public class World {
   public int hashCode() {
     return Objects.hash(id, randomNumber);
   }
+
+  @Override
+  public int compareTo(World o) {
+    return Integer.compare(id, o.id);
+  }
+
 }

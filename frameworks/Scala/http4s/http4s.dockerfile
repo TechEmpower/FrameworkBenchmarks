@@ -1,10 +1,9 @@
-FROM openjdk:17 AS builder
+FROM sbtscala/scala-sbt:eclipse-temurin-21.0.6_7_1.10.11_2.13.16 AS builder
 WORKDIR /http4s
 COPY blaze/project project
 COPY blaze/src src
 COPY blaze/build.sbt build.sbt
-COPY sbt sbt
-RUN ./sbt assembly -batch && \
+RUN sbt assembly -batch && \
     mv target/scala-2.13/http4s-assembly-1.0.jar . && \
     rm -Rf target && \
     rm -Rf project/target && \
@@ -12,7 +11,7 @@ RUN ./sbt assembly -batch && \
     rm -Rf ~/.ivy2 && \
     rm -Rf /var/cache
     
-FROM openjdk:17
+FROM openjdk:21
 WORKDIR /http4s
 COPY --from=builder /http4s/http4s-assembly-1.0.jar /http4s/http4s-assembly-1.0.jar
 

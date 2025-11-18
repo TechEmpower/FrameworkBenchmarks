@@ -25,19 +25,7 @@ class HelloWorld
   PLAINTEXT_TYPE = 'text/plain'
   DATE = 'Date'
   SERVER = 'Server'
-  SERVER_STRING = if defined?(PhusionPassenger)
-                    'Passenger'
-                  elsif defined?(Puma)
-                    'Puma'
-                  elsif defined?(Iodine)
-                    'Iodine'
-                  elsif defined?(Unicorn)
-                    'Unicorn'
-                  elsif defined?(Falcon)
-                    'Falcon'
-                  else
-                    'Ruby Rack'
-                  end
+  SERVER_STRING = 'Rack'
   TEMPLATE_PREFIX = '<!DOCTYPE html>
 <html>
 <head>
@@ -54,28 +42,12 @@ class HelloWorld
   </html>'
 
   def initialize
-    if defined?(Puma)
-      num_workers, num_threads = auto_tune
-      num_threads = [num_threads, 32].min
-      max_connections = num_workers * num_threads
+    if defined?(Puma) && (threads = Puma.cli_config.options.fetch(:max_threads)) > 1
+      max_connections = threads
     else
       max_connections = 512
     end
     @db = PgDb.new(DEFAULT_DATABASE_URL, max_connections)
-  end
-
-  def respond(content_type, body = '')
-    headers = {
-      CONTENT_TYPE => content_type,
-      DATE => Time.now.utc.httpdate,
-      SERVER => SERVER_STRING
-    }
-    headers[CONTENT_LENGTH] = body.bytesize.to_s if defined?(Unicorn)
-    [
-      200,
-      headers,
-      [body]
-    ]
   end
 
   def fortunes
@@ -116,6 +88,41 @@ class HelloWorld
     when '/plaintext'
       # Test type 6: Plaintext
       respond PLAINTEXT_TYPE, 'Hello, World!'
+    end
+  end
+
+  private
+
+  def respond(content_type, body)
+    [
+      200,
+      headers(content_type, body),
+      [body]
+    ]
+  end
+
+  if defined?(Unicorn)
+    def headers(content_type, body)
+      {
+        CONTENT_TYPE => content_type,
+        SERVER => SERVER_STRING,
+        CONTENT_LENGTH => body.bytesize.to_s
+      }
+    end
+  elsif defined?(Falcon) || defined?(Puma)
+    def headers(content_type, _)
+      {
+        CONTENT_TYPE => content_type,
+        SERVER => SERVER_STRING,
+        DATE => Time.now.utc.httpdate
+      }
+    end
+  else
+    def headers(content_type, _)
+      {
+        CONTENT_TYPE => content_type,
+        SERVER => SERVER_STRING
+      }
     end
   end
 end

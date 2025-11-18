@@ -25,22 +25,24 @@ required-features = ["diesel", "diesel-async", "sailfish"]
 
 [dependencies]
 viz = "0.10"
-hyper = "1.5"
+hyper = "1.0"
 hyper-util = "0.1"
 http-body-util = "0.1"
 atoi = "2.0"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1"
 mime = "0.3"
-rand = { version = "0.8", features = ["small_rng"] }
+rand = { version = "0.9", features = ["small_rng"] }
 thiserror = "2.0"
 futures-util = "0.3"
+socket2 = { version = "0.6.0", features = ["all"] }
+num_cpus = "1.16.0"
 
 [target.'cfg(not(unix))'.dependencies]
-nanorand = { version = "0.7" }
+nanorand = { version = "0.8" }
 
 [target.'cfg(unix)'.dependencies]
-nanorand = { version = "0.7", features = ["getrandom"] }
+nanorand = { version = "0.8", features = ["getrandom"] }
 
 tokio = { version = "1", features = ["full"] }
 tokio-postgres = { version = "0.7", optional = true }
@@ -53,7 +55,7 @@ sqlx = { version = "0.8", features = [
 diesel = { version = "2.2", default-features = false, features = [
   "i-implement-a-third-party-backend-and-opt-into-breaking-changes",
 ], optional = true }
-diesel-async = { version = "0.5", default-features = false, features = [
+diesel-async = { version = "0.6", default-features = false, features = [
   "postgres",
   "bb8",
 ], optional = true }
@@ -61,8 +63,10 @@ diesel-async = { version = "0.5", default-features = false, features = [
 yarte = { version = "0.15", features = ["bytes-buf", "json"], optional = true }
 markup = { version = "0.15", optional = true }
 v_htmlescape = { version = "0.15", optional = true }
-sailfish = { version = "0.9", optional = true }
+sailfish = { version = "0.10", optional = true }
 
 [profile.release]
 lto = true
 codegen-units = 1
+strip = true
+opt-level = 3
