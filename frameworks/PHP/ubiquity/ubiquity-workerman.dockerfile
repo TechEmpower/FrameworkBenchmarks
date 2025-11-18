@@ -5,7 +5,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update -yqq && apt-get install -yqq software-properties-common > /dev/null
 RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php
 RUN apt-get update -yqq > /dev/null && \
-    apt-get install -yqq git php8.4-cli php8.4-pgsql php8.4-xml php8.4-mbstring > /dev/null
+    apt-get install -yqq git php8.4-cli php8.4-curl php8.4-pgsql php8.4-xml php8.4-mbstring > /dev/null
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
@@ -23,7 +23,6 @@ RUN apt-get update -yqq > /dev/null && \
     apt-get install -yqq git unzip > /dev/null
 
 RUN composer require phpmv/ubiquity-devtools:dev-master phpmv/ubiquity-workerman:dev-master --quiet
-
 RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
 
 RUN chmod 777 -R /ubiquity/.ubiquity/*
