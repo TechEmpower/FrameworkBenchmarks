@@ -1,7 +1,5 @@
 #![allow(dead_code)]
 
-use std::borrow::Cow;
-
 use serde::{Deserialize, Deserializer, Serialize, Serializer, ser::SerializeStruct};
 use xitca_http::{
     body::Once,
@@ -33,9 +31,12 @@ impl Message {
 
 pub struct Num(pub u16);
 
-#[cfg_attr(any(feature = "pg-orm", feature = "pg-orm-async"), derive(diesel::Queryable))]
+#[cfg_attr(feature = "diesel", derive(diesel::Queryable))]
+#[cfg_attr(feature = "toasty", derive(toasty::Model))]
+#[cfg_attr(feature = "toasty", table = "world")]
 #[cfg_attr(feature = "perf", derive(simd_json_derive::Serialize))]
 pub struct World {
+    #[cfg_attr(feature = "toasty", key)]
     pub id: i32,
     pub randomnumber: i32,
 }
@@ -47,15 +48,33 @@ impl World {
     }
 }
 
-#[cfg_attr(any(feature = "pg-orm", feature = "pg-orm-async"), derive(diesel::Queryable))]
+#[cfg_attr(feature = "diesel", derive(diesel::Queryable))]
+#[cfg_attr(feature = "toasty", derive(toasty::Model))]
+#[cfg_attr(feature = "toasty", table = "fortune")]
 pub struct Fortune {
+    #[cfg_attr(feature = "toasty", key)]
     pub id: i32,
-    pub message: Cow<'static, str>,
+    #[cfg(not(feature = "toasty"))]
+    pub message: std::borrow::Cow<'static, str>,
+    #[cfg(feature = "toasty")]
+    pub message: String,
 }
 
+#[cfg(not(feature = "toasty"))]
 impl Fortune {
     #[inline]
-    pub fn new(id: i32, message: impl Into<Cow<'static, str>>) -> Self {
+    pub fn new(id: i32, message: impl Into<std::borrow::Cow<'static, str>>) -> Self {
+        Self {
+            id,
+            message: message.into(),
+        }
+    }
+}
+
+#[cfg(feature = "toasty")]
+impl Fortune {
+    #[inline]
+    pub fn new(id: i32, message: impl Into<String>) -> Self {
         Self {
             id,
             message: message.into(),

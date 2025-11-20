@@ -46,9 +46,7 @@
         "notes": "",
         "versus": ""
       },
-      "orm": {
-        "json_url": "/json",
-        "plaintext_url": "/plaintext",
+      "diesel": {
         "db_url": "/db",
         "fortune_url": "/fortunes",
         "query_url": "/queries?q=",
@@ -64,20 +62,18 @@
         "webserver": "xitca-server",
         "os": "linux",
         "database_os": "linux",
-        "display_name": "xitca-web [orm]",
+        "display_name": "xitca-web [diesel]",
         "notes": "",
         "versus": ""
       },
-      "sync": {
-        "json_url": "/json",
-        "plaintext_url": "/plaintext",
+      "toasty": {
         "db_url": "/db",
         "fortune_url": "/fortunes",
         "query_url": "/queries?q=",
         "update_url": "/updates?q=",
         "port": 8080,
         "approach": "realistic",
-        "classification": "micro",
+        "classification": "fullstack",
         "database": "postgres",
         "framework": "xitca-web",
         "language": "rust",
@@ -86,7 +82,7 @@
         "webserver": "xitca-server",
         "os": "linux",
         "database_os": "linux",
-        "display_name": "xitca-web [sync]",
+        "display_name": "xitca-web [toasty]",
         "notes": "",
         "versus": ""
       }
