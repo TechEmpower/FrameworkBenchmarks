@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'activerecord', '~> 8.0', require: 'active_record'
+gem 'activerecord', '~> 8.1.0', require: 'active_record'
 gem 'json', '~> 2.8'
 gem 'sinatra', '~> 4.2', require: 'sinatra/base'
 
