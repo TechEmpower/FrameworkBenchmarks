@@ -38,27 +38,26 @@ GIT
 GEM
   remote: https://rubygems.org/
   specs:
-    activemodel (8.0.2)
-      activesupport (= 8.0.2)
-    activerecord (8.0.2)
-      activemodel (= 8.0.2)
-      activesupport (= 8.0.2)
+    activemodel (8.1.1)
+      activesupport (= 8.1.1)
+    activerecord (8.1.1)
+      activemodel (= 8.1.1)
+      activesupport (= 8.1.1)
       timeout (>= 0.4.0)
-    activesupport (8.0.2)
+    activesupport (8.1.1)
       base64
-      benchmark (>= 0.3)
       bigdecimal
       concurrent-ruby (~> 1.0, >= 1.3.1)
       connection_pool (>= 2.2.5)
       drb
       i18n (>= 1.6, < 2)
+      json
       logger (>= 1.4.2)
       minitest (>= 5.1)
       securerandom (>= 0.3)
       tzinfo (~> 2.0, >= 2.0.5)
       uri (>= 0.13.1)
     base64 (0.2.0)
-    benchmark (0.4.0)
     bigdecimal (3.1.9)
     concurrent-ruby (1.3.5)
     connection_pool (2.5.0)
@@ -129,7 +128,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  activerecord (>= 7.1)
+  activerecord (~> 8.1.0)
   iodine (~> 0.7)
   json
   mysql2 (> 0.5)
