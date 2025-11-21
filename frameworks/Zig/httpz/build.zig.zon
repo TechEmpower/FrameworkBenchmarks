@@ -1,15 +1,24 @@
-.{ .name = "Zap testing", .version = "0.1.1", .paths = .{
-    "build.zig",
-    "build.zig.zon",
-    "src",
-}, .dependencies = .{
-    .pg = .{ .url = "https://github.com/karlseguin/pg.zig/archive/239a4468163a49d8c0d03285632eabe96003e9e2.tar.gz", .hash = "1220a1d7e51e2fa45e547c76a9e099c09d06e14b0b9bfc6baa89367f56f1ded399a0" },
-    .httpz = .{
-        .url = "git+https://github.com/karlseguin/http.zig?ref=zig-0.13#7d2ddae87af9b110783085c0ea6b03985faa4584",
-        .hash = "12208c1f2c5f730c4c03aabeb0632ade7e21914af03e6510311b449458198d0835d6",
+.{
+    .name = .httpz_testing,
+    .fingerprint = 0x586e7c8a23a7e7c2,
+    .version = "0.1.1",
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "src",
     },
-    .datetimez = .{
-        .url = "git+https://github.com/frmdstryr/zig-datetime#70aebf28fb3e137cd84123a9349d157a74708721",
-        .hash = "122077215ce36e125a490e59ec1748ffd4f6ba00d4d14f7308978e5360711d72d77f",
+    .dependencies = .{
+        .pg = .{
+            .url = "git+https://github.com/karlseguin/pg.zig.git#f8d4892387fbad2abdf775783e101e50a7114335",
+            .hash = "pg-0.0.0-Wp_7gag6BgD_QAZrPhNNEGpnUZR_LEkKT40Ura3p-4yX",
+        },
+        .httpz = .{
+            .url = "git+https://github.com/karlseguin/http.zig.git#a4477b1dbdc5b820fd4ad301797ca6399f7eb6e4",
+            .hash = "httpz-0.0.0-PNVzrBgtBwCVkSJyophIX6WHwDR0r8XhBGQr96Kk-1El",
+        },
+        .datetimez = .{
+            .url = "git+https://github.com/frmdstryr/zig-datetime.git#3a39a21e6e34dcb0ade0ff828d0914d40ba535f3",
+            .hash = "datetime-0.8.0-cJNXzP_YAQBxQ5hkNNP6ScnG5XsqciJmeP5RVV4xwCBA",
+        },
     },
-} }
+}

@@ -3,11 +3,11 @@ const httpz = @import("httpz");
 const pg = @import("pg");
 const datetimez = @import("datetimez");
 
-pub var date_str: []u8 = "";
+pub var date_str: [29]u8 = undefined;
 
 pub const Global = struct {
     pool: *pg.Pool,
-    rand: *std.rand.Random,
+    rand: *std.Random,
 };
 
 const World = struct {
@@ -70,17 +70,7 @@ fn getWorld(pool: *pg.Pool, random_number: u32) !World {
 fn setHeaders(allocator: std.mem.Allocator, res: *httpz.Response) !void {
     res.header("Server", "Httpz");
 
-    //const now = datetimez.datetime.Date.now();
-    //const time = datetimez.datetime.Time.now();
-
-    // Wed, 17 Apr 2013 12:00:00 GMT
-    // Return date in ISO format YYYY-MM-DD
-    //const TB_DATE_FMT = "{s:0>3}, {d:0>2} {s:0>3} {d:0>4} {d:0>2}:{d:0>2}:{d:0>2} GMT";
-    //const now_str = try std.fmt.allocPrint(allocator, TB_DATE_FMT, .{ now.weekdayName()[0..3], now.day, now.monthName()[0..3], now.year, time.hour, time.minute, time.second });
-
-    //defer allocator.free(now_str);
-
-    res.header("Date", try allocator.dupe(u8, date_str));
+    res.header("Date", try allocator.dupe(u8, &date_str));
 }
 
 fn getFortunesHtml(allocator: std.mem.Allocator, pool: *pg.Pool) ![]const u8 {

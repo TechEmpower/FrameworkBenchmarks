@@ -1,14 +1,11 @@
 const std = @import("std");
-const regex = @import("regex");
 const pg = @import("pg");
 
 const Allocator = std.mem.Allocator;
 const Pool = pg.Pool;
-const ArrayList = std.ArrayList;
 
 pub fn initPool(allocator: Allocator) !*pg.Pool {
     const info = try parsePostgresConnStr(allocator);
-    //std.debug.print("Connection: {s}:{s}@{s}:{d}/{s}\n", .{ info.username, info.password, info.hostname, info.port, info.database });
 
     const pg_pool = try Pool.init(allocator, .{
         .size = 56,
