@@ -150,9 +150,9 @@ checksum = "b35204fbdc0b3f4446b89fc1ac2cf84a8a68971995d0bf2e925ec7cd960f9cb3"
 
 [[package]]
 name = "cc"
-version = "1.2.46"
+version = "1.2.47"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b97463e1064cb1b1c1384ad0a0b9c8abd0988e2a91f52606c80ef14aadb63e36"
+checksum = "cd405d82c84ff7f35739f175f67d8b9fb7687a0e84ccdc78bd3568839827cf07"
 dependencies = [
  "find-msvc-tools",
  "shlex",
@@ -463,9 +463,9 @@ dependencies = [
 
 [[package]]
 name = "hashbrown"
-version = "0.16.0"
+version = "0.16.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5419bdc4f6a9207fbeba6d11b604d481addf78ecd10c11ad51e76c2f6482748d"
+checksum = "841d1cc9bed7f9236f321df977030373f4a4163ae1a7dbfe1a51a2c1a51d9100"
 dependencies = [
  "allocator-api2",
  "equivalent",
@@ -632,9 +632,9 @@ checksum = "44faf5bb8861a9c72e20d3fb0fdbd59233e43056e2b80475ab0aacdc2e781355"
 
 [[package]]
 name = "indexmap"
-version = "2.12.0"
+version = "2.12.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6717a8d2a5a929a1a2eb43a12812498ed141a0bcfb7e8f7844fbdbe4303bba9f"
+checksum = "0ad4bb2b565bca0645f4d68c5c9af97fba094e9791da685bf83cb5f3ce74acf2"
 dependencies = [
  "equivalent",
  "hashbrown",
@@ -1275,7 +1275,7 @@ checksum = "6ce2be8dc25455e1f91df71bfa12ad37d7af1092ae736f3a6cd0e37bc7810596"
 [[package]]
 name = "std-util"
 version = "0.1.0"
-source = "git+https://github.com/tokio-rs/toasty?rev=a4a10e8#a4a10e8a381b5cee15fcfc4718aafabc5b08b7cc"
+source = "git+https://github.com/tokio-rs/toasty?rev=e0c84c5#e0c84c5182cfd3aca16b2f77145dd0946a4cb223"
 dependencies = [
  "heck",
  "pluralizer",
@@ -1375,7 +1375,7 @@ checksum = "1f3ccbac311fea05f86f61904b462b55fb3df8837a366dfc601a0161d0532f20"
 [[package]]
 name = "toasty"
 version = "0.1.0"
-source = "git+https://github.com/tokio-rs/toasty?rev=a4a10e8#a4a10e8a381b5cee15fcfc4718aafabc5b08b7cc"
+source = "git+https://github.com/tokio-rs/toasty?rev=e0c84c5#e0c84c5182cfd3aca16b2f77145dd0946a4cb223"
 dependencies = [
  "anyhow",
  "async-stream",
@@ -1393,7 +1393,7 @@ dependencies = [
 [[package]]
 name = "toasty-codegen"
 version = "0.1.0"
-source = "git+https://github.com/tokio-rs/toasty?rev=a4a10e8#a4a10e8a381b5cee15fcfc4718aafabc5b08b7cc"
+source = "git+https://github.com/tokio-rs/toasty?rev=e0c84c5#e0c84c5182cfd3aca16b2f77145dd0946a4cb223"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1404,7 +1404,7 @@ dependencies = [
 [[package]]
 name = "toasty-core"
 version = "0.1.0"
-source = "git+https://github.com/tokio-rs/toasty?rev=a4a10e8#a4a10e8a381b5cee15fcfc4718aafabc5b08b7cc"
+source = "git+https://github.com/tokio-rs/toasty?rev=e0c84c5#e0c84c5182cfd3aca16b2f77145dd0946a4cb223"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -1418,7 +1418,7 @@ dependencies = [
 [[package]]
 name = "toasty-macros"
 version = "0.1.0"
-source = "git+https://github.com/tokio-rs/toasty?rev=a4a10e8#a4a10e8a381b5cee15fcfc4718aafabc5b08b7cc"
+source = "git+https://github.com/tokio-rs/toasty?rev=e0c84c5#e0c84c5182cfd3aca16b2f77145dd0946a4cb223"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1430,7 +1430,7 @@ dependencies = [
 [[package]]
 name = "toasty-sql"
 version = "0.1.0"
-source = "git+https://github.com/tokio-rs/toasty?rev=a4a10e8#a4a10e8a381b5cee15fcfc4718aafabc5b08b7cc"
+source = "git+https://github.com/tokio-rs/toasty?rev=e0c84c5#e0c84c5182cfd3aca16b2f77145dd0946a4cb223"
 dependencies = [
  "anyhow",
  "toasty-core",
@@ -1916,9 +1916,11 @@ dependencies = [
 [[package]]
 name = "xitca-postgres-toasty"
 version = "0.1.0"
-source = "git+https://github.com/fakeshadow/xitca-postgres-toasty?rev=ea3c137#ea3c1372e704a2ebc214a468143ed258411e97a7"
+source = "git+https://github.com/fakeshadow/xitca-postgres-toasty?rev=04bedb8#04bedb8641a13b61f13c85a1fd0b8318dd5454a8"
 dependencies = [
  "anyhow",
+ "futures-core",
+ "pin-project-lite",
  "postgres-types",
  "toasty-core",
  "toasty-sql",
@@ -2038,18 +2040,18 @@ dependencies = [
 
 [[package]]
 name = "zerocopy"
-version = "0.8.27"
+version = "0.8.28"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0894878a5fa3edfd6da3f88c4805f4c8558e2b996227a3d864f47fe11e38282c"
+checksum = "43fa6694ed34d6e57407afbccdeecfa268c470a7d2a5b0cf49ce9fcc345afb90"
 dependencies = [
  "zerocopy-derive",
 ]
 
 [[package]]
 name = "zerocopy-derive"
-version = "0.8.27"
+version = "0.8.28"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "88d2b8d9c68ad2b9e4340d7832716a4d21a22a1154777ad56ea55c51a9cf3831"
+checksum = "c640b22cd9817fae95be82f0d2f90b11f7605f6c319d16705c459b27ac2cbc26"
 dependencies = [
  "proc-macro2",
  "quote",

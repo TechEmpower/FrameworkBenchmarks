@@ -95,11 +95,11 @@ panic = "abort"
 
 [patch.crates-io]
 xitca-postgres-diesel = { git = "https://github.com/fakeshadow/xitca-postgres-diesel", rev = "8ce4e5b" }
-xitca-postgres-toasty = { git = "https://github.com/fakeshadow/xitca-postgres-toasty", rev = "ea3c137" }
+xitca-postgres-toasty = { git = "https://github.com/fakeshadow/xitca-postgres-toasty", rev = "04bedb8" }
 
-toasty = { git = "https://github.com/tokio-rs/toasty", rev = "a4a10e8" }
-toasty-core = { git = "https://github.com/tokio-rs/toasty", rev = "a4a10e8" }
-toasty-sql = { git = "https://github.com/tokio-rs/toasty", rev = "a4a10e8" }
+toasty = { git = "https://github.com/tokio-rs/toasty", rev = "e0c84c5" }
+toasty-core = { git = "https://github.com/tokio-rs/toasty", rev = "e0c84c5" }
+toasty-sql = { git = "https://github.com/tokio-rs/toasty", rev = "e0c84c5" }
 
 xitca-codegen = { git = "http://github.com/HFQR/xitca-web", rev = "c9c4b25" }
 xitca-http = { git = "http://github.com/HFQR/xitca-web", rev = "c9c4b25" }
