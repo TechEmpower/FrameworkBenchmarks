@@ -12,7 +12,7 @@ COPY src src
 COPY build.zig.zon build.zig.zon
 COPY build.zig build.zig
 
-ARG ZIG_VER=0.13.0
+ARG ZIG_VER=0.15.2
 
 RUN apt-get update && apt-get install -y curl xz-utils ca-certificates
 
