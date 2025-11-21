@@ -16,7 +16,7 @@ ARG ZIG_VER=0.15.2
 
 RUN apt-get update && apt-get install -y wget xz-utils ca-certificates
 
-RUN wget https://ziglang.org/download/${ZIG_VER}/zig-linux-$(uname -m)-${ZIG_VER}.tar.xz
+RUN wget https://ziglang.org/download/${ZIG_VER}/zig-$(uname -m)-linux-${ZIG_VER}.tar.xz
 
 RUN tar -xvf zig-$(uname -m)-linux-${ZIG_VER}.tar.xz
 
