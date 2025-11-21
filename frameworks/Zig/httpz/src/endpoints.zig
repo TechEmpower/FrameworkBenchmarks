@@ -70,7 +70,7 @@ fn getWorld(pool: *pg.Pool, random_number: u32) !World {
 fn setHeaders(allocator: std.mem.Allocator, res: *httpz.Response) !void {
     res.header("Server", "Httpz");
 
-    res.header("Date", try allocator.dupe(u8, date_str));
+    res.header("Date", try allocator.dupe(u8, &date_str));
 }
 
 fn getFortunesHtml(allocator: std.mem.Allocator, pool: *pg.Pool) ![]const u8 {
