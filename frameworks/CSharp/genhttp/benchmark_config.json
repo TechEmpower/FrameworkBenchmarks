@@ -23,10 +23,8 @@
       "database_os": "Linux",
       "display_name": "genhttp [internal]",
       "notes": ""
-    }
-  },
-    {
-      "kestrel": {
+    },
+    "kestrel": {
         "plaintext_url": "/plaintext",
         "json_url": "/json",
         "db_url": "/db",
@@ -47,6 +45,6 @@
         "database_os": "Linux",
         "display_name": "genhttp [kestrel]",
         "notes": ""
-      }
-    }]
+    }
+  }]
 }
