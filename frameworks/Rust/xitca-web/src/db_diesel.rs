@@ -10,10 +10,6 @@ use diesel_async::{
     RunQueryDsl,
     pooled_connection::{AsyncDieselConnectionManager, bb8},
 };
-use futures_util::{
-    future::join,
-    stream::{FuturesUnordered, TryStreamExt},
-};
 use xitca_postgres_diesel::AsyncPgConnection;
 
 use crate::{
@@ -56,69 +52,78 @@ impl Pool {
     }
 
     pub async fn get_worlds(&self, num: u16) -> HandleResult<Vec<World>> {
-        use crate::schema::world::dsl::*;
-        {
+        let res = {
+            use crate::schema::world::dsl::*;
+
             let mut conn = self.pool.get().await?;
             let mut rng = self.rng.borrow_mut();
             core::iter::repeat_with(|| {
                 let w_id = rng.gen_id();
-                let fut = world.filter(id.eq(w_id)).load(&mut conn);
-                async { fut.await?.pop().ok_or_else(not_found) }
+                world.filter(id.eq(w_id)).load(&mut conn)
             })
             .take(num as _)
-            .collect::<FuturesUnordered<_>>()
+            .collect::<Vec<_>>()
+        };
+
+        let mut worlds = Vec::with_capacity(num as _);
+
+        for fut in res {
+            let world = fut.await?.pop().ok_or_else(not_found)?;
+            worlds.push(world);
         }
-        .try_collect()
-        .await
+
+        Ok(worlds)
     }
 
     pub async fn update(&self, num: u16) -> HandleResult<Vec<World>> {
-        use crate::schema::world::dsl::*;
+        let (get, update) = {
+            use crate::schema::world::dsl::*;
 
-        let (select_res, update_res) = {
             let mut conn = self.pool.get().await?;
             let mut rng = self.rng.borrow_mut();
 
-            let (select, mut rngs) = core::iter::repeat_with(|| {
+            let (rngs, get) = core::iter::repeat_with(|| {
                 let w_id = rng.gen_id();
                 let num = rng.gen_id();
 
                 let fut = world.filter(id.eq(w_id)).load::<World>(&mut conn);
-                let select = async move {
+
+                ((w_id, num), async move {
                     let mut w = fut.await?.pop().ok_or_else(not_found)?;
                     w.randomnumber = num;
                     HandleResult::Ok(w)
-                };
-
-                (select, (w_id, num))
+                })
             })
             .take(num as _)
-            .collect::<(FuturesUnordered<_>, Vec<_>)>();
+            .collect::<(Vec<_>, Vec<_>)>();
 
-            rngs.sort_by(|(a, _), (b, _)| a.cmp(b));
+            (get, diesel::sql_query(update_query_from_ids(rngs)).execute(&mut conn))
+        };
 
-            let update = diesel::sql_query(update_query_from_ids(&rngs)).execute(&mut conn);
+        let mut worlds = Vec::with_capacity(num as _);
 
-            join(select.try_collect::<Vec<_>>(), update)
+        for fut in get {
+            let world = fut.await?;
+            worlds.push(world);
         }
-        .await;
 
-        update_res?;
-        select_res
+        update.await?;
+
+        Ok(worlds)
     }
 
     pub async fn tell_fortune(&self) -> HandleResult<Fortunes> {
-        use crate::schema::fortune::dsl::*;
+        let mut fortunes = {
+            use crate::schema::fortune::dsl::*;
 
-        let mut items = {
             let mut conn = self.pool.get().await?;
             fortune.load(&mut conn)
         }
         .await?;
 
-        items.push(Fortune::new(0, "Additional fortune added at request time."));
-        items.sort_by(|it, next| it.message.cmp(&next.message));
+        fortunes.push(Fortune::new(0, "Additional fortune added at request time."));
+        fortunes.sort_by(|a, b| a.message.cmp(&b.message));
 
-        Ok(Fortunes::new(items))
+        Ok(Fortunes::new(fortunes))
     }
 }

@@ -1974,7 +1974,6 @@ dependencies = [
  "diesel",
  "diesel-async",
  "futures-core",
- "futures-util",
  "httparse",
  "mimalloc",
  "rand 0.9.2",

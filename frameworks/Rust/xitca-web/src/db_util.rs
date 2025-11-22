@@ -3,10 +3,11 @@ use crate::util::Error;
 #[cfg(feature = "diesel")]
 // diesel does not support high level bulk update api. use raw sql to bypass the limitation.
 // relate discussion: https://github.com/diesel-rs/diesel/discussions/2879
-pub fn update_query_from_ids(ids: &[(i32, i32)]) -> String {
+pub fn update_query_from_ids(mut rngs: Vec<(i32, i32)>) -> String {
+    rngs.sort_by(|(a, _), (b, _)| a.cmp(b));
     update_query(|query| {
         use core::fmt::Write;
-        ids.iter().for_each(|(w_id, num)| {
+        rngs.iter().for_each(|(w_id, num)| {
             write!(query, "({}::int,{}::int),", w_id, num).unwrap();
         });
     })
