@@ -1,20 +1,21 @@
 use crate::util::Error;
 
-#[cfg(any(feature = "pg-orm", feature = "pg-orm-async"))]
+#[cfg(feature = "diesel")]
 // diesel does not support high level bulk update api. use raw sql to bypass the limitation.
 // relate discussion: https://github.com/diesel-rs/diesel/discussions/2879
-pub fn update_query_from_ids(ids: &[(i32, i32)]) -> String {
+pub fn update_query_from_ids(mut rngs: Vec<(i32, i32)>) -> String {
+    rngs.sort_by(|(a, _), (b, _)| a.cmp(b));
     update_query(|query| {
         use core::fmt::Write;
-        ids.iter().for_each(|(w_id, num)| {
+        rngs.iter().for_each(|(w_id, num)| {
             write!(query, "({}::int,{}::int),", w_id, num).unwrap();
         });
     })
 }
 
 fn update_query(func: impl FnOnce(&mut String)) -> String {
-    const PREFIX: &str = "UPDATE world SET randomNumber = w.r FROM (VALUES ";
-    const SUFFIX: &str = ") AS w (i,r) WHERE world.id = w.i";
+    const PREFIX: &str = "UPDATE world SET randomNumber=w.r FROM (VALUES ";
+    const SUFFIX: &str = ") AS w (i,r) WHERE world.id=w.i";
 
     let mut query = String::from(PREFIX);
 
@@ -50,8 +51,9 @@ pub mod pg {
 
     pub type Shared = (Rand, BytesMut);
 
-    pub const FORTUNE_STMT: StatementNamed = Statement::named("SELECT * FROM fortune", &[]);
-    pub const WORLD_STMT: StatementNamed = Statement::named("SELECT * FROM world WHERE id=$1", &[Type::INT4]);
+    pub const FORTUNE_STMT: StatementNamed = Statement::named("SELECT id,message FROM fortune", &[]);
+    pub const WORLD_STMT: StatementNamed =
+        Statement::named("SELECT id,randomnumber FROM world WHERE id=$1", &[Type::INT4]);
 
     pub fn update_query_from_num(num: usize) -> Box<str> {
         super::update_query(|query| {
@@ -64,8 +66,7 @@ pub mod pg {
         .into_boxed_str()
     }
 
-    pub fn sort_update_params(params: &[[i32; 2]]) -> impl ExactSizeIterator<Item = i32> + Clone {
-        let mut params = params.to_owned();
+    pub fn sort_update_params(mut params: Vec<[i32; 2]>) -> impl ExactSizeIterator<Item = i32> + Clone {
         params.sort_by(|a, b| a[0].cmp(&b[0]));
 
         #[derive(Clone)]

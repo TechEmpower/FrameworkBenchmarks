@@ -1,25 +1,21 @@
-mod db_diesel_async;
-mod schema;
+mod db_toasty;
 mod ser;
 mod util;
 
 use xitca_web::{
     App,
     codegen::route,
-    handler::{html::Html, json::Json, query::Query, state::StateRef, text::Text},
+    handler::{html::Html, json::Json, query::Query, state::StateRef},
     http::{WebResponse, header::SERVER},
-    route::get,
 };
 
-use db_diesel_async::Pool;
+use db_toasty::Pool;
 use ser::{Num, World};
 use util::{HandleResult, SERVER_HEADER_VALUE};
 
 fn main() -> std::io::Result<()> {
     App::new()
-        .with_async_state(db_diesel_async::create)
-        .at("/plaintext", get(Text("Hello, World!")))
-        .at("/json", get(Json(ser::Message::new())))
+        .with_async_state(db_toasty::create)
         .at_typed(db)
         .at_typed(fortunes)
         .at_typed(queries)

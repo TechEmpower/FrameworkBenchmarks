@@ -83,30 +83,28 @@ impl Client {
     pub async fn update(&self, num: u16) -> HandleResult<Vec<World>> {
         let len = num as usize;
 
-        let mut params = Vec::with_capacity(len);
+        let mut worlds = Vec::with_capacity(len);
 
         let mut res = {
+            let mut params = Vec::with_capacity(len);
             let (ref mut rng, ref mut buf) = *self.shared.borrow_mut();
             // unrealistic as all queries are sent with only one sync point.
             let mut pipe = Pipeline::unsync_with_capacity_from_buf(len + 1, buf);
+
             (0..num).try_for_each(|_| {
-                let w_id = rng.gen_id();
-                let r_id = rng.gen_id();
-                params.push([w_id, r_id]);
-                self.world.bind([w_id]).query(&mut pipe)
+                let id = rng.gen_id();
+                let rand = rng.gen_id();
+                params.push([id, rand]);
+                worlds.push(World::new(id, rand));
+                self.world.bind([id]).query(&mut pipe)
             })?;
-            self.updates[len].bind(sort_update_params(&params)).query(&mut pipe)?;
+            self.updates[len].bind(sort_update_params(params)).query(&mut pipe)?;
             pipe.query(&self.cli)?
         };
 
-        let mut worlds = Vec::with_capacity(len);
-
-        let mut r_ids = params.into_iter();
-
         while let Some(mut item) = res.try_next().await? {
             while let Some(row) = item.try_next().await? {
-                let r_id = r_ids.next().unwrap()[1];
-                worlds.push(World::new(row.get(0), r_id))
+                let _rand = row.get::<i32>(1);
             }
         }
 

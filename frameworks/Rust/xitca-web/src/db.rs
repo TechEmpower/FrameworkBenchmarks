@@ -69,29 +69,27 @@ impl Client {
         let world_stmt = WORLD_STMT.execute(&mut conn).await?;
         let update_stmt = Statement::named(update, &[]).execute(&mut conn).await?;
 
-        let mut params = Vec::with_capacity(len);
+        let mut worlds = Vec::with_capacity(len);
 
         let mut res = {
+            let mut params = Vec::with_capacity(len);
             let (ref mut rng, ref mut buf) = *self.shared.borrow_mut();
             let mut pipe = Pipeline::with_capacity_from_buf(len + 1, buf);
+
             (0..num).try_for_each(|_| {
-                let w_id = rng.gen_id();
-                let r_id = rng.gen_id();
-                params.push([w_id, r_id]);
-                world_stmt.bind([w_id]).query(&mut pipe)
+                let id = rng.gen_id();
+                let rand = rng.gen_id();
+                params.push([id, rand]);
+                worlds.push(World::new(id, rand));
+                world_stmt.bind([id]).query(&mut pipe)
             })?;
-            update_stmt.bind(sort_update_params(&params)).query(&mut pipe)?;
+            update_stmt.bind(sort_update_params(params)).query(&mut pipe)?;
             pipe.query(&conn.consume())?
         };
 
-        let mut worlds = Vec::with_capacity(len);
-
-        let mut r_ids = params.into_iter();
-
         while let Some(mut item) = res.try_next().await? {
             while let Some(row) = item.try_next().await? {
-                let r_id = r_ids.next().unwrap()[1];
-                worlds.push(World::new(row.get(0), r_id))
+                let _rand = row.get::<i32>(1);
             }
         }
 
@@ -99,19 +97,19 @@ impl Client {
     }
 
     pub async fn tell_fortune(&self) -> HandleResult<Fortunes> {
-        let mut items = Vec::with_capacity(32);
-        items.push(Fortune::new(0, "Additional fortune added at request time."));
+        let mut fortunes = Vec::with_capacity(32);
+        fortunes.push(Fortune::new(0, "Additional fortune added at request time."));
 
         let mut conn = self.pool.get().await?;
         let stmt = FORTUNE_STMT.execute(&mut conn).await?;
         let mut res = stmt.query(&conn.consume()).await?;
 
         while let Some(row) = res.try_next().await? {
-            items.push(Fortune::new(row.get(0), row.get::<String>(1)));
+            fortunes.push(Fortune::new(row.get(0), row.get::<String>(1)));
         }
 
-        items.sort_by(|it, next| it.message.cmp(&next.message));
+        fortunes.sort_by(|a, b| a.message.cmp(&b.message));
 
-        Ok(Fortunes::new(items))
+        Ok(Fortunes::new(fortunes))
     }
 }
