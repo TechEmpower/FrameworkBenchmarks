@@ -1,12 +1,13 @@
 FROM dunglas/frankenphp
- 
+
+RUN apt-get update -yqq && apt-get install libicu-dev unzip -y
 RUN install-php-extensions \
+    intl \
 	pcntl \
     pdo_mysql \
 	zip > /dev/null
- 
-COPY --link . /app/
 
+COPY --link . /app/
 COPY --from=composer --link /usr/bin/composer /usr/local/bin/composer
 
 RUN mkdir -p bootstrap/cache \

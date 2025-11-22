@@ -7,10 +7,6 @@ HelloWorld::App.controllers  do
     response['Server'] = 'padrino'
   end
 
-  after do
-    response['Date'] = Time.now.httpdate
-  end if defined?(Puma)
-
   get '/json', :provides => [:json] do
     {message: "Hello, World!"}.to_json
   end

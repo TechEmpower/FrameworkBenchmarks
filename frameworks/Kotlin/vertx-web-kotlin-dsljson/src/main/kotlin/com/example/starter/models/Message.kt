@@ -4,4 +4,4 @@ import com.dslplatform.json.CompiledJson
 import com.dslplatform.json.JsonAttribute
 
 @CompiledJson
-class Message(@JsonAttribute(nullable = false) val message: String)
+class Message(@field:JsonAttribute(nullable = false) val message: String)

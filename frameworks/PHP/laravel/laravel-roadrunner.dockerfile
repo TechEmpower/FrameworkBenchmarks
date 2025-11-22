@@ -1,6 +1,7 @@
 FROM php:8.4-cli
-
-RUN docker-php-ext-install pdo_mysql pcntl opcache sockets > /dev/null
+RUN apt-get update -yqq && \
+    apt-get install -yqq libpq-dev libicu-dev > /dev/null && \
+docker-php-ext-install intl pdo_mysql pcntl opcache sockets > /dev/null
 
 RUN echo "opcache.enable_cli=1" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
 RUN echo "opcache.jit=1205" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
@@ -26,6 +27,8 @@ RUN composer require laravel/octane --update-no-dev --no-scripts --quiet
 RUN php artisan octane:install --server="roadrunner"
 RUN php artisan optimize
 
+RUN export WORKERS=$((1*$(nproc)))
+RUN if [ $(nproc) > 2 ]; then  export WORKERS=$((1*$(nproc) -1)) ; fi;
 EXPOSE 8080
 
 # https://artisan.page/12.x/

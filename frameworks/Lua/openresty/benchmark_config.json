@@ -20,6 +20,7 @@
       "database_os": "Linux",
       "display_name": "openresty",
       "notes": "",
+      "tags": ["broken"],
       "versus": "openresty"
     }
   }]

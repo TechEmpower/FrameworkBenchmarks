@@ -1,12 +1,10 @@
 ﻿using AkazawaYun.PRO7;
-using System.Text;
 
 namespace AkazawaYun.Benchmark.Platform;
 
 class MyBenchmarkReceptor : akzWebReceptorBenchmark
 {
     readonly JsonModel JsonModel;
-    readonly ReadOnlyMemory<byte> JsonContentLength;
 
 
     public MyBenchmarkReceptor()
@@ -15,8 +13,6 @@ class MyBenchmarkReceptor : akzWebReceptorBenchmark
         {
             message = "Hello, World!"
         };
-        akzJson.Text2Json(JsonModel, out ReadOnlyMemory<byte> json);
-        JsonContentLength = Encoding.UTF8.GetBytes($"{json.Length}\r\n\r\n");
     }
 
 
@@ -26,8 +22,7 @@ class MyBenchmarkReceptor : akzWebReceptorBenchmark
     }
     public override async ValueTask SendJson(IHttpContext http)
     {
-        await http.Slient.Send(DataJson_OnlyHeaderExceptContentLength);
-        await http.Slient.Send(JsonContentLength);
+        await http.Slient.Send(DataJson_OnlyHeader);
         akzJson.Text2Json(JsonModel, out ReadOnlyMemory<byte> json);
         await http.Slient.Send(json);
     }

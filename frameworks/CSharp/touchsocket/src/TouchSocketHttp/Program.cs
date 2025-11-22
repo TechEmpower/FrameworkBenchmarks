@@ -1,7 +1,6 @@
 using System.Text;
 using TouchSocket.Core;
 using TouchSocket.Http;
-using TouchSocket.Sockets;
 using HttpContent = TouchSocket.Http.HttpContent;
 
 namespace TouchSocketHttp;
@@ -10,12 +9,16 @@ public class Program
 {
     private static async Task Main(string[] args)
     {
-        var port = 8080;
+        int port = 8080;
         var service = new MyHttpService();
 
         await service.SetupAsync(new TouchSocketConfig()
              .SetListenIPHosts(port)
              .SetMaxCount(1000000)
+              .SetTransportOption(options =>
+              {
+                  options.BufferOnDemand = false;
+              })
              .ConfigureContainer(a =>
              {
                  a.AddConsoleLogger();
