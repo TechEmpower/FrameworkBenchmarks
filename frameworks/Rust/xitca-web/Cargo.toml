@@ -27,7 +27,7 @@ required-features = ["toasty", "template", "web-codegen"]
 # pg client optional
 pg = ["dep:xitca-postgres"]
 # diesel orm optional
-diesel = ["dep:diesel", "dep:diesel-async", "dep:xitca-postgres-diesel"]
+diesel = ["dep:diesel", "dep:diesel-async", "dep:xitca-postgres-diesel", "dep:futures-util"]
 # toasty orm optional
 toasty = ["dep:toasty", "dep:xitca-postgres-toasty"]
 # http router optional
@@ -65,6 +65,7 @@ xitca-postgres = { version = "0.3", optional = true }
 diesel = { version = "2", features = ["postgres"], optional = true }
 diesel-async = { version = "0.7", features = ["bb8", "postgres"], optional = true }
 xitca-postgres-diesel = { version = "0.2", optional = true }
+futures-util = { version = "0.3", default-features = false, optional = true }
 
 # toasty orm optional
 xitca-postgres-toasty = { version = "0.1", optional = true }

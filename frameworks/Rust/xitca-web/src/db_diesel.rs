@@ -10,6 +10,7 @@ use diesel_async::{
     RunQueryDsl,
     pooled_connection::{AsyncDieselConnectionManager, bb8},
 };
+use futures_util::future::{try_join, try_join_all};
 use xitca_postgres_diesel::AsyncPgConnection;
 
 use crate::{
@@ -40,8 +41,9 @@ pub async fn create() -> io::Result<Pool> {
 
 impl Pool {
     pub async fn get_world(&self) -> HandleResult<World> {
-        use crate::schema::world::dsl::*;
         {
+            use crate::schema::world::dsl::*;
+
             let w_id = self.rng.borrow_mut().gen_id();
             let mut conn = self.pool.get().await?;
             world.filter(id.eq(w_id)).load(&mut conn)
@@ -52,27 +54,21 @@ impl Pool {
     }
 
     pub async fn get_worlds(&self, num: u16) -> HandleResult<Vec<World>> {
-        let res = {
+        try_join_all({
             use crate::schema::world::dsl::*;
 
             let mut conn = self.pool.get().await?;
             let mut rng = self.rng.borrow_mut();
+
             core::iter::repeat_with(|| {
                 let w_id = rng.gen_id();
-                world.filter(id.eq(w_id)).load(&mut conn)
+                let fut = world.filter(id.eq(w_id)).load(&mut conn);
+                async { fut.await?.pop().ok_or_else(not_found) }
             })
             .take(num as _)
             .collect::<Vec<_>>()
-        };
-
-        let mut worlds = Vec::with_capacity(num as _);
-
-        for fut in res {
-            let world = fut.await?.pop().ok_or_else(not_found)?;
-            worlds.push(world);
-        }
-
-        Ok(worlds)
+        })
+        .await
     }
 
     pub async fn update(&self, num: u16) -> HandleResult<Vec<World>> {
@@ -97,19 +93,15 @@ impl Pool {
             .take(num as _)
             .collect::<(Vec<_>, Vec<_>)>();
 
-            (get, diesel::sql_query(update_query_from_ids(rngs)).execute(&mut conn))
+            let update = diesel::sql_query(update_query_from_ids(rngs)).execute(&mut conn);
+
+            (try_join_all(get), async {
+                let res = update.await?;
+                HandleResult::Ok(res)
+            })
         };
 
-        let mut worlds = Vec::with_capacity(num as _);
-
-        for fut in get {
-            let world = fut.await?;
-            worlds.push(world);
-        }
-
-        update.await?;
-
-        Ok(worlds)
+        try_join(get, update).await.map(|(worlds, _)| worlds)
     }
 
     pub async fn tell_fortune(&self) -> HandleResult<Fortunes> {

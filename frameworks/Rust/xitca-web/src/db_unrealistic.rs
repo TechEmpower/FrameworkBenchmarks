@@ -64,7 +64,7 @@ impl Client {
         let mut res = {
             let (ref mut rng, ref mut buf) = *self.shared.borrow_mut();
             // unrealistic as all queries are sent with only one sync point.
-            let mut pipe = Pipeline::unsync_with_capacity_from_buf(len, buf);
+            let mut pipe = Pipeline::with_capacity_from_buf(len, buf);
             (0..num).try_for_each(|_| self.world.bind([rng.gen_id()]).query(&mut pipe))?;
             pipe.query(&self.cli)?
         };
