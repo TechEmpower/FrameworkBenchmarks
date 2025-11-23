@@ -1,4 +1,4 @@
-FROM phpswoole/swoole:php8.4
+FROM phpswoole/swoole:php8.5
 
 RUN apt-get -y update > /dev/null \
     && apt-get install -y libicu-dev > /dev/null \

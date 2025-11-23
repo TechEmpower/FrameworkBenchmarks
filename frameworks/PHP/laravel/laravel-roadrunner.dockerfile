@@ -1,4 +1,4 @@
-FROM php:8.4-cli
+FROM php:8.5-cli
 RUN apt-get update -yqq && \
     apt-get install -yqq libpq-dev libicu-dev > /dev/null && \
 docker-php-ext-install intl pdo_mysql pcntl opcache sockets > /dev/null
