@@ -66,7 +66,7 @@ pub mod pg {
         .into_boxed_str()
     }
 
-    pub fn sort_update_params(mut params: Vec<[i32; 2]>) -> impl ExactSizeIterator<Item = i32> + Clone {
+    pub fn sort_update_params(params: &mut Vec<[i32; 2]>) -> impl ExactSizeIterator<Item = i32> + Clone {
         params.sort_by(|a, b| a[0].cmp(&b[0]));
 
         #[derive(Clone)]
@@ -93,6 +93,6 @@ pub mod pg {
         // it's size hint. possible to cause runtime panic.
         impl<I> ExactSizeIterator for ParamIter<I> where I: Iterator {}
 
-        ParamIter(params.into_iter().flatten())
+        ParamIter(params.iter().flatten().cloned().take(params.len()))
     }
 }

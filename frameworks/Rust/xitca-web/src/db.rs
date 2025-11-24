@@ -69,22 +69,21 @@ impl Client {
         let world_stmt = WORLD_STMT.execute(&mut conn).await?;
         let update_stmt = Statement::named(update, &[]).execute(&mut conn).await?;
 
-        let mut worlds = Vec::with_capacity(len);
-
-        let mut res = {
-            let mut params = Vec::with_capacity(len);
+        let (mut res, worlds) = {
             let (ref mut rng, ref mut buf) = *self.shared.borrow_mut();
             let mut pipe = Pipeline::with_capacity_from_buf(len + 1, buf);
 
-            (0..num).try_for_each(|_| {
+            let (mut params, worlds) = core::iter::repeat_with(|| {
                 let id = rng.gen_id();
                 let rand = rng.gen_id();
-                params.push([id, rand]);
-                worlds.push(World::new(id, rand));
-                world_stmt.bind([id]).query(&mut pipe)
-            })?;
-            update_stmt.bind(sort_update_params(params)).query(&mut pipe)?;
-            pipe.query(&conn.consume())?
+                world_stmt.bind([id]).query(&mut pipe)?;
+                HandleResult::Ok(([id, rand], World::new(id, rand)))
+            })
+            .take(len)
+            .collect::<Result<(Vec<_>, Vec<_>), _>>()?;
+
+            update_stmt.bind(sort_update_params(&mut params)).query(&mut pipe)?;
+            (pipe.query(&conn.consume())?, worlds)
         };
 
         while let Some(mut item) = res.try_next().await? {

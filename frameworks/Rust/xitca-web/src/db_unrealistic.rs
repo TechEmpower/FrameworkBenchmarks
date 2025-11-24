@@ -63,7 +63,6 @@ impl Client {
 
         let mut res = {
             let (ref mut rng, ref mut buf) = *self.shared.borrow_mut();
-            // unrealistic as all queries are sent with only one sync point.
             let mut pipe = Pipeline::with_capacity_from_buf(len, buf);
             (0..num).try_for_each(|_| self.world.bind([rng.gen_id()]).query(&mut pipe))?;
             pipe.query(&self.cli)?
@@ -83,23 +82,24 @@ impl Client {
     pub async fn update(&self, num: u16) -> HandleResult<Vec<World>> {
         let len = num as usize;
 
-        let mut worlds = Vec::with_capacity(len);
-
-        let mut res = {
-            let mut params = Vec::with_capacity(len);
+        let (mut res, worlds) = {
             let (ref mut rng, ref mut buf) = *self.shared.borrow_mut();
             // unrealistic as all queries are sent with only one sync point.
             let mut pipe = Pipeline::unsync_with_capacity_from_buf(len + 1, buf);
 
-            (0..num).try_for_each(|_| {
+            let (mut params, worlds) = core::iter::repeat_with(|| {
                 let id = rng.gen_id();
                 let rand = rng.gen_id();
-                params.push([id, rand]);
-                worlds.push(World::new(id, rand));
-                self.world.bind([id]).query(&mut pipe)
-            })?;
-            self.updates[len].bind(sort_update_params(params)).query(&mut pipe)?;
-            pipe.query(&self.cli)?
+                self.world.bind([id]).query(&mut pipe)?;
+                HandleResult::Ok(([id, rand], World::new(id, rand)))
+            })
+            .take(len)
+            .collect::<Result<(Vec<_>, Vec<_>), _>>()?;
+
+            self.updates[len]
+                .bind(sort_update_params(&mut params))
+                .query(&mut pipe)?;
+            (pipe.query(&self.cli)?, worlds)
         };
 
         while let Some(mut item) = res.try_next().await? {
