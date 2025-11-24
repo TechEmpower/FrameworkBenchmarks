@@ -93,6 +93,6 @@ pub mod pg {
         // it's size hint. possible to cause runtime panic.
         impl<I> ExactSizeIterator for ParamIter<I> where I: Iterator {}
 
-        ParamIter(params.iter().flatten().cloned().take(params.len()))
+        ParamIter(params.iter().flatten().cloned())
     }
 }
