@@ -14,7 +14,6 @@ ADD ./ /php
 WORKDIR /php
 
 RUN if [ $(nproc) = 2 ]; then sed -i "s|pm.max_children = 1024|pm.max_children = 512|g" /etc/php/8.5/fpm/php-fpm.conf ; fi;
-RUN sed -i "s|opcache.jit=off|;opcache.jit=off|g" /etc/php/8.5/fpm/conf.d/10-opcache.ini
 
 RUN chmod -R 777 /php
 
