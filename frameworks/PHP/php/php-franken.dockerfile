@@ -1,4 +1,4 @@
-FROM dunglas/frankenphp
+FROM dunglas/frankenphp:8.5
 
 # add additional extensions here:
 RUN install-php-extensions \
