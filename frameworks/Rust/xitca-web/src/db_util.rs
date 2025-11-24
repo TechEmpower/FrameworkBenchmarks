@@ -1,4 +1,4 @@
-use crate::util::Error;
+#![allow(dead_code)]
 
 #[cfg(feature = "diesel")]
 // diesel does not support high level bulk update api. use raw sql to bypass the limitation.
@@ -30,12 +30,6 @@ fn update_query(func: impl FnOnce(&mut String)) -> String {
     query
 }
 
-#[cold]
-#[inline(never)]
-pub fn not_found() -> Error {
-    "request World does not exist".into()
-}
-
 #[cfg(feature = "pg")]
 pub use pg::*;
 
@@ -47,13 +41,23 @@ pub mod pg {
         types::Type,
     };
 
-    use crate::util::Rand;
+    use crate::util::{Error, Rand};
 
     pub type Shared = (Rand, BytesMut);
 
     pub const FORTUNE_STMT: StatementNamed = Statement::named("SELECT id,message FROM fortune", &[]);
     pub const WORLD_STMT: StatementNamed =
         Statement::named("SELECT id,randomnumber FROM world WHERE id=$1", &[Type::INT4]);
+    pub const UPDATE_STMT: StatementNamed = Statement::named(
+        "UPDATE world SET randomnumber=$1 WHERE id=$2",
+        &[Type::INT4, Type::INT4],
+    );
+
+    #[cold]
+    #[inline(never)]
+    pub fn not_found() -> Error {
+        "request World does not exist".into()
+    }
 
     pub fn update_query_from_num(num: usize) -> Box<str> {
         super::update_query(|query| {

@@ -13,14 +13,14 @@ use super::{
     util::{DB_URL, HandleResult},
 };
 
-use db_util::{FORTUNE_STMT, Shared, WORLD_STMT, not_found, sort_update_params, update_query_from_num};
+use db_util::{FORTUNE_STMT, Shared, UPDATE_STMT, WORLD_STMT, not_found};
 
 pub struct Client {
     cli: xitca_postgres::Client,
     shared: RefCell<Shared>,
     fortune: Statement,
     world: Statement,
-    updates: Box<[Statement]>,
+    update: Statement,
 }
 
 pub async fn create() -> HandleResult<Client> {
@@ -33,20 +33,14 @@ pub async fn create() -> HandleResult<Client> {
 
     let world = WORLD_STMT.execute(&cli).await?.leak();
     let fortune = FORTUNE_STMT.execute(&cli).await?.leak();
-
-    let mut updates = vec![Statement::default()];
-
-    for update in (1..=500).map(update_query_from_num) {
-        let stmt = Statement::named(&update, &[]).execute(&cli).await?.leak();
-        updates.push(stmt);
-    }
+    let update = UPDATE_STMT.execute(&cli).await?.leak();
 
     Ok(Client {
         cli,
         shared: Default::default(),
         world,
         fortune,
-        updates: updates.into_boxed_slice(),
+        update,
     })
 }
 
@@ -87,18 +81,19 @@ impl Client {
             // unrealistic as all queries are sent with only one sync point.
             let mut pipe = Pipeline::unsync_with_capacity_from_buf(len + 1, buf);
 
-            let (mut params, worlds) = core::iter::repeat_with(|| {
+            let (params, worlds) = core::iter::repeat_with(|| {
                 let id = rng.gen_id();
                 let rand = rng.gen_id();
                 self.world.bind([id]).query(&mut pipe)?;
-                HandleResult::Ok(([id, rand], World::new(id, rand)))
+                HandleResult::Ok(((id, rand), World::new(id, rand)))
             })
             .take(len)
             .collect::<Result<(Vec<_>, Vec<_>), _>>()?;
 
-            self.updates[len]
-                .bind(sort_update_params(&mut params))
-                .query(&mut pipe)?;
+            params
+                .into_iter()
+                .try_for_each(|(id, rng)| self.update.bind([rng, id]).query(&mut pipe))?;
+
             (pipe.query(&self.cli)?, worlds)
         };
 
