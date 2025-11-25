@@ -27,7 +27,7 @@ RUN pecl install protobuf > /dev/null && echo "extension=protobuf.so" > /usr/loc
 COPY --from=composer/composer:latest-bin --link /composer /usr/local/bin/composer
 
 RUN composer require laravel/octane --update-no-dev --no-scripts --quiet
-RUN php artisan octane:install --server="roadrunner"
+RUN php artisan octane:install --server="roadrunner" > /dev/null
 RUN php artisan optimize
 
 RUN export WORKERS=$((1*$(nproc)))
