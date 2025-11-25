@@ -3,7 +3,6 @@ using System.Text.Json.Serialization;
 using TouchSocket.Core;
 using TouchSocket.Http;
 using TouchSocket.Rpc;
-using TouchSocket.Sockets;
 using TouchSocket.WebApi;
 using HttpContent = TouchSocket.Http.HttpContent;
 
@@ -21,7 +20,7 @@ public class Program
             .SetMaxCount(1000000)
             .SetTransportOption(options =>
             {
-                options.BufferOnDemand = true;
+                options.BufferOnDemand = false;
             })
            .ConfigureContainer(a =>
            {
