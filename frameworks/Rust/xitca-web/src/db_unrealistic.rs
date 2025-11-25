@@ -81,7 +81,7 @@ impl Client {
             // unrealistic as all queries are sent with only one sync point.
             let mut pipe = Pipeline::unsync_with_capacity_from_buf(len + 1, buf);
 
-            let (params, worlds) = core::iter::repeat_with(|| {
+            let (mut params, worlds) = core::iter::repeat_with(|| {
                 let id = rng.gen_id();
                 let rand = rng.gen_id();
                 self.world.bind([id]).query(&mut pipe)?;
@@ -89,6 +89,8 @@ impl Client {
             })
             .take(len)
             .collect::<Result<(Vec<_>, Vec<_>), _>>()?;
+
+            params.sort();
 
             params
                 .into_iter()
@@ -107,16 +109,13 @@ impl Client {
     }
 
     pub async fn tell_fortune(&self) -> HandleResult<Fortunes> {
-        let mut items = Vec::with_capacity(32);
-        items.push(Fortune::new(0, "Additional fortune added at request time."));
+        let mut items = Vec::with_capacity(16);
 
         let mut res = self.fortune.query(&self.cli).await?;
 
         while let Some(row) = res.try_next().await? {
             items.push(Fortune::new(row.get(0), row.get::<String>(1)));
         }
-
-        items.sort_by(|it, next| it.message.cmp(&next.message));
 
         Ok(Fortunes::new(items))
     }

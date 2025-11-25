@@ -92,10 +92,6 @@ impl Pool {
 
     pub async fn tell_fortune(&self) -> HandleResult<Fortunes> {
         let mut fortunes = Fortune::all().all(&self.db).await?.collect::<Vec<_>>().await?;
-
-        fortunes.push(Fortune::new(0, "Additional fortune added at request time."));
-        fortunes.sort_by(|a, b| a.message.cmp(&b.message));
-
         Ok(Fortunes::new(fortunes))
     }
 }

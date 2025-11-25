@@ -68,14 +68,17 @@ impl Client {
             let (ref mut rng, ref mut buf) = *self.shared.borrow_mut();
             let mut pipe = Pipeline::with_capacity_from_buf(len + 1, buf);
 
-            let (ids, rngs, worlds) = core::iter::repeat_with(|| {
+            let (mut params, worlds) = core::iter::repeat_with(|| {
                 let id = rng.gen_id();
                 let rand = rng.gen_id();
                 world_stmt.bind([id]).query(&mut pipe)?;
-                HandleResult::Ok((id, rand, World::new(id, rand)))
+                HandleResult::Ok(((id, rand), World::new(id, rand)))
             })
             .take(len)
-            .collect::<Result<(Vec<_>, Vec<_>, Vec<_>), _>>()?;
+            .collect::<Result<(Vec<_>, Vec<_>), _>>()?;
+
+            params.sort();
+            let (ids, rngs) = params.into_iter().collect::<(Vec<_>, Vec<_>)>();
 
             update_stmt.bind([&ids, &rngs]).query(&mut pipe)?;
             (pipe.query(&conn.consume())?, worlds)
@@ -91,8 +94,7 @@ impl Client {
     }
 
     pub async fn tell_fortune(&self) -> HandleResult<Fortunes> {
-        let mut fortunes = Vec::with_capacity(32);
-        fortunes.push(Fortune::new(0, "Additional fortune added at request time."));
+        let mut fortunes = Vec::with_capacity(16);
 
         let mut conn = self.pool.get().await?;
         let stmt = FORTUNE_STMT.execute(&mut conn).await?;
@@ -101,8 +103,6 @@ impl Client {
         while let Some(row) = res.try_next().await? {
             fortunes.push(Fortune::new(row.get(0), row.get::<String>(1)));
         }
-
-        fortunes.sort_by(|a, b| a.message.cmp(&b.message));
 
         Ok(Fortunes::new(fortunes))
     }

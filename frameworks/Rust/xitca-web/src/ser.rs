@@ -119,7 +119,9 @@ impl sailfish::TemplateOnce for Fortunes {
 
 impl Fortunes {
     #[inline]
-    pub const fn new(items: Vec<Fortune>) -> Self {
+    pub fn new(mut items: Vec<Fortune>) -> Self {
+        items.push(Fortune::new(0, "Additional fortune added at request time."));
+        items.sort_by(|a, b| a.message.cmp(&b.message));
         Self { items }
     }
 }

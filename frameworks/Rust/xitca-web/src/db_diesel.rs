@@ -108,10 +108,6 @@ impl Pool {
             fortune.load(&mut conn).map_err(Into::into)
         }
         .await
-        .map(|mut fortunes| {
-            fortunes.push(Fortune::new(0, "Additional fortune added at request time."));
-            fortunes.sort_by(|a, b| a.message.cmp(&b.message));
-            Fortunes::new(fortunes)
-        })
+        .map(Fortunes::new)
     }
 }
