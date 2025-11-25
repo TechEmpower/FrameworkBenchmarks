@@ -1,7 +1,10 @@
 FROM php:8.5-cli
+
+ARG DEBIAN_FRONTEND=noninteractive
+
 RUN apt-get update -yqq && \
     apt-get install -yqq libpq-dev libicu-dev > /dev/null && \
-docker-php-ext-install intl pdo_mysql pcntl opcache sockets > /dev/null
+docker-php-ext-install intl pdo_mysql pcntl sockets > /dev/null
 
 RUN echo "opcache.enable_cli=1" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
 RUN echo "opcache.jit=1205" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini

@@ -1,4 +1,4 @@
-FROM phpswoole/swoole:php8.5
+FROM phpswoole/swoole:php8.4
 
 RUN apt-get update -yqq && apt-get install libicu-dev -y
 RUN docker-php-ext-install intl pcntl opcache> /dev/null
