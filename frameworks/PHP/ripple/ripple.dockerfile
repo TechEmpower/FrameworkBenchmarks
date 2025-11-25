@@ -10,6 +10,7 @@ RUN apt-get install -y libevent-dev \
 
 RUN docker-php-ext-install pdo_mysql \
     ffi \
+    posix \
     pcntl \
     sockets >> /dev/null
 
