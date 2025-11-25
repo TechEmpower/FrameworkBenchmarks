@@ -15,12 +15,12 @@ required-features = ["perf", "pg", "template"]
 
 [[bin]]
 name = "xitca-web-diesel"
-path = "./src/main_diesel.rs"
+path = "./src/main_orm.rs"
 required-features = ["diesel", "template", "web-codegen"]
 
 [[bin]]
 name = "xitca-web-toasty"
-path = "./src/main_toasty.rs"
+path = "./src/main_orm.rs"
 required-features = ["toasty", "template", "web-codegen"]
 
 [features]

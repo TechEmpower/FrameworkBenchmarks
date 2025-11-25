@@ -3,28 +3,24 @@ mod db_util;
 
 use core::cell::RefCell;
 
-use xitca_postgres::{Execute, iter::AsyncLendingIterator, pipeline::Pipeline, pool::Pool, statement::Statement};
+use xitca_postgres::{Execute, iter::AsyncLendingIterator, pipeline::Pipeline, pool::Pool};
 
 use super::{
     ser::{Fortune, Fortunes, World},
     util::{DB_URL, HandleResult},
 };
 
-use db_util::{FORTUNE_STMT, Shared, WORLD_STMT, not_found, sort_update_params, update_query_from_num};
+use db_util::{FORTUNE_STMT, Shared, UPDATE_BATCH_STMT, WORLD_STMT, not_found};
 
 pub struct Client {
     pool: Pool,
     shared: RefCell<Shared>,
-    updates: Box<[Box<str>]>,
 }
 
 pub async fn create() -> HandleResult<Client> {
     Ok(Client {
         pool: Pool::builder(DB_URL).capacity(1).build()?,
         shared: Default::default(),
-        updates: core::iter::once(Box::from(""))
-            .chain((1..=500).map(update_query_from_num))
-            .collect(),
     })
 }
 
@@ -64,25 +60,24 @@ impl Client {
     pub async fn update(&self, num: u16) -> HandleResult<Vec<World>> {
         let len = num as usize;
 
-        let update = self.updates.get(len).ok_or("request num is out of range")?;
         let mut conn = self.pool.get().await?;
         let world_stmt = WORLD_STMT.execute(&mut conn).await?;
-        let update_stmt = Statement::named(update, &[]).execute(&mut conn).await?;
+        let update_stmt = UPDATE_BATCH_STMT.execute(&mut conn).await?;
 
         let (mut res, worlds) = {
             let (ref mut rng, ref mut buf) = *self.shared.borrow_mut();
             let mut pipe = Pipeline::with_capacity_from_buf(len + 1, buf);
 
-            let (mut params, worlds) = core::iter::repeat_with(|| {
+            let (ids, rngs, worlds) = core::iter::repeat_with(|| {
                 let id = rng.gen_id();
                 let rand = rng.gen_id();
                 world_stmt.bind([id]).query(&mut pipe)?;
-                HandleResult::Ok(([id, rand], World::new(id, rand)))
+                HandleResult::Ok((id, rand, World::new(id, rand)))
             })
             .take(len)
-            .collect::<Result<(Vec<_>, Vec<_>), _>>()?;
+            .collect::<Result<(Vec<_>, Vec<_>, Vec<_>), _>>()?;
 
-            update_stmt.bind(sort_update_params(&mut params)).query(&mut pipe)?;
+            update_stmt.bind([&ids, &rngs]).query(&mut pipe)?;
             (pipe.query(&conn.consume())?, worlds)
         };
 
