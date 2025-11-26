@@ -13,8 +13,11 @@ ADD ./ /grape
 
 WORKDIR /grape
 
+RUN bundle config set with 'iodine'
 RUN bundle install --jobs=4 --gemfile=/grape/Gemfile
+
+ENV RACK_ENV=production
 
 EXPOSE 8080
 
-CMD nginx -c /grape/config/nginx.conf && bundle exec unicorn -E production -c config/unicorn.rb
+CMD bundle exec iodine -p 8080 -w $(ruby config/auto_tune.rb | grep -Eo '[0-9]+' | head -n 1)
