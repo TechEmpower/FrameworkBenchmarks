@@ -1,6 +1,6 @@
 <?php
 
-namespace app\controllers;
+namespace app\http\controllers;
 
 use mako\http\routing\Controller;
 use mako\view\ViewFactory;
