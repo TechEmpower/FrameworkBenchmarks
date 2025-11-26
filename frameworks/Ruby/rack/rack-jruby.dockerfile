@@ -1,4 +1,4 @@
-FROM jruby:10.0
+FROM ruby:4.0-rc
 
 RUN apt-get update -y && apt-get install netbase -y
 

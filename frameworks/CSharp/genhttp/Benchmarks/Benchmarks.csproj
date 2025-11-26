@@ -2,13 +2,15 @@
 
     <PropertyGroup>
 
-        <TargetFramework>net9.0</TargetFramework>
-        <LangVersion>13.0</LangVersion>
+        <TargetFramework>net10.0</TargetFramework>
+        <LangVersion>14.0</LangVersion>
         <ImplicitUsings>true</ImplicitUsings>
         <OutputType>Exe</OutputType>
 
         <AssemblyTitle>GenHTTP Benchmarks</AssemblyTitle>
         <Description>Test suite to be executed with TechEmpower FrameworkBenchmarks.</Description>
+
+        <DefineConstants>$(DefineConstants);$(GENHTTP_ENGINE_NAME)</DefineConstants>
 
         <ServerGarbageCollection>true</ServerGarbageCollection>
         <TieredPGO>true</TieredPGO>
@@ -26,11 +28,12 @@
 
     <ItemGroup>
 
-        <PackageReference Include="GenHTTP.Core" Version="9.8.0" />
-        <PackageReference Include="GenHTTP.Modules.Webservices" Version="9.8.0" />
+        <PackageReference Include="$(GENHTTP_ENGINE_PACKAGE)" Version="10.1.0" />
 
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.10" />
-        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
+        <PackageReference Include="GenHTTP.Modules.Webservices" Version="10.1.0" />
+
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.0" />
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0" />
 
     </ItemGroup>
 

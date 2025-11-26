@@ -18,7 +18,9 @@
    ["/updates" {:get (partial bench/update-db-handler db-conn)}]
    ["/cached-queries" {:get (partial bench/cached-query-handler db-conn cache)}]
    ["/fortunes" {:get (partial bench/selmer-fortune-handler db-conn)}]
-   ["/majavat-fortunes" {:get (partial bench/majavat-fortune-handler db-conn)}]])
+   ["/majavat-fortunes" {:get (partial bench/majavat-fortune-handler db-conn)}]
+   ["/hiccup-fortunes" {:get (partial bench/hiccup-fortune-handler db-conn)}]
+   ])
 
 (defmethod ig/init-key :reitit.routes/bench
   [_ {:keys [base-path]
