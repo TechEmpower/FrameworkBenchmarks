@@ -77,8 +77,12 @@ public class Db
             results[i] = await ReadSingleRow(db);
             ids[i] = results[i].Id;
         }
-
         Array.Sort(ids);
+
+        // Ensure unique ids by incrementing duplicates
+        for (var i = 1; i < count; i++)
+            if (ids[i] <= ids[i - 1])
+                ids[i] = Math.Min(ids[i - 1] + 1, 10000);
 
         for (var i = 0; i < count; i++)
         {

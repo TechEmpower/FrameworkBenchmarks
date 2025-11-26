@@ -136,6 +136,11 @@ public sealed class RawDb
         }
         Array.Sort(ids);
         
+        // Ensure unique ids by incrementing duplicates
+        for (var i = 1; i < count; i++)
+            if (ids[i] <= ids[i - 1])
+                ids[i] = Math.Min(ids[i - 1] + 1, 10000);
+
         using var connection = CreateConnection();
         await connection.OpenAsync();
 
