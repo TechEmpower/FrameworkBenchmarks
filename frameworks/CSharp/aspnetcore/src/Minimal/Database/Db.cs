@@ -63,6 +63,9 @@ public class Db
 
         var parameters = new Dictionary<string, object>();
 
+        var ids = new int[count];
+        var numbers = new int[count];
+
         await using var db = _dbProviderFactory.CreateConnection();
 
         db!.ConnectionString = _connectionString;
@@ -72,18 +75,24 @@ public class Db
         for (var i = 0; i < count; i++)
         {
             results[i] = await ReadSingleRow(db);
+            ids[i] = results[i].Id;
         }
+
+        Array.Sort(ids);
 
         for (var i = 0; i < count; i++)
         {
             var randomNumber = Random.Shared.Next(1, 10001);
-            parameters[$"@Rn_{i}"] = randomNumber;
-            parameters[$"@Id_{i}"] = results[i].Id;
-
             results[i].RandomNumber = randomNumber;
+            numbers[i] = randomNumber;
         }
 
-        await db.ExecuteAsync(BatchUpdateString.Query(count), parameters);
+        var update = "UPDATE world w SET randomnumber = u.new_val FROM (SELECT unnest(@ids) as id, unnest(@newValues) as new_val) u WHERE w.id = u.id";
+
+        parameters["ids"] = ids;
+        parameters["newValues"] = numbers;
+
+        await db.ExecuteAsync(update, parameters);
         return results;
     }
 
