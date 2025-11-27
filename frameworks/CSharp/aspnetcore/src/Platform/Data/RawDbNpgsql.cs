@@ -138,11 +138,10 @@ public sealed class RawDb
         
         // Ensure unique ids by incrementing duplicates
         for (var i = 1; i < count; i++)
-            if (ids[i] <= ids[i - 1])
-                ids[i] = Math.Min(ids[i - 1] + 1, 10000);
+            if (ids[i] == ids[i - 1])
+                ids[i] = (ids[i] % 10000) + 1;
 
-        using var connection = CreateConnection();
-        await connection.OpenAsync();
+        using var connection = await _dataSource.OpenConnectionAsync();
 
         // Each row must be selected randomly using one query in the same fashion as the single database query test
         // Use of IN clauses or similar means to consolidate multiple queries into one operation is not permitted.
