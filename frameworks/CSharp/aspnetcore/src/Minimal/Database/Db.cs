@@ -81,12 +81,17 @@ public class Db
 
         // Ensure unique ids by incrementing duplicates
         for (var i = 1; i < count; i++)
-            if (ids[i] <= ids[i - 1])
-                ids[i] = Math.Min(ids[i - 1] + 1, 10000);
+            if (ids[i] == ids[i - 1])
+                ids[i] = (ids[i] % 10000) + 1;
 
         for (var i = 0; i < count; i++)
         {
             var randomNumber = Random.Shared.Next(1, 10001);
+            if (results[i].RandomNumber == randomNumber)
+            {
+                randomNumber = (randomNumber % 10000) + 1;
+            }
+
             results[i].RandomNumber = randomNumber;
             numbers[i] = randomNumber;
         }

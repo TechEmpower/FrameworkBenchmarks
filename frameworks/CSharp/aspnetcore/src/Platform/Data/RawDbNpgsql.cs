@@ -130,6 +130,8 @@ public sealed class RawDb
         var results = new World[count];
 
         var ids = new int[count];
+        var numbers = new int[count];
+
         for (var i = 0; i < count; i++)
         {
             ids[i] = Random.Shared.Next(1, 10001);
@@ -156,7 +158,6 @@ public sealed class RawDb
             }
         }
 
-        var numbers = new int[count];
         for (var i = 0; i < count; i++)
         {
             var randomNumber = Random.Shared.Next(1, 10001);
