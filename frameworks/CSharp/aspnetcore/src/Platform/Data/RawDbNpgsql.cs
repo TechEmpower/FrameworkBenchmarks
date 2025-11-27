@@ -161,6 +161,11 @@ public sealed class RawDb
         for (var i = 0; i < count; i++)
         {
             var randomNumber = Random.Shared.Next(1, 10001);
+            if (results[i].RandomNumber == randomNumber)
+            {
+                randomNumber = (randomNumber % 10000) + 1;
+            }
+
             results[i].RandomNumber = randomNumber;
             numbers[i] = randomNumber;
         }
