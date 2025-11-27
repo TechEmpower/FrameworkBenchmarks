@@ -5,11 +5,15 @@ namespace Benchmarks.Model;
 
 public sealed class DatabaseContext : DbContext
 {
-    private static readonly Lazy<DbContextOptions<DatabaseContext>> Options = new(CreateOptions, LazyThreadSafetyMode.ExecutionAndPublication);
+    private static readonly Lazy<DbContextOptions<DatabaseContext>> TrackingOptions = new(() => CreateOptions(true), LazyThreadSafetyMode.ExecutionAndPublication);
 
-    public static DatabaseContext Create() => new(Options.Value);
+    private static readonly Lazy<DbContextOptions<DatabaseContext>> NoTrackingOptions = new(() => CreateOptions(false), LazyThreadSafetyMode.ExecutionAndPublication);
 
-    private static DbContextOptions<DatabaseContext> CreateOptions()
+    public static DatabaseContext CreateTracking() => new(TrackingOptions.Value, true);
+
+    public static DatabaseContext CreateNoTracking() => new(NoTrackingOptions.Value, false);
+
+    private static DbContextOptions<DatabaseContext> CreateOptions(bool tracking)
     {
         var services = new ServiceCollection();
 
@@ -21,16 +25,20 @@ public sealed class DatabaseContext : DbContext
 
         builder.UseInternalServiceProvider(provider)
                .UseNpgsql("Server=tfb-database;Database=hello_world;User Id=benchmarkdbuser;Password=benchmarkdbpass;SSL Mode=Disable;Maximum Pool Size=512;NoResetOnClose=true;Enlist=false;Max Auto Prepare=4;Multiplexing=true")
-               .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
                .EnableThreadSafetyChecks(false)
                .UseModel(DatabaseContextModel.Instance);
+
+        if (!tracking)
+        {
+            builder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+        }
 
         return builder.Options;
     }
 
-    internal DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
+    internal DatabaseContext(DbContextOptions<DatabaseContext> options, bool tracking = false) : base(options)
     {
-        ChangeTracker.AutoDetectChangesEnabled = false;
+        ChangeTracker.AutoDetectChangesEnabled = tracking;
     }
 
     public DbSet<World> World { get; set; }

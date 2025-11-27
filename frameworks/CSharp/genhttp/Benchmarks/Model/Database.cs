@@ -8,8 +8,8 @@ public static class Database
 
     static Database()
     {
-        NoTrackingPool = new DatabaseContextPool<DatabaseContext>(factory: DatabaseContext.Create, maxSize: 512);
-        TrackingPool = new DatabaseContextPool<DatabaseContext>(factory: DatabaseContext.Create, maxSize: 512);
+        NoTrackingPool = new DatabaseContextPool<DatabaseContext>(factory: DatabaseContext.CreateNoTracking, maxSize: 512);
+        TrackingPool = new DatabaseContextPool<DatabaseContext>(factory: DatabaseContext.CreateTracking, maxSize: 512);
     }
 
 }
