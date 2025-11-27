@@ -37,28 +37,35 @@ public sealed class CacheResource
 
         var result = new List<World>(count);
 
-        await using var context = DatabaseContext.CreateNoTracking();
+        var context = Database.NoTrackingPool.Rent();
 
-        for (var i = 0; i < count; i++)
+        try
         {
-            var id = Random.Next(1, 10001);
-
-            var key = CacheKeys[id];
-
-            var data = Cache.Get<World>(key);
-
-            if (data != null)
+            for (var i = 0; i < count; i++)
             {
-                result.Add(data);
-            }
-            else
-            {
-                var resolved = await context.World.FirstOrDefaultAsync(w => w.Id == id).ConfigureAwait(false);
+                var id = Random.Next(1, 10001);
 
-                Cache.Set(key, resolved);
+                var key = CacheKeys[id];
 
-                result.Add(resolved);
+                var data = Cache.Get<World>(key);
+
+                if (data != null)
+                {
+                    result.Add(data);
+                }
+                else
+                {
+                    var resolved = await context.World.FirstOrDefaultAsync(w => w.Id == id).ConfigureAwait(false);
+
+                    Cache.Set(key, resolved);
+
+                    result.Add(resolved);
+                }
             }
+        }
+        finally
+        {
+            Database.NoTrackingPool.Return(context);
         }
 
         return result;
