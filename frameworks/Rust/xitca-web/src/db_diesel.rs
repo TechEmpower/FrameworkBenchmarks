@@ -10,11 +10,11 @@ use diesel_async::{
     RunQueryDsl,
     pooled_connection::{AsyncDieselConnectionManager, bb8},
 };
-use futures_util::future::{TryFutureExt, try_join, try_join_all};
+use futures_util::future::{TryFutureExt, TryJoinAll, try_join};
 use xitca_postgres_diesel::AsyncPgConnection;
 
 use crate::{
-    ser::{Fortune, Fortunes, World},
+    ser::{Fortunes, World},
     util::{DB_URL, HandleResult, Rand},
 };
 
@@ -52,52 +52,54 @@ impl Pool {
     }
 
     pub async fn get_worlds(&self, num: u16) -> HandleResult<Vec<World>> {
-        try_join_all({
+        {
             use crate::schema::world::dsl::*;
 
             let mut conn = self.pool.get().await?;
             let mut rng = self.rng.borrow_mut();
 
-            core::iter::repeat_with(|| {
+            core::iter::repeat_with(move || {
                 let w_id = rng.gen_id();
                 world.filter(id.eq(w_id)).first(&mut conn).map_err(Into::into)
             })
             .take(num as _)
-            .collect::<Vec<_>>()
-        })
+            .collect::<TryJoinAll<_>>()
+        }
         .await
     }
 
     pub async fn update(&self, num: u16) -> HandleResult<Vec<World>> {
-        let (get, update) = {
+        {
             use crate::schema::world::dsl::*;
 
             let mut conn = self.pool.get().await?;
             let mut rng = self.rng.borrow_mut();
+            let mut params = Vec::with_capacity(num as _);
 
-            let (rngs, get) = core::iter::repeat_with(|| {
+            let get = core::iter::repeat_with(|| {
                 let w_id = rng.gen_id();
                 let rng = rng.gen_id();
 
                 let get = world.filter(id.eq(w_id)).first::<World>(&mut conn);
 
-                ((w_id, rng), async move {
+                params.push((w_id, rng));
+
+                async move {
                     let mut w = get.await?;
                     w.randomnumber = rng;
                     HandleResult::Ok(w)
-                })
+                }
             })
             .take(num as _)
-            .collect::<(Vec<_>, Vec<_>)>();
+            .collect::<TryJoinAll<_>>();
 
-            let update = diesel::sql_query(update_query_from_ids(rngs))
-                .execute(&mut conn)
-                .map_err(Into::into);
+            let sql = update_query_from_ids(params);
+            let update = diesel::sql_query(sql).execute(&mut conn).map_err(Into::into);
 
-            (try_join_all(get), update)
-        };
-
-        try_join(get, update).await.map(|(worlds, _)| worlds)
+            try_join(get, update)
+        }
+        .await
+        .map(|(worlds, _)| worlds)
     }
 
     pub async fn tell_fortune(&self) -> HandleResult<Fortunes> {
