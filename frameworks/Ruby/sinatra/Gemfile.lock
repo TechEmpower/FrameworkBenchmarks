@@ -28,7 +28,7 @@ GEM
     i18n (1.14.7)
       concurrent-ruby (~> 1.0)
     iodine (0.7.58)
-    json (2.13.2)
+    json (2.16.0)
     logger (1.7.0)
     minitest (5.25.5)
     mustermann (3.0.4)
