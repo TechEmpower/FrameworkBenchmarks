@@ -13,14 +13,14 @@ use super::{
     util::{DB_URL, HandleResult},
 };
 
-use db_util::{FORTUNE_STMT, Shared, WORLD_STMT, not_found, sort_update_params, update_query_from_num};
+use db_util::{FORTUNE_STMT, Shared, UPDATE_STMT, WORLD_STMT, not_found};
 
 pub struct Client {
     cli: xitca_postgres::Client,
     shared: RefCell<Shared>,
     fortune: Statement,
     world: Statement,
-    updates: Box<[Statement]>,
+    update: Statement,
 }
 
 pub async fn create() -> HandleResult<Client> {
@@ -33,20 +33,14 @@ pub async fn create() -> HandleResult<Client> {
 
     let world = WORLD_STMT.execute(&cli).await?.leak();
     let fortune = FORTUNE_STMT.execute(&cli).await?.leak();
-
-    let mut updates = vec![Statement::default()];
-
-    for update in (1..=500).map(update_query_from_num) {
-        let stmt = Statement::named(&update, &[]).execute(&cli).await?.leak();
-        updates.push(stmt);
-    }
+    let update = UPDATE_STMT.execute(&cli).await?.leak();
 
     Ok(Client {
         cli,
         shared: Default::default(),
         world,
         fortune,
-        updates: updates.into_boxed_slice(),
+        update,
     })
 }
 
@@ -63,8 +57,7 @@ impl Client {
 
         let mut res = {
             let (ref mut rng, ref mut buf) = *self.shared.borrow_mut();
-            // unrealistic as all queries are sent with only one sync point.
-            let mut pipe = Pipeline::unsync_with_capacity_from_buf(len, buf);
+            let mut pipe = Pipeline::with_capacity_from_buf(len, buf);
             (0..num).try_for_each(|_| self.world.bind([rng.gen_id()]).query(&mut pipe))?;
             pipe.query(&self.cli)?
         };
@@ -83,30 +76,32 @@ impl Client {
     pub async fn update(&self, num: u16) -> HandleResult<Vec<World>> {
         let len = num as usize;
 
-        let mut params = Vec::with_capacity(len);
-
-        let mut res = {
+        let (mut res, worlds) = {
             let (ref mut rng, ref mut buf) = *self.shared.borrow_mut();
             // unrealistic as all queries are sent with only one sync point.
             let mut pipe = Pipeline::unsync_with_capacity_from_buf(len + 1, buf);
-            (0..num).try_for_each(|_| {
-                let w_id = rng.gen_id();
-                let r_id = rng.gen_id();
-                params.push([w_id, r_id]);
-                self.world.bind([w_id]).query(&mut pipe)
-            })?;
-            self.updates[len].bind(sort_update_params(&params)).query(&mut pipe)?;
-            pipe.query(&self.cli)?
+
+            let (mut params, worlds) = core::iter::repeat_with(|| {
+                let id = rng.gen_id();
+                let rand = rng.gen_id();
+                self.world.bind([id]).query(&mut pipe)?;
+                HandleResult::Ok(((id, rand), World::new(id, rand)))
+            })
+            .take(len)
+            .collect::<Result<(Vec<_>, Vec<_>), _>>()?;
+
+            params.sort();
+
+            params
+                .into_iter()
+                .try_for_each(|(id, rng)| self.update.bind([rng, id]).query(&mut pipe))?;
+
+            (pipe.query(&self.cli)?, worlds)
         };
-
-        let mut worlds = Vec::with_capacity(len);
-
-        let mut r_ids = params.into_iter();
 
         while let Some(mut item) = res.try_next().await? {
             while let Some(row) = item.try_next().await? {
-                let r_id = r_ids.next().unwrap()[1];
-                worlds.push(World::new(row.get(0), r_id))
+                let _rand = row.get::<i32>(1);
             }
         }
 
@@ -114,16 +109,13 @@ impl Client {
     }
 
     pub async fn tell_fortune(&self) -> HandleResult<Fortunes> {
-        let mut items = Vec::with_capacity(32);
-        items.push(Fortune::new(0, "Additional fortune added at request time."));
+        let mut items = Vec::with_capacity(16);
 
         let mut res = self.fortune.query(&self.cli).await?;
 
         while let Some(row) = res.try_next().await? {
             items.push(Fortune::new(row.get(0), row.get::<String>(1)));
         }
-
-        items.sort_by(|it, next| it.message.cmp(&next.message));
 
         Ok(Fortunes::new(items))
     }

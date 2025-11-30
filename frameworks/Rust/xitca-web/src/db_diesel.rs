@@ -1,104 +1,113 @@
 #[path = "./db_util.rs"]
 mod db_util;
 
-use std::{
-    io,
-    sync::{Arc, Mutex},
-};
+use core::cell::RefCell;
 
-use diesel::{prelude::*, r2d2};
+use std::io;
+
+use diesel::prelude::*;
+use diesel_async::{
+    RunQueryDsl,
+    pooled_connection::{AsyncDieselConnectionManager, bb8},
+};
+use futures_util::future::{TryFutureExt, try_join, try_join_all};
+use xitca_postgres_diesel::AsyncPgConnection;
 
 use crate::{
     ser::{Fortune, Fortunes, World},
     util::{DB_URL, HandleResult, Rand},
 };
 
-use db_util::{not_found, update_query_from_ids};
+use db_util::update_query_from_ids;
 
-pub type Pool = Arc<_Pool>;
-
-pub struct _Pool {
-    pool: r2d2::Pool<r2d2::ConnectionManager<PgConnection>>,
-    rng: Mutex<Rand>,
+pub struct Pool {
+    pool: bb8::Pool<AsyncPgConnection>,
+    rng: RefCell<Rand>,
 }
 
-pub fn create() -> io::Result<Arc<_Pool>> {
-    r2d2::Builder::new()
-        .max_size(100)
-        .min_idle(Some(100))
+pub async fn create() -> io::Result<Pool> {
+    bb8::Pool::builder()
+        .max_size(1)
+        .min_idle(Some(1))
         .test_on_check_out(false)
-        .idle_timeout(None)
-        .max_lifetime(None)
-        .build(r2d2::ConnectionManager::new(DB_URL))
+        .build(AsyncDieselConnectionManager::new(DB_URL))
+        .await
         .map_err(io::Error::other)
-        .map(|pool| {
-            Arc::new(_Pool {
-                pool,
-                rng: Mutex::new(Rand::default()),
-            })
+        .map(|pool| Pool {
+            pool,
+            rng: RefCell::new(Rand::default()),
         })
 }
 
-impl _Pool {
-    pub fn get_world(&self) -> HandleResult<World> {
-        use crate::schema::world::dsl::*;
+impl Pool {
+    pub async fn get_world(&self) -> HandleResult<World> {
+        {
+            use crate::schema::world::dsl::*;
 
-        let w_id = self.rng.lock().unwrap().gen_id();
-        let mut conn = self.pool.get()?;
-        world.filter(id.eq(w_id)).load(&mut conn)?.pop().ok_or_else(not_found)
+            let w_id = self.rng.borrow_mut().gen_id();
+            let mut conn = self.pool.get().await?;
+            world.filter(id.eq(w_id)).first(&mut conn).map_err(Into::into)
+        }
+        .await
     }
 
-    pub fn get_worlds(&self, num: u16) -> HandleResult<Vec<World>> {
-        use crate::schema::world::dsl::*;
+    pub async fn get_worlds(&self, num: u16) -> HandleResult<Vec<World>> {
+        try_join_all({
+            use crate::schema::world::dsl::*;
 
-        let mut conn = self.pool.get()?;
-        core::iter::repeat_with(|| {
-            let w_id = self.rng.lock().unwrap().gen_id();
-            world.filter(id.eq(w_id)).load(&mut conn)?.pop().ok_or_else(not_found)
-        })
-        .take(num as _)
-        .collect()
-    }
+            let mut conn = self.pool.get().await?;
+            let mut rng = self.rng.borrow_mut();
 
-    pub fn update(&self, num: u16) -> HandleResult<Vec<World>> {
-        use crate::schema::world::dsl::*;
-
-        let mut rngs = {
-            let mut rng = self.rng.lock().unwrap();
-            (0..num).map(|_| (rng.gen_id(), rng.gen_id())).collect::<Vec<_>>()
-        };
-
-        rngs.sort_by(|(a, _), (b, _)| a.cmp(b));
-
-        let update_sql = update_query_from_ids(&rngs);
-
-        let mut conn = self.pool.get()?;
-
-        let worlds = rngs
-            .into_iter()
-            .map(|(w_id, num)| {
-                let mut w: World = world.filter(id.eq(w_id)).load(&mut conn)?.pop().ok_or_else(not_found)?;
-                w.randomnumber = num;
-                Ok(w)
+            core::iter::repeat_with(|| {
+                let w_id = rng.gen_id();
+                world.filter(id.eq(w_id)).first(&mut conn).map_err(Into::into)
             })
-            .collect::<HandleResult<Vec<_>>>()?;
-
-        diesel::sql_query(update_sql).execute(&mut conn)?;
-
-        Ok(worlds)
+            .take(num as _)
+            .collect::<Vec<_>>()
+        })
+        .await
     }
 
-    pub fn tell_fortune(&self) -> HandleResult<Fortunes> {
-        use crate::schema::fortune::dsl::*;
+    pub async fn update(&self, num: u16) -> HandleResult<Vec<World>> {
+        let (get, update) = {
+            use crate::schema::world::dsl::*;
 
-        let mut items = {
-            let mut conn = self.pool.get()?;
-            fortune.load(&mut conn)?
+            let mut conn = self.pool.get().await?;
+            let mut rng = self.rng.borrow_mut();
+
+            let (rngs, get) = core::iter::repeat_with(|| {
+                let w_id = rng.gen_id();
+                let rng = rng.gen_id();
+
+                let get = world.filter(id.eq(w_id)).first::<World>(&mut conn);
+
+                ((w_id, rng), async move {
+                    let mut w = get.await?;
+                    w.randomnumber = rng;
+                    HandleResult::Ok(w)
+                })
+            })
+            .take(num as _)
+            .collect::<(Vec<_>, Vec<_>)>();
+
+            let update = diesel::sql_query(update_query_from_ids(rngs))
+                .execute(&mut conn)
+                .map_err(Into::into);
+
+            (try_join_all(get), update)
         };
 
-        items.push(Fortune::new(0, "Additional fortune added at request time."));
-        items.sort_by(|it, next| it.message.cmp(&next.message));
+        try_join(get, update).await.map(|(worlds, _)| worlds)
+    }
 
-        Ok(Fortunes::new(items))
+    pub async fn tell_fortune(&self) -> HandleResult<Fortunes> {
+        {
+            use crate::schema::fortune::dsl::*;
+
+            let mut conn = self.pool.get().await?;
+            fortune.load(&mut conn).map_err(Into::into)
+        }
+        .await
+        .map(Fortunes::new)
     }
 }

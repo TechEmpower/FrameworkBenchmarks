@@ -1,10 +1,9 @@
-FROM php:8.4-cli
+FROM php:8.5-cli
 
 RUN apt-get update -yqq > /dev/null && apt-get install -yqq git unzip > /dev/null
 COPY --from=composer/composer:latest-bin --link /composer /usr/local/bin/composer
 
 RUN docker-php-ext-install \
-    opcache \
     pdo_mysql \
     sockets > /dev/null
 
