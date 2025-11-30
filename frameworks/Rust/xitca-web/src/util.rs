@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 
-use rand::{Rng, SeedableRng, rngs::SmallRng};
+use rand::{Rng, SeedableRng, distr::Uniform, rngs::SmallRng};
 use xitca_http::{bytes::BytesMut, http::header::HeaderValue};
 
 pub trait QueryParse {
@@ -56,5 +56,10 @@ impl Rand {
     #[inline]
     pub fn gen_id(&mut self) -> i32 {
         self.0.random_range(1..=10000)
+    }
+
+    #[inline]
+    pub fn gen_multi(&mut self) -> impl Iterator<Item = i32> {
+        (&mut self.0).sample_iter(Uniform::new(1, 10001).unwrap())
     }
 }

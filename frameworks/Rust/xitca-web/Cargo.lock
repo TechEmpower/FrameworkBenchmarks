@@ -151,9 +151,9 @@ checksum = "b35204fbdc0b3f4446b89fc1ac2cf84a8a68971995d0bf2e925ec7cd960f9cb3"
 
 [[package]]
 name = "cc"
-version = "1.2.47"
+version = "1.2.48"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cd405d82c84ff7f35739f175f67d8b9fb7687a0e84ccdc78bd3568839827cf07"
+checksum = "c481bdbf0ed3b892f6f806287d72acd515b352a4ec27a208489b8c1bc839633a"
 dependencies = [
  "find-msvc-tools",
  "shlex",
@@ -1281,7 +1281,7 @@ checksum = "6ce2be8dc25455e1f91df71bfa12ad37d7af1092ae736f3a6cd0e37bc7810596"
 [[package]]
 name = "std-util"
 version = "0.1.0"
-source = "git+https://github.com/fakeshadow/toasty?branch=engine#2b7662336d3a85efe76d5ff2bf05821309cf5d23"
+source = "git+https://github.com/fakeshadow/toasty?branch=engine#adff354a113ae85dd26a5fd8cecc2807fa12d5bf"
 dependencies = [
  "heck",
  "pluralizer",
@@ -1381,7 +1381,7 @@ checksum = "1f3ccbac311fea05f86f61904b462b55fb3df8837a366dfc601a0161d0532f20"
 [[package]]
 name = "toasty"
 version = "0.1.0"
-source = "git+https://github.com/fakeshadow/toasty?branch=engine#2b7662336d3a85efe76d5ff2bf05821309cf5d23"
+source = "git+https://github.com/fakeshadow/toasty?branch=engine#adff354a113ae85dd26a5fd8cecc2807fa12d5bf"
 dependencies = [
  "anyhow",
  "async-stream",
@@ -1399,7 +1399,7 @@ dependencies = [
 [[package]]
 name = "toasty-codegen"
 version = "0.1.0"
-source = "git+https://github.com/fakeshadow/toasty?branch=engine#2b7662336d3a85efe76d5ff2bf05821309cf5d23"
+source = "git+https://github.com/fakeshadow/toasty?branch=engine#adff354a113ae85dd26a5fd8cecc2807fa12d5bf"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1410,7 +1410,7 @@ dependencies = [
 [[package]]
 name = "toasty-core"
 version = "0.1.0"
-source = "git+https://github.com/fakeshadow/toasty?branch=engine#2b7662336d3a85efe76d5ff2bf05821309cf5d23"
+source = "git+https://github.com/fakeshadow/toasty?branch=engine#adff354a113ae85dd26a5fd8cecc2807fa12d5bf"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -1424,7 +1424,7 @@ dependencies = [
 [[package]]
 name = "toasty-macros"
 version = "0.1.0"
-source = "git+https://github.com/fakeshadow/toasty?branch=engine#2b7662336d3a85efe76d5ff2bf05821309cf5d23"
+source = "git+https://github.com/fakeshadow/toasty?branch=engine#adff354a113ae85dd26a5fd8cecc2807fa12d5bf"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1436,7 +1436,7 @@ dependencies = [
 [[package]]
 name = "toasty-sql"
 version = "0.1.0"
-source = "git+https://github.com/fakeshadow/toasty?branch=engine#2b7662336d3a85efe76d5ff2bf05821309cf5d23"
+source = "git+https://github.com/fakeshadow/toasty?branch=engine#adff354a113ae85dd26a5fd8cecc2807fa12d5bf"
 dependencies = [
  "anyhow",
  "toasty-core",
@@ -1537,9 +1537,9 @@ dependencies = [
 
 [[package]]
 name = "tracing"
-version = "0.1.41"
+version = "0.1.43"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "784e0ac535deb450455cbfa28a6f0df145ea1bb7ae51b821cf5e7927fdcfbdd0"
+checksum = "2d15d90a0b5c19378952d479dc858407149d7bb45a14de0142f6c534b16fc647"
 dependencies = [
  "pin-project-lite",
  "tracing-core",

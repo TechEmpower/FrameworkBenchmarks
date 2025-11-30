@@ -88,7 +88,7 @@ impl Client {
                 HandleResult::Ok(((id, rand), World::new(id, rand)))
             })
             .take(len)
-            .collect::<Result<(Vec<_>, Vec<_>), _>>()?;
+            .collect::<HandleResult<(Vec<_>, Vec<_>)>>()?;
 
             params.sort();
 
