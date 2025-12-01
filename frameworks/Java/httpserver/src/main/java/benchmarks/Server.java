@@ -51,7 +51,7 @@ public class Server {
         return fortunes;
     }
 
-    private static DataSource createPostgresDataSource() throws ClassNotFoundException {
+    private static DataSource createPostgresDataSource() {
         HikariConfig config = new HikariConfig();
 
         config.setJdbcUrl("jdbc:postgresql://tfb-database:5432/hello_world");
@@ -59,11 +59,11 @@ public class Server {
         config.setPassword("benchmarkdbpass");
 
         config.setMaximumPoolSize(64);
-        config.setMinimumIdle(16);
+        config.setMinimumIdle(0);
 
-        config.setConnectionTimeout(10000);
-        config.setIdleTimeout(600000);
-        config.setMaxLifetime(1800000);
+        config.setConnectionTimeout(1000);
+        config.setIdleTimeout(15000);
+        config.setMaxLifetime(60000);
 
         config.setAutoCommit(true);
 
