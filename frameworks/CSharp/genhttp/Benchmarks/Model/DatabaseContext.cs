@@ -1,43 +1,48 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Benchmarks.Model;
 
 public sealed class DatabaseContext : DbContext
 {
-    private static DbContextOptions<DatabaseContext> _options;
+    private static readonly Lazy<DbContextOptions<DatabaseContext>> TrackingOptions = new(() => CreateOptions(true), LazyThreadSafetyMode.ExecutionAndPublication);
 
-    private static DbContextOptions<DatabaseContext> _noTrackingOptions;
+    private static readonly Lazy<DbContextOptions<DatabaseContext>> NoTrackingOptions = new(() => CreateOptions(false), LazyThreadSafetyMode.ExecutionAndPublication);
 
-    #region Factory
+    public static DatabaseContext CreateTracking() => new(TrackingOptions.Value, true);
 
-    public static DatabaseContext Create() => new(_options ??= GetOptions(true));
+    public static DatabaseContext CreateNoTracking() => new(NoTrackingOptions.Value, false);
 
-    public static DatabaseContext CreateNoTracking() => new(_noTrackingOptions ??= GetOptions(false));
-
-    private static DbContextOptions<DatabaseContext> GetOptions(bool tracking)
+    private static DbContextOptions<DatabaseContext> CreateOptions(bool tracking)
     {
-        var optionsBuilder = new DbContextOptionsBuilder<DatabaseContext>();
+        var services = new ServiceCollection();
 
-        optionsBuilder.UseNpgsql("Server=tfb-database;Database=hello_world;User Id=benchmarkdbuser;Password=benchmarkdbpass;SSL Mode=Disable;Maximum Pool Size=512;NoResetOnClose=true;Enlist=false;Max Auto Prepare=4");
+        services.AddEntityFrameworkNpgsql();
+
+        var provider = services.BuildServiceProvider();
+
+        var builder = new DbContextOptionsBuilder<DatabaseContext>();
+
+        builder.UseInternalServiceProvider(provider)
+               .UseNpgsql("Server=tfb-database;Database=hello_world;User Id=benchmarkdbuser;Password=benchmarkdbpass;SSL Mode=Disable;Maximum Pool Size=512;NoResetOnClose=true;Enlist=false;Max Auto Prepare=4;Multiplexing=true")
+               .EnableThreadSafetyChecks(false)
+               .UseModel(DatabaseContextModel.Instance);
 
         if (!tracking)
         {
-            optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            builder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
         }
 
-        return optionsBuilder.Options;
+        return builder.Options;
     }
 
-    private DatabaseContext(DbContextOptions options) : base(options) { }
-
-    #endregion
-
-    #region Entities
+    internal DatabaseContext(DbContextOptions<DatabaseContext> options, bool tracking = false) : base(options)
+    {
+        ChangeTracker.AutoDetectChangesEnabled = tracking;
+    }
 
     public DbSet<World> World { get; set; }
 
     public DbSet<Fortune> Fortune { get; set; }
-
-    #endregion
 
 }
