@@ -19,7 +19,15 @@
 (def jdbc-opts {:builder-fn rs/as-unqualified-maps})
 
 (def db-spec
-  {:jdbcUrl "jdbc:postgresql://tfb-database/hello_world?user=benchmarkdbuser&password=benchmarkdbpass"})
+  {:auto-commit        false
+   :connection-timeout 1000
+   :validation-timeout 1000
+   :idle-timeout       15000
+   :max-lifetime       60000
+   :minimum-idle       0
+   :maximum-pool-size  128
+   :register-mbeans    false
+   :jdbcUrl            "jdbc:postgresql://tfb-database/hello_world?user=benchmarkdbuser&password=benchmarkdbpass"})
 
 (def datasource
   (connection/->pool HikariDataSource db-spec))
@@ -62,7 +70,7 @@
                      jdbc-opts))
 
 (defn- update-world
-  [{:keys [randomnumber  id]}]
+  [{:keys [randomnumber id]}]
   (jdbc/execute-one! datasource
                      ["update \"World\" set randomNumber = ? where id = ? returning *;" randomnumber id]
                      jdbc-opts))
