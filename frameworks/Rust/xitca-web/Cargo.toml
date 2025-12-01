@@ -29,7 +29,7 @@ pg = ["dep:xitca-postgres"]
 # diesel orm optional
 diesel = ["dep:diesel", "dep:diesel-async", "dep:xitca-postgres-diesel", "dep:futures-util"]
 # toasty orm optional
-toasty = ["dep:toasty", "dep:xitca-postgres-toasty"]
+toasty = ["dep:toasty", "dep:xitca-postgres-toasty", "futures-util/alloc"]
 # http router optional
 router = ["xitca-http/router"]
 # web optional
@@ -64,7 +64,7 @@ xitca-postgres = { version = "0.3", optional = true }
 # diesel orm optional
 diesel = { version = "2", features = ["postgres"], optional = true }
 diesel-async = { version = "0.7", features = ["bb8", "postgres"], optional = true }
-xitca-postgres-diesel = { version = "0.2", optional = true }
+xitca-postgres-diesel = { version = "0.2", default-features = false, optional = true }
 futures-util = { version = "0.3", default-features = false, optional = true }
 
 # toasty orm optional
@@ -94,16 +94,17 @@ codegen-units = 1
 panic = "abort"
 
 [patch.crates-io]
-xitca-postgres-diesel = { git = "https://github.com/fakeshadow/xitca-postgres-diesel", rev = "8ce4e5b" }
+xitca-postgres-diesel = { git = "https://github.com/fakeshadow/xitca-postgres-diesel", rev = "7671975" }
 xitca-postgres-toasty = { git = "https://github.com/fakeshadow/xitca-postgres-toasty", rev = "04bedb8" }
 
-toasty = { git = "https://github.com/tokio-rs/toasty", rev = "e0c84c5" }
-toasty-core = { git = "https://github.com/tokio-rs/toasty", rev = "e0c84c5" }
-toasty-sql = { git = "https://github.com/tokio-rs/toasty", rev = "e0c84c5" }
+# personal fork for efficient toasty engine fine tuned with pipelined xitca-postgres client
+toasty = { git = "https://github.com/fakeshadow/toasty", branch = "engine" }
+toasty-core = { git = "https://github.com/fakeshadow/toasty", branch = "engine" }
+toasty-sql = { git = "https://github.com/fakeshadow/toasty", branch = "engine" }
 
-xitca-codegen = { git = "http://github.com/HFQR/xitca-web", rev = "c9c4b25" }
-xitca-http = { git = "http://github.com/HFQR/xitca-web", rev = "c9c4b25" }
-xitca-postgres = { git = "http://github.com/HFQR/xitca-web", rev = "c9c4b25" }
-xitca-server = { git = "http://github.com/HFQR/xitca-web", rev = "c9c4b25" }
-xitca-service = { git = "http://github.com/HFQR/xitca-web", rev = "c9c4b25" }
-xitca-web = { git = "http://github.com/HFQR/xitca-web", rev = "c9c4b25" }
+xitca-codegen = { git = "http://github.com/HFQR/xitca-web", rev = "cf70ed7" }
+xitca-http = { git = "http://github.com/HFQR/xitca-web", rev = "cf70ed7" }
+xitca-postgres = { git = "http://github.com/HFQR/xitca-web", rev = "cf70ed7" }
+xitca-server = { git = "http://github.com/HFQR/xitca-web", rev = "cf70ed7" }
+xitca-service = { git = "http://github.com/HFQR/xitca-web", rev = "cf70ed7" }
+xitca-web = { git = "http://github.com/HFQR/xitca-web", rev = "cf70ed7" }
