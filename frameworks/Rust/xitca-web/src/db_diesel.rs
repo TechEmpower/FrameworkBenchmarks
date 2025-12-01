@@ -1,10 +1,3 @@
-#[path = "./db_util.rs"]
-mod db_util;
-
-use core::cell::RefCell;
-
-use std::io;
-
 use diesel::prelude::*;
 use diesel_async::{
     RunQueryDsl,
@@ -18,31 +11,29 @@ use crate::{
     util::{DB_URL, HandleResult, Rand},
 };
 
-use db_util::update_query_from_ids;
-
 pub struct Pool {
     pool: bb8::Pool<AsyncPgConnection>,
-    rng: RefCell<Rand>,
-}
-
-pub async fn create() -> io::Result<Pool> {
-    bb8::Pool::builder()
-        .max_size(1)
-        .min_idle(Some(1))
-        .test_on_check_out(false)
-        .build(AsyncDieselConnectionManager::new(DB_URL))
-        .await
-        .map_err(io::Error::other)
-        .map(|pool| Pool {
-            pool,
-            rng: RefCell::new(Rand::default()),
-        })
+    rng: core::cell::RefCell<Rand>,
 }
 
 impl Pool {
+    pub async fn create() -> HandleResult<Self> {
+        let pool = bb8::Pool::builder()
+            .max_size(1)
+            .min_idle(Some(1))
+            .test_on_check_out(false)
+            .build(AsyncDieselConnectionManager::new(DB_URL))
+            .await?;
+
+        Ok(Self {
+            pool,
+            rng: Default::default(),
+        })
+    }
+
     pub async fn get_world(&self) -> HandleResult<World> {
         {
-            use crate::schema::world::dsl::*;
+            use schema::world::dsl::*;
 
             let w_id = self.rng.borrow_mut().gen_id();
             let mut conn = self.pool.get().await?;
@@ -53,45 +44,44 @@ impl Pool {
 
     pub async fn get_worlds(&self, num: u16) -> HandleResult<Vec<World>> {
         {
-            use crate::schema::world::dsl::*;
+            use schema::world::dsl::*;
 
             let mut conn = self.pool.get().await?;
-            let mut rng = self.rng.borrow_mut();
-
-            core::iter::repeat_with(move || {
-                let w_id = rng.gen_id();
-                world.filter(id.eq(w_id)).first(&mut conn).map_err(Into::into)
-            })
-            .take(num as _)
-            .collect::<TryJoinAll<_>>()
+            self.rng
+                .borrow_mut()
+                .gen_multi()
+                .take(num as _)
+                .map(|w_id| world.filter(id.eq(w_id)).first(&mut conn).map_err(Into::into))
+                .collect::<TryJoinAll<_>>()
         }
         .await
     }
 
     pub async fn update(&self, num: u16) -> HandleResult<Vec<World>> {
         {
-            use crate::schema::world::dsl::*;
+            use schema::world::dsl::*;
 
             let mut conn = self.pool.get().await?;
             let mut rng = self.rng.borrow_mut();
             let mut params = Vec::with_capacity(num as _);
 
-            let get = core::iter::repeat_with(|| {
-                let w_id = rng.gen_id();
-                let rng = rng.gen_id();
+            let get = rng
+                .clone()
+                .gen_multi()
+                .take(num as _)
+                .zip(rng.gen_multi())
+                .map(|(w_id, rng)| {
+                    let get = world.filter(id.eq(w_id)).first::<World>(&mut conn);
 
-                let get = world.filter(id.eq(w_id)).first::<World>(&mut conn);
+                    params.push((w_id, rng));
 
-                params.push((w_id, rng));
-
-                async move {
-                    let mut w = get.await?;
-                    w.randomnumber = rng;
-                    HandleResult::Ok(w)
-                }
-            })
-            .take(num as _)
-            .collect::<TryJoinAll<_>>();
+                    async move {
+                        let mut w = get.await?;
+                        w.randomnumber = rng;
+                        HandleResult::Ok(w)
+                    }
+                })
+                .collect::<TryJoinAll<_>>();
 
             let sql = update_query_from_ids(params);
             let update = diesel::sql_query(sql).execute(&mut conn).map_err(Into::into);
@@ -104,7 +94,7 @@ impl Pool {
 
     pub async fn tell_fortune(&self) -> HandleResult<Fortunes> {
         {
-            use crate::schema::fortune::dsl::*;
+            use schema::fortune::dsl::*;
 
             let mut conn = self.pool.get().await?;
             fortune.load(&mut conn).map_err(Into::into)
@@ -112,4 +102,44 @@ impl Pool {
         .await
         .map(Fortunes::new)
     }
+}
+
+mod schema {
+    diesel::table! {
+        world (id) {
+            id -> Integer,
+            randomnumber -> Integer,
+        }
+    }
+
+    diesel::table! {
+        fortune (id) {
+            id -> Integer,
+            message -> Text,
+        }
+    }
+}
+
+// diesel does not support high level bulk update api. use raw sql to bypass the limitation.
+// relate discussion: https://github.com/diesel-rs/diesel/discussions/2879
+fn update_query_from_ids(mut rngs: Vec<(i32, i32)>) -> String {
+    rngs.sort_by(|(a, _), (b, _)| a.cmp(b));
+
+    const PREFIX: &str = "UPDATE world SET randomNumber=w.r FROM (VALUES ";
+    const SUFFIX: &str = ") AS w (i,r) WHERE world.id=w.i";
+
+    let mut query = String::from(PREFIX);
+
+    use core::fmt::Write;
+    rngs.iter().for_each(|(w_id, num)| {
+        write!(query, "({}::int,{}::int),", w_id, num).unwrap();
+    });
+
+    if query.ends_with(',') {
+        query.pop();
+    }
+
+    query.push_str(SUFFIX);
+
+    query
 }

@@ -12,22 +12,22 @@ pub struct Pool {
     rng: core::cell::RefCell<Rand>,
 }
 
-pub async fn create() -> HandleResult<Pool> {
-    let conn = xitca_postgres_toasty::PostgreSQL::connect(DB_URL).await?;
-
-    let db = Db::builder()
-        .register::<World>()
-        .register::<Fortune>()
-        .build(conn)
-        .await?;
-
-    Ok(Pool {
-        db,
-        rng: Default::default(),
-    })
-}
-
 impl Pool {
+    pub async fn create() -> HandleResult<Self> {
+        let conn = xitca_postgres_toasty::PostgreSQL::connect(DB_URL).await?;
+
+        let db = Db::builder()
+            .register::<World>()
+            .register::<Fortune>()
+            .build(conn)
+            .await?;
+
+        Ok(Self {
+            db,
+            rng: Default::default(),
+        })
+    }
+
     pub async fn get_world(&self) -> HandleResult<World> {
         let id = self.rng.borrow_mut().gen_id();
         World::get_by_id(&self.db, id).await.map_err(Into::into)

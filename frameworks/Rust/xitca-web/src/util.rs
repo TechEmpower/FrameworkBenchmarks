@@ -52,6 +52,13 @@ impl Default for Rand {
     }
 }
 
+impl Clone for Rand {
+    #[inline]
+    fn clone(&self) -> Self {
+        Self(self.0.clone())
+    }
+}
+
 impl Rand {
     #[inline]
     pub fn gen_id(&mut self) -> i32 {

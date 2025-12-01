@@ -26,10 +26,10 @@ pub struct Client {
 pub async fn create() -> HandleResult<Client> {
     let (cli, mut drv) = xitca_postgres::Postgres::new(DB_URL).connect().await?;
 
-    tokio::task::spawn(tokio::task::unconstrained(async move {
+    tokio::task::spawn(async move {
         while drv.try_next().await?.is_some() {}
         HandleResult::Ok(())
-    }));
+    });
 
     let world = WORLD_STMT.execute(&cli).await?.leak();
     let fortune = FORTUNE_STMT.execute(&cli).await?.leak();
@@ -53,16 +53,16 @@ impl Client {
     }
 
     pub async fn get_worlds(&self, num: u16) -> HandleResult<Vec<World>> {
-        let len = num as usize;
-
         let mut res = {
             let (ref mut rng, ref mut buf) = *self.shared.borrow_mut();
-            let mut pipe = Pipeline::with_capacity_from_buf(len, buf);
-            (0..num).try_for_each(|_| self.world.bind([rng.gen_id()]).query(&mut pipe))?;
+            let mut pipe = Pipeline::with_capacity_from_buf(num as _, buf);
+            rng.gen_multi()
+                .take(num as _)
+                .try_for_each(|id| self.world.bind([id]).query(&mut pipe))?;
             pipe.query(&self.cli)?
         };
 
-        let mut worlds = Vec::with_capacity(len);
+        let mut worlds = Vec::with_capacity(num as _);
 
         while let Some(mut item) = res.try_next().await? {
             while let Some(row) = item.try_next().await? {
@@ -78,23 +78,21 @@ impl Client {
 
         let (mut res, worlds) = {
             let (ref mut rng, ref mut buf) = *self.shared.borrow_mut();
-            // unrealistic as all queries are sent with only one sync point.
-            let mut pipe = Pipeline::unsync_with_capacity_from_buf(len + 1, buf);
+            let mut pipe = Pipeline::with_capacity_from_buf(len + 1, buf);
 
-            let (mut params, worlds) = core::iter::repeat_with(|| {
-                let id = rng.gen_id();
-                let rand = rng.gen_id();
-                self.world.bind([id]).query(&mut pipe)?;
-                HandleResult::Ok(((id, rand), World::new(id, rand)))
-            })
-            .take(len)
-            .collect::<HandleResult<(Vec<_>, Vec<_>)>>()?;
+            let mut ids = rng.gen_multi().take(num as _).collect::<Vec<_>>();
+            ids.sort();
 
-            params.sort();
-
-            params
-                .into_iter()
-                .try_for_each(|(id, rng)| self.update.bind([rng, id]).query(&mut pipe))?;
+            let (rngs, worlds) = ids
+                .iter()
+                .cloned()
+                .zip(rng.gen_multi())
+                .map(|(id, rand)| {
+                    self.world.bind([id]).query(&mut pipe)?;
+                    HandleResult::Ok((rand, World::new(id, rand)))
+                })
+                .collect::<HandleResult<(Vec<_>, Vec<_>)>>()?;
+            self.update.bind([&ids, &rngs]).query(&mut pipe)?;
 
             (pipe.query(&self.cli)?, worlds)
         };

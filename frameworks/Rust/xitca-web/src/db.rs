@@ -10,7 +10,7 @@ use super::{
     util::{DB_URL, HandleResult},
 };
 
-use db_util::{FORTUNE_STMT, Shared, UPDATE_BATCH_STMT, WORLD_STMT, not_found};
+use db_util::{FORTUNE_STMT, Shared, UPDATE_STMT, WORLD_STMT, not_found};
 
 pub struct Client {
     pool: Pool,
@@ -60,7 +60,7 @@ impl Client {
     pub async fn update(&self, num: u16) -> HandleResult<Vec<World>> {
         let mut conn = self.pool.get().await?;
         let world_stmt = WORLD_STMT.execute(&mut conn).await?;
-        let update_stmt = UPDATE_BATCH_STMT.execute(&mut conn).await?;
+        let update_stmt = UPDATE_STMT.execute(&mut conn).await?;
 
         let (mut res, worlds) = {
             let (ref mut rng, ref mut buf) = *self.shared.borrow_mut();
