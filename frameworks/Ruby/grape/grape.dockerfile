@@ -11,6 +11,7 @@ ADD ./ /grape
 
 WORKDIR /grape
 
+RUN bundle config set with 'puma'
 RUN bundle install --jobs=4 --gemfile=/grape/Gemfile
 
 ENV WEB_CONCURRENCY=auto

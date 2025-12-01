@@ -79,7 +79,7 @@ module Acme
   class API < Grape::API
     before do
       header 'Date', Time.now.httpdate if defined?(Puma)
-      header 'Server', 'WebServer'
+      header 'Server', 'grape'
     end
     logger nil
     content_type :json, 'application/json'
