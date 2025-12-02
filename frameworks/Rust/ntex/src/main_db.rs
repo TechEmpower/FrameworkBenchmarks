@@ -3,10 +3,9 @@
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
 use ntex::http::header::{CONTENT_TYPE, SERVER};
-use ntex::http::{HttpService, KeepAlive, Request, Response, StatusCode};
-use ntex::service::{Service, ServiceCtx, ServiceFactory};
-use ntex::web::{Error, HttpResponse};
-use ntex::{time::Seconds, util::PoolId};
+use ntex::http::{HttpService, Request, Response, StatusCode};
+use ntex::service::{cfg::SharedCfg, Service, ServiceCtx, ServiceFactory};
+use ntex::{web::Error, web::HttpResponse};
 
 mod db;
 mod utils;
@@ -64,13 +63,13 @@ impl Service<Request> for App {
 
 struct AppFactory;
 
-impl ServiceFactory<Request> for AppFactory {
+impl ServiceFactory<Request, SharedCfg> for AppFactory {
     type Response = Response;
     type Error = Error;
     type Service = App;
     type InitError = ();
 
-    async fn create(&self, _: ()) -> Result<Self::Service, Self::InitError> {
+    async fn create(&self, _: SharedCfg) -> Result<Self::Service, Self::InitError> {
         const DB_URL: &str =
             "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
 
@@ -85,18 +84,8 @@ async fn main() -> std::io::Result<()> {
     ntex::server::build()
         .backlog(1024)
         .enable_affinity()
-        .bind("techempower", "0.0.0.0:8080", |cfg| {
-            cfg.memory_pool(PoolId::P1);
-            PoolId::P1.set_read_params(65535, 2048);
-            PoolId::P1.set_write_params(65535, 2048);
-
-            HttpService::build()
-                .keep_alive(KeepAlive::Os)
-                .client_timeout(Seconds(0))
-                .headers_read_rate(Seconds::ZERO, Seconds::ZERO, 0)
-                .payload_read_rate(Seconds::ZERO, Seconds::ZERO, 0)
-                .h1(AppFactory)
-        })?
+        .bind("tfb", "0.0.0.0:8080", async |_| HttpService::h1(AppFactory))?
+        .config("tfb", utils::config())
         .run()
         .await
 }
