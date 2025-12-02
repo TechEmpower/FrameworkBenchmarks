@@ -4,7 +4,7 @@ COPY src src
 COPY pom.xml pom.xml
 RUN mvn package -q -P !default,!dev,!gpg
 
-FROM openjdk:21-jdk-slim
+FROM bellsoft/liberica-openjre-debian:23
 WORKDIR /loveqq
 COPY --from=maven /loveqq/target/boot-lib boot-lib
 COPY --from=maven /loveqq/target/loveqq-benchmark-1.0-SNAPSHOT.jar app.jar
