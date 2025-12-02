@@ -13,4 +13,4 @@ RUN uv pip install -r requirements-nogil.txt
 
 EXPOSE 8080
 
-CMD uv run python run_nogil.py rsgi st
+CMD uv run python run_nogil.py rsgi mt

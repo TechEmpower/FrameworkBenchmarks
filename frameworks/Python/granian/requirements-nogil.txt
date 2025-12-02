@@ -1,1 +1,1 @@
-granian[rloop]>=2.5.0,<2.6.0
+granian[rloop]>=2.6.0,<2.7.0
