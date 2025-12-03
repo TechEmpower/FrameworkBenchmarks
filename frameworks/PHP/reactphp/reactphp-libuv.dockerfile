@@ -6,7 +6,7 @@ RUN apt-get update -yqq && apt-get install -yqq software-properties-common > /de
 RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php > /dev/null
 RUN apt-get update -yqq > /dev/null && \
     apt-get install -yqq git unzip wget curl build-essential \
-    php8.5-cli php8.5-mbstring php8.5-dev php8.5-xml > /dev/null
+    php8.5-cli php8.5-curl php8.5-mbstring php8.5-dev php8.5-xml > /dev/null
 
 # An extension is required!
 # We deal with concurrencies over 1k, which stream_select doesn't support.
