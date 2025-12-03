@@ -1,0 +1,12 @@
+k:
+  server:
+    virtualThread: true
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driverClassName: org.postgresql.Driver
+    username: benchmarkdbuser
+    password: benchmarkdbpass
+    url: jdbc:postgresql://tfb-database:5432/hello_world?loggerLevel=OFF&disableColumnSanitiser=true&assumeMinServerVersion=16&sslmode=disable
+    hikari:
+      minIdle: 5
+      maxPoolSize: 256
