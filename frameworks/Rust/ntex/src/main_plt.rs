@@ -3,7 +3,7 @@ static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
 use std::{future::Future, io, pin::Pin, task::ready, task::Context, task::Poll};
 
-use ntex::{fn_service, http::h1, io::Io, io::RecvError, util::PoolId};
+use ntex::{fn_service, http::h1, io::Io, io::RecvError};
 use sonic_rs::Serialize;
 
 mod utils;
@@ -82,16 +82,13 @@ async fn main() -> io::Result<()> {
     ntex::server::build()
         .backlog(1024)
         .enable_affinity()
-        .bind("techempower", "0.0.0.0:8080", |cfg| {
-            cfg.memory_pool(PoolId::P1);
-            PoolId::P1.set_read_params(65535, 2048);
-            PoolId::P1.set_write_params(65535, 2048);
-
+        .bind("tfb", "0.0.0.0:8080", async |_| {
             fn_service(|io| App {
                 io,
                 codec: h1::Codec::default(),
             })
         })?
+        .config("tfb", utils::config())
         .run()
         .await
 }

@@ -39,7 +39,7 @@ pub struct PgConnection {
 
 impl PgConnection {
     pub async fn connect(db_url: &str) -> PgConnection {
-        let (cl, conn) = connect(db_url)
+        let (cl, conn) = connect(db_url, utils::db_config())
             .await
             .expect("can not connect to postgresql");
         ntex::rt::spawn(async move {

@@ -1,6 +1,6 @@
 [package]
 name = "ntex-bench"
-version = "2.1.0"
+version = "3.0.0"
 edition = "2018"
 
 [[bin]]
@@ -67,11 +67,10 @@ neon = ["ntex/neon"]
 neon-uring = ["ntex/neon-uring"]
 
 [dependencies]
-ntex = "2.13"
-ntex-compio = "0.3"
-ntex-neon = "0.1.31"
-ntex-net = "2.5.27"
-ntex-bytes = { version = "0.1.21", features=["simd"] }
+ntex = "3.0.0-pre.5"
+ntex-neon = "0.1.35"
+ntex-net = "3.0.0"
+ntex-bytes = { version = "1", features=["simd"] }
 mimalloc = { version = "0.1.25", default-features = false }
 snmalloc-rs = { version = "0.3.3", features = ["native-cpu"] }
 yarte = { version = "0.15", features = ["bytes-buf", "json"] }
@@ -86,10 +85,13 @@ serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 log = { version = "0.4", features = ["release_max_level_off"] }
 tok_io = {version = "1", package = "tokio" }
-tokio-postgres = { git="https://github.com/fafhrd91/postgres.git", branch="ntex-2" }
+tokio-postgres = { git="https://github.com/fafhrd91/postgres.git", branch="ntex-3" }
 
 [target.'cfg(target_os = "linux")'.dependencies]
 compio-driver = { version = "*", features = ["io-uring"]}
+
+[patch.crates-io]
+buf-min = { git = "https://github.com/fafhrd91/buf-min.git" }
 
 [profile.release]
 opt-level = 3

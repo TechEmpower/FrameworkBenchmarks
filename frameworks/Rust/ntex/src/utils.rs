@@ -2,7 +2,8 @@
 use std::{cmp, io, io::Write, mem::MaybeUninit, slice::from_raw_parts_mut};
 
 use atoi::FromRadix10;
-use ntex::{http::header::HeaderValue, util::BufMut, util::Bytes, util::BytesMut};
+use ntex::http::{header::HeaderValue, HttpServiceConfig, KeepAlive};
+use ntex::{io::IoConfig, time::Seconds, util::BufMut, util::Bytes, util::BytesMut, SharedCfg};
 use sonic_rs::writer::WriteExt;
 
 pub const HDR_SERVER: HeaderValue = HeaderValue::from_static("N");
@@ -14,6 +15,37 @@ pub const BODY_PLAIN_TEXT: Bytes = Bytes::from_static(b"Hello, World!");
 
 const HW: usize = 128 * 1024;
 pub const SIZE: usize = 27;
+
+pub fn config() -> SharedCfg {
+    thread_local! {
+        static CFG: SharedCfg = SharedCfg::new("tfb")
+        .add(
+            IoConfig::new()
+                .set_read_buf(65535, 2048, 128)
+                .set_write_buf(65535, 2048, 128),
+        )
+        .add(
+            HttpServiceConfig::new()
+                .set_keepalive(KeepAlive::Os)
+                .set_client_timeout(Seconds::ZERO)
+                .set_headers_read_rate(Seconds::ZERO, Seconds::ZERO, 0)
+                .set_payload_read_rate(Seconds::ZERO, Seconds::ZERO, 0),
+        ).into();
+    }
+    CFG.with(|cfg| *cfg)
+}
+
+pub fn db_config() -> SharedCfg {
+    thread_local! {
+        static CFG: SharedCfg = SharedCfg::new("tfb-db")
+        .add(
+            IoConfig::new()
+                .set_read_buf(65535, 2048, 128)
+                .set_write_buf(65535, 2048, 128),
+        ).into()
+    }
+    CFG.with(|cfg| *cfg)
+}
 
 pub fn get_query_param(query: Option<&str>) -> usize {
     let query = query.unwrap_or("");
