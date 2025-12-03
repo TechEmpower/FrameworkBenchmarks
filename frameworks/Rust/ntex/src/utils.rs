@@ -26,10 +26,10 @@ pub fn config() -> SharedCfg {
         )
         .add(
             HttpServiceConfig::new()
-                .keepalive(KeepAlive::Os)
-                .client_timeout(Seconds::ZERO)
-                .headers_read_rate(Seconds::ZERO, Seconds::ZERO, 0)
-                .payload_read_rate(Seconds::ZERO, Seconds::ZERO, 0),
+                .set_keepalive(KeepAlive::Os)
+                .set_client_timeout(Seconds::ZERO)
+                .set_headers_read_rate(Seconds::ZERO, Seconds::ZERO, 0)
+                .set_payload_read_rate(Seconds::ZERO, Seconds::ZERO, 0),
         ).into();
     }
     CFG.with(|cfg| *cfg)
