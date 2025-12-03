@@ -95,7 +95,7 @@ codegen-units = 1
 panic = "abort"
 
 [patch.crates-io]
-xitca-postgres-diesel = { git = "https://github.com/fakeshadow/xitca-postgres-diesel", rev = "ffd222a" }
+xitca-postgres-diesel = { git = "https://github.com/fakeshadow/xitca-postgres-diesel", rev = "fb5dcba" }
 xitca-postgres-toasty = { git = "https://github.com/fakeshadow/xitca-postgres-toasty", rev = "04bedb8" }
 
 # personal fork for efficient toasty engine fine tuned with pipelined xitca-postgres client
@@ -103,9 +103,9 @@ toasty = { git = "https://github.com/fakeshadow/toasty", branch = "engine" }
 toasty-core = { git = "https://github.com/fakeshadow/toasty", branch = "engine" }
 toasty-sql = { git = "https://github.com/fakeshadow/toasty", branch = "engine" }
 
-xitca-codegen = { git = "http://github.com/HFQR/xitca-web", rev = "91c6c31" }
-xitca-http = { git = "http://github.com/HFQR/xitca-web", rev = "91c6c31" }
-xitca-postgres = { git = "http://github.com/HFQR/xitca-web", rev = "91c6c31" }
-xitca-server = { git = "http://github.com/HFQR/xitca-web", rev = "91c6c31" }
-xitca-service = { git = "http://github.com/HFQR/xitca-web", rev = "91c6c31" }
-xitca-web = { git = "http://github.com/HFQR/xitca-web", rev = "91c6c31" }
+xitca-codegen = { git = "http://github.com/HFQR/xitca-web", rev = "244a06d" }
+xitca-http = { git = "http://github.com/HFQR/xitca-web", rev = "244a06d" }
+xitca-postgres = { git = "http://github.com/HFQR/xitca-web", rev = "244a06d" }
+xitca-server = { git = "http://github.com/HFQR/xitca-web", rev = "244a06d" }
+xitca-service = { git = "http://github.com/HFQR/xitca-web", rev = "244a06d" }
+xitca-web = { git = "http://github.com/HFQR/xitca-web", rev = "244a06d" }

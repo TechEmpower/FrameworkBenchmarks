@@ -1262,7 +1262,7 @@ checksum = "6ce2be8dc25455e1f91df71bfa12ad37d7af1092ae736f3a6cd0e37bc7810596"
 [[package]]
 name = "std-util"
 version = "0.1.0"
-source = "git+https://github.com/fakeshadow/toasty?branch=engine#52e004c02a6747a0b866513ee32bbf940f978b7c"
+source = "git+https://github.com/fakeshadow/toasty?branch=engine#ab7a56d6dc2076c28f84efc2bebee05670bcd368"
 dependencies = [
  "heck",
  "pluralizer",
@@ -1362,7 +1362,7 @@ checksum = "1f3ccbac311fea05f86f61904b462b55fb3df8837a366dfc601a0161d0532f20"
 [[package]]
 name = "toasty"
 version = "0.1.0"
-source = "git+https://github.com/fakeshadow/toasty?branch=engine#52e004c02a6747a0b866513ee32bbf940f978b7c"
+source = "git+https://github.com/fakeshadow/toasty?branch=engine#ab7a56d6dc2076c28f84efc2bebee05670bcd368"
 dependencies = [
  "anyhow",
  "async-stream",
@@ -1380,7 +1380,7 @@ dependencies = [
 [[package]]
 name = "toasty-codegen"
 version = "0.1.0"
-source = "git+https://github.com/fakeshadow/toasty?branch=engine#52e004c02a6747a0b866513ee32bbf940f978b7c"
+source = "git+https://github.com/fakeshadow/toasty?branch=engine#ab7a56d6dc2076c28f84efc2bebee05670bcd368"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1391,7 +1391,7 @@ dependencies = [
 [[package]]
 name = "toasty-core"
 version = "0.1.0"
-source = "git+https://github.com/fakeshadow/toasty?branch=engine#52e004c02a6747a0b866513ee32bbf940f978b7c"
+source = "git+https://github.com/fakeshadow/toasty?branch=engine#ab7a56d6dc2076c28f84efc2bebee05670bcd368"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -1405,7 +1405,7 @@ dependencies = [
 [[package]]
 name = "toasty-macros"
 version = "0.1.0"
-source = "git+https://github.com/fakeshadow/toasty?branch=engine#52e004c02a6747a0b866513ee32bbf940f978b7c"
+source = "git+https://github.com/fakeshadow/toasty?branch=engine#ab7a56d6dc2076c28f84efc2bebee05670bcd368"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1417,7 +1417,7 @@ dependencies = [
 [[package]]
 name = "toasty-sql"
 version = "0.1.0"
-source = "git+https://github.com/fakeshadow/toasty?branch=engine#52e004c02a6747a0b866513ee32bbf940f978b7c"
+source = "git+https://github.com/fakeshadow/toasty?branch=engine#ab7a56d6dc2076c28f84efc2bebee05670bcd368"
 dependencies = [
  "anyhow",
  "toasty-core",
@@ -1832,7 +1832,7 @@ checksum = "9edde0db4769d2dc68579893f2306b26c6ecfbe0ef499b013d731b7b9247e0b9"
 [[package]]
 name = "xitca-codegen"
 version = "0.4.0"
-source = "git+http://github.com/HFQR/xitca-web?rev=91c6c31#91c6c31cf7b2babece4c0d7245f80e4a90a93cc0"
+source = "git+http://github.com/HFQR/xitca-web?rev=244a06d#244a06da993578d4efde13e9bf1a17baaf624760"
 dependencies = [
  "quote",
  "syn",
@@ -1841,7 +1841,7 @@ dependencies = [
 [[package]]
 name = "xitca-http"
 version = "0.7.1"
-source = "git+http://github.com/HFQR/xitca-web?rev=91c6c31#91c6c31cf7b2babece4c0d7245f80e4a90a93cc0"
+source = "git+http://github.com/HFQR/xitca-web?rev=244a06d#244a06da993578d4efde13e9bf1a17baaf624760"
 dependencies = [
  "futures-core",
  "http",
@@ -1874,7 +1874,7 @@ dependencies = [
 [[package]]
 name = "xitca-postgres"
 version = "0.3.0"
-source = "git+http://github.com/HFQR/xitca-web?rev=91c6c31#91c6c31cf7b2babece4c0d7245f80e4a90a93cc0"
+source = "git+http://github.com/HFQR/xitca-web?rev=244a06d#244a06da993578d4efde13e9bf1a17baaf624760"
 dependencies = [
  "fallible-iterator",
  "futures-core",
@@ -1890,7 +1890,7 @@ dependencies = [
 [[package]]
 name = "xitca-postgres-diesel"
 version = "0.2.0"
-source = "git+https://github.com/fakeshadow/xitca-postgres-diesel?rev=ffd222a#ffd222ac488c0a05f321fb6b6eb0fa82242999cc"
+source = "git+https://github.com/fakeshadow/xitca-postgres-diesel?rev=fb5dcba#fb5dcba5a89164a880a3e82d62dcb3ae5e99ae6e"
 dependencies = [
  "diesel",
  "diesel-async",
@@ -1927,7 +1927,7 @@ dependencies = [
 [[package]]
 name = "xitca-server"
 version = "0.5.0"
-source = "git+http://github.com/HFQR/xitca-web?rev=91c6c31#91c6c31cf7b2babece4c0d7245f80e4a90a93cc0"
+source = "git+http://github.com/HFQR/xitca-web?rev=244a06d#244a06da993578d4efde13e9bf1a17baaf624760"
 dependencies = [
  "socket2 0.6.1",
  "tokio",
@@ -1941,7 +1941,7 @@ dependencies = [
 [[package]]
 name = "xitca-service"
 version = "0.3.0"
-source = "git+http://github.com/HFQR/xitca-web?rev=91c6c31#91c6c31cf7b2babece4c0d7245f80e4a90a93cc0"
+source = "git+http://github.com/HFQR/xitca-web?rev=244a06d#244a06da993578d4efde13e9bf1a17baaf624760"
 
 [[package]]
 name = "xitca-unsafe-collection"
@@ -1987,7 +1987,7 @@ dependencies = [
 [[package]]
 name = "xitca-web"
 version = "0.7.1"
-source = "git+http://github.com/HFQR/xitca-web?rev=91c6c31#91c6c31cf7b2babece4c0d7245f80e4a90a93cc0"
+source = "git+http://github.com/HFQR/xitca-web?rev=244a06d#244a06da993578d4efde13e9bf1a17baaf624760"
 dependencies = [
  "futures-core",
  "pin-project-lite",
