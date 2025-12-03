@@ -9,19 +9,19 @@ path = "./src/main.rs"
 required-features = ["io-uring", "pg", "router", "template"]
 
 [[bin]]
-name = "xitca-web-unrealistic"
-path = "./src/main_unrealistic.rs"
-required-features = ["perf", "pg", "template"]
+name = "xitca-web-barebone"
+path = "./src/main_barebone.rs"
+required-features = ["perf", "perf-json", "pg", "template"]
 
 [[bin]]
 name = "xitca-web-diesel"
 path = "./src/main_orm.rs"
-required-features = ["diesel", "template", "web-codegen"]
+required-features = ["diesel", "perf", "template", "web-codegen"]
 
 [[bin]]
 name = "xitca-web-toasty"
 path = "./src/main_orm.rs"
-required-features = ["toasty", "template", "web-codegen"]
+required-features = ["perf", "template", "toasty", "web-codegen"]
 
 [features]
 # pg client optional
@@ -41,7 +41,8 @@ template = ["dep:sailfish"]
 # io-uring optional
 io-uring = ["dep:tokio-uring", "xitca-http/io-uring", "xitca-server/io-uring"]
 # unrealistic performance optimization
-perf = ["dep:core_affinity", "dep:mimalloc", "tokio/parking_lot", "simd-json", "simd-json-derive"]
+perf = ["dep:core_affinity", "dep:mimalloc", "tokio/parking_lot"]
+perf-json = ["simd-json", "simd-json-derive"]
 
 [dependencies]
 xitca-http = "0.7"
@@ -63,7 +64,7 @@ xitca-postgres = { version = "0.3", optional = true }
 
 # diesel orm optional
 diesel = { version = "2", features = ["postgres"], optional = true }
-diesel-async = { version = "0.7", features = ["bb8", "postgres"], optional = true }
+diesel-async = { version = "0.7", features = ["postgres"], optional = true }
 xitca-postgres-diesel = { version = "0.2", default-features = false, optional = true }
 futures-util = { version = "0.3", default-features = false, optional = true }
 
@@ -85,7 +86,7 @@ simd-json-derive =  { version = "0.18", default-features = false, optional = tru
 
 futures-core = { version = "0.3", default-features = false }
 rand = { version = "0.9", features = ["os_rng", "small_rng"], default-features = false }
-tokio = "1.41"
+tokio = "1.48"
 
 [profile.release]
 lto = true
@@ -94,7 +95,7 @@ codegen-units = 1
 panic = "abort"
 
 [patch.crates-io]
-xitca-postgres-diesel = { git = "https://github.com/fakeshadow/xitca-postgres-diesel", rev = "7671975" }
+xitca-postgres-diesel = { git = "https://github.com/fakeshadow/xitca-postgres-diesel", rev = "ffd222a" }
 xitca-postgres-toasty = { git = "https://github.com/fakeshadow/xitca-postgres-toasty", rev = "04bedb8" }
 
 # personal fork for efficient toasty engine fine tuned with pipelined xitca-postgres client
@@ -102,9 +103,9 @@ toasty = { git = "https://github.com/fakeshadow/toasty", branch = "engine" }
 toasty-core = { git = "https://github.com/fakeshadow/toasty", branch = "engine" }
 toasty-sql = { git = "https://github.com/fakeshadow/toasty", branch = "engine" }
 
-xitca-codegen = { git = "http://github.com/HFQR/xitca-web", rev = "cf70ed7" }
-xitca-http = { git = "http://github.com/HFQR/xitca-web", rev = "cf70ed7" }
-xitca-postgres = { git = "http://github.com/HFQR/xitca-web", rev = "cf70ed7" }
-xitca-server = { git = "http://github.com/HFQR/xitca-web", rev = "cf70ed7" }
-xitca-service = { git = "http://github.com/HFQR/xitca-web", rev = "cf70ed7" }
-xitca-web = { git = "http://github.com/HFQR/xitca-web", rev = "cf70ed7" }
+xitca-codegen = { git = "http://github.com/HFQR/xitca-web", rev = "91c6c31" }
+xitca-http = { git = "http://github.com/HFQR/xitca-web", rev = "91c6c31" }
+xitca-postgres = { git = "http://github.com/HFQR/xitca-web", rev = "91c6c31" }
+xitca-server = { git = "http://github.com/HFQR/xitca-web", rev = "91c6c31" }
+xitca-service = { git = "http://github.com/HFQR/xitca-web", rev = "91c6c31" }
+xitca-web = { git = "http://github.com/HFQR/xitca-web", rev = "91c6c31" }

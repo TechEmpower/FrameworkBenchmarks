@@ -3,18 +3,19 @@ mod db_util;
 
 use core::cell::RefCell;
 
+use xitca_io::bytes::BytesMut;
 use xitca_postgres::{Execute, iter::AsyncLendingIterator, pipeline::Pipeline, pool::Pool};
 
 use super::{
     ser::{Fortune, Fortunes, World},
-    util::{DB_URL, HandleResult},
+    util::{DB_URL, HandleResult, Rand},
 };
 
-use db_util::{FORTUNE_STMT, Shared, UPDATE_STMT, WORLD_STMT, not_found};
+use db_util::{FORTUNE_STMT, UPDATE_STMT, WORLD_STMT, not_found};
 
 pub struct Client {
     pool: Pool,
-    shared: RefCell<Shared>,
+    shared: RefCell<(Rand, BytesMut)>,
 }
 
 pub async fn create() -> HandleResult<Client> {

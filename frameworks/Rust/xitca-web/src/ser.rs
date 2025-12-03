@@ -16,7 +16,7 @@ use crate::util::{Error, State};
 const HELLO: &str = "Hello, World!";
 const HELLO_BYTES: &[u8] = HELLO.as_bytes();
 
-#[cfg_attr(feature = "perf", derive(simd_json_derive::Serialize))]
+#[cfg_attr(feature = "perf-json", derive(simd_json_derive::Serialize))]
 #[derive(Clone)]
 pub struct Message {
     message: &'static str,
@@ -34,7 +34,7 @@ pub struct Num(pub u16);
 #[cfg_attr(feature = "diesel", derive(diesel::Queryable))]
 #[cfg_attr(feature = "toasty", derive(toasty::Model))]
 #[cfg_attr(feature = "toasty", table = "world")]
-#[cfg_attr(feature = "perf", derive(simd_json_derive::Serialize))]
+#[cfg_attr(feature = "perf-json", derive(simd_json_derive::Serialize))]
 pub struct World {
     #[cfg_attr(feature = "toasty", key)]
     pub id: i32,

@@ -24,7 +24,7 @@
         "notes": "",
         "versus": ""
       },
-      "unrealistic": {
+      "barebone": {
         "json_url": "/json",
         "plaintext_url": "/plaintext",
         "db_url": "/db",
@@ -32,7 +32,7 @@
         "query_url": "/queries?q=",
         "update_url": "/updates?q=",
         "port": 8080,
-        "approach": "Stripped",
+        "approach": "Realistic",
         "classification": "Platform",
         "database": "Postgres",
         "framework": "xitca-web",
@@ -42,7 +42,7 @@
         "webserver": "xitca-server",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "xitca-web [unrealistic]",
+        "display_name": "xitca-web [barebone]",
         "notes": "",
         "versus": ""
       },
