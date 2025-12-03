@@ -11,4 +11,4 @@ COPY --from=lein /aleph/target/hello-aleph-standalone.jar app.jar
 
 EXPOSE 8080
 
-CMD ["java", "-server", "--enable-native-access=ALL-UNNAMED", "-XX:+UseParallelGC", "-jar", "app.jar"]
+CMD ["java", "-server", "--enable-native-access=ALL-UNNAMED", "-XX:+UseParallelGC", "-XX:MaxRAMPercentage=70", "-Dclojure.compiler.direct-linking=true","-jar", "app.jar"]

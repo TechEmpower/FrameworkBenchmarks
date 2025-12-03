@@ -10,4 +10,4 @@ COPY --from=maven /httpserver/target/httpserver-1.0-jar-with-dependencies.jar ap
 
 EXPOSE 8080
 
-CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-jar", "app.jar", "postgres"]
+CMD ["java", "-server", "-XX:MaxRAMPercentage=70", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-jar", "app.jar", "postgres"]

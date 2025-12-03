@@ -8,4 +8,4 @@ RUN lein uberjar
 
 EXPOSE 8080
 
-CMD ["java", "-jar", "-Dio.pedestal.log.defaultMetricsRecorder=nil", "-Dio.pedestal.log.overrideLogger=nil", "target/pedestal-standalone.jar"]
+CMD ["java", "-Dclojure.compiler.direct-linking=true", "-jar", "-Dio.pedestal.log.defaultMetricsRecorder=nil", "-Dio.pedestal.log.overrideLogger=nil", "target/pedestal-standalone.jar"]

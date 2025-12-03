@@ -13,9 +13,16 @@ public sealed class DbResource
     {
         var id = Random.Next(1, 10001);
 
-        await using var context = DatabaseContext.CreateNoTracking();
+        var context = Database.NoTrackingPool.Rent();
 
-        return await context.World.FirstOrDefaultAsync(w => w.Id == id).ConfigureAwait(false);
+        try
+        {
+            return await context.World.FirstOrDefaultAsync(w => w.Id == id).ConfigureAwait(false);
+        }
+        finally
+        {
+            Database.NoTrackingPool.Return(context);
+        }
     }
 
 }

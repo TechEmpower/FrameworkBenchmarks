@@ -7,22 +7,24 @@ const pool = @import("pool.zig");
 
 const endpoints = @import("endpoints.zig");
 
-var server: httpz.ServerCtx(*endpoints.Global, *endpoints.Global) = undefined;
+var server: httpz.Server(*endpoints.Global) = undefined;
 
 pub fn main() !void {
     const cpu_count = try std.Thread.getCpuCount();
     var gpa = std.heap.GeneralPurposeAllocator(.{
         .thread_safe = true,
     }){};
+    defer {
+        if (builtin.mode == .Debug) _ = gpa.deinit();
+    }
 
-    const allocator = gpa.allocator();
+    const allocator = if (builtin.mode == .Debug) gpa.allocator() else std.heap.smp_allocator;
 
     var pg_pool = try pool.initPool(allocator);
     defer pg_pool.deinit();
 
     const date_thread = try std.Thread.spawn(.{}, struct {
         fn update() !void {
-            const ally = std.heap.page_allocator;
             while (true) {
                 const now = datetimez.datetime.Date.now();
                 const time = datetimez.datetime.Time.now();
@@ -30,15 +32,15 @@ pub fn main() !void {
                 // Wed, 17 Apr 2013 12:00:00 GMT
                 // Return date in ISO format YYYY-MM-DD
                 const TB_DATE_FMT = "{s:0>3}, {d:0>2} {s:0>3} {d:0>4} {d:0>2}:{d:0>2}:{d:0>2} GMT";
-                endpoints.date_str = try std.fmt.allocPrint(ally, TB_DATE_FMT, .{ now.weekdayName()[0..3], now.day, now.monthName()[0..3], now.year, time.hour, time.minute, time.second });
-                std.time.sleep(std.time.ns_per_ms * 980);
+                _ = try std.fmt.bufPrint(&endpoints.date_str, TB_DATE_FMT, .{ now.weekdayName()[0..3], now.day, now.monthName()[0..3], now.year, time.hour, time.minute, time.second });
+                std.Thread.sleep(std.time.ns_per_ms * 980);
             }
         }
     }.update, .{});
 
     date_thread.detach();
 
-    var prng = std.rand.DefaultPrng.init(@as(u64, @bitCast(std.time.milliTimestamp())));
+    var prng: std.Random.DefaultPrng = .init(@as(u64, @bitCast(std.time.milliTimestamp())));
 
     var rand = prng.random();
 
@@ -50,7 +52,7 @@ pub fn main() !void {
     const port: u16 = 3000;
     const workers = @as(u16, @intCast(16 * cpu_count));
 
-    server = try httpz.ServerApp(*endpoints.Global).init(allocator, .{
+    server = try httpz.Server(*endpoints.Global).init(allocator, .{
         .port = port,
         .address = "0.0.0.0",
         .workers = .{
@@ -118,24 +120,24 @@ pub fn main() !void {
     defer server.deinit();
 
     // now that our server is up, we register our intent to handle SIGINT
-    try std.posix.sigaction(std.posix.SIG.INT, &.{
+    std.posix.sigaction(std.posix.SIG.INT, &.{
         .handler = .{ .handler = shutdown },
-        .mask = std.posix.empty_sigset,
+        .mask = std.posix.sigemptyset(),
         .flags = 0,
     }, null);
 
-    var router = server.router();
-    router.get("/json", endpoints.json);
-    router.get("/plaintext", endpoints.plaintext);
-    router.get("/db", endpoints.db);
-    router.get("/fortunes", endpoints.fortune);
+    var router = try server.router(.{});
+    router.get("/json", endpoints.json, .{});
+    router.get("/plaintext", endpoints.plaintext, .{});
+    router.get("/db", endpoints.db, .{});
+    router.get("/fortunes", endpoints.fortune, .{});
 
     std.debug.print("Httpz using {d} workers listening at 0.0.0.0:{d}\n", .{ workers, port });
 
     try server.listen();
 }
 
-fn shutdown(_: c_int) callconv(.C) void {
+fn shutdown(_: c_int) callconv(.c) void {
     server.stop();
 }
 

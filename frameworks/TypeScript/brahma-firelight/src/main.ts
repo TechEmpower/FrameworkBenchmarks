@@ -1,25 +1,44 @@
-import { createApp, type Response, type Request, type App, type NextFunction, type Handler } from "brahma-firelight";
+import { createApp, type Response, type Request, type App, type NextFunction, type Handler, registerRustHotpath } from "brahma-firelight";
 import cluster from "node:cluster";
 import os from "node:os";
 
 const app: App = createApp();
 
 // Server Config Middleware
-const serverInfo: Handler = (_req: Request, res: Response, next?: NextFunction) => {
-    res.setHeader("Server", "brahma-firelight");
-    res.setHeader("Connection", "keep-alive")
-    next?.();
-};
+// const serverInfo: Handler = (_req: Request, res: Response, next?: NextFunction) => {
+//     res.setHeader("Server", "brahma-firelight");
+//     res.setHeader("Connection", "keep-alive")
+//     next?.();
+// };
 
 // JSON compute
-app.get("/json", serverInfo, (_req: Request, res: Response) => {
-    res.json({ message: "Hello, World!" });
-});
+// app.get("/json", serverInfo, (_req: Request, res: Response) => {
+//     res.json({ message: "Hello, World!" });
+// });
 
 // PLAIN-TEXT
-app.get("/plaintext", serverInfo, (_req: Request, res: Response) => {
-    res.text("Hello, World!");
-});
+// app.get("/plaintext", serverInfo, (_req: Request, res: Response) => {
+//     res.text("Hello, World!");
+// });
+
+
+// JSON compute
+registerRustHotpath(
+    "GET",
+    "/json",
+    200,
+    '{"Content-Type": "application/json", "Server": "brahma-firelight"}',
+    Buffer.from(JSON.stringify({ message: "Hello, World!" }))
+);
+
+// PLAIN-TEXT
+registerRustHotpath(
+    "GET",
+    "/plaintext",
+    200,
+    '{"Content-Type": "text/plain", "Server": "brahma-firelight"}',
+    Buffer.from("Hello, World!")
+);
 
 // Port & Host 
 const PORT = process.env.PORT || 8080;

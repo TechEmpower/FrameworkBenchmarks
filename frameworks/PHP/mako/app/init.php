@@ -4,7 +4,7 @@
  * Configure PHP error reporting.
  * @see http://php.net/manual/en/function.error-reporting.php
  */
-error_reporting(E_ALL | E_STRICT);
+error_reporting(E_ALL);
 
 /*
  * Choose if errors that are NOT caught by the Mako error and exception handlers should be
