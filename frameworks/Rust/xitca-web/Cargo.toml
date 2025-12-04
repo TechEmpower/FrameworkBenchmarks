@@ -103,9 +103,9 @@ toasty = { git = "https://github.com/fakeshadow/toasty", branch = "engine" }
 toasty-core = { git = "https://github.com/fakeshadow/toasty", branch = "engine" }
 toasty-sql = { git = "https://github.com/fakeshadow/toasty", branch = "engine" }
 
-xitca-codegen = { git = "http://github.com/HFQR/xitca-web", rev = "244a06d" }
-xitca-http = { git = "http://github.com/HFQR/xitca-web", rev = "244a06d" }
-xitca-postgres = { git = "http://github.com/HFQR/xitca-web", rev = "244a06d" }
-xitca-server = { git = "http://github.com/HFQR/xitca-web", rev = "244a06d" }
-xitca-service = { git = "http://github.com/HFQR/xitca-web", rev = "244a06d" }
-xitca-web = { git = "http://github.com/HFQR/xitca-web", rev = "244a06d" }
+xitca-codegen = { git = "http://github.com/HFQR/xitca-web", rev = "d65bec8" }
+xitca-http = { git = "http://github.com/HFQR/xitca-web", rev = "d65bec8" }
+xitca-postgres = { git = "http://github.com/HFQR/xitca-web", rev = "d65bec8" }
+xitca-server = { git = "http://github.com/HFQR/xitca-web", rev = "d65bec8" }
+xitca-service = { git = "http://github.com/HFQR/xitca-web", rev = "d65bec8" }
+xitca-web = { git = "http://github.com/HFQR/xitca-web", rev = "d65bec8" }
