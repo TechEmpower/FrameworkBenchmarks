@@ -73,6 +73,7 @@ fun registerBundle(
     dependencies {
         exclusions.forEach { exclude(dependency(it)) }
     }
+    mergeServiceFiles()
 }
 
 val nettyBundle by registerBundle(
