@@ -1,12 +1,11 @@
-FROM maven:3.9.9-amazoncorretto-21-debian-bookworm as maven
+FROM gradle:8.13-jdk21 AS build
 WORKDIR /ktor-r2dbc
-COPY ktor-r2dbc/pom.xml pom.xml
-COPY ktor-r2dbc/src src
-RUN mvn clean package -q
+COPY ktor-r2dbc/ ./
+RUN chmod +x gradlew && ./gradlew --no-daemon clean nettyBundle
 
 FROM amazoncorretto:21-al2023-headless
 WORKDIR /ktor-r2dbc
-COPY --from=maven /ktor-r2dbc/target/tech-empower-framework-benchmark-1.0-SNAPSHOT-netty-bundle.jar app.jar
+COPY --from=build /ktor-r2dbc/build/libs/tech-empower-framework-benchmark-1.0-SNAPSHOT-netty-bundle.jar app.jar
 
 EXPOSE 9090
 

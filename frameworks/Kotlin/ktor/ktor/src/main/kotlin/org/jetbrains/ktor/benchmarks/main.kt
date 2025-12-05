@@ -13,9 +13,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.withContext
 import kotlinx.html.*
-import java.sql.Connection
 import java.util.StringJoiner
-import kotlin.random.Random
+import java.util.concurrent.ThreadLocalRandom
+import kotlinx.coroutines.CoroutineDispatcher
 
 const val HELLO_WORLD = "Hello, World!"
 const val WORLD_QUERY = "SELECT id, randomNumber FROM World WHERE id = ?"
@@ -30,7 +30,6 @@ fun Application.main() {
     // Create a dedicated dispatcher for database operations
     val databaseDispatcher = Dispatchers.IO.limitedParallelism(poolSize)
     val helloWorldContent = TextContent(HELLO_WORLD, ContentType.Text.Plain)
-    val random = Random.Default
 
     install(DefaultHeaders)
 
@@ -44,36 +43,13 @@ fun Application.main() {
         }
 
         get("/db") {
-            val world = withContext(databaseDispatcher) {
-                pool.connection.use { connection ->
-                    connection.prepareStatement(WORLD_QUERY).use { statement ->
-                        statement.setInt(1, random.nextInt(DB_ROWS) + 1)
-                        statement.executeQuery().use { rs ->
-                            rs.next()
-                            World(rs.getInt(1), rs.getInt(2))
-                        }
-                    }
-                }
-            }
+            val world = fetchWorld(pool, databaseDispatcher)
             call.respondJson(world)
         }
 
-        fun Connection.selectWorlds(queries: Int): Array<World> =
-            prepareStatement(WORLD_QUERY).use { statement ->
-                Array<World>(queries) { i ->
-                    statement.setInt(1, random.nextInt(DB_ROWS) + 1)
-                    statement.executeQuery().use { rs ->
-                        rs.next()
-                        World(rs.getInt(1), rs.getInt(2))
-                    }
-                }
-            }
-
         get("/queries") {
             val queries = call.queries()
-            val result = withContext(databaseDispatcher) {
-                pool.connection.use { it.selectWorlds(queries) }
-            }
+            val result = fetchWorlds(pool, queries, databaseDispatcher)
             call.respondJson(result)
         }
 
@@ -113,20 +89,18 @@ fun Application.main() {
 
         get("/updates") {
             val queries = call.queries()
-            val result: Array<World>
+            val result = fetchWorlds(pool, queries, databaseDispatcher)
 
             withContext(databaseDispatcher) {
                 pool.connection.use { connection ->
-                    result = connection.selectWorlds(queries)
-
                     val updateSql = StringJoiner(
                         ", ",
                         "UPDATE World SET randomNumber = temp.randomNumber FROM (VALUES ",
                         " ORDER BY 1) AS temp(id, randomNumber) WHERE temp.id = World.id"
                     )
 
-                    for (i in result.indices) {
-                        result[i].randomNumber = random.nextInt(DB_ROWS) + 1
+                    for (world in result) {
+                        world.randomNumber = ThreadLocalRandom.current().nextInt(1, DB_ROWS + 1)
                         updateSql.add("(?, ?)")
                     }
 
@@ -142,6 +116,46 @@ fun Application.main() {
             }
 
             call.respondJson(result)
+        }
+    }
+}
+
+suspend fun fetchWorld(
+    pool: HikariDataSource,
+    dispatcher: CoroutineDispatcher
+): World = withContext(dispatcher) {
+    pool.connection.use { connection ->
+        fetchWorld(connection)
+    }
+}
+
+private fun fetchWorld(connection: java.sql.Connection): World =
+    connection.prepareStatement(WORLD_QUERY).use { statement ->
+        statement.setInt(1, ThreadLocalRandom.current().nextInt(1, DB_ROWS + 1))
+        statement.executeQuery().use { rs ->
+            rs.next()
+            World(rs.getInt(1), rs.getInt(2))
+        }
+    }
+
+suspend fun fetchWorlds(
+    pool: HikariDataSource,
+    queries: Int,
+    dispatcher: CoroutineDispatcher
+): Array<World> = withContext(dispatcher) {
+    if (queries <= 0) {
+        emptyArray()
+    } else {
+        pool.connection.use { connection ->
+            connection.prepareStatement(WORLD_QUERY).use { statement ->
+                Array(queries) {
+                    statement.setInt(1, ThreadLocalRandom.current().nextInt(1, DB_ROWS + 1))
+                    statement.executeQuery().use { rs ->
+                        rs.next()
+                        World(rs.getInt(1), rs.getInt(2))
+                    }
+                }
+            }
         }
     }
 }

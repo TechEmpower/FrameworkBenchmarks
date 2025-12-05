@@ -2,7 +2,7 @@ plugins {
     application
     kotlin("jvm") version "2.0.21"
     kotlin("plugin.serialization") version "2.0.0"
-    id("com.github.johnrengelman.shadow") version "8.1.0"
+    id("com.gradleup.shadow") version "8.3.9"
 }
 
 group = "org.jetbrains.ktor"
