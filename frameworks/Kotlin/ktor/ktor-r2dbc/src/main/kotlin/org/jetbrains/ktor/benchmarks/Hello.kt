@@ -60,20 +60,10 @@ fun Application.main() {
             call.respondJson(result)
         }
 
-        fun selectWorlds(queries: Int): Flow<World> = flow {
-            repeat(queries) {
-                emit(getWorld(dbConnFactory).awaitFirst())
-            }
-        }
-
         get("/queries") {
             val queries = call.queries()
 
-            val result = buildList {
-                selectWorlds(queries).collect {
-                    add(it)
-                }
-            }
+            val result = fetchWorldsConcurrently(dbConnFactory, queries)
 
             call.respondJson(result)
         }
@@ -123,19 +113,24 @@ fun Application.main() {
             }.sortedBy { it.id }
 
             Mono.usingWhen(dbConnFactory.create(), { connection ->
-                connection.beginTransaction()
-                val statement = connection.createStatement(UPDATE_QUERY)
-                updatedWorlds.forEach { world ->
-                    statement.bind(0, world.randomNumber).bind(1, world.id).add()
-                }
-                Mono.from(statement.execute())
-                    .flatMap { Mono.from(it.rowsUpdated) }
+                Mono.from(connection.beginTransaction())
+                    .thenMany(
+                        Flux.fromIterable(updatedWorlds)
+                            .concatMap { world ->
+                                Mono.from(
+                                    connection.createStatement(UPDATE_QUERY)
+                                        .bind("$1", world.randomNumber)
+                                        .bind("$2", world.id)
+                                        .execute()
+                                ).flatMap { Mono.from(it.rowsUpdated) }
+                            }
+                    )
                     .then(Mono.from(connection.commitTransaction()))
             },
                 Connection::close,
                 { connection, _ -> connection.rollbackTransaction() },
                 { connection -> connection.rollbackTransaction() }
-            ).awaitSingle()
+            ).awaitFirstOrNull()
 
             call.respondJson(updatedWorlds)
         }
@@ -163,7 +158,7 @@ private fun getWorld(
 suspend fun fetchWorldsConcurrently(factory: ConnectionFactory, count: Int): List<World> =
     coroutineScope {
         (0 until count).map {
-            async { getWorld(factory, ThreadLocalRandom.current()).awaitSingle() }
+            async { getWorld(factory).awaitSingle() }
         }.awaitAll()
     }
 
