@@ -10,7 +10,6 @@ import io.ktor.server.plugins.defaultheaders.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import kotlinx.html.*
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
@@ -22,8 +21,9 @@ import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.Transaction
-import org.jetbrains.exposed.sql.transactions.transaction
-import org.jetbrains.exposed.sql.update
+import org.jetbrains.exposed.sql.statements.BatchUpdateStatement
+import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
+import org.jetbrains.exposed.sql.transactions.TransactionManager
 import java.util.concurrent.ThreadLocalRandom
 
 @Serializable
@@ -73,12 +73,12 @@ fun main(args: Array<String>) {
 }
 
 fun Application.module(exposedMode: ExposedMode) {
-    val dbRows = 10000
-    val poolSize = 48
+    val poolSize = Runtime.getRuntime().availableProcessors() * 2
     val pool = HikariDataSource(HikariConfig().apply { configurePostgres(poolSize) })
-    Database.connect(pool)
-    suspend fun <T> withDatabaseContextAndTransaction(statement: Transaction.() -> T) =
-        withContext(Dispatchers.IO) { transaction(statement = statement) }
+    val database = Database.connect(pool)
+    val databaseDispatcher = Dispatchers.IO.limitedParallelism(poolSize)
+    suspend fun <T> withDatabaseTransaction(statement: suspend Transaction.() -> T) =
+        newSuspendedTransaction(context = databaseDispatcher, db = database, statement = statement)
 
     install(DefaultHeaders)
 
@@ -93,7 +93,7 @@ fun Application.module(exposedMode: ExposedMode) {
             Fortune(this[FortuneTable.id].value, this[FortuneTable.message])
 
         fun ThreadLocalRandom.nextIntWithinRows() =
-            nextInt(dbRows) + 1
+            nextInt(DB_ROWS) + 1
 
         fun selectSingleWorld(random: ThreadLocalRandom): World =
             selectWorldsWithIdQuery(random.nextIntWithinRows()).single().toWorld()
@@ -103,7 +103,7 @@ fun Application.module(exposedMode: ExposedMode) {
 
         get("/db") {
             val random = ThreadLocalRandom.current()
-            val result = withDatabaseContextAndTransaction {
+            val result = withDatabaseTransaction {
                 when (exposedMode) {
                     Dsl -> selectSingleWorld(random)
                     Dao -> WorldDao[random.nextIntWithinRows()].toWorld()
@@ -117,7 +117,7 @@ fun Application.module(exposedMode: ExposedMode) {
             val queries = call.queries()
             val random = ThreadLocalRandom.current()
 
-            val result = withDatabaseContextAndTransaction {
+            val result = withDatabaseTransaction {
                 when (exposedMode) {
                     Dsl -> selectWorlds(queries, random)
                     Dao -> //List(queries) { WorldDao[random.nextIntWithinRows()].toWorld() }
@@ -129,7 +129,7 @@ fun Application.module(exposedMode: ExposedMode) {
         }
 
         get("/fortunes") {
-            val result = withDatabaseContextAndTransaction {
+            val result = withDatabaseTransaction {
                 when (exposedMode) {
                     Dsl -> FortuneTable.select(FortuneTable.id, FortuneTable.message)
                         .asSequence().map { it.toFortune() }
@@ -164,23 +164,17 @@ fun Application.module(exposedMode: ExposedMode) {
             val random = ThreadLocalRandom.current()
             lateinit var result: List<World>
 
-            withDatabaseContextAndTransaction {
+            withDatabaseTransaction {
                 when (exposedMode) {
                     Dsl -> {
                         result = selectWorlds(queries, random)
-                        result.forEach { it.randomNumber = random.nextInt(dbRows) + 1 }
-                        result
-                            // sort the data to avoid data race because all updates are in one transaction
-                            .sortedBy { it.id }
-                            .forEach { world ->
-                                WorldTable.update({ WorldTable.id eq world.id }) {
-                                    it[randomNumber] = world.randomNumber
-                                }
-                                /*
-                                // An alternative approach: commit every change to avoid data race
-                                commit()
-                                */
-                            }
+                        result.forEach { it.randomNumber = random.nextIntWithinRows() }
+                        val batch = BatchUpdateStatement(WorldTable)
+                        result.sortedBy { it.id }.forEach { world ->
+                            batch.addBatch(EntityID(world.id, WorldTable))
+                            batch[WorldTable.randomNumber] = world.randomNumber
+                        }
+                        batch.execute(TransactionManager.current())
                     }
 
                     Dao -> /*{
@@ -201,6 +195,8 @@ fun Application.module(exposedMode: ExposedMode) {
         }
     }
 }
+
+private const val DB_ROWS = 10_000
 
 fun HikariConfig.configurePostgres(poolSize: Int) {
     jdbcUrl = "jdbc:postgresql://tfb-database/hello_world?useSSL=false"
@@ -224,3 +220,4 @@ fun HikariConfig.configureCommon(poolSize: Int) {
 
 fun ApplicationCall.queries() =
     request.queryParameters["queries"]?.toIntOrNull()?.coerceIn(1, 500) ?: 1
+
