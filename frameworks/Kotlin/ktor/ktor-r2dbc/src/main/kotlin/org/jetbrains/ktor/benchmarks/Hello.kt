@@ -15,11 +15,6 @@ import io.r2dbc.postgresql.PostgresqlConnectionFactory
 import io.r2dbc.postgresql.client.SSLMode
 import io.r2dbc.spi.Connection
 import io.r2dbc.spi.ConnectionFactory
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.reactive.awaitFirst
 import kotlinx.coroutines.reactive.awaitFirstOrNull
 import kotlinx.coroutines.reactor.awaitSingle
@@ -28,7 +23,7 @@ import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import java.time.Duration
 import java.util.concurrent.ThreadLocalRandom
-import kotlin.random.Random
+import kotlin.math.min
 
 const val HELLO_WORLD = "Hello, World!"
 const val WORLD_QUERY = "SELECT id, randomnumber FROM world WHERE id = $1"
@@ -54,34 +49,18 @@ fun Application.main() {
         }
 
         get("/db") {
-            val request = getWorld(dbConnFactory)
-            val result = request.awaitFirstOrNull()
-
-            call.respondJson(result)
+            val world = dbConnFactory.fetchWorld()
+            call.respondJson(world)
         }
 
         get("/queries") {
             val queries = call.queries()
-
-            val result = fetchWorldsConcurrently(dbConnFactory, queries)
-
-            call.respondJson(result)
+            val worlds = dbConnFactory.fetchWorlds(queries)
+            call.respondJson(worlds)
         }
 
         get("/fortunes") {
-            val result = mutableListOf<Fortune>()
-
-            val request = Flux.usingWhen(dbConnFactory.create(), { connection ->
-                Flux.from(connection.createStatement(FORTUNES_QUERY).execute()).flatMap { r ->
-                    Flux.from(r.map { row, _ ->
-                        Fortune(
-                            row.get(0, Int::class.java)!!, row.get(1, String::class.java)!!
-                        )
-                    })
-                }
-            }, { connection -> connection.close() })
-
-            request.collectList().awaitFirstOrNull()?.let { result.addAll(it) }
+            val result = dbConnFactory.fetchFortunes().toMutableList()
 
             result.add(Fortune(0, "Additional fortune added at request time."))
             result.sortBy { it.message }
@@ -107,7 +86,7 @@ fun Application.main() {
         get("/updates") {
             val queries = call.queries()
 
-            val worlds = fetchWorldsConcurrently(dbConnFactory, queries)
+            val worlds = dbConnFactory.fetchWorlds(queries)
             val updatedWorlds = worlds.map {
                 it.copy(randomNumber = ThreadLocalRandom.current().nextInt(1, DB_ROWS + 1))
             }.sortedBy { it.id }
@@ -137,30 +116,55 @@ fun Application.main() {
     }
 }
 
-private fun getWorld(
-    dbConnFactory: ConnectionFactory, random: ThreadLocalRandom = ThreadLocalRandom.current()
-): Mono<World> = Mono.usingWhen(dbConnFactory.create(), { connection ->
-    Mono.from(connection.createStatement(WORLD_QUERY)
-        .bind("$1", random.nextInt(DB_ROWS) + 1)
-        .execute())
-        .flatMap { result ->
-            Mono.from(result.map { row, _ ->
-                World(
-                    row.get(0, Int::class.java)
-                        ?: error("id is null"),
-                    row.get(1, Int::class.java)
-                        ?: error("randomNumber is null")
-                )
-            })
-        }
-}, Connection::close)
+private suspend fun ConnectionFactory.fetchWorld(): World =
+    Mono.usingWhen(create(), { connection ->
+        selectWorld(connection)
+    }, Connection::close).awaitSingle()
 
-suspend fun fetchWorldsConcurrently(factory: ConnectionFactory, count: Int): List<World> =
-    coroutineScope {
-        (0 until count).map {
-            async { getWorld(factory).awaitSingle() }
-        }.awaitAll()
+private suspend fun ConnectionFactory.fetchWorlds(
+    count: Int
+): List<World> {
+    if (count <= 0) return emptyList()
+    val concurrency = min(count, 32)
+    return Mono.usingWhen(create(), { connection ->
+        Flux.range(0, count)
+            .flatMap({ selectWorldPublisher(connection) }, concurrency)
+            .collectList()
+    }, Connection::close).awaitSingle()
+}
+
+private fun selectWorld(connection: Connection): Mono<World> =
+    selectWorldPublisher(connection)
+
+private fun selectWorldPublisher(connection: Connection): Mono<World> {
+    val worldId = ThreadLocalRandom.current().nextInt(1, DB_ROWS + 1)
+    return Mono.from(
+        connection.createStatement(WORLD_QUERY)
+            .bind("$1", worldId)
+            .execute()
+    ).flatMap { result ->
+        Mono.from(result.map { row, _ ->
+            World(
+                row.get(0, Int::class.java) ?: error("id is null"),
+                row.get(1, Int::class.java) ?: error("randomNumber is null")
+            )
+        })
     }
+}
+
+private suspend fun ConnectionFactory.fetchFortunes(): List<Fortune> =
+    Mono.usingWhen(create(), { connection ->
+        Flux.from(connection.createStatement(FORTUNES_QUERY).execute())
+            .flatMap { result ->
+                Flux.from(result.map { row, _ ->
+                    Fortune(
+                        row.get(0, Int::class.java) ?: error("id is null"),
+                        row.get(1, String::class.java) ?: error("message is null")
+                    )
+                })
+            }
+            .collectList()
+    }, Connection::close).awaitSingle()
 
 private fun configurePostgresR2DBC(config: ApplicationConfig): ConnectionFactory {
     val cfo = PostgresqlConnectionConfiguration.builder()

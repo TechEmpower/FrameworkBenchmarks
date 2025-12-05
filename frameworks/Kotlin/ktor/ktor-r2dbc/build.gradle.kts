@@ -11,13 +11,13 @@ plugins {
 group = "org.jetbrains.ktor"
 version = "1.0-SNAPSHOT"
 
-val ktorVersion = "3.1.3"
+val ktorVersion = "3.3.3"
 val serializationVersion = "1.8.1"
 val kotlinxHtmlVersion = "0.12.0"
 val coroutinesVersion = "1.10.1"
 val logbackVersion = "1.5.13"
-val reactorVersion = "3.7.1"
-val r2dbcVersion = "1.0.7.RELEASE"
+val reactorVersion = "3.8.0"
+val r2dbcPstgrsVersion = "1.1.1.RELEASE"
 val r2dbcPoolVersion = "1.0.2.RELEASE"
 val postgresqlVersion = "42.7.5"
 
@@ -40,7 +40,7 @@ dependencies {
     implementation("io.ktor:ktor-server-html-builder-jvm:$ktorVersion")
     implementation("io.ktor:ktor-server-netty-jvm:$ktorVersion")
 
-    implementation("org.postgresql:r2dbc-postgresql:$r2dbcVersion")
+    implementation("org.postgresql:r2dbc-postgresql:$r2dbcPstgrsVersion")
     implementation("io.r2dbc:r2dbc-pool:$r2dbcPoolVersion")
     implementation("io.projectreactor:reactor-core:$reactorVersion")
 

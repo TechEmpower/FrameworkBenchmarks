@@ -11,7 +11,7 @@ plugins {
 group = "org.jetbrains.ktor"
 version = "1.0-SNAPSHOT"
 
-val ktorVersion = "3.1.3"
+val ktorVersion = "3.3.3"
 val serializationVersion = "1.8.1"
 val kotlinxHtmlVersion = "0.12.0"
 val hikariVersion = "5.1.0"
