@@ -1,5 +1,7 @@
 #![allow(dead_code)]
 
+use std::borrow::Cow;
+
 use serde::{Deserialize, Deserializer, Serialize, Serializer, ser::SerializeStruct};
 use xitca_http::{
     body::Once,
@@ -54,27 +56,12 @@ impl World {
 pub struct Fortune {
     #[cfg_attr(feature = "toasty", key)]
     pub id: i32,
-    #[cfg(not(feature = "toasty"))]
-    pub message: std::borrow::Cow<'static, str>,
-    #[cfg(feature = "toasty")]
-    pub message: String,
+    pub message: Cow<'static, str>,
 }
 
-#[cfg(not(feature = "toasty"))]
 impl Fortune {
     #[inline]
-    pub fn new(id: i32, message: impl Into<std::borrow::Cow<'static, str>>) -> Self {
-        Self {
-            id,
-            message: message.into(),
-        }
-    }
-}
-
-#[cfg(feature = "toasty")]
-impl Fortune {
-    #[inline]
-    pub fn new(id: i32, message: impl Into<String>) -> Self {
+    pub fn new(id: i32, message: impl Into<Cow<'static, str>>) -> Self {
         Self {
             id,
             message: message.into(),
