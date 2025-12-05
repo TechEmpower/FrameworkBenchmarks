@@ -64,7 +64,7 @@ xitca-postgres = { version = "0.3", optional = true }
 
 # diesel orm optional
 diesel = { version = "2", features = ["postgres"], optional = true }
-diesel-async = { version = "0.7", features = ["postgres"], optional = true }
+diesel-async = { version = "0.7", optional = true }
 xitca-postgres-diesel = { version = "0.2", default-features = false, optional = true }
 futures-util = { version = "0.3", default-features = false, optional = true }
 

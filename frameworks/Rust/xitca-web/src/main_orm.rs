@@ -50,7 +50,6 @@ async fn db(StateRef(pool): StateRef<'_, Pool>) -> HandleResult<Json<World>> {
 
 #[route("/fortunes", method = get)]
 async fn fortunes(StateRef(pool): StateRef<'_, Pool>) -> HandleResult<Html<String>> {
-    use sailfish::TemplateOnce;
     let html = pool.tell_fortune().await?.render_once()?;
     Ok(Html(html))
 }

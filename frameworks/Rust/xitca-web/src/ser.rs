@@ -77,8 +77,8 @@ pub struct Fortunes {
 // using the macro does not have any perf cost and this piece of code is expanded manually to speed up compile time of
 // bench to reduce resource usage of bench runner
 #[cfg(feature = "template")]
-impl sailfish::TemplateOnce for Fortunes {
-    fn render_once(self) -> sailfish::RenderResult {
+impl Fortunes {
+    pub fn render_once(self) -> sailfish::RenderResult {
         use sailfish::runtime::{Buffer, Render};
 
         const PREFIX: &str = "<!DOCTYPE html>\n<html>\n<head><title>Fortunes</title></head>\n<body>\n<table>\n<tr><th>id</th><th>message</th></tr>\n";
@@ -97,10 +97,6 @@ impl sailfish::TemplateOnce for Fortunes {
         buf.push_str(SUFFIX);
 
         Ok(buf.into_string())
-    }
-
-    fn render_once_to(self, _: &mut sailfish::runtime::Buffer) -> Result<(), sailfish::runtime::RenderError> {
-        unimplemented!("")
     }
 }
 
