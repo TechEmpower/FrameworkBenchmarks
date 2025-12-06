@@ -41,10 +41,9 @@ internal enum RouteType
 internal sealed class MyTcpSessionClientBase : TcpSessionClient
 {
     #region Paths
-    public static ReadOnlySpan<byte> Json => "/json"u8;
-    public static ReadOnlySpan<byte> Plaintext => "/plaintext"u8;
+    private static ReadOnlySpan<byte> Json => "/json"u8;
+    private static ReadOnlySpan<byte> Plaintext => "/plaintext"u8;
     #endregion
-
 
     private static ReadOnlySpan<byte> PlainTextBody => "Hello, World!"u8;
     private static ReadOnlySpan<byte> JsonBody => "{\"message\":\"Hello, World!\"}"u8;
@@ -68,14 +67,30 @@ internal sealed class MyTcpSessionClientBase : TcpSessionClient
 
         while (true)
         {
-            var readResult = await pipeReader.ReadAsync();
+            ValueTask<ReadResult> readTask = pipeReader.ReadAsync();
+            ReadResult readResult;
+
+            if (readTask.IsCompleted)
+            {
+                readResult = readTask.Result;
+            }
+            else
+            {
+                readResult = await readTask.ConfigureAwait(false);
+            }
+
             var bufferSequence = readResult.Buffer;
 
             var totalConsumed = ProcessRequests(bufferSequence, pipeWriter, out var responseCount);
 
             if (responseCount > 0)
             {
-                await pipeWriter.FlushAsync();
+                ValueTask<FlushResult> flushTask = pipeWriter.FlushAsync();
+                
+                if (!flushTask.IsCompleted)
+                {
+                    await flushTask.ConfigureAwait(false);
+                }
             }
 
             if (totalConsumed > 0)
@@ -94,7 +109,7 @@ internal sealed class MyTcpSessionClientBase : TcpSessionClient
         }
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
     private static long ProcessRequests(ReadOnlySequence<byte> buffer, PipeWriter writer, out int responseCount)
     {
         var seqReader = new SequenceReader<byte>(buffer);
@@ -105,23 +120,20 @@ internal sealed class MyTcpSessionClientBase : TcpSessionClient
         {
             var startConsumed = seqReader.Consumed;
 
-            // 请求行
             if (!TryReadLine(ref seqReader, out var requestLineLength))
             {
-                // 请求行不完整，不消费任何数据
                 break;
             }
 
             var requestLineConsumed = requestLineLength + 2;
 
-            // 读取Headers，直到空行；若不完整，回退并等待更多数据
             var headersStartConsumed = seqReader.Consumed;
             bool headersComplete = false;
+            
             while (!seqReader.End)
             {
                 if (!TryReadLine(ref seqReader, out var headerLength))
                 {
-                    // 回退到读取Headers前的位置，等待更多数据
                     var rewind = seqReader.Consumed - headersStartConsumed;
                     if (rewind > 0)
                     {
@@ -134,24 +146,20 @@ internal sealed class MyTcpSessionClientBase : TcpSessionClient
                 if (headerLength == 0)
                 {
                     headersComplete = true;
-                    break; // headers 结束
+                    break;
                 }
             }
 
             if (!headersComplete)
             {
-                // 不完整，等待更多数据
                 break;
             }
 
-            // 解析URL - 直接在原始位置解析，避免Slice
             var routeType = ParseUrlFast(buffer.Slice(startConsumed), requestLineConsumed);
 
-            // 计算本次消费的字节数
             var consumed = seqReader.Consumed - startConsumed;
             totalConsumed += consumed;
 
-            // 写入响应
             WriteResponseSync(writer, routeType);
             responseCount++;
         }
@@ -159,138 +167,97 @@ internal sealed class MyTcpSessionClientBase : TcpSessionClient
         return totalConsumed;
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
     private static void WriteResponseSync(PipeWriter writer, RouteType routeType)
     {
-        switch (routeType)
+        if (routeType == RouteType.Plaintext)
         {
-            case RouteType.Plaintext:
-                writer.Write(PlaintextPreamble);
-                writer.Write(DateHeader.HeaderBytes);
-                writer.Write(PlainTextBody);
-                break;
-            case RouteType.Json:
-                writer.Write(JsonPreamble);
-                writer.Write(DateHeader.HeaderBytes);
-                writer.Write(JsonBody);
-                break;
+            writer.Write(PlaintextPreamble);
+            writer.Write(DateHeader.HeaderBytes);
+            writer.Write(PlainTextBody);
+        }
+        else if (routeType == RouteType.Json)
+        {
+            writer.Write(JsonPreamble);
+            writer.Write(DateHeader.HeaderBytes);
+            writer.Write(JsonBody);
         }
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
     private static bool TryReadLine(ref SequenceReader<byte> reader, out long length)
     {
-        var start = reader.Consumed;
-
-        while (!reader.End)
+        if (reader.TryAdvanceTo((byte)'\r', advancePastDelimiter: false))
         {
-            if (reader.TryRead(out var b))
+            var start = reader.Consumed;
+            
+            if (!reader.TryPeek(1, out var next))
             {
-                if (b == '\r')
-                {
-                    // 查看是否有'\n'，若暂不可用则回退并判定不完整
-                    if (!reader.TryPeek(out var next))
-                    {
-                        // 回退已读取的'\r'
-                        reader.Rewind(1);
-                        length = 0;
-                        return false;
-                    }
-                    if (next == '\n')
-                    {
-                        // 消费'\n'并返回本行长度（不含CRLF）
-                        reader.Advance(1);
-                        length = reader.Consumed - start - 2;
-                        return true;
-                    }
-                }
+                length = 0;
+                return false;
             }
+            
+            if (next == '\n')
+            {
+                var lineLength = reader.Consumed;
+                reader.Advance(2);
+                length = lineLength - start;
+                return true;
+            }
+            
+            reader.Advance(1);
+            return TryReadLine(ref reader, out length);
         }
 
         length = 0;
         return false;
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
     private static RouteType ParseUrlFast(ReadOnlySequence<byte> sequence, long requestLineLength)
     {
         var reader = new SequenceReader<byte>(sequence);
 
-        // 跳过方法
-        var spaceCount = 0;
-        var urlStart = 0L;
-        var urlEnd = 0L;
-
-        while (reader.Consumed < requestLineLength && !reader.End)
-        {
-            if (reader.TryRead(out var b))
-            {
-                if (b == ' ')
-                {
-                    spaceCount++;
-                    if (spaceCount == 1)
-                    {
-                        urlStart = reader.Consumed;
-                    }
-                    else if (spaceCount == 2)
-                    {
-                        urlEnd = reader.Consumed - 1;
-                        break;
-                    }
-                }
-            }
-        }
-
-        if (spaceCount < 2)
+        if (!reader.TryAdvanceTo((byte)' ', advancePastDelimiter: true))
         {
             return RouteType.Unknown;
         }
 
-        var urlLength = urlEnd - urlStart;
+        var urlStart = reader.Consumed;
 
-        // 截取URL片段
-        var startPos = sequence.GetPosition(urlStart);
-        var urlSlice = sequence.Slice(startPos, urlLength);
+        if (!reader.TryAdvanceTo((byte)' ', advancePastDelimiter: false))
+        {
+            return RouteType.Unknown;
+        }
 
-        // "/plaintext"
+        var urlLength = reader.Consumed - urlStart;
+
         if (urlLength == Plaintext.Length)
         {
+            var urlSlice = sequence.Slice(urlStart, urlLength);
+            
             if (urlSlice.IsSingleSegment)
             {
-                if (urlSlice.FirstSpan.SequenceEqual(Plaintext))
-                {
-                    return RouteType.Plaintext;
-                }
+                return urlSlice.FirstSpan.SequenceEqual(Plaintext) ? RouteType.Plaintext : RouteType.Unknown;
             }
-            else
-            {
-                Span<byte> tmp = stackalloc byte[(int)urlLength];
-                urlSlice.CopyTo(tmp);
-                if (tmp.SequenceEqual(Plaintext))
-                {
-                    return RouteType.Plaintext;
-                }
-            }
+            
+            Span<byte> tmp = stackalloc byte[(int)urlLength];
+            urlSlice.CopyTo(tmp);
+            return tmp.SequenceEqual(Plaintext) ? RouteType.Plaintext : RouteType.Unknown;
         }
-        // "/json"
-        else if (urlLength == Json.Length)
+        
+        if (urlLength == Json.Length)
         {
+            var urlSlice = sequence.Slice(urlStart, urlLength);
+            
             if (urlSlice.IsSingleSegment)
             {
-                if (urlSlice.FirstSpan.SequenceEqual(Json))
-                {
-                    return RouteType.Json;
-                }
+                return urlSlice.FirstSpan.SequenceEqual(Json) ? RouteType.Json : RouteType.Unknown;
             }
-            else
-            {
-                Span<byte> tmp = stackalloc byte[(int)urlLength];
-                urlSlice.CopyTo(tmp);
-                if (tmp.SequenceEqual(Json))
-                {
-                    return RouteType.Json;
-                }
-            }
+            
+            Span<byte> tmp = stackalloc byte[(int)urlLength];
+            urlSlice.CopyTo(tmp);
+            return tmp.SequenceEqual(Json) ? RouteType.Json : RouteType.Unknown;
         }
 
         return RouteType.Unknown;
