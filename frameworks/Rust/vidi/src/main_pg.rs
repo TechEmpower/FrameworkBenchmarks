@@ -1,10 +1,6 @@
 use std::sync::Arc;
 
-use viz::{
-    header::{HeaderValue, SERVER},
-    types::State,
-    Request, RequestExt, Response, ResponseExt, Result, Router,
-};
+use vidi::{Request, RequestExt, Response, ResponseExt, Result, Router, types::State};
 use yarte::Template;
 
 mod db_pg;
@@ -12,7 +8,7 @@ mod models;
 mod server;
 mod utils;
 
-use db_pg::{get_conn, PgConnection};
+use db_pg::{PgConnection, get_conn};
 
 #[derive(Template)]
 #[template(path = "fortune.hbs")]
@@ -28,9 +24,8 @@ async fn db(req: Request) -> Result<Response> {
 
     let world = conn.get_world().await?;
 
-    let mut res = Response::json(world)?;
-    res.headers_mut()
-        .insert(SERVER, HeaderValue::from_static("Viz"));
+    let res = Response::json(world)?;
+
     Ok(res)
 }
 
@@ -43,10 +38,7 @@ async fn fortunes(req: Request) -> Result<Response> {
         .call()
         .expect("error rendering template");
 
-    let mut res = Response::html(buf);
-    res.headers_mut()
-        .insert(SERVER, HeaderValue::from_static("Viz"));
-    Ok(res)
+    Ok(Response::html(buf))
 }
 
 async fn queries(req: Request) -> Result<Response> {
@@ -55,9 +47,8 @@ async fn queries(req: Request) -> Result<Response> {
 
     let worlds = conn.get_worlds(count).await?;
 
-    let mut res = Response::json(worlds)?;
-    res.headers_mut()
-        .insert(SERVER, HeaderValue::from_static("Viz"));
+    let res = Response::json(worlds)?;
+
     Ok(res)
 }
 
@@ -67,9 +58,8 @@ async fn updates(req: Request) -> Result<Response> {
 
     let worlds = conn.update(count).await?;
 
-    let mut res = Response::json(worlds)?;
-    res.headers_mut()
-        .insert(SERVER, HeaderValue::from_static("Viz"));
+    let res = Response::json(worlds)?;
+
     Ok(res)
 }
 

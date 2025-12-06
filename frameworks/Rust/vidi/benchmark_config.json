@@ -1,0 +1,47 @@
+{
+  "framework": "vidi",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "none",
+        "framework": "Vidi",
+        "language": "Rust",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "Rust",
+        "webserver": "Hyper",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Vidi",
+        "notes": "",
+        "versus": "None"
+      },
+      "pg": {
+        "db_url": "/db",
+        "fortune_url": "/fortunes",
+        "query_url": "/queries?q=",
+        "update_url": "/updates?q=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "postgres",
+        "framework": "Vidi",
+        "language": "Rust",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "Rust",
+        "webserver": "Hyper",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Vidi [Postgresql]",
+        "notes": "",
+        "versus": "None"
+      }
+    }
+  ]
+}

@@ -1,9 +1,9 @@
 #![allow(clippy::unused_async)]
 
 use serde::Serialize;
-use viz::{
-    header::{HeaderValue, CONTENT_TYPE, SERVER},
+use vidi::{
     Bytes, Request, Response, ResponseExt, Result, Router,
+    header::{CONTENT_TYPE, HeaderValue},
 };
 
 mod server;
@@ -14,12 +14,11 @@ struct Message {
     message: &'static str,
 }
 
+const HELLO_WORLD: &str = "Hello, World!";
+
 #[inline(always)]
 async fn plaintext(_: Request) -> Result<Response> {
-    let mut res = Response::text("Hello, World!");
-    res.headers_mut()
-        .insert(SERVER, HeaderValue::from_static("Viz"));
-    Ok(res)
+    Ok(Response::text(HELLO_WORLD))
 }
 
 #[inline(always)]
@@ -28,7 +27,7 @@ async fn json(_: Request) -> Result<Response> {
         .body(
             http_body_util::Full::new(Bytes::from(
                 serde_json::to_vec(&Message {
-                    message: "Hello, World!",
+                    message: HELLO_WORLD,
                 })
                 .unwrap(),
             ))
@@ -36,7 +35,6 @@ async fn json(_: Request) -> Result<Response> {
         )
         .unwrap();
     let headers = res.headers_mut();
-    headers.insert(SERVER, HeaderValue::from_static("Viz"));
     headers.insert(
         CONTENT_TYPE,
         HeaderValue::from_static(mime::APPLICATION_JSON.as_ref()),

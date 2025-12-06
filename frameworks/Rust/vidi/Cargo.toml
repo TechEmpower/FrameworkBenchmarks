@@ -1,0 +1,47 @@
+[package]
+name = "vidi"
+version = "0.1.0"
+edition = "2024"
+publish = false
+authors = ["Fangdun Tsai <fundon@pindash.io>"]
+
+[[bin]]
+name = "vidi"
+path = "src/main.rs"
+
+[[bin]]
+name = "vidi-pg"
+path = "src/main_pg.rs"
+required-features = ["tokio-postgres", "yarte"]
+
+[dependencies]
+vidi = "0.1"
+hyper = "1.0"
+hyper-util = "0.1"
+http-body-util = "0.1"
+atoi = "2.0"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1"
+mime = "0.3"
+rand = { version = "0.9", features = ["small_rng"] }
+thiserror = "2.0"
+futures-util = "0.3"
+socket2 = { version = "0.6.0", features = ["all"] }
+num_cpus = "1.0"
+
+[target.'cfg(not(unix))'.dependencies]
+nanorand = { version = "0.8" }
+
+[target.'cfg(unix)'.dependencies]
+nanorand = { version = "0.8", features = ["getrandom"] }
+
+tokio = { version = "1", features = ["full"] }
+tokio-postgres = { version = "0.7", optional = true }
+
+yarte = { version = "0.15", features = ["bytes-buf", "json"], optional = true }
+
+[profile.release]
+lto = true
+codegen-units = 1
+strip = true
+opt-level = 3

@@ -1,10 +1,10 @@
 use std::{collections::HashMap, fmt::Write, io, sync::Arc};
 
-use futures_util::{stream::FuturesUnordered, StreamExt, TryFutureExt, TryStreamExt};
-use rand::{rng, rngs::SmallRng, Rng, SeedableRng};
+use futures_util::{StreamExt, TryFutureExt, TryStreamExt, stream::FuturesUnordered};
+use rand::{Rng, SeedableRng, rng, rngs::SmallRng};
 use tokio::pin;
-use tokio_postgres::{connect, types::ToSql, Client, NoTls, Statement};
-use viz::{Error, IntoResponse, Response, StatusCode};
+use tokio_postgres::{Client, NoTls, Statement, connect, types::ToSql};
+use vidi::{Error, IntoResponse, Response, StatusCode};
 
 use crate::models::{Fortune, World};
 
@@ -21,7 +21,7 @@ pub enum PgError {
 
 impl From<PgError> for Error {
     fn from(e: PgError) -> Self {
-        Error::Responder(e.into_response())
+        Error::Responder(Box::new(e.into_response()))
     }
 }
 
