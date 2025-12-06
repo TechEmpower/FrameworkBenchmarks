@@ -9,19 +9,28 @@ use hyper::server::conn::http1::Builder;
 use hyper_util::rt::TokioIo;
 use socket2::{Domain, SockAddr, Socket};
 use tokio::{net::TcpListener, runtime};
-use viz::{Responder, Router, Tree};
+use vidi::header::{HeaderValue, SERVER};
+use vidi::{HandlerExt, Responder, Response, Router, Tree};
 
 pub async fn serve(router: Router) -> Result<(), Box<dyn Error + Send + Sync>> {
     let addr = SocketAddr::from((Ipv4Addr::UNSPECIFIED, 8080));
     let socket = create_socket(addr).expect("couldn't bind to addr");
     let listener = TcpListener::from_std(socket.into())?;
 
+    let router = router.map_handler(|h| {
+        h.map(|mut res: Response| {
+            let headers = res.headers_mut();
+            headers.insert(SERVER, HeaderValue::from_static("Vidi"));
+            res
+        })
+        .boxed()
+    });
     let tree = Arc::<Tree>::new(router.into());
 
     let mut http = Builder::new();
     http.pipeline_flush(true);
 
-    println!("Started viz server at 8080");
+    println!("Started vidi server at 8080");
 
     loop {
         let (tcp, _) = listener.accept().await?;
