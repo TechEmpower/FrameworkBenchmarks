@@ -78,18 +78,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "72b3254f16251a8381aa12e40e3c4d2f0199f8c6508fbecb9d91f575e0fbb8c6"
 
 [[package]]
-name = "bb8"
-version = "0.9.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "457d7ed3f888dfd2c7af56d4975cade43c622f74bdcddfed6d4352f57acc6310"
-dependencies = [
- "futures-util",
- "parking_lot",
- "portable-atomic",
- "tokio",
-]
-
-[[package]]
 name = "bit-set"
 version = "0.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -103,12 +91,6 @@ name = "bit-vec"
 version = "0.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5e764a1d40d510daf35e07be9eb06e75770908c27d411ee6c92109c9840eaaf7"
-
-[[package]]
-name = "bitflags"
-version = "1.3.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bef38d45163c2f1dde094a7dfd33ccf595c92905c8f8f4fdc18d06fb1037718a"
 
 [[package]]
 name = "bitflags"
@@ -151,9 +133,9 @@ checksum = "b35204fbdc0b3f4446b89fc1ac2cf84a8a68971995d0bf2e925ec7cd960f9cb3"
 
 [[package]]
 name = "cc"
-version = "1.2.48"
+version = "1.2.49"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c481bdbf0ed3b892f6f806287d72acd515b352a4ec27a208489b8c1bc839633a"
+checksum = "90583009037521a116abf44494efecd645ba48b6622457080f080b85544e2215"
 dependencies = [
  "find-msvc-tools",
  "shlex",
@@ -236,7 +218,7 @@ version = "2.3.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0c415189028b232660655e4893e8bc25ca7aee8e96888db66d9edb400535456a"
 dependencies = [
- "bitflags 2.10.0",
+ "bitflags",
  "byteorder",
  "diesel_derives",
  "downcast-rs",
@@ -250,13 +232,10 @@ version = "0.7.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "13096fb8dae53f2d411c4b523bec85f45552ed3044a2ab4d85fb2092d9cb4f34"
 dependencies = [
- "bb8",
  "diesel",
  "futures-core",
  "futures-util",
  "scoped-futures",
- "tokio",
- "tokio-postgres",
 ]
 
 [[package]]
@@ -375,16 +354,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cb4cb245038516f5f85277875cdaa4f7d2c9a0fa0468de06ed190163b1581fcf"
 dependencies = [
  "percent-encoding",
-]
-
-[[package]]
-name = "futures-channel"
-version = "0.3.31"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2dff15bf788c671c1934e366d07e30c1814a8ef514e1af724a602e8a2fbe1b10"
-dependencies = [
- "futures-core",
- "futures-sink",
 ]
 
 [[package]]
@@ -642,11 +611,12 @@ dependencies = [
 
 [[package]]
 name = "io-uring"
-version = "0.6.4"
+version = "0.7.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "595a0399f411a508feb2ec1e970a4a30c249351e30208960d58298de8660b0e5"
+checksum = "fdd7bddefd0a8833b88a4b68f90dae22c7450d11b354198baee3874fd811b344"
 dependencies = [
- "bitflags 1.3.2",
+ "bitflags",
+ "cfg-if",
  "libc",
 ]
 
@@ -680,9 +650,9 @@ checksum = "bbd2bcb4c963f2ddae06a2efc7e9f3591312473c50c6685e1f298068316e66fe"
 
 [[package]]
 name = "libc"
-version = "0.2.177"
+version = "0.2.178"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2874a2af47a2325c2001a6e6fad9b16a53b802102b528163885171cf92b15976"
+checksum = "37c93d8daa9d8a012fd8ab92f088405fb202ea0b6ab73ee2482ae66af4f42091"
 
 [[package]]
 name = "libmimalloc-sys"
@@ -692,17 +662,6 @@ checksum = "667f4fec20f29dfc6bc7357c582d91796c169ad7e2fce709468aefeb2c099870"
 dependencies = [
  "cc",
  "libc",
-]
-
-[[package]]
-name = "libredox"
-version = "0.1.10"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "416f7e718bdb06000964960ffa43b4335ad4012ae8b99060261aa4a8088d5ccb"
-dependencies = [
- "bitflags 2.10.0",
- "libc",
- "redox_syscall",
 ]
 
 [[package]]
@@ -719,12 +678,6 @@ checksum = "224399e74b87b5f3557511d98dff8b14089b3dadafcab6bb93eab67d3aace965"
 dependencies = [
  "scopeguard",
 ]
-
-[[package]]
-name = "log"
-version = "0.4.28"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "34080505efa8e45a4b816c349525ebe327ceaa8559756f0356cba97ef3bf7432"
 
 [[package]]
 name = "md-5"
@@ -753,9 +706,9 @@ dependencies = [
 
 [[package]]
 name = "mio"
-version = "1.1.0"
+version = "1.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "69d83b0086dc8ecf3ce9ae2874b2d1290252e2a30720bea58a5c6639b0092873"
+checksum = "a69bcab0ad47271a0234d9422b131806bf3968021e5dc9328caf2d4cd58557fc"
 dependencies = [
  "libc",
  "wasi",
@@ -817,25 +770,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9b4f627cb1b25917193a259e49bdad08f671f8d9708acfd5fe0a8c1455d87220"
 
 [[package]]
-name = "phf"
-version = "0.13.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c1562dc717473dbaa4c1f85a36410e03c047b2e7df7f45ee938fbef64ae7fadf"
-dependencies = [
- "phf_shared",
- "serde",
-]
-
-[[package]]
-name = "phf_shared"
-version = "0.13.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e57fef6bc5981e38c2ce2d63bfa546861309f875b8a75f092d1d54ae2d64f266"
-dependencies = [
- "siphasher",
-]
-
-[[package]]
 name = "pin-project-lite"
 version = "0.2.16"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -862,12 +796,6 @@ dependencies = [
  "lazy_static",
  "regex",
 ]
-
-[[package]]
-name = "portable-atomic"
-version = "1.11.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f84267b20a16ea918e43c6a88433c2d54fa145c92a811b5b047ccbe153674483"
 
 [[package]]
 name = "postgres-protocol"
@@ -1016,7 +944,7 @@ version = "0.5.18"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ed2bf2547551a7053d6fdfafda3f938979645c44812fbfcda098faae3f1a362d"
 dependencies = [
- "bitflags 2.10.0",
+ "bitflags",
 ]
 
 [[package]]
@@ -1082,9 +1010,9 @@ checksum = "28d3b2b1366ec20994f1fd18c3c594f05c5dd4bc44d8bb0c1c632c8d6829481f"
 
 [[package]]
 name = "sailfish"
-version = "0.10.0"
+version = "0.10.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "40efbac4e16ca6b1a5706348ada4d8b67d7b417ac2001aa6c4ae092511bb1763"
+checksum = "51bd7299cb39e7e0d9350a2f4ec0c0f2a98de9608ada54983c3c30f4d55051b8"
 dependencies = [
  "itoap",
  "ryu",
@@ -1235,12 +1163,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e3a9fe34e3e7a50316060351f37187a3f546bce95496156754b601a5fa71b76e"
 
 [[package]]
-name = "siphasher"
-version = "1.0.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "56199f7ddabf13fe5074ce809e7d3f42b42ae711800501b5b16ea82ad029c39d"
-
-[[package]]
 name = "slab"
 version = "0.4.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1251,16 +1173,6 @@ name = "smallvec"
 version = "1.15.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "67b1b7a3b5fe4f1376887184045fcf45c69e92af734b7aaddc05fb777b6fbd03"
-
-[[package]]
-name = "socket2"
-version = "0.4.10"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9f7916fc008ca5542385b89a3d3ce689953c143e9304a9bf8beec1de48994c0d"
-dependencies = [
- "libc",
- "winapi",
-]
 
 [[package]]
 name = "socket2"
@@ -1281,7 +1193,7 @@ checksum = "6ce2be8dc25455e1f91df71bfa12ad37d7af1092ae736f3a6cd0e37bc7810596"
 [[package]]
 name = "std-util"
 version = "0.1.0"
-source = "git+https://github.com/fakeshadow/toasty?branch=engine#adff354a113ae85dd26a5fd8cecc2807fa12d5bf"
+source = "git+https://github.com/fakeshadow/toasty?branch=engine#2132c89dfd7a4698cdaaa85888c016b97c01471a"
 dependencies = [
  "heck",
  "pluralizer",
@@ -1381,7 +1293,7 @@ checksum = "1f3ccbac311fea05f86f61904b462b55fb3df8837a366dfc601a0161d0532f20"
 [[package]]
 name = "toasty"
 version = "0.1.0"
-source = "git+https://github.com/fakeshadow/toasty?branch=engine#adff354a113ae85dd26a5fd8cecc2807fa12d5bf"
+source = "git+https://github.com/fakeshadow/toasty?branch=engine#2132c89dfd7a4698cdaaa85888c016b97c01471a"
 dependencies = [
  "anyhow",
  "async-stream",
@@ -1399,7 +1311,7 @@ dependencies = [
 [[package]]
 name = "toasty-codegen"
 version = "0.1.0"
-source = "git+https://github.com/fakeshadow/toasty?branch=engine#adff354a113ae85dd26a5fd8cecc2807fa12d5bf"
+source = "git+https://github.com/fakeshadow/toasty?branch=engine#2132c89dfd7a4698cdaaa85888c016b97c01471a"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1410,7 +1322,7 @@ dependencies = [
 [[package]]
 name = "toasty-core"
 version = "0.1.0"
-source = "git+https://github.com/fakeshadow/toasty?branch=engine#adff354a113ae85dd26a5fd8cecc2807fa12d5bf"
+source = "git+https://github.com/fakeshadow/toasty?branch=engine#2132c89dfd7a4698cdaaa85888c016b97c01471a"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -1424,7 +1336,7 @@ dependencies = [
 [[package]]
 name = "toasty-macros"
 version = "0.1.0"
-source = "git+https://github.com/fakeshadow/toasty?branch=engine#adff354a113ae85dd26a5fd8cecc2807fa12d5bf"
+source = "git+https://github.com/fakeshadow/toasty?branch=engine#2132c89dfd7a4698cdaaa85888c016b97c01471a"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1436,7 +1348,7 @@ dependencies = [
 [[package]]
 name = "toasty-sql"
 version = "0.1.0"
-source = "git+https://github.com/fakeshadow/toasty?branch=engine#adff354a113ae85dd26a5fd8cecc2807fa12d5bf"
+source = "git+https://github.com/fakeshadow/toasty?branch=engine#2132c89dfd7a4698cdaaa85888c016b97c01471a"
 dependencies = [
  "anyhow",
  "toasty-core",
@@ -1454,7 +1366,7 @@ dependencies = [
  "parking_lot",
  "pin-project-lite",
  "signal-hook-registry",
- "socket2 0.6.1",
+ "socket2",
  "tokio-macros",
  "windows-sys 0.61.2",
 ]
@@ -1471,32 +1383,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "tokio-postgres"
-version = "0.7.15"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2b40d66d9b2cfe04b628173409368e58247e8eddbbd3b0e6c6ba1d09f20f6c9e"
-dependencies = [
- "async-trait",
- "byteorder",
- "bytes",
- "fallible-iterator",
- "futures-channel",
- "futures-util",
- "log",
- "parking_lot",
- "percent-encoding",
- "phf",
- "pin-project-lite",
- "postgres-protocol",
- "postgres-types",
- "rand 0.9.2",
- "socket2 0.6.1",
- "tokio",
- "tokio-util",
- "whoami",
-]
-
-[[package]]
 name = "tokio-stream"
 version = "0.1.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1509,29 +1395,15 @@ dependencies = [
 
 [[package]]
 name = "tokio-uring"
-version = "0.5.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "748482e3e13584a34664a710168ad5068e8cb1d968aa4ffa887e83ca6dd27967"
+version = "0.5.1"
+source = "git+http://github.com/fakeshadow/tokio-uring?rev=7a1b343#7a1b343b4e7056b4ca83423d9c6ff75c847f7780"
 dependencies = [
  "bytes",
  "futures-util",
  "io-uring",
  "libc",
  "slab",
- "socket2 0.4.10",
- "tokio",
-]
-
-[[package]]
-name = "tokio-util"
-version = "0.7.17"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2efa149fe76073d6e8fd97ef4f4eca7b67f599660115591483572e406e165594"
-dependencies = [
- "bytes",
- "futures-core",
- "futures-sink",
- "pin-project-lite",
+ "socket2",
  "tokio",
 ]
 
@@ -1604,9 +1476,9 @@ checksum = "b6c140620e7ffbb22c2dee59cafe6084a59b5ffc27a8859a5f0d494b5d52b6be"
 
 [[package]]
 name = "uuid"
-version = "1.18.1"
+version = "1.19.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2f87b8aa10b915a06587d0dec516c282ff295b475d94abf425d62b57710070a2"
+checksum = "e2e054861b4bd027cd373e18e8d8d8e6548085000e41290d95ce0c373a654b4a"
 dependencies = [
  "getrandom 0.3.4",
  "js-sys",
@@ -1654,12 +1526,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "wasite"
-version = "0.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b8dad83b4f25e74f184f64c43b150b91efe7647395b42289f38e50566d82855b"
-
-[[package]]
 name = "wasm-bindgen"
 version = "0.2.106"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1702,27 +1568,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cbc538057e648b67f72a982e708d485b2efa771e1ac05fec311f9f63e5800db4"
 dependencies = [
  "unicode-ident",
-]
-
-[[package]]
-name = "web-sys"
-version = "0.3.83"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9b32828d774c412041098d182a8b38b16ea816958e07cf40eec2bc080ae137ac"
-dependencies = [
- "js-sys",
- "wasm-bindgen",
-]
-
-[[package]]
-name = "whoami"
-version = "1.6.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5d4a4db5077702ca3015d3d02d74974948aba2ad9e12ab7df718ee64ccd7e97d"
-dependencies = [
- "libredox",
- "wasite",
- "web-sys",
 ]
 
 [[package]]
@@ -1851,7 +1696,7 @@ checksum = "9edde0db4769d2dc68579893f2306b26c6ecfbe0ef499b013d731b7b9247e0b9"
 [[package]]
 name = "xitca-codegen"
 version = "0.4.0"
-source = "git+http://github.com/HFQR/xitca-web?rev=cf70ed7#cf70ed7328c1b6d60c339a7dc67be454f59b1736"
+source = "git+http://github.com/HFQR/xitca-web?rev=adc7ff1#adc7ff1a385c8a81e21a3c7619dc70adaf9e79de"
 dependencies = [
  "quote",
  "syn",
@@ -1860,7 +1705,7 @@ dependencies = [
 [[package]]
 name = "xitca-http"
 version = "0.7.1"
-source = "git+http://github.com/HFQR/xitca-web?rev=cf70ed7#cf70ed7328c1b6d60c339a7dc67be454f59b1736"
+source = "git+http://github.com/HFQR/xitca-web?rev=adc7ff1#adc7ff1a385c8a81e21a3c7619dc70adaf9e79de"
 dependencies = [
  "futures-core",
  "http",
@@ -1868,7 +1713,7 @@ dependencies = [
  "httpdate",
  "itoa",
  "pin-project-lite",
- "socket2 0.6.1",
+ "socket2",
  "tokio",
  "tokio-uring",
  "tracing",
@@ -1893,7 +1738,7 @@ dependencies = [
 [[package]]
 name = "xitca-postgres"
 version = "0.3.0"
-source = "git+http://github.com/HFQR/xitca-web?rev=cf70ed7#cf70ed7328c1b6d60c339a7dc67be454f59b1736"
+source = "git+http://github.com/HFQR/xitca-web?rev=adc7ff1#adc7ff1a385c8a81e21a3c7619dc70adaf9e79de"
 dependencies = [
  "fallible-iterator",
  "futures-core",
@@ -1909,7 +1754,7 @@ dependencies = [
 [[package]]
 name = "xitca-postgres-diesel"
 version = "0.2.0"
-source = "git+https://github.com/fakeshadow/xitca-postgres-diesel?rev=7671975#7671975951fdd71bfaedaa1686aa7c69e4af6caf"
+source = "git+https://github.com/fakeshadow/xitca-postgres-diesel?rev=fb5dcba#fb5dcba5a89164a880a3e82d62dcb3ae5e99ae6e"
 dependencies = [
  "diesel",
  "diesel-async",
@@ -1946,9 +1791,9 @@ dependencies = [
 [[package]]
 name = "xitca-server"
 version = "0.5.0"
-source = "git+http://github.com/HFQR/xitca-web?rev=cf70ed7#cf70ed7328c1b6d60c339a7dc67be454f59b1736"
+source = "git+http://github.com/HFQR/xitca-web?rev=adc7ff1#adc7ff1a385c8a81e21a3c7619dc70adaf9e79de"
 dependencies = [
- "socket2 0.6.1",
+ "socket2",
  "tokio",
  "tokio-uring",
  "tracing",
@@ -1960,7 +1805,7 @@ dependencies = [
 [[package]]
 name = "xitca-service"
 version = "0.3.0"
-source = "git+http://github.com/HFQR/xitca-web?rev=cf70ed7#cf70ed7328c1b6d60c339a7dc67be454f59b1736"
+source = "git+http://github.com/HFQR/xitca-web?rev=adc7ff1#adc7ff1a385c8a81e21a3c7619dc70adaf9e79de"
 
 [[package]]
 name = "xitca-unsafe-collection"
@@ -2006,7 +1851,7 @@ dependencies = [
 [[package]]
 name = "xitca-web"
 version = "0.7.1"
-source = "git+http://github.com/HFQR/xitca-web?rev=cf70ed7#cf70ed7328c1b6d60c339a7dc67be454f59b1736"
+source = "git+http://github.com/HFQR/xitca-web?rev=adc7ff1#adc7ff1a385c8a81e21a3c7619dc70adaf9e79de"
 dependencies = [
  "futures-core",
  "pin-project-lite",

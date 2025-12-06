@@ -113,7 +113,6 @@ async fn handler<'h>(req: Request<'h, State<db::Client>>, res: Response<'h>) -> 
 
         // all database related categories are unrealistic. please reference db_unrealistic module for detail.
         "/fortunes" => {
-            use sailfish::TemplateOnce;
             let fortunes = req.ctx.client.tell_fortune().await.unwrap().render_once().unwrap();
             res.status(StatusCode::OK)
                 .header("content-type", "text/html; charset=utf-8")

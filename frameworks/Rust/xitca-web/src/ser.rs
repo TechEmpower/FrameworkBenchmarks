@@ -1,5 +1,7 @@
 #![allow(dead_code)]
 
+use std::borrow::Cow;
+
 use serde::{Deserialize, Deserializer, Serialize, Serializer, ser::SerializeStruct};
 use xitca_http::{
     body::Once,
@@ -16,7 +18,7 @@ use crate::util::{Error, State};
 const HELLO: &str = "Hello, World!";
 const HELLO_BYTES: &[u8] = HELLO.as_bytes();
 
-#[cfg_attr(feature = "perf", derive(simd_json_derive::Serialize))]
+#[cfg_attr(feature = "perf-json", derive(simd_json_derive::Serialize))]
 #[derive(Clone)]
 pub struct Message {
     message: &'static str,
@@ -34,7 +36,7 @@ pub struct Num(pub u16);
 #[cfg_attr(feature = "diesel", derive(diesel::Queryable))]
 #[cfg_attr(feature = "toasty", derive(toasty::Model))]
 #[cfg_attr(feature = "toasty", table = "world")]
-#[cfg_attr(feature = "perf", derive(simd_json_derive::Serialize))]
+#[cfg_attr(feature = "perf-json", derive(simd_json_derive::Serialize))]
 pub struct World {
     #[cfg_attr(feature = "toasty", key)]
     pub id: i32,
@@ -54,27 +56,12 @@ impl World {
 pub struct Fortune {
     #[cfg_attr(feature = "toasty", key)]
     pub id: i32,
-    #[cfg(not(feature = "toasty"))]
-    pub message: std::borrow::Cow<'static, str>,
-    #[cfg(feature = "toasty")]
-    pub message: String,
+    pub message: Cow<'static, str>,
 }
 
-#[cfg(not(feature = "toasty"))]
 impl Fortune {
     #[inline]
-    pub fn new(id: i32, message: impl Into<std::borrow::Cow<'static, str>>) -> Self {
-        Self {
-            id,
-            message: message.into(),
-        }
-    }
-}
-
-#[cfg(feature = "toasty")]
-impl Fortune {
-    #[inline]
-    pub fn new(id: i32, message: impl Into<String>) -> Self {
+    pub fn new(id: i32, message: impl Into<Cow<'static, str>>) -> Self {
         Self {
             id,
             message: message.into(),
@@ -90,8 +77,8 @@ pub struct Fortunes {
 // using the macro does not have any perf cost and this piece of code is expanded manually to speed up compile time of
 // bench to reduce resource usage of bench runner
 #[cfg(feature = "template")]
-impl sailfish::TemplateOnce for Fortunes {
-    fn render_once(self) -> sailfish::RenderResult {
+impl Fortunes {
+    pub fn render_once(self) -> sailfish::RenderResult {
         use sailfish::runtime::{Buffer, Render};
 
         const PREFIX: &str = "<!DOCTYPE html>\n<html>\n<head><title>Fortunes</title></head>\n<body>\n<table>\n<tr><th>id</th><th>message</th></tr>\n";
@@ -110,10 +97,6 @@ impl sailfish::TemplateOnce for Fortunes {
         buf.push_str(SUFFIX);
 
         Ok(buf.into_string())
-    }
-
-    fn render_once_to(self, _: &mut sailfish::runtime::Buffer) -> Result<(), sailfish::runtime::RenderError> {
-        unimplemented!("")
     }
 }
 
