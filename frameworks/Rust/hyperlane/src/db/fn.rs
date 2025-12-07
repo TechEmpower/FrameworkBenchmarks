@@ -87,13 +87,16 @@ pub(crate) async fn connection_db() -> DbPoolConnection {
             "{DATABASE_TYPE}://{DATABASE_USER_NAME}:{DATABASE_USER_PASSWORD}@{DATABASE_HOST}:{DATABASE_PORT}/{DATABASE_NAME}"
         ),
     };
-    let pool_size: u32 = (get_thread_count() as u32).min(DB_MAX_CONNECTIONS);
+    let thread_count: u32 = get_thread_count() as u32;
+    let max_connections: u32 = (thread_count * 4).min(DB_MAX_CONNECTIONS);
+    let min_connections: u32 = (thread_count / 4).max(1);
     let pool: DbPoolConnection = PgPoolOptions::new()
-        .max_connections(DB_MAX_CONNECTIONS)
-        .min_connections(pool_size)
-        .max_lifetime(None)
-        .test_before_acquire(false)
-        .idle_timeout(None)
+        .max_connections(max_connections)
+        .min_connections(min_connections)
+        .acquire_timeout(std::time::Duration::from_secs(1))
+        .idle_timeout(Some(std::time::Duration::from_secs(300)))
+        .max_lifetime(Some(std::time::Duration::from_secs(1800)))
+        .test_before_acquire(true)
         .connect(db_url)
         .await
         .unwrap();
