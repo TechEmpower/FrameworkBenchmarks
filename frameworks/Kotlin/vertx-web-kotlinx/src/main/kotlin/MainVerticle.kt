@@ -76,7 +76,7 @@ class MainVerticle(val hasDb: Boolean) : CoroutineVerticle(), CoroutineRouterSup
                 /*(it is NativeIoException && it.message == "recvAddress(..) failed: Connection reset by peer")
                 || (it is SocketException && it.message == "Connection reset")*/
                 // for io_uring
-                    it is NativeIoException && it.message == "io_uring read(..) failed: Connection reset by peer"
+                    it is NativeIoException && it.expectedErr() == -104
                 )
                     return@exceptionHandler
 
