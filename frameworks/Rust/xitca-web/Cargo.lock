@@ -385,7 +385,6 @@ dependencies = [
  "futures-task",
  "pin-project-lite",
  "pin-utils",
- "slab",
 ]
 
 [[package]]
@@ -1396,10 +1395,9 @@ dependencies = [
 [[package]]
 name = "tokio-uring"
 version = "0.5.1"
-source = "git+http://github.com/fakeshadow/tokio-uring?rev=7a1b343#7a1b343b4e7056b4ca83423d9c6ff75c847f7780"
+source = "git+http://github.com/fakeshadow/tokio-uring?rev=97d9a98#97d9a988704b5466809633b3ca6ba07acba3f38b"
 dependencies = [
  "bytes",
- "futures-util",
  "io-uring",
  "libc",
  "slab",

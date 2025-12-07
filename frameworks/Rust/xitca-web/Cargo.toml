@@ -102,7 +102,7 @@ xitca-postgres-toasty = { git = "https://github.com/fakeshadow/xitca-postgres-to
 toasty = { git = "https://github.com/fakeshadow/toasty", branch = "engine" }
 toasty-core = { git = "https://github.com/fakeshadow/toasty", branch = "engine" }
 toasty-sql = { git = "https://github.com/fakeshadow/toasty", branch = "engine" }
-tokio-uring = { git = "http://github.com/fakeshadow/tokio-uring", rev = "7a1b343" }
+tokio-uring = { git = "http://github.com/fakeshadow/tokio-uring", rev = "97d9a98" }
 
 xitca-codegen = { git = "http://github.com/HFQR/xitca-web", rev = "adc7ff1" }
 xitca-http = { git = "http://github.com/HFQR/xitca-web", rev = "adc7ff1" }
