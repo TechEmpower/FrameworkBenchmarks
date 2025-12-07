@@ -89,7 +89,7 @@ pub(crate) async fn connection_db() -> DbPoolConnection {
     };
     let thread_count: u32 = get_thread_count() as u32;
     let max_connections: u32 = (thread_count * 4).min(DB_MAX_CONNECTIONS);
-    let min_connections: u32 = (thread_count / 4).max(1);
+    let min_connections: u32 = thread_count.max(1);
     let pool: DbPoolConnection = PgPoolOptions::new()
         .max_connections(max_connections)
         .min_connections(min_connections)
