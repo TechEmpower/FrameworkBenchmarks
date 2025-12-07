@@ -3,7 +3,7 @@ tasks.wrapper {
 }
 
 plugins {
-    val kotlinVersion = "2.2.21"
+    val kotlinVersion = "2.3.0-RC2"
     kotlin("jvm") version kotlinVersion
     kotlin("plugin.serialization") version kotlinVersion
     application
@@ -34,6 +34,6 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1") // TODO try using this in the code
 }
 
-kotlin.jvmToolchain(21) // Kotlin doesn't support Java 25 yet
+kotlin.jvmToolchain(25) // Kotlin doesn't support Java 25 yet
 
 application.mainClass.set("MainKt")
