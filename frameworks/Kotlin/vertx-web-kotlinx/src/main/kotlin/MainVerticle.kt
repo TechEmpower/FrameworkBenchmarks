@@ -40,7 +40,7 @@ class MainVerticle(val hasDb: Boolean) : CoroutineVerticle(), CoroutineRouterSup
     lateinit var updateWordQuery: PreparedQuery<RowSet<Row>>
 
     fun setCurrentDate() {
-        // kotlinx-datetime doesn't support the format yet.
+        // Don't know how to get kotlinx-datetime to work here properly. See commit 9cf28f15b6f1806b3ed75260adee8acd822cac91 for a failed attempt.
         //date = Clock.System.now().toString()
         date = DateTimeFormatter.RFC_1123_DATE_TIME.format(ZonedDateTime.now())
     }
