@@ -93,10 +93,10 @@ pub(crate) async fn connection_db() -> DbPoolConnection {
     let pool: DbPoolConnection = PgPoolOptions::new()
         .max_connections(max_connections)
         .min_connections(min_connections)
-        .acquire_timeout(std::time::Duration::from_secs(1))
-        .idle_timeout(Some(std::time::Duration::from_secs(300)))
-        .max_lifetime(Some(std::time::Duration::from_secs(1800)))
-        .test_before_acquire(true)
+        .acquire_timeout(std::time::Duration::from_secs(2))
+        .idle_timeout(None)
+        .max_lifetime(None)
+        .test_before_acquire(false)
         .connect(db_url)
         .await
         .unwrap();
