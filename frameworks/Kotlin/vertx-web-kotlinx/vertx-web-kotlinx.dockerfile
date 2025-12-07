@@ -1,4 +1,4 @@
-FROM gradle:8.10.2-jdk21
+FROM gradle:9.2.1-jdk25
 
 WORKDIR /vertx-web-kotlinx
 COPY build.gradle.kts build.gradle.kts
