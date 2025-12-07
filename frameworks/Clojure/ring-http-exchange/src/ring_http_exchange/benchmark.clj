@@ -12,35 +12,34 @@
     (com.zaxxer.hikari HikariDataSource)
     (java.util.concurrent Executors)))
 
+(defrecord Response [body status headers])
+
 (def query-fortunes (boa/execute (boa/->NextJdbcAdapter) "fortune.sql"))
 
 (def db-spec {:auto-commit        false
-              :connection-timeout 3000
+              :connection-timeout 1000
               :validation-timeout 1000
-              :idle-timeout       300000
-              :max-lifetime       1800000
-              :minimum-idle       128
-              :maximum-pool-size  1024
+              :idle-timeout       15000
+              :max-lifetime       60000
+              :minimum-idle       0
+              :maximum-pool-size  128
               :register-mbeans    false
-              :jdbcUrl            "jdbc:postgresql://tfb-database/hello_world?user=benchmarkdbuser&password=benchmarkdbpass&prepareThreshold=1"})
+              :jdbcUrl            "jdbc:postgresql://tfb-database/hello_world?user=benchmarkdbuser&password=benchmarkdbpass&prepareThreshold=1"}
+  )
 
+(def ^:private ^:const hello-world "Hello, World!")
 (def ^:private ^:const additional-message {:id      0
                                            :message "Additional fortune added at request time."})
 (def ^:private ^:const fortune-headers {"Server"       "ring-http-exchange"
                                         "Content-Type" "text/html; charset=UTF-8"})
 (def ^:private ^:const json-headers {"Server"       "ring-http-exchange"
                                      "Content-Type" "application/json"})
+(def ^:private ^:const plain-text-headers {"Server"       "ring-http-exchange"
+                                           "Content-Type" "text/plain"})
 
 (def ^:private render-fortune (majavat/build-renderer "fortune.html"
                                                       {:renderer (->StringRenderer
                                                                    {:sanitizer (->Html)})}))
-
-
-(defn- plaintext-response []
-  {:status  200
-   :headers {"Server"       "ring-http-exchange"
-             "Content-Type" "text/plain"}
-   :body    "Hello, World!"})
 
 (defn- get-body [datasource]
   (let [context (as-> (query-fortunes datasource) fortunes
@@ -50,23 +49,17 @@
 
 (defn -main
   [& _]
-  (System/setProperty "jdk.virtualThreadScheduler.parallelism" 
-                    (str (* 4 (.availableProcessors (Runtime/getRuntime)))))
-
   (println "Starting server on port 8080")
   (let [datasource (connection/->pool HikariDataSource db-spec)]
     (server/run-http-server
       (fn [req]
         (case (req :uri)
-          "/plaintext" (plaintext-response)
-          "/json" {:status  200
-                   :headers json-headers
-                   :body    (json/write-value-as-bytes {:message "Hello, World!"})}
-          "/fortunes" (let [body (get-body datasource)]
-                        {:status  200
-                         :headers fortune-headers
-                         :body    body})
-          (plaintext-response)))
-      {:port     8080
-       :host     "0.0.0.0"
-       :executor (Executors/newVirtualThreadPerTaskExecutor)})))
+          "/plaintext" (Response. hello-world 200 plain-text-headers)
+          "/json" (Response. (json/write-value-as-string {:message hello-world}) 200 json-headers)
+          "/fortunes" (let [body (get-body datasource)] (Response. body 200 fortune-headers))
+          (Response. hello-world 200 {"Server"       "ring-http-exchange"
+                                      "Content-Type" "text/plain"})))
+      {:port            8080
+       :host            "0.0.0.0"
+       :record-support? true
+       :executor        (Executors/newVirtualThreadPerTaskExecutor)})))

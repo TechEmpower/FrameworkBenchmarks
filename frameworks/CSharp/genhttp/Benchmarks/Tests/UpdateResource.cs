@@ -31,7 +31,9 @@ public sealed class UpdateResource
 
         var ids = Enumerable.Range(1, 10000).Select(x => Random.Next(1, 10001)).Distinct().Take(count).ToArray();
 
-        using (var context = DatabaseContext.Create())
+        var context = Database.TrackingPool.Rent();
+
+        try
         {
             foreach (var id in ids)
             {
@@ -57,6 +59,10 @@ public sealed class UpdateResource
 
                 await context.SaveChangesAsync();
             }
+        }
+        finally
+        {
+            Database.TrackingPool.Return(context);
         }
 
         return result;

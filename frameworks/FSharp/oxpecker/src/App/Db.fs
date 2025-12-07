@@ -32,20 +32,15 @@ module Db =
         cmd.Parameters.Add(id) |> ignore
         struct(cmd, id)
 
-    let private readSingleRow (cmd: NpgsqlCommand) =
-        task {
-            use! rdr = cmd.ExecuteReaderAsync(CommandBehavior.SingleRow)
-            let! _ = rdr.ReadAsync()
-            return { id = rdr.GetInt32(0); randomnumber = rdr.GetInt32(1) }
-        }
-
     let loadSingleRow () =
         task {
             use db = new NpgsqlConnection(ConnectionString)
             let struct(cmd', _) = createReadCommand db
             use cmd = cmd'
             do! db.OpenAsync()
-            return! readSingleRow cmd
+            use! rdr = cmd.ExecuteReaderAsync(CommandBehavior.SingleRow)
+            let! _ = rdr.ReadAsync()
+            return { id = rdr.GetInt32(0); randomnumber = rdr.GetInt32(1) }
         }
 
     let private readMultipleRows (count: int) (conn: NpgsqlConnection) =
@@ -54,8 +49,9 @@ module Db =
             let struct(cmd', idParam) = createReadCommand conn
             use cmd = cmd'
             for i in 0..result.Length-1 do
-                let! row = readSingleRow cmd
-                result[i] <- row
+                use! rdr = cmd.ExecuteReaderAsync(CommandBehavior.SingleRow)
+                let! _ = rdr.ReadAsync()
+                result[i] <- { id = rdr.GetInt32(0); randomnumber = rdr.GetInt32(1) }
                 idParam.TypedValue <- Random.Shared.Next(1, 10001)
             return result
         }

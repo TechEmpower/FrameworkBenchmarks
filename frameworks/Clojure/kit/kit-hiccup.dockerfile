@@ -13,7 +13,7 @@ COPY --from=build /target/te-bench-standalone.jar /te-bench/te-bench-standalone.
 EXPOSE 8080
 
 ENV PORT=8080
-ENV JAVA_OPTS="-XX:+UseContainerSupport -Dfile.encoding=UTF-8"
+ENV JAVA_OPTS="-XX:+UseContainerSupport -Dfile.encoding=UTF-8 -XX:MaxRAMPercentage=70  -Dclojure.compiler.direct-linking=true"
 ENV JDBC_URL="jdbc:postgresql://tfb-database/hello_world?user=benchmarkdbuser&password=benchmarkdbpass"
 
 ENTRYPOINT exec java $JAVA_OPTS -jar /te-bench/te-bench-standalone.jar

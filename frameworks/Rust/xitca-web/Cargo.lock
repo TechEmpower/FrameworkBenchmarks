@@ -151,9 +151,9 @@ checksum = "b35204fbdc0b3f4446b89fc1ac2cf84a8a68971995d0bf2e925ec7cd960f9cb3"
 
 [[package]]
 name = "cc"
-version = "1.2.47"
+version = "1.2.48"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cd405d82c84ff7f35739f175f67d8b9fb7687a0e84ccdc78bd3568839827cf07"
+checksum = "c481bdbf0ed3b892f6f806287d72acd515b352a4ec27a208489b8c1bc839633a"
 dependencies = [
  "find-msvc-tools",
  "shlex",
@@ -232,9 +232,9 @@ dependencies = [
 
 [[package]]
 name = "diesel"
-version = "2.3.3"
+version = "2.3.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5e7624a3bb9fffd82fff016be9a7f163d20e5a89eb8d28f9daaa6b30fff37500"
+checksum = "0c415189028b232660655e4893e8bc25ca7aee8e96888db66d9edb400535456a"
 dependencies = [
  "bitflags 2.10.0",
  "byteorder",
@@ -261,9 +261,9 @@ dependencies = [
 
 [[package]]
 name = "diesel_derives"
-version = "2.3.4"
+version = "2.3.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9daac6489a36e42570da165a10c424f3edcefdff70c5fd55e1847c23f3dd7562"
+checksum = "8587cbca3c929fb198e7950d761d31ca72b80aa6e07c1b7bec5879d187720436"
 dependencies = [
  "diesel_table_macro_syntax",
  "dsl_auto_type",
@@ -664,9 +664,9 @@ checksum = "9028f49264629065d057f340a86acb84867925865f73bbf8d47b4d149a7e88b8"
 
 [[package]]
 name = "js-sys"
-version = "0.3.82"
+version = "0.3.83"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b011eec8cc36da2aab2d5cff675ec18454fad408585853910a202391cf9f8e65"
+checksum = "464a3709c7f55f1f721e5389aa6ea4e3bc6aba669353300af094b29ffbdde1d8"
 dependencies = [
  "once_cell",
  "wasm-bindgen",
@@ -1281,7 +1281,7 @@ checksum = "6ce2be8dc25455e1f91df71bfa12ad37d7af1092ae736f3a6cd0e37bc7810596"
 [[package]]
 name = "std-util"
 version = "0.1.0"
-source = "git+https://github.com/tokio-rs/toasty?rev=e0c84c5#e0c84c5182cfd3aca16b2f77145dd0946a4cb223"
+source = "git+https://github.com/fakeshadow/toasty?branch=engine#adff354a113ae85dd26a5fd8cecc2807fa12d5bf"
 dependencies = [
  "heck",
  "pluralizer",
@@ -1381,7 +1381,7 @@ checksum = "1f3ccbac311fea05f86f61904b462b55fb3df8837a366dfc601a0161d0532f20"
 [[package]]
 name = "toasty"
 version = "0.1.0"
-source = "git+https://github.com/tokio-rs/toasty?rev=e0c84c5#e0c84c5182cfd3aca16b2f77145dd0946a4cb223"
+source = "git+https://github.com/fakeshadow/toasty?branch=engine#adff354a113ae85dd26a5fd8cecc2807fa12d5bf"
 dependencies = [
  "anyhow",
  "async-stream",
@@ -1399,7 +1399,7 @@ dependencies = [
 [[package]]
 name = "toasty-codegen"
 version = "0.1.0"
-source = "git+https://github.com/tokio-rs/toasty?rev=e0c84c5#e0c84c5182cfd3aca16b2f77145dd0946a4cb223"
+source = "git+https://github.com/fakeshadow/toasty?branch=engine#adff354a113ae85dd26a5fd8cecc2807fa12d5bf"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1410,7 +1410,7 @@ dependencies = [
 [[package]]
 name = "toasty-core"
 version = "0.1.0"
-source = "git+https://github.com/tokio-rs/toasty?rev=e0c84c5#e0c84c5182cfd3aca16b2f77145dd0946a4cb223"
+source = "git+https://github.com/fakeshadow/toasty?branch=engine#adff354a113ae85dd26a5fd8cecc2807fa12d5bf"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -1424,7 +1424,7 @@ dependencies = [
 [[package]]
 name = "toasty-macros"
 version = "0.1.0"
-source = "git+https://github.com/tokio-rs/toasty?rev=e0c84c5#e0c84c5182cfd3aca16b2f77145dd0946a4cb223"
+source = "git+https://github.com/fakeshadow/toasty?branch=engine#adff354a113ae85dd26a5fd8cecc2807fa12d5bf"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1436,7 +1436,7 @@ dependencies = [
 [[package]]
 name = "toasty-sql"
 version = "0.1.0"
-source = "git+https://github.com/tokio-rs/toasty?rev=e0c84c5#e0c84c5182cfd3aca16b2f77145dd0946a4cb223"
+source = "git+https://github.com/fakeshadow/toasty?branch=engine#adff354a113ae85dd26a5fd8cecc2807fa12d5bf"
 dependencies = [
  "anyhow",
  "toasty-core",
@@ -1537,9 +1537,9 @@ dependencies = [
 
 [[package]]
 name = "tracing"
-version = "0.1.41"
+version = "0.1.43"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "784e0ac535deb450455cbfa28a6f0df145ea1bb7ae51b821cf5e7927fdcfbdd0"
+checksum = "2d15d90a0b5c19378952d479dc858407149d7bb45a14de0142f6c534b16fc647"
 dependencies = [
  "pin-project-lite",
  "tracing-core",
@@ -1547,9 +1547,9 @@ dependencies = [
 
 [[package]]
 name = "tracing-core"
-version = "0.1.34"
+version = "0.1.35"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b9d12581f227e93f094d3af2ae690a574abb8a2b9b7a96e7cfe9647b2b617678"
+checksum = "7a04e24fab5c89c6a36eb8558c9656f30d81de51dfa4d3b45f26b21d61fa0a6c"
 
 [[package]]
 name = "typenum"
@@ -1661,9 +1661,9 @@ checksum = "b8dad83b4f25e74f184f64c43b150b91efe7647395b42289f38e50566d82855b"
 
 [[package]]
 name = "wasm-bindgen"
-version = "0.2.105"
+version = "0.2.106"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "da95793dfc411fbbd93f5be7715b0578ec61fe87cb1a42b12eb625caa5c5ea60"
+checksum = "0d759f433fa64a2d763d1340820e46e111a7a5ab75f993d1852d70b03dbb80fd"
 dependencies = [
  "cfg-if",
  "once_cell",
@@ -1674,9 +1674,9 @@ dependencies = [
 
 [[package]]
 name = "wasm-bindgen-macro"
-version = "0.2.105"
+version = "0.2.106"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "04264334509e04a7bf8690f2384ef5265f05143a4bff3889ab7a3269adab59c2"
+checksum = "48cb0d2638f8baedbc542ed444afc0644a29166f1595371af4fecf8ce1e7eeb3"
 dependencies = [
  "quote",
  "wasm-bindgen-macro-support",
@@ -1684,9 +1684,9 @@ dependencies = [
 
 [[package]]
 name = "wasm-bindgen-macro-support"
-version = "0.2.105"
+version = "0.2.106"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "420bc339d9f322e562942d52e115d57e950d12d88983a14c79b86859ee6c7ebc"
+checksum = "cefb59d5cd5f92d9dcf80e4683949f15ca4b511f4ac0a6e14d4e1ac60c6ecd40"
 dependencies = [
  "bumpalo",
  "proc-macro2",
@@ -1697,18 +1697,18 @@ dependencies = [
 
 [[package]]
 name = "wasm-bindgen-shared"
-version = "0.2.105"
+version = "0.2.106"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "76f218a38c84bcb33c25ec7059b07847d465ce0e0a76b995e134a45adcb6af76"
+checksum = "cbc538057e648b67f72a982e708d485b2efa771e1ac05fec311f9f63e5800db4"
 dependencies = [
  "unicode-ident",
 ]
 
 [[package]]
 name = "web-sys"
-version = "0.3.82"
+version = "0.3.83"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3a1f95c0d03a47f4ae1f7a64643a6bb97465d9b740f0fa8f90ea33915c99a9a1"
+checksum = "9b32828d774c412041098d182a8b38b16ea816958e07cf40eec2bc080ae137ac"
 dependencies = [
  "js-sys",
  "wasm-bindgen",
@@ -1851,7 +1851,7 @@ checksum = "9edde0db4769d2dc68579893f2306b26c6ecfbe0ef499b013d731b7b9247e0b9"
 [[package]]
 name = "xitca-codegen"
 version = "0.4.0"
-source = "git+http://github.com/HFQR/xitca-web?rev=c9c4b25#c9c4b259e7e7a903f494dd54a6be6073363430c4"
+source = "git+http://github.com/HFQR/xitca-web?rev=cf70ed7#cf70ed7328c1b6d60c339a7dc67be454f59b1736"
 dependencies = [
  "quote",
  "syn",
@@ -1860,7 +1860,7 @@ dependencies = [
 [[package]]
 name = "xitca-http"
 version = "0.7.1"
-source = "git+http://github.com/HFQR/xitca-web?rev=c9c4b25#c9c4b259e7e7a903f494dd54a6be6073363430c4"
+source = "git+http://github.com/HFQR/xitca-web?rev=cf70ed7#cf70ed7328c1b6d60c339a7dc67be454f59b1736"
 dependencies = [
  "futures-core",
  "http",
@@ -1893,7 +1893,7 @@ dependencies = [
 [[package]]
 name = "xitca-postgres"
 version = "0.3.0"
-source = "git+http://github.com/HFQR/xitca-web?rev=c9c4b25#c9c4b259e7e7a903f494dd54a6be6073363430c4"
+source = "git+http://github.com/HFQR/xitca-web?rev=cf70ed7#cf70ed7328c1b6d60c339a7dc67be454f59b1736"
 dependencies = [
  "fallible-iterator",
  "futures-core",
@@ -1909,7 +1909,7 @@ dependencies = [
 [[package]]
 name = "xitca-postgres-diesel"
 version = "0.2.0"
-source = "git+https://github.com/fakeshadow/xitca-postgres-diesel?rev=8ce4e5b#8ce4e5bb138765bc1780642adfefc4d3b8427bb7"
+source = "git+https://github.com/fakeshadow/xitca-postgres-diesel?rev=7671975#7671975951fdd71bfaedaa1686aa7c69e4af6caf"
 dependencies = [
  "diesel",
  "diesel-async",
@@ -1946,7 +1946,7 @@ dependencies = [
 [[package]]
 name = "xitca-server"
 version = "0.5.0"
-source = "git+http://github.com/HFQR/xitca-web?rev=c9c4b25#c9c4b259e7e7a903f494dd54a6be6073363430c4"
+source = "git+http://github.com/HFQR/xitca-web?rev=cf70ed7#cf70ed7328c1b6d60c339a7dc67be454f59b1736"
 dependencies = [
  "socket2 0.6.1",
  "tokio",
@@ -1960,7 +1960,7 @@ dependencies = [
 [[package]]
 name = "xitca-service"
 version = "0.3.0"
-source = "git+http://github.com/HFQR/xitca-web?rev=c9c4b25#c9c4b259e7e7a903f494dd54a6be6073363430c4"
+source = "git+http://github.com/HFQR/xitca-web?rev=cf70ed7#cf70ed7328c1b6d60c339a7dc67be454f59b1736"
 
 [[package]]
 name = "xitca-unsafe-collection"
@@ -2006,7 +2006,7 @@ dependencies = [
 [[package]]
 name = "xitca-web"
 version = "0.7.1"
-source = "git+http://github.com/HFQR/xitca-web?rev=c9c4b25#c9c4b259e7e7a903f494dd54a6be6073363430c4"
+source = "git+http://github.com/HFQR/xitca-web?rev=cf70ed7#cf70ed7328c1b6d60c339a7dc67be454f59b1736"
 dependencies = [
  "futures-core",
  "pin-project-lite",
@@ -2046,18 +2046,18 @@ dependencies = [
 
 [[package]]
 name = "zerocopy"
-version = "0.8.30"
+version = "0.8.31"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4ea879c944afe8a2b25fef16bb4ba234f47c694565e97383b36f3a878219065c"
+checksum = "fd74ec98b9250adb3ca554bdde269adf631549f51d8a8f8f0a10b50f1cb298c3"
 dependencies = [
  "zerocopy-derive",
 ]
 
 [[package]]
 name = "zerocopy-derive"
-version = "0.8.30"
+version = "0.8.31"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cf955aa904d6040f70dc8e9384444cb1030aed272ba3cb09bbc4ab9e7c1f34f5"
+checksum = "d8a8d209fdf45cf5138cbb5a506f6b52522a25afccc534d1475dad8e31105c6a"
 dependencies = [
  "proc-macro2",
  "quote",

@@ -1,6 +1,6 @@
 <?php
 
-use app\controllers\Index;
+use app\http\controllers\Index;
 
 /** @var \mako\http\routing\Routes $routes */
 

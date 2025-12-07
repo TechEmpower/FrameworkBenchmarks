@@ -17,7 +17,7 @@ platform = "Rack"
 webserver = "Puma"
 versus = "rack-puma-mri"
 
-[unicorn]
+[iodine]
 urls.plaintext = "/plaintext"
 urls.json = "/json"
 urls.db = "/db"
@@ -30,5 +30,5 @@ database_os = "Linux"
 os = "Linux"
 orm = "Full"
 platform = "Rack"
-webserver = "Unicorn"
-versus = "rack-unicorn-mri"
+webserver = "Iodine"
+versus = "rack-iodine-mri"
