@@ -2,17 +2,17 @@
     "type": "project",
     "license": "proprietary",
     "require": {
-        "php": ">=8.2",
+        "php": ">=8.4",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-mbstring": "*",
-        "symfony/console": "^7",
-        "symfony/dotenv": "^7",
+        "symfony/console": "^8",
+        "symfony/dotenv": "^8",
         "symfony/flex": "^2",
-        "symfony/framework-bundle": "^7",
+        "symfony/framework-bundle": "^8",
         "symfony/orm-pack": "^2",
-        "symfony/twig-bundle": "^7",
-        "symfony/yaml": "^7",
+        "symfony/twig-bundle": "^8",
+        "symfony/yaml": "^8",
         "joanhey/adapterman": "^0.7"
     },
     "minimum-stability": "dev",
@@ -49,7 +49,8 @@
         "symfony/polyfill-php81": "*",
         "symfony/polyfill-php82": "*",
         "symfony/polyfill-php83": "*",
-        "symfony/polyfill-php84": "*"
+        "symfony/polyfill-php84": "*",
+        "symfony/polyfill-php85": "*"
     },
     "scripts": {
         "auto-scripts": {
