@@ -19,8 +19,8 @@ EXPOSE 8080
 ADD ./ /cakephp
 WORKDIR /cakephp
 
-RUN composer require joanhey/adapterman:^0.7
-RUN composer install --optimize-autoloader --classmap-authoritative --no-dev  --quiet
+RUN composer require joanhey/adapterman:^0.7 --quiet
+RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
 
 RUN chmod -R 777 /cakephp
 
@@ -28,3 +28,4 @@ RUN chmod -R 777 /cakephp
 
 CMD php -c deploy/conf/cli-php.ini \
     server.php start
+
