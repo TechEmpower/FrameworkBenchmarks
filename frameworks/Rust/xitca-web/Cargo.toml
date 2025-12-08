@@ -6,7 +6,7 @@ edition = "2024"
 [[bin]]
 name = "xitca-web"
 path = "./src/main.rs"
-required-features = ["io-uring", "pg", "router", "template"]
+required-features = ["io-uring", "json", "pg", "router", "template"]
 
 [[bin]]
 name = "xitca-web-barebone"
@@ -42,7 +42,10 @@ template = ["dep:sailfish"]
 io-uring = ["dep:tokio-uring", "xitca-http/io-uring", "xitca-server/io-uring"]
 # unrealistic performance optimization
 perf = ["dep:core_affinity", "dep:mimalloc", "tokio/parking_lot"]
-perf-json = ["simd-json", "simd-json-derive"]
+# regular json serializer
+json = ["serde_json"]
+# performance optimization json serializer
+perf-json = ["sonic-rs"]
 
 [dependencies]
 xitca-http = "0.7"
@@ -53,8 +56,7 @@ xitca-unsafe-collection = "0.2"
 
 atoi = "2"
 httparse = "1"
-serde = { version = "1" }
-serde_json = { version = "1" }
+serde_core = { version = "1" }
 
 # web optional
 xitca-web = { version = "0.7", features = ["json"], optional = true }
@@ -81,8 +83,10 @@ tokio-uring = { version = "0.5", optional = true }
 # perf optional
 core_affinity = { version = "0.8.1", optional = true }
 mimalloc = { version = "0.1", default-features = false, optional = true }
-simd-json = { version = "0.17", optional = true }
-simd-json-derive =  { version = "0.18", default-features = false, optional = true }
+
+# json optioanl
+serde_json = { version = "1", optional = true }
+sonic-rs = { version = "0.5.6", optional = true }
 
 futures-core = { version = "0.3", default-features = false }
 rand = { version = "0.9", features = ["os_rng", "small_rng"], default-features = false }
@@ -104,9 +108,9 @@ toasty-core = { git = "https://github.com/fakeshadow/toasty", branch = "engine" 
 toasty-sql = { git = "https://github.com/fakeshadow/toasty", branch = "engine" }
 tokio-uring = { git = "http://github.com/fakeshadow/tokio-uring", rev = "97d9a98" }
 
-xitca-codegen = { git = "http://github.com/HFQR/xitca-web", rev = "adc7ff1" }
-xitca-http = { git = "http://github.com/HFQR/xitca-web", rev = "adc7ff1" }
-xitca-postgres = { git = "http://github.com/HFQR/xitca-web", rev = "adc7ff1" }
-xitca-server = { git = "http://github.com/HFQR/xitca-web", rev = "adc7ff1" }
-xitca-service = { git = "http://github.com/HFQR/xitca-web", rev = "adc7ff1" }
-xitca-web = { git = "http://github.com/HFQR/xitca-web", rev = "adc7ff1" }
+xitca-codegen = { git = "http://github.com/HFQR/xitca-web", rev = "83b4a60" }
+xitca-http = { git = "http://github.com/HFQR/xitca-web", rev = "83b4a60" }
+xitca-postgres = { git = "http://github.com/HFQR/xitca-web", rev = "83b4a60" }
+xitca-server = { git = "http://github.com/HFQR/xitca-web", rev = "83b4a60" }
+xitca-service = { git = "http://github.com/HFQR/xitca-web", rev = "83b4a60" }
+xitca-web = { git = "http://github.com/HFQR/xitca-web", rev = "83b4a60" }
