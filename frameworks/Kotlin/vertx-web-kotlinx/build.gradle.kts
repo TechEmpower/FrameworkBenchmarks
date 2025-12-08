@@ -31,7 +31,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-io-core:0.8.2")
 
     implementation("org.jetbrains.kotlinx:kotlinx-html:0.12.0")
-    //implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1")
 }
 
 kotlin.jvmToolchain(25) // Kotlin doesn't support Java 25 yet

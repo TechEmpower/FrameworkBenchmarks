@@ -18,6 +18,11 @@ import io.vertx.sqlclient.Row
 import io.vertx.sqlclient.RowSet
 import io.vertx.sqlclient.Tuple
 import kotlinx.coroutines.Dispatchers
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.UtcOffset
+import kotlinx.datetime.format.DateTimeComponents
+import kotlinx.datetime.format.format
+import kotlinx.datetime.toLocalDateTime
 import kotlinx.html.*
 import kotlinx.html.stream.appendHTML
 import kotlinx.io.buffered
@@ -26,8 +31,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.io.encodeToSink
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
+import kotlin.time.Clock
 
 class MainVerticle(val hasDb: Boolean) : CoroutineVerticle(), CoroutineRouterSupport {
     // `PgConnection`s as used in the "vertx" portion offers better performance than `PgPool`s.
@@ -40,9 +44,10 @@ class MainVerticle(val hasDb: Boolean) : CoroutineVerticle(), CoroutineRouterSup
     lateinit var updateWordQuery: PreparedQuery<RowSet<Row>>
 
     fun setCurrentDate() {
-        // Don't know how to get kotlinx-datetime to work here properly. See commit 9cf28f15b6f1806b3ed75260adee8acd822cac91 for a failed attempt.
-        //date = Clock.System.now().toString()
-        date = DateTimeFormatter.RFC_1123_DATE_TIME.format(ZonedDateTime.now())
+        date = DateTimeComponents.Formats.RFC_1123.format {
+            // We don't need a more complicated system `TimeZone` here (whose offset depends dynamically on the actual time due to DST) since UTC works.
+            setDateTimeOffset(Clock.System.now(), UtcOffset.ZERO)
+        }
     }
 
     override suspend fun start() {
