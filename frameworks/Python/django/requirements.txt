@@ -1,4 +1,4 @@
-Django==3.2.25
+Django==4.2.27
 mysqlclient==2.2.6
 psycopg2==2.9.9; implementation_name=='cpython'
 pytz==2023.2
