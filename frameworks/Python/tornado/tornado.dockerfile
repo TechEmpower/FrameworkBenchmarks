@@ -1,11 +1,11 @@
-FROM python:2.7.15-stretch
+FROM python:3.6.6-stretch
 
 ADD ./ /tornado
 
 WORKDIR /tornado
 
-RUN pip install -r /tornado/requirements_py2_mongo.txt
+RUN pip3 install -r /tornado/requirements_mongo.txt
 
 EXPOSE 8080
 
-CMD python server_py2.py --port=8080 --mongo=tfb-database --logging=error
+CMD python3 server.py --port=8080 --mongo=tfb-database --logging=error
