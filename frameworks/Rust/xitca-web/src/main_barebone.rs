@@ -13,14 +13,11 @@ mod util;
 use std::io;
 
 use xitca_http::{
-    bytes::BufMutWriter,
+    bytes::BufMut,
     h1::dispatcher_unreal::{Dispatcher, Request, Response},
     http::StatusCode,
 };
 use xitca_service::Service;
-// simd-json crate is realistic approach to json serializer.
-// That said xitca-web by default utilize serde-json as serializer making it an unrealistic representation of framework performance
-use simd_json_derive::Serialize;
 
 use self::{
     ser::Message,
@@ -109,11 +106,12 @@ async fn handler<'h>(req: Request<'h, State<db::Client>>, res: Response<'h>) -> 
             .header("server", "X")
             // unrealistic content length header.
             .header("content-length", "27")
-            .body_writer(|buf| Message::new().json_write(&mut BufMutWriter(buf)).unwrap()),
+            // snoic-rs crate is realistic approach to json serializer.
+            // That said xitca-web by default utilize serde-json as serializer making it an unrealistic representation of framework performance
+            .body_writer(|buf| sonic_rs::to_writer(buf.writer(), &Message::new()).unwrap()),
 
         // all database related categories are unrealistic. please reference db_unrealistic module for detail.
         "/fortunes" => {
-            use sailfish::TemplateOnce;
             let fortunes = req.ctx.client.tell_fortune().await.unwrap().render_once().unwrap();
             res.status(StatusCode::OK)
                 .header("content-type", "text/html; charset=utf-8")
@@ -142,10 +140,10 @@ async fn handler<'h>(req: Request<'h, State<db::Client>>, res: Response<'h>) -> 
 
 fn json_response<'r, DB, T>(res: Response<'r>, state: &State<DB>, val: &T) -> Response<'r, 3>
 where
-    T: Serialize,
+    T: serde_core::Serialize,
 {
     let buf = &mut *state.write_buf.borrow_mut();
-    val.json_write(&mut BufMutWriter(buf)).unwrap();
+    sonic_rs::to_writer(buf.writer(), val).unwrap();
     let res = res
         .status(StatusCode::OK)
         .header("content-type", "application/json")
