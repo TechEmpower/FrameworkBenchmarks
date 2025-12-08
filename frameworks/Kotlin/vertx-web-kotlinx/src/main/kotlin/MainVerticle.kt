@@ -19,6 +19,7 @@ import io.vertx.sqlclient.RowSet
 import io.vertx.sqlclient.Tuple
 import kotlinx.coroutines.Dispatchers
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.UtcOffset
 import kotlinx.datetime.format.DateTimeComponents
 import kotlinx.datetime.format.format
 import kotlinx.datetime.toLocalDateTime
@@ -33,10 +34,6 @@ import kotlinx.serialization.json.io.encodeToSink
 import kotlin.time.Clock
 
 class MainVerticle(val hasDb: Boolean) : CoroutineVerticle(), CoroutineRouterSupport {
-    companion object {
-        val timeZone = TimeZone.currentSystemDefault()
-    }
-
     // `PgConnection`s as used in the "vertx" portion offers better performance than `PgPool`s.
     lateinit var pgConnection: PgConnection
     lateinit var date: String
@@ -48,7 +45,8 @@ class MainVerticle(val hasDb: Boolean) : CoroutineVerticle(), CoroutineRouterSup
 
     fun setCurrentDate() {
         date = DateTimeComponents.Formats.RFC_1123.format {
-            setDateTime(Clock.System.now().toLocalDateTime(timeZone))
+            // We don't need a more complicated system `TimeZone` here (whose offset depends dynamically on the actual time due to DST) since UTC works.
+            setDateTimeOffset(Clock.System.now(), UtcOffset.ZERO)
         }
     }
 
