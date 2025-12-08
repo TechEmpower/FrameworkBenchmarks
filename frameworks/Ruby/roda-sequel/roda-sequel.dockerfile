@@ -4,7 +4,6 @@ ADD ./ /roda-sequel
 WORKDIR /roda-sequel
 
 ENV RUBY_YJIT_ENABLE=1
-ENV RUBY_THREAD_TIMESLICE=10
 
 # Use Jemalloc
 RUN apt-get update && \
