@@ -135,12 +135,12 @@ class MainVerticle(val hasDb: Boolean) : CoroutineVerticle(), CoroutineRouterSup
                 addJsonResponseHeaders()
 
                 /*
-                // approach 1
+                // Approach 1
                 end(Json.encodeToString(serializer, requestHandler(it)))/*.coAwait()*/
                 */
 
                 /*
-                // approach 2
+                // Approach 2
                 // java.lang.IllegalStateException: You must set the Content-Length header to be the total size of the message body BEFORE sending any data if you are not using HTTP chunked encoding.
                 toRawSink().buffered().use { bufferedSink ->
                     @OptIn(ExperimentalSerializationApi::class)
@@ -148,7 +148,7 @@ class MainVerticle(val hasDb: Boolean) : CoroutineVerticle(), CoroutineRouterSup
                 }
                 */
 
-                // approach 3
+                // Approach 3
                 end(Buffer.buffer().apply {
                     toRawSink().buffered().use { bufferedSink ->
                         @OptIn(ExperimentalSerializationApi::class)
