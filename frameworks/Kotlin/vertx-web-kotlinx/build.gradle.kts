@@ -34,6 +34,6 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1")
 }
 
-kotlin.jvmToolchain(25) // Kotlin doesn't support Java 25 yet
+kotlin.jvmToolchain(25)
 
 application.mainClass.set("MainKt")
