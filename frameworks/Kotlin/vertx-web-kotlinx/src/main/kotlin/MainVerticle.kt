@@ -1,3 +1,4 @@
+import io.netty.channel.unix.Errors
 import io.netty.channel.unix.Errors.NativeIoException
 import io.vertx.core.MultiMap
 import io.vertx.core.buffer.Buffer
@@ -30,6 +31,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.io.encodeToSink
+import java.net.SocketException
 import kotlin.time.Clock
 
 class MainVerticle(val hasDb: Boolean) : CoroutineVerticle(), CoroutineRouterSupport {
@@ -84,12 +86,8 @@ class MainVerticle(val hasDb: Boolean) : CoroutineVerticle(), CoroutineRouterSup
             .requestHandler(Router.router(vertx).apply { routes() })
             .exceptionHandler {
                 // wrk resets the connections when benchmarking is finished.
-                if (
-                // for epoll
-                /*(it is NativeIoException && it.message == "recvAddress(..) failed: Connection reset by peer")
-                || (it is SocketException && it.message == "Connection reset")*/
-                // for io_uring
-                    it is NativeIoException && it.expectedErr() == -104
+                if ((/* for native transport */it is NativeIoException && it.expectedErr() == Errors.ERRNO_ECONNRESET_NEGATIVE) ||
+                    (/* for Java NIO */ it is SocketException && it.message == "Connection reset")
                 )
                     return@exceptionHandler
 
