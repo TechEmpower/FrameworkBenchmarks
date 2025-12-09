@@ -4,8 +4,8 @@ gem 'mysql2', '> 0.5'
 gem 'json'
 gem 'activerecord', '~> 8.1.0', :require => 'active_record'
 
-gem 'slim', '2.0.3'
-gem 'padrino', git: 'https://github.com/padrino/padrino-framework.git'
+gem 'slim'
+gem 'padrino', '0.16.0'
 gem 'rack'
 
 group :iodine, optional: true do

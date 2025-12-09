@@ -106,7 +106,6 @@ async def route_db(scope, receive, send):
 async def route_queries(scope, receive, send):
     num_queries = get_num_queries(scope)
     row_ids = sample(range(1, 10000), num_queries)
-    worlds = []
 
     async with pool.acquire() as connection:
         rows = await connection.fetchmany(SQL_SELECT, [(v,) for v in row_ids])
