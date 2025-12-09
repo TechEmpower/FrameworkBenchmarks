@@ -28,5 +28,6 @@ CMD export JAVA_OPTS=" \
     -Dio.netty.noUnsafe=false \
     -Dio.netty.buffer.checkBounds=false \
     -Dio.netty.buffer.checkAccessible=false \
+    -Dio.netty.iouring.ringSize=16384 \
     " && \
     build/install/vertx-web-kotlinx-benchmark/bin/vertx-web-kotlinx-benchmark false
