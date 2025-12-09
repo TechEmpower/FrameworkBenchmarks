@@ -57,16 +57,17 @@ public class WebMvcController {
      * GET /queries?queries=10 HTTP/1.1
      */
     @GetMapping("/queries")
-    public World[] queries(@RequestParam(defaultValue = "1") Integer queries) {
-        return Utils.randomWorldNumbers().mapToObj(dbRepository::getWorld).limit(queries).toArray(World[]::new);
+    public World[] queries(@RequestParam(defaultValue = "1") String queries) {
+        return Utils.randomWorldNumbers().limit(parseQueryCount(queries)).mapToObj(dbRepository::getWorld).toArray(World[]::new);
     }
 
     /**
      * GET /updates?queries=10 HTTP/1.1
      */
     @GetMapping("/updates")
-    public List<World> updates(@RequestParam(defaultValue = "1") Integer queries) {
+    public List<World> updates(@RequestParam(defaultValue = "1") String queries) {
         List<World> worlds = Utils.randomWorldNumbers()
+                .limit(parseQueryCount(queries))
                 .mapToObj(id -> {
                     World world = dbRepository.getWorld(id);
                     int randomNumber;
@@ -76,7 +77,6 @@ public class WebMvcController {
                     world.randomNumber = randomNumber;
                     return world;
                 })
-                .limit(queries)
                 .sorted(Comparator.comparingInt(w -> w.id))
                 .toList();
         dbRepository.updateWorlds(worlds);
@@ -94,5 +94,18 @@ public class WebMvcController {
         Collections.sort(fortunes);
 
         return JStachio.render(new Fortunes(fortunes));
+    }
+
+    private static int parseQueryCount(String textValue) {
+        if (textValue == null) {
+            return 1;
+        }
+        int parsedValue;
+        try {
+            parsedValue = Integer.parseInt(textValue);
+        } catch (NumberFormatException e) {
+            return 1;
+        }
+        return Math.min(500, Math.max(1, parsedValue));
     }
 }

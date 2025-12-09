@@ -1,6 +1,6 @@
 k:
   server:
-    virtualThread: true
+    virtualThread: false
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driverClassName: org.postgresql.Driver
