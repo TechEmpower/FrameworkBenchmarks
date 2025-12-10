@@ -1,3 +1,7 @@
+import com.huanshankeji.exposedvertxsqlclient.DatabaseClient
+import com.huanshankeji.exposedvertxsqlclient.postgresql.PgDatabaseClientConfig
+import com.huanshankeji.exposedvertxsqlclient.postgresql.vertx.pgclient.createPgConnection
+import database.*
 import io.netty.channel.unix.Errors
 import io.netty.channel.unix.Errors.NativeIoException
 import io.vertx.core.MultiMap
@@ -13,13 +17,10 @@ import io.vertx.kotlin.core.http.httpServerOptionsOf
 import io.vertx.kotlin.coroutines.CoroutineRouterSupport
 import io.vertx.kotlin.coroutines.CoroutineVerticle
 import io.vertx.kotlin.coroutines.coAwait
-import io.vertx.kotlin.pgclient.pgConnectOptionsOf
 import io.vertx.pgclient.PgConnection
-import io.vertx.sqlclient.PreparedQuery
-import io.vertx.sqlclient.Row
-import io.vertx.sqlclient.RowSet
-import io.vertx.sqlclient.Tuple
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.datetime.UtcOffset
 import kotlinx.datetime.format.DateTimeComponents
 import kotlinx.datetime.format.format
@@ -31,10 +32,17 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.io.encodeToSink
+import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.core.statements.buildStatement
+import org.jetbrains.exposed.v1.jdbc.Database
+import org.jetbrains.exposed.v1.jdbc.select
 import java.net.SocketException
 import kotlin.time.Clock
 
-class MainVerticle(val hasDb: Boolean) : CoroutineVerticle(), CoroutineRouterSupport {
+/**
+ * @param exposedDatabase `null` indicates that the database is not needed in the test.
+ */
+class MainVerticle(val exposedDatabase: Database?) : CoroutineVerticle(), CoroutineRouterSupport {
     object HttpHeaderValues {
         val vertxWeb = HttpHeaders.createOptimized("Vert.x-Web")
         val applicationJson = HttpHeaders.createOptimized("application/json")
@@ -43,13 +51,16 @@ class MainVerticle(val hasDb: Boolean) : CoroutineVerticle(), CoroutineRouterSup
     }
 
     // `PgConnection`s as used in the "vertx" portion offers better performance than `PgPool`s.
-    lateinit var pgConnection: PgConnection
+    lateinit var databaseClient: DatabaseClient<PgConnection>
     lateinit var date: String
     lateinit var httpServer: HttpServer
 
+    // kept in case we support generating and reusing `PreparedQuery`
+    /*
     lateinit var selectWorldQuery: PreparedQuery<RowSet<Row>>
     lateinit var selectFortuneQuery: PreparedQuery<RowSet<Row>>
     lateinit var updateWorldQuery: PreparedQuery<RowSet<Row>>
+    */
 
     fun setCurrentDate() {
         date = DateTimeComponents.Formats.RFC_1123.format {
@@ -58,24 +69,17 @@ class MainVerticle(val hasDb: Boolean) : CoroutineVerticle(), CoroutineRouterSup
         }
     }
 
-    override suspend fun start() {
-        if (hasDb) {
-            // Parameters are copied from the "vertx-web" and "vertx" portions.
-            pgConnection = PgConnection.connect(
-                vertx,
-                pgConnectOptionsOf(
-                    database = "hello_world",
-                    host = "tfb-database",
-                    user = "benchmarkdbuser",
-                    password = "benchmarkdbpass",
-                    cachePreparedStatements = true,
-                    pipeliningLimit = 256
-                )
-            ).coAwait()
+    val hasDb get() = exposedDatabase !== null
 
-            selectWorldQuery = pgConnection.preparedQuery(SELECT_WORLD_SQL)
-            selectFortuneQuery = pgConnection.preparedQuery(SELECT_FORTUNE_SQL)
-            updateWorldQuery = pgConnection.preparedQuery(UPDATE_WORLD_SQL)
+    override suspend fun start() {
+        exposedDatabase?.let {
+            // Parameters are copied from the "vertx-web" and "vertx" portions.
+            val pgConnection = createPgConnection(vertx, connectionConfig, {
+                cachePreparedStatements = true
+                pipeliningLimit = 256
+            })
+            // TODO `validateBatch = false`
+            databaseClient = DatabaseClient(pgConnection, it, PgDatabaseClientConfig(/*validateBatch = false*/))
         }
 
         setCurrentDate()
@@ -119,9 +123,7 @@ class MainVerticle(val hasDb: Boolean) : CoroutineVerticle(), CoroutineRouterSup
 
 
     fun Route.coHandlerUnconfined(requestHandler: suspend (RoutingContext) -> Unit): Route =
-        /* Some conclusions from the Plaintext test results with trailing `await()`s:
-           1. `launch { /*...*/ }` < `launch(start = CoroutineStart.UNDISPATCHED) { /*...*/ }` < `launch(Dispatchers.Unconfined) { /*...*/ }`.
-           1. `launch { /*...*/ }` without `context` or `start` lead to `io.netty.channel.StacklessClosedChannelException` and `io.netty.channel.unix.Errors$NativeIoException: sendAddress(..) failed: Connection reset by peer`. */
+        // see the corresponding comment in the `vertx-web-kotlinx` portion for more details
         coHandler(Dispatchers.Unconfined, requestHandler)
 
     inline fun <reified T : Any> Route.jsonResponseCoHandler(
@@ -132,21 +134,7 @@ class MainVerticle(val hasDb: Boolean) : CoroutineVerticle(), CoroutineRouterSup
             it.response().run {
                 addJsonResponseHeaders()
 
-                /*
-                // Approach 1
-                end(Json.encodeToString(serializer, requestHandler(it)))/*.coAwait()*/
-                */
-
-                /*
-                // Approach 2
-                // java.lang.IllegalStateException: You must set the Content-Length header to be the total size of the message body BEFORE sending any data if you are not using HTTP chunked encoding.
-                toRawSink().buffered().use { bufferedSink ->
-                    @OptIn(ExperimentalSerializationApi::class)
-                    Json.encodeToSink(serializer, requestHandler(it), bufferedSink)
-                }
-                */
-
-                // Approach 3
+                // Approach 3 from the `vertx-web-kotlinx` portion
                 end(Buffer.buffer().apply {
                     toRawSink().buffered().use { bufferedSink ->
                         @OptIn(ExperimentalSerializationApi::class)
@@ -157,21 +145,18 @@ class MainVerticle(val hasDb: Boolean) : CoroutineVerticle(), CoroutineRouterSup
         }
 
 
-    suspend fun selectRandomWorlds(queries: Int): List<World> {
-        val rowSets = List(queries) {
-            selectWorldQuery.execute(Tuple.of(randomIntBetween1And10000()))
-        }.awaitAll()
-        return rowSets.map { it.single().toWorld() }
-    }
+    suspend fun selectRandomWorld() =
+        databaseClient.executeQuery(selectWorldWithIdQuery(randomIntBetween1And10000()))
+            .single().toWorld()
+
+    suspend fun selectRandomWorlds(queries: Int): List<World> =
+    //List(queries) { async { selectRandomWorld() } }.awaitAll()
+        // This should be slightly more efficient.
+        awaitAll(*Array(queries) { async { selectRandomWorld() } })
 
     fun Router.routes() {
-        get("/json").jsonResponseCoHandler(Serializers.message) {
-            Message("Hello, World!")
-        }
-
         get("/db").jsonResponseCoHandler(Serializers.world) {
-            val rowSet = selectWorldQuery.execute(Tuple.of(randomIntBetween1And10000())).coAwait()
-            rowSet.single().toWorld()
+            selectRandomWorld()
         }
 
         get("/queries").jsonResponseCoHandler(Serializers.worlds) {
@@ -181,7 +166,7 @@ class MainVerticle(val hasDb: Boolean) : CoroutineVerticle(), CoroutineRouterSup
 
         get("/fortunes").coHandlerUnconfined {
             val fortunes = mutableListOf<Fortune>()
-            selectFortuneQuery.execute().coAwait()
+            databaseClient.executeQuery(with(FortuneTable) { select(id, message) })
                 .mapTo(fortunes) { it.toFortune() }
 
             fortunes.add(Fortune(0, "Additional fortune added at request time."))
@@ -224,29 +209,17 @@ class MainVerticle(val hasDb: Boolean) : CoroutineVerticle(), CoroutineRouterSup
             val worlds = selectRandomWorlds(queries)
             val updatedWorlds = worlds.map { it.copy(randomNumber = randomIntBetween1And10000()) }
 
-            // Approach 1
-            // The updated worlds need to be sorted first to avoid deadlocks.
-            updateWorldQuery
-                .executeBatch(updatedWorlds.sortedBy { it.id }.map { Tuple.of(it.randomNumber, it.id) }).coAwait()
-
-            /*
-            // Approach 2, worse performance
-            updatedWorlds.map {
-                pgPool.preparedQuery(UPDATE_WORLD_SQL).execute(Tuple.of(it.randomNumber, it.id))
-            }.awaitAll()
-            */
+            // Approach 1 from the `vertx-web-kotlinx` portion
+            // TODO `sortedBy { it.id }`
+            databaseClient.executeBatchUpdate(updatedWorlds.map { world ->
+                buildStatement {
+                    WorldTable.update({ WorldTable.id eq world.id }) {
+                        it[randomNumber] = world.randomNumber
+                    }
+                }
+            })
 
             updatedWorlds
-        }
-
-        get("/plaintext").coHandlerUnconfined {
-            it.response().run {
-                headers().run {
-                    addCommonHeaders()
-                    add(HttpHeaders.CONTENT_TYPE, HttpHeaderValues.textPlain)
-                }
-                end("Hello, World!")/*.coAwait()*/
-            }
         }
     }
 }

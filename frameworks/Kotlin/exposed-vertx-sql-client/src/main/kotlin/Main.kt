@@ -1,3 +1,5 @@
+import com.huanshankeji.exposedvertxsqlclient.postgresql.exposed.exposedDatabaseConnectPostgresql
+import database.connectionConfig
 import io.vertx.core.Vertx
 import io.vertx.core.impl.cpu.CpuCoreSensor
 import io.vertx.kotlin.core.deploymentOptionsOf
@@ -24,8 +26,9 @@ suspend fun main(args: Array<String>) {
         logger.info("Vertx exception caught: $it")
         it.printStackTrace()
     }
+    val exposedDatabase = if (hasDb) connectionConfig.exposedDatabaseConnectPostgresql() else null
     vertx.deployVerticle(
-        Supplier { MainVerticle(hasDb) },
+        Supplier { MainVerticle(exposedDatabase) },
         deploymentOptionsOf(instances = numProcessors)
     ).coAwait()
     logger.info("$SERVER_NAME started.")
