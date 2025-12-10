@@ -50,7 +50,6 @@ CMD java \
   -Dio.netty.buffer.checkBounds=false \
   -Dio.netty.buffer.checkAccessible=false \
   -Dio.netty.leakDetection.level=disabled \
-  -Dio.netty.iouring.ringSize=4096 \
-  -Dio.netty.iouring.cqSize=8192 \
+  -Dio.netty.iouring.ringSize=16384 \
   -Dtfb.type=basic \
   -jar /app/vertx-web-kotlin-dsljson.jar

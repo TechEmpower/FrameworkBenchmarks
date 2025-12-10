@@ -51,6 +51,6 @@ CMD java \
   -Dio.netty.buffer.checkAccessible=false \
   -Dio.netty.leakDetection.level=disabled \
   -Dio.netty.iouring.ringSize=4096 \
-  -Dio.netty.iouring.cqSize=8192 \
+  -Dio.netty.iouring.ringSize=16384 \
   -Dtfb.type=postgres \
   -jar /app/vertx-web-kotlin-dsljson.jar
