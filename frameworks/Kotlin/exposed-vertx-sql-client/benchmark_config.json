@@ -2,9 +2,11 @@
   "framework": "exposed-vertx-sql-client",
   "tests": [
     {
-      "default": {
-        "json_url": "/json",
-        "plaintext_url": "/plaintext",
+      "postgresql": {
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
+        "fortune_url": "/fortunes",
+        "update_url": "/updates?queries=",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Micro",
@@ -17,7 +19,7 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "Exposed Vert.x SQL Client",
+        "display_name": "exposed-vertx-sql-client-postgresql",
         "notes": "",
         "versus": "vertx-web-kotlinx-postgresql"
       }
