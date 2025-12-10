@@ -9,7 +9,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.0" />
-		<PackageReference Include="TouchSocket.Hosting" Version="4.0.0" />
-		<PackageReference Include="TouchSocket.WebApi" Version="4.0.0" />
+		<PackageReference Include="TouchSocket.Hosting" Version="4.0.2" />
+		<PackageReference Include="TouchSocket.WebApi" Version="4.0.2" />
 	</ItemGroup>
 </Project>

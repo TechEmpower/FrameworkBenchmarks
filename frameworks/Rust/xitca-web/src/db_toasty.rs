@@ -6,7 +6,6 @@ use crate::{
     util::{DB_URL, HandleResult, Rand},
 };
 
-// this is not a realistic connection pool.
 pub struct Pool {
     db: Db,
     rng: core::cell::RefCell<Rand>,

@@ -1,8 +1,5 @@
 use diesel::prelude::*;
-use diesel_async::{
-    RunQueryDsl,
-    pooled_connection::{AsyncDieselConnectionManager, bb8},
-};
+use diesel_async::{AsyncConnection, RunQueryDsl};
 use futures_util::future::{TryFutureExt, TryJoinAll, try_join};
 use xitca_postgres_diesel::AsyncPgConnection;
 
@@ -12,18 +9,13 @@ use crate::{
 };
 
 pub struct Pool {
-    pool: bb8::Pool<AsyncPgConnection>,
+    pool: AsyncPgConnection,
     rng: core::cell::RefCell<Rand>,
 }
 
 impl Pool {
     pub async fn create() -> HandleResult<Self> {
-        let pool = bb8::Pool::builder()
-            .max_size(1)
-            .min_idle(Some(1))
-            .test_on_check_out(false)
-            .build(AsyncDieselConnectionManager::new(DB_URL))
-            .await?;
+        let pool = AsyncPgConnection::establish(DB_URL).await?;
 
         Ok(Self {
             pool,
@@ -36,8 +28,7 @@ impl Pool {
             use schema::world::dsl::*;
 
             let w_id = self.rng.borrow_mut().gen_id();
-            let mut conn = self.pool.get().await?;
-            world.filter(id.eq(w_id)).first(&mut conn).map_err(Into::into)
+            world.filter(id.eq(w_id)).first(&mut &self.pool).map_err(Into::into)
         }
         .await
     }
@@ -46,12 +37,11 @@ impl Pool {
         {
             use schema::world::dsl::*;
 
-            let mut conn = self.pool.get().await?;
             self.rng
                 .borrow_mut()
                 .gen_multi()
                 .take(num as _)
-                .map(|w_id| world.filter(id.eq(w_id)).first(&mut conn).map_err(Into::into))
+                .map(|w_id| world.filter(id.eq(w_id)).first(&mut &self.pool).map_err(Into::into))
                 .collect::<TryJoinAll<_>>()
         }
         .await
@@ -61,7 +51,6 @@ impl Pool {
         {
             use schema::world::dsl::*;
 
-            let mut conn = self.pool.get().await?;
             let mut rng = self.rng.borrow_mut();
             let mut params = Vec::with_capacity(num as _);
 
@@ -71,7 +60,7 @@ impl Pool {
                 .take(num as _)
                 .zip(rng.gen_multi())
                 .map(|(w_id, rng)| {
-                    let get = world.filter(id.eq(w_id)).first::<World>(&mut conn);
+                    let get = world.filter(id.eq(w_id)).first::<World>(&mut &self.pool);
 
                     params.push((w_id, rng));
 
@@ -84,7 +73,7 @@ impl Pool {
                 .collect::<TryJoinAll<_>>();
 
             let sql = update_query_from_ids(params);
-            let update = diesel::sql_query(sql).execute(&mut conn).map_err(Into::into);
+            let update = diesel::sql_query(sql).execute(&mut &self.pool).map_err(Into::into);
 
             try_join(get, update)
         }
@@ -96,8 +85,7 @@ impl Pool {
         {
             use schema::fortune::dsl::*;
 
-            let mut conn = self.pool.get().await?;
-            fortune.load(&mut conn).map_err(Into::into)
+            fortune.load(&mut &self.pool).map_err(Into::into)
         }
         .await
         .map(Fortunes::new)

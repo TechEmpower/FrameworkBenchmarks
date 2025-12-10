@@ -43,8 +43,8 @@ class HelloWorld
   </html>'
 
   def initialize
-    if defined?(Puma) && (threads = Puma.cli_config.options.fetch(:max_threads)) > 1
-      max_connections = threads
+    if defined?(Puma)
+      max_connections = ENV.fetch('MAX_THREADS')
     elsif defined?(Itsi)
       require_relative 'config/auto_tune'
       _num_workers, num_threads = auto_tune
