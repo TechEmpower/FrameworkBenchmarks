@@ -133,7 +133,6 @@ GEM
       hansi (~> 0.2.0)
       mustermann (= 3.0.3)
     nio4r (2.7.4)
-    ostruct (0.6.3)
     pg (1.5.9)
     pp (0.6.3)
       prettyprint
@@ -205,7 +204,6 @@ DEPENDENCIES
   hanami-router (~> 2.3)
   hanami-validations (~> 2.3)
   hanami-view (~> 2.3)
-  ostruct
   pg
   puma
   rake
