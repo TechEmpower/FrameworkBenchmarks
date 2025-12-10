@@ -5,5 +5,5 @@ production:
   database: hello_world
   username: benchmarkdbuser
   password: benchmarkdbpass
-  pool: 3
+  pool: <%= ENV.fetch('MAX_THREADS') %>
   timeout: 5000
