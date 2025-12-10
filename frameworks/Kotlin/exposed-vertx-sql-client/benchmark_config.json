@@ -1,0 +1,26 @@
+{
+  "framework": "exposed-vertx-sql-client",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "postgres",
+        "framework": "vertx-web",
+        "language": "Kotlin",
+        "flavor": "None",
+        "orm": "Full",
+        "platform": "Vert.x",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Exposed Vert.x SQL Client",
+        "notes": "",
+        "versus": "vertx-web-kotlinx-postgresql"
+      }
+    }
+  ]
+}
