@@ -15,6 +15,7 @@ repositories {
 
 val vertxVersion = "5.0.5"
 val kotlinxSerializationVersion = "1.9.0"
+val exposedVertxSqlClientVersion = "0.6.0"
 dependencies {
     implementation(platform("io.vertx:vertx-stack-depchain:$vertxVersion"))
     implementation("io.vertx:vertx-web")
@@ -32,6 +33,9 @@ dependencies {
 
     implementation("org.jetbrains.kotlinx:kotlinx-html:0.12.0")
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1")
+
+    implementation("com.huanshankeji:exposed-vertx-sql-client-core:$exposedVertxSqlClientVersion")
+    implementation("com.huanshankeji:exposed-vertx-sql-client-postgresql:${exposedVertxSqlClientVersion}")
 }
 
 kotlin.jvmToolchain(25)
