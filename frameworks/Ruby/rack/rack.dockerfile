@@ -17,7 +17,9 @@ RUN bundle install --jobs=8
 
 COPY . .
 
-EXPOSE 8080
 ENV WEB_CONCURRENCY=auto
+ENV MAX_THREADS=5
+
+EXPOSE 8080
 
 CMD bundle exec puma -C config/puma.rb -b tcp://0.0.0.0:8080 -e production
