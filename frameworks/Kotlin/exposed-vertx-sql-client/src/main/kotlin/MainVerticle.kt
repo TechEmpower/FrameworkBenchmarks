@@ -78,8 +78,7 @@ class MainVerticle(val exposedDatabase: Database?) : CoroutineVerticle(), Corout
                 cachePreparedStatements = true
                 pipeliningLimit = 256
             })
-            // TODO `validateBatch = false`
-            databaseClient = DatabaseClient(pgConnection, it, PgDatabaseClientConfig(/*validateBatch = false*/))
+            databaseClient = DatabaseClient(pgConnection, it, PgDatabaseClientConfig(validateBatch = false))
         }
 
         setCurrentDate()
@@ -210,8 +209,7 @@ class MainVerticle(val exposedDatabase: Database?) : CoroutineVerticle(), Corout
             val updatedWorlds = worlds.map { it.copy(randomNumber = randomIntBetween1And10000()) }
 
             // Approach 1 from the `vertx-web-kotlinx` portion
-            // TODO `sortedBy { it.id }`
-            databaseClient.executeBatchUpdate(updatedWorlds.map { world ->
+            databaseClient.executeBatchUpdate(updatedWorlds.sortedBy { it.id }.map { world ->
                 buildStatement {
                     WorldTable.update({ WorldTable.id eq world.id }) {
                         it[randomNumber] = world.randomNumber

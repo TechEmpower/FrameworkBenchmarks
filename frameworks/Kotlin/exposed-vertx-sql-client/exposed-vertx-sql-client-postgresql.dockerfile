@@ -1,6 +1,12 @@
 FROM gradle:9.2.1-jdk25
 
 WORKDIR /exposed-vertx-sql-client
+
+# copy the Maven local dependencies into the container for snapshot dependencies
+# First publish with `publishToMavenLocal` and copy the Maven local dependencies into this directory with `cp -r ~/.m2 ./`.
+COPY .m2/repository/com/huanshankeji/exposed-vertx-sql-client-core/0.7.0-SNAPSHOT /root/.m2/repository/com/huanshankeji/exposed-vertx-sql-client-core/0.7.0-SNAPSHOT
+COPY .m2/repository/com/huanshankeji/exposed-vertx-sql-client-postgresql/0.7.0-SNAPSHOT /root/.m2/repository/com/huanshankeji/exposed-vertx-sql-client-postgresql/0.7.0-SNAPSHOT
+
 COPY build.gradle.kts build.gradle.kts
 COPY settings.gradle.kts settings.gradle.kts
 COPY gradle.properties gradle.properties

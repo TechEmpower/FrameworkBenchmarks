@@ -10,12 +10,14 @@ plugins {
 }
 
 repositories {
+    // TODO comment out
+    mavenLocal() // for snapshot dependencies
     mavenCentral()
 }
 
 val vertxVersion = "5.0.5"
 val kotlinxSerializationVersion = "1.9.0"
-val exposedVertxSqlClientVersion = "0.6.0"
+val exposedVertxSqlClientVersion = "0.7.0-SNAPSHOT" // TODO use a stable version
 dependencies {
     implementation(platform("io.vertx:vertx-stack-depchain:$vertxVersion"))
     implementation("io.vertx:vertx-web")

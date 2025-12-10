@@ -6,7 +6,9 @@ import org.jetbrains.exposed.v1.core.dao.id.IdTable
 
 object WorldTable : IdTable<Int>("World") {
     override val id = integer("id").entityId()
-    val randomNumber = integer("randomNumber").default(0)
+
+    // The name is "randomNumber" in "create-postgres.sql" but it's actually "randomnumber" in the test database.
+    val randomNumber = integer("randomnumber").default(0)
 }
 
 object FortuneTable : IdTable<Int>("Fortune") {
