@@ -28,7 +28,7 @@
 
     <ItemGroup>
 
-        <PackageReference Include="GenHTTP.Core" Version="10.2.0" />
+        <PackageReference Include="$(GENHTTP_ENGINE_PACKAGE)" Version="10.2.0" />
 
         <PackageReference Include="GenHTTP.Modules.Webservices" Version="10.2.0" />
 
