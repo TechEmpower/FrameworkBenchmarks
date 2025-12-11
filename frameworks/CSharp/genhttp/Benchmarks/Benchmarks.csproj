@@ -35,12 +35,6 @@
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.0" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0" />
 
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.0" PrivateAssets="all" />
-        
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Model\CompiledModel\" />
     </ItemGroup>
 
 </Project>
