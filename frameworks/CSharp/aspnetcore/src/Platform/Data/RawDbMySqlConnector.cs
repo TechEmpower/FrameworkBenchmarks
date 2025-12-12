@@ -17,16 +17,14 @@ namespace PlatformBenchmarks;
 // If you are changing RawDbMySqlConnector.cs, also consider changing RawDbNpgsql.cs.
 public sealed class RawDb
 {
-    private readonly ConcurrentRandom _random;
     private readonly string _connectionString;
     private readonly MemoryCache _cache
         = new(new MemoryCacheOptions { ExpirationScanFrequency = TimeSpan.FromMinutes(60) });
 
     private readonly MySqlDataSource _dataSource;
 
-    public RawDb(ConcurrentRandom random, AppSettings appSettings)
+    public RawDb(AppSettings appSettings)
     {
-        _random = random;
         _connectionString = appSettings.ConnectionString;
         _dataSource = new MySqlDataSource(appSettings.ConnectionString);
     }
@@ -46,10 +44,10 @@ public sealed class RawDb
         var result = new CachedWorld[count];
         var cacheKeys = _cacheKeys;
         var cache = _cache;
-        var random = _random;
+        
         for (var i = 0; i < result.Length; i++)
         {
-            var id = random.Next(1, 10001);
+            var id = Random.Shared.Next(1, 10001);
             var key = cacheKeys[id];
             if (cache.TryGetValue(key, out var cached))
             {
@@ -80,7 +78,7 @@ public sealed class RawDb
             {
                 result[i] = await rawdb._cache.GetOrCreateAsync(key, create);
 
-                id = rawdb._random.Next(1, 10001);
+                id = Random.Shared.Next(1, 10001);
                 idParameter.Value = id;
                 key = cacheKeys[id];
             }
@@ -117,24 +115,18 @@ public sealed class RawDb
 
         using var connection = await _dataSource.OpenConnectionAsync();
 
-        using var batch = new MySqlBatch(connection);
-
-        for (var i = 0; i < count; i++)
+        // It is not acceptable to execute multiple SELECTs within a single complex query.
+        // It is not acceptable to retrieve all required rows using a SELECT ... WHERE id IN (...) clause.
+        // Pipelining of network traffic between the application and database is permitted.
+        
+        var (queryCmd, queryParameter) = await CreateReadCommandAsync(connection);
+        using (queryCmd)
         {
-            batch.BatchCommands.Add(new MySqlBatchCommand()
+            for (var i = 0; i < results.Length; i++)
             {
-                CommandText = "SELECT id, randomnumber FROM world WHERE id = @id",
-                Parameters = { new MySqlParameter("@id", _random.Next(1, 10001)) }
-            });
-        }
-
-        using var reader = await batch.ExecuteReaderAsync();
-
-        for (var i = 0; i < count; i++)
-        {
-            await reader.ReadAsync();
-            results[i] = new World { Id = reader.GetInt32(0), RandomNumber = reader.GetInt32(1) };
-            await reader.NextResultAsync();
+                queryParameter.Value = Random.Shared.Next(1, 10001);
+                results[i] = await ReadSingleRow(queryCmd);
+            }
         }
 
         return results;
@@ -144,23 +136,34 @@ public sealed class RawDb
     {
         var results = new World[count];
 
+        var ids = new int[count];
+        for (var i = 0; i < count; i++)
+        {
+            ids[i] = Random.Shared.Next(1, 10001);
+        }
+        Array.Sort(ids);
+
         using var connection = await _dataSource.OpenConnectionAsync();
 
+        // Each row must be selected randomly using one query in the same fashion as the single database query test
+        // Use of IN clauses or similar means to consolidate multiple queries into one operation is not permitted.
+        // Similarly, use of a batch or multiple SELECTs within a single statement are not permitted
         var (queryCmd, queryParameter) = await CreateReadCommandAsync(connection);
         using (queryCmd)
         {
             for (var i = 0; i < results.Length; i++)
             {
+                queryParameter.Value = ids[i];
                 results[i] = await ReadSingleRow(queryCmd);
-                queryParameter.Value = _random.Next(1, 10001);
             }
         }
 
+        // MySql doesn't have the unnest function like PostgreSQL, so we have to do a batch update instead
         using (var updateCmd = new MySqlCommand(BatchUpdateString.Query(count), connection))
         {
             for (var i = 0; i < results.Length; i++)
             {
-                var randomNumber = _random.Next(1, 10001);
+                var randomNumber = Random.Shared.Next(1, 10001);
 
                 updateCmd.Parameters.AddWithValue($"@Id_{i}", results[i].Id);
                 updateCmd.Parameters.AddWithValue($"@Random_{i}", randomNumber);
@@ -204,7 +207,7 @@ public sealed class RawDb
     private async Task<(MySqlCommand readCmd, MySqlParameter idParameter)> CreateReadCommandAsync(MySqlConnection connection)
     {
         var cmd = new MySqlCommand("SELECT id, randomnumber FROM world WHERE id = @Id", connection);
-        var parameter = new MySqlParameter("@Id", _random.Next(1, 10001));
+        var parameter = new MySqlParameter("@Id", Random.Shared.Next(1, 10001));
 
         cmd.Parameters.Add(parameter);
 

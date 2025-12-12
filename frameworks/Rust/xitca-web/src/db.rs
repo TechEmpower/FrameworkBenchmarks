@@ -1,26 +1,24 @@
 #[path = "./db_util.rs"]
 mod db_util;
 
-use core::cell::RefCell;
-
-use xitca_postgres::{Execute, iter::AsyncLendingIterator, pipeline::Pipeline, pool::Pool};
+use xitca_postgres::{Execute, iter::AsyncLendingIterator, pool::Pool};
 
 use super::{
     ser::{Fortune, Fortunes, World},
-    util::{DB_URL, HandleResult},
+    util::{DB_URL, HandleResult, Rand},
 };
 
-use db_util::{FORTUNE_STMT, Shared, UPDATE_BATCH_STMT, WORLD_STMT, not_found};
+use db_util::{FORTUNE_STMT, UPDATE_STMT, WORLD_STMT, not_found};
 
 pub struct Client {
     pool: Pool,
-    shared: RefCell<Shared>,
+    rng: core::cell::RefCell<Rand>,
 }
 
 pub async fn create() -> HandleResult<Client> {
     Ok(Client {
         pool: Pool::builder(DB_URL).capacity(1).build()?,
-        shared: Default::default(),
+        rng: Default::default(),
     })
 }
 
@@ -28,29 +26,31 @@ impl Client {
     pub async fn get_world(&self) -> HandleResult<World> {
         let mut conn = self.pool.get().await?;
         let stmt = WORLD_STMT.execute(&mut conn).await?;
-        let id = self.shared.borrow_mut().0.gen_id();
+        let id = self.rng.borrow_mut().gen_id();
         let mut res = stmt.bind([id]).query(&conn.consume()).await?;
         let row = res.try_next().await?.ok_or_else(not_found)?;
         Ok(World::new(row.get(0), row.get(1)))
     }
 
     pub async fn get_worlds(&self, num: u16) -> HandleResult<Vec<World>> {
-        let len = num as usize;
-
         let mut conn = self.pool.get().await?;
         let stmt = WORLD_STMT.execute(&mut conn).await?;
 
-        let mut res = {
-            let (ref mut rng, ref mut buf) = *self.shared.borrow_mut();
-            let mut pipe = Pipeline::with_capacity_from_buf(len, buf);
-            (0..num).try_for_each(|_| stmt.bind([rng.gen_id()]).query(&mut pipe))?;
-            pipe.query(&conn.consume())?
-        };
+        let get = self
+            .rng
+            .borrow_mut()
+            .gen_multi()
+            .take(num as _)
+            .map(|id| stmt.bind([id]).query(&conn))
+            .collect::<Vec<_>>();
 
-        let mut worlds = Vec::with_capacity(len);
+        drop(conn);
 
-        while let Some(mut item) = res.try_next().await? {
-            let row = item.try_next().await?.ok_or_else(not_found)?;
+        let mut worlds = Vec::with_capacity(num as _);
+
+        for get in get {
+            let mut res = get.await?;
+            let row = res.try_next().await?.ok_or_else(not_found)?;
             worlds.push(World::new(row.get(0), row.get(1)));
         }
 
@@ -58,37 +58,35 @@ impl Client {
     }
 
     pub async fn update(&self, num: u16) -> HandleResult<Vec<World>> {
-        let len = num as usize;
-
         let mut conn = self.pool.get().await?;
         let world_stmt = WORLD_STMT.execute(&mut conn).await?;
-        let update_stmt = UPDATE_BATCH_STMT.execute(&mut conn).await?;
+        let update_stmt = UPDATE_STMT.execute(&mut conn).await?;
 
-        let (mut res, worlds) = {
-            let (ref mut rng, ref mut buf) = *self.shared.borrow_mut();
-            let mut pipe = Pipeline::with_capacity_from_buf(len + 1, buf);
+        let (get, update, worlds) = {
+            let mut rng = self.rng.borrow_mut();
+            let mut ids = rng.gen_multi().take(num as _).collect::<Vec<_>>();
+            ids.sort();
 
-            let (mut params, worlds) = core::iter::repeat_with(|| {
-                let id = rng.gen_id();
-                let rand = rng.gen_id();
-                world_stmt.bind([id]).query(&mut pipe)?;
-                HandleResult::Ok(((id, rand), World::new(id, rand)))
-            })
-            .take(len)
-            .collect::<Result<(Vec<_>, Vec<_>), _>>()?;
+            let (get, rngs, worlds) = ids
+                .iter()
+                .cloned()
+                .zip(rng.gen_multi())
+                .map(|(id, rand)| {
+                    let get = world_stmt.bind([id]).query(&conn);
+                    (get, rand, World::new(id, rand))
+                })
+                .collect::<(Vec<_>, Vec<_>, Vec<_>)>();
 
-            params.sort();
-            let (ids, rngs) = params.into_iter().collect::<(Vec<_>, Vec<_>)>();
+            let update = update_stmt.bind([&ids, &rngs]).query(&conn.consume());
 
-            update_stmt.bind([&ids, &rngs]).query(&mut pipe)?;
-            (pipe.query(&conn.consume())?, worlds)
+            (get, update, worlds)
         };
 
-        while let Some(mut item) = res.try_next().await? {
-            while let Some(row) = item.try_next().await? {
-                let _rand = row.get::<i32>(1);
-            }
+        for fut in get {
+            let _rand = fut.await?.try_next().await?.ok_or_else(not_found)?.get::<i32>(1);
         }
+
+        update.await?;
 
         Ok(worlds)
     }

@@ -1,13 +1,16 @@
+#[global_allocator]
+static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
+
 mod ser;
 mod util;
 
-#[cfg(feature = "diesel")]
-mod db_diesel;
-#[cfg(feature = "diesel")]
-mod schema;
+#[cfg(all(feature = "diesel", not(feature = "toasty")))]
+#[path = "./db_diesel.rs"]
+mod orm;
 
-#[cfg(feature = "toasty")]
-mod db_toasty;
+#[cfg(all(feature = "toasty", not(feature = "diesel")))]
+#[path = "./db_toasty.rs"]
+mod orm;
 
 use ser::{Num, World};
 use util::{HandleResult, SERVER_HEADER_VALUE};
@@ -18,14 +21,11 @@ use xitca_web::{
     http::{WebResponse, header::SERVER},
 };
 
-#[cfg(feature = "diesel")]
-use db_diesel::{Pool, create};
-#[cfg(feature = "toasty")]
-use db_toasty::{Pool, create};
+use orm::Pool;
 
 fn main() -> std::io::Result<()> {
     App::new()
-        .with_async_state(create)
+        .with_async_state(Pool::create)
         .at_typed(db)
         .at_typed(fortunes)
         .at_typed(queries)
@@ -50,7 +50,6 @@ async fn db(StateRef(pool): StateRef<'_, Pool>) -> HandleResult<Json<World>> {
 
 #[route("/fortunes", method = get)]
 async fn fortunes(StateRef(pool): StateRef<'_, Pool>) -> HandleResult<Html<String>> {
-    use sailfish::TemplateOnce;
     let html = pool.tell_fortune().await?.render_once()?;
     Ok(Html(html))
 }

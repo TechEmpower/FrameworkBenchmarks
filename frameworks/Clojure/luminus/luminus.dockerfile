@@ -12,4 +12,4 @@ COPY --from=lein /luminus/target/hello.jar app.jar
 
 EXPOSE 8080
 
-CMD ["java", "-server", "-XX:+UseParallelGC", "-jar", "app.jar"]
+CMD ["java", "-server", "-XX:+UseParallelGC", "-XX:MaxRAMPercentage=70", "-Dclojure.compiler.direct-linking=true", "-jar", "app.jar"]

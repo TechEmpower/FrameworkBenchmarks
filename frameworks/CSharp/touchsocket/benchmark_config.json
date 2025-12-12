@@ -55,7 +55,7 @@
         "webserver": "touchsocket",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "touchsocket.http31",
+        "display_name": "touchsocket.http [v3.1]",
         "notes": "",
         "versus": "aspnetcore"
       },
@@ -74,7 +74,7 @@
         "webserver": "touchsocket",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "touchsocket.webapi31",
+        "display_name": "touchsocket.webapi [v3.1]",
         "notes": "",
         "versus": "aspnetcore-mvc"
       },
@@ -93,7 +93,7 @@
         "webserver": "touchsocket",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "touchsocket.httpplatform",
+        "display_name": "touchsocket.http [Platform]",
         "notes": "High-performance custom pipeline-based implementation variant.",
         "versus": "aspnetcore"
       }
