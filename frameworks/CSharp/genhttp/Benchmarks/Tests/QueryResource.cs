@@ -29,20 +29,13 @@ public sealed class QueryResource
 
         var result = new List<World>(count);
 
-        var context = Database.NoTrackingPool.Rent();
+        using var context = DatabaseContext.CreateNoTracking();
 
-        try
+        for (var _ = 0; _ < count; _++)
         {
-            for (var _ = 0; _ < count; _++)
-            {
-                var id = Random.Next(1, 10001);
+            var id = Random.Next(1, 10001);
 
-                result.Add(await context.World.FirstOrDefaultAsync(w => w.Id == id).ConfigureAwait(false));
-            }
-        }
-        finally
-        {
-            Database.NoTrackingPool.Return(context);
+            result.Add(await context.World.FirstOrDefaultAsync(w => w.Id == id).ConfigureAwait(false));
         }
 
         return result;
