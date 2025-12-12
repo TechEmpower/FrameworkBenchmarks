@@ -43,7 +43,7 @@ import kotlin.time.Clock
 /**
  * @param exposedDatabase `null` indicates that the database is not needed in the test.
  */
-class MainVerticle(val exposedDatabase: Database?) : CoroutineVerticle(), CoroutineRouterSupport {
+class MainVerticle(val exposedDatabase: Database) : CoroutineVerticle(), CoroutineRouterSupport {
     object HttpHeaderValues {
         val vertxWeb = HttpHeaders.createOptimized("Vert.x-Web")
         val applicationJson = HttpHeaders.createOptimized("application/json")
@@ -72,17 +72,13 @@ class MainVerticle(val exposedDatabase: Database?) : CoroutineVerticle(), Corout
         }
     }
 
-    val hasDb get() = exposedDatabase !== null
-
     override suspend fun start() {
-        exposedDatabase?.let {
-            // Parameters are copied from the "vertx-web" and "vertx" portions.
-            val pgConnection = createPgConnection(vertx, connectionConfig, {
-                cachePreparedStatements = true
-                pipeliningLimit = 256
-            })
-            databaseClient = DatabaseClient(pgConnection, it, PgDatabaseClientConfig(validateBatch = false))
-        }
+        // Parameters are copied from the "vertx-web" and "vertx" portions.
+        val pgConnection = createPgConnection(vertx, connectionConfig, {
+            cachePreparedStatements = true
+            pipeliningLimit = 256
+        })
+        databaseClient = DatabaseClient(pgConnection, exposedDatabase, PgDatabaseClientConfig(validateBatch = false))
 
         setCurrentDate()
         vertx.setPeriodic(1000) { setCurrentDate() }

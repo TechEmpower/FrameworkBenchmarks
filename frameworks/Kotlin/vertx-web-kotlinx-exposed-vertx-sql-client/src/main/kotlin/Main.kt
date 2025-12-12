@@ -13,9 +13,6 @@ val numProcessors = CpuCoreSensor.availableProcessors()
 
 val logger = Logger.getLogger("Vert.x-Web Kotlinx Benchmark")
 suspend fun main(args: Array<String>) {
-    val hasDb = args.getOrNull(0)?.toBooleanStrictOrNull()
-        ?: throw IllegalArgumentException("Specify the first `hasDb` Boolean argument")
-
     logger.info("$SERVER_NAME starting...")
     val vertx = Vertx.vertx(
         vertxOptionsOf(
@@ -26,7 +23,7 @@ suspend fun main(args: Array<String>) {
         logger.info("Vertx exception caught: $it")
         it.printStackTrace()
     }
-    val exposedDatabase = if (hasDb) connectionConfig.exposedDatabaseConnectPostgresql() else null
+    val exposedDatabase = connectionConfig.exposedDatabaseConnectPostgresql()
     vertx.deployVerticle(
         Supplier { MainVerticle(exposedDatabase) },
         deploymentOptionsOf(instances = numProcessors)

@@ -36,4 +36,4 @@ CMD export JAVA_OPTS=" \
     -Dio.netty.buffer.checkAccessible=false \
     -Dio.netty.iouring.ringSize=16384 \
     " && \
-    build/install/vertx-web-kotlinx-exposed-vertx-sql-client-benchmark/bin/vertx-web-kotlinx-exposed-vertx-sql-client-benchmark true
+    build/install/vertx-web-kotlinx-exposed-vertx-sql-client-benchmark/bin/vertx-web-kotlinx-exposed-vertx-sql-client-benchmark
