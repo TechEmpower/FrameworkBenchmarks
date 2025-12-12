@@ -1,6 +1,6 @@
 FROM gradle:9.2.1-jdk25
 
-WORKDIR /exposed-vertx-sql-client
+WORKDIR /vertx-web-kotlinx-exposed-vertx-sql-client
 
 # copy the Maven local dependencies into the container for snapshot dependencies
 # First publish with `publishToMavenLocal` and copy the Maven local dependencies into this directory with `cp -r ~/.m2 ./`.
@@ -36,4 +36,4 @@ CMD export JAVA_OPTS=" \
     -Dio.netty.buffer.checkAccessible=false \
     -Dio.netty.iouring.ringSize=16384 \
     " && \
-    build/install/exposed-vertx-sql-client-benchmark/bin/exposed-vertx-sql-client-benchmark true
+    build/install/vertx-web-kotlinx-exposed-vertx-sql-client-benchmark/bin/vertx-web-kotlinx-exposed-vertx-sql-client-benchmark true

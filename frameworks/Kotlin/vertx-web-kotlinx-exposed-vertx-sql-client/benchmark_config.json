@@ -1,5 +1,5 @@
 {
-  "framework": "exposed-vertx-sql-client",
+  "framework": "vertx-web-kotlinx-exposed-vertx-sql-client",
   "tests": [
     {
       "postgresql": {
@@ -19,7 +19,7 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "exposed-vertx-sql-client-postgresql",
+        "display_name": "vertx-web-kotlinx-exposed-vertx-sql-client-postgresql",
         "notes": "",
         "versus": "vertx-web-kotlinx-postgresql"
       }
