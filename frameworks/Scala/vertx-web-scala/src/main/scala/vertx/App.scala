@@ -102,7 +102,7 @@ class App extends ScalaVerticle {
 
   private def handleDb(request: HttpServerRequest): Unit =
     client
-      .preparedQuery("SELECT id, randomnumber from WORLD where id=$1")
+      .preparedQuery("SELECT id, randomnumber FROM world WHERE id = $1")
       .execute(
         Tuple.of(App.randomWorld(), Nil: _*),
         (ar: AsyncResult[RowSet[Row]]) => {
@@ -128,7 +128,7 @@ class App extends ScalaVerticle {
     var failed = false
     while (i < queries) {
       client
-        .preparedQuery("SELECT id, randomnumber from WORLD where id=$1")
+        .preparedQuery("SELECT id, randomnumber FROM world WHERE id = $1")
         .execute(
           Tuple.of(App.randomWorld(), Nil: _*),
           (ar: AsyncResult[RowSet[Row]]) => {
@@ -159,7 +159,7 @@ class App extends ScalaVerticle {
 
       val batch = worlds.map(world => Tuple.of(world.randomNumber, world.id)).toList.asJava
       conn
-        .preparedQuery("UPDATE world SET randomnumber=$1 WHERE id=$2")
+        .preparedQuery("UPDATE world SET randomnumber = $1 WHERE id = $2")
         .executeBatch(
           batch,
           (ar: AsyncResult[RowSet[Row]]) => {
@@ -184,7 +184,7 @@ class App extends ScalaVerticle {
       val id = App.randomWorld()
       val index = i
       client
-        .preparedQuery("SELECT id, randomnumber from WORLD where id=$1")
+        .preparedQuery("SELECT id, randomnumber FROM world WHERE id = $1")
         .execute(
           Tuple.of(id, Nil: _*),
           (ar2: AsyncResult[RowSet[Row]]) => {
@@ -206,7 +206,7 @@ class App extends ScalaVerticle {
 
   private def handleFortunes(request: HttpServerRequest): Unit =
     client
-      .preparedQuery("SELECT id, message from FORTUNE")
+      .preparedQuery("SELECT id, message FROM fortune")
       .execute(
         (ar: AsyncResult[RowSet[Row]]) => {
           val response = request.response
