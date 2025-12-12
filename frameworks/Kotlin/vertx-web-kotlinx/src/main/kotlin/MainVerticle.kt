@@ -34,6 +34,7 @@ import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.io.encodeToSink
 import java.net.SocketException
+import kotlin.random.Random
 import kotlin.time.Clock
 
 class MainVerticle(val hasDb: Boolean) : CoroutineVerticle(), CoroutineRouterSupport {
@@ -52,6 +53,8 @@ class MainVerticle(val hasDb: Boolean) : CoroutineVerticle(), CoroutineRouterSup
     lateinit var selectWorldQuery: PreparedQuery<RowSet<Row>>
     lateinit var selectFortuneQuery: PreparedQuery<RowSet<Row>>
     lateinit var updateWorldQuery: PreparedQuery<RowSet<Row>>
+
+    val random = Random(0)
 
     fun setCurrentDate() {
         date = DateTimeComponents.Formats.RFC_1123.format {
@@ -159,7 +162,7 @@ class MainVerticle(val hasDb: Boolean) : CoroutineVerticle(), CoroutineRouterSup
         }
 
     suspend fun selectRandomWorld() =
-        selectWorldQuery.execute(Tuple.of(randomIntBetween1And10000())).coAwait()
+        selectWorldQuery.execute(Tuple.of(random.nextIntBetween1And10000())).coAwait()
             .single().toWorld()
 
     suspend fun selectRandomWorlds(queries: Int): List<World> =
@@ -240,7 +243,7 @@ class MainVerticle(val hasDb: Boolean) : CoroutineVerticle(), CoroutineRouterSup
         get("/updates").jsonResponseCoHandler(Serializers.worlds) {
             val queries = it.request().getQueries()
             val worlds = selectRandomWorlds(queries)
-            val updatedWorlds = worlds.map { it.copy(randomNumber = randomIntBetween1And10000()) }
+            val updatedWorlds = worlds.map { it.copy(randomNumber = random.nextIntBetween1And10000()) }
 
             // Approach 1
             // The updated worlds need to be sorted first to avoid deadlocks.
