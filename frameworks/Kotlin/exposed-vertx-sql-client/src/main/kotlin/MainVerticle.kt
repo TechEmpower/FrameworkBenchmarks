@@ -37,6 +37,7 @@ import org.jetbrains.exposed.v1.core.statements.buildStatement
 import org.jetbrains.exposed.v1.jdbc.Database
 import org.jetbrains.exposed.v1.jdbc.select
 import java.net.SocketException
+import kotlin.random.Random
 import kotlin.time.Clock
 
 /**
@@ -61,6 +62,8 @@ class MainVerticle(val exposedDatabase: Database?) : CoroutineVerticle(), Corout
     lateinit var selectFortuneQuery: PreparedQuery<RowSet<Row>>
     lateinit var updateWorldQuery: PreparedQuery<RowSet<Row>>
     */
+
+    val random = Random(0)
 
     fun setCurrentDate() {
         date = DateTimeComponents.Formats.RFC_1123.format {
@@ -145,7 +148,7 @@ class MainVerticle(val exposedDatabase: Database?) : CoroutineVerticle(), Corout
 
 
     suspend fun selectRandomWorld() =
-        databaseClient.executeQuery(selectWorldWithIdQuery(randomIntBetween1And10000()))
+        databaseClient.executeQuery(selectWorldWithIdQuery(random.nextIntBetween1And10000()))
             .single().toWorld()
 
     suspend fun selectRandomWorlds(queries: Int): List<World> =
@@ -206,7 +209,7 @@ class MainVerticle(val exposedDatabase: Database?) : CoroutineVerticle(), Corout
         get("/updates").jsonResponseCoHandler(Serializers.worlds) {
             val queries = it.request().getQueries()
             val worlds = selectRandomWorlds(queries)
-            val updatedWorlds = worlds.map { it.copy(randomNumber = randomIntBetween1And10000()) }
+            val updatedWorlds = worlds.map { it.copy(randomNumber = random.nextIntBetween1And10000()) }
 
             // Approach 1 from the `vertx-web-kotlinx` portion
             databaseClient.executeBatchUpdate(updatedWorlds.sortedBy { it.id }.map { world ->
