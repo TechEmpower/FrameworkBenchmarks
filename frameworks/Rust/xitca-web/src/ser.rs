@@ -2,23 +2,22 @@
 
 use std::borrow::Cow;
 
-use serde::{Deserialize, Deserializer, Serialize, Serializer, ser::SerializeStruct};
+use serde_core::{Deserialize, Deserializer, Serialize, Serializer, ser::SerializeStruct};
 use xitca_http::{
     body::Once,
-    bytes::{BufMutWriter, Bytes},
+    bytes::Bytes,
     http::{
         self, IntoResponse as _, RequestExt, StatusCode,
-        const_header_value::{JSON, TEXT_HTML_UTF8, TEXT_UTF8},
+        const_header_value::{TEXT_HTML_UTF8, TEXT_UTF8},
         header::CONTENT_TYPE,
     },
 };
 
-use crate::util::{Error, State};
+use crate::util::Error;
 
 const HELLO: &str = "Hello, World!";
 const HELLO_BYTES: &[u8] = HELLO.as_bytes();
 
-#[cfg_attr(feature = "perf", derive(simd_json_derive::Serialize))]
 #[derive(Clone)]
 pub struct Message {
     message: &'static str,
@@ -33,9 +32,11 @@ impl Message {
 
 pub struct Num(pub u16);
 
-#[cfg_attr(any(feature = "pg-orm", feature = "pg-orm-async"), derive(diesel::Queryable))]
-#[cfg_attr(feature = "perf", derive(simd_json_derive::Serialize))]
+#[cfg_attr(feature = "diesel", derive(diesel::Queryable))]
+#[cfg_attr(feature = "toasty", derive(toasty::Model))]
+#[cfg_attr(feature = "toasty", table = "world")]
 pub struct World {
+    #[cfg_attr(feature = "toasty", key)]
     pub id: i32,
     pub randomnumber: i32,
 }
@@ -47,8 +48,11 @@ impl World {
     }
 }
 
-#[cfg_attr(any(feature = "pg-orm", feature = "pg-orm-async"), derive(diesel::Queryable))]
+#[cfg_attr(feature = "diesel", derive(diesel::Queryable))]
+#[cfg_attr(feature = "toasty", derive(toasty::Model))]
+#[cfg_attr(feature = "toasty", table = "fortune")]
 pub struct Fortune {
+    #[cfg_attr(feature = "toasty", key)]
     pub id: i32,
     pub message: Cow<'static, str>,
 }
@@ -71,8 +75,8 @@ pub struct Fortunes {
 // using the macro does not have any perf cost and this piece of code is expanded manually to speed up compile time of
 // bench to reduce resource usage of bench runner
 #[cfg(feature = "template")]
-impl sailfish::TemplateOnce for Fortunes {
-    fn render_once(self) -> sailfish::RenderResult {
+impl Fortunes {
+    pub fn render_once(self) -> sailfish::RenderResult {
         use sailfish::runtime::{Buffer, Render};
 
         const PREFIX: &str = "<!DOCTYPE html>\n<html>\n<head><title>Fortunes</title></head>\n<body>\n<table>\n<tr><th>id</th><th>message</th></tr>\n";
@@ -92,15 +96,13 @@ impl sailfish::TemplateOnce for Fortunes {
 
         Ok(buf.into_string())
     }
-
-    fn render_once_to(self, _: &mut sailfish::runtime::Buffer) -> Result<(), sailfish::runtime::RenderError> {
-        unimplemented!("")
-    }
 }
 
 impl Fortunes {
     #[inline]
-    pub const fn new(items: Vec<Fortune>) -> Self {
+    pub fn new(mut items: Vec<Fortune>) -> Self {
+        items.push(Fortune::new(0, "Additional fortune added at request time."));
+        items.sort_by(|a, b| a.message.cmp(&b.message));
         Self { items }
     }
 }
@@ -112,7 +114,7 @@ impl<'de> Deserialize<'de> for Num {
     {
         use core::fmt;
 
-        use serde::de::{Error, MapAccess, Visitor};
+        use serde_core::de::{Error, MapAccess, Visitor};
 
         const FIELDS: &[&str] = &["q"];
 
@@ -196,7 +198,8 @@ pub type Request<B> = http::Request<RequestExt<B>>;
 pub type Response = http::Response<Once<Bytes>>;
 
 pub trait IntoResponse: Sized {
-    fn json_response<C>(self, state: &State<C>, val: &impl Serialize) -> Result<Response, Error>;
+    #[cfg(any(feature = "json", feature = "perf-json"))]
+    fn json_response<C>(self, state: &crate::util::State<C>, val: &impl Serialize) -> Result<Response, Error>;
 
     fn text_response(self) -> Result<Response, Error>;
 
@@ -204,11 +207,18 @@ pub trait IntoResponse: Sized {
 }
 
 impl<Ext> IntoResponse for Request<Ext> {
-    fn json_response<C>(self, state: &State<C>, val: &impl Serialize) -> Result<Response, Error> {
+    #[cfg(any(feature = "json", feature = "perf-json"))]
+    fn json_response<C>(self, state: &crate::util::State<C>, val: &impl Serialize) -> Result<Response, Error> {
         let buf = &mut *state.write_buf.borrow_mut();
-        serde_json::to_writer(BufMutWriter(buf), val)?;
+        #[cfg(all(feature = "json", not(feature = "perf-json")))]
+        serde_json::to_writer(xitca_http::bytes::BufMutWriter(buf), val)?;
+
+        #[cfg(all(feature = "perf-json", not(feature = "json")))]
+        sonic_rs::to_writer(xitca_http::bytes::BufMut::writer(&mut *buf), val)?;
+
         let mut res = self.into_response(buf.split().freeze());
-        res.headers_mut().insert(CONTENT_TYPE, JSON);
+        res.headers_mut()
+            .insert(CONTENT_TYPE, xitca_http::http::const_header_value::JSON);
         Ok(res)
     }
 

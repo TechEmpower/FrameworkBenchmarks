@@ -23,6 +23,7 @@
           "database_os": "Linux",
           "display_name": "nim-stdlib",
           "notes": "",
+          "tags": ["broken"],
           "versus": "httpbeast"
         }
       }

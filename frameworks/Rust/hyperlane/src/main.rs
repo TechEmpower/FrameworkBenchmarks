@@ -34,10 +34,7 @@ async fn main() {
     init_db().await;
 
     let config: ServerConfig = ServerConfig::new().await;
-    config.host("0.0.0.0").await;
     config.port(8080).await;
-    config.buffer(256).await;
-    config.disable_linger().await;
     config.disable_nodelay().await;
 
     let server: Server = Server::from(config).await;
@@ -50,6 +47,6 @@ async fn main() {
     server.route::<FortunesRoute>("/fortunes").await;
     server.route::<UpdateRoute>("/upda").await;
 
-    let server_hook: ServerControlHook = server.run().await.unwrap_or_default();
+    let server_hook: ServerControlHook = server.run().await.unwrap();
     server_hook.wait().await;
 }

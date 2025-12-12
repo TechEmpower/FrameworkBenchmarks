@@ -6,10 +6,10 @@ COPY resources resources
 COPY src src
 RUN lein uberjar
 
-FROM openjdk:25-jdk-slim
+FROM amazoncorretto:25
 WORKDIR /luminus
 COPY --from=lein /luminus/target/hello.jar app.jar
 
 EXPOSE 8080
 
-CMD ["java", "-server", "-XX:+UseParallelGC", "-jar", "app.jar"]
+CMD ["java", "-server", "-XX:+UseParallelGC", "-XX:MaxRAMPercentage=70", "-Dclojure.compiler.direct-linking=true", "-jar", "app.jar"]

@@ -2,7 +2,7 @@ version: 2.0
 shards:
   action-controller:
     git: https://github.com/spider-gazelle/action-controller.git
-    version: 7.4.3
+    version: 7.6.1
 
   active-model:
     git: https://github.com/spider-gazelle/active-model.git
@@ -10,7 +10,7 @@ shards:
 
   backtracer:
     git: https://github.com/sija/backtracer.cr.git
-    version: 1.2.2
+    version: 1.2.4
 
   db:
     git: https://github.com/crystal-lang/crystal-db.git
@@ -18,7 +18,7 @@ shards:
 
   eventbus:
     git: https://github.com/spider-gazelle/eventbus.git
-    version: 1.0.0+git.commit.af63536d718348885a553dc4aa6debccc2946289
+    version: 1.0.1+git.commit.a707ac06aba16ba6070ff4972acfd839f1f05e15
 
   exception_page:
     git: https://github.com/crystal-loot/exception_page.git
@@ -30,7 +30,7 @@ shards:
 
   hot_topic:
     git: https://github.com/jgaskins/hot_topic.git
-    version: 0.1.0+git.commit.3c901e77b6e000930398738260a2944b6f5785dc
+    version: 0.1.0+git.commit.4eafc046ed4d98bbab7a4534da57e163ea16b6c6
 
   http-params-serializable:
     git: https://github.com/place-labs/http-params-serializable.git
@@ -38,7 +38,7 @@ shards:
 
   json-schema:
     git: https://github.com/spider-gazelle/json-schema.git
-    version: 1.3.1
+    version: 1.3.2
 
   kilt:
     git: https://github.com/jeromegn/kilt.git
@@ -46,21 +46,13 @@ shards:
 
   lucky_router:
     git: https://github.com/luckyframework/lucky_router.git
-    version: 0.6.0
+    version: 0.6.1
 
   pg:
     git: https://github.com/will/crystal-pg.git
-    version: 0.28.0
+    version: 0.29.0
 
   pg-orm:
     git: https://github.com/spider-gazelle/pg-orm.git
-    version: 1.1.2+git.commit.9b340ee269cd4a10ed6c5b51235cbaf45fc380e1
-
-  pool:
-    git: https://github.com/ysbaddaden/pool.git
-    version: 0.2.4
-
-  redis:
-    git: https://github.com/stefanwille/crystal-redis.git
-    version: 2.9.1
+    version: 2.1.0
 

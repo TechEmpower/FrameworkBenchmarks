@@ -1,4 +1,4 @@
-FROM php:8.4-cli
+FROM php:8.5-cli
 
 COPY --from=ghcr.io/roadrunner-server/roadrunner:2025.1 --link /usr/bin/rr /usr/local/bin/rr
 COPY --from=mlocati/php-extension-installer --link /usr/bin/install-php-extensions /usr/local/bin/
@@ -6,7 +6,6 @@ COPY --from=composer/composer:latest-bin --link /composer /usr/local/bin/compose
 
 RUN install-php-extensions \
     intl \
-    opcache \
     pdo_pgsql \
     sockets \
     zip > /dev/null

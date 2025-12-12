@@ -6,6 +6,7 @@ require_relative 'pg_db'
 require_relative 'config/auto_tune'
 require 'rack'
 require 'json'
+require 'erb'
 
 if RUBY_PLATFORM == 'java'
   DEFAULT_DATABASE_URL = 'jdbc:postgresql://tfb-database/hello_world?user=benchmarkdbuser&password=benchmarkdbpass'
@@ -42,8 +43,12 @@ class HelloWorld
   </html>'
 
   def initialize
-    if defined?(Puma) && (threads = Puma.cli_config.options.fetch(:max_threads)) > 1
-      max_connections = threads
+    if defined?(Puma)
+      max_connections = ENV.fetch('MAX_THREADS')
+    elsif defined?(Itsi)
+      require_relative 'config/auto_tune'
+      _num_workers, num_threads = auto_tune
+      max_connections = num_threads
     else
       max_connections = 512
     end

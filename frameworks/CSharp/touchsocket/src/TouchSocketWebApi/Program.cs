@@ -1,9 +1,10 @@
+using System.Buffers;
+using System.IO.Pipelines;
 using System.Text;
 using System.Text.Json.Serialization;
 using TouchSocket.Core;
 using TouchSocket.Http;
 using TouchSocket.Rpc;
-using TouchSocket.Sockets;
 using TouchSocket.WebApi;
 using HttpContent = TouchSocket.Http.HttpContent;
 
@@ -19,6 +20,28 @@ public class Program
         {
             config.SetListenIPHosts(8080)
             .SetMaxCount(1000000)
+            .SetTransportOption(options =>
+            {
+                options.BufferOnDemand = false;
+
+                options.ReceivePipeOptions = new PipeOptions(
+                pool: MemoryPool<byte>.Shared,
+                readerScheduler: PipeScheduler.ThreadPool,
+                writerScheduler: PipeScheduler.ThreadPool,
+                pauseWriterThreshold: 1024 * 1024,
+                resumeWriterThreshold: 1024 * 512,
+                minimumSegmentSize: -1,
+                useSynchronizationContext: false);
+
+                options.SendPipeOptions = new PipeOptions(
+              pool: MemoryPool<byte>.Shared,
+              readerScheduler: PipeScheduler.ThreadPool,
+              writerScheduler: PipeScheduler.ThreadPool,
+              pauseWriterThreshold: 64 * 1024,
+              resumeWriterThreshold: 32 * 1024,
+              minimumSegmentSize: -1,
+              useSynchronizationContext: false);
+            })
            .ConfigureContainer(a =>
            {
                a.AddConsoleLogger();
@@ -45,7 +68,7 @@ public class Program
            });
         });
 
-        var host = builder.Build();
+        IHost host = builder.Build();
         host.Run();
     }
 }
@@ -60,7 +83,7 @@ public partial class ApiServer : SingletonRpcServer
     [WebApi(Method = HttpMethodType.Get)]
     public async Task Plaintext(IWebApiCallContext callContext)
     {
-        var response = callContext.HttpContext.Response;
+        HttpResponse response = callContext.HttpContext.Response;
         response.SetStatus(200, "ok");
         response.Content = m_contentPlaintext;
         await response.AnswerAsync().ConfigureAwait(false);

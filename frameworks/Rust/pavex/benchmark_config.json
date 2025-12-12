@@ -18,6 +18,7 @@
         "database_os": "Linux",
         "display_name": "pavex",
         "notes": "",
+        "tags": ["broken"],
         "versus": "None"
       }
     }

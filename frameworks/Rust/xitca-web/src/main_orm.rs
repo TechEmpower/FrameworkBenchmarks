@@ -1,25 +1,31 @@
-mod db_diesel_async;
-mod schema;
+#[global_allocator]
+static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
+
 mod ser;
 mod util;
 
+#[cfg(all(feature = "diesel", not(feature = "toasty")))]
+#[path = "./db_diesel.rs"]
+mod orm;
+
+#[cfg(all(feature = "toasty", not(feature = "diesel")))]
+#[path = "./db_toasty.rs"]
+mod orm;
+
+use ser::{Num, World};
+use util::{HandleResult, SERVER_HEADER_VALUE};
 use xitca_web::{
     App,
     codegen::route,
-    handler::{html::Html, json::Json, query::Query, state::StateRef, text::Text},
+    handler::{html::Html, json::Json, query::Query, state::StateRef},
     http::{WebResponse, header::SERVER},
-    route::get,
 };
 
-use db_diesel_async::Pool;
-use ser::{Num, World};
-use util::{HandleResult, SERVER_HEADER_VALUE};
+use orm::Pool;
 
 fn main() -> std::io::Result<()> {
     App::new()
-        .with_async_state(db_diesel_async::create)
-        .at("/plaintext", get(Text("Hello, World!")))
-        .at("/json", get(Json(ser::Message::new())))
+        .with_async_state(Pool::create)
         .at_typed(db)
         .at_typed(fortunes)
         .at_typed(queries)
@@ -44,7 +50,6 @@ async fn db(StateRef(pool): StateRef<'_, Pool>) -> HandleResult<Json<World>> {
 
 #[route("/fortunes", method = get)]
 async fn fortunes(StateRef(pool): StateRef<'_, Pool>) -> HandleResult<Html<String>> {
-    use sailfish::TemplateOnce;
     let html = pool.tell_fortune().await?.render_once()?;
     Ok(Html(html))
 }

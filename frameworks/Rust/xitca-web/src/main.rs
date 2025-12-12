@@ -47,7 +47,6 @@ fn main() -> std::io::Result<()> {
             "/fortunes",
             get(fn_service(async |ctx: Ctx| {
                 let (req, state) = ctx.into_parts();
-                use sailfish::TemplateOnce;
                 let fortunes = state.client.tell_fortune().await?.render_once()?;
                 req.html_response(fortunes)
             })),

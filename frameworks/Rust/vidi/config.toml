@@ -1,0 +1,30 @@
+[framework]
+name = "vidi"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+approach = "Realistic"
+classification = "Micro"
+database = "Postgres"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "None"
+webserver = "vidi"
+versus = ""
+
+[pg]
+urls.db = "/db"
+urls.query = "/queries?q="
+urls.update = "/updates?q="
+urls.fortune = "/fortunes"
+approach = "Realistic"
+classification = "Fullstack"
+database = "Postgres"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "None"
+webserver = "vidi"
+versus = ""

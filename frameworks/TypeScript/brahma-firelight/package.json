@@ -14,6 +14,6 @@
     "typescript": "^5"
   },
   "dependencies": {
-    "brahma-firelight": "1.5.16"
+    "brahma-firelight": "^1.5.20"
   }
 }

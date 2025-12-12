@@ -31,6 +31,12 @@ http://localhost:8080/query?queries=
 
 http://localhost:8080/update?queries=
 
-### FORTUNES
 
-http://localhost:8080/fortunes
+Testing:
+
+```shell
+../../../tfb \
+    --mode benchmark \
+    --test vertx-web-kotlin-dsljson \
+    --type json
+```
