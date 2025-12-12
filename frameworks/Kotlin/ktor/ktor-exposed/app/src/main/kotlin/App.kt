@@ -22,8 +22,8 @@ import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.Transaction
 import org.jetbrains.exposed.sql.statements.BatchUpdateStatement
-import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.TransactionManager
+import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import java.util.concurrent.ThreadLocalRandom
 
 @Serializable
@@ -129,13 +129,14 @@ fun Application.module(exposedMode: ExposedMode) {
         }
 
         get("/fortunes") {
-            val result = withDatabaseTransaction {
+            val result = mutableListOf<Fortune>()
+            withDatabaseTransaction {
                 when (exposedMode) {
-                    Dsl -> FortuneTable.select(FortuneTable.id, FortuneTable.message)
-                        .asSequence().map { it.toFortune() }
+                    Dsl -> FortuneTable.select(FortuneTable.id, FortuneTable.message).toList()
+                        .mapTo(result) { it.toFortune() }
 
-                    Dao -> FortuneDao.all().asSequence().map { it.toFortune() }
-                }.toMutableList()
+                    Dao -> FortuneDao.all().mapTo(result) { it.toFortune() }
+                }
             }
 
             result.add(Fortune(0, "Additional fortune added at request time."))
