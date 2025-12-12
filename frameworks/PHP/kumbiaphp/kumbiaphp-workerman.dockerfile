@@ -5,7 +5,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update -yqq && apt-get install -yqq software-properties-common > /dev/null
 RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php > /dev/null
 RUN apt-get update -yqq > /dev/null && \
-    apt-get install -yqq git php8.5-cli php8.5-pgsql php8.5-xml > /dev/null
+    apt-get install -yqq git unzip php8.5-cli php8.5-curl php8.5-pgsql php8.5-xml > /dev/null
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 

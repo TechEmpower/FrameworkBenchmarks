@@ -11,7 +11,7 @@ RUN mkdir -p /etc/php/8.4/fpm/conf.d
 RUN pecl install phalcon > /dev/null && echo "extension=phalcon.so" > /etc/php/8.4/fpm/conf.d/phalcon.ini
 
 RUN apt-get install -yqq nginx git unzip \
-    php8.4-cli php8.4-fpm php8.4-mysql php8.4-mbstring php8.4-xml > /dev/null
+    php8.4-cli php8.4-curl php8.4-fpm php8.4-mysql php8.4-mbstring php8.4-xml > /dev/null
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 

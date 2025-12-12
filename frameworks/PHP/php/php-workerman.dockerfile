@@ -7,7 +7,7 @@ RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php > /dev/null && \
     apt-get update -yqq > /dev/null && apt-get upgrade -yqq
 
 RUN apt-get install -yqq git unzip \
-    php8.5 php8.5-common php8.5-cli php8.5-fpm php8.5-mysql  > /dev/null
+    php8.5 php8.5-common php8.5-cli php8.5-curl php8.5-fpm php8.5-mysql  > /dev/null
 
 RUN apt-get install -y php-pear php8.5-dev php8.5-xml libevent-dev > /dev/null
 RUN pecl install event-3.1.4 > /dev/null && echo "extension=event.so" > /etc/php/8.5/cli/conf.d/event.ini
