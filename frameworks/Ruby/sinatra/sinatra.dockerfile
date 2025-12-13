@@ -17,6 +17,8 @@ ENV APP_ENV=production
 ENV DBTYPE=mysql
 
 ENV WEB_CONCURRENCY=auto
+ENV MAX_THREADS=5
+
 EXPOSE 8080
 
-CMD bundle exec puma -C config/puma.rb -b tcp://0.0.0.0:8080
+CMD bundle exec puma -b tcp://0.0.0.0:8080

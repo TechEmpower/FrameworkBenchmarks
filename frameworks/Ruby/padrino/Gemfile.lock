@@ -56,6 +56,7 @@ GEM
       timeout
     net-smtp (0.5.1)
       net-protocol
+    ostruct (0.6.3)
     padrino (0.16.0)
       padrino-admin (= 0.16.0)
       padrino-cache (= 0.16.0)
@@ -128,6 +129,7 @@ DEPENDENCIES
   iodine (~> 0.7)
   json
   mysql2 (> 0.5)
+  ostruct
   padrino (= 0.16.0)
   rack
   slim

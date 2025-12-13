@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 RUN apt-get update
 RUN apt-get -yqq install clang zlib1g-dev
 RUN apt-get update
@@ -8,7 +8,7 @@ COPY src .
 RUN dotnet publish -c Release -o out /p:Database=mysql
 
 # Construct the actual image that will run
-FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:10.0.1 AS runtime
 
 RUN apt-get update
 # The following installs standard versions unixodbc and pgsqlodbc
@@ -50,6 +50,8 @@ RUN cp /usr/lib/libm* /app
 RUN cp /usr/lib/x86_64-linux-gnu/libodbc* /app
 #TODOLOCAL
 #RUN cp /usr/lib/aarch64-linux-gnu/libodbc* /app
+
+#TEST: ./tfb --test appmpower-odbc-my  --type db
 
 EXPOSE 8080
 

@@ -1,4 +1,4 @@
-FROM ruby:3.5-rc
+FROM ruby:4.0-rc
 
 ENV RUBY_YJIT_ENABLE=1
 
@@ -14,9 +14,10 @@ ADD ./ /grape
 WORKDIR /grape
 
 RUN bundle config set with 'iodine'
-RUN bundle install --jobs=4 --gemfile=/grape/Gemfile
+RUN bundle install --jobs=8 --gemfile=/grape/Gemfile
 
 ENV RACK_ENV=production
+ENV MAX_THREADS=1
 
 EXPOSE 8080
 

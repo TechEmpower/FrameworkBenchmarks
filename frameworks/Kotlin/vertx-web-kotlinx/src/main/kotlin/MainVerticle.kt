@@ -1,4 +1,6 @@
+import io.netty.channel.unix.Errors
 import io.netty.channel.unix.Errors.NativeIoException
+import io.vertx.core.MultiMap
 import io.vertx.core.buffer.Buffer
 import io.vertx.core.http.HttpHeaders
 import io.vertx.core.http.HttpServer
@@ -18,6 +20,9 @@ import io.vertx.sqlclient.Row
 import io.vertx.sqlclient.RowSet
 import io.vertx.sqlclient.Tuple
 import kotlinx.coroutines.Dispatchers
+import kotlinx.datetime.UtcOffset
+import kotlinx.datetime.format.DateTimeComponents
+import kotlinx.datetime.format.format
 import kotlinx.html.*
 import kotlinx.html.stream.appendHTML
 import kotlinx.io.buffered
@@ -26,10 +31,17 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.io.encodeToSink
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
+import java.net.SocketException
+import kotlin.time.Clock
 
 class MainVerticle(val hasDb: Boolean) : CoroutineVerticle(), CoroutineRouterSupport {
+    object HttpHeaderValues {
+        val vertxWeb = HttpHeaders.createOptimized("Vert.x-Web")
+        val applicationJson = HttpHeaders.createOptimized("application/json")
+        val textHtmlCharsetUtf8 = HttpHeaders.createOptimized("text/html; charset=utf-8")
+        val textPlain = HttpHeaders.createOptimized("text/plain")
+    }
+
     // `PgConnection`s as used in the "vertx" portion offers better performance than `PgPool`s.
     lateinit var pgConnection: PgConnection
     lateinit var date: String
@@ -37,12 +49,13 @@ class MainVerticle(val hasDb: Boolean) : CoroutineVerticle(), CoroutineRouterSup
 
     lateinit var selectWorldQuery: PreparedQuery<RowSet<Row>>
     lateinit var selectFortuneQuery: PreparedQuery<RowSet<Row>>
-    lateinit var updateWordQuery: PreparedQuery<RowSet<Row>>
+    lateinit var updateWorldQuery: PreparedQuery<RowSet<Row>>
 
     fun setCurrentDate() {
-        // kotlinx-datetime doesn't support the format yet.
-        //date = Clock.System.now().toString()
-        date = DateTimeFormatter.RFC_1123_DATE_TIME.format(ZonedDateTime.now())
+        date = DateTimeComponents.Formats.RFC_1123.format {
+            // We don't need a more complicated system `TimeZone` here (whose offset depends dynamically on the actual time due to DST) since UTC works.
+            setDateTimeOffset(Clock.System.now(), UtcOffset.ZERO)
+        }
     }
 
     override suspend fun start() {
@@ -56,27 +69,25 @@ class MainVerticle(val hasDb: Boolean) : CoroutineVerticle(), CoroutineRouterSup
                     user = "benchmarkdbuser",
                     password = "benchmarkdbpass",
                     cachePreparedStatements = true,
-                    pipeliningLimit = 100000
+                    pipeliningLimit = 256
                 )
             ).coAwait()
 
             selectWorldQuery = pgConnection.preparedQuery(SELECT_WORLD_SQL)
             selectFortuneQuery = pgConnection.preparedQuery(SELECT_FORTUNE_SQL)
-            updateWordQuery = pgConnection.preparedQuery(UPDATE_WORLD_SQL)
+            updateWorldQuery = pgConnection.preparedQuery(UPDATE_WORLD_SQL)
         }
 
         setCurrentDate()
         vertx.setPeriodic(1000) { setCurrentDate() }
-        httpServer = vertx.createHttpServer(httpServerOptionsOf(port = 8080))
+        httpServer = vertx.createHttpServer(
+            httpServerOptionsOf(port = 8080, http2ClearTextEnabled = false, strictThreadMode = true)
+        )
             .requestHandler(Router.router(vertx).apply { routes() })
             .exceptionHandler {
                 // wrk resets the connections when benchmarking is finished.
-                if (
-                // for epoll
-                /*(it is NativeIoException && it.message == "recvAddress(..) failed: Connection reset by peer")
-                || (it is SocketException && it.message == "Connection reset")*/
-                // for io_uring
-                    it is NativeIoException && it.message == "io_uring read(..) failed: Connection reset by peer"
+                if ((/* for native transport */it is NativeIoException && it.expectedErr() == Errors.ERRNO_ECONNRESET_NEGATIVE) ||
+                    (/* for Java NIO */ it is SocketException && it.message == "Connection reset")
                 )
                     return@exceptionHandler
 
@@ -93,15 +104,17 @@ class MainVerticle(val hasDb: Boolean) : CoroutineVerticle(), CoroutineRouterSup
     }
 
     @Suppress("NOTHING_TO_INLINE")
-    inline fun HttpServerResponse.putCommonHeaders() {
-        putHeader(HttpHeaders.SERVER, "Vert.x-Web")
-        putHeader(HttpHeaders.DATE, date)
+    inline fun MultiMap.addCommonHeaders() {
+        add(HttpHeaders.SERVER, HttpHeaderValues.vertxWeb)
+        add(HttpHeaders.DATE, date)
     }
 
     @Suppress("NOTHING_TO_INLINE")
-    inline fun HttpServerResponse.putJsonResponseHeader() {
-        putCommonHeaders()
-        putHeader(HttpHeaders.CONTENT_TYPE, "application/json")
+    inline fun HttpServerResponse.addJsonResponseHeaders() {
+        headers().run {
+            addCommonHeaders()
+            add(HttpHeaders.CONTENT_TYPE, HttpHeaderValues.applicationJson)
+        }
     }
 
 
@@ -117,15 +130,15 @@ class MainVerticle(val hasDb: Boolean) : CoroutineVerticle(), CoroutineRouterSup
     ) =
         coHandlerUnconfined {
             it.response().run {
-                putJsonResponseHeader()
+                addJsonResponseHeaders()
 
                 /*
-                // approach 1
+                // Approach 1
                 end(Json.encodeToString(serializer, requestHandler(it)))/*.coAwait()*/
                 */
 
                 /*
-                // approach 2
+                // Approach 2
                 // java.lang.IllegalStateException: You must set the Content-Length header to be the total size of the message body BEFORE sending any data if you are not using HTTP chunked encoding.
                 toRawSink().buffered().use { bufferedSink ->
                     @OptIn(ExperimentalSerializationApi::class)
@@ -133,7 +146,7 @@ class MainVerticle(val hasDb: Boolean) : CoroutineVerticle(), CoroutineRouterSup
                 }
                 */
 
-                // approach 3
+                // Approach 3
                 end(Buffer.buffer().apply {
                     toRawSink().buffered().use { bufferedSink ->
                         @OptIn(ExperimentalSerializationApi::class)
@@ -197,12 +210,15 @@ class MainVerticle(val hasDb: Boolean) : CoroutineVerticle(), CoroutineRouterSup
             }
 
             it.response().run {
-                putCommonHeaders()
-                putHeader(HttpHeaders.CONTENT_TYPE, "text/html; charset=utf-8")
+                headers().run {
+                    addCommonHeaders()
+                    add(HttpHeaders.CONTENT_TYPE, HttpHeaderValues.textHtmlCharsetUtf8)
+                }
                 end(htmlString)/*.coAwait()*/
             }
         }
 
+        // Some changes to this part in the `vertx` portion in #9142 are not ported.
         get("/updates").jsonResponseCoHandler(Serializers.worlds) {
             val queries = it.request().getQueries()
             val worlds = selectRandomWorlds(queries)
@@ -210,7 +226,7 @@ class MainVerticle(val hasDb: Boolean) : CoroutineVerticle(), CoroutineRouterSup
 
             // Approach 1
             // The updated worlds need to be sorted first to avoid deadlocks.
-            updateWordQuery
+            updateWorldQuery
                 .executeBatch(updatedWorlds.sortedBy { it.id }.map { Tuple.of(it.randomNumber, it.id) }).coAwait()
 
             /*
@@ -225,8 +241,10 @@ class MainVerticle(val hasDb: Boolean) : CoroutineVerticle(), CoroutineRouterSup
 
         get("/plaintext").coHandlerUnconfined {
             it.response().run {
-                putCommonHeaders()
-                putHeader(HttpHeaders.CONTENT_TYPE, "text/plain")
+                headers().run {
+                    addCommonHeaders()
+                    add(HttpHeaders.CONTENT_TYPE, HttpHeaderValues.textPlain)
+                }
                 end("Hello, World!")/*.coAwait()*/
             }
         }

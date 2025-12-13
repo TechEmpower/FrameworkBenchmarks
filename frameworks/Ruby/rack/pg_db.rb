@@ -7,8 +7,6 @@ if RUBY_PLATFORM == 'java'
   Jdbc::Postgres.load_driver
 end
 
-
-
 class PgDb
   QUERY_RANGE = (1..10_000).freeze # range of IDs in the Fortune DB
   ALL_IDS = QUERY_RANGE.to_a # enumeration of all the IDs in fortune DB
