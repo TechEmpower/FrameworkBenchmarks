@@ -514,9 +514,9 @@ dependencies = [
 
 [[package]]
 name = "http-compress"
-version = "3.0.3"
+version = "3.0.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5a7b163ab0da395ee1f950d547b44ac3b73ed1a351d53454d6ae811e9daa288e"
+checksum = "8a3200f5033ff75c1c682550881db3667bb79a4853f310586b25f608c8e139bf"
 dependencies = [
  "brotli",
  "flate2",
@@ -525,15 +525,15 @@ dependencies = [
 
 [[package]]
 name = "http-constant"
-version = "1.73.0"
+version = "1.73.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7886400d92b0eb2db84097de69ed4649ca9466f4c6b4e8cb342a3b46934a8d43"
+checksum = "748cd7866cc9dc74fc039e1cbc9984cb0d86f345fe3099398f2e5bc4bbe74b72"
 
 [[package]]
 name = "http-type"
-version = "5.11.0"
+version = "5.11.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b27d55be58ea8bc2ab73573aeafa68fd50b3098813f83029bcb766f1f1c61b3b"
+checksum = "9a1d71d2d6886484b34b8912bf1e8d0403edae7be8948dd5ca633b8ad128c005"
 dependencies = [
  "hex",
  "http-compress",
@@ -549,11 +549,10 @@ dependencies = [
 
 [[package]]
 name = "hyperlane"
-version = "10.14.0"
+version = "10.14.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6abaa8b50397c4a9d2d0d969ccba9cecdad7bf0fa75c7da0335d6895c3d0ce98"
+checksum = "570a84ae23ca82652464bdcf473e4e821d6d9741f0af0d5d1db8c32b0e2d7cc6"
 dependencies = [
- "aho-corasick",
  "http-type",
  "inventory",
  "lombok-macros",
@@ -564,9 +563,9 @@ dependencies = [
 
 [[package]]
 name = "hyperlane-time"
-version = "0.7.12"
+version = "0.7.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0c1902a81b87724c226187b798658dd38038afe79eb337735eff39ec5f4d3d30"
+checksum = "dfe36686e48cccf57cc1f5bb165c960d63abbb1670abc08149ea686917da5ac1"
 
 [[package]]
 name = "hyperlane_techempower"
@@ -780,9 +779,9 @@ checksum = "34080505efa8e45a4b816c349525ebe327ceaa8559756f0356cba97ef3bf7432"
 
 [[package]]
 name = "lombok-macros"
-version = "1.13.13"
+version = "1.13.16"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3bf89b026ebf6e1c51f466b40f60f8e90a64305d9cf07268e1adaeceefcb3c7a"
+checksum = "802066947abc9055e2356081b4874916392e1a1df42265606d3cc5e857b867ad"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1001,9 +1000,9 @@ dependencies = [
 
 [[package]]
 name = "quote"
-version = "1.0.41"
+version = "1.0.42"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ce25767e7b499d1b604768e7cde645d14cc8584231ea6b295e9c9eb22c02e1d1"
+checksum = "a338cc41d27e6cc6dce6cefc13a0729dfbb81c262b1f519331575dd80ef3067f"
 dependencies = [
  "proc-macro2",
 ]
@@ -1520,9 +1519,9 @@ checksum = "13c2bddecc57b384dee18652358fb23172facb8a2c51ccc10d74c157bdea3292"
 
 [[package]]
 name = "syn"
-version = "2.0.108"
+version = "2.0.111"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "da58917d35242480a05c2897064da0a80589a2a0476c9a3f2fdc83b53502e917"
+checksum = "390cc9a294ab71bdb1aa2e99d13be9c753cd2d7bd6560c77118597410c4d2e87"
 dependencies = [
  "proc-macro2",
  "quote",
