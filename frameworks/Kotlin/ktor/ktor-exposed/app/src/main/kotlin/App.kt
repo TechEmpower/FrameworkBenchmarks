@@ -9,7 +9,6 @@ import io.ktor.server.netty.*
 import io.ktor.server.plugins.defaultheaders.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import kotlinx.coroutines.Dispatchers
 import kotlinx.html.*
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
@@ -25,7 +24,7 @@ import org.jetbrains.exposed.v1.jdbc.Database
 import org.jetbrains.exposed.v1.jdbc.select
 import org.jetbrains.exposed.v1.jdbc.statements.toExecutable
 import org.jetbrains.exposed.v1.jdbc.transactions.TransactionManager
-import org.jetbrains.exposed.v1.jdbc.transactions.experimental.newSuspendedTransaction
+import org.jetbrains.exposed.v1.jdbc.transactions.suspendTransaction
 import java.util.concurrent.ThreadLocalRandom
 
 @Serializable
@@ -78,9 +77,8 @@ fun Application.module(exposedMode: ExposedMode) {
     val poolSize = Runtime.getRuntime().availableProcessors() * 2
     val pool = HikariDataSource(HikariConfig().apply { configurePostgres(poolSize) })
     val database = Database.connect(pool)
-    val databaseDispatcher = Dispatchers.IO.limitedParallelism(poolSize)
     suspend fun <T> withDatabaseTransaction(statement: suspend Transaction.() -> T) =
-        newSuspendedTransaction(context = databaseDispatcher, db = database, statement = statement)
+        suspendTransaction(database, statement = statement)
 
     install(DefaultHeaders)
 
@@ -105,7 +103,7 @@ fun Application.module(exposedMode: ExposedMode) {
 
         get("/db") {
             val random = ThreadLocalRandom.current()
-            val result = withDatabaseTransaction {
+            val result = withDatabaseTransaction<World> {
                 when (exposedMode) {
                     Dsl -> selectSingleWorld(random)
                     Dao -> WorldDao[random.nextIntWithinRows()].toWorld()
@@ -119,7 +117,7 @@ fun Application.module(exposedMode: ExposedMode) {
             val queries = call.queries()
             val random = ThreadLocalRandom.current()
 
-            val result = withDatabaseTransaction {
+            val result = withDatabaseTransaction<List<World>> {
                 when (exposedMode) {
                     Dsl -> selectWorlds(queries, random)
                     Dao -> //List(queries) { WorldDao[random.nextIntWithinRows()].toWorld() }
