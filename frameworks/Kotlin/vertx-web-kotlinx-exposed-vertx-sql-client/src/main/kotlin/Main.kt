@@ -8,10 +8,11 @@ import io.vertx.kotlin.coroutines.coAwait
 import java.util.function.Supplier
 import java.util.logging.Logger
 
-const val SERVER_NAME = "Vert.x-Web Kotlinx Benchmark server"
+const val BENCHMARK_NAME = "Vert.x-Web Kotlinx with Exposed Vert.x SQL Client Benchmark"
+const val SERVER_NAME = "$BENCHMARK_NAME server"
 val numProcessors = CpuCoreSensor.availableProcessors()
 
-val logger = Logger.getLogger("Vert.x-Web Kotlinx Benchmark")
+val logger = Logger.getLogger(BENCHMARK_NAME)
 suspend fun main(args: Array<String>) {
     logger.info("$SERVER_NAME starting...")
     val vertx = Vertx.vertx(
