@@ -1,4 +1,4 @@
-FROM gradle:jdk21
+FROM gradle:jdk25
 
 WORKDIR /ktor-exposed
 COPY ktor-exposed/settings.gradle.kts settings.gradle.kts
