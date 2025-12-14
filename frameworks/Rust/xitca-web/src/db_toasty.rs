@@ -1,4 +1,4 @@
-use futures_util::future::try_join_all;
+use futures_util::future::TryJoinAll;
 use toasty::Db;
 
 use crate::{
@@ -27,30 +27,39 @@ impl Pool {
         })
     }
 
-    pub async fn get_world(&self) -> HandleResult<World> {
+    pub async fn db(&self) -> HandleResult<World> {
         let id = self.rng.borrow_mut().gen_id();
         World::get_by_id(&self.db, id).await.map_err(Into::into)
     }
 
-    pub async fn get_worlds(&self, num: u16) -> HandleResult<Vec<World>> {
-        try_join_all(core::iter::repeat_with(|| self.get_world()).take(num as _)).await
+    pub async fn queries(&self, num: u16) -> HandleResult<Vec<World>> {
+        let get = self
+            .rng
+            .borrow_mut()
+            .gen_multi()
+            .take(num as _)
+            .map(|id| World::get_by_id(&self.db, id))
+            .collect::<TryJoinAll<_>>();
+
+        get.await.map_err(Into::into)
     }
 
-    pub async fn update(&self, num: u16) -> HandleResult<Vec<World>> {
-        let mut worlds = self.get_worlds(num).await?;
+    pub async fn updates(&self, num: u16) -> HandleResult<Vec<World>> {
+        let mut worlds = self.queries(num).await?;
 
-        try_join_all({
-            let mut rng = self.rng.borrow_mut();
-            worlds
-                .iter_mut()
-                .map(move |world| world.update().randomnumber(rng.gen_id()).exec(&self.db))
-        })
-        .await?;
+        // TODO: revisit when toasty supports batch update or raw sql
+        let update = worlds
+            .iter_mut()
+            .zip(self.rng.borrow_mut().gen_multi())
+            .map(|(world, rand)| world.update().randomnumber(rand).exec(&self.db))
+            .collect::<TryJoinAll<_>>();
+
+        update.await?;
 
         Ok(worlds)
     }
 
-    pub async fn tell_fortune(&self) -> HandleResult<Fortunes> {
+    pub async fn fortunes(&self) -> HandleResult<Fortunes> {
         let fortunes = Fortune::all().all(&self.db).await?.collect().await?;
         Ok(Fortunes::new(fortunes))
     }

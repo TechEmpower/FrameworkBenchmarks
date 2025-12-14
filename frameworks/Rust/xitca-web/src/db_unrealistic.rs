@@ -43,14 +43,14 @@ pub async fn create() -> HandleResult<Client> {
 }
 
 impl Client {
-    pub async fn get_world(&self) -> HandleResult<World> {
+    pub async fn db(&self) -> HandleResult<World> {
         let id = self.rng.borrow_mut().gen_id();
         let mut res = self.world.bind([id]).query(&self.cli).await?;
         let row = res.try_next().await?.ok_or_else(not_found)?;
         Ok(World::new(row.get(0), row.get(1)))
     }
 
-    pub async fn get_worlds(&self, num: u16) -> HandleResult<Vec<World>> {
+    pub async fn queries(&self, num: u16) -> HandleResult<Vec<World>> {
         let get = self
             .rng
             .borrow_mut()
@@ -61,8 +61,8 @@ impl Client {
 
         let mut worlds = Vec::with_capacity(num as _);
 
-        for query in get {
-            let mut res = query.await?;
+        for get in get {
+            let mut res = get.await?;
             let row = res.try_next().await?.ok_or_else(not_found)?;
             worlds.push(World::new(row.get(0), row.get(1)));
         }
@@ -70,7 +70,7 @@ impl Client {
         Ok(worlds)
     }
 
-    pub async fn update(&self, num: u16) -> HandleResult<Vec<World>> {
+    pub async fn updates(&self, num: u16) -> HandleResult<Vec<World>> {
         let (get, update, worlds) = {
             let mut rng = self.rng.borrow_mut();
             let mut ids = rng.gen_multi().take(num as _).collect::<Vec<_>>();
@@ -91,8 +91,8 @@ impl Client {
             (get, update, worlds)
         };
 
-        for fut in get {
-            let _rand = fut.await?.try_next().await?.ok_or_else(not_found)?.get::<i32>(1);
+        for get in get {
+            let _rand = get.await?.try_next().await?.ok_or_else(not_found)?.get::<i32>(1);
         }
 
         update.await?;
@@ -100,7 +100,7 @@ impl Client {
         Ok(worlds)
     }
 
-    pub async fn tell_fortune(&self) -> HandleResult<Fortunes> {
+    pub async fn fortunes(&self) -> HandleResult<Fortunes> {
         let mut items = Vec::with_capacity(16);
 
         let mut res = self.fortune.query(&self.cli).await?;

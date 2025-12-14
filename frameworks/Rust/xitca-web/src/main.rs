@@ -39,7 +39,7 @@ fn main() -> std::io::Result<()> {
             "/db",
             get(fn_service(async |ctx: Ctx| {
                 let (req, state) = ctx.into_parts();
-                let world = state.client.get_world().await?;
+                let world = state.client.db().await?;
                 req.json_response(state, &world)
             })),
         )
@@ -47,7 +47,7 @@ fn main() -> std::io::Result<()> {
             "/fortunes",
             get(fn_service(async |ctx: Ctx| {
                 let (req, state) = ctx.into_parts();
-                let fortunes = state.client.tell_fortune().await?.render_once()?;
+                let fortunes = state.client.fortunes().await?.render_once()?;
                 req.html_response(fortunes)
             })),
         )
@@ -56,7 +56,7 @@ fn main() -> std::io::Result<()> {
             get(fn_service(async |ctx: Ctx| {
                 let (req, state) = ctx.into_parts();
                 let num = req.uri().query().parse_query();
-                let worlds = state.client.get_worlds(num).await?;
+                let worlds = state.client.queries(num).await?;
                 req.json_response(state, &worlds)
             })),
         )
@@ -65,7 +65,7 @@ fn main() -> std::io::Result<()> {
             get(fn_service(async |ctx: Ctx| {
                 let (req, state) = ctx.into_parts();
                 let num = req.uri().query().parse_query();
-                let worlds = state.client.update(num).await?;
+                let worlds = state.client.updates(num).await?;
                 req.json_response(state, &worlds)
             })),
         )
@@ -88,6 +88,9 @@ fn error_handler(e: RouterError<util::Error>) -> Response {
     error_response(match e {
         RouterError::Match(_) => StatusCode::NOT_FOUND,
         RouterError::NotAllowed(_) => StatusCode::METHOD_NOT_ALLOWED,
-        RouterError::Service(_) => StatusCode::INTERNAL_SERVER_ERROR,
+        RouterError::Service(e) => {
+            eprintln!("Internal Error: {e}");
+            StatusCode::INTERNAL_SERVER_ERROR
+        }
     })
 }

@@ -23,7 +23,7 @@ pub async fn create() -> HandleResult<Client> {
 }
 
 impl Client {
-    pub async fn get_world(&self) -> HandleResult<World> {
+    pub async fn db(&self) -> HandleResult<World> {
         let mut conn = self.pool.get().await?;
         let stmt = WORLD_STMT.execute(&mut conn).await?;
         let id = self.rng.borrow_mut().gen_id();
@@ -32,7 +32,7 @@ impl Client {
         Ok(World::new(row.get(0), row.get(1)))
     }
 
-    pub async fn get_worlds(&self, num: u16) -> HandleResult<Vec<World>> {
+    pub async fn queries(&self, num: u16) -> HandleResult<Vec<World>> {
         let mut conn = self.pool.get().await?;
         let stmt = WORLD_STMT.execute(&mut conn).await?;
 
@@ -57,7 +57,7 @@ impl Client {
         Ok(worlds)
     }
 
-    pub async fn update(&self, num: u16) -> HandleResult<Vec<World>> {
+    pub async fn updates(&self, num: u16) -> HandleResult<Vec<World>> {
         let mut conn = self.pool.get().await?;
         let world_stmt = WORLD_STMT.execute(&mut conn).await?;
         let update_stmt = UPDATE_STMT.execute(&mut conn).await?;
@@ -82,8 +82,8 @@ impl Client {
             (get, update, worlds)
         };
 
-        for fut in get {
-            let _rand = fut.await?.try_next().await?.ok_or_else(not_found)?.get::<i32>(1);
+        for get in get {
+            let _rand = get.await?.try_next().await?.ok_or_else(not_found)?.get::<i32>(1);
         }
 
         update.await?;
@@ -91,7 +91,7 @@ impl Client {
         Ok(worlds)
     }
 
-    pub async fn tell_fortune(&self) -> HandleResult<Fortunes> {
+    pub async fn fortunes(&self) -> HandleResult<Fortunes> {
         let mut fortunes = Vec::with_capacity(16);
 
         let mut conn = self.pool.get().await?;

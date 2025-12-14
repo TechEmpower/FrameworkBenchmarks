@@ -31,6 +31,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a23eb6b1614318a8071c9b2521f36b424b2c83db5eb3a0fead4a6c0809af6e61"
 
 [[package]]
+name = "array-init"
+version = "2.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3d62b7694a562cdf5a74227903507c56ab2cc8bdd1f781ed5cb4cf9c9f810bfc"
+
+[[package]]
 name = "async-stream"
 version = "0.3.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -527,9 +533,9 @@ checksum = "7aedcccd01fc5fe81e6b489c15b247b8b0690feb23304303a9e560f37efc560a"
 
 [[package]]
 name = "icu_properties"
-version = "2.1.1"
+version = "2.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e93fcd3157766c0c8da2f8cff6ce651a31f0810eaa1c51ec363ef790bbb5fb99"
+checksum = "020bfc02fe870ec3a66d93e677ccca0562506e5872c650f893269e08615d74ec"
 dependencies = [
  "icu_collections",
  "icu_locale_core",
@@ -541,9 +547,9 @@ dependencies = [
 
 [[package]]
 name = "icu_properties_data"
-version = "2.1.1"
+version = "2.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "02845b3647bb045f1100ecd6480ff52f34c35f82d9880e029d329c21d1054899"
+checksum = "616c294cf8d725c6afcd8f55abc17c56464ef6211f9ed59cccffe534129c77af"
 
 [[package]]
 name = "icu_provider"
@@ -835,9 +841,11 @@ version = "0.2.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ef4605b7c057056dd35baeb6ac0c0338e4975b1f2bef0f65da953285eb007095"
 dependencies = [
+ "array-init",
  "bytes",
  "fallible-iterator",
  "postgres-protocol",
+ "uuid",
 ]
 
 [[package]]
@@ -1269,7 +1277,7 @@ checksum = "6ce2be8dc25455e1f91df71bfa12ad37d7af1092ae736f3a6cd0e37bc7810596"
 [[package]]
 name = "std-util"
 version = "0.1.0"
-source = "git+https://github.com/fakeshadow/toasty?branch=engine#2132c89dfd7a4698cdaaa85888c016b97c01471a"
+source = "git+https://github.com/fakeshadow/toasty?branch=engine#b4a6ff95cb23f34c06c383806a0d00f782b6acbc"
 dependencies = [
  "heck",
  "pluralizer",
@@ -1369,7 +1377,7 @@ checksum = "1f3ccbac311fea05f86f61904b462b55fb3df8837a366dfc601a0161d0532f20"
 [[package]]
 name = "toasty"
 version = "0.1.0"
-source = "git+https://github.com/fakeshadow/toasty?branch=engine#2132c89dfd7a4698cdaaa85888c016b97c01471a"
+source = "git+https://github.com/fakeshadow/toasty?branch=engine#b4a6ff95cb23f34c06c383806a0d00f782b6acbc"
 dependencies = [
  "anyhow",
  "async-stream",
@@ -1387,7 +1395,7 @@ dependencies = [
 [[package]]
 name = "toasty-codegen"
 version = "0.1.0"
-source = "git+https://github.com/fakeshadow/toasty?branch=engine#2132c89dfd7a4698cdaaa85888c016b97c01471a"
+source = "git+https://github.com/fakeshadow/toasty?branch=engine#b4a6ff95cb23f34c06c383806a0d00f782b6acbc"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1398,7 +1406,7 @@ dependencies = [
 [[package]]
 name = "toasty-core"
 version = "0.1.0"
-source = "git+https://github.com/fakeshadow/toasty?branch=engine#2132c89dfd7a4698cdaaa85888c016b97c01471a"
+source = "git+https://github.com/fakeshadow/toasty?branch=engine#b4a6ff95cb23f34c06c383806a0d00f782b6acbc"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -1412,7 +1420,7 @@ dependencies = [
 [[package]]
 name = "toasty-macros"
 version = "0.1.0"
-source = "git+https://github.com/fakeshadow/toasty?branch=engine#2132c89dfd7a4698cdaaa85888c016b97c01471a"
+source = "git+https://github.com/fakeshadow/toasty?branch=engine#b4a6ff95cb23f34c06c383806a0d00f782b6acbc"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1424,7 +1432,7 @@ dependencies = [
 [[package]]
 name = "toasty-sql"
 version = "0.1.0"
-source = "git+https://github.com/fakeshadow/toasty?branch=engine#2132c89dfd7a4698cdaaa85888c016b97c01471a"
+source = "git+https://github.com/fakeshadow/toasty?branch=engine#b4a6ff95cb23f34c06c383806a0d00f782b6acbc"
 dependencies = [
  "anyhow",
  "toasty-core",
@@ -1472,7 +1480,7 @@ dependencies = [
 [[package]]
 name = "tokio-uring"
 version = "0.5.1"
-source = "git+http://github.com/fakeshadow/tokio-uring?rev=97d9a98#97d9a988704b5466809633b3ca6ba07acba3f38b"
+source = "git+http://github.com/fakeshadow/tokio-uring?rev=c3d5887#c3d588793dc88cb05b57b982356b5e28bc73c192"
 dependencies = [
  "bytes",
  "io-uring",
@@ -1759,7 +1767,7 @@ checksum = "9edde0db4769d2dc68579893f2306b26c6ecfbe0ef499b013d731b7b9247e0b9"
 [[package]]
 name = "xitca-codegen"
 version = "0.4.0"
-source = "git+http://github.com/HFQR/xitca-web?rev=83b4a60#83b4a607a9a704a4286dd190209e567316589afc"
+source = "git+http://github.com/HFQR/xitca-web?rev=19906c7#19906c7dc53b42570f09b8ddd33504e888d8f151"
 dependencies = [
  "quote",
  "syn",
@@ -1768,7 +1776,7 @@ dependencies = [
 [[package]]
 name = "xitca-http"
 version = "0.7.1"
-source = "git+http://github.com/HFQR/xitca-web?rev=83b4a60#83b4a607a9a704a4286dd190209e567316589afc"
+source = "git+http://github.com/HFQR/xitca-web?rev=19906c7#19906c7dc53b42570f09b8ddd33504e888d8f151"
 dependencies = [
  "futures-core",
  "http",
@@ -1801,7 +1809,7 @@ dependencies = [
 [[package]]
 name = "xitca-postgres"
 version = "0.3.0"
-source = "git+http://github.com/HFQR/xitca-web?rev=83b4a60#83b4a607a9a704a4286dd190209e567316589afc"
+source = "git+http://github.com/HFQR/xitca-web?rev=19906c7#19906c7dc53b42570f09b8ddd33504e888d8f151"
 dependencies = [
  "fallible-iterator",
  "futures-core",
@@ -1830,7 +1838,7 @@ dependencies = [
 [[package]]
 name = "xitca-postgres-toasty"
 version = "0.1.0"
-source = "git+https://github.com/fakeshadow/xitca-postgres-toasty?rev=04bedb8#04bedb8641a13b61f13c85a1fd0b8318dd5454a8"
+source = "git+https://github.com/fakeshadow/xitca-postgres-toasty?rev=02c6604#02c6604beaf9f9792eb2c4e54d23cbddc34675fc"
 dependencies = [
  "anyhow",
  "futures-core",
@@ -1839,6 +1847,7 @@ dependencies = [
  "toasty-core",
  "toasty-sql",
  "tokio",
+ "uuid",
  "xitca-postgres",
 ]
 
@@ -1854,7 +1863,7 @@ dependencies = [
 [[package]]
 name = "xitca-server"
 version = "0.5.0"
-source = "git+http://github.com/HFQR/xitca-web?rev=83b4a60#83b4a607a9a704a4286dd190209e567316589afc"
+source = "git+http://github.com/HFQR/xitca-web?rev=19906c7#19906c7dc53b42570f09b8ddd33504e888d8f151"
 dependencies = [
  "socket2",
  "tokio",
@@ -1868,7 +1877,7 @@ dependencies = [
 [[package]]
 name = "xitca-service"
 version = "0.3.0"
-source = "git+http://github.com/HFQR/xitca-web?rev=83b4a60#83b4a607a9a704a4286dd190209e567316589afc"
+source = "git+http://github.com/HFQR/xitca-web?rev=19906c7#19906c7dc53b42570f09b8ddd33504e888d8f151"
 
 [[package]]
 name = "xitca-unsafe-collection"
@@ -1913,7 +1922,7 @@ dependencies = [
 [[package]]
 name = "xitca-web"
 version = "0.7.1"
-source = "git+http://github.com/HFQR/xitca-web?rev=83b4a60#83b4a607a9a704a4286dd190209e567316589afc"
+source = "git+http://github.com/HFQR/xitca-web?rev=19906c7#19906c7dc53b42570f09b8ddd33504e888d8f151"
 dependencies = [
  "futures-core",
  "pin-project-lite",
