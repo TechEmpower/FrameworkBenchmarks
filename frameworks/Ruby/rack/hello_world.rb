@@ -43,12 +43,8 @@ class HelloWorld
   </html>'
 
   def initialize
-    if defined?(Puma)
+    if defined?(Puma) || defined?(Itsi)
       max_connections = ENV.fetch('MAX_THREADS')
-    elsif defined?(Itsi)
-      require_relative 'config/auto_tune'
-      _num_workers, num_threads = auto_tune
-      max_connections = num_threads
     else
       max_connections = 512
     end
