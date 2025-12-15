@@ -1,4 +1,5 @@
 mod db;
+mod db_pool;
 mod ser;
 mod util;
 
@@ -16,11 +17,10 @@ use xitca_http::{
 };
 use xitca_service::{Service, ServiceExt, fn_service};
 
-use db::Client;
 use ser::{IntoResponse, Message, Request, Response, error_response};
 use util::{QueryParse, SERVER_HEADER_VALUE, State};
 
-type Ctx<'a> = Context<'a, Request<RequestBody>, State<Client>>;
+type Ctx<'a> = Context<'a, Request<RequestBody>, State<db_pool::Client>>;
 
 fn main() -> std::io::Result<()> {
     let service = Router::new()
@@ -69,7 +69,9 @@ fn main() -> std::io::Result<()> {
                 req.json_response(state, &worlds)
             })),
         )
-        .enclosed(ContextBuilder::new(|| async { db::create().await.map(State::new) }))
+        .enclosed(ContextBuilder::new(|| async {
+            db_pool::create().await.map(State::new)
+        }))
         .enclosed_fn(async |service, req| {
             let mut res = service.call(req).await.unwrap_or_else(error_handler);
             res.headers_mut().insert(SERVER, SERVER_HEADER_VALUE);

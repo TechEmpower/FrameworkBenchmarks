@@ -1767,7 +1767,7 @@ checksum = "9edde0db4769d2dc68579893f2306b26c6ecfbe0ef499b013d731b7b9247e0b9"
 [[package]]
 name = "xitca-codegen"
 version = "0.4.0"
-source = "git+http://github.com/HFQR/xitca-web?rev=19906c7#19906c7dc53b42570f09b8ddd33504e888d8f151"
+source = "git+http://github.com/HFQR/xitca-web?rev=b723c0c#b723c0c5800d82beca768bbfff273b3e6d1abf52"
 dependencies = [
  "quote",
  "syn",
@@ -1776,7 +1776,7 @@ dependencies = [
 [[package]]
 name = "xitca-http"
 version = "0.7.1"
-source = "git+http://github.com/HFQR/xitca-web?rev=19906c7#19906c7dc53b42570f09b8ddd33504e888d8f151"
+source = "git+http://github.com/HFQR/xitca-web?rev=b723c0c#b723c0c5800d82beca768bbfff273b3e6d1abf52"
 dependencies = [
  "futures-core",
  "http",
@@ -1809,7 +1809,7 @@ dependencies = [
 [[package]]
 name = "xitca-postgres"
 version = "0.3.0"
-source = "git+http://github.com/HFQR/xitca-web?rev=19906c7#19906c7dc53b42570f09b8ddd33504e888d8f151"
+source = "git+http://github.com/HFQR/xitca-web?rev=b723c0c#b723c0c5800d82beca768bbfff273b3e6d1abf52"
 dependencies = [
  "fallible-iterator",
  "futures-core",
@@ -1863,7 +1863,7 @@ dependencies = [
 [[package]]
 name = "xitca-server"
 version = "0.5.0"
-source = "git+http://github.com/HFQR/xitca-web?rev=19906c7#19906c7dc53b42570f09b8ddd33504e888d8f151"
+source = "git+http://github.com/HFQR/xitca-web?rev=b723c0c#b723c0c5800d82beca768bbfff273b3e6d1abf52"
 dependencies = [
  "socket2",
  "tokio",
@@ -1877,7 +1877,7 @@ dependencies = [
 [[package]]
 name = "xitca-service"
 version = "0.3.0"
-source = "git+http://github.com/HFQR/xitca-web?rev=19906c7#19906c7dc53b42570f09b8ddd33504e888d8f151"
+source = "git+http://github.com/HFQR/xitca-web?rev=b723c0c#b723c0c5800d82beca768bbfff273b3e6d1abf52"
 
 [[package]]
 name = "xitca-unsafe-collection"
@@ -1922,7 +1922,7 @@ dependencies = [
 [[package]]
 name = "xitca-web"
 version = "0.7.1"
-source = "git+http://github.com/HFQR/xitca-web?rev=19906c7#19906c7dc53b42570f09b8ddd33504e888d8f151"
+source = "git+http://github.com/HFQR/xitca-web?rev=b723c0c#b723c0c5800d82beca768bbfff273b3e6d1abf52"
 dependencies = [
  "futures-core",
  "pin-project-lite",

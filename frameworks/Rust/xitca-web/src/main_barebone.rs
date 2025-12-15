@@ -5,8 +5,8 @@
 #[global_allocator]
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
-#[path = "db_unrealistic.rs"]
 mod db;
+mod db_unrealistic;
 mod ser;
 mod util;
 
@@ -51,7 +51,7 @@ fn main() -> io::Result<()> {
                 socket.bind(addr)?;
                 let listener = socket.listen(1024)?;
 
-                let client = db::create().await.unwrap();
+                let client = db_unrealistic::create().await.unwrap();
 
                 // unrealistic http dispatcher. no spec check. no security feature.
                 let service = Dispatcher::new(handler, State::new(client));
@@ -87,7 +87,7 @@ fn main() -> io::Result<()> {
     Ok(())
 }
 
-async fn handler<'h>(req: Request<'h, State<db::Client>>, res: Response<'h>) -> Response<'h, 3> {
+async fn handler<'h>(req: Request<'h, State<db_unrealistic::Client>>, res: Response<'h>) -> Response<'h, 3> {
     // unrealistic due to no http method check
     match req.path {
         // unrealistic due to no dynamic path matching

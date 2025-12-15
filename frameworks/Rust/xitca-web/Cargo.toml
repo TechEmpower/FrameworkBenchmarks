@@ -110,9 +110,9 @@ toasty-sql = { git = "https://github.com/fakeshadow/toasty", branch = "engine" }
 # personal fork of tokio-uring with tokio local runtime enabled
 tokio-uring = { git = "http://github.com/fakeshadow/tokio-uring", rev = "c3d5887" }
 
-xitca-codegen = { git = "http://github.com/HFQR/xitca-web", rev = "19906c7" }
-xitca-http = { git = "http://github.com/HFQR/xitca-web", rev = "19906c7" }
-xitca-postgres = { git = "http://github.com/HFQR/xitca-web", rev = "19906c7" }
-xitca-server = { git = "http://github.com/HFQR/xitca-web", rev = "19906c7" }
-xitca-service = { git = "http://github.com/HFQR/xitca-web", rev = "19906c7" }
-xitca-web = { git = "http://github.com/HFQR/xitca-web", rev = "19906c7" }
+xitca-codegen = { git = "http://github.com/HFQR/xitca-web", rev = "b723c0c" }
+xitca-http = { git = "http://github.com/HFQR/xitca-web", rev = "b723c0c" }
+xitca-postgres = { git = "http://github.com/HFQR/xitca-web", rev = "b723c0c" }
+xitca-server = { git = "http://github.com/HFQR/xitca-web", rev = "b723c0c" }
+xitca-service = { git = "http://github.com/HFQR/xitca-web", rev = "b723c0c" }
+xitca-web = { git = "http://github.com/HFQR/xitca-web", rev = "b723c0c" }
