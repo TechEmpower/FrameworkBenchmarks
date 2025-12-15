@@ -3,7 +3,7 @@
     --main-text-color: #555;
     --dark-text-color: #222;
     --light-text-color: #c7c7c7;
-    --brand-primary-color: #E06E3F;
+    --brand-primary-color: #DC4814;
     --light-bg-color: #ededee;
     --dark-bg-color: #404040;
 }
@@ -19,7 +19,6 @@ body {
 }
 h1 {
     font-weight: lighter;
-    letter-spacing: 0.8;
     font-size: 3rem;
     color: var(--dark-text-color);
     margin: 0;
@@ -42,9 +41,10 @@ p.lead {
 .header {
     background: var(--light-bg-color);
     color: var(--dark-text-color);
+    margin-top: 2.17rem;
 }
 .header .container {
-    padding: 1rem 1.75rem 1.75rem 1.75rem;
+    padding: 1rem;
 }
 .header h1 {
     font-size: 2.5rem;
@@ -65,14 +65,14 @@ p.lead {
     display: inline;
 }
 
-.footer {
-    background: var(--dark-bg-color);
-    color: var(--light-text-color);
-}
-.footer .container {
-    border-top: 1px solid #e7e7e7;
-    margin-top: 1rem;
+.environment {
+    background: var(--brand-primary-color);
+    color: var(--main-bg-color);
     text-align: center;
+    padding: calc(4px + 0.2083vw);
+    width: 100%;
+    top: 0;
+    position: fixed;
 }
 
 .source {
@@ -112,7 +112,7 @@ p.lead {
 }
 .tabs a:link,
 .tabs a:visited {
-    padding: 0rem 1rem;
+    padding: 0 1rem;
     line-height: 2.7;
     text-decoration: none;
     color: var(--dark-text-color);
@@ -151,9 +151,6 @@ p.lead {
     border: 1px solid #bcdff1;
     border-radius: 5px;
     color: #31708f;
-}
-ul, ol {
-    line-height: 1.8;
 }
 
 table {

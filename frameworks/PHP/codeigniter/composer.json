@@ -1,16 +1,12 @@
 {
-    "require": {
-        "php": "^7.4 || ^8",
-        "codeigniter4/framework": "^4.0"
-    },
-    "autoload": {
-        "exclude-from-classmap": [
-            "**/Database/Migrations/**"
-        ]
-    },
-    "support": {
-        "forum": "http://forum.codeigniter.com/",
-        "source": "https://github.com/codeigniter4/CodeIgniter4",
-        "slack": "https://codeigniterchat.slack.com"
+  "require": {
+    "php": "^8.2",
+    "codeigniter4/framework": "^4.6"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "app/",
+      "Config\\": "app/Config"
     }
+  }
 }

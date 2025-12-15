@@ -31,7 +31,7 @@ class Toolbar extends BaseConfig
      * List of toolbar collectors that will be called when Debug Toolbar
      * fires up and collects data from.
      *
-     * @var string[]
+     * @var list<class-string>
      */
     public array $collectors = [
         Timers::class,
@@ -49,7 +49,7 @@ class Toolbar extends BaseConfig
      * Collect Var Data
      * --------------------------------------------------------------------------
      *
-     * If set to false var data from the views will not be colleted. Useful to
+     * If set to false var data from the views will not be collected. Useful to
      * avoid high memory usage when there are lots of data passed to the view.
      */
     public bool $collectVarData = true;
@@ -99,6 +99,8 @@ class Toolbar extends BaseConfig
      * We restrict the values to keep performance as high as possible.
      *
      * NOTE: The ROOTPATH will be prepended to all values.
+     *
+     * @var list<string>
      */
     public array $watchedDirectories = [
         'app',
@@ -111,6 +113,8 @@ class Toolbar extends BaseConfig
      *
      * Contains an array of file extensions that will be watched for changes and
      * used to determine if the hot-reload feature should reload the page or not.
+     *
+     * @var list<string>
      */
     public array $watchedExtensions = [
         'php', 'css', 'js', 'html', 'svg', 'json', 'env',

@@ -2,10 +2,19 @@
 
 namespace App\Controllers;
 
-use App\Libraries\DbRaw;
+use CodeIgniter\Controller;
+use CodeIgniter\Database\BaseConnection;
+use Config\Database;
 
-class Bench extends BaseController
+class Bench extends Controller
 {
+    protected static BaseConnection $database;
+
+    protected function database(): BaseConnection
+    {
+        return self::$database ??= Database::connect();
+    }
+
     public function plaintext()
     {
         $this->response->setContentType('text/plain');
@@ -19,7 +28,7 @@ class Bench extends BaseController
 
     public function db()
     {
-        $worlds = Dbraw::get()
+        $worlds = $this->database()
             ->query('SELECT * FROM World WHERE id = ?', array(mt_rand(1, 10000)))
             ->getRow();
 
@@ -32,7 +41,7 @@ class Bench extends BaseController
         $queries = is_numeric($queries) ? min(max($queries, 1), 500) : 1;
 
         for ($i = 0; $i < $queries; ++$i) {
-            $worlds[] = Dbraw::get()
+            $worlds[] = $this->database()
                 ->query('SELECT * FROM World WHERE id = ?', array(mt_rand(1, 10000)))
                 ->getRow();
         }
@@ -47,12 +56,12 @@ class Bench extends BaseController
 
         for ($i = 0; $i < $queries; ++$i) {
             $id = mt_rand(1, 10000);
-            $world = Dbraw::get()
+            $world = $this->database()
                 ->query('SELECT * FROM World WHERE id = ?', [$id])
                 ->getRow();
             
             $world->randomNumber = mt_rand(1, 10000);
-            Dbraw::get()
+            $this->database()
                 ->query('UPDATE World SET randomNumber=? WHERE id=?', [$world->randomNumber, $id]);
             $worlds[] = $world;
         }
@@ -62,7 +71,8 @@ class Bench extends BaseController
 
     public function fortunes()
     {
-        $fortunes = Dbraw::get()
+        $data = [];
+        $fortunes = $this->database()
             ->query('SELECT * FROM Fortune')
             ->getResultArray();
 

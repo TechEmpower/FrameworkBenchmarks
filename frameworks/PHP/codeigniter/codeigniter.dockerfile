@@ -11,19 +11,18 @@ RUN apt-get update > /dev/null && apt-get install -yqq nginx git unzip \
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
-COPY deploy/conf/* /etc/php/8.5/fpm/
+COPY ./deploy/conf/ /etc/php/8.5/fpm/
+RUN if [ $(nproc) = 2 ]; then sed -i "s|pm.max_children = 1024|pm.max_children = 512|g" /etc/php/8.5/fpm/pool.d/www.conf ; fi;
 
-ADD ./ /codeigniter
+COPY ./deploy/nginx.conf /etc/nginx/
+
+COPY --chown=www-data:www-data ./ /codeigniter/
 WORKDIR /codeigniter
-
-RUN if [ $(nproc) = 2 ]; then sed -i "s|pm.max_children = 1024|pm.max_children = 512|g" /etc/php/8.5/fpm/php-fpm.conf ; fi;
-
-RUN composer install --optimize-autoloader --classmap-authoritative --no-dev 
-#--quiet
-
-RUN chmod -R 777 writable
+RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --no-progress && \
+    echo "opcache.preload=/codeigniter/preload.php" >> /etc/php/8.5/fpm/php.ini && \
+    php spark optimize
 
 EXPOSE 8080
 
 CMD service php8.5-fpm start && \
-    nginx -c /codeigniter/deploy/nginx.conf
+    nginx
