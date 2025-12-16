@@ -15,7 +15,8 @@ libraryDependencies += "io.vertx" % "vertx-web" % vertxVersion
 libraryDependencies += "io.vertx" % "vertx-codegen" % vertxVersion
 libraryDependencies += "io.vertx" % "vertx-pg-client" % vertxVersion
 libraryDependencies += "io.netty" % "netty-transport-native-kqueue" % nettyVersion classifier "osx-x86_64"
-libraryDependencies += "io.netty" % "netty-transport-native-epoll" % nettyVersion classifier "linux-x86_64"
+//libraryDependencies += "io.netty" % "netty-transport-native-epoll" % nettyVersion classifier "linux-x86_64"
+libraryDependencies += "io.netty" % "netty-transport-native-io_uring" % nettyVersion classifier "linux-x86_64"
 libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.5.22"
 libraryDependencies += "com.typesafe.scala-logging" %% "scala-logging" % "3.9.6"
 
