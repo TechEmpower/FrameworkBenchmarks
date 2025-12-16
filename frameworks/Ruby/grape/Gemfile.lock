@@ -58,7 +58,6 @@ GEM
       ruby2_keywords (~> 0.0.1)
     mustermann-grape (1.1.0)
       mustermann (>= 1.0.0)
-    mysql2 (0.5.6)
     nio4r (2.7.4)
     puma (7.1.0)
       nio4r (~> 2.0)
@@ -66,6 +65,7 @@ GEM
     ruby2_keywords (0.0.5)
     securerandom (0.4.1)
     timeout (0.4.3)
+    trilogy (2.9.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     uri (1.0.3)
@@ -81,8 +81,8 @@ DEPENDENCIES
   grape (= 2.1.1)
   iodine (~> 0.7)
   json (~> 2.9)
-  mysql2 (= 0.5.6)
   puma (~> 7.1)
+  trilogy (~> 2.9)
 
 BUNDLED WITH
    2.7.0
