@@ -1,0 +1,1 @@
+.gitcurrent.d
