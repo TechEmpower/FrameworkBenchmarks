@@ -4,7 +4,7 @@ COPY reactive/src src
 COPY reactive/pom.xml pom.xml
 RUN mvn package -q
 
-FROM openjdk:19-jdk-slim
+FROM openjdk:19-ea-jdk
 WORKDIR /helidon
 COPY --from=maven /helidon/target/libs libs
 COPY --from=maven /helidon/target/benchmark-reactive.jar app.jar
