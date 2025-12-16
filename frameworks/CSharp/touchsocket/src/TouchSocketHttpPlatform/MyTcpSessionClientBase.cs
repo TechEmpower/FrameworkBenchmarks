@@ -52,13 +52,13 @@ internal sealed class MyTcpSessionClientBase : TcpSessionClient
            "HTTP/1.1 200 OK\r\n"u8 +
            "Server: T\r\n"u8 +
            "Content-Type: text/plain\r\n"u8 +
-           "Content-Length: 13\r\n"u8;
+           "Content-Length: 13"u8;
 
     private static ReadOnlySpan<byte> JsonPreamble =>
         "HTTP/1.1 200 OK\r\n"u8 +
         "Server: T\r\n"u8 +
         "Content-Type: application/json\r\n"u8 +
-        "Content-Length: 27\r\n"u8;
+        "Content-Length: 27"u8;
 
     protected override async Task ReceiveLoopAsync(ITransport transport)
     {
