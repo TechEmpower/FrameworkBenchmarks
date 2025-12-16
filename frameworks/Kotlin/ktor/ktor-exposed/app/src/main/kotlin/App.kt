@@ -1,6 +1,7 @@
 import ExposedMode.*
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
+import database.*
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
@@ -10,59 +11,18 @@ import io.ktor.server.plugins.defaultheaders.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.html.*
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import org.jetbrains.exposed.v1.core.ResultRow
 import org.jetbrains.exposed.v1.core.Transaction
 import org.jetbrains.exposed.v1.core.dao.id.EntityID
-import org.jetbrains.exposed.v1.core.dao.id.IdTable
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.core.statements.BatchUpdateStatement
-import org.jetbrains.exposed.v1.dao.IntEntity
-import org.jetbrains.exposed.v1.dao.IntEntityClass
 import org.jetbrains.exposed.v1.jdbc.Database
 import org.jetbrains.exposed.v1.jdbc.select
 import org.jetbrains.exposed.v1.jdbc.statements.toExecutable
 import org.jetbrains.exposed.v1.jdbc.transactions.TransactionManager
 import org.jetbrains.exposed.v1.jdbc.transactions.suspendTransaction
 import java.util.concurrent.ThreadLocalRandom
-
-@Serializable
-data class World(val id: Int, var randomNumber: Int)
-
-@Serializable
-data class Fortune(val id: Int, var message: String)
-
-
-// see "toolset/databases/postgres/create-postgres.sql"
-
-object WorldTable : IdTable<Int>("World") {
-    override val id = integer("id").entityId()
-    val randomNumber = integer("randomnumber").default(0) // The name is "randomNumber" in "create-postgres.sql".
-}
-
-object FortuneTable : IdTable<Int>("Fortune") {
-    override val id = integer("id").entityId()
-    val message = varchar("message", 2048)
-}
-
-
-class WorldDao(id: EntityID<Int>) : IntEntity(id) {
-    companion object : IntEntityClass<WorldDao>(WorldTable)
-
-    var randomNumber by WorldTable.randomNumber
-    fun toWorld() =
-        World(id.value, randomNumber)
-}
-
-class FortuneDao(id: EntityID<Int>) : IntEntity(id) {
-    companion object : IntEntityClass<FortuneDao>(FortuneTable)
-
-    var message by FortuneTable.message
-    fun toFortune() =
-        Fortune(id.value, message)
-}
-
 
 enum class ExposedMode {
     Dsl, Dao
@@ -72,6 +32,12 @@ fun main(args: Array<String>) {
     val exposedMode = valueOf(args.first())
     embeddedServer(Netty, port = 9090) { module(exposedMode) }.start(wait = true)
 }
+
+
+private const val DB_ROWS = 10_000
+
+fun ApplicationCall.queries() =
+    request.queryParameters["queries"]?.toIntOrNull()?.coerceIn(1, 500) ?: 1
 
 fun Application.module(exposedMode: ExposedMode) {
     val poolSize = Runtime.getRuntime().availableProcessors() * 2
@@ -196,29 +162,3 @@ fun Application.module(exposedMode: ExposedMode) {
         }
     }
 }
-
-private const val DB_ROWS = 10_000
-
-fun HikariConfig.configurePostgres(poolSize: Int) {
-    jdbcUrl = "jdbc:postgresql://tfb-database/hello_world?useSSL=false"
-    driverClassName = org.postgresql.Driver::class.java.name
-
-    configureCommon(poolSize)
-}
-
-fun HikariConfig.configureCommon(poolSize: Int) {
-    username = "benchmarkdbuser"
-    password = "benchmarkdbpass"
-    addDataSourceProperty("cacheServerConfiguration", true)
-    addDataSourceProperty("cachePrepStmts", "true")
-    addDataSourceProperty("useUnbufferedInput", "false")
-    addDataSourceProperty("prepStmtCacheSize", "4096")
-    addDataSourceProperty("prepStmtCacheSqlLimit", "2048")
-    connectionTimeout = 10000
-    maximumPoolSize = poolSize
-    minimumIdle = poolSize
-}
-
-fun ApplicationCall.queries() =
-    request.queryParameters["queries"]?.toIntOrNull()?.coerceIn(1, 500) ?: 1
-
