@@ -34,13 +34,16 @@ class HelloWorld < Sinatra::Base
     end
   end
 
-  after do
-    response['Date'] = Time.now.httpdate
-  end if defined?(Falcon) || defined?(Puma)
-
-  after do
-    response['Server'] = SERVER_STRING
-  end if SERVER_STRING
+  if defined?(Puma)
+    after do
+      response['Server'] = SERVER_STRING
+      response['Date'] = Time.now.httpdate
+    end
+  else
+    after do
+      response['Server'] = SERVER_STRING
+    end
+  end
 
   # Test type 1: JSON serialization
   get '/json' do
