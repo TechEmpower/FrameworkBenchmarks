@@ -140,7 +140,7 @@
         "notes": "http://ktor.io/",
         "versus": "netty"
       },
-      "exposed-dsl": {
+      "exposed-jdbc-dsl": {
         "db_url": "/db",
         "query_url": "/queries?queries=",
         "update_url": "/updates?queries=",
@@ -157,11 +157,11 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "ktor-netty-exposed-dsl",
+        "display_name": "ktor-netty-exposed-jdbc-dsl",
         "notes": "",
         "versus": "ktor"
       },
-      "exposed-dao": {
+      "exposed-jdbc-dao": {
         "db_url": "/db",
         "fortune_url": "/fortunes",
         "port": 9090,
@@ -176,7 +176,7 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "ktor-netty-exposed-dao",
+        "display_name": "ktor-netty-exposed-jdbc-dao",
         "notes": "",
         "versus": "ktor"
       }
