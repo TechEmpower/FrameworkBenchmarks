@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 
 namespace PlatformBenchmarks;
 
@@ -42,7 +43,7 @@ public class Program
         await host.RunAsync();
     }
 
-    public static IWebHost BuildWebHost(string[] args)
+    public static IHost BuildWebHost(string[] args)
     {
         Console.WriteLine($"BuildWebHost()");
         Console.WriteLine($"Args: {string.Join(' ', args)}");
@@ -59,30 +60,34 @@ public class Program
         var appSettings = config.Get<AppSettings>();
         Console.WriteLine($"ConnectionString: {appSettings.ConnectionString}");
 
-        BenchmarkApplication.RawDb = new RawDb(new ConcurrentRandom(), appSettings);
+        BenchmarkApplication.RawDb = new RawDb(appSettings);
 
-        var hostBuilder = new WebHostBuilder()
-            .UseBenchmarksConfiguration(config)
-            .UseKestrel((context, options) =>
+        var hostBuilder = Host.CreateDefaultBuilder(args)
+            .ConfigureWebHost(webHostBuilder =>
             {
-                var endPoint = context.Configuration.CreateIPEndPoint();
+                webHostBuilder
+                    .UseBenchmarksConfiguration(config)
+                    .UseKestrel((context, options) =>
+                    {
+                        var endPoint = context.Configuration.CreateIPEndPoint();
 
-                options.Listen(endPoint, builder =>
+                        options.Listen(endPoint, builder =>
+                        {
+                            builder.UseHttpApplication<BenchmarkApplication>();
+                        });
+                    })
+                    .UseStartup<Startup>();
+
+                webHostBuilder.UseSockets(options =>
                 {
-                    builder.UseHttpApplication<BenchmarkApplication>();
+                    options.WaitForDataBeforeAllocatingBuffer = false;
+
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                    {
+                        options.UnsafePreferInlineScheduling = true;
+                    }
                 });
-            })
-            .UseStartup<Startup>();
-
-        hostBuilder.UseSockets(options =>
-        {
-            options.WaitForDataBeforeAllocatingBuffer = false;
-
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            {
-                options.UnsafePreferInlineScheduling = true;
-            }
-        });
+            });
 
         var host = hostBuilder.Build();
 

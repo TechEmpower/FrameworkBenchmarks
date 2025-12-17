@@ -12,7 +12,7 @@ internal class Program
     {
         var builder = UnhingedEngine
             .CreateBuilder()
-            .SetNWorkersSolver(() => Environment.ProcessorCount / 2)
+            .SetNWorkersSolver(() => Environment.ProcessorCount)
             .SetBacklog(16384)
             .SetMaxEventsPerWake(512)
             .SetMaxNumberConnectionsPerWorker(512)

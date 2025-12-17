@@ -13,9 +13,9 @@ $http_worker->count         = (int) shell_exec('nproc') * 4;
 $http_worker->reusePort     = true;
 $http_worker->name          = 'AdapterMan-Laravel';
 $http_worker->onWorkerStart = static function () {
-    Header::$date = gmdate(DATE_RFC7231);
+    Header::$date = gmdate('D, d M Y H:i:s \G\M\T');
     Timer::add(1, function() {
-         Header::$date = gmdate(DATE_RFC7231);
+         Header::$date = gmdate('D, d M Y H:i:s \G\M\T');
     });
     //init();
     require __DIR__.'/start.php';

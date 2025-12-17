@@ -1,15 +1,18 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     application
     kotlin("jvm") version "2.1.21"
     kotlin("plugin.serialization") version "2.1.21"
-    id("com.github.johnrengelman.shadow") version "8.1.0"
+    id("com.gradleup.shadow") version "8.3.9"
 }
 
 repositories {
     mavenCentral()
 }
 
-val ktorVersion = "3.1.3"
+val ktorVersion = "3.3.3"
 val kotlinxSerializationVersion = "1.8.1"
 val exposedVersion = "0.61.0"
 
@@ -31,3 +34,13 @@ dependencies {
 }
 
 application.mainClass.set("AppKt")
+
+kotlin {
+    jvmToolchain(21)
+}
+
+tasks.withType<KotlinCompile>().configureEach {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_21)
+    }
+}

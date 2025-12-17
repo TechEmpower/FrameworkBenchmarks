@@ -1,6 +1,8 @@
-FROM dunglas/frankenphp
+FROM dunglas/frankenphp:php8.5
 
-RUN apt-get update -yqq && apt-get install libicu-dev unzip -y
+ARG DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update -yqq && apt-get install libicu-dev unzip -y > /dev/null
 RUN install-php-extensions \
     intl \
 	pcntl \

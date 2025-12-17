@@ -6,16 +6,20 @@ pub fn build(b: *std.Build) !void {
 
     const dep_opts = .{ .target = target, .optimize = optimize };
 
-    const exe = b.addExecutable(.{
-        .name = "httpz",
-        .root_source_file = b.path("src/main.zig"),
+    const root_module = b.addModule("root_mod", .{
         .target = target,
         .optimize = optimize,
+        .root_source_file = b.path("src/main.zig"),
     });
 
     const httpz_module = b.dependency("httpz", dep_opts).module("httpz");
     const pg_module = b.dependency("pg", dep_opts).module("pg");
-    const datetimez_module = b.dependency("datetimez", dep_opts).module("zig-datetime");
+    const datetimez_module = b.dependency("datetimez", dep_opts).module("datetime");
+
+    const exe = b.addExecutable(.{
+        .name = "httpz",
+        .root_module = root_module,
+    });
 
     exe.root_module.addImport("httpz", httpz_module);
     exe.root_module.addImport("pg", pg_module);

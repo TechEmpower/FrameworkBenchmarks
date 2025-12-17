@@ -68,7 +68,7 @@
                 <inherited>true</inherited>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.0</version>
+                <version>3.14.1</version>
                 <configuration>
                     <debug>false</debug>
                     <source>21</source>

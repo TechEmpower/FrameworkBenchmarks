@@ -34,9 +34,9 @@ class WorkerTimer
 
     public static function init()
     {
-        self::$date = 'Date: ' . gmdate(DATE_RFC7231);
+        self::$date = 'Date: ' . gmdate('D, d M Y H:i:s \G\M\T');
         Timer::add(1, function() {
-            WorkerTimer::$date = 'Date: ' . gmdate(DATE_RFC7231);
+            WorkerTimer::$date = 'Date: ' . gmdate('D, d M Y H:i:s \G\M\T');
         });
     }
 }

@@ -28,12 +28,12 @@
 
     <ItemGroup>
 
-        <PackageReference Include="$(GENHTTP_ENGINE_PACKAGE)" Version="10.0.0" />
+        <PackageReference Include="$(GENHTTP_ENGINE_PACKAGE)" Version="10.2.0" />
 
-        <PackageReference Include="GenHTTP.Modules.Webservices" Version="10.0.0" />
+        <PackageReference Include="GenHTTP.Modules.Webservices" Version="10.2.0" />
 
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.0" />
-        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0-rc.2" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.1" />
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0" />
 
     </ItemGroup>
 

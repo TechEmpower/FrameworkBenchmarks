@@ -24,9 +24,9 @@ $app = new Comet([
 $app->init(
     function() {
         ORM::init();	
-	    Storage::$date = gmdate(DATE_RFC7231);
+	    Storage::$date = gmdate('D, d M Y H:i:s \G\M\T');
     	Timer::add(1, function() {
-        	Storage::$date = gmdate(DATE_RFC7231);
+        	Storage::$date = gmdate('D, d M Y H:i:s \G\M\T');
 	    });
 });
 

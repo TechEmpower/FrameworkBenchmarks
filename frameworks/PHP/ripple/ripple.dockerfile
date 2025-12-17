@@ -1,4 +1,4 @@
-FROM php:8.3-cli
+FROM php:8.5-cli
 
 RUN apt-get update -yqq >> /dev/null
 RUN apt-get install -y libevent-dev \
@@ -10,7 +10,6 @@ RUN apt-get install -y libevent-dev \
 
 RUN docker-php-ext-install pdo_mysql \
     ffi \
-    opcache \
     posix \
     pcntl \
     sockets >> /dev/null

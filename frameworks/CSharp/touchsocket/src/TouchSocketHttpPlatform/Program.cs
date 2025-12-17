@@ -10,6 +10,8 @@
 // 感谢您的下载和使用
 // ------------------------------------------------------------------------------
 
+using System.Buffers;
+using System.IO.Pipelines;
 using TouchSocket.Core;
 using TouchSocket.Sockets;
 
@@ -19,10 +21,32 @@ internal class Program
 {
     private static async Task Main(string[] args)
     {
-        var server = new MyServer();
+        MyServer server = new MyServer();
         await server.SetupAsync(new TouchSocketConfig()
             .SetListenIPHosts(8080)
             .SetMaxCount(1000000)
+            .SetTransportOption(options =>
+            {
+                options.BufferOnDemand = false;
+
+                options.ReceivePipeOptions = new PipeOptions(
+              pool: MemoryPool<byte>.Shared,
+              readerScheduler: PipeScheduler.Inline,
+              writerScheduler: PipeScheduler.Inline,
+              pauseWriterThreshold: 1024 * 1024,
+              resumeWriterThreshold: 1024 * 512,
+              minimumSegmentSize: -1,
+              useSynchronizationContext: false);
+
+                options.SendPipeOptions = new PipeOptions(
+              pool: MemoryPool<byte>.Shared,
+              readerScheduler: PipeScheduler.Inline,
+              writerScheduler: PipeScheduler.Inline,
+              pauseWriterThreshold: 64 * 1024,
+              resumeWriterThreshold: 32 * 1024,
+              minimumSegmentSize: -1,
+              useSynchronizationContext: false);
+            })
             .ConfigureContainer(a =>
             {
                 a.AddConsoleLogger();
@@ -30,7 +54,7 @@ internal class Program
 
         await server.StartAsync();
         Console.WriteLine("HTTP服务器已启动，端口: 8080");
-        
+
         while (true)
         {
             Console.ReadLine();
