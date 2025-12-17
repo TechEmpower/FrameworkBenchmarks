@@ -186,14 +186,14 @@ fun <Database> Application.parameterizedModule(exposedOps: ExposedOps<Database>)
         get("/db") {
             val random = ThreadLocalRandom.current()
             val result = transaction { exposedOps.getWorldWithId(random.nextIntWithinRows()) }
-            call.respondText(Json.encodeToString(result), ContentType.Application.Json)
+            call.respondText(json.encodeToString(result), ContentType.Application.Json)
         }
 
         get("/queries") {
             val queries = call.queries()
             val random = ThreadLocalRandom.current()
             val result = transaction { exposedOps.getRandomWorlds(queries, random) }
-            call.respondText(Json.encodeToString(result), ContentType.Application.Json)
+            call.respondText(json.encodeToString(result), ContentType.Application.Json)
         }
 
         get("/fortunes") {
@@ -227,7 +227,7 @@ fun <Database> Application.parameterizedModule(exposedOps: ExposedOps<Database>)
             val queries = call.queries()
             val random = ThreadLocalRandom.current()
             val result = transaction { exposedOps.getRandomWorldsAndUpdate(queries, random) }
-            call.respondText(Json.encodeToString(result), ContentType.Application.Json)
+            call.respondText(json.encodeToString(result), ContentType.Application.Json)
         }
     }
 }
