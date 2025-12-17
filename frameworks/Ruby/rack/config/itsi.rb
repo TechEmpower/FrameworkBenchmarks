@@ -9,5 +9,5 @@ preload false
 num_workers, num_threads = auto_tune
 
 workers num_workers
-threads num_threads
+threads ENV.fetch('MAX_THREADS').to_i
 fiber_scheduler false
