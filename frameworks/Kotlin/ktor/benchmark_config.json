@@ -179,6 +179,27 @@
         "display_name": "ktor-netty-exposed-jdbc-dao",
         "notes": "",
         "versus": "ktor"
+      },
+      "exposed-r2dbc-dsl": {
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
+        "update_url": "/updates?queries=",
+        "fortune_url": "/fortunes",
+        "port": 9090,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "postgres",
+        "framework": "ktor",
+        "language": "Kotlin",
+        "flavor": "None",
+        "orm": "Full",
+        "platform": "Netty",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "ktor-netty-exposed-r2dbc-dsl",
+        "notes": "",
+        "versus": "ktor"
       }
     }
   ]

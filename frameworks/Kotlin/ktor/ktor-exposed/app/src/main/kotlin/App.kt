@@ -11,18 +11,26 @@ import io.ktor.server.netty.*
 import io.ktor.server.plugins.defaultheaders.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.single
+import kotlinx.coroutines.flow.toList
 import kotlinx.html.*
-import kotlinx.serialization.json.Json
 import org.jetbrains.exposed.v1.core.dao.id.EntityID
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.core.statements.BatchUpdateStatement
+import org.jetbrains.exposed.v1.core.vendors.PostgreSQLDialect
 import org.jetbrains.exposed.v1.jdbc.Database
-import org.jetbrains.exposed.v1.jdbc.select
-import org.jetbrains.exposed.v1.jdbc.statements.toExecutable
-import org.jetbrains.exposed.v1.jdbc.transactions.TransactionManager
 import org.jetbrains.exposed.v1.jdbc.transactions.suspendTransaction
+import org.jetbrains.exposed.v1.r2dbc.R2dbcDatabase
 import org.jetbrains.exposed.v1.r2dbc.R2dbcDatabaseConfig
+import org.jetbrains.exposed.v1.r2dbc.transactions.suspendTransaction
 import java.util.concurrent.ThreadLocalRandom
+import org.jetbrains.exposed.v1.jdbc.select as jdbcSelect
+import org.jetbrains.exposed.v1.jdbc.statements.toExecutable as toJdbcExecutable
+import org.jetbrains.exposed.v1.jdbc.transactions.TransactionManager.Companion as JdbcTransactionManager
+import org.jetbrains.exposed.v1.r2dbc.select as r2dbcSelect
+import org.jetbrains.exposed.v1.r2dbc.statements.toExecutable as toR2dbcExecutable
+import org.jetbrains.exposed.v1.r2dbc.transactions.TransactionManager as R2dbcTransactionManager
 
 enum class ConnectionMode {
     Jdbc, R2dbc
@@ -49,7 +57,7 @@ fun Application.module(connectionMode: ConnectionMode, exposedMode: ExposedMode)
 
             ConnectionMode.R2dbc -> when (exposedMode) {
                 Dsl -> ExposedOps.R2dbc.Dsl
-                Dao -> ExposedOps.R2dbc.Dao
+                Dao -> throw IllegalArgumentException("DAO with R2DBC is not supported")
             }
         }
     )
@@ -83,13 +91,14 @@ interface ExposedOps<Database> {
 
         object Dsl : Jdbc {
             override suspend fun getWorldWithId(id: Int): World =
-                WorldTable.select(WorldTable.id, WorldTable.randomNumber).where(WorldTable.id eq id).single().toWorld()
+                WorldTable.jdbcSelect(WorldTable.id, WorldTable.randomNumber).where(WorldTable.id eq id)
+                    .single().toWorld()
 
             override suspend fun getRandomWorlds(queries: Int, random: ThreadLocalRandom): List<World> =
                 List(queries) { getWorldWithId(random.nextIntWithinRows()) }
 
             override suspend fun getAllFortunesAndAddTo(result: MutableList<Fortune>) {
-                FortuneTable.select(FortuneTable.id, FortuneTable.message)
+                FortuneTable.jdbcSelect(FortuneTable.id, FortuneTable.message)
                     .mapTo(result) { it.toFortune() }
             }
 
@@ -102,7 +111,7 @@ interface ExposedOps<Database> {
                     batch[WorldTable.randomNumber] = world.randomNumber
                 }
                 // also consider passing the transaction explicitly
-                batch.toExecutable().execute(TransactionManager.current())
+                batch.toJdbcExecutable().execute(JdbcTransactionManager.current())
                 return result
             }
         }
@@ -135,40 +144,41 @@ interface ExposedOps<Database> {
         }
     }
 
-    interface R2dbc : ExposedOps<R2dbcDatabaseConfig> {
-        override suspend fun <T> transaction(db: R2dbcDatabaseConfig, statement: suspend () -> T): T =
-            TODO("Not yet implemented")
+    // TODO consider moving to separate files to avoid import conflicts/aliases
+    interface R2dbc : ExposedOps<R2dbcDatabase> {
+        override fun createDatabase(): R2dbcDatabase =
+            R2dbcDatabase.connect(configurePostgresR2DBC(), R2dbcDatabaseConfig {
+                // This can't be omitted.
+                explicitDialect = PostgreSQLDialect()
+            })
 
-        override fun createDatabase(): R2dbcDatabaseConfig =
-            TODO("Not yet implemented")
+        override suspend fun <T> transaction(db: R2dbcDatabase, statement: suspend () -> T): T =
+            suspendTransaction(db) { statement() }
 
         object Dsl : R2dbc {
             override suspend fun getWorldWithId(id: Int): World =
-                TODO("Not yet implemented")
+                WorldTable.r2dbcSelect(WorldTable.id, WorldTable.randomNumber).where(WorldTable.id eq id)
+                    .single().toWorld()
 
             override suspend fun getRandomWorlds(queries: Int, random: ThreadLocalRandom): List<World> =
-                TODO("Not yet implemented")
+                List(queries) { getWorldWithId(random.nextIntWithinRows()) }
 
-            override suspend fun getAllFortunesAndAddTo(result: MutableList<Fortune>) =
-                TODO("Not yet implemented")
-
-            override suspend fun getRandomWorldsAndUpdate(queries: Int, random: ThreadLocalRandom): List<World> {
-                TODO("Not yet implemented")
+            override suspend fun getAllFortunesAndAddTo(result: MutableList<Fortune>) {
+                FortuneTable.r2dbcSelect(FortuneTable.id, FortuneTable.message)
+                    .map { it.toFortune() }.toList(result)
             }
-        }
-
-        object Dao : R2dbc {
-            override suspend fun getWorldWithId(id: Int): World =
-                TODO("Not yet implemented")
-
-            override suspend fun getRandomWorlds(queries: Int, random: ThreadLocalRandom): List<World> =
-                TODO("Not yet implemented")
-
-            override suspend fun getAllFortunesAndAddTo(result: MutableList<Fortune>) =
-                TODO("Not yet implemented")
 
             override suspend fun getRandomWorldsAndUpdate(queries: Int, random: ThreadLocalRandom): List<World> {
-                TODO("Not yet implemented")
+                val result = getRandomWorlds(queries, random)
+                result.forEach { it.randomNumber = random.nextIntWithinRows() }
+                val batch = BatchUpdateStatement(WorldTable)
+                result.sortedBy { it.id }.forEach { world ->
+                    batch.addBatch(EntityID(world.id, WorldTable))
+                    batch[WorldTable.randomNumber] = world.randomNumber
+                }
+                // also consider passing the transaction explicitly
+                batch.toR2dbcExecutable().execute(R2dbcTransactionManager.current())
+                return result
             }
         }
     }

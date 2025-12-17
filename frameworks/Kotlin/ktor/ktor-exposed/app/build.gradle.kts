@@ -31,6 +31,10 @@ dependencies {
 
     implementation("org.postgresql:postgresql:42.7.8")
     implementation("com.zaxxer:HikariCP:7.0.2")
+
+    implementation("org.postgresql:r2dbc-postgresql:1.1.1.RELEASE")
+    implementation("io.r2dbc:r2dbc-pool:1.0.2.RELEASE")
+
     runtimeOnly("org.slf4j:slf4j-simple:2.0.7")
 }
 
