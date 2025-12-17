@@ -1,107 +1,119 @@
-#[path = "./db_util.rs"]
-mod db_util;
+use core::cell::RefCell;
 
-use xitca_postgres::{Execute, iter::AsyncLendingIterator, pool::Pool};
-
-use super::{
-    ser::{Fortune, Fortunes, World},
-    util::{DB_URL, HandleResult, Rand},
+use xitca_postgres::{
+    Execute,
+    dev::Query,
+    iter::AsyncLendingIterator,
+    statement::{Statement, StatementNamed},
+    types::Type,
 };
 
-use db_util::{FORTUNE_STMT, UPDATE_STMT, WORLD_STMT, not_found};
+use crate::{
+    ser::{Fortune, Fortunes, World},
+    util::{Error, HandleResult, Rand},
+};
 
-pub struct Client {
-    pool: Pool,
-    rng: core::cell::RefCell<Rand>,
+pub const FORTUNE_STMT: StatementNamed = Statement::named("SELECT id,message FROM fortune", &[]);
+
+pub const WORLD_STMT: StatementNamed = Statement::named("SELECT id,randomnumber FROM world WHERE id=$1", &[Type::INT4]);
+
+pub const UPDATE_STMT: StatementNamed = Statement::named(
+    "UPDATE world SET randomnumber=w.r FROM (SELECT unnest($1) as i,unnest($2) as r) w WHERE world.id=w.i",
+    &[Type::INT4_ARRAY, Type::INT4_ARRAY],
+);
+
+#[cold]
+#[inline(never)]
+fn not_found() -> Error {
+    "request World does not exist".into()
 }
 
-pub async fn create() -> HandleResult<Client> {
-    Ok(Client {
-        pool: Pool::builder(DB_URL).capacity(1).build()?,
-        rng: Default::default(),
-    })
+pub(crate) async fn db<C>(conn: C, rng: &RefCell<Rand>, stmt: &Statement) -> HandleResult<World>
+where
+    C: Query,
+{
+    let id = rng.borrow_mut().gen_id();
+    let mut res = stmt.bind([id]).query(&conn).await?;
+    drop(conn);
+    let row = res.try_next().await?.ok_or_else(not_found)?;
+    Ok(World::new(row.get(0), row.get(1)))
 }
 
-impl Client {
-    pub async fn get_world(&self) -> HandleResult<World> {
-        let mut conn = self.pool.get().await?;
-        let stmt = WORLD_STMT.execute(&mut conn).await?;
-        let id = self.rng.borrow_mut().gen_id();
-        let mut res = stmt.bind([id]).query(&conn.consume()).await?;
+pub(crate) async fn queries<C>(conn: C, rng: &RefCell<Rand>, stmt: &Statement, num: u16) -> HandleResult<Vec<World>>
+where
+    C: Query,
+{
+    let get = rng
+        .borrow_mut()
+        .gen_multi()
+        .take(num as _)
+        .map(|id| stmt.bind([id]).query(&conn))
+        .collect::<Vec<_>>();
+
+    drop(conn);
+
+    let mut worlds = Vec::with_capacity(num as _);
+
+    for get in get {
+        let mut res = get.await?;
         let row = res.try_next().await?.ok_or_else(not_found)?;
-        Ok(World::new(row.get(0), row.get(1)))
+        worlds.push(World::new(row.get(0), row.get(1)));
     }
 
-    pub async fn get_worlds(&self, num: u16) -> HandleResult<Vec<World>> {
-        let mut conn = self.pool.get().await?;
-        let stmt = WORLD_STMT.execute(&mut conn).await?;
+    Ok(worlds)
+}
 
-        let get = self
-            .rng
-            .borrow_mut()
-            .gen_multi()
-            .take(num as _)
-            .map(|id| stmt.bind([id]).query(&conn))
-            .collect::<Vec<_>>();
+pub(crate) async fn updates<C>(
+    conn: C,
+    rng: &RefCell<Rand>,
+    world_stmt: &Statement,
+    update_stmt: &Statement,
+    num: u16,
+) -> HandleResult<Vec<World>>
+where
+    C: Query,
+{
+    let mut rng = rng.borrow_mut();
+    let mut ids = rng.gen_multi().take(num as _).collect::<Vec<_>>();
+    ids.sort();
 
-        drop(conn);
+    let (get, rngs, worlds) = ids
+        .iter()
+        .cloned()
+        .zip(rng.gen_multi())
+        .map(|(id, rand)| {
+            let get = world_stmt.bind([id]).query(&conn);
+            (get, rand, World::new(id, rand))
+        })
+        .collect::<(Vec<_>, Vec<_>, Vec<_>)>();
 
-        let mut worlds = Vec::with_capacity(num as _);
+    let update = update_stmt.bind([&ids, &rngs]).query(&conn);
 
-        for get in get {
-            let mut res = get.await?;
-            let row = res.try_next().await?.ok_or_else(not_found)?;
-            worlds.push(World::new(row.get(0), row.get(1)));
-        }
+    drop(conn);
+    drop(rng);
 
-        Ok(worlds)
+    for get in get {
+        let _rand = get.await?.try_next().await?.ok_or_else(not_found)?.get::<i32>(1);
     }
 
-    pub async fn update(&self, num: u16) -> HandleResult<Vec<World>> {
-        let mut conn = self.pool.get().await?;
-        let world_stmt = WORLD_STMT.execute(&mut conn).await?;
-        let update_stmt = UPDATE_STMT.execute(&mut conn).await?;
+    update.await?;
 
-        let (get, update, worlds) = {
-            let mut rng = self.rng.borrow_mut();
-            let mut ids = rng.gen_multi().take(num as _).collect::<Vec<_>>();
-            ids.sort();
+    Ok(worlds)
+}
 
-            let (get, rngs, worlds) = ids
-                .iter()
-                .cloned()
-                .zip(rng.gen_multi())
-                .map(|(id, rand)| {
-                    let get = world_stmt.bind([id]).query(&conn);
-                    (get, rand, World::new(id, rand))
-                })
-                .collect::<(Vec<_>, Vec<_>, Vec<_>)>();
+pub(crate) async fn fortunes<C>(conn: C, stmt: &Statement) -> HandleResult<Fortunes>
+where
+    C: Query,
+{
+    let mut res = stmt.query(&conn).await?;
 
-            let update = update_stmt.bind([&ids, &rngs]).query(&conn.consume());
+    drop(conn);
 
-            (get, update, worlds)
-        };
+    let mut fortunes = Vec::with_capacity(16);
 
-        for fut in get {
-            let _rand = fut.await?.try_next().await?.ok_or_else(not_found)?.get::<i32>(1);
-        }
-
-        update.await?;
-
-        Ok(worlds)
+    while let Some(row) = res.try_next().await? {
+        fortunes.push(Fortune::new(row.get(0), row.get::<String>(1)));
     }
 
-    pub async fn tell_fortune(&self) -> HandleResult<Fortunes> {
-        let mut fortunes = Vec::with_capacity(16);
-
-        let mut conn = self.pool.get().await?;
-        let stmt = FORTUNE_STMT.execute(&mut conn).await?;
-        let mut res = stmt.query(&conn.consume()).await?;
-
-        while let Some(row) = res.try_next().await? {
-            fortunes.push(Fortune::new(row.get(0), row.get::<String>(1)));
-        }
-
-        Ok(Fortunes::new(fortunes))
-    }
+    Ok(Fortunes::new(fortunes))
 }

@@ -5,8 +5,8 @@
 #[global_allocator]
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
-#[path = "db_unrealistic.rs"]
 mod db;
+mod db_unrealistic;
 mod ser;
 mod util;
 
@@ -51,7 +51,7 @@ fn main() -> io::Result<()> {
                 socket.bind(addr)?;
                 let listener = socket.listen(1024)?;
 
-                let client = db::create().await.unwrap();
+                let client = db_unrealistic::create().await.unwrap();
 
                 // unrealistic http dispatcher. no spec check. no security feature.
                 let service = Dispatcher::new(handler, State::new(client));
@@ -87,7 +87,7 @@ fn main() -> io::Result<()> {
     Ok(())
 }
 
-async fn handler<'h>(req: Request<'h, State<db::Client>>, res: Response<'h>) -> Response<'h, 3> {
+async fn handler<'h>(req: Request<'h, State<db_unrealistic::Client>>, res: Response<'h>) -> Response<'h, 3> {
     // unrealistic due to no http method check
     match req.path {
         // unrealistic due to no dynamic path matching
@@ -112,7 +112,7 @@ async fn handler<'h>(req: Request<'h, State<db::Client>>, res: Response<'h>) -> 
 
         // all database related categories are unrealistic. please reference db_unrealistic module for detail.
         "/fortunes" => {
-            let fortunes = req.ctx.client.tell_fortune().await.unwrap().render_once().unwrap();
+            let fortunes = req.ctx.client.fortunes().await.unwrap().render_once().unwrap();
             res.status(StatusCode::OK)
                 .header("content-type", "text/html; charset=utf-8")
                 .header("server", "X")
@@ -121,17 +121,17 @@ async fn handler<'h>(req: Request<'h, State<db::Client>>, res: Response<'h>) -> 
         "/db" => {
             // unrealistic due to no error handling. any db/serialization error will cause process crash.
             // the same goes for all following unwraps on database related functions.
-            let world = req.ctx.client.get_world().await.unwrap();
+            let world = req.ctx.client.db().await.unwrap();
             json_response(res, req.ctx, &world)
         }
         p if p.starts_with("/q") => {
             let num = p["/queries?q=".len()..].parse_query();
-            let worlds = req.ctx.client.get_worlds(num).await.unwrap();
+            let worlds = req.ctx.client.queries(num).await.unwrap();
             json_response(res, req.ctx, &worlds)
         }
         p if p.starts_with("/u") => {
             let num = p["/updates?q=".len()..].parse_query();
-            let worlds = req.ctx.client.update(num).await.unwrap();
+            let worlds = req.ctx.client.updates(num).await.unwrap();
             json_response(res, req.ctx, &worlds)
         }
         _ => res.status(StatusCode::NOT_FOUND).header("server", "X").body(&[]),

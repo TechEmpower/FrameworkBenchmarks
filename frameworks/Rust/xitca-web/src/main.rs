@@ -1,4 +1,5 @@
 mod db;
+mod db_pool;
 mod ser;
 mod util;
 
@@ -16,11 +17,10 @@ use xitca_http::{
 };
 use xitca_service::{Service, ServiceExt, fn_service};
 
-use db::Client;
 use ser::{IntoResponse, Message, Request, Response, error_response};
 use util::{QueryParse, SERVER_HEADER_VALUE, State};
 
-type Ctx<'a> = Context<'a, Request<RequestBody>, State<Client>>;
+type Ctx<'a> = Context<'a, Request<RequestBody>, State<db_pool::Client>>;
 
 fn main() -> std::io::Result<()> {
     let service = Router::new()
@@ -39,7 +39,7 @@ fn main() -> std::io::Result<()> {
             "/db",
             get(fn_service(async |ctx: Ctx| {
                 let (req, state) = ctx.into_parts();
-                let world = state.client.get_world().await?;
+                let world = state.client.db().await?;
                 req.json_response(state, &world)
             })),
         )
@@ -47,7 +47,7 @@ fn main() -> std::io::Result<()> {
             "/fortunes",
             get(fn_service(async |ctx: Ctx| {
                 let (req, state) = ctx.into_parts();
-                let fortunes = state.client.tell_fortune().await?.render_once()?;
+                let fortunes = state.client.fortunes().await?.render_once()?;
                 req.html_response(fortunes)
             })),
         )
@@ -56,7 +56,7 @@ fn main() -> std::io::Result<()> {
             get(fn_service(async |ctx: Ctx| {
                 let (req, state) = ctx.into_parts();
                 let num = req.uri().query().parse_query();
-                let worlds = state.client.get_worlds(num).await?;
+                let worlds = state.client.queries(num).await?;
                 req.json_response(state, &worlds)
             })),
         )
@@ -65,11 +65,13 @@ fn main() -> std::io::Result<()> {
             get(fn_service(async |ctx: Ctx| {
                 let (req, state) = ctx.into_parts();
                 let num = req.uri().query().parse_query();
-                let worlds = state.client.update(num).await?;
+                let worlds = state.client.updates(num).await?;
                 req.json_response(state, &worlds)
             })),
         )
-        .enclosed(ContextBuilder::new(|| async { db::create().await.map(State::new) }))
+        .enclosed(ContextBuilder::new(|| async {
+            db_pool::create().await.map(State::new)
+        }))
         .enclosed_fn(async |service, req| {
             let mut res = service.call(req).await.unwrap_or_else(error_handler);
             res.headers_mut().insert(SERVER, SERVER_HEADER_VALUE);
@@ -88,6 +90,9 @@ fn error_handler(e: RouterError<util::Error>) -> Response {
     error_response(match e {
         RouterError::Match(_) => StatusCode::NOT_FOUND,
         RouterError::NotAllowed(_) => StatusCode::METHOD_NOT_ALLOWED,
-        RouterError::Service(_) => StatusCode::INTERNAL_SERVER_ERROR,
+        RouterError::Service(e) => {
+            eprintln!("Internal Error: {e}");
+            StatusCode::INTERNAL_SERVER_ERROR
+        }
     })
 }

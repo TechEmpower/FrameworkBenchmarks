@@ -13,7 +13,7 @@ use xitca_http::{
     },
 };
 
-use crate::util::Error;
+use crate::util::HandleResult;
 
 const HELLO: &str = "Hello, World!";
 const HELLO_BYTES: &[u8] = HELLO.as_bytes();
@@ -76,7 +76,7 @@ pub struct Fortunes {
 // bench to reduce resource usage of bench runner
 #[cfg(feature = "template")]
 impl Fortunes {
-    pub fn render_once(self) -> sailfish::RenderResult {
+    pub fn render_once(self) -> HandleResult<String> {
         use sailfish::runtime::{Buffer, Render};
 
         const PREFIX: &str = "<!DOCTYPE html>\n<html>\n<head><title>Fortunes</title></head>\n<body>\n<table>\n<tr><th>id</th><th>message</th></tr>\n";
@@ -199,16 +199,16 @@ pub type Response = http::Response<Once<Bytes>>;
 
 pub trait IntoResponse: Sized {
     #[cfg(any(feature = "json", feature = "perf-json"))]
-    fn json_response<C>(self, state: &crate::util::State<C>, val: &impl Serialize) -> Result<Response, Error>;
+    fn json_response<C>(self, state: &crate::util::State<C>, val: &impl Serialize) -> HandleResult<Response>;
 
-    fn text_response(self) -> Result<Response, Error>;
+    fn text_response(self) -> HandleResult<Response>;
 
-    fn html_response(self, val: String) -> Result<Response, Error>;
+    fn html_response(self, val: String) -> HandleResult<Response>;
 }
 
 impl<Ext> IntoResponse for Request<Ext> {
     #[cfg(any(feature = "json", feature = "perf-json"))]
-    fn json_response<C>(self, state: &crate::util::State<C>, val: &impl Serialize) -> Result<Response, Error> {
+    fn json_response<C>(self, state: &crate::util::State<C>, val: &impl Serialize) -> HandleResult<Response> {
         let buf = &mut *state.write_buf.borrow_mut();
         #[cfg(all(feature = "json", not(feature = "perf-json")))]
         serde_json::to_writer(xitca_http::bytes::BufMutWriter(buf), val)?;
@@ -222,13 +222,13 @@ impl<Ext> IntoResponse for Request<Ext> {
         Ok(res)
     }
 
-    fn text_response(self) -> Result<Response, Error> {
+    fn text_response(self) -> HandleResult<Response> {
         let mut res = self.into_response(const { Bytes::from_static(HELLO_BYTES) });
         res.headers_mut().insert(CONTENT_TYPE, TEXT_UTF8);
         Ok(res)
     }
 
-    fn html_response(self, val: String) -> Result<Response, Error> {
+    fn html_response(self, val: String) -> HandleResult<Response> {
         let mut res = self.into_response(Bytes::from(val));
         res.headers_mut().insert(CONTENT_TYPE, TEXT_HTML_UTF8);
         Ok(res)
