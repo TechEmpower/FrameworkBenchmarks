@@ -139,7 +139,7 @@ class MainVerticle(val hasDb: Boolean) : CoroutineVerticle(), CoroutineRouterSup
 
                 /*
                 // Approach 1
-                end(Json.encodeToString(serializer, requestHandler(it)))/*.coAwait()*/
+                end(json.encodeToString(serializer, requestHandler(it)))/*.coAwait()*/
                 */
 
                 /*
@@ -147,7 +147,7 @@ class MainVerticle(val hasDb: Boolean) : CoroutineVerticle(), CoroutineRouterSup
                 // java.lang.IllegalStateException: You must set the Content-Length header to be the total size of the message body BEFORE sending any data if you are not using HTTP chunked encoding.
                 toRawSink().buffered().use { bufferedSink ->
                     @OptIn(ExperimentalSerializationApi::class)
-                    Json.encodeToSink(serializer, requestHandler(it), bufferedSink)
+                    json.encodeToSink(serializer, requestHandler(it), bufferedSink)
                 }
                 */
 
@@ -155,7 +155,7 @@ class MainVerticle(val hasDb: Boolean) : CoroutineVerticle(), CoroutineRouterSup
                 end(Buffer.buffer().apply {
                     toRawSink().buffered().use { bufferedSink ->
                         @OptIn(ExperimentalSerializationApi::class)
-                        Json.encodeToSink(serializer, requestHandler(it), bufferedSink)
+                        json.encodeToSink(serializer, requestHandler(it), bufferedSink)
                     }
                 })
             }
