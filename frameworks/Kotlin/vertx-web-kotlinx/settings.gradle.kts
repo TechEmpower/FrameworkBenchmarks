@@ -10,3 +10,6 @@ include(
     "with-db:exposed-r2dbc",
     "with-db:exposed-vertx-sql-client"
 )
+
+// renamed explicitly to work around jar name conflicts
+project(":with-db:common").name = "with-db-common"
