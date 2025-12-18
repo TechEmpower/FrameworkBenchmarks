@@ -10,14 +10,8 @@ abstract class CommonWithDbVerticle<DbClient : Any> : CommonVerticle() {
     lateinit var dbClient: DbClient
 
     override suspend fun start() {
-        initDbResources()
-        super.start()
-    }
-
-
-    // TODO consider just inlining this
-    /*abstract*/ suspend fun initDbResources() {
         dbClient = initDbClient()
+        super.start()
     }
 
     abstract suspend fun initDbClient(): DbClient
