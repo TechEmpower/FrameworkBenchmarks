@@ -1,0 +1,15 @@
+[versions]
+kotlin = "2.3.0"
+vertx = "5.0.6"
+kotlinx-coroutines = "1.10.2"
+kotlinx-serialization = "1.9.0"
+kotlinx-io = "0.8.2"
+kotlinx-html = "0.12.0"
+kotlinx-datetime = "0.7.1"
+exposedVertxSqlClient = "0.7.0-SNAPSHOT" # TODO use a stable version
+
+[libraries]
+kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+
+[plugins]
+kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

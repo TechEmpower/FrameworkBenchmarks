@@ -1,6 +1,11 @@
 FROM gradle:9.2.1-jdk25
 
-WORKDIR /vertx-web-kotlinx
+WORKDIR /vertx-web-kotlinx-exposed-vertx-sql-client
+
+# copy the Maven local dependencies into the container for snapshot dependencies
+# First publish with `publishToMavenLocal` and copy the Maven local dependencies into this directory with `cp -r ~/.m2 ./`.
+COPY .m2/repository/com/huanshankeji/exposed-vertx-sql-client-core/0.7.0-SNAPSHOT /root/.m2/repository/com/huanshankeji/exposed-vertx-sql-client-core/0.7.0-SNAPSHOT
+COPY .m2/repository/com/huanshankeji/exposed-vertx-sql-client-postgresql/0.7.0-SNAPSHOT /root/.m2/repository/com/huanshankeji/exposed-vertx-sql-client-postgresql/0.7.0-SNAPSHOT
 
 
 COPY gradle/libs.versions.toml gradle/libs.versions.toml
@@ -15,11 +20,14 @@ RUN mkdir -p common without-db/default with-db/common with-db/default with-db/r2
 COPY common/build.gradle.kts common/build.gradle.kts
 COPY common/src common/src
 
-COPY without-db/default/build.gradle.kts without-db/default/build.gradle.kts
-COPY without-db/default/src without-db/default/src
+COPY with-db/common/build.gradle.kts with-db/common/build.gradle.kts
+COPY with-db/common/src with-db/common/src
+
+COPY with-db/exposed-vertx-sql-client/build.gradle.kts with-db/exposed-vertx-sql-client/build.gradle.kts
+COPY with-db/exposed-vertx-sql-client/src with-db/exposed-vertx-sql-client/src
 
 
-RUN gradle --no-daemon without-db:default:installDist
+RUN gradle --no-daemon with-db:exposed-vertx-sql-client:installDist
 
 EXPOSE 8080
 
@@ -44,4 +52,4 @@ CMD export JAVA_OPTS=" \
     -Dio.netty.buffer.checkAccessible=false \
     -Dio.netty.iouring.ringSize=16384 \
     " && \
-    without-db/default/build/install/default/bin/default
+    with-db/exposed-vertx-sql-client/build/install/exposed-vertx-sql-client/bin/exposed-vertx-sql-client
