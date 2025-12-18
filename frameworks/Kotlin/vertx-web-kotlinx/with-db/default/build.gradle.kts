@@ -1,0 +1,33 @@
+plugins {
+    id("buildlogic.kotlin-application-conventions")
+}
+
+// TODO merge code and remove this block and use the block below
+dependencies {
+    implementation(platform("io.vertx:vertx-stack-depchain:${libs.versions.vertx.get()}"))
+    implementation("io.vertx:vertx-web")
+    implementation("io.vertx:vertx-pg-client")
+    //implementation("io.netty", "netty-transport-native-epoll", classifier = "linux-x86_64")
+    implementation("io.netty", "netty-transport-native-io_uring", classifier = "linux-x86_64")
+    implementation("io.vertx:vertx-lang-kotlin")
+    implementation("io.vertx:vertx-lang-kotlin-coroutines")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${libs.versions.kotlinx.coroutines.get()}")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:${libs.versions.kotlinx.serialization.get()}")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-io:${libs.versions.kotlinx.serialization.get()}")
+    implementation("org.jetbrains.kotlinx:kotlinx-io-core:${libs.versions.kotlinx.io.get()}")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-html:${libs.versions.kotlinx.html.get()}")
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:${libs.versions.kotlinx.datetime.get()}")
+}
+
+/*
+dependencies {
+    implementation(project(":with-db:common"))
+    implementation("io.vertx:vertx-pg-client")
+}
+*/
+
+
+application.mainClass.set("MainKt")

@@ -11,7 +11,7 @@ Adapted from the [`vertx-web-kotlinx` portion](../vertx-web-kotlinx) for the [Ex
 
 ## Important Libraries
 The tests were run with:
-* [Those in the `vertx-web-kotlinx` portion](../vertx-web-kotlinx/README.md#important-libraries)
+* [Those in the `vertx-web-kotlinx` portion](../../README.md#important-libraries)
 * [Exposed Vert.x SQL Client](https://github.com/huanshankeji/exposed-vertx-sql-client)
 
 ## Test URLs

@@ -6,15 +6,15 @@ Code is written from scratch to be as concise as possible with common code extra
 
 ## Test Type Implementation Source Code
 
-* [JSON](src/main/kotlin/MainVerticle.kt)
+* [JSON](without-db/default/src/main/kotlin/MainVerticle.kt)
 
   implemented with kotlinx.serialization
 
-* [PLAINTEXT](src/main/kotlin/MainVerticle.kt)
-* [DB](src/main/kotlin/MainVerticle.kt)
-* [QUERY](src/main/kotlin/MainVerticle.kt)
-* [UPDATE](src/main/kotlin/MainVerticle.kt)
-* [FORTUNES](src/main/kotlin/MainVerticle.kt)
+* [PLAINTEXT](without-db/default/src/main/kotlin/MainVerticle.kt)
+* [DB](with-db/default/src/main/kotlin/MainVerticle.kt)
+* [QUERY](with-db/default/src/main/kotlin/MainVerticle.kt)
+* [UPDATE](with-db/default/src/main/kotlin/MainVerticle.kt)
+* [FORTUNES](with-db/default/src/main/kotlin/MainVerticle.kt)
 
   implemented with kotlinx.html
 

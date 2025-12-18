@@ -7,11 +7,24 @@ WORKDIR /vertx-web-kotlinx-exposed-vertx-sql-client
 COPY .m2/repository/com/huanshankeji/exposed-vertx-sql-client-core/0.7.0-SNAPSHOT /root/.m2/repository/com/huanshankeji/exposed-vertx-sql-client-core/0.7.0-SNAPSHOT
 COPY .m2/repository/com/huanshankeji/exposed-vertx-sql-client-postgresql/0.7.0-SNAPSHOT /root/.m2/repository/com/huanshankeji/exposed-vertx-sql-client-postgresql/0.7.0-SNAPSHOT
 
-COPY build.gradle.kts build.gradle.kts
+
+COPY gradle/libs.versions.toml gradle/libs.versions.toml
+COPY buildSrc buildSrc
 COPY settings.gradle.kts settings.gradle.kts
+COPY build.gradle.kts build.gradle.kts
 COPY gradle.properties gradle.properties
-COPY src src
-RUN gradle --no-daemon installDist
+
+COPY common/build.gradle.kts common/build.gradle.kts
+COPY common/src common/src
+
+COPY with-db/common/build.gradle.kts with-db/common/build.gradle.kts
+COPY with-db/common/src with-db/common/src
+
+COPY with-db/exposed-vertx-sql-client/build.gradle.kts with-db/exposed-vertx-sql-client/build.gradle.kts
+COPY with-db/exposed-vertx-sql-client/src with-db/exposed-vertx-sql-client/src
+
+
+RUN gradle --no-daemon with-db:exposed-vertx-sql-client:installDist
 
 EXPOSE 8080
 
@@ -36,4 +49,4 @@ CMD export JAVA_OPTS=" \
     -Dio.netty.buffer.checkAccessible=false \
     -Dio.netty.iouring.ringSize=16384 \
     " && \
-    build/install/vertx-web-kotlinx-exposed-vertx-sql-client-benchmark/bin/vertx-web-kotlinx-exposed-vertx-sql-client-benchmark
+    with-db/exposed-vertx-sql-client/build/install/exposed-vertx-sql-client/bin/exposed-vertx-sql-client
