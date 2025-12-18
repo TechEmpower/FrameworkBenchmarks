@@ -41,4 +41,4 @@ CMD export JAVA_OPTS=" \
     -Dio.netty.buffer.checkAccessible=false \
     -Dio.netty.iouring.ringSize=16384 \
     " && \
-    without-db/default/build/install/default/bin/default false
+    without-db/default/build/install/default/bin/default

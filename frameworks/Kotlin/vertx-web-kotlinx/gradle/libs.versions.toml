@@ -1,6 +1,6 @@
 [versions]
 kotlin = "2.3.0"
-vertx = "5.0.5"
+vertx = "5.0.6"
 kotlinx-coroutines = "1.10.2"
 kotlinx-serialization = "1.9.0"
 kotlinx-io = "0.8.2"

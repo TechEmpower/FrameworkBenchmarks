@@ -5,4 +5,6 @@ plugins {
 
 dependencies {
     api(project(":common"))
+
+    implementation("org.jetbrains.kotlinx:kotlinx-html:${libs.versions.kotlinx.html.get()}")
 }
