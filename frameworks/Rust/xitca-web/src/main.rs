@@ -69,7 +69,7 @@ fn main() -> std::io::Result<()> {
                 cli.updates(num).await.and_then(|w| req.json_response(&w))
             })),
         )
-        .enclosed(ContextBuilder::new(|| db_pool::Client::create()))
+        .enclosed(ContextBuilder::new(db_pool::Client::create))
         .enclosed_fn(async |service, req| {
             let mut res = service.call(req).await.unwrap_or_else(error_handler);
             res.headers_mut().insert(SERVER, SERVER_HEADER_VALUE);

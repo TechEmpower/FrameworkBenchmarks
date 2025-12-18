@@ -77,24 +77,23 @@ impl Exec {
     where
         C: Query,
     {
-        let mut rng = self.rng.borrow_mut();
-        let mut ids = rng.gen_multi().take(num as _).collect::<Vec<_>>();
-        ids.sort();
+        let (worlds, get, update) = {
+            let mut rng = self.rng.borrow_mut();
+            let mut ids = rng.gen_multi().take(num as _).collect::<Vec<_>>();
+            ids.sort();
 
-        let (get, rngs, worlds) = ids
-            .iter()
-            .cloned()
-            .zip(rng.gen_multi())
-            .map(|(id, rand)| {
-                let get = world_stmt.bind([id]).query(&conn);
-                (get, rand, World::new(id, rand))
-            })
-            .collect::<(Vec<_>, Vec<_>, Vec<_>)>();
+            let (get, rngs, worlds) = ids
+                .iter()
+                .cloned()
+                .zip(rng.gen_multi())
+                .map(|(id, rand)| {
+                    let get = world_stmt.bind([id]).query(&conn);
+                    (get, rand, World::new(id, rand))
+                })
+                .collect::<(Vec<_>, Vec<_>, Vec<_>)>();
 
-        let update = update_stmt.bind([&ids, &rngs]).query(&conn);
-
-        drop(conn);
-        drop(rng);
+            (worlds, get, update_stmt.bind([&ids, &rngs]).query(&conn))
+        };
 
         for get in get {
             let _rand = get.await?.try_next().await?.ok_or_else(not_found)?.get::<i32>(1);

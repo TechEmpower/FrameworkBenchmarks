@@ -23,10 +23,15 @@ use orm::Pool;
 use ser::{Num, World};
 use util::{HandleResult, SERVER_HEADER_VALUE};
 
-fn main() -> std::io::Result<()> {
-    App::new()
-        .with_async_state(Pool::create)
-        .at_typed(db)
+#[tokio::main]
+async fn main() -> HandleResult<()> {
+    #[cfg(all(feature = "toasty", not(feature = "diesel")))]
+    let app = App::new().with_state(Pool::create().await?);
+
+    #[cfg(all(feature = "diesel", not(feature = "toasty")))]
+    let app = App::new().with_async_state(Pool::create);
+
+    app.at_typed(db)
         .at_typed(fortunes)
         .at_typed(queries)
         .at_typed(updates)
@@ -38,7 +43,8 @@ fn main() -> std::io::Result<()> {
         .disable_vectored_write()
         .bind("0.0.0.0:8080")?
         .run()
-        .wait()
+        .await
+        .map_err(Into::into)
 }
 
 #[route("/db", method = get)]

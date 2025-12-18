@@ -78,7 +78,7 @@ fn main() -> io::Result<()> {
     // need clean async shutdown will be leaked.
     worker(ids.pop())?;
     for handle in handle {
-        handle.join().unwrap()?;
+        let _ = handle.join().unwrap();
     }
 
     Ok(())
