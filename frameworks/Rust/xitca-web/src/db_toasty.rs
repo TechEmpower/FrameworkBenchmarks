@@ -1,5 +1,3 @@
-use std::sync::{Arc, Mutex};
-
 use futures_util::future::TryJoinAll;
 use toasty::Db;
 
@@ -8,20 +6,9 @@ use crate::{
     util::{DB_URL, HandleResult, Rand},
 };
 
-#[derive(Clone)]
-pub struct Pool(Arc<_Pool>);
-
-impl core::ops::Deref for Pool {
-    type Target = _Pool;
-
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-
-pub struct _Pool {
+pub struct Pool {
     db: Db,
-    rng: Mutex<Rand>,
+    rng: core::cell::RefCell<Rand>,
 }
 
 impl Pool {
@@ -34,22 +21,21 @@ impl Pool {
             .build(drv)
             .await?;
 
-        Ok(Self(Arc::new(_Pool {
+        Ok(Self {
             db,
             rng: Default::default(),
-        })))
+        })
     }
 
     pub async fn db(&self) -> HandleResult<World> {
-        let id = self.rng.lock().unwrap().gen_id();
+        let id = self.rng.borrow_mut().gen_id();
         World::get_by_id(&self.db, id).await.map_err(Into::into)
     }
 
     pub async fn queries(&self, num: u16) -> HandleResult<Vec<World>> {
         let get = self
             .rng
-            .lock()
-            .unwrap()
+            .borrow_mut()
             .gen_multi()
             .take(num as _)
             .map(|id| World::get_by_id(&self.db, id))
@@ -64,7 +50,7 @@ impl Pool {
         // TODO: revisit when toasty supports batch update or raw sql
         let update = worlds
             .iter_mut()
-            .zip(self.rng.lock().unwrap().gen_multi())
+            .zip(self.rng.borrow_mut().gen_multi())
             .map(|(world, rand)| world.update().randomnumber(rand).exec(&self.db))
             .collect::<TryJoinAll<_>>();
 

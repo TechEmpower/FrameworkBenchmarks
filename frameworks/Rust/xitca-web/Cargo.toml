@@ -33,7 +33,7 @@ toasty = ["dep:toasty", "dep:xitca-postgres-toasty", "futures-util/alloc"]
 # http router optional
 router = ["xitca-http/router"]
 # web with macros optional
-web-codegen = ["xitca-web/codegen", "xitca-web/urlencoded", "tokio/macros"]
+web-codegen = ["xitca-web/codegen", "xitca-web/urlencoded"]
 # template optional
 template = ["dep:sailfish"]
 # io-uring optional
@@ -99,18 +99,18 @@ panic = "abort"
 
 [patch.crates-io]
 xitca-postgres-diesel = { git = "https://github.com/fakeshadow/xitca-postgres-diesel", rev = "1bd39ac" }
-xitca-postgres-toasty = { git = "https://github.com/fakeshadow/xitca-postgres-toasty", rev = "8f2f569" }
+xitca-postgres-toasty = { git = "https://github.com/fakeshadow/xitca-postgres-toasty", rev = "270fe35" }
 
-toasty = { git = "https://github.com/tokio-rs/toasty" }
-toasty-core = { git = "https://github.com/tokio-rs/toasty" }
-toasty-sql = { git = "https://github.com/tokio-rs/toasty" }
+toasty = { git = "https://github.com/fakeshadow/toasty", branch = "engine" }
+toasty-core = { git = "https://github.com/fakeshadow/toasty", branch = "engine" }
+toasty-sql = { git = "https://github.com/fakeshadow/toasty", branch = "engine" }
 
 # personal fork of tokio-uring with tokio local runtime enabled
 tokio-uring = { git = "http://github.com/fakeshadow/tokio-uring", rev = "c3d5887" }
 
-xitca-codegen = { git = "http://github.com/HFQR/xitca-web", rev = "249226a" }
-xitca-http = { git = "http://github.com/HFQR/xitca-web", rev = "249226a" }
-xitca-postgres = { git = "http://github.com/HFQR/xitca-web", rev = "249226a" }
-xitca-server = { git = "http://github.com/HFQR/xitca-web", rev = "249226a" }
-xitca-service = { git = "http://github.com/HFQR/xitca-web", rev = "249226a" }
-xitca-web = { git = "http://github.com/HFQR/xitca-web", rev = "249226a" }
+xitca-codegen = { git = "http://github.com/HFQR/xitca-web", rev = "faf1ae2" }
+xitca-http = { git = "http://github.com/HFQR/xitca-web", rev = "faf1ae2" }
+xitca-postgres = { git = "http://github.com/HFQR/xitca-web", rev = "faf1ae2" }
+xitca-server = { git = "http://github.com/HFQR/xitca-web", rev = "faf1ae2" }
+xitca-service = { git = "http://github.com/HFQR/xitca-web", rev = "faf1ae2" }
+xitca-web = { git = "http://github.com/HFQR/xitca-web", rev = "faf1ae2" }
