@@ -9,6 +9,9 @@ COPY settings.gradle.kts settings.gradle.kts
 COPY build.gradle.kts build.gradle.kts
 COPY gradle.properties gradle.properties
 
+# make empty directories for subprojects that do not need to be copied for Gradle
+RUN mkdir -p common without-db/default with-db/common with-db/default with-db/r2dbc with-db/exposed-r2dbc with-db/exposed-vertx-sql-client
+
 COPY common/build.gradle.kts common/build.gradle.kts
 COPY common/src common/src
 

@@ -7,6 +7,7 @@ include(
 
     "with-db:common",
     "with-db:default",
+    "with-db:r2dbc",
     "with-db:exposed-r2dbc",
     "with-db:exposed-vertx-sql-client"
 )
