@@ -92,7 +92,11 @@ impl Exec {
                 })
                 .collect::<(Vec<_>, Vec<_>, Vec<_>)>();
 
-            (worlds, get, update_stmt.bind([&ids, &rngs]).query(&conn))
+            let update = update_stmt.bind([&ids, &rngs]).query(&conn);
+
+            drop(conn);
+
+            (worlds, get, update)
         };
 
         for get in get {
