@@ -6,7 +6,7 @@ edition = "2024"
 [[bin]]
 name = "xitca-web"
 path = "./src/main.rs"
-required-features = ["io-uring", "json", "pg", "router", "template"]
+required-features = ["io-uring", "pg", "router", "template"]
 
 [[bin]]
 name = "xitca-web-barebone"
@@ -32,8 +32,6 @@ diesel = ["dep:diesel", "dep:diesel-async", "dep:xitca-postgres-diesel", "dep:fu
 toasty = ["dep:toasty", "dep:xitca-postgres-toasty", "futures-util/alloc"]
 # http router optional
 router = ["xitca-http/router"]
-# web optional
-web = ["dep:xitca-web"]
 # web with macros optional
 web-codegen = ["xitca-web/codegen", "xitca-web/urlencoded"]
 # template optional
@@ -41,7 +39,8 @@ template = ["dep:sailfish"]
 # io-uring optional
 io-uring = ["dep:tokio-uring", "xitca-http/io-uring", "xitca-server/io-uring"]
 # unrealistic performance optimization
-perf = ["dep:core_affinity", "dep:mimalloc", "tokio/parking_lot"]
+perf = ["perf-allocator", "dep:core_affinity", "tokio/parking_lot"]
+perf-allocator = ["dep:mimalloc"]
 # regular json serializer
 json = ["serde_json"]
 # performance optimization json serializer
@@ -99,10 +98,9 @@ codegen-units = 1
 panic = "abort"
 
 [patch.crates-io]
-xitca-postgres-diesel = { git = "https://github.com/fakeshadow/xitca-postgres-diesel", rev = "fb5dcba" }
-xitca-postgres-toasty = { git = "https://github.com/fakeshadow/xitca-postgres-toasty", rev = "02c6604" }
+xitca-postgres-diesel = { git = "https://github.com/fakeshadow/xitca-postgres-diesel", rev = "1bd39ac" }
+xitca-postgres-toasty = { git = "https://github.com/fakeshadow/xitca-postgres-toasty", rev = "270fe35" }
 
-# personal fork for efficient toasty engine fine tuned with pipelined xitca-postgres client
 toasty = { git = "https://github.com/fakeshadow/toasty", branch = "engine" }
 toasty-core = { git = "https://github.com/fakeshadow/toasty", branch = "engine" }
 toasty-sql = { git = "https://github.com/fakeshadow/toasty", branch = "engine" }
@@ -110,9 +108,9 @@ toasty-sql = { git = "https://github.com/fakeshadow/toasty", branch = "engine" }
 # personal fork of tokio-uring with tokio local runtime enabled
 tokio-uring = { git = "http://github.com/fakeshadow/tokio-uring", rev = "c3d5887" }
 
-xitca-codegen = { git = "http://github.com/HFQR/xitca-web", rev = "b723c0c" }
-xitca-http = { git = "http://github.com/HFQR/xitca-web", rev = "b723c0c" }
-xitca-postgres = { git = "http://github.com/HFQR/xitca-web", rev = "b723c0c" }
-xitca-server = { git = "http://github.com/HFQR/xitca-web", rev = "b723c0c" }
-xitca-service = { git = "http://github.com/HFQR/xitca-web", rev = "b723c0c" }
-xitca-web = { git = "http://github.com/HFQR/xitca-web", rev = "b723c0c" }
+xitca-codegen = { git = "http://github.com/HFQR/xitca-web", rev = "faf1ae2" }
+xitca-http = { git = "http://github.com/HFQR/xitca-web", rev = "faf1ae2" }
+xitca-postgres = { git = "http://github.com/HFQR/xitca-web", rev = "faf1ae2" }
+xitca-server = { git = "http://github.com/HFQR/xitca-web", rev = "faf1ae2" }
+xitca-service = { git = "http://github.com/HFQR/xitca-web", rev = "faf1ae2" }
+xitca-web = { git = "http://github.com/HFQR/xitca-web", rev = "faf1ae2" }

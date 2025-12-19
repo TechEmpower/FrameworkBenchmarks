@@ -19,10 +19,7 @@ use xitca_http::{
 };
 use xitca_service::Service;
 
-use self::{
-    ser::Message,
-    util::{QueryParse, State},
-};
+use self::{ser::Message, util::QueryParse};
 
 fn main() -> io::Result<()> {
     let addr = "0.0.0.0:8080".parse().unwrap();
@@ -51,10 +48,10 @@ fn main() -> io::Result<()> {
                 socket.bind(addr)?;
                 let listener = socket.listen(1024)?;
 
-                let client = db_unrealistic::create().await.unwrap();
+                let client = db_unrealistic::Client::create().await.unwrap();
 
                 // unrealistic http dispatcher. no spec check. no security feature.
-                let service = Dispatcher::new(handler, State::new(client));
+                let service = Dispatcher::new(handler, client);
 
                 loop {
                     match listener.accept().await {
@@ -81,13 +78,13 @@ fn main() -> io::Result<()> {
     // need clean async shutdown will be leaked.
     worker(ids.pop())?;
     for handle in handle {
-        handle.join().unwrap()?;
+        let _ = handle.join().unwrap();
     }
 
     Ok(())
 }
 
-async fn handler<'h>(req: Request<'h, State<db_unrealistic::Client>>, res: Response<'h>) -> Response<'h, 3> {
+async fn handler<'h>(req: Request<'h, db_unrealistic::Client>, res: Response<'h>) -> Response<'h, 3> {
     // unrealistic due to no http method check
     match req.path {
         // unrealistic due to no dynamic path matching
@@ -112,7 +109,7 @@ async fn handler<'h>(req: Request<'h, State<db_unrealistic::Client>>, res: Respo
 
         // all database related categories are unrealistic. please reference db_unrealistic module for detail.
         "/fortunes" => {
-            let fortunes = req.ctx.client.fortunes().await.unwrap().render_once().unwrap();
+            let fortunes = req.ctx.fortunes().await.unwrap().render_once().unwrap();
             res.status(StatusCode::OK)
                 .header("content-type", "text/html; charset=utf-8")
                 .header("server", "X")
@@ -121,34 +118,31 @@ async fn handler<'h>(req: Request<'h, State<db_unrealistic::Client>>, res: Respo
         "/db" => {
             // unrealistic due to no error handling. any db/serialization error will cause process crash.
             // the same goes for all following unwraps on database related functions.
-            let world = req.ctx.client.db().await.unwrap();
-            json_response(res, req.ctx, &world)
+            let world = req.ctx.db().await.unwrap();
+            json_response(res, &world)
         }
         p if p.starts_with("/q") => {
             let num = p["/queries?q=".len()..].parse_query();
-            let worlds = req.ctx.client.queries(num).await.unwrap();
-            json_response(res, req.ctx, &worlds)
+            let worlds = req.ctx.queries(num).await.unwrap();
+            json_response(res, &worlds)
         }
         p if p.starts_with("/u") => {
             let num = p["/updates?q=".len()..].parse_query();
-            let worlds = req.ctx.client.updates(num).await.unwrap();
-            json_response(res, req.ctx, &worlds)
+            let worlds = req.ctx.updates(num).await.unwrap();
+            json_response(res, &worlds)
         }
         _ => res.status(StatusCode::NOT_FOUND).header("server", "X").body(&[]),
     }
 }
 
-fn json_response<'r, DB, T>(res: Response<'r>, state: &State<DB>, val: &T) -> Response<'r, 3>
+fn json_response<'r, T>(res: Response<'r>, val: &T) -> Response<'r, 3>
 where
     T: serde_core::Serialize,
 {
-    let buf = &mut *state.write_buf.borrow_mut();
-    sonic_rs::to_writer(buf.writer(), val).unwrap();
-    let res = res
-        .status(StatusCode::OK)
+    let mut buf = xitca_http::bytes::BytesMut::new();
+    sonic_rs::to_writer((&mut buf).writer(), val).unwrap();
+    res.status(StatusCode::OK)
         .header("content-type", "application/json")
         .header("server", "X")
-        .body(buf.as_ref());
-    buf.clear();
-    res
+        .body(buf.as_ref())
 }
