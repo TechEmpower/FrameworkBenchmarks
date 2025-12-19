@@ -46,7 +46,6 @@ GEM
     moneta (1.6.0)
     mustermann (3.0.4)
       ruby2_keywords (~> 0.0.1)
-    mysql2 (0.5.6)
     net-imap (0.5.12)
       date
       net-protocol
@@ -115,6 +114,7 @@ GEM
     thor (1.4.0)
     tilt (2.6.1)
     timeout (0.4.4)
+    trilogy (2.9.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     uri (1.0.3)
@@ -128,11 +128,11 @@ DEPENDENCIES
   activerecord (~> 8.1.0)
   iodine (~> 0.7)
   json
-  mysql2 (> 0.5)
   ostruct
   padrino (= 0.16.0)
   rack
   slim
+  trilogy (~> 2.9)
 
 BUNDLED WITH
    2.7.0
