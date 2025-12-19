@@ -1,7 +1,7 @@
 #![allow(dead_code)]
 
 use rand::{Rng, SeedableRng, distr::Uniform, rngs::SmallRng};
-use xitca_http::{bytes::BytesMut, http::header::HeaderValue};
+use xitca_http::http::header::HeaderValue;
 
 pub trait QueryParse {
     fn parse_query(self) -> u16;
@@ -29,20 +29,6 @@ pub type Error = Box<dyn std::error::Error + Send + Sync + 'static>;
 pub type HandleResult<T> = Result<T, Error>;
 
 pub const DB_URL: &str = "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
-
-pub struct State<DB> {
-    pub client: DB,
-    pub write_buf: core::cell::RefCell<BytesMut>,
-}
-
-impl<DB> State<DB> {
-    pub fn new(client: DB) -> Self {
-        Self {
-            client,
-            write_buf: Default::default(),
-        }
-    }
-}
 
 pub struct Rand(SmallRng);
 

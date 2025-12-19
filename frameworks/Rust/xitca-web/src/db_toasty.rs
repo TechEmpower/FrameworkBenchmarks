@@ -13,12 +13,12 @@ pub struct Pool {
 
 impl Pool {
     pub async fn create() -> HandleResult<Self> {
-        let conn = xitca_postgres_toasty::PostgreSQL::connect(DB_URL).await?;
+        let drv = xitca_postgres_toasty::PostgreSQL::new(DB_URL)?;
 
         let db = Db::builder()
             .register::<World>()
             .register::<Fortune>()
-            .build(conn)
+            .build(drv)
             .await?;
 
         Ok(Self {
