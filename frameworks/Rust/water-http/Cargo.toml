@@ -6,12 +6,12 @@ edition = "2018"
 [dependencies]
 askama = "0.14.0"
 tokio = { version = "1.47.1", features = ["full"] }
-water_http = {git = "https://github.com/HassanSharara/water_http.git", branch = "beta", features = ["use_only_http1"],optional = true , version = "3.0.8-beta.5" }
+water_http = { version = "3.1.1" ,optional = true , features = ["use_only_http1"]}
 smallvec = "1.15.1"
 nanorand = "0.8.0"
 tokio-postgres = "0.7.15"
 sonic-rs = "0.5.5"
-bytes = "1.10.1"
+bytes = "1.11.0"
 serde = { version = "1.0.228", features = ["derive","rc"] }
 futures-util = "0.3.31"
 num_cpus = "1.17.0"
