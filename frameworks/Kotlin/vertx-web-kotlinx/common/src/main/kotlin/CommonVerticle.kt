@@ -48,7 +48,11 @@ abstract class CommonVerticle : CoroutineVerticle(), CoroutineRouterSupport {
         setCurrentDate()
         vertx.setPeriodic(1000) { setCurrentDate() }
         httpServer = vertx.createHttpServer(
-            httpServerOptionsOf(port = 8080, http2ClearTextEnabled = false, strictThreadMode = true)
+            httpServerOptionsOf(
+                port = 8080,
+                http2ClearTextEnabled = false,
+                strictThreadMode = httpServerStrictThreadMode
+            )
         )
             .requestHandler(Router.router(vertx).apply { routes() })
             .exceptionHandler {
@@ -63,6 +67,9 @@ abstract class CommonVerticle : CoroutineVerticle(), CoroutineRouterSupport {
             }
             .listen().coAwait()
     }
+
+    // set to `false` to resolve `java.lang.IllegalStateException: Only the context thread can write a message
+    open val httpServerStrictThreadMode get() = true
 
     abstract fun Router.routes()
 
@@ -86,6 +93,10 @@ abstract class CommonVerticle : CoroutineVerticle(), CoroutineRouterSupport {
            1. `launch { /*...*/ }` < `launch(start = CoroutineStart.UNDISPATCHED) { /*...*/ }` < `launch(Dispatchers.Unconfined) { /*...*/ }`.
            1. `launch { /*...*/ }` without `context` or `start` lead to `io.netty.channel.StacklessClosedChannelException` and `io.netty.channel.unix.Errors$NativeIoException: sendAddress(..) failed: Connection reset by peer`. */
         coHandler(Dispatchers.Unconfined, requestHandler)
+
+    // an alternative way
+    // set to `EmptyCoroutineContext` to resolve `java.lang.IllegalStateException: Only the context thread can write a message
+    //open val coHandlerCoroutineContext: CoroutineContext get() = Dispatchers.Unconfined
 
     inline fun <reified T : Any> Route.jsonResponseCoHandler(
         serializer: SerializationStrategy<T>,

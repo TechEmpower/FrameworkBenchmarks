@@ -9,6 +9,9 @@ class MainVerticle : CommonWithDbVerticle<Connection>() {
     override suspend fun initDbClient(): Connection =
         connectionFactory.create().awaitSingle()
 
+    override val httpServerStrictThreadMode get() = false
+    //override val coHandlerCoroutineContext: CoroutineContext get() = EmptyCoroutineContext
+
     override suspend fun selectWorld(id: Int): World =
         dbClient.createStatement(SELECT_WORLD_SQL).bind(0, id).execute()
             .awaitSingle()

@@ -15,6 +15,9 @@ class MainVerticle : CommonWithDbVerticle<R2dbcDatabase>() {
     override suspend fun initDbClient(): R2dbcDatabase =
         r2DbcDatabaseConnect()
 
+    override val httpServerStrictThreadMode get() = false
+    //override val coHandlerCoroutineContext: CoroutineContext get() = EmptyCoroutineContext
+
     override suspend fun selectWorld(id: Int): World =
         suspendTransaction(dbClient) {
             r2dbcSelectWorldWithIdQuery(id).single().toWorld()
