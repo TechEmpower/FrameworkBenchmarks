@@ -18,10 +18,10 @@ class MainVerticle : CommonWithDbVerticle<PgConnection>() {
         PgConnection.connect(
             vertx,
             pgConnectOptionsOf(
-                database = "hello_world",
-                host = "tfb-database",
-                user = "benchmarkdbuser",
-                password = "benchmarkdbpass",
+                database = DATABASE,
+                host = HOST,
+                user = USER,
+                password = PASSWORD,
                 cachePreparedStatements = true,
                 pipeliningLimit = 256
             )

@@ -1,3 +1,4 @@
 package database
 
-const val POSTGRESQL_R2DBC_URL = "r2dbc:postgresql://tfb-database:5432/hello-world"
+// Note that this URL doesn't have `USER` and `PASSWORD`
+const val POSTGRESQL_R2DBC_URL = "r2dbc:postgresql://$HOST:5432/$DATABASE"
