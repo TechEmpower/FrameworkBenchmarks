@@ -7,12 +7,55 @@ kotlinx-io = "0.8.2"
 kotlinx-html = "0.12.0"
 kotlinx-datetime = "0.7.1"
 r2dbc-spi = "1.0.0.RELEASE"
-r2dbcPostgresql = "1.1.1.RELEASE"
+r2dbc-postgresql = "1.1.1.RELEASE"
 exposed = "1.0.0-rc-4"
 exposedVertxSqlClient = "0.7.0-SNAPSHOT" # TODO use a stable version
 
 [libraries]
+# Kotlin Gradle plugin as a library for buildSrc
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+
+# Vert.x BOM (depchain) and modules
+
+vertx-stack-depchain = { module = "io.vertx:vertx-stack-depchain", version.ref = "vertx" }
+vertx-web = { module = "io.vertx:vertx-web" }
+vertx-pgClient = { module = "io.vertx:vertx-pg-client" }
+vertx-lang-kotlin = { module = "io.vertx:vertx-lang-kotlin" }
+vertx-lang-kotlin-coroutines = { module = "io.vertx:vertx-lang-kotlin-coroutines" }
+
+# Netty native transport (version managed transitively by Vert.x)
+netty-transport-native-iouring = { module = "io.netty:netty-transport-native-io_uring" }
+
+
+# KotlinX libraries
+
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-reactive = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-reactive", version.ref = "kotlinx-coroutines" }
+
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
+kotlinx-serialization-json-io = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json-io", version.ref = "kotlinx-serialization" }
+
+kotlinx-io-core = { module = "org.jetbrains.kotlinx:kotlinx-io-core", version.ref = "kotlinx-io" }
+
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
+
+kotlinx-html = { module = "org.jetbrains.kotlinx:kotlinx-html", version.ref = "kotlinx-html" }
+
+
+# R2DBC SPI and PostgreSQL driver
+r2dbc-spi = { module = "io.r2dbc:r2dbc-spi", version.ref = "r2dbc-spi" }
+r2dbc-postgresql = { module = "org.postgresql:r2dbc-postgresql", version.ref = "r2dbc-postgresql" }
+
+
+# Exposed
+exposed-core = { module = "org.jetbrains.exposed:exposed-core", version.ref = "exposed" }
+exposed-jdbc = { module = "org.jetbrains.exposed:exposed-jdbc", version.ref = "exposed" }
+exposed-r2dbc = { module = "org.jetbrains.exposed:exposed-r2dbc", version.ref = "exposed" }
+
+
+# Exposed Vert.x SQL Client
+exposedVertxSqlClient-core = { module = "com.huanshankeji:exposed-vertx-sql-client-core", version.ref = "exposedVertxSqlClient" }
+exposedVertxSqlClient-postgresql = { module = "com.huanshankeji:exposed-vertx-sql-client-postgresql", version.ref = "exposedVertxSqlClient" }
 
 [plugins]
 kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

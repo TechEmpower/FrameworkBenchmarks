@@ -4,19 +4,18 @@ plugins {
 }
 
 dependencies {
-    // TODO consider moving the GAVs to the version catalog too
-    api(platform("io.vertx:vertx-stack-depchain:${libs.versions.vertx.get()}"))
-    api("io.vertx:vertx-web")
+    api(platform(libs.vertx.stack.depchain))
+    api(libs.vertx.web)
     //runtimeOnly("io.netty", "netty-transport-native-epoll", classifier = "linux-x86_64")
-    runtimeOnly("io.netty", "netty-transport-native-io_uring", classifier = "linux-x86_64")
-    api("io.vertx:vertx-lang-kotlin")
-    api("io.vertx:vertx-lang-kotlin-coroutines")
+    runtimeOnly(libs.netty.transport.native.iouring) { artifact { classifier = "linux-x86_64" } }
+    api(libs.vertx.lang.kotlin)
+    api(libs.vertx.lang.kotlin.coroutines)
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${libs.versions.kotlinx.coroutines.get()}")
+    implementation(libs.kotlinx.coroutines.core)
 
-    api("org.jetbrains.kotlinx:kotlinx-serialization-json:${libs.versions.kotlinx.serialization.get()}")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-io:${libs.versions.kotlinx.serialization.get()}")
-    implementation("org.jetbrains.kotlinx:kotlinx-io-core:${libs.versions.kotlinx.io.get()}")
+    api(libs.kotlinx.serialization.json)
+    implementation(libs.kotlinx.serialization.json.io)
+    implementation(libs.kotlinx.io.core)
 
-    implementation("org.jetbrains.kotlinx:kotlinx-datetime:${libs.versions.kotlinx.datetime.get()}")
+    implementation(libs.kotlinx.datetime)
 }

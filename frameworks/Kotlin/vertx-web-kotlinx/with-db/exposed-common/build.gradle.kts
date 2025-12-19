@@ -5,8 +5,8 @@ plugins {
 dependencies {
     implementation(project(":with-db:with-db-common"))
 
-    api("org.jetbrains.exposed:exposed-core:${libs.versions.exposed.get()}")
+    api(libs.exposed.core)
     // explicitly made `implementation` instead of `api` to avoid importing wrong APIs in dependent projects
-    implementation("org.jetbrains.exposed:exposed-jdbc:${libs.versions.exposed.get()}")
-    implementation("org.jetbrains.exposed:exposed-r2dbc:${libs.versions.exposed.get()}")
+    implementation(libs.exposed.jdbc)
+    implementation(libs.exposed.r2dbc)
 }
