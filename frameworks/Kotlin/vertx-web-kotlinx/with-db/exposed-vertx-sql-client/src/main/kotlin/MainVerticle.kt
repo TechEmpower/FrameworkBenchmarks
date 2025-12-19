@@ -26,7 +26,7 @@ class MainVerticle(val exposedDatabase: Database) : CommonWithDbVerticle<Databas
     }
 
     override suspend fun selectWorld(id: Int): World =
-        dbClient.executeQuery(selectWorldWithIdQuery(id))
+        dbClient.executeQuery(jdbcSelectWorldWithIdQuery(id))
             .single().toWorld()
 
     override suspend fun updateSortedWorlds(sortedWorlds: List<World>) {
