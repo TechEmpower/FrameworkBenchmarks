@@ -47,7 +47,7 @@ public class MainAppConfig implements BootConfiguration {
       requestRouter.add("/fortunes", dbQueryController::fortunes);
 
       CacheHandler cacheController = new CacheHandler();
-      requestRouter.add("/cachedQuery", cacheController::cachedQuery);
+      requestRouter.add("/cachedQuery", cacheController);
     }
   }
 }
