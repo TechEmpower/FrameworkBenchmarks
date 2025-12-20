@@ -28,10 +28,7 @@ abstract class CommonWithDbVerticle<DbClient : Any> : CommonVerticle() {
     suspend fun selectRandomWorld() =
         selectWorld(random.nextIntBetween1And10000())
 
-    suspend fun selectRandomWorlds(queries: Int): List<World> =
-    //List(queries) { async { selectRandomWorld() } }.awaitAll()
-        // This should be slightly more efficient.
-        awaitAll(*Array(queries) { async { selectRandomWorld() } })
+    abstract suspend fun selectRandomWorlds(queries: Int): List<World>
 
     abstract suspend fun updateSortedWorlds(sortedWorlds: List<World>)
 
@@ -105,5 +102,17 @@ abstract class CommonWithDbVerticle<DbClient : Any> : CommonVerticle() {
 
             updatedWorlds
         }
+    }
+
+    abstract class ParallelOrPipelinedSelectWorlds<DbClient : Any> : CommonWithDbVerticle<DbClient>() {
+        override suspend fun selectRandomWorlds(queries: Int): List<World> =
+        //List(queries) { async { selectRandomWorld() } }.awaitAll()
+            // This should be slightly more efficient.
+            awaitAll(*Array(queries) { async { selectRandomWorld() } })
+    }
+
+    abstract class SequentialSelectWorlds<DbClient : Any> : CommonWithDbVerticle<DbClient>() {
+        override suspend fun selectRandomWorlds(queries: Int): List<World> =
+            List(queries) { selectRandomWorld() }
     }
 }

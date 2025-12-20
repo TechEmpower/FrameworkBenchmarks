@@ -6,7 +6,11 @@ import kotlinx.coroutines.reactive.awaitSingle
 import kotlinx.coroutines.reactive.collect
 
 // TODO also try getting new connections each time
-class MainVerticle : CommonWithDbVerticle<Connection>() {
+/*
+`ParallelOrPipelinedSelectWorlds` leads to `io.r2dbc.postgresql.client.ReactorNettyClient$RequestQueueException: [08006] Cannot exchange messages because the request queue limit is exceeded`.
+https://github.com/pgjdbc/r2dbc-postgresql/issues/360#issuecomment-869422327 offers a workaround but it doesn't seem like the officially recommend approach.
+ */
+class MainVerticle : CommonWithDbVerticle.SequentialSelectWorlds<Connection>() {
     override suspend fun initDbClient(): Connection =
         connectionFactory.create().awaitSingle()
 
