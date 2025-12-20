@@ -14,6 +14,10 @@ class MainVerticle : CommonWithDbVerticle.SequentialSelectWorlds<Connection>() {
     override suspend fun initDbClient(): Connection =
         connectionFactory.create().awaitSingle()
 
+    override suspend fun stop() {
+        dbClient.close().awaitSingle()
+    }
+
     override val httpServerStrictThreadMode get() = false
     //override val coHandlerCoroutineContext: CoroutineContext get() = EmptyCoroutineContext
 
