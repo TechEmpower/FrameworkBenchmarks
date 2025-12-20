@@ -98,8 +98,8 @@ codegen-units = 1
 panic = "abort"
 
 [patch.crates-io]
-xitca-postgres-diesel = { git = "https://github.com/fakeshadow/xitca-postgres-diesel", rev = "1bd39ac" }
-xitca-postgres-toasty = { git = "https://github.com/fakeshadow/xitca-postgres-toasty", rev = "270fe35" }
+xitca-postgres-diesel = { git = "https://github.com/fakeshadow/xitca-postgres-diesel", rev = "ca6ae52" }
+xitca-postgres-toasty = { git = "https://github.com/fakeshadow/xitca-postgres-toasty", rev = "1ce7536" }
 
 toasty = { git = "https://github.com/fakeshadow/toasty", branch = "engine" }
 toasty-core = { git = "https://github.com/fakeshadow/toasty", branch = "engine" }
@@ -108,9 +108,9 @@ toasty-sql = { git = "https://github.com/fakeshadow/toasty", branch = "engine" }
 # personal fork of tokio-uring with tokio local runtime enabled
 tokio-uring = { git = "http://github.com/fakeshadow/tokio-uring", rev = "c3d5887" }
 
-xitca-codegen = { git = "http://github.com/HFQR/xitca-web", rev = "faf1ae2" }
-xitca-http = { git = "http://github.com/HFQR/xitca-web", rev = "faf1ae2" }
-xitca-postgres = { git = "http://github.com/HFQR/xitca-web", rev = "faf1ae2" }
-xitca-server = { git = "http://github.com/HFQR/xitca-web", rev = "faf1ae2" }
-xitca-service = { git = "http://github.com/HFQR/xitca-web", rev = "faf1ae2" }
-xitca-web = { git = "http://github.com/HFQR/xitca-web", rev = "faf1ae2" }
+xitca-codegen = { git = "http://github.com/HFQR/xitca-web", rev = "6544494" }
+xitca-http = { git = "http://github.com/HFQR/xitca-web", rev = "6544494" }
+xitca-postgres = { git = "http://github.com/HFQR/xitca-web", rev = "6544494" }
+xitca-server = { git = "http://github.com/HFQR/xitca-web", rev = "6544494" }
+xitca-service = { git = "http://github.com/HFQR/xitca-web", rev = "6544494" }
+xitca-web = { git = "http://github.com/HFQR/xitca-web", rev = "6544494" }
