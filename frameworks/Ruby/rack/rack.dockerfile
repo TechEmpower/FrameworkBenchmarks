@@ -1,8 +1,6 @@
-FROM ruby:3.5-rc
+FROM ruby:4.0-rc
 
 ENV RUBY_YJIT_ENABLE=1
-ENV RUBY_MN_THREADS=1
-ENV RUBY_THREAD_TIMESLICE=10
 
 # Use Jemalloc
 RUN apt-get update && \
@@ -11,13 +9,16 @@ ENV LD_PRELOAD=libjemalloc.so.2
 
 WORKDIR /rack
 
-COPY Gemfile ./
+COPY Gemfile* ./
 
 ENV BUNDLE_FORCE_RUBY_PLATFORM=true
 RUN bundle config set with 'puma'
 RUN bundle install --jobs=8
 
 COPY . .
+
+ENV WEB_CONCURRENCY=auto
+ENV MAX_THREADS=5
 
 EXPOSE 8080
 

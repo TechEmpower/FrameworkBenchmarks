@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RootNamespace>SimpleW</RootNamespace>
+
+        <ServerGarbageCollection>true</ServerGarbageCollection>
+        <TieredPGO>true</TieredPGO>
+
+        <RuntimeIdentifier>linux-musl-x64</RuntimeIdentifier>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="SimpleW" Version="16.1.0" />
+    </ItemGroup>
+
+</Project>

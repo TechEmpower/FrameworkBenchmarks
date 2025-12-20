@@ -6,17 +6,17 @@ See the [project website](https://github.com/chronoxor/NetCoreServer) for more i
 
 **Language**
 
-* C# 9.0
+* C# 13.0
 
 **Platforms**
 
-* .NET 5
+* .NET 9
 
 **Web Servers**
 
 * [NetCoreServer](https://github.com/chronoxor/NetCoreServer)
 
-## Paths & Source for Tests
+## Paths \& Source for Tests
 
 * [Plaintext](Benchmarks/HttpBenchmarkSession.cs): "/plaintext"
 * [JSON](Benchmarks/HttpBenchmarkSession.cs): "/json"

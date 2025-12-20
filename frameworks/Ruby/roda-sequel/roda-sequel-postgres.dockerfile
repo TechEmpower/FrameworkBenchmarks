@@ -1,4 +1,4 @@
-FROM ruby:3.5-rc
+FROM ruby:4.0-rc
 
 ADD ./ /roda-sequel
 WORKDIR /roda-sequel
@@ -14,8 +14,12 @@ ENV BUNDLE_FORCE_RUBY_PLATFORM=true
 RUN bundle config set with 'postgresql puma'
 RUN bundle install --jobs=8
 
+ENV RACK_ENV=production
 ENV DBTYPE=postgresql
+
+ENV MAX_THREADS=5
+ENV WEB_CONCURRENCY=auto
 
 EXPOSE 8080
 
-CMD bundle exec puma -C config/mri_puma.rb -b tcp://0.0.0.0:8080 -e production
+CMD bundle exec puma -C config/puma.rb -b tcp://0.0.0.0:8080

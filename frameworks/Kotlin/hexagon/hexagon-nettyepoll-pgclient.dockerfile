@@ -1,7 +1,7 @@
 #
 # BUILD
 #
-FROM docker.io/bellsoft/liberica-runtime-container:jdk-all-24-cds-musl AS build
+FROM docker.io/bellsoft/liberica-runtime-container:jdk-all-25-cds-musl AS build
 USER root
 WORKDIR /hexagon
 
@@ -12,7 +12,7 @@ RUN ./gradlew --quiet -x test installDist
 #
 # RUNTIME
 #
-FROM docker.io/bellsoft/liberica-runtime-container:jre-24-musl
+FROM docker.io/bellsoft/liberica-runtime-container:jre-25-cds-slim-musl
 ARG PROJECT=hexagon_nettyepoll_pgclient
 
 ENV POSTGRESQL_DB_HOST tfb-database

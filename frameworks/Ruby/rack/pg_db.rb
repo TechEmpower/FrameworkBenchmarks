@@ -7,8 +7,6 @@ if RUBY_PLATFORM == 'java'
   Jdbc::Postgres.load_driver
 end
 
-
-
 class PgDb
   QUERY_RANGE = (1..10_000).freeze # range of IDs in the Fortune DB
   ALL_IDS = QUERY_RANGE.to_a # enumeration of all the IDs in fortune DB
@@ -18,7 +16,7 @@ class PgDb
   attr_reader :connection
 
   def initialize(connection_string = nil, max_connections = 512)
-    @connection = Sequel.connect(connection_string, max_connections: max_connections, sql_log_level: :warning)
+    @connection = Sequel.connect(connection_string, max_connections: max_connections)
     Sequel.extension :fiber_concurrency if defined?(Falcon)
 
     prepare_statements
@@ -28,7 +26,6 @@ class PgDb
     @world_select = @connection['SELECT id, randomNumber FROM World WHERE id = ?', :$id].prepare(:select, :select_by_id)
     @world_update = @connection['UPDATE World SET randomNumber = ? WHERE id = ?', :$random_number, :$id].prepare(:update,
                                                                                                                  :update_by_id)
-
     @fortune_select = @connection['SELECT id, message FROM Fortune'].prepare(:select, :select_all)
   end
 
@@ -54,13 +51,6 @@ class PgDb
     end
   end
 
-  def select_random_numbers(count)
-    count = validate_count(count)
-    ALL_IDS.sample(count).map do |id|
-      @world_random_select.call(randomvalue: random_id, id: id).first
-    end
-  end
-
   def select_worlds(count)
     count = validate_count(count)
     ALL_IDS.sample(count).map do |id|
@@ -79,8 +69,7 @@ class PgDb
     else
       select_worlds(count)
     end
-    #values = []
-    ids=[]
+    ids = []
     sql = String.new("UPDATE world SET randomnumber = CASE id ")
     results.each do |r|
       r[:randomnumber] = random_id

@@ -9,7 +9,7 @@ require_once 'vendor/autoload.php';
 /** @var Base $f3 */
 $f3 = \Base::instance();
 
-error_reporting(-1);
+error_reporting(E_ALL ^ E_DEPRECATED);
 
 $f3->set('DEBUG', 0);
 $f3->set('HIGHLIGHT', false);

@@ -34,10 +34,11 @@ def connect(dbtype)
   end
 
   # Determine threading/thread pool size and timeout
-  if defined?(Puma) &&
-        (threads = Puma.cli_config.options.fetch(:max_threads)) > 1
-    opts[:max_connections] = (2 * Math.log(threads)).floor
+  if defined?(Puma)
+    opts[:max_connections] = ENV.fetch('MAX_THREADS')
     opts[:pool_timeout] = 10
+  else
+    opts[:max_connections] = 512
   end
 
   Sequel.connect "%{adapter}://%{host}/%{database}?user=%{user}&password=%{password}" %

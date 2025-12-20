@@ -30,14 +30,14 @@ class HelloWorld
   end
 
   def db
-    World::BY_ID.(id: rand1)
+    World.with_pk(rand1).values
   end
 
   def queries(env)
     ids = ALL_IDS.sample(bounded_queries(env))
     DB.synchronize do
       ids.map do |id|
-        World::BY_ID.(id: id)
+        World.with_pk(id).values
       end
     end
   end
@@ -70,7 +70,7 @@ class HelloWorld
       html << <<~"HTML"
       <tr>
         <td>#{fortune.id}</td>
-        <td>#{CGI.escape_html(fortune.message)}</td>
+        <td>#{ERB::Escape.html_escape(fortune.message)}</td>
       </tr>
       HTML
     end
@@ -84,17 +84,20 @@ class HelloWorld
   end
 
   def updates(env)
+    worlds = []
     ids = ALL_IDS.sample(bounded_queries(env))
     DB.synchronize do
       worlds =
         ids.map do |id|
-          world = World::BY_ID.(id: id)
-          world[:randomnumber] = rand1
+          world = World.with_pk(id)
+          new_value = rand1
+          new_value = rand1 while new_value == world.randomnumber
+          world.randomnumber = new_value
           world
         end
       World.batch_update(worlds)
-      worlds
     end
+    worlds.map!(&:values)
   end
 
   def call(env)
@@ -125,13 +128,13 @@ class HelloWorld
   def respond(content_type, body)
     [
       200,
-      headers(content_type, body),
+      headers(content_type),
       [body]
     ]
   end
 
   if defined?(Puma)
-    def headers(content_type, _)
+    def headers(content_type)
       {
         CONTENT_TYPE => content_type,
         SERVER => SERVER_STRING,
@@ -139,7 +142,7 @@ class HelloWorld
       }
     end
   else
-    def headers(content_type, _)
+    def headers(content_type)
       {
         CONTENT_TYPE => content_type,
         SERVER => SERVER_STRING

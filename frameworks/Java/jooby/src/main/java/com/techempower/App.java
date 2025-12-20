@@ -5,7 +5,6 @@ import static com.techempower.Util.randomWorld;
 import static io.jooby.ExecutionMode.EVENT_LOOP;
 import static io.jooby.MediaType.JSON;
 
-import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -27,7 +26,7 @@ public class App extends Jooby {
 
   private static final String MESSAGE = "Hello, World!";
 
-  private static final byte[] MESSAGE_BYTES = MESSAGE.getBytes(StandardCharsets.US_ASCII);
+  private static final byte[] MESSAGE_BYTES = MESSAGE.getBytes(StandardCharsets.UTF_8);
 
   {
     /** Database: */

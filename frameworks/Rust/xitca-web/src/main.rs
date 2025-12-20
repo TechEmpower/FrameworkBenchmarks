@@ -1,4 +1,10 @@
+// temporary allocator for tracking overhead between xitca-web and xitca-web [barebone] bench.
+// remove it before official run
+#[global_allocator]
+static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
+
 mod db;
+mod db_pool;
 mod ser;
 mod util;
 
@@ -16,61 +22,54 @@ use xitca_http::{
 };
 use xitca_service::{Service, ServiceExt, fn_service};
 
-use db::Client;
 use ser::{IntoResponse, Message, Request, Response, error_response};
-use util::{QueryParse, SERVER_HEADER_VALUE, State};
+use util::{QueryParse, SERVER_HEADER_VALUE};
 
-type Ctx<'a> = Context<'a, Request<RequestBody>, State<Client>>;
+type Ctx<'a> = Context<'a, Request<RequestBody>, db_pool::Client>;
 
 fn main() -> std::io::Result<()> {
     let service = Router::new()
         .insert(
             "/plaintext",
-            get(fn_service(async |ctx: Ctx| ctx.into_parts().0.text_response())),
+            get(fn_service(async |ctx: Ctx| Ok(ctx.into_parts().0.text_response()))),
         )
         .insert(
             "/json",
             get(fn_service(async |ctx: Ctx| {
-                let (req, state) = ctx.into_parts();
-                req.json_response(state, &Message::new())
+                ctx.into_parts().0.json_response(&Message::new())
             })),
         )
         .insert(
             "/db",
             get(fn_service(async |ctx: Ctx| {
-                let (req, state) = ctx.into_parts();
-                let world = state.client.get_world().await?;
-                req.json_response(state, &world)
+                let (req, cli) = ctx.into_parts();
+                cli.db().await.and_then(|w| req.json_response(&w))
             })),
         )
         .insert(
             "/fortunes",
             get(fn_service(async |ctx: Ctx| {
-                let (req, state) = ctx.into_parts();
-                use sailfish::TemplateOnce;
-                let fortunes = state.client.tell_fortune().await?.render_once()?;
-                req.html_response(fortunes)
+                let (req, cli) = ctx.into_parts();
+                cli.fortunes().await?.render_once().map(|f| req.html_response(f))
             })),
         )
         .insert(
             "/queries",
             get(fn_service(async |ctx: Ctx| {
-                let (req, state) = ctx.into_parts();
+                let (req, cli) = ctx.into_parts();
                 let num = req.uri().query().parse_query();
-                let worlds = state.client.get_worlds(num).await?;
-                req.json_response(state, &worlds)
+                cli.queries(num).await.and_then(|w| req.json_response(&w))
             })),
         )
         .insert(
             "/updates",
             get(fn_service(async |ctx: Ctx| {
-                let (req, state) = ctx.into_parts();
+                let (req, cli) = ctx.into_parts();
                 let num = req.uri().query().parse_query();
-                let worlds = state.client.update(num).await?;
-                req.json_response(state, &worlds)
+                cli.updates(num).await.and_then(|w| req.json_response(&w))
             })),
         )
-        .enclosed(ContextBuilder::new(|| async { db::create().await.map(State::new) }))
+        .enclosed(ContextBuilder::new(db_pool::Client::create))
         .enclosed_fn(async |service, req| {
             let mut res = service.call(req).await.unwrap_or_else(error_handler);
             res.headers_mut().insert(SERVER, SERVER_HEADER_VALUE);
@@ -89,6 +88,9 @@ fn error_handler(e: RouterError<util::Error>) -> Response {
     error_response(match e {
         RouterError::Match(_) => StatusCode::NOT_FOUND,
         RouterError::NotAllowed(_) => StatusCode::METHOD_NOT_ALLOWED,
-        RouterError::Service(_) => StatusCode::INTERNAL_SERVER_ERROR,
+        RouterError::Service(e) => {
+            eprintln!("Internal Error: {e}");
+            StatusCode::INTERNAL_SERVER_ERROR
+        }
     })
 }

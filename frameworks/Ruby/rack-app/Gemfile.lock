@@ -1,0 +1,63 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    bigdecimal (3.3.1)
+    date (3.5.0)
+    erb (5.1.3)
+    io-console (0.8.1)
+    iodine (0.7.58)
+    irb (1.15.3)
+      pp (>= 0.6.0)
+      rdoc (>= 4.0.0)
+      reline (>= 0.4.2)
+    json (2.16.0)
+    logger (1.7.0)
+    pg (1.6.2)
+    pg (1.6.2-arm64-darwin)
+    pp (0.6.3)
+      prettyprint
+    prettyprint (0.2.0)
+    psych (5.2.6)
+      date
+      stringio
+    rack (3.2.4)
+    rack-app (11.0.2)
+      rack (>= 3.0.0)
+      rackup
+    rack-app-front_end (0.22.2)
+      rack-app (>= 6.3.1)
+      tilt
+    rackup (2.2.1)
+      rack (>= 3)
+    rdoc (6.15.1)
+      erb
+      psych (>= 4.0.0)
+      tsort
+    reline (0.6.2)
+      io-console (~> 0.5)
+    sequel (5.98.0)
+      bigdecimal
+    sequel_pg (1.17.2)
+      pg (>= 0.18.0, != 1.2.0)
+      sequel (>= 4.38.0)
+    stringio (3.1.7)
+    tilt (2.6.1)
+    tsort (0.2.0)
+
+PLATFORMS
+  arm64-darwin-24
+  ruby
+
+DEPENDENCIES
+  iodine (~> 0.7)
+  irb
+  json (~> 2.10)
+  logger
+  pg (~> 1.5)
+  rack-app
+  rack-app-front_end
+  sequel (~> 5.0)
+  sequel_pg (~> 1.6)
+
+BUNDLED WITH
+   2.7.2

@@ -39,7 +39,7 @@ class DockerHelper:
                     path=path,
                     dockerfile=dockerfile,
                     tag=tag,
-                    forcerm=True,
+                    forcerm=self.benchmarker.config.force_rm_intermediate_docker_layers,
                     timeout=3600,
                     pull=True,
                     buildargs=buildargs,

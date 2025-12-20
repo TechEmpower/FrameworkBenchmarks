@@ -22,6 +22,7 @@
         "webserver": "None",
         "os": "Linux",
         "notes": "https://http4k.org",
+        "tags": [ "broken" ],
         "versus": "servlet"
       },
       "apache4": {
@@ -88,6 +89,7 @@
         "webserver": "None",
         "os": "Linux",
         "notes": "https://http4k.org",
+        "tags": [ "broken" ],
         "versus": "helidon-jdbc"
       },
       "jetty": {

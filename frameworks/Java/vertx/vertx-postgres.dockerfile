@@ -17,6 +17,8 @@ CMD export DBIP=`getent hosts tfb-database | awk '{ print $1 }'` && \
       -server \
       -XX:+UseNUMA \
       -XX:+UseParallelGC \
+      -XX:+UnlockDiagnosticVMOptions \
+      -XX:+DebugNonSafepoints \
       -Djava.lang.Integer.IntegerCache.high=10000 \
       -Dvertx.disableMetrics=true \
       -Dvertx.disableWebsockets=true \
@@ -28,6 +30,7 @@ CMD export DBIP=`getent hosts tfb-database | awk '{ print $1 }'` && \
       -Dio.netty.noUnsafe=false \
       -Dio.netty.buffer.checkBounds=false \
       -Dio.netty.buffer.checkAccessible=false \
+      -Dio.netty.iouring.ringSize=16384 \
       -jar \
       target/vertx.benchmark-0.0.1-SNAPSHOT-fat.jar \
       src/main/conf/config.json

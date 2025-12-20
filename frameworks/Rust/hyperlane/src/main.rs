@@ -12,11 +12,7 @@ pub(crate) use std::fmt;
 
 pub(crate) use futures::{executor::block_on, future::join_all};
 pub(crate) use hyperlane::{
-    tokio::{
-        runtime::{Builder, Runtime},
-        spawn,
-        task::JoinHandle,
-    },
+    tokio::{spawn, task::JoinHandle},
     *,
 };
 pub(crate) use hyperlane_time::*;
@@ -30,6 +26,27 @@ pub(crate) use sqlx::{
     query as db_query,
 };
 
-fn main() {
-    run_server();
+use middleware::*;
+use route::*;
+
+#[tokio::main]
+async fn main() {
+    init_db().await;
+
+    let config: ServerConfig = ServerConfig::new().await;
+    config.port(8080).await;
+    config.disable_nodelay().await;
+
+    let server: Server = Server::from(config).await;
+    server.request_middleware::<RequestMiddleware>().await;
+    server.route::<PlaintextRoute>("/plaintext").await;
+    server.route::<JsonRoute>("/json").await;
+    server.route::<CachedQueryRoute>("/cached-quer").await;
+    server.route::<DbRoute>("/db").await;
+    server.route::<QueryRoute>("/query").await;
+    server.route::<FortunesRoute>("/fortunes").await;
+    server.route::<UpdateRoute>("/upda").await;
+
+    let server_hook: ServerControlHook = server.run().await.unwrap();
+    server_hook.wait().await;
 }
