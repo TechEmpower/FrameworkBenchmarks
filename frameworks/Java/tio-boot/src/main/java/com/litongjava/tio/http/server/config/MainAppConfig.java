@@ -1,13 +1,11 @@
-package com.litongjava.tio.http.server;
+package com.litongjava.tio.http.server.config;
 
 import com.litongjava.context.BootConfiguration;
 import com.litongjava.tio.boot.server.TioBootServer;
-import com.litongjava.tio.http.server.config.EhCachePluginConfig;
-import com.litongjava.tio.http.server.config.EnjoyEngineConfig;
-import com.litongjava.tio.http.server.config.MysqlDbConfig;
 import com.litongjava.tio.http.server.handler.CacheHandler;
 import com.litongjava.tio.http.server.handler.DbHandler;
-import com.litongjava.tio.http.server.handler.IndexHandler;
+import com.litongjava.tio.http.server.handler.JsonHandler;
+import com.litongjava.tio.http.server.handler.PlaintextHandler;
 import com.litongjava.tio.http.server.router.HttpRequestRouter;
 import com.litongjava.tio.utils.environment.EnvUtils;
 
@@ -33,13 +31,14 @@ public class MainAppConfig implements BootConfiguration {
     }
 
     // add route
-    IndexHandler controller = new IndexHandler();
+    JsonHandler jsonHanlder = new JsonHandler();
 
+    PlaintextHandler plaintextHandler = new PlaintextHandler();
     TioBootServer server = TioBootServer.me();
     HttpRequestRouter requestRouter = server.getRequestRouter();
     if (requestRouter != null) {
-      requestRouter.add("/plaintext", controller::plaintext);
-      requestRouter.add("/json", controller::json);
+      requestRouter.add("/plaintext", plaintextHandler);
+      requestRouter.add("/json", jsonHanlder);
 
       DbHandler dbQueryController = new DbHandler();
       requestRouter.add("/db", dbQueryController::db);
