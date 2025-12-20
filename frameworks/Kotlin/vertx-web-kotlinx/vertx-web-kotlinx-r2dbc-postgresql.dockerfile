@@ -29,6 +29,7 @@ RUN gradle --no-daemon with-db:r2dbc:installDist
 
 EXPOSE 8080
 
+# https://github.com/pgjdbc/r2dbc-postgresql/issues/360
 CMD export JAVA_OPTS=" \
     --enable-native-access=ALL-UNNAMED \
     --sun-misc-unsafe-memory-access=allow \
@@ -49,5 +50,6 @@ CMD export JAVA_OPTS=" \
     -Dio.netty.buffer.checkBounds=false \
     -Dio.netty.buffer.checkAccessible=false \
     -Dio.netty.iouring.ringSize=16384 \
+    -Dreactor.bufferSize.small=1024 \
     " && \
     with-db/r2dbc/build/install/r2dbc/bin/r2dbc
