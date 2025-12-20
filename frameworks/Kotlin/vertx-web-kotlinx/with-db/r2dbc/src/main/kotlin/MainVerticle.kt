@@ -20,10 +20,12 @@ class MainVerticle : CommonWithDbVerticle<Connection>() {
 
     override suspend fun updateSortedWorlds(sortedWorlds: List<World>) {
         val statement = dbClient.createStatement(UPDATE_WORLD_SQL)
-        for (world in sortedWorlds)
+        val lastIndex = sortedWorlds.lastIndex
+        sortedWorlds.forEachIndexed { index, world ->
             statement.bind(0, world.randomNumber)
                 .bind(1, world.id)
-                .add()
+            if (index < lastIndex) statement.add()
+        }
         // wait for the execution to complete
         statement.execute().awaitSingle() // or `.collect {}`
     }
