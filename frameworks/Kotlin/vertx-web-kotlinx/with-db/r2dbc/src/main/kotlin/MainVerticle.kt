@@ -1,6 +1,7 @@
 import database.*
 import io.r2dbc.spi.Connection
 import io.r2dbc.spi.Readable
+import kotlinx.coroutines.reactive.awaitLast
 import kotlinx.coroutines.reactive.awaitSingle
 import kotlinx.coroutines.reactive.collect
 
@@ -27,7 +28,7 @@ class MainVerticle : CommonWithDbVerticle<Connection>() {
             if (index < lastIndex) statement.add()
         }
         // wait for the execution to complete
-        statement.execute().awaitSingle() // or `.collect {}`
+        statement.execute().awaitLast() // or `.collect {}`
     }
 
     override suspend fun selectFortunesInto(fortunes: MutableList<Fortune>) {
