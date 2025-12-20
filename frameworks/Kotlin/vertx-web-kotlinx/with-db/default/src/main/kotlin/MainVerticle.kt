@@ -8,7 +8,7 @@ import io.vertx.sqlclient.RowSet
 import io.vertx.sqlclient.Tuple
 
 // `PgConnection`s as used in the "vertx" portion offers better performance than `PgPool`s.
-class MainVerticle : CommonWithDbVerticle<PgConnection>() {
+class MainVerticle : CommonWithDbVerticle.ParallelOrPipelinedSelectWorlds<PgConnection>() {
     lateinit var selectWorldQuery: PreparedQuery<RowSet<Row>>
     lateinit var selectFortuneQuery: PreparedQuery<RowSet<Row>>
     lateinit var updateWorldQuery: PreparedQuery<RowSet<Row>>

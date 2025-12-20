@@ -8,7 +8,8 @@ import org.jetbrains.exposed.v1.core.statements.buildStatement
 import org.jetbrains.exposed.v1.jdbc.Database
 import org.jetbrains.exposed.v1.jdbc.select
 
-class MainVerticle(val exposedDatabase: Database) : CommonWithDbVerticle<DatabaseClient<PgConnection>>() {
+class MainVerticle(val exposedDatabase: Database) :
+    CommonWithDbVerticle.ParallelOrPipelinedSelectWorlds<DatabaseClient<PgConnection>>() {
     // kept in case we support generating and reusing `PreparedQuery`
     /*
     lateinit var selectWorldQuery: PreparedQuery<RowSet<Row>>
