@@ -1,7 +1,7 @@
 import database.*
 import io.r2dbc.spi.Connection
 import io.r2dbc.spi.Readable
-import kotlinx.coroutines.reactive.awaitLast
+import kotlinx.coroutines.reactive.awaitFirst
 import kotlinx.coroutines.reactive.awaitSingle
 import kotlinx.coroutines.reactive.collect
 
@@ -32,7 +32,9 @@ class MainVerticle : CommonWithDbVerticle.SequentialSelectWorlds<Connection>() {
             if (index < lastIndex) statement.add()
         }
         // wait for the execution to complete
-        statement.execute().awaitLast() // or `.collect {}`
+        // There is only a single result.
+        // None of `awaitSingle`, `awaitLast`, `collect`, and `.asFlow().take(sortedWorlds.size).collect {}` returns here and leads to timeout.
+        statement.execute().awaitFirst()
     }
 
     override suspend fun selectFortunesInto(fortunes: MutableList<Fortune>) {
