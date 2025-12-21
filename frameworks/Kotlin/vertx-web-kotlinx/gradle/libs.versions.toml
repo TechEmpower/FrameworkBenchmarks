@@ -8,6 +8,7 @@ kotlinx-html = "0.12.0"
 kotlinx-datetime = "0.7.1"
 r2dbc-spi = "1.0.0.RELEASE"
 r2dbc-postgresql = "1.1.1.RELEASE"
+r2dbc-pool = "1.0.2.RELEASE"
 exposed = "1.0.0-rc-4"
 exposedVertxSqlClient = "0.7.0-SNAPSHOT" # TODO use a stable version
 
@@ -45,6 +46,7 @@ kotlinx-html = { module = "org.jetbrains.kotlinx:kotlinx-html", version.ref = "k
 # R2DBC SPI and PostgreSQL driver
 r2dbc-spi = { module = "io.r2dbc:r2dbc-spi", version.ref = "r2dbc-spi" }
 r2dbc-postgresql = { module = "org.postgresql:r2dbc-postgresql", version.ref = "r2dbc-postgresql" }
+r2dbc-pool = { module = "io.r2dbc:r2dbc-pool", version.ref = "r2dbc-pool" }
 
 
 # Exposed

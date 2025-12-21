@@ -11,13 +11,16 @@ import org.jetbrains.exposed.v1.r2dbc.transactions.TransactionManager
 import org.jetbrains.exposed.v1.r2dbc.transactions.suspendTransaction
 
 /*
-`ParallelOrPipelinedSelectWorlds` leads to `io.r2dbc.postgresql.client.ReactorNettyClient$RequestQueueException: [08006] Cannot exchange messages because the request queue limit is exceeded`.
+`ParallelOrPipelinedSelectWorlds` results in `io.r2dbc.postgresql.client.ReactorNettyClient$RequestQueueException: [08006] Cannot exchange messages because the request queue limit is exceeded`.
 https://github.com/pgjdbc/r2dbc-postgresql/issues/360#issuecomment-869422327 offers a workaround, but it doesn't seem like the officially recommended approach.
 The PostgreSQL R2DBC driver doesn't seem to have full support for pipelining and multiplexing as discussed in https://github.com/pgjdbc/r2dbc-postgresql/pull/28.
  */
 class MainVerticle : CommonWithDbVerticle.SequentialSelectWorlds<R2dbcDatabase>() {
     override suspend fun initDbClient(): R2dbcDatabase =
-        r2DbcDatabaseConnect()
+    // This seems to cause too many connections to be created, resulting in `io.r2dbc.postgresql.PostgresqlConnectionFactory$PostgresConnectionException: [08003] Cannot connect to tfb-database/<unresolved>:5432`.
+    //r2DbcDatabaseConnect()
+        // since a pool is created for every `Verticle`, the size 1 is optimal as tested.
+        r2dbcDatabaseConnectPool(1)
 
     override val httpServerStrictThreadMode get() = false
     //override val coHandlerCoroutineContext: CoroutineContext get() = EmptyCoroutineContext

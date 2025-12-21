@@ -1,5 +1,7 @@
 package database
 
+import io.r2dbc.pool.ConnectionPool
+import io.r2dbc.pool.ConnectionPoolConfiguration
 import io.r2dbc.spi.ConnectionFactories.get
 import io.r2dbc.spi.ConnectionFactoryOptions
 import io.r2dbc.spi.ConnectionFactoryOptions.DRIVER
@@ -17,3 +19,11 @@ val connectionFactory = get(
         .option(ConnectionFactoryOptions.DATABASE, DATABASE)
         .build()
 )
+
+fun connectionPoolConfiguration(size: Int) = ConnectionPoolConfiguration.builder(connectionFactory)
+    .initialSize(size)
+    .maxSize(size)
+    .build()
+
+fun connectionPool(size: Int) =
+    ConnectionPool(connectionPoolConfiguration(size))

@@ -7,7 +7,7 @@ dependencies {
     implementation(project(":with-db:r2dbc-common"))
     implementation(project(":with-db:exposed-common"))
 
-    api(libs.exposed.r2dbc)
+    implementation(libs.exposed.r2dbc)
 }
 
 application.mainClass.set("MainKt")

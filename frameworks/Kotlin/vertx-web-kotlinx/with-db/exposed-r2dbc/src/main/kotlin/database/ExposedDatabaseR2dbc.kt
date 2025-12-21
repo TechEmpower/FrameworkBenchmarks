@@ -8,3 +8,8 @@ fun r2DbcDatabaseConnect() =
     R2dbcDatabase.connect(connectionFactory, R2dbcDatabaseConfig {
         explicitDialect = PostgreSQLDialect()
     })
+
+fun r2dbcDatabaseConnectPool(connectionPoolSize: Int) =
+    R2dbcDatabase.connect(connectionPool(connectionPoolSize), R2dbcDatabaseConfig {
+        explicitDialect = PostgreSQLDialect()
+    })

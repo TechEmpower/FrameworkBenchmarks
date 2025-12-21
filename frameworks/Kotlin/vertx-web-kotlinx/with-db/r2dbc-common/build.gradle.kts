@@ -7,4 +7,5 @@ dependencies {
 
     api(libs.r2dbc.spi)
     implementation(libs.r2dbc.postgresql)
+    api(libs.r2dbc.pool)
 }
