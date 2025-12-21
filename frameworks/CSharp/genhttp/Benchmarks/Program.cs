@@ -1,7 +1,11 @@
 ﻿using Benchmarks.Tests;
 using Benchmarks.Utilities;
 
+#if INTERNAL
 using GenHTTP.Engine.Internal;
+#else
+using GenHTTP.Engine.Kestrel;
+#endif
 
 using GenHTTP.Modules.IO;
 using GenHTTP.Modules.Layouting;

@@ -1,9 +1,9 @@
 ﻿using System.Runtime.InteropServices;
-using System.Text; 
-using System.Text.Json; 
-using appMpower.Orm.Data; 
-using appMpower.Orm.Objects; 
-using appMpower.Orm.Serializers; 
+using System.Text;
+using System.Text.Json;
+using appMpower.Orm.Data;
+using appMpower.Orm.Objects;
+using appMpower.Orm.Serializers;
 
 namespace appMpower.Orm;
 
@@ -11,7 +11,7 @@ public static class NativeMethods
 {
     private static JsonWriterOptions _jsonWriterOptions = new JsonWriterOptions
     {
-        Indented = false, 
+        Indented = false,
         SkipValidation = true
     };
 
@@ -24,17 +24,17 @@ public static class NativeMethods
     [UnmanagedCallersOnly(EntryPoint = "Dbms")]
     public static void Dbms(int dbms)
     {
-        Constants.Dbms = (Dbms)dbms; 
+        Constants.Dbms = (Dbms)dbms;
         DbProviderFactory.SetConnectionString();
     }
 
     [UnmanagedCallersOnly(EntryPoint = "DbProvider")]
     public static void DbProvider(int dbProvider)
     {
-        Constants.DbProvider = (DbProvider)dbProvider; 
+        Constants.DbProvider = (DbProvider)dbProvider;
         DbProviderFactory.SetConnectionString();
     }
-    
+
     [UnmanagedCallersOnly(EntryPoint = "FreeHandlePointer")]
     public static void FreeHandlePointer(IntPtr handlePointer)
     {
@@ -48,25 +48,22 @@ public static class NativeMethods
         var world = RawDb.LoadSingleQueryRow().GetAwaiter().GetResult();
 
         var memoryStream = new MemoryStream();
-        using var utf8JsonWriter = new Utf8JsonWriter(memoryStream, _jsonWriterOptions);
+        using (var utf8JsonWriter = new Utf8JsonWriter(memoryStream, _jsonWriterOptions))
+        {
+            _worldSerializer.Serialize(utf8JsonWriter, world);
+        }
 
-        _worldSerializer.Serialize(utf8JsonWriter, world);
+        // Flush everything to the MemoryStream
+        memoryStream.Flush();
+        byte[] buffer = memoryStream.GetBuffer();
+        int len = (int)memoryStream.Position;  // or (int)memoryStream.Length;
 
-        *length = (int)utf8JsonWriter.BytesCommitted; 
-        byte[] byteArray = memoryStream.ToArray();
+        *length = len;
 
-        GCHandle handle = GCHandle.Alloc(byteArray, GCHandleType.Pinned);
-        // return the managed and byteArrayPointer pointer
-        IntPtr byteArrayPointer = handle.AddrOfPinnedObject();
+        GCHandle handle = GCHandle.Alloc(buffer, GCHandleType.Pinned);
         *handlePointer = GCHandle.ToIntPtr(handle);
 
-        return byteArrayPointer;
-        /*
-        fixed(byte* b = memoryStream.ToArray())
-        {
-            return b; 
-        }
-        */
+        return handle.AddrOfPinnedObject();
     }
 
     /*
@@ -90,7 +87,7 @@ public static class NativeMethods
     [UnmanagedCallersOnly(EntryPoint = "Fortunes")]
     public static unsafe IntPtr Fortunes(int* length, IntPtr* handlePointer)
     {
-        List<Fortune> fortunes = RawDb.LoadFortunesRows().GetAwaiter().GetResult(); 
+        List<Fortune> fortunes = RawDb.LoadFortunesRows().GetAwaiter().GetResult();
 
         int totalSize = 0;
 
@@ -122,7 +119,7 @@ public static class NativeMethods
         }
 
         byte[] byteArray = buffer.ToArray();
-        *length = byteArray.Length; 
+        *length = byteArray.Length;
 
         /*
         var memoryStream = new MemoryStream();
@@ -151,7 +148,7 @@ public static class NativeMethods
 
         _worldsSerializer.Serialize(utf8JsonWriter, worlds);
 
-        *length = (int)utf8JsonWriter.BytesCommitted; 
+        *length = (int)utf8JsonWriter.BytesCommitted;
         byte[] byteArray = memoryStream.ToArray();
 
         GCHandle handle = GCHandle.Alloc(byteArray, GCHandleType.Pinned);
@@ -171,7 +168,7 @@ public static class NativeMethods
 
         _worldsSerializer.Serialize(utf8JsonWriter, worlds);
 
-        *length = (int)utf8JsonWriter.BytesCommitted; 
+        *length = (int)utf8JsonWriter.BytesCommitted;
         byte[] byteArray = memoryStream.ToArray();
 
         GCHandle handle = GCHandle.Alloc(byteArray, GCHandleType.Pinned);
@@ -191,7 +188,7 @@ public static class NativeMethods
 
         _worldSerializer.Serialize(utf8JsonWriter, world);
 
-        *length = (int)utf8JsonWriter.BytesCommitted; 
+        *length = (int)utf8JsonWriter.BytesCommitted;
         byte[] byteArray = memoryStream.ToArray();
 
         GCHandle handle = GCHandle.Alloc(byteArray, GCHandleType.Pinned);

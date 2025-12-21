@@ -22,6 +22,7 @@
       "database_os": "Linux",
       "display_name": "Rocket",
       "notes": "",
+      "tags": ["broken"],
       "versus": "None"
     },
     "diesel": {

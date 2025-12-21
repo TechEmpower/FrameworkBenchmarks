@@ -9,31 +9,29 @@ path = "./src/main.rs"
 required-features = ["io-uring", "pg", "router", "template"]
 
 [[bin]]
-name = "xitca-web-unrealistic"
-path = "./src/main_unrealistic.rs"
-required-features = ["perf", "pg", "template"]
+name = "xitca-web-barebone"
+path = "./src/main_barebone.rs"
+required-features = ["perf", "perf-json", "pg", "template"]
 
 [[bin]]
-name = "xitca-web-orm"
+name = "xitca-web-diesel"
 path = "./src/main_orm.rs"
-required-features = ["pg-orm-async", "template", "web-codegen"]
+required-features = ["diesel", "perf", "template", "web-codegen"]
 
 [[bin]]
-name = "xitca-web-sync"
-path = "./src/main_sync.rs"
-required-features = ["pg-orm", "template", "web-codegen"]
+name = "xitca-web-toasty"
+path = "./src/main_orm.rs"
+required-features = ["perf", "template", "toasty", "web-codegen"]
 
 [features]
 # pg client optional
 pg = ["dep:xitca-postgres"]
 # diesel orm optional
-pg-orm = ["diesel/r2d2"]
-# diesel async orm optional
-pg-orm-async = ["dep:diesel", "dep:diesel-async", "dep:xitca-postgres-diesel", "dep:futures-util"]
+diesel = ["dep:diesel", "dep:diesel-async", "dep:xitca-postgres-diesel", "dep:futures-util"]
+# toasty orm optional
+toasty = ["dep:toasty", "dep:xitca-postgres-toasty", "futures-util/alloc"]
 # http router optional
 router = ["xitca-http/router"]
-# web optional
-web = ["dep:xitca-web"]
 # web with macros optional
 web-codegen = ["xitca-web/codegen", "xitca-web/urlencoded"]
 # template optional
@@ -41,7 +39,12 @@ template = ["dep:sailfish"]
 # io-uring optional
 io-uring = ["dep:tokio-uring", "xitca-http/io-uring", "xitca-server/io-uring"]
 # unrealistic performance optimization
-perf = ["dep:core_affinity", "dep:mimalloc", "tokio/parking_lot", "simd-json", "simd-json-derive"]
+perf = ["perf-allocator", "dep:core_affinity", "tokio/parking_lot"]
+perf-allocator = ["dep:mimalloc"]
+# regular json serializer
+json = ["serde_json"]
+# performance optimization json serializer
+perf-json = ["sonic-rs"]
 
 [dependencies]
 xitca-http = "0.7"
@@ -52,8 +55,7 @@ xitca-unsafe-collection = "0.2"
 
 atoi = "2"
 httparse = "1"
-serde = { version = "1" }
-serde_json = { version = "1" }
+serde_core = { version = "1" }
 
 # web optional
 xitca-web = { version = "0.7", features = ["json"], optional = true }
@@ -61,13 +63,15 @@ xitca-web = { version = "0.7", features = ["json"], optional = true }
 # raw-pg optional
 xitca-postgres = { version = "0.3", optional = true }
 
-# orm optional
+# diesel orm optional
 diesel = { version = "2", features = ["postgres"], optional = true }
-
-# orm async optional
-diesel-async = { version = "0.7", features = ["bb8", "postgres"], optional = true }
-xitca-postgres-diesel = { version = "0.2", optional = true }
+diesel-async = { version = "0.7", optional = true }
+xitca-postgres-diesel = { version = "0.2", default-features = false, optional = true }
 futures-util = { version = "0.3", default-features = false, optional = true }
+
+# toasty orm optional
+xitca-postgres-toasty = { version = "0.1", optional = true }
+toasty = { version = "0.1", optional = true }
 
 # template optional
 sailfish = { version = "0.10", default-features = false, features = ["perf-inline"], optional = true }
@@ -78,12 +82,14 @@ tokio-uring = { version = "0.5", optional = true }
 # perf optional
 core_affinity = { version = "0.8.1", optional = true }
 mimalloc = { version = "0.1", default-features = false, optional = true }
-simd-json = { version = "0.17", optional = true }
-simd-json-derive =  { version = "0.18", default-features = false, optional = true }
+
+# json optioanl
+serde_json = { version = "1", optional = true }
+sonic-rs = { version = "0.5.6", optional = true }
 
 futures-core = { version = "0.3", default-features = false }
 rand = { version = "0.9", features = ["os_rng", "small_rng"], default-features = false }
-tokio = "1.41"
+tokio = "1.48"
 
 [profile.release]
 lto = true
@@ -92,11 +98,19 @@ codegen-units = 1
 panic = "abort"
 
 [patch.crates-io]
-xitca-postgres-diesel = { git = "https://github.com/fakeshadow/xitca-postgres-diesel", rev = "8ce4e5b" }
+xitca-postgres-diesel = { git = "https://github.com/fakeshadow/xitca-postgres-diesel", rev = "1bd39ac" }
+xitca-postgres-toasty = { git = "https://github.com/fakeshadow/xitca-postgres-toasty", rev = "270fe35" }
 
-xitca-codegen = { git = "http://github.com/HFQR/xitca-web", rev = "7c22b4a" }
-xitca-http = { git = "http://github.com/HFQR/xitca-web", rev = "7c22b4a" }
-xitca-postgres = { git = "http://github.com/HFQR/xitca-web", rev = "7c22b4a" }
-xitca-server = { git = "http://github.com/HFQR/xitca-web", rev = "7c22b4a" }
-xitca-service = { git = "http://github.com/HFQR/xitca-web", rev = "7c22b4a" }
-xitca-web = { git = "http://github.com/HFQR/xitca-web", rev = "7c22b4a" }
+toasty = { git = "https://github.com/fakeshadow/toasty", branch = "engine" }
+toasty-core = { git = "https://github.com/fakeshadow/toasty", branch = "engine" }
+toasty-sql = { git = "https://github.com/fakeshadow/toasty", branch = "engine" }
+
+# personal fork of tokio-uring with tokio local runtime enabled
+tokio-uring = { git = "http://github.com/fakeshadow/tokio-uring", rev = "c3d5887" }
+
+xitca-codegen = { git = "http://github.com/HFQR/xitca-web", rev = "faf1ae2" }
+xitca-http = { git = "http://github.com/HFQR/xitca-web", rev = "faf1ae2" }
+xitca-postgres = { git = "http://github.com/HFQR/xitca-web", rev = "faf1ae2" }
+xitca-server = { git = "http://github.com/HFQR/xitca-web", rev = "faf1ae2" }
+xitca-service = { git = "http://github.com/HFQR/xitca-web", rev = "faf1ae2" }
+xitca-web = { git = "http://github.com/HFQR/xitca-web", rev = "faf1ae2" }

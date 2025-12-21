@@ -48,6 +48,7 @@
         "database_os": "Linux",
         "display_name": "Goravel Fiber",
         "notes": "",
+        "tags": ["broken"],
         "versus": "go"
       }
     }

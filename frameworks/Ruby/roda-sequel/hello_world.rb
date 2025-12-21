@@ -4,6 +4,7 @@
 class HelloWorld < Roda
   plugin :hooks
   plugin :render, escape: true, layout_opts: { cache_key: "default_layout" }
+  plugin :default_headers, SERVER_HEADER => SERVER_STRING
 
   def bounded_queries
     queries = request.params["queries"].to_i
@@ -15,19 +16,8 @@ class HelloWorld < Roda
     rand(MAX_PK) + 1
   end
 
-  if defined?(Puma)
-    def set_default_headers(response)
-      response[DATE_HEADER] = Time.now.httpdate
-      response[SERVER_HEADER] = SERVER_STRING
-    end
-  else
-    def set_default_headers(response)
-      response[SERVER_HEADER] = SERVER_STRING
-    end
-  end
-
   route do |r|
-    set_default_headers(response)
+    response[DATE_HEADER] = Time.now.httpdate if defined?(Puma)
 
     # Test type 1: JSON serialization
     r.is "json" do

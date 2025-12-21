@@ -7,10 +7,10 @@
 
   <ItemGroup>
     <PackageReference Update="FSharp.Core" Version="9.0.303" />
-    <PackageReference Include="Dapper" Version="2.1.66" />
     <PackageReference Include="Giraffe" Version="8.1.0-alpha-001" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="Npgsql" Version="9.0.4" />
+    <PackageReference Include="Dapper" Version="2.1.66" />
   </ItemGroup>
 
   <ItemGroup>

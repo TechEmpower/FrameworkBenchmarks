@@ -19,6 +19,7 @@
         "database_os": "Linux",
         "display_name": "Ratpack",
         "notes": "",
+        "tags": ["broken"],
         "versus": "Netty"
       },
       "jdbc": {
@@ -40,6 +41,7 @@
         "database_os": "Linux",
         "display_name": "Ratpack-jdbc",
         "notes": "",
+        "tags": ["broken"],
         "versus": "Netty"
       },
       "pgclient": {
@@ -61,6 +63,7 @@
         "database_os": "Linux",
         "display_name": "Ratpack-pgclient",
         "notes": "",
+        "tags": ["broken"],
         "versus": "Netty"
       }
     }

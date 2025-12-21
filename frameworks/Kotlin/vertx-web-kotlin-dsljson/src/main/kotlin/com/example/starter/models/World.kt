@@ -5,10 +5,8 @@ import com.dslplatform.json.JsonAttribute
 
 @CompiledJson
 class World(
-    @JsonAttribute(nullable = false) val id: Int,
-    @JsonAttribute(nullable = false) var randomNumber: Int
+    @field:JsonAttribute(nullable = false) val id: Int,
+    @field:JsonAttribute(nullable = false) var randomNumber: Int,
 ) : Comparable<World> {
-    override fun compareTo(other: World): Int {
-        return id.compareTo(other.id)
-    }
+    override fun compareTo(other: World): Int = id - other.id
 }

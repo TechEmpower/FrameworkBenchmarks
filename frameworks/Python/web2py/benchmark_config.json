@@ -22,6 +22,7 @@
       "database_os": "Linux",
       "display_name": "web2py-standard",
       "notes": "CPython 2.7",
+      "tags": ["broken"],
       "versus": "wsgi"
     },
     "optimized": {
@@ -44,6 +45,7 @@
       "database_os": "Linux",
       "display_name": "web2py-optimized",
       "notes": "CPython 2.7",
+      "tags": ["broken"],
       "versus": "wsgi"
     }
   }]
