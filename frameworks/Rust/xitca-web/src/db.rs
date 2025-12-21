@@ -119,7 +119,7 @@ impl Exec {
         let mut fortunes = Vec::with_capacity(16);
 
         while let Some(row) = res.try_next().await? {
-            fortunes.push(Fortune::new(row.get(0), row.get::<String>(1)));
+            fortunes.push(Fortune::new(row.get(0), row.get_zc(1)));
         }
 
         Ok(Fortunes::new(fortunes))
