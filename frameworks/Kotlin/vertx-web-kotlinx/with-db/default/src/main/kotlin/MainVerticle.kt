@@ -8,7 +8,9 @@ import io.vertx.sqlclient.RowSet
 import io.vertx.sqlclient.Tuple
 
 // `PgConnection`s as used in the "vertx" portion offers better performance than `PgPool`s.
-class MainVerticle : CommonWithDbVerticle.ParallelOrPipelinedSelectWorlds<PgConnection>() {
+class MainVerticle : CommonWithDbVerticle<PgConnection, Unit>(),
+    CommonWithDbVerticleI.ParallelOrPipelinedSelectWorlds<PgConnection, Unit>,
+    CommonWithDbVerticleI.WithoutTransaction<PgConnection> {
     lateinit var selectWorldQuery: PreparedQuery<RowSet<Row>>
     lateinit var selectFortuneQuery: PreparedQuery<RowSet<Row>>
     lateinit var updateWorldQuery: PreparedQuery<RowSet<Row>>
@@ -32,16 +34,16 @@ class MainVerticle : CommonWithDbVerticle.ParallelOrPipelinedSelectWorlds<PgConn
         }
 
 
-    override suspend fun selectWorld(id: Int) =
+    override suspend fun Unit.selectWorld(id: Int) =
         selectWorldQuery.execute(Tuple.of(id)).coAwait()
             .single().toWorld()
 
-    override suspend fun selectFortunesInto(fortunes: MutableList<Fortune>) {
+    override suspend fun Unit.selectFortunesInto(fortunes: MutableList<Fortune>) {
         selectFortuneQuery.execute().coAwait()
             .mapTo(fortunes) { it.toFortune() }
     }
 
-    override suspend fun updateSortedWorlds(sortedWorlds: List<World>) {
+    override suspend fun Unit.updateSortedWorlds(sortedWorlds: List<World>) {
         updateWorldQuery.executeBatch(sortedWorlds.map { Tuple.of(it.randomNumber, it.id) }).coAwait()
     }
 }

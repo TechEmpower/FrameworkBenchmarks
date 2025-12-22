@@ -10,7 +10,9 @@ import kotlinx.coroutines.reactive.collect
 https://github.com/pgjdbc/r2dbc-postgresql/issues/360#issuecomment-869422327 offers a workaround, but it doesn't seem like the officially recommended approach.
 The PostgreSQL R2DBC driver doesn't seem to have full support for pipelining and multiplexing as discussed in https://github.com/pgjdbc/r2dbc-postgresql/pull/28.
  */
-class MainVerticle : CommonWithDbVerticle.SequentialSelectWorlds<Connection>() {
+class MainVerticle : CommonWithDbVerticle<Connection, Unit>(),
+    CommonWithDbVerticleI.SequentialSelectWorlds<Connection, Unit>,
+    CommonWithDbVerticleI.WithoutTransaction<Connection> {
     override suspend fun initDbClient(): Connection =
         connectionFactory.create().awaitSingle()
 
@@ -21,13 +23,13 @@ class MainVerticle : CommonWithDbVerticle.SequentialSelectWorlds<Connection>() {
     override val httpServerStrictThreadMode get() = false
     //override val coHandlerCoroutineContext: CoroutineContext get() = EmptyCoroutineContext
 
-    override suspend fun selectWorld(id: Int): World =
+    override suspend fun Unit.selectWorld(id: Int): World =
         dbClient.createStatement(SELECT_WORLD_SQL).bind(0, id).execute()
             .awaitSingle()
             .map(Readable::toWorld)
             .awaitSingle()
 
-    override suspend fun updateSortedWorlds(sortedWorlds: List<World>) {
+    override suspend fun Unit.updateSortedWorlds(sortedWorlds: List<World>) {
         val statement = dbClient.createStatement(UPDATE_WORLD_SQL)
         val lastIndex = sortedWorlds.lastIndex
         sortedWorlds.forEachIndexed { index, world ->
@@ -41,7 +43,7 @@ class MainVerticle : CommonWithDbVerticle.SequentialSelectWorlds<Connection>() {
         statement.execute().awaitFirst()
     }
 
-    override suspend fun selectFortunesInto(fortunes: MutableList<Fortune>) {
+    override suspend fun Unit.selectFortunesInto(fortunes: MutableList<Fortune>) {
         dbClient.createStatement(SELECT_FORTUNE_SQL).execute()
             .awaitSingle()
             .map(Readable::toFortune)

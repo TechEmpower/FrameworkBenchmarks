@@ -8,8 +8,9 @@ import org.jetbrains.exposed.v1.core.statements.buildStatement
 import org.jetbrains.exposed.v1.jdbc.Database
 import org.jetbrains.exposed.v1.jdbc.select
 
-class MainVerticle(val exposedDatabase: Database) :
-    CommonWithDbVerticle.ParallelOrPipelinedSelectWorlds<DatabaseClient<PgConnection>>() {
+class MainVerticle(val exposedDatabase: Database) : CommonWithDbVerticle<DatabaseClient<PgConnection>, Unit>(),
+    CommonWithDbVerticleI.ParallelOrPipelinedSelectWorlds<DatabaseClient<PgConnection>, Unit>,
+    CommonWithDbVerticleI.WithoutTransaction<DatabaseClient<PgConnection>> {
     // kept in case we support generating and reusing `PreparedQuery`
     /*
     lateinit var selectWorldQuery: PreparedQuery<RowSet<Row>>
@@ -26,11 +27,11 @@ class MainVerticle(val exposedDatabase: Database) :
         return DatabaseClient(pgConnection, exposedDatabase, PgDatabaseClientConfig(validateBatch = false))
     }
 
-    override suspend fun selectWorld(id: Int): World =
+    override suspend fun Unit.selectWorld(id: Int): World =
         dbClient.executeQuery(jdbcSelectWorldWithIdQuery(id))
             .single().toWorld()
 
-    override suspend fun updateSortedWorlds(sortedWorlds: List<World>) {
+    override suspend fun Unit.updateSortedWorlds(sortedWorlds: List<World>) {
         dbClient.executeBatchUpdate(sortedWorlds.map { world ->
             buildStatement {
                 WorldTable.update({ WorldTable.id eq world.id }) {
@@ -40,7 +41,7 @@ class MainVerticle(val exposedDatabase: Database) :
         })
     }
 
-    override suspend fun selectFortunesInto(fortunes: MutableList<Fortune>) {
+    override suspend fun Unit.selectFortunesInto(fortunes: MutableList<Fortune>) {
         dbClient.executeQuery(with(FortuneTable) { select(id, message) })
             .mapTo(fortunes) { it.toFortune() }
     }

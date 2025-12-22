@@ -5,9 +5,9 @@ import kotlinx.coroutines.flow.toList
 import org.jetbrains.exposed.v1.core.dao.id.EntityID
 import org.jetbrains.exposed.v1.core.statements.BatchUpdateStatement
 import org.jetbrains.exposed.v1.r2dbc.R2dbcDatabase
+import org.jetbrains.exposed.v1.r2dbc.R2dbcTransaction
 import org.jetbrains.exposed.v1.r2dbc.select
 import org.jetbrains.exposed.v1.r2dbc.statements.toExecutable
-import org.jetbrains.exposed.v1.r2dbc.transactions.TransactionManager
 import org.jetbrains.exposed.v1.r2dbc.transactions.suspendTransaction
 
 /*
@@ -15,7 +15,8 @@ import org.jetbrains.exposed.v1.r2dbc.transactions.suspendTransaction
 https://github.com/pgjdbc/r2dbc-postgresql/issues/360#issuecomment-869422327 offers a workaround, but it doesn't seem like the officially recommended approach.
 The PostgreSQL R2DBC driver doesn't seem to have full support for pipelining and multiplexing as discussed in https://github.com/pgjdbc/r2dbc-postgresql/pull/28.
  */
-class MainVerticle : CommonWithDbVerticle.SequentialSelectWorlds<R2dbcDatabase>() {
+class MainVerticle : CommonWithDbVerticle<R2dbcDatabase, R2dbcTransaction>(),
+    CommonWithDbVerticleI.SequentialSelectWorlds<R2dbcDatabase, R2dbcTransaction> {
     override suspend fun initDbClient(): R2dbcDatabase =
     // This seems to cause too many connections to be created, resulting in `io.r2dbc.postgresql.PostgresqlConnectionFactory$PostgresConnectionException: [08003] Cannot connect to tfb-database/<unresolved>:5432`.
     //r2DbcDatabaseConnect()
@@ -27,27 +28,23 @@ class MainVerticle : CommonWithDbVerticle.SequentialSelectWorlds<R2dbcDatabase>(
 
     // copied and adapted from https://github.com/huanshankeji/FrameworkBenchmarks/blob/34532d12439d95c939bde1044a5f11afd07927d1/frameworks/Kotlin/ktor/ktor-exposed/app/src/main/kotlin/App.kt#L148-L185
 
-    override suspend fun selectWorld(id: Int): World =
-        suspendTransaction(dbClient) {
-            r2dbcSelectWorldWithIdQuery(id).single().toWorld()
-        }
+    override suspend fun <T> withOptionalTransaction(block: suspend R2dbcTransaction.() -> T): T =
+        suspendTransaction(dbClient) { block() }
 
-    override suspend fun updateSortedWorlds(sortedWorlds: List<World>) {
-        suspendTransaction(dbClient) {
-            val batch = BatchUpdateStatement(WorldTable)
-            sortedWorlds.forEach { world ->
-                batch.addBatch(EntityID(world.id, WorldTable))
-                batch[WorldTable.randomNumber] = world.randomNumber
-            }
-            // TODO also consider passing the transaction explicitly
-            batch.toExecutable().execute(TransactionManager.current())
+    override suspend fun R2dbcTransaction.selectWorld(id: Int): World =
+        r2dbcSelectWorldWithIdQuery(id).single().toWorld()
+
+    override suspend fun R2dbcTransaction.updateSortedWorlds(sortedWorlds: List<World>) {
+        val batch = BatchUpdateStatement(WorldTable)
+        sortedWorlds.forEach { world ->
+            batch.addBatch(EntityID(world.id, WorldTable))
+            batch[WorldTable.randomNumber] = world.randomNumber
         }
+        batch.toExecutable().execute(this)
     }
 
-    override suspend fun selectFortunesInto(fortunes: MutableList<Fortune>) {
-        suspendTransaction(dbClient) {
-            FortuneTable.select(FortuneTable.id, FortuneTable.message)
-                .map { it.toFortune() }.toList(fortunes)
-        }
+    override suspend fun R2dbcTransaction.selectFortunesInto(fortunes: MutableList<Fortune>) {
+        FortuneTable.select(FortuneTable.id, FortuneTable.message)
+            .map { it.toFortune() }.toList(fortunes)
     }
 }
