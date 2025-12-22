@@ -66,12 +66,14 @@ internal class Program
 
         DateHeader.SyncDateTimer();
 
-        Console.WriteLine("按任意键停止服务器...");
-        Console.ReadKey();
 
-        _isRunning = false;
-        _listenerSocket.Close();
-        Console.WriteLine("服务器已停止");
+        while (true)
+        {
+            Console.ReadLine();
+
+            _isRunning = false;
+            _listenerSocket.Close();
+        }
     }
 
     private static void AcceptClients()
