@@ -19,7 +19,10 @@ use xitca_http::{
 };
 use xitca_service::Service;
 
-use self::{ser::Message, util::QueryParse};
+use self::{
+    ser::{HELLO_BYTES, Message},
+    util::QueryParse,
+};
 
 fn main() -> io::Result<()> {
     let addr = "0.0.0.0:8080".parse().unwrap();
@@ -95,7 +98,7 @@ async fn handler<'h>(req: Request<'h, db_unrealistic::Client>, res: Response<'h>
                 .header("server", "X")
                 // unrealistic content length header.
                 .header("content-length", "13")
-                .body_writer(|buf| buf.extend_from_slice(b"Hello, World!"))
+                .body_writer(|buf| buf.extend_from_slice(HELLO_BYTES))
         }
         "/json" => res
             .status(StatusCode::OK)
