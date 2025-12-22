@@ -13,7 +13,7 @@ exclude = ["target", "Cargo.lock", "sh", ".github", "logs", "**/*.log"]
 
 [dependencies]
 futures = "0.3.31"
-hyperlane = "10.14.7"
+hyperlane = "10.16.0"
 hyperlane-time = "0.7.14"
 num_cpus = "1.17.0"
 once_cell = "1.21.3"
@@ -39,6 +39,8 @@ panic = "unwind"
 debug = false
 codegen-units = 1
 strip = "debuginfo"
+overflow-checks = false
+rpath = false
 
 [features]
 dev = []
