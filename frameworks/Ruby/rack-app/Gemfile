@@ -4,6 +4,7 @@ source 'https://rubygems.org'
 
 gem 'rack-app'
 gem 'rack-app-front_end'
+gem 'cgi' # for Ruby 4.0
 gem 'iodine', '~> 0.7', platforms: %i[ruby windows]
 gem 'irb' # for Ruby 3.5
 gem 'logger' # for Ruby 3.5
