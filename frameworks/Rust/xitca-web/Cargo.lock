@@ -1790,7 +1790,7 @@ checksum = "9edde0db4769d2dc68579893f2306b26c6ecfbe0ef499b013d731b7b9247e0b9"
 [[package]]
 name = "xitca-codegen"
 version = "0.4.0"
-source = "git+http://github.com/HFQR/xitca-web?rev=7ef2cc4#7ef2cc423b799702b5801288d49ff7fbfe01113e"
+source = "git+http://github.com/HFQR/xitca-web?rev=3f38156#3f381568a2a7b1d854d09e2acedd739f6a420388"
 dependencies = [
  "quote",
  "syn",
@@ -1799,7 +1799,7 @@ dependencies = [
 [[package]]
 name = "xitca-http"
 version = "0.7.1"
-source = "git+http://github.com/HFQR/xitca-web?rev=7ef2cc4#7ef2cc423b799702b5801288d49ff7fbfe01113e"
+source = "git+http://github.com/HFQR/xitca-web?rev=3f38156#3f381568a2a7b1d854d09e2acedd739f6a420388"
 dependencies = [
  "futures-core",
  "http",
@@ -1832,7 +1832,7 @@ dependencies = [
 [[package]]
 name = "xitca-postgres"
 version = "0.3.0"
-source = "git+http://github.com/HFQR/xitca-web?rev=7ef2cc4#7ef2cc423b799702b5801288d49ff7fbfe01113e"
+source = "git+http://github.com/HFQR/xitca-web?rev=3f38156#3f381568a2a7b1d854d09e2acedd739f6a420388"
 dependencies = [
  "fallible-iterator",
  "futures-core",
@@ -1861,7 +1861,7 @@ dependencies = [
 [[package]]
 name = "xitca-postgres-toasty"
 version = "0.1.0"
-source = "git+https://github.com/fakeshadow/xitca-postgres-toasty?rev=1ce7536#1ce7536cf72ca8aa13482e91ffc87459ec605e20"
+source = "git+https://github.com/fakeshadow/xitca-postgres-toasty?rev=6034a22#6034a220a76214655b3a74b8a99786954034b2a4"
 dependencies = [
  "anyhow",
  "async-stream",
@@ -1887,7 +1887,7 @@ dependencies = [
 [[package]]
 name = "xitca-server"
 version = "0.5.0"
-source = "git+http://github.com/HFQR/xitca-web?rev=7ef2cc4#7ef2cc423b799702b5801288d49ff7fbfe01113e"
+source = "git+http://github.com/HFQR/xitca-web?rev=3f38156#3f381568a2a7b1d854d09e2acedd739f6a420388"
 dependencies = [
  "socket2",
  "tokio",
@@ -1901,7 +1901,7 @@ dependencies = [
 [[package]]
 name = "xitca-service"
 version = "0.3.0"
-source = "git+http://github.com/HFQR/xitca-web?rev=7ef2cc4#7ef2cc423b799702b5801288d49ff7fbfe01113e"
+source = "git+http://github.com/HFQR/xitca-web?rev=3f38156#3f381568a2a7b1d854d09e2acedd739f6a420388"
 
 [[package]]
 name = "xitca-unsafe-collection"
@@ -1946,7 +1946,7 @@ dependencies = [
 [[package]]
 name = "xitca-web"
 version = "0.7.1"
-source = "git+http://github.com/HFQR/xitca-web?rev=7ef2cc4#7ef2cc423b799702b5801288d49ff7fbfe01113e"
+source = "git+http://github.com/HFQR/xitca-web?rev=3f38156#3f381568a2a7b1d854d09e2acedd739f6a420388"
 dependencies = [
  "futures-core",
  "pin-project-lite",
