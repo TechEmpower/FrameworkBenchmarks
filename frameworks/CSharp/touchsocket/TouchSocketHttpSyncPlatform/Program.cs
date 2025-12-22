@@ -51,7 +51,7 @@ internal class Program
     {
         var port = 8080;
         _listenerSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-        _listenerSocket.Bind(new IPEndPoint(IPAddress.Any, port));
+        _listenerSocket.Bind(new IPEndPoint(IPAddress.Parse("0.0.0.0"), port));
         _listenerSocket.Listen(1000);
         _isRunning = true;
 
@@ -70,9 +70,6 @@ internal class Program
         while (true)
         {
             Console.ReadLine();
-
-            _isRunning = false;
-            _listenerSocket.Close();
         }
     }
 
