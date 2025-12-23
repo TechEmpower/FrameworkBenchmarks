@@ -16,6 +16,7 @@ namespace Benchmarks
             var app = EffinitiveApp.Create()
                                    .UsePort(8080)
                                    .MapEndpoints()
+                                   .UseMiddleware<HttpComplianceMiddleware>()
                                    .Build();
 
             try
