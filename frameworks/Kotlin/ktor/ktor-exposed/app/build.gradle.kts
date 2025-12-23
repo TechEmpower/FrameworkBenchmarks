@@ -40,4 +40,4 @@ dependencies {
 
 application.mainClass.set("AppKt")
 
-kotlin. jvmToolchain(25)
+kotlin.jvmToolchain(25)
