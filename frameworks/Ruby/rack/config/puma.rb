@@ -1,4 +1,4 @@
-if ENV.fetch('WEB_CONCURRENCY') == 'auto'
+if ENV.fetch('WEB_CONCURRENCY').to_i > 1
   before_fork do
     Sequel::DATABASES.each(&:disconnect)
   end
