@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+
+    <TargetFramework>net10.0</TargetFramework>
+    <LangVersion>14.0</LangVersion>
+
+    <AssemblyTitle>Effinitive Benchmarks</AssemblyTitle>
+    <Description>Test suite to be executed with TechEmpower FrameworkBenchmarks.</Description>
+
+    <StartupObject>Benchmarks.Program</StartupObject>
+    <OutputType>Exe</OutputType>
+
+    <ServerGarbageCollection>true</ServerGarbageCollection>
+    <TieredCompilation>false</TieredCompilation>
+
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EffinitiveFramework.Core" Version="1.1.0" />
+  </ItemGroup>
+
+</Project>
