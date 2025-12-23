@@ -11,6 +11,8 @@ public class Plaintext : NoRequestEndpointBase<string>
 
     protected override string Route => "/plaintext";
 
+    protected override string ContentType => "text/plain";
+
     public override ValueTask<string> HandleAsync(CancellationToken cancellationToken = default)
     {
         return ValueTask.FromResult("Hello, World!");
