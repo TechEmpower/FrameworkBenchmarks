@@ -97,7 +97,7 @@ class App extends ScalaVerticle {
 
   private def handleDb(request: HttpServerRequest): Unit =
     client
-      .preparedQuery("SELECT id, randomnumber from WORLD where id=$1")
+      .preparedQuery("SELECT id, randomnumber FROM world WHERE id = $1")
       .execute(
         Tuple.of(App.randomWorld()))
       .andThen(
@@ -124,7 +124,7 @@ class App extends ScalaVerticle {
     var failed = false
     while (i < queries) {
       client
-        .preparedQuery("SELECT id, randomnumber from WORLD where id=$1")
+        .preparedQuery("SELECT id, randomnumber FROM world WHERE id = $1")
         .execute(Tuple.of(App.randomWorld()))
         .andThen(
           ar => boundary {
@@ -155,7 +155,7 @@ class App extends ScalaVerticle {
 
       val batch = worlds.map(world => Tuple.of(world.randomNumber, world.id)).toList.asJava
       conn
-        .preparedQuery("UPDATE world SET randomnumber=$1 WHERE id=$2")
+        .preparedQuery("UPDATE world SET randomnumber = $1 WHERE id = $2")
         .executeBatch(batch)
         .andThen(
           ar => boundary {
@@ -180,7 +180,7 @@ class App extends ScalaVerticle {
       val id = App.randomWorld()
       val index = i
       client
-        .preparedQuery("SELECT id, randomnumber from WORLD where id=$1")
+        .preparedQuery("SELECT id, randomnumber FROM world WHERE id = $1")
         .execute(Tuple.of(id)).andThen(
           ar2 => boundary {
             if (!failed) {
@@ -201,7 +201,7 @@ class App extends ScalaVerticle {
 
   private def handleFortunes(request: HttpServerRequest): Unit =
     client
-      .preparedQuery("SELECT id, message from FORTUNE")
+      .preparedQuery("SELECT id, message FROM fortune")
       .execute()
       .andThen(
         ar => boundary {
