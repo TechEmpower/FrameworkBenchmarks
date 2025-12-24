@@ -1,5 +1,4 @@
-// temporary allocator for tracking overhead between xitca-web and xitca-web [barebone] bench.
-// remove it before official run
+#[cfg(feature = "perf-allocator")]
 #[global_allocator]
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
@@ -14,8 +13,8 @@ use xitca_http::{
     bytes::Bytes,
     h1::RequestBody,
     http::{
-        self, IntoResponse as _, RequestExt, StatusCode,
-        const_header_value::{TEXT_HTML_UTF8, TEXT_UTF8},
+        self, HeaderValue, IntoResponse as _, RequestExt, StatusCode,
+        const_header_value::{JSON, TEXT_HTML_UTF8, TEXT_UTF8},
         header::{CONTENT_TYPE, SERVER},
     },
     util::{
@@ -28,8 +27,8 @@ use xitca_http::{
 };
 use xitca_service::{Service, ServiceExt, fn_service};
 
-use ser::{HELLO_BYTES, Message};
-use util::{HandleResult, QueryParse, SERVER_HEADER_VALUE};
+use ser::{HELLO, Message};
+use util::{HandleResult, QueryParse};
 
 type Request<B> = http::Request<RequestExt<B>>;
 
@@ -43,7 +42,7 @@ fn main() -> std::io::Result<()> {
             "/plaintext",
             get(fn_service(async |ctx: Ctx| {
                 let (req, _) = ctx.into_parts();
-                let mut res = req.into_response(const { Bytes::from_static(HELLO_BYTES) });
+                let mut res = req.into_response(const { Bytes::from_static(HELLO.as_bytes()) });
                 res.headers_mut().insert(CONTENT_TYPE, TEXT_UTF8);
                 Ok(res)
             })),
@@ -52,7 +51,7 @@ fn main() -> std::io::Result<()> {
             "/json",
             get(fn_service(async |ctx: Ctx| {
                 let (req, _) = ctx.into_parts();
-                json_response(req, &Message::new())
+                json_response(req, Message::HELLO)
             })),
         )
         .insert(
@@ -91,7 +90,7 @@ fn main() -> std::io::Result<()> {
         .enclosed(ContextBuilder::new(db_pool::Client::create))
         .enclosed_fn(async |service, req| {
             let mut res = service.call(req).await.unwrap_or_else(error_handler);
-            res.headers_mut().insert(SERVER, SERVER_HEADER_VALUE);
+            res.headers_mut().insert(SERVER, HeaderValue::from_static("x"));
             Ok::<_, core::convert::Infallible>(res)
         })
         .enclosed(HttpServiceBuilder::h1().io_uring());
@@ -118,16 +117,9 @@ fn error_handler(e: RouterError<util::Error>) -> Response {
         .unwrap()
 }
 
-#[cfg(any(feature = "json", feature = "perf-json"))]
 fn json_response<Ext>(req: Request<Ext>, val: &impl serde_core::Serialize) -> HandleResult<Response> {
-    let mut buf = xitca_http::bytes::BytesMut::new();
-    #[cfg(all(feature = "json", not(feature = "perf-json")))]
-    serde_json::to_writer(xitca_http::bytes::BufMutWriter(&mut buf), val)?;
-
-    #[cfg(all(feature = "perf-json", not(feature = "json")))]
-    sonic_rs::to_writer(xitca_http::bytes::BufMut::writer(&mut buf), val)?;
-
-    let mut res = req.into_response(buf.freeze());
-    res.headers_mut().insert(CONTENT_TYPE, http::const_header_value::JSON);
+    let buf = ser::json_serialize(val)?;
+    let mut res = req.into_response(Bytes::from(buf));
+    res.headers_mut().insert(CONTENT_TYPE, JSON);
     Ok(res)
 }
