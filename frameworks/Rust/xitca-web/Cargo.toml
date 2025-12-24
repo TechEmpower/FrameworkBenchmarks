@@ -9,6 +9,11 @@ path = "./src/main.rs"
 required-features = ["io-uring", "pg", "router", "template", "zero-copy"]
 
 [[bin]]
+name = "xitca-web-compio"
+path = "./src/main_compio.rs"
+required-features = ["compio", "perf", "perf-json", "pg", "router", "template", "zero-copy"]
+
+[[bin]]
 name = "xitca-web-barebone"
 path = "./src/main_barebone.rs"
 required-features = ["perf", "perf-json", "pg", "template", "zero-copy"]
@@ -47,6 +52,8 @@ perf-allocator = ["dep:mimalloc"]
 json = ["serde_json"]
 # performance optimization json serializer
 perf-json = ["sonic-rs"]
+# compio as runtime
+compio = ["dep:compio", "dep:socket2", "xitca-http/compio", "xitca-postgres/compio"]
 
 [dependencies]
 xitca-http = "0.7"
@@ -89,6 +96,10 @@ mimalloc = { version = "0.1", default-features = false, optional = true }
 serde_json = { version = "1", optional = true }
 sonic-rs = { version = "0.5.6", optional = true }
 
+# compio optional
+compio = { version = "0.17", features = ["time"], optional = true }
+socket2 = { version = "0.6", optional = true }
+
 futures-core = { version = "0.3", default-features = false }
 rand = { version = "0.9", features = ["os_rng", "small_rng"], default-features = false }
 tokio = "1.48"
@@ -110,9 +121,9 @@ toasty-sql = { git = "https://github.com/fakeshadow/toasty", rev = "51c8186" }
 # personal fork of tokio-uring with tokio local runtime enabled
 tokio-uring = { git = "http://github.com/fakeshadow/tokio-uring", rev = "c3d5887" }
 
-xitca-codegen = { git = "http://github.com/HFQR/xitca-web", rev = "2fb7b62" }
-xitca-http = { git = "http://github.com/HFQR/xitca-web", rev = "2fb7b62" }
-xitca-postgres = { git = "http://github.com/HFQR/xitca-web", rev = "2fb7b62" }
-xitca-server = { git = "http://github.com/HFQR/xitca-web", rev = "2fb7b62" }
-xitca-service = { git = "http://github.com/HFQR/xitca-web", rev = "2fb7b62" }
-xitca-web = { git = "http://github.com/HFQR/xitca-web", rev = "2fb7b62" }
+xitca-codegen = { git = "http://github.com/HFQR/xitca-web", rev = "b3d7dc0be3783fe1ad66ba94236c3a1dcfc1af8b" }
+xitca-http = { git = "http://github.com/HFQR/xitca-web", rev = "b3d7dc0be3783fe1ad66ba94236c3a1dcfc1af8b" }
+xitca-postgres = { git = "http://github.com/HFQR/xitca-web", rev = "b3d7dc0be3783fe1ad66ba94236c3a1dcfc1af8b" }
+xitca-server = { git = "http://github.com/HFQR/xitca-web", rev = "b3d7dc0be3783fe1ad66ba94236c3a1dcfc1af8b" }
+xitca-service = { git = "http://github.com/HFQR/xitca-web", rev = "b3d7dc0be3783fe1ad66ba94236c3a1dcfc1af8b" }
+xitca-web = { git = "http://github.com/HFQR/xitca-web", rev = "b3d7dc0be3783fe1ad66ba94236c3a1dcfc1af8b" }
