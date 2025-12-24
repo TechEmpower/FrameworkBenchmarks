@@ -56,10 +56,9 @@
         (case (req :uri)
           "/plaintext" (Response. hello-world 200 plain-text-headers)
           "/json" (Response. (json/write-value-as-string {:message hello-world}) 200 json-headers)
-          "/fortunes" (let [body (get-body datasource)] (Response. body 200 fortune-headers))
+          "/fortunes" (Response. (get-body datasource) 200 fortune-headers)
           (Response. hello-world 200 {"Server"       "ring-http-exchange"
                                       "Content-Type" "text/plain"})))
-      {:port            8080
-       :host            "0.0.0.0"
-       :record-support? true
-       :executor        (Executors/newVirtualThreadPerTaskExecutor)})))
+      {:port     8080
+       :host     "0.0.0.0"
+       :executor (Executors/newVirtualThreadPerTaskExecutor)})))
