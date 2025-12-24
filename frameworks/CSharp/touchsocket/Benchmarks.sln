@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TouchSocketWebApi31", "src\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TouchSocketHttpPlatform", "src\TouchSocketHttpPlatform\TouchSocketHttpPlatform.csproj", "{BC320C24-941D-2109-FBC8-92780569BBA4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TouchSocketHttpSyncPlatform", "TouchSocketHttpSyncPlatform\TouchSocketHttpSyncPlatform.csproj", "{E4A6B13A-13D3-47D6-9696-533A1FA1B88F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{BC320C24-941D-2109-FBC8-92780569BBA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BC320C24-941D-2109-FBC8-92780569BBA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BC320C24-941D-2109-FBC8-92780569BBA4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4A6B13A-13D3-47D6-9696-533A1FA1B88F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4A6B13A-13D3-47D6-9696-533A1FA1B88F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4A6B13A-13D3-47D6-9696-533A1FA1B88F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4A6B13A-13D3-47D6-9696-533A1FA1B88F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
