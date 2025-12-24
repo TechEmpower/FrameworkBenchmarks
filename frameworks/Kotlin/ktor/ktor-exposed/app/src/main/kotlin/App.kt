@@ -95,6 +95,7 @@ interface ExposedOps<TDatabase> {
                     .single().toWorld()
 
             override suspend fun getRandomWorlds(queries: Int, random: ThreadLocalRandom): List<World> =
+                // Coroutine concurrent `select`s lead to connection pool exhaustion.
                 List(queries) { getWorldWithId(random.nextIntWithinRows()) }
 
             override suspend fun getAllFortunesAndAddTo(result: MutableList<Fortune>) {
@@ -161,6 +162,7 @@ interface ExposedOps<TDatabase> {
                     .single().toWorld()
 
             override suspend fun getRandomWorlds(queries: Int, random: ThreadLocalRandom): List<World> =
+                // Coroutine concurrent `select`s lead to connection pool exhaustion.
                 List(queries) { getWorldWithId(random.nextIntWithinRows()) }
 
             override suspend fun getAllFortunesAndAddTo(result: MutableList<Fortune>) {
