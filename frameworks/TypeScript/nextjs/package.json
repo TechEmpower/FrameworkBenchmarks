@@ -4,20 +4,20 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build",
+    "build": "next build --turbopack",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
-    "kysely": "^0.27.5",
-    "next": "^15.2.4",
-    "pg": "^8.13.1",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "kysely": "0.27.6",
+    "next": "15.3.3",
+    "pg": "8.16.3",
+    "react": "19.2.3",
+    "react-dom": "19.2.3"
   },
   "devDependencies": {
-    "@types/node": "^20",
-    "@types/pg": "^8.11.10",
+    "@types/node": "^24",
+    "@types/pg": "^8.11",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "typescript": "^5"
