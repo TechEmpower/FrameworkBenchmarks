@@ -1,28 +1,28 @@
-#![allow(dead_code)]
-
 use rand::{Rng, SeedableRng, distr::Uniform, rngs::SmallRng};
-use xitca_http::http::header::HeaderValue;
 
-pub trait QueryParse {
-    fn parse_query(self) -> u16;
-}
+#[cfg(feature = "pg")]
+pub use parse::QueryParse;
 
-impl QueryParse for Option<&str> {
-    fn parse_query(self) -> u16 {
-        self.and_then(|q| q.find('q').map(|pos| q.split_at(pos + 2).1.parse_query()))
-            .unwrap_or(1)
+#[cfg(feature = "pg")]
+mod parse {
+    pub trait QueryParse {
+        fn parse_query(self) -> u16;
+    }
+
+    impl QueryParse for Option<&str> {
+        fn parse_query(self) -> u16 {
+            self.and_then(|q| q.find('q').map(|pos| q.split_at(pos + 2).1.parse_query()))
+                .unwrap_or(1)
+        }
+    }
+
+    impl QueryParse for &str {
+        fn parse_query(self) -> u16 {
+            use atoi::FromRadix10;
+            u16::from_radix_10(self.as_bytes()).0.clamp(1, 500)
+        }
     }
 }
-
-impl QueryParse for &str {
-    fn parse_query(self) -> u16 {
-        use atoi::FromRadix10;
-        u16::from_radix_10(self.as_bytes()).0.clamp(1, 500)
-    }
-}
-
-#[allow(clippy::declare_interior_mutable_const)]
-pub const SERVER_HEADER_VALUE: HeaderValue = HeaderValue::from_static("X");
 
 pub type Error = Box<dyn std::error::Error + Send + Sync + 'static>;
 
