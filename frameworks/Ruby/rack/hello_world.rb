@@ -43,12 +43,8 @@ class HelloWorld
   </html>'
 
   def initialize
-    if defined?(Puma)
+    if defined?(Puma) || defined?(Itsi)
       max_connections = ENV.fetch('MAX_THREADS')
-    elsif defined?(Itsi)
-      require_relative 'config/auto_tune'
-      _num_workers, num_threads = auto_tune
-      max_connections = num_threads
     else
       max_connections = 512
     end
@@ -101,13 +97,13 @@ class HelloWorld
   def respond(content_type, body)
     [
       200,
-      headers(content_type, body),
+      headers(content_type),
       [body]
     ]
   end
 
-  if defined?(Falcon) || defined?(Puma)
-    def headers(content_type, _)
+  if defined?(Puma) || defined?(Falcon)
+    def headers(content_type)
       {
         CONTENT_TYPE => content_type,
         SERVER => SERVER_STRING,
@@ -115,7 +111,7 @@ class HelloWorld
       }
     end
   else
-    def headers(content_type, _)
+    def headers(content_type)
       {
         CONTENT_TYPE => content_type,
         SERVER => SERVER_STRING

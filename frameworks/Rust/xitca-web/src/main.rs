@@ -1,11 +1,23 @@
+// temporary allocator for tracking overhead between xitca-web and xitca-web [barebone] bench.
+// remove it before official run
+#[global_allocator]
+static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
+
 mod db;
+mod db_pool;
 mod ser;
 mod util;
 
 use xitca_http::{
     HttpServiceBuilder,
+    body::Once,
+    bytes::Bytes,
     h1::RequestBody,
-    http::{StatusCode, header::SERVER},
+    http::{
+        self, IntoResponse as _, RequestExt, StatusCode,
+        const_header_value::{TEXT_HTML_UTF8, TEXT_UTF8},
+        header::{CONTENT_TYPE, SERVER},
+    },
     util::{
         middleware::context::{Context, ContextBuilder},
         service::{
@@ -16,60 +28,67 @@ use xitca_http::{
 };
 use xitca_service::{Service, ServiceExt, fn_service};
 
-use db::Client;
-use ser::{IntoResponse, Message, Request, Response, error_response};
-use util::{QueryParse, SERVER_HEADER_VALUE, State};
+use ser::{HELLO_BYTES, Message};
+use util::{HandleResult, QueryParse, SERVER_HEADER_VALUE};
 
-type Ctx<'a> = Context<'a, Request<RequestBody>, State<Client>>;
+type Request<B> = http::Request<RequestExt<B>>;
+
+type Response = http::Response<Once<Bytes>>;
+
+type Ctx<'a> = Context<'a, Request<RequestBody>, db_pool::Client>;
 
 fn main() -> std::io::Result<()> {
     let service = Router::new()
         .insert(
             "/plaintext",
-            get(fn_service(async |ctx: Ctx| ctx.into_parts().0.text_response())),
+            get(fn_service(async |ctx: Ctx| {
+                let (req, _) = ctx.into_parts();
+                let mut res = req.into_response(const { Bytes::from_static(HELLO_BYTES) });
+                res.headers_mut().insert(CONTENT_TYPE, TEXT_UTF8);
+                Ok(res)
+            })),
         )
         .insert(
             "/json",
             get(fn_service(async |ctx: Ctx| {
-                let (req, state) = ctx.into_parts();
-                req.json_response(state, &Message::new())
+                let (req, _) = ctx.into_parts();
+                json_response(req, &Message::new())
             })),
         )
         .insert(
             "/db",
             get(fn_service(async |ctx: Ctx| {
-                let (req, state) = ctx.into_parts();
-                let world = state.client.get_world().await?;
-                req.json_response(state, &world)
+                let (req, cli) = ctx.into_parts();
+                cli.db().await.and_then(|w| json_response(req, &w))
             })),
         )
         .insert(
             "/fortunes",
             get(fn_service(async |ctx: Ctx| {
-                let (req, state) = ctx.into_parts();
-                let fortunes = state.client.tell_fortune().await?.render_once()?;
-                req.html_response(fortunes)
+                let (req, cli) = ctx.into_parts();
+                let fortunes = cli.fortunes().await?.render_once()?;
+                let mut res = req.into_response(Bytes::from(fortunes));
+                res.headers_mut().insert(CONTENT_TYPE, TEXT_HTML_UTF8);
+                Ok(res)
             })),
         )
         .insert(
             "/queries",
             get(fn_service(async |ctx: Ctx| {
-                let (req, state) = ctx.into_parts();
+                let (req, cli) = ctx.into_parts();
                 let num = req.uri().query().parse_query();
-                let worlds = state.client.get_worlds(num).await?;
-                req.json_response(state, &worlds)
+                cli.queries(num).await.and_then(|w| json_response(req, &w))
             })),
         )
         .insert(
             "/updates",
             get(fn_service(async |ctx: Ctx| {
-                let (req, state) = ctx.into_parts();
+                let (req, cli) = ctx.into_parts();
                 let num = req.uri().query().parse_query();
-                let worlds = state.client.update(num).await?;
-                req.json_response(state, &worlds)
+                cli.updates(num).await.and_then(|w| json_response(req, &w))
             })),
         )
-        .enclosed(ContextBuilder::new(|| async { db::create().await.map(State::new) }))
+        .enclosed(ContextBuilder::new(db_pool::Client::create))
         .enclosed_fn(async |service, req| {
             let mut res = service.call(req).await.unwrap_or_else(error_handler);
             res.headers_mut().insert(SERVER, SERVER_HEADER_VALUE);
@@ -85,9 +104,30 @@ fn main() -> std::io::Result<()> {
 #[cold]
 #[inline(never)]
 fn error_handler(e: RouterError<util::Error>) -> Response {
-    error_response(match e {
+    let status = match e {
         RouterError::Match(_) => StatusCode::NOT_FOUND,
         RouterError::NotAllowed(_) => StatusCode::METHOD_NOT_ALLOWED,
-        RouterError::Service(_) => StatusCode::INTERNAL_SERVER_ERROR,
-    })
+        RouterError::Service(e) => {
+            eprintln!("Internal Error: {e}");
+            StatusCode::INTERNAL_SERVER_ERROR
+        }
+    };
+    http::Response::builder()
+        .status(status)
+        .body(Once::new(Bytes::new()))
+        .unwrap()
+}
+
+#[cfg(any(feature = "json", feature = "perf-json"))]
+fn json_response<Ext>(req: Request<Ext>, val: &impl serde_core::Serialize) -> HandleResult<Response> {
+    let mut buf = xitca_http::bytes::BytesMut::new();
+    #[cfg(all(feature = "json", not(feature = "perf-json")))]
+    serde_json::to_writer(xitca_http::bytes::BufMutWriter(&mut buf), val)?;
+
+    #[cfg(all(feature = "perf-json", not(feature = "json")))]
+    sonic_rs::to_writer(xitca_http::bytes::BufMut::writer(&mut buf), val)?;
+
+    let mut res = req.into_response(buf.freeze());
+    res.headers_mut().insert(CONTENT_TYPE, http::const_header_value::JSON);
+    Ok(res)
 }

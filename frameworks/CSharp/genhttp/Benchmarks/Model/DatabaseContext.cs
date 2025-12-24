@@ -1,48 +1,43 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Benchmarks.Model;
 
 public sealed class DatabaseContext : DbContext
 {
-    private static readonly Lazy<DbContextOptions<DatabaseContext>> TrackingOptions = new(() => CreateOptions(true), LazyThreadSafetyMode.ExecutionAndPublication);
+    private static DbContextOptions<DatabaseContext> _options;
 
-    private static readonly Lazy<DbContextOptions<DatabaseContext>> NoTrackingOptions = new(() => CreateOptions(false), LazyThreadSafetyMode.ExecutionAndPublication);
+    private static DbContextOptions<DatabaseContext> _noTrackingOptions;
 
-    public static DatabaseContext CreateTracking() => new(TrackingOptions.Value, true);
+    #region Factory
 
-    public static DatabaseContext CreateNoTracking() => new(NoTrackingOptions.Value, false);
+    public static DatabaseContext Create() => new(_options ??= GetOptions(true));
 
-    private static DbContextOptions<DatabaseContext> CreateOptions(bool tracking)
+    public static DatabaseContext CreateNoTracking() => new(_noTrackingOptions ??= GetOptions(false));
+
+    private static DbContextOptions<DatabaseContext> GetOptions(bool tracking)
     {
-        var services = new ServiceCollection();
+        var optionsBuilder = new DbContextOptionsBuilder<DatabaseContext>();
 
-        services.AddEntityFrameworkNpgsql();
-
-        var provider = services.BuildServiceProvider();
-
-        var builder = new DbContextOptionsBuilder<DatabaseContext>();
-
-        builder.UseInternalServiceProvider(provider)
-               .UseNpgsql("Server=tfb-database;Database=hello_world;User Id=benchmarkdbuser;Password=benchmarkdbpass;SSL Mode=Disable;Maximum Pool Size=512;NoResetOnClose=true;Enlist=false;Max Auto Prepare=4;Multiplexing=true")
-               .EnableThreadSafetyChecks(false)
-               .UseModel(DatabaseContextModel.Instance);
+        optionsBuilder.UseNpgsql("Server=tfb-database;Database=hello_world;User Id=benchmarkdbuser;Password=benchmarkdbpass;SSL Mode=Disable;Maximum Pool Size=512;NoResetOnClose=true;Enlist=false;Max Auto Prepare=4");
 
         if (!tracking)
         {
-            builder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
         }
 
-        return builder.Options;
+        return optionsBuilder.Options;
     }
 
-    internal DatabaseContext(DbContextOptions<DatabaseContext> options, bool tracking = false) : base(options)
-    {
-        ChangeTracker.AutoDetectChangesEnabled = tracking;
-    }
+    private DatabaseContext(DbContextOptions options) : base(options) { }
+
+    #endregion
+
+    #region Entities
 
     public DbSet<World> World { get; set; }
 
     public DbSet<Fortune> Fortune { get; set; }
+
+    #endregion
 
 }

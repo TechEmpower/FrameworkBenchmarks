@@ -1,32 +1,32 @@
 package vertx
 
+import com.typesafe.scalalogging.Logger
+import io.vertx.core.buffer.Buffer
+import io.vertx.core.http.{HttpHeaders, HttpServerRequest, HttpServerResponse}
+import io.vertx.core.json.{JsonArray, JsonObject}
+import io.vertx.core.{Handler, Vertx, VertxOptions as JVertxOptions}
+import io.vertx.ext.web.Router
+import io.vertx.lang.scala.{ScalaVerticle, VertxExecutionContext, asScala}
+import io.vertx.pgclient.*
+import io.vertx.scala.core.*
+import io.vertx.sqlclient.*
+import vertx.model.{Fortune, Message, World}
+
 import java.io.{ByteArrayOutputStream, File, IOException}
 import java.nio.file.Files
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.concurrent.ThreadLocalRandom
-
-import com.typesafe.scalalogging.Logger
-import io.vertx.core.buffer.Buffer
-import io.vertx.core.http.HttpHeaders
-import io.vertx.core.json.{JsonArray, JsonObject}
-import io.vertx.core.{AsyncResult, Handler, VertxOptions => JVertxOptions}
-import io.vertx.lang.scala.{ScalaVerticle, VertxExecutionContext}
-import io.vertx.pgclient._
-import io.vertx.scala.core.http.{HttpServer, HttpServerRequest, HttpServerResponse}
-import io.vertx.scala.core.{VertxOptions, _}
-import io.vertx.scala.ext.web.Router
-import io.vertx.sqlclient._
-import vertx.model.{Fortune, Message, World}
-
-import scala.collection.JavaConverters._
-import scala.concurrent.{Future, Promise}
-import scala.util.{Failure, Sorting, Success, Try}
+import scala.compiletime.uninitialized
+import scala.jdk.CollectionConverters.*
+import scala.util.{Sorting, Try, boundary}
 
 case class Header(name: CharSequence, value: String)
 
 class App extends ScalaVerticle {
-  import App._
+
+  import App.*
+
   private val HELLO_WORLD = "Hello, world!"
   private val HELLO_WORLD_BUFFER = Buffer.buffer(HELLO_WORLD, "UTF-8")
   private val SERVER = "vert.x"
@@ -37,14 +37,14 @@ class App extends ScalaVerticle {
 
   private var dateString: String = ""
 
-  private var server: HttpServer = _
-  private var client: PgConnection = _
+  private var server: io.vertx.core.http.HttpServer = uninitialized
+  private var client: PgConnection = uninitialized
 
   private def refreshDateHeader(): Unit = dateString = App.createDateHeader()
 
-  override def startFuture(): Future[_] = {
+  override def start(promise: scala.concurrent.Promise[Unit]): Unit = {
     refreshDateHeader()
-    vertx.setPeriodic(1000, (_: Long) => refreshDateHeader())
+    vertx.setPeriodic(1000, _ => refreshDateHeader())
 
     val pgConnectOptions = new PgConnectOptions()
       .setDatabase(config.getString("database"))
@@ -55,15 +55,11 @@ class App extends ScalaVerticle {
       .setCachePreparedStatements(true)
       .setPipeliningLimit(100000)
 
-    val jVertx = vertx.asJava.asInstanceOf[io.vertx.core.Vertx]
-    val pgConnectionPromise = Promise[Unit]
-    PgConnection.connect(
-      jVertx,
-      pgConnectOptions,
-      (ar => {
-        client = ar.result()
-        pgConnectionPromise.success()
-      }): Handler[AsyncResult[PgConnection]]
+    val pgConnectionFuture = PgConnection.connect(
+      vertx,
+      pgConnectOptions
+    ).onSuccess(r =>
+      client = r
     )
 
     val router = Router.router(vertx)
@@ -76,12 +72,11 @@ class App extends ScalaVerticle {
 
     val port = 8080
     server = vertx.createHttpServer()
-    val httpServerPromise = Promise[Unit]
-    server
-      .requestHandler(router.accept)
-      .listen(port, (_ => httpServerPromise.success()): Handler[AsyncResult[HttpServer]])
+    val httpServerFuture = server
+      .requestHandler(router)
+      .listen(port)
 
-    pgConnectionPromise.future.flatMap(_ => httpServerPromise.future)
+    promise.completeWith(pgConnectionFuture.flatMap(_ => httpServerFuture.map(())).asScala)
   }
 
   override def stop(): Unit = Option(server).foreach(_.close())
@@ -104,8 +99,9 @@ class App extends ScalaVerticle {
     client
       .preparedQuery("SELECT id, randomnumber FROM world WHERE id = $1")
       .execute(
-        Tuple.of(App.randomWorld(), Nil: _*),
-        (ar: AsyncResult[RowSet[Row]]) => {
+        Tuple.of(App.randomWorld()))
+      .andThen(
+        ar => {
           if (ar.succeeded) {
             val resultSet = ar.result.iterator
             if (!resultSet.hasNext) {
@@ -129,14 +125,14 @@ class App extends ScalaVerticle {
     while (i < queries) {
       client
         .preparedQuery("SELECT id, randomnumber FROM world WHERE id = $1")
-        .execute(
-          Tuple.of(App.randomWorld(), Nil: _*),
-          (ar: AsyncResult[RowSet[Row]]) => {
+        .execute(Tuple.of(App.randomWorld()))
+        .andThen(
+          ar => boundary {
             if (!failed) {
               if (ar.failed) {
                 failed = true
                 sendError(request, ar.cause, "Failed to handle Queries request")
-                return
+                boundary.break()
               }
               // we need a final reference
               val row = ar.result.iterator.next
@@ -160,12 +156,12 @@ class App extends ScalaVerticle {
       val batch = worlds.map(world => Tuple.of(world.randomNumber, world.id)).toList.asJava
       conn
         .preparedQuery("UPDATE world SET randomnumber = $1 WHERE id = $2")
-        .executeBatch(
-          batch,
-          (ar: AsyncResult[RowSet[Row]]) => {
+        .executeBatch(batch)
+        .andThen(
+          ar => boundary {
             if (ar.failed) {
               sendError(request, ar.cause, "handleUpdates: failed to update DB")
-              return
+              boundary.break()
             }
 
             responseWithHeaders(request.response, contentTypeJson)
@@ -185,14 +181,13 @@ class App extends ScalaVerticle {
       val index = i
       client
         .preparedQuery("SELECT id, randomnumber FROM world WHERE id = $1")
-        .execute(
-          Tuple.of(id, Nil: _*),
-          (ar2: AsyncResult[RowSet[Row]]) => {
+        .execute(Tuple.of(id)).andThen(
+          ar2 => boundary {
             if (!failed) {
               if (ar2.failed) {
                 failed = true
                 sendError(request, ar2.cause, "handleUpdates: failed to read DB")
-                return
+                boundary.break()
               }
               worlds(index) = World(ar2.result.iterator.next.getInteger(0), App.randomWorld())
               queryCount += 1
@@ -207,14 +202,15 @@ class App extends ScalaVerticle {
   private def handleFortunes(request: HttpServerRequest): Unit =
     client
       .preparedQuery("SELECT id, message FROM fortune")
-      .execute(
-        (ar: AsyncResult[RowSet[Row]]) => {
+      .execute()
+      .andThen(
+        ar => boundary {
           val response = request.response
           if (ar.succeeded) {
             val resultSet = ar.result.iterator
             if (!resultSet.hasNext) {
               response.setStatusCode(404).end("No results")
-              return
+              boundary.break()
             }
             val fortunes = (resultSet.asScala
               .map(row => Fortune(row.getInteger(0), row.getString(1))) ++
@@ -233,25 +229,26 @@ class App extends ScalaVerticle {
 object App {
   val logger: Logger = Logger[App]
   val defaultConfigPath = "src/main/conf/config.json"
+
   def main(args: Array[String]): Unit = {
-    val config = new JsonObject(Files.readString(new File(if(args.length < 1) defaultConfigPath else args(0)).toPath))
+    val config = new JsonObject(Files.readString(new File(if (args.length < 1) defaultConfigPath else args(0)).toPath))
     val vertx = Vertx.vertx(VertxOptions().setPreferNativeTransport(true))
 
     printConfig(vertx)
 
     vertx.exceptionHandler(_.printStackTrace())
 
-    implicit val executionContext: VertxExecutionContext = VertxExecutionContext(vertx.getOrCreateContext())
+    implicit val executionContext: VertxExecutionContext = VertxExecutionContext(vertx, vertx.getOrCreateContext())
 
     vertx
-      .deployVerticleFuture(
-        ScalaVerticle.nameForVerticle[App],
+      .deployVerticle(
+        ScalaVerticle.nameForVerticle[App](),
         DeploymentOptions().setInstances(JVertxOptions.DEFAULT_EVENT_LOOP_POOL_SIZE).setConfig(config)
       )
-      .onComplete {
-        case _: Success[String] => logger.info("Server listening on port 8080")
-        case f: Failure[String] => logger.error("Unable to start application", f.exception)
-      }
+      .onComplete(ar =>
+        if (ar.succeeded()) logger.info("Server listening on port 8080")
+        else logger.error("Unable to start application", ar.cause)
+      )
   }
 
   def createDateHeader(): String = DateTimeFormatter.RFC_1123_DATE_TIME.format(ZonedDateTime.now)
@@ -259,8 +256,7 @@ object App {
   def randomWorld(): Int = 1 + ThreadLocalRandom.current.nextInt(10000)
 
   def getQueries(request: HttpServerRequest): Int =
-    request
-      .getParam("queries")
+    Option(request.getParam("queries"))
       .flatMap(param => Try(param.toInt).toOption)
       .map(number => Math.min(500, Math.max(1, number)))
       .getOrElse(1)

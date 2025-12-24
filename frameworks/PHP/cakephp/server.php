@@ -8,7 +8,7 @@ use Workerman\Worker;
 Adapterman::init();
 
 $http_worker        = new Worker('http://0.0.0.0:8080');
-$http_worker->count = (int) shell_exec('nproc') * 4;
+$http_worker->count = (int) shell_exec('nproc') * 2;
 $http_worker->reusePort = true;
 $http_worker->name  = 'AdapterMan-CakePHP';
 
@@ -26,7 +26,7 @@ Worker::runAll();
 
 class HeaderDate
 {
-    const NAME = 'Date: ';
+    const DATE_FORMAT = 'D, d M Y H:i:s \G\M\T';
 
     /**
      * Date header
@@ -37,9 +37,9 @@ class HeaderDate
 
     public static function init(): void
     {
-        self::$date = self::NAME.gmdate(DATE_RFC7231);
+        self::$date = 'Date: '.gmdate(self::DATE_FORMAT);
         Timer::add(1, static function () {
-            self::$date = self::NAME.gmdate(DATE_RFC7231);
+            self::$date = 'Date: '.gmdate(self::DATE_FORMAT);
         });
     }
 }

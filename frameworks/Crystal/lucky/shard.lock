@@ -6,7 +6,7 @@ shards:
 
   backtracer:
     git: https://github.com/sija/backtracer.cr.git
-    version: 1.2.2
+    version: 1.2.4
 
   cadmium_transliterator:
     git: https://github.com/cadmiumcr/transliterator.git

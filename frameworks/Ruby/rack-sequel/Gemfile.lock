@@ -8,7 +8,7 @@ GEM
     pg (1.6.2)
     pg (1.6.2-x86_64-darwin)
     pg (1.6.2-x86_64-linux)
-    puma (7.0.2)
+    puma (7.1.0)
       nio4r (~> 2.0)
     rack (3.2.0)
     sequel (5.97.0)
