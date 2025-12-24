@@ -7,14 +7,14 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends libjemalloc2
 ENV LD_PRELOAD=libjemalloc.so.2
 
-WORKDIR /rack-app
+ADD ./ /sinatra
+WORKDIR /sinatra
 
-COPY Gemfile* ./
+ENV BUNDLE_WITH=mysql:iodine
+RUN bundle install --jobs=4 --gemfile=/sinatra/Gemfile
 
-ENV BUNDLE_FORCE_RUBY_PLATFORM=true
-RUN bundle install --jobs=8
-
-COPY . .
+ENV APP_ENV=production
+ENV DBTYPE=mysql
 
 EXPOSE 8080
 

@@ -25,9 +25,9 @@ pub struct Exec {
 impl Exec {
     pub const FORTUNE_STMT: StatementNamed<'_> = Statement::named("SELECT id,message FROM fortune", &[]);
     pub const WORLD_STMT: StatementNamed<'_> =
-        Statement::named("SELECT id,randomnumber FROM world WHERE id=$1", &[Type::INT4]);
+        Statement::named("SELECT id,randomNumber FROM world WHERE id=$1", &[Type::INT4]);
     pub const UPDATE_STMT: StatementNamed<'_> = Statement::named(
-        "UPDATE world SET randomnumber=w.r FROM (SELECT unnest($1) as i,unnest($2) as r) w WHERE world.id=w.i",
+        "UPDATE world SET randomNumber=w.r FROM (SELECT unnest($1) as i,unnest($2) as r) w WHERE world.id=w.i",
         &[Type::INT4_ARRAY, Type::INT4_ARRAY],
     );
 
@@ -92,7 +92,7 @@ impl Exec {
                 })
                 .collect::<(Vec<_>, Vec<_>, Vec<_>)>();
 
-            let update = update_stmt.bind([&ids, &rngs]).query(&conn);
+            let update = update_stmt.bind([&ids, &rngs]).execute(&conn);
 
             drop(conn);
 
@@ -119,7 +119,7 @@ impl Exec {
         let mut fortunes = Vec::with_capacity(16);
 
         while let Some(row) = res.try_next().await? {
-            fortunes.push(Fortune::new(row.get(0), row.get::<String>(1)));
+            fortunes.push(Fortune::new(row.get(0), row.get_zc(1)));
         }
 
         Ok(Fortunes::new(fortunes))

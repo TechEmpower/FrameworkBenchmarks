@@ -14,7 +14,7 @@ import io.vertx.ext.web.Router
 import io.vertx.ext.web.RoutingContext
 import io.vertx.ext.web.templ.rocker.RockerTemplateEngine
 import io.vertx.kotlin.coroutines.CoroutineVerticle
-import io.vertx.kotlin.coroutines.await
+import io.vertx.kotlin.coroutines.coAwait
 import io.vertx.kotlin.pgclient.pgConnectOptionsOf
 import io.vertx.pgclient.PgConnection
 import io.vertx.sqlclient.Tuple
@@ -31,7 +31,6 @@ class App : CoroutineVerticle() {
     companion object {
         init {
             DatabindCodec.mapper().registerModule(BlackbirdModule())
-            DatabindCodec.prettyMapper().registerModule(BlackbirdModule())
         }
 
         private const val SERVER = "vertx-web"
@@ -70,7 +69,7 @@ class App : CoroutineVerticle() {
 
         return PgClientBenchmark(
             try {
-                PgConnection.connect(vertx, options).await()
+                PgConnection.connect(vertx, options).coAwait()
             } catch (e: UnknownHostException) {
                 null
             },
@@ -91,7 +90,7 @@ class App : CoroutineVerticle() {
                 client!!
                     .preparedQuery(SELECT_WORLD)
                     .execute(Tuple.of(randomWorld()))
-                    .await()
+                    .coAwait()
             } catch (t: Throwable) {
                 // adapted from the Java code and kept, though I don't see the purpose of this
                 t.printStackTrace()
@@ -103,7 +102,7 @@ class App : CoroutineVerticle() {
                 ctx.response()
                     .setStatusCode(404)
                     .end()
-                    .await()
+                    .coAwait()
                 return
             }
             val row = resultSet.next()
@@ -112,7 +111,7 @@ class App : CoroutineVerticle() {
                 .putHeader(HttpHeaders.DATE, date)
                 .putHeader(HttpHeaders.CONTENT_TYPE, "application/json")
                 .end(Json.encodeToBuffer(World(row.getInteger(0), row.getInteger(1))))
-                .await()
+                .coAwait()
         }
 
         suspend fun queriesHandler(ctx: RoutingContext) {
@@ -122,7 +121,7 @@ class App : CoroutineVerticle() {
             val cnt = intArrayOf(0)
             List(queries) {
                 async {
-                    val result = `try` { client!!.preparedQuery(SELECT_WORLD).execute(Tuple.of(randomWorld())).await() }
+                    val result = `try` { client!!.preparedQuery(SELECT_WORLD).execute(Tuple.of(randomWorld())).coAwait() }
 
                     if (!failed[0]) {
                         if (result is Try.Failure) {
@@ -142,7 +141,7 @@ class App : CoroutineVerticle() {
                                 .putHeader(HttpHeaders.DATE, date)
                                 .putHeader(HttpHeaders.CONTENT_TYPE, "application/json")
                                 .end(Json.encodeToBuffer(worlds))
-                                .await()
+                                .coAwait()
                         }
                     }
                 }
@@ -151,7 +150,7 @@ class App : CoroutineVerticle() {
         }
 
         suspend fun fortunesHandler(ctx: RoutingContext) {
-            val result = client!!.preparedQuery(SELECT_FORTUNE).execute().await()
+            val result = client!!.preparedQuery(SELECT_FORTUNE).execute().coAwait()
 
             val resultSet = result.iterator()
             if (!resultSet.hasNext()) {
@@ -168,13 +167,13 @@ class App : CoroutineVerticle() {
             ctx.put("fortunes", fortunes)
 
             // and now delegate to the engine to render it.
-            val result2 = engine.render(ctx.data(), "templates/Fortunes.rocker.html").await()
+            val result2 = engine.render(ctx.data(), "templates/Fortunes.rocker.html").coAwait()
             ctx.response()
                 .putHeader(HttpHeaders.SERVER, SERVER)
                 .putHeader(HttpHeaders.DATE, date)
                 .putHeader(HttpHeaders.CONTENT_TYPE, "text/html; charset=UTF-8")
                 .end(result2)
-                .await()
+                .coAwait()
         }
 
         suspend fun updateHandler(ctx: RoutingContext) {
@@ -185,7 +184,7 @@ class App : CoroutineVerticle() {
             List(worlds.size) {
                 val id = randomWorld()
                 async {
-                    val r2 = `try` { client!!.preparedQuery(SELECT_WORLD).execute(Tuple.of(id)).await() }
+                    val r2 = `try` { client!!.preparedQuery(SELECT_WORLD).execute(Tuple.of(id)).coAwait() }
 
                     if (!failed[0]) {
                         if (r2 is Try.Failure) {
@@ -205,13 +204,13 @@ class App : CoroutineVerticle() {
                             ctx.checkedRun {
                                 client!!.preparedQuery(UPDATE_WORLD)
                                     .executeBatch(batch)
-                                    .await()
+                                    .coAwait()
                                 ctx.response()
                                     .putHeader(HttpHeaders.SERVER, SERVER)
                                     .putHeader(HttpHeaders.DATE, date)
                                     .putHeader(HttpHeaders.CONTENT_TYPE, "application/json")
                                     .end(Json.encodeToBuffer(worlds))
-                                    .await()
+                                    .coAwait()
                             }
                         }
                     }
@@ -240,7 +239,7 @@ class App : CoroutineVerticle() {
                 .putHeader(HttpHeaders.DATE, date)
                 .putHeader(HttpHeaders.CONTENT_TYPE, "application/json")
                 .end(Json.encodeToBuffer(Message("Hello, World!")))
-                .await()
+                .coAwait()
         }
 
         /*
@@ -281,10 +280,10 @@ class App : CoroutineVerticle() {
                 .putHeader(HttpHeaders.DATE, date)
                 .putHeader(HttpHeaders.CONTENT_TYPE, "text/plain")
                 .end("Hello, World!")
-                .await()
+                .coAwait()
         }
         try {
-            vertx.createHttpServer().requestHandler(app).listen(8080).await()
+            vertx.createHttpServer().requestHandler(app).listen(8080).coAwait()
         } catch (t: Throwable) {
             t.printStackTrace()
             exitProcess(1)
