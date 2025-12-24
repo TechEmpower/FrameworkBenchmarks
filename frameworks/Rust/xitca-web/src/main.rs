@@ -1,5 +1,4 @@
-// temporary allocator for tracking overhead between xitca-web and xitca-web [barebone] bench.
-// remove it before official run
+#[cfg(feature = "perf-allocator")]
 #[global_allocator]
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 

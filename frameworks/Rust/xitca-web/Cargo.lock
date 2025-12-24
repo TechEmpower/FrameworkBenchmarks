@@ -1291,7 +1291,7 @@ checksum = "6ce2be8dc25455e1f91df71bfa12ad37d7af1092ae736f3a6cd0e37bc7810596"
 [[package]]
 name = "std-util"
 version = "0.1.0"
-source = "git+https://github.com/fakeshadow/toasty?rev=51c8186aea9d07562c4079d420adc82ac898b0fb#51c8186aea9d07562c4079d420adc82ac898b0fb"
+source = "git+https://github.com/fakeshadow/toasty?rev=51c8186#51c8186aea9d07562c4079d420adc82ac898b0fb"
 dependencies = [
  "heck",
  "pluralizer",
@@ -1391,7 +1391,7 @@ checksum = "1f3ccbac311fea05f86f61904b462b55fb3df8837a366dfc601a0161d0532f20"
 [[package]]
 name = "toasty"
 version = "0.1.0"
-source = "git+https://github.com/fakeshadow/toasty?rev=51c8186aea9d07562c4079d420adc82ac898b0fb#51c8186aea9d07562c4079d420adc82ac898b0fb"
+source = "git+https://github.com/fakeshadow/toasty?rev=51c8186#51c8186aea9d07562c4079d420adc82ac898b0fb"
 dependencies = [
  "anyhow",
  "async-stream",
@@ -1411,7 +1411,7 @@ dependencies = [
 [[package]]
 name = "toasty-codegen"
 version = "0.1.0"
-source = "git+https://github.com/fakeshadow/toasty?rev=51c8186aea9d07562c4079d420adc82ac898b0fb#51c8186aea9d07562c4079d420adc82ac898b0fb"
+source = "git+https://github.com/fakeshadow/toasty?rev=51c8186#51c8186aea9d07562c4079d420adc82ac898b0fb"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1422,7 +1422,7 @@ dependencies = [
 [[package]]
 name = "toasty-core"
 version = "0.1.0"
-source = "git+https://github.com/fakeshadow/toasty?rev=51c8186aea9d07562c4079d420adc82ac898b0fb#51c8186aea9d07562c4079d420adc82ac898b0fb"
+source = "git+https://github.com/fakeshadow/toasty?rev=51c8186#51c8186aea9d07562c4079d420adc82ac898b0fb"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -1436,7 +1436,7 @@ dependencies = [
 [[package]]
 name = "toasty-macros"
 version = "0.1.0"
-source = "git+https://github.com/fakeshadow/toasty?rev=51c8186aea9d07562c4079d420adc82ac898b0fb#51c8186aea9d07562c4079d420adc82ac898b0fb"
+source = "git+https://github.com/fakeshadow/toasty?rev=51c8186#51c8186aea9d07562c4079d420adc82ac898b0fb"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1448,7 +1448,7 @@ dependencies = [
 [[package]]
 name = "toasty-sql"
 version = "0.1.0"
-source = "git+https://github.com/fakeshadow/toasty?rev=51c8186aea9d07562c4079d420adc82ac898b0fb#51c8186aea9d07562c4079d420adc82ac898b0fb"
+source = "git+https://github.com/fakeshadow/toasty?rev=51c8186#51c8186aea9d07562c4079d420adc82ac898b0fb"
 dependencies = [
  "anyhow",
  "toasty-core",

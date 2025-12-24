@@ -93,6 +93,7 @@ async fn handler<'h>(req: Request<'h, db_unrealistic::Client>, res: Response<'h>
         "/plaintext" => {
             // unrealistic due to no body streaming and no post processing. violating middleware feature of xitca-web
             res.status(StatusCode::OK)
+                // unrealistic due to no charset k/v pair
                 .header("content-type", "text/plain")
                 .header("server", "X")
                 .body(HELLO.as_bytes())
@@ -101,6 +102,8 @@ async fn handler<'h>(req: Request<'h, db_unrealistic::Client>, res: Response<'h>
 
         // all database related categories are unrealistic. please reference db_unrealistic module for detail.
         "/fortunes" => {
+            // unrealistic due to no error handling. any db/serialization error will cause process crash.
+            // the same goes for all following unwraps on database related functions.
             let fortunes = req.ctx.fortunes().await.unwrap().render_once().unwrap();
             res.status(StatusCode::OK)
                 .header("content-type", "text/html; charset=utf-8")
@@ -108,8 +111,6 @@ async fn handler<'h>(req: Request<'h, db_unrealistic::Client>, res: Response<'h>
                 .body(fortunes.as_bytes())
         }
         "/db" => {
-            // unrealistic due to no error handling. any db/serialization error will cause process crash.
-            // the same goes for all following unwraps on database related functions.
             let world = req.ctx.db().await.unwrap();
             json_response(res, &world)
         }
