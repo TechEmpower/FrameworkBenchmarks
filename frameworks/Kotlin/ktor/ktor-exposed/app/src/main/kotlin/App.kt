@@ -69,9 +69,9 @@ private const val DB_ROWS = 10_000
 fun ThreadLocalRandom.nextIntWithinRows() =
     nextInt(DB_ROWS) + 1
 
-interface ExposedOps<Database> {
-    fun createDatabase(): Database
-    suspend fun <T> transaction(db: Database, statement: suspend /*JdbcTransaction.*/() -> T): T
+interface ExposedOps<TDatabase> {
+    fun createDatabase(): TDatabase
+    suspend fun <T> transaction(db: TDatabase, statement: suspend /*JdbcTransaction.*/() -> T): T
 
     // Repository pattern functions. These can also be extracted into a separate interface.
     suspend fun getWorldWithId(id: Int): World
