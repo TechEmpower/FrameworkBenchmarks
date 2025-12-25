@@ -11,7 +11,7 @@
     <java.version>1.8</java.version>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
-    <tio-boot.version>2.0.1</tio-boot.version>
+    <tio-boot.version>2.0.5</tio-boot.version>
 
 
     <main.class>com.litongjava.tio.http.server.MainApp</main.class>
@@ -26,7 +26,7 @@
     <dependency>
       <groupId>com.litongjava</groupId>
       <artifactId>java-db</artifactId>
-      <version>1.5.3</version>
+      <version>1.5.5</version>
     </dependency>
 
     <dependency>
@@ -45,7 +45,7 @@
     <dependency>
       <groupId>com.alibaba.fastjson2</groupId>
       <artifactId>fastjson2</artifactId>
-      <version>2.0.52</version>
+      <version>2.0.60</version>
     </dependency>
 
     <dependency>

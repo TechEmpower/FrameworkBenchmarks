@@ -5,11 +5,11 @@ COPY conf conf
 COPY pom-pgclient.xml pom.xml
 RUN mvn package -q
 
-FROM openjdk:23-jdk-slim
+FROM eclipse-temurin:25-jre-noble
 WORKDIR /redkale
 COPY conf conf
 COPY --from=maven /redkale/target/redkale-benchmark-1.0.0.jar redkale-benchmark.jar
 
 EXPOSE 8080
 
-CMD ["java", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-Dio.netty.buffer.checkBounds=false", "-Dio.netty.buffer.checkAccessible=false", "-Dvertx.disableURIValidation=true", "-Dvertx.threadChecks=false", "-Dvertx.disableContextTimings=true", "-DAPP_HOME=./", "-jar", "redkale-benchmark.jar"]
+CMD ["java", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+UseCompactObjectHeaders", "-Dio.netty.buffer.checkBounds=false", "-Dio.netty.buffer.checkAccessible=false", "-Dvertx.disableURIValidation=true", "-Dvertx.threadChecks=false", "-Dvertx.disableContextTimings=true", "-DAPP_HOME=./", "-jar", "redkale-benchmark.jar"]

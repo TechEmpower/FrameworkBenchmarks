@@ -13,13 +13,15 @@ mod util;
 use std::io;
 
 use xitca_http::{
-    bytes::BufMut,
     h1::dispatcher_unreal::{Dispatcher, Request, Response},
     http::StatusCode,
 };
 use xitca_service::Service;
 
-use self::{ser::Message, util::QueryParse};
+use self::{
+    ser::{HELLO, Message},
+    util::QueryParse,
+};
 
 fn main() -> io::Result<()> {
     let addr = "0.0.0.0:8080".parse().unwrap();
@@ -91,24 +93,17 @@ async fn handler<'h>(req: Request<'h, db_unrealistic::Client>, res: Response<'h>
         "/plaintext" => {
             // unrealistic due to no body streaming and no post processing. violating middleware feature of xitca-web
             res.status(StatusCode::OK)
+                // unrealistic due to no charset k/v pair
                 .header("content-type", "text/plain")
                 .header("server", "X")
-                // unrealistic content length header.
-                .header("content-length", "13")
-                .body_writer(|buf| buf.extend_from_slice(b"Hello, World!"))
+                .body(HELLO.as_bytes())
         }
-        "/json" => res
-            .status(StatusCode::OK)
-            .header("content-type", "application/json")
-            .header("server", "X")
-            // unrealistic content length header.
-            .header("content-length", "27")
-            // snoic-rs crate is realistic approach to json serializer.
-            // That said xitca-web by default utilize serde-json as serializer making it an unrealistic representation of framework performance
-            .body_writer(|buf| sonic_rs::to_writer(buf.writer(), &Message::new()).unwrap()),
+        "/json" => json_response(res, Message::HELLO),
 
         // all database related categories are unrealistic. please reference db_unrealistic module for detail.
         "/fortunes" => {
+            // unrealistic due to no error handling. any db/serialization error will cause process crash.
+            // the same goes for all following unwraps on database related functions.
             let fortunes = req.ctx.fortunes().await.unwrap().render_once().unwrap();
             res.status(StatusCode::OK)
                 .header("content-type", "text/html; charset=utf-8")
@@ -116,8 +111,6 @@ async fn handler<'h>(req: Request<'h, db_unrealistic::Client>, res: Response<'h>
                 .body(fortunes.as_bytes())
         }
         "/db" => {
-            // unrealistic due to no error handling. any db/serialization error will cause process crash.
-            // the same goes for all following unwraps on database related functions.
             let world = req.ctx.db().await.unwrap();
             json_response(res, &world)
         }
@@ -135,12 +128,10 @@ async fn handler<'h>(req: Request<'h, db_unrealistic::Client>, res: Response<'h>
     }
 }
 
-fn json_response<'r, T>(res: Response<'r>, val: &T) -> Response<'r, 3>
-where
-    T: serde_core::Serialize,
-{
-    let mut buf = xitca_http::bytes::BytesMut::new();
-    sonic_rs::to_writer((&mut buf).writer(), val).unwrap();
+fn json_response<'r>(res: Response<'r>, val: &impl serde_core::Serialize) -> Response<'r, 3> {
+    // snoic-rs crate is realistic approach to json serializer.
+    // That said xitca-web by default utilize serde-json as serializer making it an unrealistic representation of framework performance
+    let buf = ser::json_serialize(val).unwrap();
     res.status(StatusCode::OK)
         .header("content-type", "application/json")
         .header("server", "X")
