@@ -1,4 +1,4 @@
-# [hyperlane](https://github.com/hyperlane-dev/hyperlane) web framework
+# [hyperlane web framework](https://github.com/hyperlane-dev/hyperlane)
 
 ## Description
 
