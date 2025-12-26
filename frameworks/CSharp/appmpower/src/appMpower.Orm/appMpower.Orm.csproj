@@ -61,12 +61,4 @@
     <PackageReference Include="Npgsql" Version="10.0.0" />
     <PackageReference Include="MySqlConnector" Version="2.5.0" />
   </ItemGroup>
-
-  <PropertyGroup>
-      <DefineConstants Condition=" '$(Driver)' == 'ado' ">$(DefineConstants);ADO</DefineConstants>
-      <DefineConstants Condition=" '$(Driver)' == 'odbc' ">$(DefineConstants);ODBC</DefineConstants>
-      <DefineConstants Condition=" '$(Database)' == 'postgresql' ">$(DefineConstants);POSTGRESQL</DefineConstants>
-      <DefineConstants Condition=" '$(Database)' == 'mysql' ">$(DefineConstants);MYSQL</DefineConstants>
-  </PropertyGroup>
-
 </Project>

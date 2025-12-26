@@ -29,6 +29,7 @@ public static class NativeMethods
     {
         Constants.Dbms = (Dbms)dbms;
         DbFactory.SetConnectionString();
+        DbFactory.SetInstance();
     }
 
     [UnmanagedCallersOnly(EntryPoint = "DbProvider")]
@@ -36,6 +37,7 @@ public static class NativeMethods
     {
         Constants.DbProvider = (DbProvider)dbProvider;
         DbFactory.SetConnectionString();
+        DbFactory.SetInstance();
     }
 
     [UnmanagedCallersOnly(EntryPoint = "FreeHandlePointer")]

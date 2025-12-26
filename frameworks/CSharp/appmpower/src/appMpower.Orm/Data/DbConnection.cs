@@ -20,8 +20,16 @@ namespace appMpower.Orm.Data
       public DbConnection(string connectionString, bool keyed = false)
       {
          _keyed = keyed;
-         _connectionString = connectionString; 
-         GetConnection();
+         _connectionString = connectionString;
+
+         if (Constants.DbProvider == DbProvider.ODBC)
+         {
+            GetConnection();
+         }
+         else
+         {
+            _dbConnection = DbFactory.GetConnection(_connectionString); 
+         }
       }
 
       public IDbConnection Connection
@@ -133,13 +141,20 @@ namespace appMpower.Orm.Data
 
       public void Dispose()
       {
-         if (_keyed)
+         if (Constants.DbProvider == DbProvider.ODBC)
          {
-            DbConnectionsKeyed.Release((Number: _number, DbConnection: _dbConnection, KeyedDbCommands: _keyedDbCommands));
+            if (_keyed)
+            {
+               DbConnectionsKeyed.Release((Number: _number, DbConnection: _dbConnection, KeyedDbCommands: _keyedDbCommands));
+            }
+            else
+            {
+               DbConnections.Release((Number: _number, DbConnection: _dbConnection, DbCommands: _dbCommands));
+            }
          }
          else
          {
-            DbConnections.Release((Number: _number, DbConnection: _dbConnection, DbCommands: _dbCommands));
+            _dbConnection.Dispose();
          }
       }
 

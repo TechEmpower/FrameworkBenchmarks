@@ -86,7 +86,9 @@ namespace appMpower.Orm
                   id: dataReader.GetInt32(0),
                   //MariaDB ODBC connector does not correctly support Japanese characters in combination with default ADO.NET;
                   //as a solution we custom read this string
-                  message: (Constants.Dbms == Dbms.MySQL ? ReadColumn(dataReader, 1) : dataReader.GetString(1))
+                  message: (Constants.Dbms == Dbms.MySQL && Constants.DbProvider == DbProvider.ODBC ? 
+                              ReadColumn(dataReader, 1) : 
+                              dataReader.GetString(1))
                ));
             }
 
