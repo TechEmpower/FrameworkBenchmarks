@@ -84,12 +84,8 @@ namespace appMpower.Orm
                fortunes.Add(new Fortune
                (
                   id: dataReader.GetInt32(0),
-                  //MariaDB ODBC connector does not correctly support Japanese characters in combination with default ADO.NET;
-                  //as a solution we custom read this string
-                  message: (Constants.Dbms == Dbms.MySQL && Constants.DbProvider == DbProvider.ODBC ? 
-                              ReadColumn(dataReader, 1) : 
-                              dataReader.GetString(1))
-               ));
+                  message: dataReader.GetString(1))
+               );
             }
 
             dataReader.Close();
@@ -231,24 +227,6 @@ namespace appMpower.Orm
          dataReader.Close();
 
          return worlds;
-      }
-
-      public static string ReadColumn(IDataReader dataReader, int column)
-      {
-         long size = dataReader.GetBytes(column, 0, null, 0, 0);  //get the length of data
-         byte[] values = new byte[size];
-
-         int bufferSize = 64;
-         long bytesRead = 0;
-         int currentPosition = 0;
-
-         while (bytesRead < size)
-         {
-            bytesRead += dataReader.GetBytes(column, currentPosition, values, currentPosition, bufferSize);
-            currentPosition += bufferSize;
-         }
-
-         return System.Text.Encoding.Default.GetString(values);
       }
    }
 }

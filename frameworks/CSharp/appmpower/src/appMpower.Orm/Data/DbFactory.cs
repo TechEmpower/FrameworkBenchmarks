@@ -8,7 +8,7 @@ namespace appMpower.Orm.Data
       public static string ConnectionString;
       public static DbProviderFactory Instance;
 
-      public static System.Data.Common.DbConnection GetConnection(string? connectionString = null)
+      public static System.Data.Common.DbConnection GetConnection(string connectionString = null)
       {
           System.Data.Common.DbConnection dbConnection = Instance.CreateConnection();
           dbConnection.ConnectionString = connectionString ?? ConnectionString;
