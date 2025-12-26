@@ -1,4 +1,4 @@
-FROM ruby:4.0-rc
+FROM ruby:4.0
 
 ENV RUBY_YJIT_ENABLE=1
 

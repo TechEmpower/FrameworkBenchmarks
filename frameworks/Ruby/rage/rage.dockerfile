@@ -1,4 +1,4 @@
-FROM ruby:4.0-rc
+FROM ruby:4.0
 
 EXPOSE 8080
 WORKDIR /rage

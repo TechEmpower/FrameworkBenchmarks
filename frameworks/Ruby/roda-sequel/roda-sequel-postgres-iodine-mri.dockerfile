@@ -1,4 +1,4 @@
-FROM ruby:4.0-rc
+FROM ruby:4.0
 
 ADD ./ /roda-sequel
 WORKDIR /roda-sequel
