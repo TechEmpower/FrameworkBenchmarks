@@ -162,17 +162,20 @@ namespace appMpower.Orm.Data
       {
          System.Data.Common.DbCommand dbCommand;
 
-         if (_dbCommands.TryPop(out dbCommand))
+         if (Constants.DbProvider == DbProvider.ODBC)
          {
-            if (commandText != dbCommand.CommandText)
+            if (_dbCommands.TryPop(out dbCommand))
             {
-               dbCommand.CommandText = commandText; 
-               dbCommand.Parameters.Clear();
-            }
+               if (commandText != dbCommand.CommandText)
+               {
+                  dbCommand.CommandText = commandText; 
+                  dbCommand.Parameters.Clear();
+               }
 
-            return dbCommand; 
+               return dbCommand; 
+            }
+            else if (_keyed && _keyedDbCommands.TryGetValue(commandText, out dbCommand)) return dbCommand; 
          }
-         else if (_keyed && _keyedDbCommands.TryGetValue(commandText, out dbCommand)) return dbCommand; 
 
          dbCommand = _dbConnection.CreateCommand();
          dbCommand.CommandText = commandText;
@@ -184,8 +187,11 @@ namespace appMpower.Orm.Data
 
       internal void Release(System.Data.Common.DbCommand dbCommand)
       {
-         if (_keyed) _keyedDbCommands.TryAdd(dbCommand.CommandText, dbCommand);
-         else _dbCommands.Push(dbCommand);
+         if (Constants.DbProvider == DbProvider.ODBC)
+         {
+            if (_keyed) _keyedDbCommands.TryAdd(dbCommand.CommandText, dbCommand);
+            else _dbCommands.Push(dbCommand);
+         }
       }
    }
 }
