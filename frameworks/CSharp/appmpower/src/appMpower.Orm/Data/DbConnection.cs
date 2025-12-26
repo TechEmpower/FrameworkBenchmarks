@@ -54,12 +54,12 @@ namespace appMpower.Orm.Data
          if (_keyed)
          {
             (_number, _dbConnection, _keyedDbCommands) = 
-               DbConnectionsKeyed.GetConnectionBase(_connectionString);
+               DbConnectionsKeyed.GetConnectionBase();
          }
          else
          {
             (_number, _dbConnection, _dbCommands) =
-               DbConnections.GetConnectionBase(_connectionString);
+               DbConnections.GetConnectionBase();
          }
       }
 

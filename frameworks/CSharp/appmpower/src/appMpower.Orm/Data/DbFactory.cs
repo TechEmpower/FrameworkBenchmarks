@@ -8,10 +8,22 @@ namespace appMpower.Orm.Data
       public static string ConnectionString; 
 
 #if ADO
+   #if MYSQL
       public static DbProviderFactory Instance = MySqlConnector.MySqlConnectorFactory.Instance;
+   #else
+      public static DbProviderFactory Instance = Npgsql.NpgsqlFactory.Instance; 
+   #endif 
 #else
       public static DbProviderFactory Instance = System.Data.Odbc.OdbcFactory.Instance;
 #endif
+
+      public static System.Data.Common.DbConnection GetConnection()
+      {
+          System.Data.Common.DbConnection dbConnection = Instance.CreateConnection();
+          dbConnection.ConnectionString = ConnectionString;
+
+          return dbConnection; 
+      }
 
       public static void SetConnectionString()
       {
@@ -27,7 +39,13 @@ namespace appMpower.Orm.Data
          }
          else
          {
+#if ADO
+            ConnectionString = "Server=tfb-database;Database=hello_world;User Id=benchmarkdbuser;Password=benchmarkdbpass;Maximum Pool Size=1024;NoResetOnClose=true;Enlist=false;Max Auto Prepare=3";
+            Console.WriteLine("hey ado postgresql");
+#else
             ConnectionString = "Driver={PostgreSQL};Server=tfb-database;Database=hello_world;Uid=benchmarkdbuser;Pwd=benchmarkdbpass;UseServerSidePrepare=1;Pooling=false;sslmode=disable";
+            Console.WriteLine("hey odbc postgresql");
+#endif
          }
       }
    }

@@ -9,18 +9,15 @@ namespace appMpower.Orm.Data
 
       private static ConcurrentStack<(int Number, System.Data.Common.DbConnection DbConnection, Dictionary<string, System.Data.Common.DbCommand>)> _connectionsStack = new();
 
-      internal static (int Number, System.Data.Common.DbConnection DbConnection, Dictionary<string, System.Data.Common.DbCommand> KeyedDbCommands) GetConnectionBase(string connectionString)
+      internal static (int Number, System.Data.Common.DbConnection DbConnection, Dictionary<string, System.Data.Common.DbCommand> KeyedDbCommands) GetConnectionBase()
       {
          (int Number, System.Data.Common.DbConnection DbConnection, Dictionary<string, System.Data.Common.DbCommand> KeyedDbCommands) dbConnectionBase;
 
          if (!_connectionsStack.TryPop(out dbConnectionBase))
          {
             _createdConnections++;
-            using System.Data.Common.DbConnection dbConnection = DbFactory.Instance.CreateConnection();
-            dbConnection.ConnectionString = connectionString; 
-
             dbConnectionBase = (Number: _createdConnections, 
-                                DbConnection: dbConnection, 
+                                DbConnection: DbFactory.GetConnection(), 
                                 KeyedDbCommands: new Dictionary<string, System.Data.Common.DbCommand>());
          }
 
