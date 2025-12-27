@@ -63,27 +63,6 @@
         "notes": "",
         "versus": "None"
       },
-      "gunicorn-orjson": {
-        "json_url": "/json",
-        "db_url": "/db",
-        "query_url": "/queries?queries=",
-        "update_url": "/updates?queries=",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Micro",
-        "database": "Postgres",
-        "framework": "FastAPI",
-        "language": "Python",
-        "flavor": "Python3",
-        "orm": "Raw",
-        "platform": "asyncio",
-        "webserver": "Gunicorn",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "FastAPI-gunicorn-orjson",
-        "notes": "",
-        "versus": "None"
-      },
       "gunicorn-orm": {
         "json_url": "/json",
         "fortune_url": "/fortunes",
@@ -172,10 +151,7 @@
         "database_os": "Linux",
         "display_name": "FastAPI-nginx-unit",
         "notes": "",
-        "versus": "None",
-        "tags": [
-          "broken"
-        ]
+        "versus": "None"
       },
       "nginx": {
         "json_url": "/json",
