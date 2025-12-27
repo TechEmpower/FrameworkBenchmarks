@@ -67,7 +67,7 @@ httparse = "1"
 serde_core = { version = "1" }
 
 # web optional
-xitca-web = { version = "0.7", features = ["json"], optional = true }
+xitca-web = { version = "0.8", features = ["json"], optional = true }
 
 # raw-pg optional
 xitca-postgres = { version = "0.4", optional = true }
@@ -115,6 +115,5 @@ toasty = { git = "https://github.com/fakeshadow/toasty", rev = "51c8186" }
 toasty-core = { git = "https://github.com/fakeshadow/toasty", rev = "51c8186" }
 toasty-sql = { git = "https://github.com/fakeshadow/toasty", rev = "51c8186" }
 
-xitca-codegen = { git = "http://github.com/HFQR/xitca-web", rev = "00cdcc9" }
-xitca-postgres = { git = "http://github.com/HFQR/xitca-web", rev = "04a84e4" }
-xitca-web = { git = "http://github.com/HFQR/xitca-web", rev = "00cdcc9" }
+xitca-postgres = { git = "http://github.com/HFQR/xitca-web", rev = "e0c1978" }
+xitca-web = { git = "http://github.com/HFQR/xitca-web", rev = "e0c1978" }
