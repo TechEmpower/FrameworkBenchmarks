@@ -9,7 +9,7 @@ RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php > /dev/null
 RUN apt-get update -yqq > /dev/null && \
     apt-get install -yqq wget git unzip libxml2-dev cmake make systemtap-sdt-dev \
                     zlib1g-dev libpcre3-dev libargon2-dev libsodium-dev \
-                    php8.3-cli php8.3-curl php8.3-dev libphp8.3-embed php8.3-pgsql nginx > /dev/null
+                    php8.3-cli php8.3-dev libphp8.3-embed php8.3-pgsql nginx > /dev/null
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
