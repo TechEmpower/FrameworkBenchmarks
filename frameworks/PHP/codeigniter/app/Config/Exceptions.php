@@ -30,6 +30,8 @@ class Exceptions extends BaseConfig
      * --------------------------------------------------------------------------
      * Any status codes here will NOT be logged if logging is turned on.
      * By default, only 404 (Page Not Found) exceptions are ignored.
+     *
+     * @var list<int>
      */
     public array $ignoreCodes = [404];
 
@@ -51,17 +53,17 @@ class Exceptions extends BaseConfig
      * Any data that you would like to hide from the debug trace.
      * In order to specify 2 levels, use "/" to separate.
      * ex. ['server', 'setup/password', 'secret_token']
+     *
+     * @var list<string>
      */
     public array $sensitiveDataInTrace = [];
 
     /**
      * --------------------------------------------------------------------------
-     * LOG DEPRECATIONS INSTEAD OF THROWING?
+     * WHETHER TO THROW AN EXCEPTION ON DEPRECATED ERRORS
      * --------------------------------------------------------------------------
-     * By default, CodeIgniter converts deprecations into exceptions. Also,
-     * starting in PHP 8.1 will cause a lot of deprecated usage warnings.
-     * Use this option to temporarily cease the warnings and instead log those.
-     * This option also works for user deprecations.
+     * If set to `true`, DEPRECATED errors are only logged and no exceptions are
+     * thrown. This option also works for user deprecations.
      */
     public bool $logDeprecations = true;
 
