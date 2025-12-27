@@ -131,7 +131,7 @@ platform = "None"
 webserver = "nginx-unit"
 versus = "None"
 
-[nginx-unit-orjson]
+[nginx]
 urls.plaintext = "/plaintext"
 urls.json = "/json"
 urls.db = "/db"
@@ -145,7 +145,7 @@ database_os = "Linux"
 os = "Linux"
 orm = "Raw"
 platform = "None"
-webserver = "nginx-unit"
+webserver = "nginx"
 versus = "None"
 
 
