@@ -34,7 +34,7 @@ module.exports = {
 
     bulkUpdateWorld: async worlds => Promise.all(
         worlds.map( world =>
-            execute( 'UPDATE world SET randomnumber = ? WHERE id = ?',
-                [world.randomnumber, world.id] ) )
+            execute( 'UPDATE world SET randomNumber = ? WHERE id = ?',
+                [world.randomNumber, world.id] ) )
     ).then( () => worlds )
 }
