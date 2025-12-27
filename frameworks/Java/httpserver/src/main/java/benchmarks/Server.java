@@ -88,6 +88,7 @@ public class Server {
             t.getResponseHeaders().add("Server", SERVER_NAME);
             t.sendResponseHeaders(200, HELLO_LENGTH);
             t.getResponseBody().write(HELLO_BYTES);
+            t.getResponseBody().flush();
             t.getResponseBody().close();
         };
     }
@@ -131,6 +132,7 @@ public class Server {
                 t.getResponseHeaders().add("Server", SERVER_NAME);
                 t.sendResponseHeaders(200, bytes.length);
                 t.getResponseBody().write(bytes);
+                t.getResponseBody().flush();
                 t.getResponseBody().close();
             } catch (SQLException | ParseException e) {
                 throw new IOException(e);
