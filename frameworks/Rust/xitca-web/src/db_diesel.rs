@@ -90,14 +90,29 @@ mod schema {
 fn update_query_from_ids(mut rngs: Vec<(i32, i32)>) -> String {
     rngs.sort_by(|(a, _), (b, _)| a.cmp(b));
 
-    const PREFIX: &str = "UPDATE world SET randomNumber=w.r FROM (VALUES ";
-    const SUFFIX: &str = ") AS w (i,r) WHERE world.id=w.i";
+    const PREFIX: &str = "UPDATE world SET randomNumber = w.r FROM (SELECT unnest(ARRAY[";
+    const MID: &str = "]) as i, unnest(ARRAY[";
+    const SUFFIX: &str = "]) as r) w WHERE world.id = w.i";
+    const SIZE_HINT: usize = PREFIX.len() + MID.len() + SUFFIX.len() + "10000,".len();
 
-    let mut query = String::from(PREFIX);
+    let mut query = String::with_capacity(SIZE_HINT);
+
+    query.push_str(PREFIX);
 
     use core::fmt::Write;
-    rngs.iter().for_each(|(w_id, num)| {
-        write!(query, "({}::int,{}::int),", w_id, num).unwrap();
+
+    rngs.iter().for_each(|(w_id, _)| {
+        write!(query, "{},", w_id).unwrap();
+    });
+
+    if query.ends_with(',') {
+        query.pop();
+    }
+
+    query.push_str(MID);
+
+    rngs.iter().for_each(|(_, rand)| {
+        write!(query, "{},", rand).unwrap();
     });
 
     if query.ends_with(',') {

@@ -7,7 +7,7 @@
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
 mod db;
-mod db_compio;
+mod db_pool;
 mod ser;
 mod util;
 
@@ -43,7 +43,7 @@ type Request<B> = http::Request<RequestExt<B>>;
 
 type Response = http::Response<Once<Bytes>>;
 
-type Ctx<'a> = Context<'a, Request<RequestBody>, db_compio::Client>;
+type Ctx<'a> = Context<'a, Request<RequestBody>, db_pool::Client>;
 
 fn main() -> io::Result<()> {
     let cores = std::thread::available_parallelism().map(|num| num.get()).unwrap_or(56);
@@ -112,7 +112,7 @@ fn main() -> io::Result<()> {
                         cli.updates(num).await.and_then(|w| json_response(req, &w))
                     })),
                 )
-                .enclosed(ContextBuilder::new(db_compio::Client::create))
+                .enclosed(ContextBuilder::new(db_pool::Client::create))
                 .enclosed_fn(async |service, req| {
                     let mut res = service.call(req).await.unwrap_or_else(error_handler);
                     res.headers_mut().insert(SERVER, HeaderValue::from_static("x"));
@@ -128,7 +128,7 @@ fn main() -> io::Result<()> {
                     Ok((stream, addr)) => {
                         let service = service.clone();
                         compio::runtime::spawn(async move {
-                            let _ = Dispatcher::<_, _, _, 16, { usize::MAX }, { usize::MAX }>::run(
+                            let _ = Dispatcher::<_, _, _, 64, { usize::MAX }, { usize::MAX }>::run(
                                 stream, addr, &service.0, &service.1,
                             )
                             .await;
@@ -186,13 +186,13 @@ struct Time(Rc<RefCell<DateTimeState>>);
 
 impl Time {
     fn new() -> Self {
-        let state = Rc::new(RefCell::new(DateTimeState::new()));
+        let state = Rc::new(RefCell::new(DateTimeState::default()));
         let state2 = state.clone();
         compio::runtime::spawn(async move {
             let mut interval = compio::runtime::time::interval(Duration::from_secs(1));
             loop {
                 let _ = interval.tick().await;
-                *state2.borrow_mut() = DateTimeState::new();
+                *state2.borrow_mut() = DateTimeState::default();
             }
         })
         .detach();
@@ -201,8 +201,6 @@ impl Time {
 }
 
 impl DateTime for Time {
-    const DATE_VALUE_LENGTH: usize = 29;
-
     fn with_date<F, O>(&self, f: F) -> O
     where
         F: FnOnce(&[u8]) -> O,
@@ -213,5 +211,33 @@ impl DateTime for Time {
 
     fn now(&self) -> tokio::time::Instant {
         self.0.borrow().now
+    }
+}
+
+struct CompIoConnector;
+
+impl xitca_postgres::pool::Connect for CompIoConnector {
+    async fn connect(&self, cfg: xitca_postgres::Config) -> Result<xitca_postgres::Client, xitca_postgres::Error> {
+        let (cli, drv) = compio::runtime::spawn_blocking(|| {
+            tokio::runtime::Builder::new_current_thread()
+                .enable_all()
+                .build()
+                .unwrap()
+                .block_on(xitca_postgres::Postgres::new(cfg).connect())
+        })
+        .await
+        .unwrap()?;
+
+        let drv = drv.try_into_tcp().expect("raw tcp is used for database connection");
+        let drv = xitca_postgres::CompIoDriver::from_tcp(drv)?;
+
+        compio::runtime::spawn(async move {
+            use core::{async_iter::AsyncIterator, future::poll_fn, pin::pin};
+
+            let mut drv = pin!(drv.into_async_iter());
+            while poll_fn(|cx| drv.as_mut().poll_next(cx)).await.is_some() {}
+        })
+        .detach();
+        Ok(cli)
     }
 }
