@@ -11,4 +11,4 @@ COPY --from=lein /ring-http-exchange/target/ring-http-server-1.0.0-standalone.ja
 
 EXPOSE 8080
 
-CMD ["java", "-server", "-XX:+UseZGC", "-XX:MaxRAMPercentage=70", "-Dclojure.compiler.direct-linking=true", "-jar", "app.jar"]
+CMD ["java", "-server", "-XX:+UseParallelGC", "-XX:MaxRAMPercentage=70", "-Dclojure.compiler.direct-linking=true", "-jar", "app.jar"]
