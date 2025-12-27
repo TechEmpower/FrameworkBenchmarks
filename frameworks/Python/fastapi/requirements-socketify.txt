@@ -1,3 +1,3 @@
-orjson==3.10.16
-fastapi==0.115.12
-git+https://github.com/cirospaciari/socketify.py.git@main#socketify
+orjson==3.11.5
+fastapi==0.120.3
+https://github.com/cirospaciari/socketify.py/archive/refs/heads/main.zip#egg=socketify

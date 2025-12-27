@@ -1,11 +1,11 @@
-FROM python:3.13
+FROM python:3.14
 
 WORKDIR /fastapi
 
 RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
-RUN pip3 install cython==3.0.12
+RUN pip3 install cython==3.2.3
 
 COPY requirements.txt requirements-orjson.txt requirements-uvicorn.txt ./
 
