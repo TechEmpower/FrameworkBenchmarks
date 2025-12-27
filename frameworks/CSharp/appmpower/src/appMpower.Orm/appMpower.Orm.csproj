@@ -2,38 +2,54 @@
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
 
     <PublishAot>true</PublishAot>
     <SelfContained>true</SelfContained>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    
+
     <!--TODOGITHUB-->
     <RuntimeIdentifier>linux-x64</RuntimeIdentifier> <!-- docker server -->
     <!--TODOLOCAL-->
     <!--<RuntimeIdentifier>linux-arm64</RuntimeIdentifier>--> <!-- docker local -->
     <!--<RuntimeIdentifier>osx-arm64</RuntimeIdentifier>--> <!-- outside docker local -->
 
-    <InvariantGlobalization>true</InvariantGlobalization>
-    <IlcGenerateStackTraceData>false</IlcGenerateStackTraceData>
+    <PublishTrimmed>true</PublishTrimmed>
+    <TrimMode>full</TrimMode>
+
+    <OptimizationPreference>Size</OptimizationPreference>
     <IlcOptimizationPreference>Size</IlcOptimizationPreference>
-    <DebugType>none</DebugType>
-    <GenerateRuntimeConfigurationFiles>false</GenerateRuntimeConfigurationFiles>
 
-    <IlcFoldIdenticalMethodBodies>true</IlcFoldIdenticalMethodBodies>
-    <IlcTrimMetadata>true</IlcTrimMetadata>
-    <IlcInvariantGlobalization>true</IlcInvariantGlobalization>
-    <IlcGenerateCompleteTypeMetadata>false</IlcGenerateCompleteTypeMetadata>
-
-    <IlcDisableReflection>true</IlcDisableReflection>
-
-    <SuppressTrimAnalysisWarnings>true</SuppressTrimAnalysisWarnings>
-
-    <IlcPgoOptimize>true</IlcPgoOptimize>
-
-    <UseSystemResourceKeys>true</UseSystemResourceKeys>
-    <EventSourceSupport>false</EventSourceSupport>
     <DebuggerSupport>false</DebuggerSupport>
+    <EventSourceSupport>false</EventSourceSupport>
+    <HttpActivityPropagationSupport>false</HttpActivityPropagationSupport>
+    <MetadataUpdaterSupport>false</MetadataUpdaterSupport>
+    <MetricsSupport>false</MetricsSupport>
+    <Http3Support>false</Http3Support>
+
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <UseSystemResourceKeys>true</UseSystemResourceKeys>
+
+    <StackTraceSupport>false</StackTraceSupport>
+    <IlcGenerateStackTraceData>false</IlcGenerateStackTraceData>
+    <TrimmerRemoveSymbols>true</TrimmerRemoveSymbols>
+
+    <IlcScanReflection>false</IlcScanReflection>
+
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+
+    <StripSymbols>true</StripSymbols>
+
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+
+  <!-- show more specific warning
+  <PropertyGroup>
+     <TrimmerSingleWarn>false</TrimmerSingleWarn>
+  </PropertyGroup>
+  -->
+  <PropertyGroup>
+    <NoWarn>$(NoWarn);IL2093</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -42,6 +58,7 @@
 
   <ItemGroup>
     <PackageReference Include="System.Data.Odbc" Version="10.0.1" />
+    <PackageReference Include="Npgsql" Version="10.0.0" />
+    <PackageReference Include="MySqlConnector" Version="2.5.0" />
   </ItemGroup>
-
 </Project>

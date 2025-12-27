@@ -1,4 +1,8 @@
-﻿using System.Runtime.InteropServices;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
 using appMpower.Orm.Data;
@@ -20,19 +24,20 @@ public static class NativeMethods
     private readonly static FortunesSerializer _fortunesSerializer = new FortunesSerializer();
     private static readonly byte[] _delimiter = new byte[] { 0xFF, 0xFF, 0xFF, 0xFF };
 
-
     [UnmanagedCallersOnly(EntryPoint = "Dbms")]
     public static void Dbms(int dbms)
     {
         Constants.Dbms = (Dbms)dbms;
-        DbProviderFactory.SetConnectionString();
+        DbFactory.SetConnectionString();
+        DbFactory.SetInstance();
     }
 
     [UnmanagedCallersOnly(EntryPoint = "DbProvider")]
     public static void DbProvider(int dbProvider)
     {
         Constants.DbProvider = (DbProvider)dbProvider;
-        DbProviderFactory.SetConnectionString();
+        DbFactory.SetConnectionString();
+        DbFactory.SetInstance();
     }
 
     [UnmanagedCallersOnly(EntryPoint = "FreeHandlePointer")]
@@ -45,7 +50,7 @@ public static class NativeMethods
     [UnmanagedCallersOnly(EntryPoint = "Db")]
     public static unsafe IntPtr Db(int* length, IntPtr* handlePointer)
     {
-        var world = RawDb.LoadSingleQueryRow().GetAwaiter().GetResult();
+        var world = RawDb.LoadSingleQueryRow(); 
 
         var memoryStream = new MemoryStream();
         using (var utf8JsonWriter = new Utf8JsonWriter(memoryStream, _jsonWriterOptions))
@@ -87,7 +92,7 @@ public static class NativeMethods
     [UnmanagedCallersOnly(EntryPoint = "Fortunes")]
     public static unsafe IntPtr Fortunes(int* length, IntPtr* handlePointer)
     {
-        List<Fortune> fortunes = RawDb.LoadFortunesRows().GetAwaiter().GetResult();
+        List<Fortune> fortunes = RawDb.LoadFortunesRows();
 
         int totalSize = 0;
 
@@ -141,7 +146,7 @@ public static class NativeMethods
     [UnmanagedCallersOnly(EntryPoint = "Query")]
     public static unsafe IntPtr Query(int queries, int* length, IntPtr* handlePointer)
     {
-        World[] worlds = RawDb.ReadMultipleRows(queries).GetAwaiter().GetResult();
+        World[] worlds = RawDb.ReadMultipleRows(queries);
 
         var memoryStream = new MemoryStream();
         using var utf8JsonWriter = new Utf8JsonWriter(memoryStream, _jsonWriterOptions);
@@ -161,7 +166,7 @@ public static class NativeMethods
     [UnmanagedCallersOnly(EntryPoint = "Updates")]
     public static unsafe IntPtr Updates(int count, int* length, IntPtr* handlePointer)
     {
-        World[] worlds = RawDb.LoadMultipleUpdatesRows(count).GetAwaiter().GetResult();
+        World[] worlds = RawDb.LoadMultipleUpdatesRows(count);
 
         var memoryStream = new MemoryStream();
         using var utf8JsonWriter = new Utf8JsonWriter(memoryStream, _jsonWriterOptions);
@@ -181,7 +186,7 @@ public static class NativeMethods
     [UnmanagedCallersOnly(EntryPoint = "DbById")]
     public static unsafe IntPtr DbById(int id, int* length, IntPtr* handlePointer)
     {
-        var world = RawDb.LoadSingleQueryRowById(id).GetAwaiter().GetResult();
+        var world = RawDb.LoadSingleQueryRowById(id);
 
         var memoryStream = new MemoryStream();
         using var utf8JsonWriter = new Utf8JsonWriter(memoryStream, _jsonWriterOptions);
