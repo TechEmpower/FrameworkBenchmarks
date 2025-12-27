@@ -19,7 +19,7 @@
 (def ^:const HELLO_WORLD "Hello, World!")
 (def ^:const MAX_ID_ZERO_IDX 9999)
 (def ^:const CACHE_TTL (* 24 60 60))
-(def ^:private render-fortune (majavat/build-renderer "html/fortunes.html"
+(def ^:private render-fortune (majavat/build-renderer "html/majavat-fortunes.html"
                                                       {:renderer (->StringRenderer
                                                                    {:sanitizer (->Html)})}))
 

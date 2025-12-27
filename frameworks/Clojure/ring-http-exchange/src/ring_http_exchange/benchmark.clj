@@ -16,7 +16,7 @@
 
 (def query-fortunes (boa/execute (boa/->NextJdbcAdapter) "fortune.sql"))
 
-(def db-spec {:auto-commit        false
+(def db-spec {:auto-commit        true
               :connection-timeout 1000
               :validation-timeout 1000
               :idle-timeout       15000
