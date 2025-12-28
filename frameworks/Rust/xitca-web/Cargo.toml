@@ -56,7 +56,7 @@ perf-json = ["sonic-rs"]
 compio = ["dep:compio", "dep:socket2", "xitca-http/compio", "xitca-postgres/compio"]
 
 [dependencies]
-xitca-http = "0.8"
+xitca-http = "0.8.2"
 xitca-io = "0.5.1"
 xitca-server = "0.6.1"
 xitca-service = "0.3"
@@ -115,5 +115,5 @@ toasty = { git = "https://github.com/fakeshadow/toasty", rev = "51c8186" }
 toasty-core = { git = "https://github.com/fakeshadow/toasty", rev = "51c8186" }
 toasty-sql = { git = "https://github.com/fakeshadow/toasty", rev = "51c8186" }
 
-xitca-postgres = { git = "http://github.com/HFQR/xitca-web", rev = "e0c1978" }
-xitca-web = { git = "http://github.com/HFQR/xitca-web", rev = "e0c1978" }
+xitca-postgres = { git = "http://github.com/HFQR/xitca-web", rev = "ae0db84" }
+xitca-web = { git = "http://github.com/HFQR/xitca-web", rev = "ae0db84" }

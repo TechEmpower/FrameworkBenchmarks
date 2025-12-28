@@ -1144,9 +1144,9 @@ dependencies = [
 
 [[package]]
 name = "proc-macro2"
-version = "1.0.103"
+version = "1.0.104"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5ee95bc4ef87b8d5ba32e8b7714ccc834865276eab0aed5c9958d00ec45f49e8"
+checksum = "9695f8df41bb4f3d222c95a67532365f569318332d03d5f3f67f37b20e6ebdf0"
 dependencies = [
  "unicode-ident",
 ]
@@ -2079,9 +2079,9 @@ dependencies = [
 
 [[package]]
 name = "xitca-http"
-version = "0.8.1"
+version = "0.8.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "98056bc20dbf6441ceb40d587a350140993444ec30ec50f7627b9044e320427e"
+checksum = "ba51754e98a98549a1bae7a2f4c20e6b71d931cee6f43acd0307c2c70ba83f2a"
 dependencies = [
  "compio-buf",
  "compio-io",
@@ -2144,7 +2144,7 @@ dependencies = [
 [[package]]
 name = "xitca-postgres"
 version = "0.4.0"
-source = "git+http://github.com/HFQR/xitca-web?rev=e0c1978#e0c1978889750a3c6b728a070b2691e393221ad4"
+source = "git+http://github.com/HFQR/xitca-web?rev=ae0db84#ae0db845390d23b62b9748111fab9347d9fe9090"
 dependencies = [
  "compio",
  "fallible-iterator",
@@ -2262,7 +2262,7 @@ dependencies = [
 [[package]]
 name = "xitca-web"
 version = "0.8.0"
-source = "git+http://github.com/HFQR/xitca-web?rev=e0c1978#e0c1978889750a3c6b728a070b2691e393221ad4"
+source = "git+http://github.com/HFQR/xitca-web?rev=ae0db84#ae0db845390d23b62b9748111fab9347d9fe9090"
 dependencies = [
  "futures-core",
  "pin-project-lite",
