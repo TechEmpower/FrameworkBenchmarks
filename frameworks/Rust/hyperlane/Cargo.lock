@@ -514,9 +514,9 @@ dependencies = [
 
 [[package]]
 name = "http-compress"
-version = "3.0.5"
+version = "3.0.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8a3200f5033ff75c1c682550881db3667bb79a4853f310586b25f608c8e139bf"
+checksum = "5e981abf4edff64424f5657082bf163bda23100b25a379b0a519b96f02fd8ccb"
 dependencies = [
  "brotli",
  "flate2",
@@ -525,15 +525,15 @@ dependencies = [
 
 [[package]]
 name = "http-constant"
-version = "1.78.0"
+version = "1.81.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5dd2b82a08026cba5a31fe6a3ba2abb9c9b977014370a116fed9c6c30b9aec8f"
+checksum = "69bda62bdd68301688f45257c7cf0abf616015d74f57748a22056a2c94e0e526"
 
 [[package]]
 name = "http-type"
-version = "5.20.0"
+version = "5.24.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "087ab05631d62289f9e78ba465f26f54ef4b6b5547b7e3bb7b2c7cc35905cf8c"
+checksum = "209639eb60f0e9fc1bc3204ce006253d33088a13b978a43763900fd9a903a97c"
 dependencies = [
  "hex",
  "http-compress",
@@ -549,23 +549,22 @@ dependencies = [
 
 [[package]]
 name = "hyperlane"
-version = "10.19.0"
+version = "10.21.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2565ee4564b78831f242c0c0a4bc2fb16ae0a80562a315999613cec1147a396f"
+checksum = "3e32a35c1bf6546f0f5863a87924ccac6bdff806237f12078aa3b001280a885b"
 dependencies = [
  "http-type",
  "inventory",
  "lombok-macros",
  "regex",
  "serde",
- "serde_json",
 ]
 
 [[package]]
 name = "hyperlane-time"
-version = "0.7.14"
+version = "0.7.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dfe36686e48cccf57cc1f5bb165c960d63abbb1670abc08149ea686917da5ac1"
+checksum = "d7604538534f747992bc1b74bab91f4b5d74dbfed987854d2bf4b0313e694a2e"
 
 [[package]]
 name = "hyperlane_techempower"
@@ -774,9 +773,9 @@ checksum = "5e5032e24019045c762d3c0f28f5b6b8bbf38563a65908389bf7978758920897"
 
 [[package]]
 name = "lombok-macros"
-version = "1.13.16"
+version = "1.13.18"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "802066947abc9055e2356081b4874916392e1a1df42265606d3cc5e857b867ad"
+checksum = "3f0304bd5bbf8dbdaf33068cf13c37bade7e050d403ccc30dfb9808254c07c2e"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -985,9 +984,9 @@ dependencies = [
 
 [[package]]
 name = "proc-macro2"
-version = "1.0.103"
+version = "1.0.104"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5ee95bc4ef87b8d5ba32e8b7714ccc834865276eab0aed5c9958d00ec45f49e8"
+checksum = "9695f8df41bb4f3d222c95a67532365f569318332d03d5f3f67f37b20e6ebdf0"
 dependencies = [
  "unicode-ident",
 ]
@@ -1195,9 +1194,9 @@ dependencies = [
 
 [[package]]
 name = "serde_json"
-version = "1.0.147"
+version = "1.0.148"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6af14725505314343e673e9ecb7cd7e8a36aa9791eb936235a3567cc31447ae4"
+checksum = "3084b546a1dd6289475996f182a22aba973866ea8e8b02c51d9f46b1336a22da"
 dependencies = [
  "itoa",
  "memchr",
@@ -2039,6 +2038,6 @@ dependencies = [
 
 [[package]]
 name = "zmij"
-version = "0.1.7"
+version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9e404bcd8afdaf006e529269d3e85a743f9480c3cef60034d77860d02964f3ba"
+checksum = "e6d6085d62852e35540689d1f97ad663e3971fc19cf5eceab364d62c646ea167"
