@@ -16,22 +16,23 @@ use xitca_web::{
     App,
     codegen::route,
     handler::{html::Html, json::Json, query::Query, state::StateRef},
-    http::{WebResponse, header::SERVER},
+    http::{HeaderValue, WebResponse, header::SERVER},
 };
 
 use orm::Pool;
-use ser::{Num, World};
-use util::{HandleResult, SERVER_HEADER_VALUE};
+use ser::{Message, Num, World};
+use util::HandleResult;
 
 fn main() -> std::io::Result<()> {
     App::new()
         .with_async_state(Pool::create)
+        .at("/json", Json(Message::HELLO))
         .at_typed(db)
         .at_typed(fortunes)
         .at_typed(queries)
         .at_typed(updates)
         .map(|mut res: WebResponse| {
-            res.headers_mut().insert(SERVER, SERVER_HEADER_VALUE);
+            res.headers_mut().insert(SERVER, HeaderValue::from_static("xitca-web"));
             res
         })
         .serve()

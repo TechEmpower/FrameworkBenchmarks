@@ -36,9 +36,9 @@ class App : CoroutineVerticle() {
         private const val SERVER = "vertx-web"
 
         // for PgClientBenchmark only
-        private const val UPDATE_WORLD = "UPDATE world SET randomnumber=$1 WHERE id=$2"
-        private const val SELECT_WORLD = "SELECT id, randomnumber from WORLD where id=$1"
-        private const val SELECT_FORTUNE = "SELECT id, message from FORTUNE"
+        private const val UPDATE_WORLD = "UPDATE world SET randomnumber = $1 WHERE id = $2"
+        private const val SELECT_WORLD = "SELECT id, randomnumber FROM world WHERE id = $1"
+        private const val SELECT_FORTUNE = "SELECT id, message FROM fortune"
     }
 
     inline fun Route.coroutineHandlerUnconfined(crossinline requestHandler: suspend (RoutingContext) -> Unit): Route =

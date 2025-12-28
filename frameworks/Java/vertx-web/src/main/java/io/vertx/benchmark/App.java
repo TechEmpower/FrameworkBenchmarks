@@ -49,9 +49,9 @@ public class App extends AbstractVerticle {
    */
   private final class PgClientBenchmark {
 
-    private static final String UPDATE_WORLD = "UPDATE world SET randomnumber=$1 WHERE id=$2";
-    private static final String SELECT_WORLD = "SELECT id, randomnumber from WORLD where id=$1";
-    private static final String SELECT_FORTUNE = "SELECT id, message from FORTUNE";
+    private static final String UPDATE_WORLD = "UPDATE world SET randomnumber = $1 WHERE id = $2";
+    private static final String SELECT_WORLD = "SELECT id, randomnumber FROM world WHERE id = $1";
+    private static final String SELECT_FORTUNE = "SELECT id, message FROM fortune";
 
     private final PgConnection client;
 
