@@ -16,152 +16,426 @@ exec ros -Q -- $0 "$@"
 ;; the program runs.
 
 ;; Woo - https://github.com/fukamachi/woo
-;; Jonathan - https://github.com/fukamachi/jonathan
-;; CL-MARKUP - https://github.com/arielnetworks/cl-markup
+;; st-json - https://github.com/marijnh/ST-JSON
+;; Serapeum - https://github.com/ruricolist/serapeum
 ;; Postmodern - https://github.com/marijnh/Postmodern
 ;; QURI - https://github.com/fukamachi/quri
 
-(ql:quickload '(:cl-markup :jonathan :postmodern :quri :uiop :woo) :silent t)
+(sb-ext:restrict-compiler-policy 'speed 3)
+(sb-ext:restrict-compiler-policy 'safety 0)
+(sb-ext:restrict-compiler-policy 'debug 0)
+(sb-ext:restrict-compiler-policy 'compilation-speed 0)
 
 
-(declaim (optimize (debug 0) (safety 0) (speed 3)))
+(ql:quickload '(postmodern
+                ;; st-json 10-15% faster than jonathan
+                ;; according to this benchmark
+                ;; https://sabracrolleton.github.io/json-review#write-times
+                st-json
+                ;; Previously cl-markup was used but Spinneret
+                ;; is 30% faster and more convenient. CL-WHO also as fast as
+                ;; Spinneret but requires manual string escaping which is error-prone.
+                spinneret
+                quri
+                uiop
+                woo
+                alexandria
+                serapeum
+                function-cache
+                cl+ssl
+                slynk
+                slynk/mrepl
+                slynk-macrostep
+                slynk-named-readtables
+                log4cl-extras)
+              :silent t)
 
 
-(load "./helpers/starts-with.lisp")
-(load "./helpers/parse-argv.lisp")
+(load (merge-pathnames "helpers/starts-with.lisp"
+                       *load-pathname*))
+(load (merge-pathnames "helpers/parse-argv.lisp"
+                       *load-pathname*))
 
 
-;; Initialize the global random state by "some means" (e.g. current time)
-(setf *random-state* (make-random-state t))
+(function-cache:defcached db-host ()
+  (or (uiop:getenv "DB_HOST")
+      "tfb-database"))
+
+(function-cache:defcached db-port ()
+  (parse-integer (or (uiop:getenv "DB_PORT")
+                     "5432")))
 
 
+(function-cache:defcached db-use-ssl ()
+  (if (uiop:getenv "DB_USE_SSL")
+      :full
+      :no))
+
+(function-cache:defcached db-name ()
+  (or (uiop:getenv "DB_NAME")
+      "hello_world"))
+
+(function-cache:defcached db-user ()
+  (or (uiop:getenv "DB_USER")
+      "benchmarkdbuser"))
+
+(function-cache:defcached db-pass ()
+  (or (uiop:getenv "DB_PASS")
+      "benchmarkdbpass"))
+
+
+(defmacro with-binary-connection (() &body body)
+  `(postmodern:with-connection (list (db-name)
+                                     (db-user)
+                                     (db-pass)
+                                     (db-host)
+                                     :port (db-port)
+                                     :use-binary t
+                                     :use-ssl (db-use-ssl)
+                                     :pooled-p t)
+     ,@body))
+
+
+(declaim (ftype (function () list)
+                plaintext)
+         (inline plaintext))
 (defun plaintext ()
   "Plaintext handler."
-  '(200 (:content-type "text/plain" :server "Woo") ("Hello, World!")))
+  '(200
+    (:content-type "text/plain"
+     :server "Woo")
+    ("Hello, World!")))
 
+
+(declaim (ftype (function () list)
+                json)
+         (inline json))
 (defun json ()
   "JSON handler using Jonathan to encode JSON"
-  `(200 (:content-type "application/json" :server "Woo") (,(jonathan:to-json '(:message "Hello, World!")))))
+  `(200
+    (:content-type "application/json"
+     :server "Woo")
+    (,(st-json:write-json-to-string (serapeum:dict "message"
+                                                   "Hello, World!")))))
 
+
+(postmodern:defprepared get-a-random-record-query
+    (:select 'randomnumber
+      :from 'world
+      :where (:= 'id '$1))
+    :single)
+
+
+(declaim (ftype (function (fixnum) (values))
+                get-a-random-record)
+         (inline get-a-random-record))
 (defun get-a-random-record (id)
-  (declare (integer id))
-  `(:|id| ,id :|randomNumber| ,(postmodern:query (:select 'randomnumber :from 'world :where (:= 'id id)) :single!)))
+  (declare (fixnum id))
+  
+  (let ((id (min id 10000)))
+    (let ((number (get-a-random-record-query id)))
+      (declare (type fixnum number))
+      (serapeum:dict "id" id
+                     "randomNumber" number))))
 
+
+(declaim (ftype (function () list)
+                db)
+         (inline db))
 (defun db ()
   "DB handler using Jonathan to encode JSON and Postmodern to access PostgreSQL"
-  (let ((id (+ 1 (random 10000))))
-    `(
-      200
-      (:content-type "application/json" :server "Woo")
-      (,(jonathan:to-json (get-a-random-record id)))
-     )))
+  (with-binary-connection ()
+    (let ((id (+ 1 (random 10000))))
+      `(200
+        (:content-type "application/json"
+         :server "Woo")
+        (,(st-json:write-json-to-string (get-a-random-record id)))))))
 
+
+(declaim (ftype (function (fixnum) fixnum)
+                ensure-integer-is-between-one-and-five-hundreds)
+         (inline ensure-integer-is-between-one-and-five-hundreds))
 (defun ensure-integer-is-between-one-and-five-hundreds (n)
-  (declare (integer n))
-  (if (< n 1)
-    (values 1 nil)
-    (if (> n 500)
-      (values 500 nil)
-      (values n t))))
+  (max (min n 500)
+       1))
 
+
+(declaim (ftype (function (list) fixnum)
+                extract-number-of-records-to-fetch)
+         (inline extract-number-of-records-to-fetch))
 (defun extract-number-of-records-to-fetch (env)
   (let ((n (handler-case
-            (parse-integer (cdr (assoc "queries" (quri:url-decode-params (getf env :query-string)) :test #'equal)))
-            (error (c) (values 1 c)))))
+               (parse-integer (cdr (assoc "queries" (quri:url-decode-params (getf env :query-string)) :test #'equal)))
+             (error (c) (values 1 c)))))
     (ensure-integer-is-between-one-and-five-hundreds n)))
 
+
+(declaim (ftype (function (fixnum) list)
+                get-some-random-integers-between-one-and-ten-thousand)
+         (inline get-some-random-integers-between-one-and-ten-thousand))
 (defun get-some-random-integers-between-one-and-ten-thousand (n)
-  (declare (integer n))
+  (declare (fixnum n))
   (loop :repeat n
         :collect (+ 1 (random 10000))))
 
-(defun get-some-random-records (n)
-  (declare (integer n))
-  (let ((ids (get-some-random-integers-between-one-and-ten-thousand n)))
-    (mapcar #'get-a-random-record ids)))
 
+(declaim (ftype (function (fixnum) list)
+                get-some-random-records)
+         (inline get-some-random-records))
+(defun get-some-random-records (n)
+  (loop repeat n
+        for id fixnum = (1+ (random 10000))
+        collect (get-a-random-record id)))
+
+
+(declaim (ftype (function (list) list)
+                queries)
+         (inline queries))
 (defun queries (env)
   "QUERIES handler using Jonathan to encode JSON and Postmodern to access PostgreSQL"
-  `(
-    200
-    (:content-type "application/json" :server "Woo")
-    (,(jonathan:to-json (get-some-random-records (extract-number-of-records-to-fetch env))))
-   ))
+  (with-binary-connection ()
+    `(200
+      (:content-type "application/json"
+       :server "Woo")
+      (,(st-json:write-json-to-string
+         (get-some-random-records
+          (extract-number-of-records-to-fetch env)))))))
 
-(defun get-all-fortunes ()
-  (postmodern:query (:select 'id 'message :from 'fortune) :rows))
 
+(postmodern:defprepared get-all-fortunes
+    (:select 'id 'message
+      :from 'fortune)
+    :rows)
+
+
+(declaim (ftype (function () list)
+                get-all-fortunes-plus-one)
+         (inline get-all-fortunes-plus-one))
 (defun get-all-fortunes-plus-one ()
-  (let* ((records       (get-all-fortunes))
-         (records-p-one (append records '((0 "Additional fortune added at request time.")))))
+  (let* ((records (get-all-fortunes))
+         (records-p-one
+           (append records '((0 "Additional fortune added at request time.")))))
     (sort (copy-list records-p-one) #'string-lessp :key #'second)))
 
+
+(declaim (ftype (function () list)
+                fortunes)
+         (inline fortunes))
 (defun fortunes ()
-  "FORTUNES handler using Jonathan to encode JSON, Postmodern to access PostgreSQL and CL-Markup to build the HTML"
-  `(
-     200
-     (:content-type "text/html; charset=UTF-8" :server "Woo")
-     (,(cl-markup:html5
-       (:head
-         (:title "Fortunes"))
-       (:body
-         (:table
-           (:tr
-             (:th "id")
-             (:th "message"))
-           (loop for fortune-row in (get-all-fortunes-plus-one)
-                 collect (cl-markup:markup
-                           (:tr
-                             (:td (format nil "~d" (first fortune-row)))
-                             (:td (second fortune-row)))))))))
-   ))
+  "FORTUNES handler using Spinneret to generate HTML and Postmodern to access PostgreSQL."
+  (let ((*print-pretty* nil)
+        ;; Without this setting Spinneret does not close tags when it is possible
+        ;; and benchmark's validator fails.
+        (spinneret:*html-style* :tree))
+    (with-binary-connection ()
+      `(200
+        (:content-type "text/html; charset=UTF-8"
+         :server "Woo")
+        (,(spinneret:with-html-string
+            (:doctype)
+            (:html
+             ;; Here I have to use :tag,
+             ;; because otherwise spinneret inserts
+             ;; <meta charset="UTF-8" /> and benchmark's verification fails.
+             (:tag :name "head"
+                   (:title "Fortunes"))
+             (:body
+              (:table
+               (:tr
+                (:th "id")
+                (:th "message"))
+               (loop for fortune-row in (get-all-fortunes-plus-one)
+                     do (:tr
+                         (:td (format nil "~d" (first fortune-row)))
+                         (:td (second fortune-row)))))))))))))
 
-(defun get-and-update-some-random-records (n)
-  (declare (integer n))
+
+(defun make-batch-update-query (n)
+  (declare (type fixnum n))
+  (format nil
+          "UPDATE world AS ori SET randomnumber = new.randomnumber::integer FROM (VALUES ~{~A~^, ~}) AS new (id, randomnumber) WHERE ori.id = new.id::integer"
+          (loop for i fixnum below n
+                for arg1 fixnum = (+ (* i 2)
+                                     1)
+                for arg2 fixnum = (+ (* i 2)
+                                     2)
+                collect (format nil "($~A,$~A)" arg1 arg2))))
+
+
+(defparameter *batch-updaters* (make-hash-table))
+
+
+(defmacro define-batch-updater (n)
+  (let ((name (intern (format nil "UPDATE-BATCH-~A" n)))
+        (query (make-batch-update-query n)))
+    `(progn
+       (postmodern:defprepared ,name
+           (:raw ,query)
+           :rows)
+       (setf (gethash ,n *batch-updaters*)
+             #',name))))
+
+
+(defmacro define-batch-updaters (n)
+  (loop for i fixnum from 1 to n
+        collect `(define-batch-updater ,i) into forms
+        finally (return `(progn ,@forms))))
+
+
+;; Here we are defining a number of functions
+;; which use prepared statements to update
+;; a given number of records.
+;; 
+;; Each function does something like this:
+;; 
+;; UPDATE world AS ori SET randomnumber = new.randomnumber FROM
+;; (VALUES (($1, $2), ($3, $4), ($5, $6), ($7, $8), ($9, $10)) AS new (id, randomnumber) WHERE ori.id = new.id
+;;
+;; Previous version of the update function formatted SQL query
+;; using FORMAT function. In real world application this could lead to SQL injection.
+(define-batch-updaters 500)
+
+
+(defun auto-batch-update (data)
+  (declare (type list data))
+  (let* ((batch-length (/ (length data)
+                          2))
+         (func (gethash batch-length
+                        *batch-updaters*)))
+    (declare (type (or null function) func))
+    (cond
+      (func
+       (apply func data))
+      (t
+       (error "No prepared function for batch of length ~A"
+              batch-length)))))
+
+
+(declaim (ftype (function (fixnum) list)
+                get-and-update-some-random-records-batch)
+         (inline get-and-update-some-random-records-batch))
+(defun get-and-update-some-random-records-batch (n)
+  "Flexible batch updater. This function will be called with n from 0 upto 500."
   (let* ((random-records (get-some-random-records n))
-         (random-numbers (get-some-random-integers-between-one-and-ten-thousand n))
-         (index -1)
-         (updated-records (map 'list
-                               (lambda (row)
-                                       (incf index)
-                                       (list :|id|           (getf row :|id|          )
-                                             :|randomNumber| (nth index random-numbers)))
-                               random-records))
-         (record-list     (map 'list
-                               (lambda (row)
-                                       (list (nth 1 row)
-                                             (nth 3 row)))
-                               updated-records)))
-    (postmodern:query (format nil "UPDATE world AS ori SET randomnumber = new.randomnumber FROM (VALUES ~{(~{~a~^, ~})~^, ~}) AS new (id, randomnumber) WHERE ori.id = new.id" record-list))
-    (values updated-records)))
+         (random-numbers (get-some-random-integers-between-one-and-ten-thousand n)))
+    (loop with batch-size fixnum = 0
+          with args = nil
+          for iteration fixnum upfrom 0
+          for row in random-records
+          for new-random-number in random-numbers
+          for record-id = (gethash "id" row)
+          
+          do (setf args (list*
+                         record-id
+                         new-random-number
+                         args))
+             (setf batch-size
+                   (1+ batch-size))
+             ;; Here we keep old hash but update it with a new
+             ;; value to make lisp consing less:
+             (setf (gethash "randomNumber" row)
+                   new-random-number)
+          collect row into results
+          when (= batch-size
+                  500)
+            ;; Sending update to the database.
+            ;; This branch works if n > 500
+            do (apply #'update-batch-500 args)
+               (setf args nil
+                     batch-size 0)
+          finally (when args
+                    ;; If we have some more data to update
+                    ;; then will send them to the database too.
+                    (auto-batch-update args))
+                  (return results))))
 
+(declaim (ftype (function (list) list)
+                updates)
+         (inline updates))
 (defun updates (env)
   "UPDATES handler using Jonathan to encode JSON and Postmodern to access PostgreSQL"
-  `(
-    200
-    (:content-type "application/json" :server "Woo")
-    (,(jonathan:to-json (get-and-update-some-random-records (extract-number-of-records-to-fetch env))))
-   ))
+  (with-binary-connection ()
+    `(200
+      (:content-type "application/json"
+       :server "Woo")
+      (,(st-json:write-json-to-string (get-and-update-some-random-records-batch
+                                       (extract-number-of-records-to-fetch env)))))))
 
+
+(defparameter *args* nil)
+
+(declaim (ftype (function () list)
+                server-info)
+         (inline server-info))
+(defun server-info ()
+  "Shows information about lisp implementation and version"
+  `(200
+    (:content-type "text/plain"
+     :server "Woo")
+    (,(format nil "Running on ~A ~A~%Started with: ~A~%"
+              (lisp-implementation-type)
+              (lisp-implementation-version)
+              *args*))))
+
+
+(declaim (ftype (function (list) list)
+                handler)
+         (inline handler))
 (defun handler (env)
   "Router"
-  (let ((path (getf env :path-info)))
-    (cond ((starts-with path "/plaintext") (funcall 'plaintext  ))
-          ((starts-with path "/json"     ) (funcall 'json       ))
-          ((starts-with path "/db"       ) (funcall 'db         ))
-          ((starts-with path "/queries"  ) (funcall 'queries env))
-          ((starts-with path "/fortunes" ) (funcall 'fortunes   ))
-          ((starts-with path "/updates"  ) (funcall 'updates env)))))
+  (log4cl-extras/error:with-log-unhandled ()
+    (let ((path (getf env :path-info)))
+      (cond ((starts-with path "/plaintext") (plaintext))
+            ((starts-with path "/json"     ) (json))
+            ((starts-with path "/db"       ) (db))
+            ((starts-with path "/queries"  ) (queries env))
+            ((starts-with path "/fortunes" ) (fortunes))
+            ((starts-with path "/updates"  ) (updates env))
+            (t
+             (server-info))))))
+
+
+(defvar slynk:*use-dedicated-output-stream*)
+
 
 (defun main (&rest argv)
   "Create and start the server, applying argv to the env"
-  (let ((args (parse-argv argv)))
+  (let ((args (parse-argv argv))
+        (debug-mode (uiop:getenv "DEBUG")))
+    ;; Initialize the global random state by "some means" (e.g. current time)
+    (setf *random-state* (make-random-state t))
+    
+    (setf *args* args)
+    
+    (setf (getf args :worker-num)
+          ;; empirically I found that performance is the best when
+          ;; we have 4 workers per core.
+          (* (getf args :cpu 1)
+             4))
+    (alexandria:remove-from-plistf args :cpu)
+    
+    (format t "Starting with args: ~S~%"
+            args)
+    
+    (when debug-mode
+      (setf slynk:*use-dedicated-output-stream* nil)
+      (slynk:create-server :port 4005
+                           :interface "0.0.0.0"
+                           :dont-close t))
+    
+    (when (db-use-ssl)
+      (let ((postgres-certs-file
+              (probe-file "~/.postgresql/root.crt")))
+        (when postgres-certs-file
+          (cl+ssl:ssl-load-global-verify-locations postgres-certs-file))))
+
+    (log4cl-extras/config:setup
+     (list :level (if debug-mode
+                      :debug
+                      :error)
+           :appenders '((this-console :layout :plain))))
+    
     (apply #'woo:run
-      (lambda (env)
-        ;; preprocessing
-        (let ((res (postmodern:with-connection '("hello_world" "benchmarkdbuser" "benchmarkdbpass" "tfb-database" :pooled-p t)
-                     (funcall 'handler env))))
-          ;; postprocessing
-          res))
-      :debug nil
-      args)))
+           #'handler
+           :debug nil
+           args)))

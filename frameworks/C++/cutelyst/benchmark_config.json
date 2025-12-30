@@ -20,10 +20,11 @@
                 "versus": ""
             },
             "pf-apg": {
-                "db_url": "/dbp",
-                "query_url": "/queriesp?queries=",
+                "db_url": "/pg",
+                "query_url": "/querAPG?queries=",
                 "update_url": "/updatep?queries=",
-                "fortune_url": "/fortunes_raw_p",
+                "fortune_url": "/f_RW_APG",
+                "cached_query_url": "/cached_queries?count=",
                 "port": 8080,
                 "approach": "Realistic",
                 "classification": "Fullstack",
@@ -57,10 +58,10 @@
                 "versus": ""
             },
             "pf-pg": {
-                "db_url": "/db_postgres",
-                "query_url": "/query_postgres?queries=",
-                "update_url": "/updates_postgres?queries=",
-                "fortune_url": "/fortunes_raw_postgres",
+                "db_url": "/PG",
+                "query_url": "/queryPG?queries=",
+                "update_url": "/ups_QPG?queries=",
+                "fortune_url": "/f_RW_QPG",
                 "port": 8080,
                 "approach": "Realistic",
                 "classification": "Fullstack",
@@ -77,10 +78,10 @@
                 "versus": ""
             },
             "pf-my": {
-                "db_url": "/db_mysql",
-                "query_url": "/query_mysql?queries=",
-                "update_url": "/updates_mysql?queries=",
-                "fortune_url": "/fortunes_raw_mysql",
+                "db_url": "/MY",
+                "query_url": "/queryMY?queries=",
+                "update_url": "/ups_QMY?queries=",
+                "fortune_url": "/f_RW_QMY",
                 "port": 8080,
                 "approach": "Realistic",
                 "classification": "Fullstack",
@@ -132,10 +133,11 @@
                 "versus": ""
             },
             "thread-apg": {
-                "db_url": "/dbp",
-                "query_url": "/queriesp?queries=",
+                "db_url": "/pg",
+                "query_url": "/querAPG?queries=",
                 "update_url": "/updatep?queries=",
-                "fortune_url": "/fortunes_raw_p",
+                "fortune_url": "/f_RW_APG",
+                "cached_query_url": "/cached_queries?count=",
                 "port": 8080,
                 "approach": "Realistic",
                 "classification": "Fullstack",
@@ -169,10 +171,10 @@
                 "versus": ""
             },
             "thread-pg": {
-                "db_url": "/db_postgres",
-                "query_url": "/query_postgres?queries=",
-                "update_url": "/updates_postgres?queries=",
-                "fortune_url": "/fortunes_raw_postgres",
+                "db_url": "/PG",
+                "query_url": "/queryPG?queries=",
+                "update_url": "/ups_QPG?queries=",
+                "fortune_url": "/f_RW_QPG",
                 "port": 8080,
                 "approach": "Realistic",
                 "classification": "Fullstack",
@@ -189,7 +191,7 @@
                 "versus": ""
             },
             "thread-pg-cutelee": {
-                "fortune_url": "/fortunes_cutelee_postgres",
+                "fortune_url": "/f_CL_QPG",
                 "port": 8080,
                 "approach": "Realistic",
                 "classification": "Fullstack",
@@ -206,7 +208,7 @@
                 "versus": ""
             },
             "t-apg-cutelee": {
-                "fortune_url": "/fortunes_c_p",
+                "fortune_url": "/f_CL_APG",
                 "port": 8080,
                 "approach": "Realistic",
                 "classification": "Fullstack",
@@ -223,10 +225,10 @@
                 "versus": ""
             },
             "thread-my": {
-                "db_url": "/db_mysql",
-                "query_url": "/query_mysql?queries=",
-                "update_url": "/updates_mysql?queries=",
-                "fortune_url": "/fortunes_raw_mysql",
+                "db_url": "/MY",
+                "query_url": "/queryMY?queries=",
+                "update_url": "/ups_QMY?queries=",
+                "fortune_url": "/f_RW_QMY",
                 "port": 8080,
                 "approach": "Realistic",
                 "classification": "Fullstack",
@@ -243,7 +245,7 @@
                 "versus": ""
             },
             "thread-my-cutelee": {
-                "fortune_url": "/fortunes_cutelee_mysql",
+                "fortune_url": "/f_CL_QMY",
                 "port": 8080,
                 "approach": "Realistic",
                 "classification": "Fullstack",

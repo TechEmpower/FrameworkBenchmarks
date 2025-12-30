@@ -1,0 +1,15 @@
+[framework]
+name = "bun"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+approach = "Realistic"
+classification = "Platform"
+database_os = "Linux"
+database = "None"
+os = "Linux"
+orm = "Raw"
+platform = "bun"
+webserver = "None"
+versus = "nodejs"

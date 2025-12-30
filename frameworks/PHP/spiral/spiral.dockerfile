@@ -1,22 +1,28 @@
-FROM php:7.4
+FROM php:8.5-cli
 
-RUN docker-php-ext-install pdo_mysql > /dev/null
+RUN apt-get update -yqq > /dev/null && apt-get install -yqq git unzip > /dev/null
+COPY --from=composer/composer:latest-bin --link /composer /usr/local/bin/composer
 
-ADD ./ /spiral
+RUN docker-php-ext-install \
+    pdo_mysql \
+    sockets > /dev/null
+
+# RoadRunner >= 2024.x.x requires protobuf extensions to be installed
+ARG PROTOBUF_VERSION="4.30.1"
+RUN pecl channel-update pecl.php.net
+RUN MAKEFLAGS="-j $(nproc)" pecl install protobuf-${PROTOBUF_VERSION} > /dev/null
+
 WORKDIR /spiral
+COPY --link . .
 
 # composer and opcache settings
-COPY php/* /usr/local/etc/php/
-RUN chmod +x /usr/local/etc/php/install-composer.sh && /usr/local/etc/php/install-composer.sh
-
-# install dependencies
-RUN apt-get update -yqq > /dev/null && apt-get install -yqq git unzip > /dev/null
-RUN php composer.phar install --optimize-autoloader --classmap-authoritative --no-dev --quiet
+COPY --link php/php.ini /usr/local/etc/php/
+RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
 
 # pre-configure
-RUN ./vendor/bin/spiral get > /dev/null 2>&1
-RUN php app.php configure > /dev/null 2>&1
+RUN ./vendor/bin/rr get-binary > /dev/null 2>&1
+RUN php app.php configure
 
 EXPOSE 8080
 
-CMD php app.php up > /dev/null 2>&1 && ./spiral serve -o "http.workers.pool.numWorkers = 64"
+CMD php app.php up > /dev/null 2>&1 && ./rr serve -o "http.pool.num_workers = 64"

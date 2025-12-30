@@ -19,22 +19,22 @@ class FortuneTest : public Controller
 public:
     explicit FortuneTest(QObject *parent = 0);
 
-    C_ATTR(fortunes_raw_p, :Local :AutoArgs)
+    C_ATTR(fortunes_raw_p, :Path('f_RW_APG') :AutoArgs)
     void fortunes_raw_p(Context *c);
 
-    C_ATTR(fortunes_raw_postgres, :Local :AutoArgs)
+    C_ATTR(fortunes_raw_postgres, :Path('f_RW_QPG') :AutoArgs)
     void fortunes_raw_postgres(Context *c);
 
-    C_ATTR(fortunes_raw_mysql, :Local :AutoArgs)
+    C_ATTR(fortunes_raw_mysql, :Path('f_RW_QMY') :AutoArgs)
     void fortunes_raw_mysql(Context *c);
 
-    C_ATTR(fortunes_c_p, :Local :AutoArgs)
+    C_ATTR(fortunes_c_p, :Path('f_CL_APG') :AutoArgs)
     void fortunes_c_p(Context *c);
 
-    C_ATTR(fortunes_cutelee_postgres, :Local :AutoArgs)
+    C_ATTR(fortunes_cutelee_postgres, :Path('f_CL_QPG') :AutoArgs)
     void fortunes_cutelee_postgres(Context *c);
 
-    C_ATTR(fortunes_cutelee_mysql, :Local :AutoArgs)
+    C_ATTR(fortunes_cutelee_mysql, :Path('f_CL_QMY') :AutoArgs)
     void fortunes_cutelee_mysql(Context *c);
 
 private:

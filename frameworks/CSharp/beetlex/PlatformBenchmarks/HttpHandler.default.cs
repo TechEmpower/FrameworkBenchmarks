@@ -1,6 +1,7 @@
-﻿using BeetleX;
-using BeetleX.Buffers;
+﻿
+using BeetleX.Light.Memory;
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,16 +16,19 @@ namespace PlatformBenchmarks
                + _headerContentTypeJson.ToString()
                + _headerServer.ToString();
 
-        public Task Default(PipeStream stream, HttpToken token, ISession session)
-        {
+        public ValueTask Default(IStreamWriter stream)
+        { 
+            
             stream.Write(_defaultPreamble.Data, 0, _defaultPreamble.Length);
-            token.ContentLength = stream.Allocate(HttpHandler._LengthSize);
+            ContentLengthMemory contentLength = new ContentLengthMemory();
+            contentLength.Data = GetContentLengthMemory(stream);
             GMTDate.Default.Write(stream);
-            token.ContentPostion = stream.CacheLength;
-            stream.Write("<b> beetlex server</b><hr/>");
-            stream.Write("path not found!");
-            OnCompleted(stream, session, token);
-            return Task.CompletedTask;
+            stream.WriteSequenceNetStream.StartWriteLength();
+            stream.WriteString("<b> beetlex server</b><hr/>");
+            stream.WriteString("path not found!");
+            var length = stream.WriteSequenceNetStream.EndWriteLength();
+            contentLength.Full(length);
+            return ValueTask.CompletedTask;
         }
     }
 }

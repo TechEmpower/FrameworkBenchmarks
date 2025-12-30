@@ -3,22 +3,22 @@
 This application tests Giraffe in 3 modes:
 
 - Default: Using Giraffe's Endpoint Routing APIs with the `System.Text.Json` serializer
-- Utf8Json: Testing the JSON endpoint with the `Utf8Json` serializer
 - Newtonsoft: Testing the JSON endpoint with the `NewtonsoftJson` serializer
+- FSharpFriendly: Testing the JSON endpoint with the `FSharp.SystemTextJson` serializer
 
 ## Infrastructure Software Versions
 
 **Language**
 
-* F# 6.0
+* F# 9.0
 
 **Platforms**
 
-* .NET 6 (Windows and Linux)
+* .NET 9 (Windows and Linux)
 
 **Web Servers**
 
-* [Kestrel](https://github.com/aspnet/KestrelHttpServer)
+* [Kestrel](https://github.com/dotnet/aspnetcore/tree/main/src/Servers/Kestrel)
 
 **Web Stack**
 
@@ -27,10 +27,8 @@ This application tests Giraffe in 3 modes:
 
 ## Paths & Source for Tests
 
-All source code is inside `Program.fs`.
-
 App listens for a single command line argument to pick the desired JSON implementation:
 
-    - `system`: `System.Text.Json`
-    - `utf8`: `Utf8Json`
-    - `newtonsoft`: `Newtonsoft.Json`
+- `system`: `System.Text.Json`
+- `newtonsoft`: `Newtonsoft.Json`
+- `fsharpfriendly`: `FSharp.SystemTextJson`

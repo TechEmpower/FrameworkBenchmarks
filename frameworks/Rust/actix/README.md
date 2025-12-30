@@ -4,7 +4,7 @@
 
 Actix web is a small, fast, pragmatic, open source rust web framework.
 
-* [User Guide](https://actix.rs/book/actix-web/)
+* [User Guide](https://actix.rs/docs/getting-started)
 * [API Documentation](https://docs.rs/actix-web/)
 * [Chat on gitter](https://gitter.im/actix/actix)
 * Cargo package: [actix-web](https://crates.io/crates/actix-web)
@@ -21,11 +21,15 @@ Actix web is a small, fast, pragmatic, open source rust web framework.
 * Multipart streams
 * Middlewares (Logger, Session, DefaultHeaders, CORS)
 
-## Database
+## Databases
 
-PostgreSQL.
+* PostgreSQL
+  * Raw driver access via [`tokio_postgres`](https://docs.rs/tokio-postgres/latest/tokio_postgres/) (actix-http test)
+  * ORM using [`diesel`](http://diesel.rs) (actix-web-diesel test)
+  * Raw driver access via [`tokio_postgres`](https://docs.rs/tokio-postgres/latest/tokio_postgres/) with connection pooling using [`deadpool_postgres`](https://docs.rs/deadpool-postgres/latest/deadpool_postgres/) (actix-web-pg-deadpool test)
 
-* ORM using [diesel](http://diesel.rs)
+* MongoDB
+  * Raw driver access and connection pooling via [`mongodb`](https://docs.rs/mongodb/latest/mongodb/) (actix-web-mongodb test)
 
 ## Test URLs
 

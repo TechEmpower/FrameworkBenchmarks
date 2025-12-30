@@ -1,9 +1,9 @@
-FROM ubuntu:18.04
+FROM ubuntu:24.04
 
 ADD ./ /urweb
 WORKDIR /urweb
 
-RUN apt-get update -yqq && apt-get install -yqq urweb
+RUN apt-get update -yqq && apt-get install -yqq sudo git gcc make autoconf automake libtool mlton libmysqlclient-dev libssl-dev uthash-dev libicu-dev && git clone https://github.com/urweb/urweb.git && cd urweb && ./autogen.sh && ./configure && make -j && sudo make install
 
 RUN urweb -sqlcache -dbms mysql -db "dbname=hello_world user=benchmarkdbuser password=benchmarkdbpass host=tfb-database" bench
 

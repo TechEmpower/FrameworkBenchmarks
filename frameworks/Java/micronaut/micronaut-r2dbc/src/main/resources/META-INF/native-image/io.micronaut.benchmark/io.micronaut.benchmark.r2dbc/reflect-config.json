@@ -1,0 +1,26 @@
+[
+  {
+    "name": "java.time.Instant[]",
+    "allPublicMethods": true,
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "java.time.ZonedDateTime[]",
+    "allPublicMethods": true,
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "java.net.URL[]",
+    "allPublicMethods": true,
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "java.util.Date[]",
+    "allPublicMethods": true,
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "java.net.URI[]",
+    "unsafeAllocated": true
+  }
+]

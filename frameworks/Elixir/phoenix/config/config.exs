@@ -3,7 +3,7 @@
 #
 # This configuration file is loaded before any dependency and
 # is restricted to this project.
-use Mix.Config
+import Config
 
 config :phoenix, :json_library, Jason
 
@@ -17,6 +17,14 @@ config :hello, HelloWeb.Endpoint,
   root: Path.expand(__DIR__),
   debug_errors: false,
   secret_key_base: "Z18ZjzZslFpKd8HB41IljqMavPiOKVF9y1DIQ+S2Ytg7Op0EIauwJgd7mtRStssx"
+
+# Configure cache for world entities
+config :hello, Hello.WorldCache,
+  gc_interval: :timer.hours(1),
+  max_size: 1_000_000,
+  allocated_memory: 100_000_000,
+  gc_cleanup_min_timeout: :timer.seconds(30),
+  gc_cleanup_max_timeout: :timer.minutes(30)
 
 # Configures Elixir's Logger
 config :logger, :console,

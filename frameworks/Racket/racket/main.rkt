@@ -62,7 +62,7 @@
     (apply choice-evt (map place-dead-evt places)))
 
   (define backlog
-    (* parallelism 4 1024))
+    (* parallelism 65 1024))
   (define listener
     (tcp-listen port backlog #t host))
   (define stop-ch (make-channel))
@@ -71,6 +71,7 @@
      (lambda ()
        (define places* (list->vector places))
        (define num-places (vector-length places*))
+       (define stop-evt (choice-evt stop-ch place-fail-evt))
        (let loop ([idx 0])
          (sync
           (handle-evt
@@ -79,9 +80,11 @@
              (define-values (in out)
                (tcp-accept listener))
              (place-channel-put (vector-ref places* idx) `(accept ,in, out))
+             (tcp-abandon-port out)
+             (tcp-abandon-port in)
              (loop (modulo (add1 idx) num-places))))
           (handle-evt
-           (choice-evt stop-ch place-fail-evt)
+           stop-evt
            (lambda (_)
              (stop-places)
              (tcp-close listener))))))))

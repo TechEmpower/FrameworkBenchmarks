@@ -7,7 +7,6 @@ import (
 
 	dbm "benchmark/app/db"
 
-	"github.com/revel/modules/db/app"
 	"github.com/revel/revel"
 )
 
@@ -84,13 +83,13 @@ func (c App) Plaintext() revel.Result {
 }
 
 func (c App) Db(queries int) revel.Result {
-        _, foundQuery := c.Params.Values["queries"]
-        if queries>500 {
-             queries = 500
-        }
-        if queries == 0 {
-          queries = 1
-        }
+	_, foundQuery := c.Params.Values["queries"]
+	if queries > 500 {
+		queries = 500
+	}
+	if queries == 0 {
+		queries = 1
+	}
 	ww := make([]World, queries)
 	for i := 0; i < queries; i++ {
 		err := worldStatement.QueryRow(rand.Intn(WorldRowCount)+1).
@@ -99,19 +98,19 @@ func (c App) Db(queries int) revel.Result {
 			c.Log.Fatalf("Error scanning world row: %v", err)
 		}
 	}
-        if !foundQuery {
-            return c.RenderJSON(ww[0])
-        }
+	if !foundQuery {
+		return c.RenderJSON(ww[0])
+	}
 	return c.RenderJSON(ww)
 }
 
 func (c App) Update(queries int) revel.Result {
-        _, foundQuery := c.Params.Values["queries"]
-        if queries>500 {
-             queries = 500
-        } else if queries == 0 {
-             queries = 1
-        }
+	_, foundQuery := c.Params.Values["queries"]
+	if queries > 500 {
+		queries = 500
+	} else if queries == 0 {
+		queries = 1
+	}
 	ww := make([]World, queries)
 	for i := 0; i < queries; i++ {
 		err := worldStatement.QueryRow(rand.Intn(WorldRowCount)+1).
@@ -122,14 +121,14 @@ func (c App) Update(queries int) revel.Result {
 		ww[i].RandomNumber = uint16(rand.Intn(WorldRowCount) + 1)
 		updateStatement.Exec(ww[i].RandomNumber, ww[i].Id)
 	}
-        if !foundQuery {
-            return c.RenderJSON(ww[0])
-        }
-        return c.RenderJSON(ww)
+	if !foundQuery {
+		return c.RenderJSON(ww[0])
+	}
+	return c.RenderJSON(ww)
 }
 
 func (c App) Fortune() revel.Result {
-	fortunes := make([]*Fortune, 0, 16)
+	fortunes := make([]*Fortune, 0)
 
 	rows, err := fortuneStatement.Query()
 	if err != nil {

@@ -53,3 +53,7 @@ PostgreSQL.
 ### Test 6: Plaintext
 
     http://localhost:8080/plaintext
+
+### Test 7: Caching
+
+    http://localhost:8080/cached/20

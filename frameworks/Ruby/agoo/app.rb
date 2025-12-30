@@ -6,36 +6,48 @@ require 'oj'
 require 'pg'
 require 'rack'
 
-$pool = ConnectionPool.new(size: 256, timeout: 5) do
-          PG::Connection.new({
-                                 dbname:   'hello_world',
-                                 host:     'tfb-database',
-                                 user:     'benchmarkdbuser',
-                                 password: 'benchmarkdbpass'
-                             })
-        end
+$pool = ConnectionPool.new(size: 1, timeout: 5) do
+  conn = PG::Connection.new({
+    dbname:   'hello_world',
+    host:     'tfb-database',
+    user:     'benchmarkdbuser',
+    password: 'benchmarkdbpass'
+  })
+  conn.set_error_verbosity(PG::PQERRORS_VERBOSE)
+  conn.prepare('select_world', 'SELECT * FROM world WHERE id = $1')
+  conn.prepare('select_fortune', 'SELECT id, message FROM fortune')
+  conn
+end
+
+QUERY_RANGE = (1..10_000).freeze
+ALL_IDS = QUERY_RANGE.to_a
+QUERIES_MIN = 1
+QUERIES_MAX = 500
+
+CONTENT_TYPE = 'Content-Type'
+DATE = 'Date'
+SERVER = 'Server'
+SERVER_STRING = 'Agoo'
+
+JSON_TYPE = 'application/json'
+HTML_TYPE = 'text/html; charset=utf-8'
+PLAINTEXT_TYPE = 'text/plain'
+
 
 class BaseHandler
   def self.extract_queries_param(request = nil)
     queries = Rack::Utils.parse_query(request['QUERY_STRING'])['queries'].to_i rescue 1
 
-    return   1 if queries <   1
-    return 500 if queries > 500
-
-    queries
+    queries.clamp(QUERIES_MIN, QUERIES_MAX)
   end
 
   def self.get_one_random_number
-    1 + Random.rand(10000)
+    Random.rand(QUERY_RANGE)
   end
 
   def self.get_one_record(id = get_one_random_number)
     $pool.with do |conn|
-      conn.exec_params(<<-SQL, [id]).first
-
-        SELECT * FROM world WHERE id = $1
-
-      SQL
+      conn.exec_prepared('select_world', [id]).first
     end
   end
 
@@ -43,9 +55,9 @@ class BaseHandler
     [
         200,
         {
-            'Content-Type' => 'text/html; charset=utf-8',
-            'Date'         => Time.now.utc.httpdate,
-            'Server'       => 'Agoo'
+            CONTENT_TYPE => HTML_TYPE,
+            DATE         => Time.now.httpdate,
+            SERVER       => SERVER_STRING
         },
         [str]
     ]
@@ -55,9 +67,9 @@ class BaseHandler
     [
         200,
         {
-            'Content-Type' => 'application/json',
-            'Date'         => Time.now.utc.httpdate,
-            'Server'       => 'Agoo'
+            CONTENT_TYPE => JSON_TYPE,
+            DATE         => Time.now.httpdate,
+            SERVER       => SERVER_STRING
         },
         [Oj.dump(obj, { :mode => :strict })]
     ]
@@ -67,9 +79,9 @@ class BaseHandler
     [
         200,
         {
-            'Content-Type' => 'text/plain',
-            'Date'         => Time.now.utc.httpdate,
-            'Server'       => 'Agoo'
+            CONTENT_TYPE => PLAINTEXT_TYPE,
+            DATE         => Time.now.httpdate,
+            SERVER       => SERVER_STRING
         },
         [str]
     ]
@@ -102,27 +114,24 @@ class DbHandler < BaseHandler
   end
 end
 
+
 class FortunesHandler < BaseHandler
   def self.call(_req)
     f_1 = $pool.with do |conn|
-            conn.exec(<<-SQL)
-
-              SELECT id, message FROM fortune
-
-            SQL
-          end
+      conn.exec_prepared('select_fortune', [])
+    end
 
     f_2 = f_1.map(&:to_h).
             append({ 'id' => '0', 'message' => 'Additional fortune added at request time.' }).
-              sort { |x,y| x['message'] <=> y['message'] }.
-                map { |f| "<tr><td>#{ f['id'] }</td><td>#{ Rack::Utils.escape_html(f['message']) }</td></tr>" }.
+              sort_by { |item| item['message'] }.
+                map { |f| "<tr><td>#{ f['id'] }</td><td>#{ ERB::Escape.html_escape(f['message']) }</td></tr>" }.
                   join
 
     html_response(<<-HTML)
       <!DOCTYPE html>
       <html>
         <head>
-          <title>Fortune</title>
+          <title>Fortunes</title>
         </head>
         <body>
           <table>
@@ -132,7 +141,7 @@ class FortunesHandler < BaseHandler
             </tr>
             #{ f_2 }
           </table>
-        </body
+        </body>
       </html>
     HTML
   end
@@ -140,12 +149,10 @@ end
 
 class QueriesHandler < BaseHandler
   def self.call(req)
-    records =
-        [].tap do|r|
-          (extract_queries_param req).times do
-            r << get_one_record()
-          end
-        end
+    queries = extract_queries_param req
+    records = ALL_IDS.sample(queries).map do |id|
+      get_one_record(id)
+    end
 
     json_response(records)
   end
@@ -153,20 +160,18 @@ end
 
 class UpdatesHandler < BaseHandler
   def self.call(req)
-    records =
-        [].tap do|r|
-          (extract_queries_param req).times do
-            r << get_one_record()
-          end
-        end
-
-    updated_records =
-        records.map { |r| r['randomnumber'] = get_one_random_number; r }
+    queries = extract_queries_param req
+    records = ALL_IDS.sample(queries).sort.map do |id|
+      world = get_one_record(id)
+      world['randomnumber'] = get_one_random_number
+      world
+    end
 
     sql_values =
-        updated_records.
-          map { |r| "(#{ r['id'] }, #{ r['randomnumber'] })"}.
-            join(', ')
+        records.
+          map { |r|
+            "(#{ r['id'] }, #{ r['randomnumber'] })"
+          }.join(', ')
 
     $pool.with do |conn|
       conn.exec(<<-SQL)
@@ -179,26 +184,25 @@ class UpdatesHandler < BaseHandler
       SQL
     end
 
-    json_response(updated_records)
+    json_response(records)
   end
 end
 
 Agoo::Log.configure({
-                        classic:  true,
-                        colorize: true,
-                        console:  true,
-                        dir:      '',
-                        states:   {
-                            DEBUG:    false,
-                            INFO:     false,
-
-                            connect:  false,
-                            eval:     false,
-                            push:     false,
-                            request:  false,
-                            response: false
-                        }
-                    })
+  classic:  true,
+  colorize: true,
+  console:  true,
+  dir:      '',
+  states:   {
+    DEBUG:    false,
+    INFO:     false,
+    connect:  false,
+    eval:     false,
+    push:     false,
+    request:  false,
+    response: false
+  }
+})
 
 worker_count = 4
 worker_count = ENV['AGOO_WORKER_COUNT'].to_i if ENV.key?('AGOO_WORKER_COUNT')

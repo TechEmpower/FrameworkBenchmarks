@@ -1,0 +1,3 @@
+[build]
+rustflags = ["-C", "target-cpu=native", "--cfg", "tokio_unstable"]
+incremental = false

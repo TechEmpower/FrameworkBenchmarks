@@ -1,11 +1,10 @@
-FROM node:16.13.2
+FROM node:20.16-slim
 
 COPY ./ ./
 
 RUN npm install
 
 ENV NODE_ENV production
-ENV DATABASE mongo
 
 EXPOSE 8080
 

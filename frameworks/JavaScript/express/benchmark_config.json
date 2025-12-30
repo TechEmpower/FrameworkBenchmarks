@@ -17,22 +17,6 @@
       "display_name": "express",
       "versus": "nodejs"
     },
-    "chakra": {
-      "json_url": "/json",
-      "plaintext_url": "/plaintext",
-      "port": 8080,
-      "approach": "Realistic",
-      "classification": "Micro",
-      "framework": "express",
-      "language": "JavaScript",
-      "flavor": "node-chakracore",
-      "platform": "nodejs",
-      "webserver": "None",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "express",
-      "versus": "nodejs"
-    },
     "mongodb": {
       "db_url": "/mongoose",
       "query_url": "/mongooseq?queries=",
@@ -71,7 +55,7 @@
       "orm": "Full",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "express",
+      "display_name": "express[mysql-sequelize]",
       "notes": "",
       "versus": "nodejs"
     },
@@ -92,7 +76,30 @@
       "orm": "Full",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "express",
+      "display_name": "express[postgres-sequelize]",
+      "notes": "",
+      "versus": "nodejs"
+    },
+    "postgresjs": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "update_url": "/updates?queries=",
+      "fortune_url": "/fortunes",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "Postgres",
+      "framework": "express",
+      "language": "JavaScript",
+      "flavor": "NodeJS",
+      "platform": "nodejs",
+      "webserver": "None",
+      "orm": "Full",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "express[postgres.js]",
       "notes": "",
       "versus": "nodejs"
     }

@@ -18,7 +18,8 @@
       "database_os": "Linux",
       "display_name": "evhttp-sharp",
       "notes": "",
-      "versus": "evhttp-sharp"
+      "versus": "evhttp-sharp",
+      "tags": ["broken"]
     }
   }]
 }

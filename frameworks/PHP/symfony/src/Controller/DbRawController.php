@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\FetchMode;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -18,20 +17,17 @@ class DbRawController
         $this->connection = $connection;
     }
 
-    /**
-     * @Route("/raw/db")
-     */
+    #[Route('/raw/db')]
+
     public function db(): JsonResponse
     {
-        $statement = $this->connection->prepare('SELECT id,randomNumber FROM World WHERE id = ?');
-        $world = $statement->execute([mt_rand(1, 10000)]);
+        $world = $this->connection->executeQuery('SELECT id,randomNumber FROM World WHERE id = ?', [mt_rand(1, 10000)]);
 
         return new JsonResponse($world->fetchAssociative());
     }
 
-    /**
-     * @Route("/raw/queries")
-     */
+    #[Route('/raw/queries')]
+
     public function queries(Request $request): JsonResponse
     {
         $queries = (int) $request->query->get('queries', 1);
@@ -42,16 +38,16 @@ class DbRawController
 
         $statement = $this->connection->prepare('SELECT id,randomNumber FROM World WHERE id = ?');
         for ($i = 0; $i < $queries; ++$i) {
-            $world = $statement->execute([mt_rand(1, 10000)]);
+            $statement->bindValue(1, mt_rand(1, 10000));
+            $world = $statement->executeQuery();
             $worlds[] = $world->fetchAssociative();
         }
 
         return new JsonResponse($worlds);
     }
 
-    /**
-     * @Route("/raw/updates")
-     */
+    #[Route('/raw/updates')]
+
     public function updates(Request $request): JsonResponse
     {
         $queries = (int) $request->query->get('queries', 1);
@@ -64,11 +60,12 @@ class DbRawController
 
         for ($i = 0; $i < $queries; ++$i) {
             $id = mt_rand(1, 10000);
-            $world = $readStatement->execute([$id]);
-            $world =  $world->fetchAssociative();
-            $writeStatement->execute(
-                [$world['randomNumber'] = mt_rand(1, 10000), $id]
-            );
+            $readStatement->bindValue(1, $id);
+            $world = $readStatement->executeQuery();
+            $world = $world->fetchAssociative();
+            $writeStatement->bindValue(1, mt_rand(1, 10000));
+            $writeStatement->bindValue(2, $id);
+            $writeStatement->executeStatement();
             $worlds[] = $world;
         }
 

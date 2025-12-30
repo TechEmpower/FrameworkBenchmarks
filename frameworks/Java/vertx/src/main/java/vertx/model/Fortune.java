@@ -7,10 +7,13 @@ import java.util.Collections;
 /**
  * The model for the "fortune" database table.
  */
-public final class Fortune extends JsonObject implements Comparable<Fortune> {
+public final class Fortune implements Comparable<Fortune> {
 
   private static final String ID = "id";
   private static final String MESSAGE = "message";
+
+  private final int id;
+  private final String message;
 
   /**
    * Constructs a new fortune object with the given parameters.
@@ -19,20 +22,16 @@ public final class Fortune extends JsonObject implements Comparable<Fortune> {
    * @param message the message of the fortune
    */
   public Fortune(int id, String message) {
-    put(ID, id);
-    put(MESSAGE, message);
-  }
-
-  public Fortune(JsonObject doc) {
-    super(doc == null ? Collections.emptyMap() : doc.getMap());
+    this.id = id;
+    this.message = message;
   }
 
   public int getId() {
-    return getInteger(ID);
+    return id;
   }
 
   public String getMessage() {
-    return getString(MESSAGE);
+    return message;
   }
 
   @Override

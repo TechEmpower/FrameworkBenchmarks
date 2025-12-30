@@ -1,15 +1,11 @@
-FROM maven:3.6.1-jdk-11-slim as maven
+FROM maven:3.9.11-eclipse-temurin-25-noble as maven
 WORKDIR /jooby
 COPY pom.xml pom.xml
 COPY src src
 COPY public public
-RUN mvn package -q -P netty
-
-FROM openjdk:11.0.3-jdk-slim
-WORKDIR /jooby
-COPY --from=maven /jooby/target/jooby.jar app.jar
 COPY conf conf
+RUN mvn package -q -P vertx
 
 EXPOSE 8080
 
-CMD ["java", "-server", "-Xms4g", "-Xmx4g", "-XX:+AggressiveOpts", "-XX:-UseBiasedLocking", "-XX:+UseStringDeduplication", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-cp", "app.jar", "com.techempower.ReactivePg"]
+CMD ["java", "-server", "-Xms2g", "-Xmx2g", "-XX:+UseNUMA", "-XX:+UseParallelGC", "--enable-native-access=ALL-UNNAMED", "--add-opens=java.base/java.lang=ALL-UNNAMED", "--sun-misc-unsafe-memory-access=allow", "-Dio.netty.disableHttpHeadersValidation=true", "-Dio.netty.buffer.checkBounds=false", "-Dio.netty.buffer.checkAccessible=false", "-Dio.netty.noUnsafe=false", "-Dio.netty.eventLoopGroup=single", "-Djava.lang.Integer.IntegerCache.high=10000", "-Dvertx.disableMetrics=true", "-Dvertx.disableContextTimings=true", "-cp", "target/jooby.jar", "com.techempower.ReactivePg", "vertx"]

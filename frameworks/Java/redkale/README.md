@@ -1,39 +1,40 @@
 # Redkale Benchmarking Test
 
-This is the Redkale portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
+This is the [Redkale](https://github.com/redkale/redkale) portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
 
 ### Plaintext Test
 
-* [Plaintext test source](src/main/java/org/redkalex/benchmark/Service.java)
+* [Plaintext test source](src/main/java/org/redkalex/benchmark/BenchmarkService.java)
 
 ### JSON Serialization Test
 
-* [JSON test source](src/main/java/org/redkalex/benchmark/Service.java)
+* [JSON test source](src/main/java/org/redkalex/benchmark/BenchmarkService.java)
 
 ### Database Query Test
 
-* [Database Query test source](src/main/java/org/redkalex/benchmark/Service.java)
+* [Database Query test source](src/main/java/org/redkalex/benchmark/BenchmarkService.java)
 
 ### Database Queries Test
 
-* [Database Queries test source](src/main/java/org/redkalex/benchmark/Service.java)
+* [Database Queries test source](src/main/java/org/redkalex/benchmark/BenchmarkService.java)
 
 ### Database Caching Test
 
-* [Database Caching test source](src/main/java/org/redkalex/benchmark/Service.java)
+* [Database Caching test source](src/main/java/org/redkalex/benchmark/BenchmarkService.java)
 
 ### Database Update Test
 
-* [Database Update test source](src/main/java/org/redkalex/benchmark/Service.java)
+* [Database Update test source](src/main/java/org/redkalex/benchmark/BenchmarkService.java)
 
 ### Template rendering Test
 
-* [Template rendering test source](src/main/java/org/redkalex/benchmark/Service.java)
+* [Template rendering test source](src/main/java/org/redkalex/benchmark/BenchmarkService.java)
 
 ## Versions
 
-* [Java OpenJDK 11](http://openjdk.java.net/)
-* [Redkale 2.3.0](http://redkale.org/)
+* [Java OpenJDK 21](http://openjdk.java.net/) 
+* [GraalVM SDK 22](https://www.graalvm.org/) 
+* [Redkale 2.8.0](https://github.com/redkale/redkale)
 
 ## Test URLs
 

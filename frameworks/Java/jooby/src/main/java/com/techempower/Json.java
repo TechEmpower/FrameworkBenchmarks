@@ -1,10 +1,13 @@
 package com.techempower;
 
 import java.nio.ByteBuffer;
+import java.util.List;
 
 import com.dslplatform.json.DslJson;
 import com.dslplatform.json.JsonWriter;
 import com.dslplatform.json.runtime.Settings;
+import io.jooby.output.Output;
+import io.jooby.output.OutputFactory;
 
 public class Json {
   private final static DslJson<Object> dslJson = new DslJson<>(Settings.basicSetup());
@@ -14,31 +17,41 @@ public class Json {
       return dslJson.newWriter(1024);
     }
   };
+  private static OutputFactory outputFactory;
 
-  public static final ByteBuffer encode(Message data) {
-    JsonWriter writer = pool.get();
-    writer.reset();
-    _Message_DslJsonConverter.ObjectFormatConverter converter = new _Message_DslJsonConverter.ObjectFormatConverter(
-        dslJson);
-    converter.write(writer, data);
-    return ByteBuffer.wrap(writer.getByteBuffer(), 0, writer.size());
+  public static void configure(OutputFactory outputFactory) {
+    Json.outputFactory =outputFactory.getContextFactory();
   }
 
-  public static final ByteBuffer encode(World data) {
+  public static Output encode(Message data) {
     JsonWriter writer = pool.get();
     writer.reset();
-    _World_DslJsonConverter.ObjectFormatConverter converter = new _World_DslJsonConverter.ObjectFormatConverter(
-        dslJson);
+    var converter = new _Message_DslJsonConverter.ObjectFormatConverter(dslJson);
     converter.write(writer, data);
-    return ByteBuffer.wrap(writer.getByteBuffer(), 0, writer.size());
+    return outputFactory.wrap(writer.getByteBuffer(), 0, writer.size());
   }
 
-  public static final ByteBuffer encode(World[] data) {
+  public static Output encode(World data) {
     JsonWriter writer = pool.get();
     writer.reset();
-    _World_DslJsonConverter.ObjectFormatConverter converter = new _World_DslJsonConverter.ObjectFormatConverter(
-        dslJson);
+    var converter = new _World_DslJsonConverter.ObjectFormatConverter(dslJson);
+    converter.write(writer, data);
+    return outputFactory.wrap(writer.getByteBuffer(), 0, writer.size());
+  }
+
+  public static Output encode(World[] data) {
+    JsonWriter writer = pool.get();
+    writer.reset();
+    var converter = new _World_DslJsonConverter.ObjectFormatConverter(dslJson);
     writer.serialize(data, converter);
-    return ByteBuffer.wrap(writer.getByteBuffer(), 0, writer.size());
+    return outputFactory.wrap(writer.getByteBuffer(), 0, writer.size());
+  }
+
+  public static Output encode(List<World> data) {
+    JsonWriter writer = pool.get();
+    writer.reset();
+    var converter = new _World_DslJsonConverter.ObjectFormatConverter(dslJson);
+    writer.serialize(data, converter);
+    return outputFactory.wrap(writer.getByteBuffer(), 0, writer.size());
   }
 }

@@ -8,9 +8,11 @@ targets:
   bench:
     main: src/bench.cr
 
-crystal: ">= 1.0.0"
+crystal: ">= 1.12.1"
 
 dependencies:
+  avram:
+    github: luckyframework/avram
   lucky:
     github: luckyframework/lucky
-    version: ~> 0.28.0
+    version: ~> 1.2.0

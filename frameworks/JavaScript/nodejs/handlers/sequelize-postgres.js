@@ -6,7 +6,9 @@ const sequelize = new Sequelize('hello_world', 'benchmarkdbuser', 'benchmarkdbpa
   dialect: 'postgres',
   logging: false,
   pool: {
-    min: 20, max: 20
+    max: 50,
+    min: 0,
+    idle: 10000
   }
 });
 

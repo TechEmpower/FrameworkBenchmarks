@@ -1,20 +1,20 @@
-from sqlalchemy import Column, Integer, String
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
-Base = declarative_base()
+class Base(DeclarativeBase):
+    """Base for models."""
 
 
 class World(Base):
     __tablename__ = 'world'
-    id = Column(Integer, primary_key=True)
-    randomnumber = Column(Integer)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    randomnumber: Mapped[int]
 
 sa_worlds = World.__table__
 
 
 class Fortune(Base):
     __tablename__ = 'fortune'
-    id = Column(Integer, primary_key=True)
-    message = Column(String)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    message: Mapped[str]
 
 sa_fortunes = Fortune.__table__

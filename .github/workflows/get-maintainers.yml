@@ -1,0 +1,37 @@
+name: get-maintainers
+on: 
+  pull_request:
+    types: [opened, reopened]
+permissions:
+  pull-requests: write
+jobs:
+  get_maintainers:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 10
+      - name: Get commit branch and commit message from PR
+        run: |
+          echo "BRANCH_NAME=$GITHUB_HEAD_REF" >> $GITHUB_ENV
+          echo "TARGET_BRANCH_NAME=$(echo ${GITHUB_BASE_REF##*/})" >> $GITHUB_ENV
+          echo "COMMIT_MESSAGE<<EOF" >> $GITHUB_ENV
+          echo "$(git log --format=%B -n 1 HEAD^2)" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+          echo "PREVIOUS_COMMIT=$(git log --format=%H -n 1 HEAD^2~1)" >> $GITHUB_ENV
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          architecture: 'x64'
+      - name: Save PR number
+        run: |
+          mkdir -p ./maintainers
+          echo ${{ github.event.number }} > ./maintainers/NR
+      - name: Get Maintainers
+        run: |
+          python ./toolset/github_actions/get_maintainers.py > ./maintainers/maintainers.md
+      - name: Save Maintainers
+        uses: actions/upload-artifact@v4
+        with:
+          name: maintainers
+          path: maintainers/

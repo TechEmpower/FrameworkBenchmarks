@@ -28,7 +28,7 @@ func easyjson2f1218d5DecodeGoStdSrcTemplates(in *jlexer.Lexer, out *Fortune) {
 	}
 	in.Delim('{')
 	for !in.IsDelim('}') {
-		key := in.UnsafeString()
+		key := in.UnsafeFieldName(true)
 		in.WantColon()
 		if in.IsNull() {
 			in.Skip()
@@ -56,12 +56,8 @@ func easyjson2f1218d5EncodeGoStdSrcTemplates(out *jwriter.Writer, in Fortune) {
 	_ = first
 	if in.ID != 0 {
 		const prefix string = ",\"id\":"
-		if first {
-			first = false
-			out.RawString(prefix[1:])
-		} else {
-			out.RawString(prefix)
-		}
+		first = false
+		out.RawString(prefix[1:])
 		out.Int(int(in.ID))
 	}
 	if in.Message != "" {

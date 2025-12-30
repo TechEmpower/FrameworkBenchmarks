@@ -1,6 +1,6 @@
 #!/bin/bash
 
-let max_threads=$(cat /proc/cpuinfo | grep processor | wc -l)
+let max_threads=$(nproc)
 echo ""
 echo "---------------------------------------------------------"
 echo " Running Primer $name"

@@ -1,4 +1,4 @@
-FROM perl:5.26
+FROM perl:5.40
 
 RUN apt-get update -yqq && apt-get install -yqq nginx
 
@@ -10,7 +10,7 @@ RUN cpanm --notest --no-man-page \
       Dancer@1.3134 \
       Dancer::Plugin::Database@2.10 \
       DBI@1.633 \
-      DBD::mysql@4.033 \
+      DBD::MariaDB@1.23 \
       JSON::XS@3.01 \
       Plack@1.0034 \
       Starman@0.4011
@@ -18,4 +18,5 @@ RUN cpanm --notest --no-man-page \
 EXPOSE 8080
 
 CMD nginx -c /dancer/nginx.conf && \
-    plackup -E production -s Starman --workers=$(nproc) -l /tmp/perl-dancer.sock -a ./app.pl
+    plackup -E production -s Starman --workers=$(nproc) --max-requests=100000 -l /tmp/perl-dancer.sock -a ./app.pl
+

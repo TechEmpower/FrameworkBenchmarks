@@ -37,4 +37,4 @@ http://localhost:8080/updates?queries=2
 
 ### Fortune
 
-http://localhost:8080/fortune
+http://localhost:8080/fortunes

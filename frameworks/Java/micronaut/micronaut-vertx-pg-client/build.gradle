@@ -1,0 +1,14 @@
+plugins {
+    id 'io.micronaut.benchmark.module'
+}
+
+micronaut {
+    testResources {
+        additionalModules.add(JDBC_POSTGRESQL)
+    }
+}
+
+dependencies {
+    implementation("io.vertx:vertx-pg-client:5.0.2")
+    implementation('com.ongres.scram:client')
+}

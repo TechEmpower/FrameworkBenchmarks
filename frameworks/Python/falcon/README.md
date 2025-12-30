@@ -30,14 +30,18 @@ Native asyncio support.
 
 ### Server
 
-* Waitress on CPython3
+* Socketify.py on CPython3
+* Socketify.py on Pypy3
+* Gunicorn + Uvicorn workers with Orjson on CPython3 
 * Bjoern on Cpython3
 * Gunicorn + Meinheld on CPython3
 * Gunicorn + Meinheld with Orjson on CPython3
 * Gunicorn Sync on PyPy3
+* Waitress on CPython3
 
 ### Database
 
+* Tortoise ORM [PostgresSQL] - (asynpg on CPython3)
 * Pony ORM [PostgreSQL] - (psycopg2-binary on CPython3, psycopg2cffi on PyPy3)
 
 ## Test Paths & Sources

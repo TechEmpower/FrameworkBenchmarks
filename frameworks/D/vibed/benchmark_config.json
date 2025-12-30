@@ -22,7 +22,8 @@
       "database_os": "Linux",
       "display_name": "vibe.d",
       "notes": "",
-      "versus": "vibed"
+      "versus": "vibed",
+      "tags": ["broken"]
     },
     "dmd-pgsql": {
       "db_url": "/db",
@@ -66,13 +67,16 @@
       "database_os": "Linux",
       "display_name": "vibe.d-ldc",
       "notes": "",
-      "versus": "vibed"
+      "versus": "vibed",
+      "tags": ["broken"]
     },
     "ldc-pgsql": {
       "db_url": "/db",
       "query_url": "/queries?queries=",
+      "plaintext_url": "/plaintext",
       "fortune_url": "/fortunes",
       "update_url": "/updates?queries=",
+      "json_url": "/json",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Platform",

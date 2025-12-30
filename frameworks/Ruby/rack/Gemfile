@@ -1,8 +1,45 @@
-source 'http://rubygems.org'
+# frozen_string_literal: true
 
-gem 'mysql2', '0.4.5'
-gem 'unicorn', '5.3.0'
-gem 'puma', '3.12.6'
-gem 'rack', '2.0.8'
-gem 'json', '2.1.0'
-gem 'falcon'
+source 'https://rubygems.org'
+
+# Show platform so we can set in the Gemfile
+puts "Platform: #{Gem::Platform.local}"
+
+gem 'rack', '~> 3.0'
+gem 'connection_pool', '~> 2.4'
+gem 'jdbc-postgres', '~> 42.2', platforms: :jruby, require: 'jdbc/postgres'
+gem 'json', '~> 2.10'
+gem 'pg', '~> 1.5', platforms: %i[ruby windows]
+gem 'sequel'
+gem 'sequel_pg', platforms: %i[ruby windows]
+gem 'tzinfo-data', '1.2023.3'
+
+group :falcon, optional: true do
+  gem 'falcon', '~> 0.52', platforms: %i[ruby windows]
+end
+
+group :iodine, optional: true do
+  gem 'iodine', '~> 0.7', platforms: %i[ruby windows]
+end
+
+group :itsi, optional: true do
+  gem 'itsi'
+end
+
+group :passenger, optional: true do
+  gem 'logger' # required by passenger on Ruby 3.5
+  gem 'passenger', '~> 6.1', platforms: [:ruby, :windows], require: false
+end
+
+group :pitchfork, optional: true do
+  gem 'pitchfork', '~> 0.17'
+end
+
+group :puma, optional: true do
+  gem 'puma', '~> 7.1'
+end
+
+group :development, optional: true do
+  gem 'rack-test'
+  gem 'rubocop', platforms: %i[ruby windows]
+end

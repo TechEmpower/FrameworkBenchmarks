@@ -1,0 +1,58 @@
+version: 2.0
+shards:
+  action-controller:
+    git: https://github.com/spider-gazelle/action-controller.git
+    version: 7.6.1
+
+  active-model:
+    git: https://github.com/spider-gazelle/active-model.git
+    version: 4.3.2
+
+  backtracer:
+    git: https://github.com/sija/backtracer.cr.git
+    version: 1.2.4
+
+  db:
+    git: https://github.com/crystal-lang/crystal-db.git
+    version: 0.13.1
+
+  eventbus:
+    git: https://github.com/spider-gazelle/eventbus.git
+    version: 1.0.1+git.commit.a707ac06aba16ba6070ff4972acfd839f1f05e15
+
+  exception_page:
+    git: https://github.com/crystal-loot/exception_page.git
+    version: 0.5.0
+
+  habitat:
+    git: https://github.com/luckyframework/habitat.git
+    version: 0.4.9
+
+  hot_topic:
+    git: https://github.com/jgaskins/hot_topic.git
+    version: 0.1.0+git.commit.4eafc046ed4d98bbab7a4534da57e163ea16b6c6
+
+  http-params-serializable:
+    git: https://github.com/place-labs/http-params-serializable.git
+    version: 0.5.0
+
+  json-schema:
+    git: https://github.com/spider-gazelle/json-schema.git
+    version: 1.3.2
+
+  kilt:
+    git: https://github.com/jeromegn/kilt.git
+    version: 0.6.1
+
+  lucky_router:
+    git: https://github.com/luckyframework/lucky_router.git
+    version: 0.6.1
+
+  pg:
+    git: https://github.com/will/crystal-pg.git
+    version: 0.29.0
+
+  pg-orm:
+    git: https://github.com/spider-gazelle/pg-orm.git
+    version: 2.1.0
+

@@ -74,7 +74,7 @@ class RootController(TGController):
         return json.dumps(worlds)
 
     @expose()
-    def fortune(self):
+    def fortunes(self):
         fortunes = db_session.query(Fortune).all()
         fortunes.append(Fortune(id=0, message="Additional fortune added at request time."))
         fortunes.sort(key=attrgetter("message"))

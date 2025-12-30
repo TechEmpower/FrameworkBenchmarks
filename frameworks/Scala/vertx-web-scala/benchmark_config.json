@@ -8,6 +8,7 @@
         "fortune_url": "/fortunes",
         "update_url": "/updates?queries=",
         "plaintext_url": "/plaintext",
+        "json_url": "/json",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Micro",

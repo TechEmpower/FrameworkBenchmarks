@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/jackc/pgx/v4/pgxpool"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 const (
@@ -42,5 +42,5 @@ func newPGX(maxConn int) (*pgxpool.Pool, error) {
 		dbHost, dbPort, dbUser, dbPaswd, dbName, maxConn,
 	)
 
-	return pgxpool.Connect(context.Background(), dsn)
+	return pgxpool.New(context.Background(), dsn)
 }

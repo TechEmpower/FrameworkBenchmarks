@@ -1,0 +1,22 @@
+{{define "fortunes.tmpl"}}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fortunes</title>
+</head>
+<body>
+<table>
+    <tr>
+        <th>id</th>
+        <th>message</th>
+    </tr>
+    {{range .fortunes}}
+    <tr>
+        <td>{{.ID}}</td>
+        <td>{{.Message}}</td>
+    </tr>
+    {{end}}
+</table>
+</body>
+</html>
+{{end}}

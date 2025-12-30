@@ -1,10 +1,10 @@
 # Angel3 Framework Benchmarking Test
 
-This is the Angel3 framework portion of a [benchmarking test suite](../) comparing a variety of web development platforms. 
+This is the Angel3 framework portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
 
 ## Description
 
-All the tests are implemented using the [Angel3 Framework](https://angel3-framework.web.app) with ORM for Postgresql database enabled. The directory layout follows the standard ORM boilerplate template.
+All the tests are implemented using the [Angel3 Framework](https://angel3-framework.web.app) with ORM for Postgresql and MySQL database on Dart 3.6. The directory layout follows the standard ORM boilerplate template.
 
 ### Test Type Implementation Source Code
 
@@ -28,24 +28,24 @@ The tests were run with:
 
 ### JSON
 
-http://localhost:8080/json
+<http://localhost:8080/json>
 
 ### PLAINTEXT
 
-http://localhost:8080/plaintext
+<http://localhost:8080/plaintext>
 
 ### DB
 
-http://localhost:8080/db
+<http://localhost:8080/db>
 
 ### QUERY
 
-http://localhost:8080/query?queries=
+<http://localhost:8080/query?queries=>
 
 ### UPDATE
 
-http://localhost:8080/updates?queries=
+<http://localhost:8080/updates?queries=>
 
 ### FORTUNES
 
-http://localhost:8080/fortunes
+<http://localhost:8080/fortunes>

@@ -1,3 +1,0 @@
-type message = {
-  message : string;
-}

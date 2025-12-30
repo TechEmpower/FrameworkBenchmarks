@@ -13,7 +13,7 @@ This is the Baratine portion of a [benchmarking test suite](../) comparing a var
 ## Software Versions
 
 * [Java OpenJDK 1.8](http://openjdk.java.net/)
-* [Baratine 0.11.0](http://baratine.io/)
+* [Baratine 0.11.0](https://github.com/baratine/baratine)
 
 ## Test URLs
 

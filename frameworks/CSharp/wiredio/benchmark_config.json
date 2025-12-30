@@ -1,0 +1,76 @@
+{
+  "framework": "wiredio",
+  "maintainers": ["MDA2AV"],
+  "tests": [
+    {
+      "default": {
+        "plaintext_url": "/plaintext",
+        "json_url": "/json",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "None",
+        "framework": "Wired.IO",
+        "language": "C#",
+        "orm": "None",
+        "platform": ".NET",
+        "webserver": "Wired.IO",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Wired.IO",
+        "notes": "Only plaintext and JSON benchmarks implemented yet"
+      },
+      "mcr": {
+        "plaintext_url": "/plaintext",
+        "json_url": "/json",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "None",
+        "framework": "Unhinged",
+        "language": "C#",
+        "orm": "None",
+        "platform": ".NET",
+        "webserver": "Unhinged",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Unhinged",
+        "notes": "epoll"
+      },
+      "mcr-p": {
+        "plaintext_url": "/plaintext",
+        "json_url": "/json",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "None",
+        "framework": "Unhinged",
+        "language": "C#",
+        "orm": "None",
+        "platform": ".NET",
+        "webserver": "Unhinged",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Unhinged [p]",
+        "notes": "epoll"
+      },
+      "gen": {
+        "plaintext_url": "/plaintext",
+        "json_url": "/json",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "None",
+        "framework": "GenHttp",
+        "language": "C#",
+        "orm": "None",
+        "platform": ".NET",
+        "webserver": "Unhinged",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "genhttp [Unhinged]",
+        "notes": "Adapter"
+      }
+    }
+  ]
+}

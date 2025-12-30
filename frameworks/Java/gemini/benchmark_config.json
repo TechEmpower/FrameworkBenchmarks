@@ -1,5 +1,6 @@
 {
   "framework": "gemini",
+  "maintainers": ["ecruz-te", "nbrady-techempower"],
   "tests": [
     {
       "default": {
@@ -19,6 +20,7 @@
         "database_os": "Linux",
         "display_name": "Gemini",
         "notes": "",
+        "tags": ["broken"],
         "versus": "servlet"
       },
       "mysql": {
@@ -41,6 +43,7 @@
         "database_os": "Linux",
         "display_name": "Gemini",
         "notes": "",
+        "tags": ["broken"],
         "versus": "servlet"
       },
       "postgres": {
@@ -63,6 +66,7 @@
         "database_os": "Linux",
         "display_name": "Gemini",
         "notes": "",
+        "tags": ["broken"],
         "versus": "servlet"
       }
     }

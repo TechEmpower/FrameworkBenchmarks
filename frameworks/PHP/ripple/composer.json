@@ -1,0 +1,8 @@
+{
+  "require": {
+    "ext-pdo": "*",
+    "cloudtay/ripple": "^2.0"
+  },
+  "minimum-stability": "beta",
+  "prefer-stable": true
+}

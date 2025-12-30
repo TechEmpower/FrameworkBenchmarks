@@ -19,7 +19,7 @@ TOO_MANY_BYTES = 50 * 1024 * 1024
 def log(log_text=None, **kwargs):
     '''
     Logs the given text and optional prefix to stdout (if quiet is False) and
-    to an optional log file. By default, we strip out newlines in order to 
+    to an optional log file. By default, we strip out newlines in order to
     print our lines correctly, but you can override this functionality if you
     want to print multi-line output.
     '''
@@ -43,7 +43,7 @@ def log(log_text=None, **kwargs):
     try:
         new_log_text = border or ''
         for line in log_text.splitlines():
-            if line.strip() is not '':
+            if line.strip() != '':
                 if prefix:
                     new_log_text += Style.DIM + prefix + Style.RESET_ALL
                 new_log_text += color + line + color_reset + os.linesep
@@ -63,7 +63,7 @@ def log(log_text=None, **kwargs):
 
 class QuietOutputStream:
     '''
-    Provides an output stream which either writes to stdout or nothing 
+    Provides an output stream which either writes to stdout or nothing
     depending on the is_quiet param.
     '''
 

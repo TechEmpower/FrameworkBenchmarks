@@ -1,5 +1,5 @@
 const cluster = require('cluster');
-const cpus = require('os').cpus();
+const numCPUs = require('os').cpus().length;
 const server = require('restify').createServer();
 
 server.get('/plaintext', (req, res) =>
@@ -8,10 +8,18 @@ server.get('/plaintext', (req, res) =>
 server.get('/json', (req, res) =>
   res.json({ message: 'Hello, World!' }));
 
-
-if (cluster.isMaster) {
-  cpus.forEach(() => cluster.fork());
+if (cluster.isPrimary) {
+  console.log(`Primary ${process.pid} is running`);
+  
+  // Fork workers.
+  for (let i = 0; i < numCPUs; i++) {
+    cluster.fork();
+  }
+  
+  cluster.on('exit', (worker, code, signal) => {
+    console.log(`worker ${worker.process.pid} died`);
+  });
 } else {
   server.listen(8080, () =>
-    console.log('%s listening at %s', server.name, server.url));
+    console.log(`${server.name} listening at ${server.url}`));
 }

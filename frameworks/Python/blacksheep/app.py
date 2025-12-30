@@ -1,145 +1,176 @@
+import multiprocessing
 import os
-import ujson
 import asyncpg
-from random import randint
-from multiprocessing import cpu_count
-from blacksheep.server import Application
-from blacksheep import Response, Header, Content
-from jinja2 import Template
-json_dumps = ujson.dumps
+import platform
+import random
+import asyncio
+import blacksheep as bs
+import jinja2
+import msgspec
+from pathlib import Path
+try:
+    import uvloop
+    asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+except Exception:
+    ...
 
-
-async def configure_db(app):
-    global db_pool
-    db_pool = await asyncpg.create_pool(
-        user=os.getenv('PGUSER', 'benchmarkdbuser'),
-        password=os.getenv('PGPASS', 'benchmarkdbpass'),
-        database='hello_world',
-        host='tfb-database',
-        port=5432
-    )
-
-
-def load_fortunes_template():
-    path = os.path.join('templates', 'fortune.html')
-    with open(path, 'r') as template_file:
-        template_text = template_file.read()
-        return Template(template_text)
-
+READ_ROW_SQL = 'SELECT "id", "randomnumber" FROM "world" WHERE id = $1'
+WRITE_ROW_SQL = 'UPDATE "world" SET "randomnumber"=$1 WHERE id=$2'
+ADDITIONAL_ROW = [0, "Additional fortune added at request time."]
+MAX_CONNECTIONS = 1900
+CORE_COUNT = multiprocessing.cpu_count()
+MAX_POOL_SIZE = max(1,int(os.getenv('MAX_POOL_SIZE', MAX_CONNECTIONS // CORE_COUNT)))
+MIN_POOL_SIZE = max(1,int(os.getenv('MIN_POOL_SIZE', MAX_POOL_SIZE // 2)))
 
 db_pool = None
+
+async def setup_db(app):
+    global db_pool
+    db_pool = await asyncpg.create_pool(
+        user=os.getenv('PGUSER', "benchmarkdbuser"),
+        password=os.getenv('PGPASS', "benchmarkdbpass"),
+        database='hello_world',
+        host="tfb-database",
+        port=5432,
+        min_size=MIN_POOL_SIZE,
+        max_size=MAX_POOL_SIZE,
+    )
+
+async def shutdown_db(app):
+    """Close asyncpg connection pool for the current process."""
+    global db_pool
+    if db_pool is not None:
+        await db_pool.close()
+        db_pool = None
+
+def load_fortunes_template():
+    with Path("templates/fortune.html").open("r") as f:
+        return jinja2.Template(f.read())
+
+
 fortune_template = load_fortunes_template()
 
-app = Application()
-app.on_start += configure_db
-
+app = bs.Application()
+app.on_start += setup_db
+app.on_stop += shutdown_db
 
 def get_num_queries(request):
     try:
         value = request.query.get('queries')
         if value is None:
             return 1
-
         query_count = int(value[0])
     except (KeyError, IndexError, ValueError):
         return 1
+    return min(max(query_count, 1), 500)
 
-    if query_count < 1:
-        return 1
-    if query_count > 500:
-        return 500
-    return query_count
+ENCODER = msgspec.json.Encoder()
+JSON_CONTENT_TYPE = b"application/json"
+def jsonify(
+    data,
+    status=200,
+    headers=None,
+):
+    """
+    Returns a response with application/json content,
+    and given status (default HTTP 200 OK).
+    """
+    return bs.Response(
+        status=status,
+        headers=headers,
+        content=bs.Content(content_type=JSON_CONTENT_TYPE, data=ENCODER.encode(data)),
+    )
 
+class Result(msgspec.Struct):
+    id: int
+    randomNumber: int
 
-@app.route('/json')
+# ------------------------------------------------------------------------------------------
+
+@bs.get('/json')
 async def json_test(request):
-    """Test type 1: JSON Serialization"""
+    return jsonify( {'message': 'Hello, world!'} )
 
-    return Response(200, content=Content(b'application/json; charset=utf-8',
-                                         json_dumps({'message': 'Hello, world!'}).encode('utf-8')))
-
-
-@app.route('/db')
+@bs.get('/db')
 async def single_db_query_test(request):
-    """Test type 2: Single Database Query"""
-
-    row_id = randint(1, 10000)
-    connection = await db_pool.acquire()
-    try:
-        number = await connection.fetchval('SELECT "randomnumber", "id" FROM "world" WHERE id = $1', row_id)
-        world = {'id': row_id, 'randomNumber': number}
-    finally:
-        await db_pool.release(connection)
-
-    return Response(200, content=Content(b'application/json; charset=utf-8',
-                                         json_dumps(world).encode('utf-8')))
+    row_id = random.randint(1, 10000)
+    
+    async with db_pool.acquire() as db_conn:
+        number = await db_conn.fetchval(READ_ROW_SQL, row_id)
+    
+    return jsonify(Result(id=row_id, randomNumber=number))
+    # return ({'id': row_id, 'randomNumber': number})
 
 
-@app.route('/queries')
+@bs.get('/queries')
 async def multiple_db_queries_test(request):
-    """Test type 3: Multiple Database Queries"""
-
     num_queries = get_num_queries(request)
-
-    row_ids = [randint(1, 10000) for _ in range(num_queries)]
+    row_ids = random.sample(range(1, 10000), num_queries)
     worlds = []
 
-    connection = await db_pool.acquire()
-    try:
-        statement = await connection.prepare('SELECT "randomnumber", "id" FROM "world" WHERE id = $1')
+    async with db_pool.acquire() as db_conn:
+        statement = await db_conn.prepare(READ_ROW_SQL)
         for row_id in row_ids:
             number = await statement.fetchval(row_id)
-            worlds.append({'id': row_id, 'randomNumber': number})
-    finally:
-        await db_pool.release(connection)
+            # worlds.append( {"id": row_id, "randomNumber": number} )
+            worlds.append(Result(id=row_id, randomNumber=number))
 
-    return Response(200, content=Content(b'application/json; charset=utf-8',
-                                         json_dumps(worlds).encode('utf-8')))
+    return jsonify(worlds)
 
 
-@app.route('/fortunes')
+@bs.get('/fortunes')
 async def fortunes_test(request):
-    """Test type 4: Fortunes"""
+    async with db_pool.acquire() as db_conn:
+        fortunes = await db_conn.fetch("SELECT * FROM Fortune")
 
-    connection = await db_pool.acquire()
-
-    try:
-        fortunes = await connection.fetch('SELECT * FROM Fortune')
-    finally:
-        await db_pool.release(connection)
-
-    fortunes.append([0, 'Additional fortune added at request time.'])
-    fortunes.sort(key=lambda x: x[1])
-
-    return Response(200, [
-        Header(b'Cache-Control', b'no-cache')
-    ], content=Content(b'text/html; charset=utf-8', fortune_template.render(fortunes=fortunes).encode('utf8')))
+    fortunes.append(ADDITIONAL_ROW)
+    fortunes.sort(key=lambda row: row[1])
+    data = fortune_template.render(fortunes=fortunes)
+    return bs.html(data)
 
 
-@app.route('/updates')
+@bs.get('/updates')
 async def db_updates_test(request):
-    """Test type 5: Database Updates"""
-
     num_queries = get_num_queries(request)
-
-    updates = [(randint(1, 10000), randint(1, 10000)) for _ in range(num_queries)]
-    worlds = [{'id': row_id, 'randomNumber': number} for row_id, number in updates]
-
-    connection = await db_pool.acquire()
-    try:
-        statement = await connection.prepare('SELECT "randomnumber", "id" FROM "world" WHERE id = $1')
+    updates = list(zip(
+        random.sample(range(1, 10000), num_queries),
+        sorted(random.sample(range(1, 10000), num_queries))
+    ))
+    worlds = [Result(id=row_id, randomNumber=number) for row_id, number in updates]
+    # worlds = [ {"id": row_id, "randomNumber": number} for row_id, number in updates ]
+    async with db_pool.acquire() as db_conn:
+        statement = await db_conn.prepare(READ_ROW_SQL)
         for row_id, _ in updates:
             await statement.fetchval(row_id)
-        await connection.executemany('UPDATE "world" SET "randomnumber"=$1 WHERE id=$2', updates)
-    finally:
-        await db_pool.release(connection)
-
-    return Response(200, content=Content(b'application/json',
-                                         json_dumps(worlds).encode('utf-8')))
+        await db_conn.executemany(WRITE_ROW_SQL, updates)
+    return jsonify(worlds)
 
 
-@app.route('/plaintext')
+@bs.get('/plaintext')
 async def plaintext_test(request):
-    """Test type 6: Plaintext"""
+    return bs.Response(200, content=bs.Content(b"text/plain", b'Hello, World!'))
+    #return bs.text('Hello, World!')
 
-    return Response(200, content=Content(b'text/plain', b'Hello, World!'))
+
+if platform.python_implementation() == 'PyPy':
+    from socketify import ASGI
+    workers = int(multiprocessing.cpu_count())
+    if _is_travis:
+        workers = 2
+
+    def run_app():
+        ASGI(app).listen(8080, lambda config: logging.info(f"Listening on port http://localhost:{config.port} now\n")).run()
+
+
+    def create_fork():
+        n = os.fork()
+        # n greater than 0 means parent process
+        if not n > 0:
+            run_app()
+
+
+    # fork limiting the cpu count - 1
+    for i in range(1, workers):
+        create_fork()
+
+    run_app()

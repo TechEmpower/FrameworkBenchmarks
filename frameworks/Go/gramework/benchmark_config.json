@@ -8,7 +8,7 @@
       "approach": "Realistic",
       "classification": "Platform",
       "database": "Postgres",
-      "framework": "None",
+      "framework": "gramework",
       "language": "Go",
       "flavor": "None",
       "orm": "Raw",
@@ -18,7 +18,8 @@
       "database_os": "Linux",
       "display_name": "Gramework",
       "notes": "",
-      "versus": "go"
+      "versus": "go",
+      "tags": ["broken"]
     }
   }]
 }

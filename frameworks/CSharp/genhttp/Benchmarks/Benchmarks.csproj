@@ -1,36 +1,40 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  
-  <PropertyGroup>
-    
-    <TargetFramework>net6.0</TargetFramework>
-    <LangVersion>10.0</LangVersion>
-    
-    <AssemblyTitle>GenHTTP Benchmarks</AssemblyTitle>
-    <Description>Test suite to be executed with TechEmpower FrameworkBenchmarks.</Description>
-    
-    <StartupObject>Benchmarks.Program</StartupObject>    
-    <OutputType>Exe</OutputType>
-    
-    <ServerGarbageCollection>true</ServerGarbageCollection>
-    
-  </PropertyGroup>
-  
-  <ItemGroup>
-    <None Remove="Resources\Fortunes.html" />
-    <None Remove="Resources\Template.html" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\Template.html" />
-    <EmbeddedResource Include="Resources\Fortunes.html" />
-  </ItemGroup>
-    
-  <ItemGroup>
-    <PackageReference Include="GenHTTP.Core" Version="6.3.0" />
-    <PackageReference Include="GenHTTP.Modules.Razor" Version="6.3.0" />
-    <PackageReference Include="GenHTTP.Modules.Webservices" Version="6.3.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.1" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.1" />
-  </ItemGroup>
-  
+
+    <PropertyGroup>
+
+        <TargetFramework>net10.0</TargetFramework>
+        <LangVersion>14.0</LangVersion>
+        <ImplicitUsings>true</ImplicitUsings>
+        <OutputType>Exe</OutputType>
+
+        <AssemblyTitle>GenHTTP Benchmarks</AssemblyTitle>
+        <Description>Test suite to be executed with TechEmpower FrameworkBenchmarks.</Description>
+
+        <DefineConstants>$(DefineConstants);$(GENHTTP_ENGINE_NAME)</DefineConstants>
+
+        <ServerGarbageCollection>true</ServerGarbageCollection>
+        <TieredPGO>true</TieredPGO>
+
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Remove="Resources\Fortunes.html" />
+        <None Remove="Resources\Template.html" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Include="Resources\Template.html" />
+    </ItemGroup>
+
+    <ItemGroup>
+
+        <PackageReference Include="$(GENHTTP_ENGINE_PACKAGE)" Version="10.2.0" />
+
+        <PackageReference Include="GenHTTP.Modules.Webservices" Version="10.2.0" />
+
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.1" />
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0" />
+
+    </ItemGroup>
+
 </Project>

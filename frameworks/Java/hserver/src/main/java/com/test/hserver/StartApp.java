@@ -1,8 +1,10 @@
 package com.test.hserver;
 
-import top.hserver.HServerApplication;
-import top.hserver.core.ioc.annotation.HServerBoot;
-import top.hserver.core.server.context.ConstConfig;
+
+import cn.hserver.core.boot.HServerApplication;
+import cn.hserver.core.boot.annotation.HServerBoot;
+import cn.hserver.mvc.server.WebServer;
+import com.test.hserver.controller.TestController;
 
 /**
  * @author hxm
@@ -11,7 +13,14 @@ import top.hserver.core.server.context.ConstConfig;
 public class StartApp {
 
     public static void main(String[] args) {
-        ConstConfig.workerPool=Runtime.getRuntime().availableProcessors();
-        HServerApplication.run(StartApp.class, 8888, args);
+        WebServer.router
+                .get("/json", TestController::json)
+                .get("/plaintext", TestController::plaintext)
+                .get("/db", TestController::db)
+                .get("/queries", TestController::queries)
+                .get("/updates", TestController::updates)
+                .get("/fortunes", TestController::fortunes)
+        ;
+        HServerApplication.run(StartApp.class,  args);
     }
 }

@@ -6,20 +6,15 @@ For further guidance, review the
 Also note the additional information provided in the [Ruby README](../).
 
 This is the Ruby Grape portion of a [benchmarking test suite](../../)
-comparing a variety of web servers along with JRuby/MRI.
+comparing a variety of web servers.
 
 ## Infrastructure Software Versions
 The tests were run with:
 
-* [Ruby 2.0.0-p0](http://www.ruby-lang.org/)
-* [JRuby 1.7.8](http://jruby.org/)
-* [Rubinius 2.2.10](http://rubini.us/)
-* [Grape 0.8.0](http://intridea.github.io/grape/)
-* [Rack 1.5.2](http://rack.github.com/)
-* [Unicorn 4.8.3](http://unicorn.bogomips.org/)
-* [TorqBox 0.1.7](http://torquebox.org/torqbox/)
-* [Puma 3.9](http://puma.io/)
-* [Thin 1.6.2](http://code.macournoyer.com/thin/)
+* [Ruby 3.4](http://www.ruby-lang.org/)
+* [Grape 2.1](http://www.ruby-grape.org/)
+* [Iodine](https://github.com/boazsegev/iodine)
+* [Puma 7](https://puma.io/)
 
 ## Paths & Source for Tests
 
@@ -42,4 +37,4 @@ _No experts listed, yet. If you're an expert, add yourself!_
 
 ### Resources
 
-* [Grape Micro-framework Source Code](https://github.com/intridea/grape)
+* [Grape Micro-framework Source Code](https://github.com/ruby-grape/grape)

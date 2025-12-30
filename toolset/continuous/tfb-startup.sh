@@ -20,11 +20,22 @@ git clone \
 echo "moving to tfb directory"
 cd $TFB_REPOPARENT/$TFB_REPONAME
 
+if [ -e "${TFB_REPOPARENT}/tfb-reverse-order" ]; then
+  export TFB_RUN_ORDER="reverse"
+  sudo rm -rf "${TFB_REPOPARENT}/tfb-reverse-order"
+else
+  unset TFB_RUN_ORDER
+  touch "${TFB_REPOPARENT}/tfb-reverse-order"
+fi
+
 echo "building tfb docker image"
-docker build -t techempower/tfb .
+docker build -t techempower/tfb \
+  --build-arg USER_ID=$(id -u) \
+  --build-arg GROUP_ID=$(id -g) .
 
 echo "running tfb docker image"
 docker run \
+  -e USER_ID=$(id -u) \
   --network=host \
   --mount type=bind,source=$TFB_REPOPARENT/$TFB_REPONAME,target=/FrameworkBenchmarks \
   techempower/tfb \
@@ -35,6 +46,7 @@ docker run \
   --results-name "$TFB_RUN_NAME" \
   --results-environment "$TFB_ENVIRONMENT" \
   --results-upload-uri "$TFB_UPLOAD_URI" \
+  $(if [ "$TFB_RUN_ORDER" = "reverse" ]; then echo "--reverse-order"; fi) \
   --quiet
 
 echo "zipping the results"

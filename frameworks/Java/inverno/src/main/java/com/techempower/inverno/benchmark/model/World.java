@@ -1,14 +1,15 @@
 package com.techempower.inverno.benchmark.model;
 
+import com.dslplatform.json.CompiledJson;
+
+@CompiledJson
 public final class World implements Comparable<World> {
 
-	private final int id;
+	private int id;
 	private int randomNumber;
 
-	public World(int id) {
-		this.id = id;
-	}
-	
+	public World() {}
+
 	public World(int id, int randomNumber) {
 		this.id = id;
 		this.randomNumber = randomNumber;

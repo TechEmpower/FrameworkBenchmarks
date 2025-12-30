@@ -15,7 +15,7 @@
             if (equal option "--port")
               append (list :port (parse-int-value option value))
           else
-            if (equal option "--worker")
-              append (list :worker-num (parse-int-value option value))
+            if (equal option "--cpu")
+              append (list :cpu (parse-int-value option value))
           else
             do (error "Unknown option: ~S" option))))

@@ -11,4 +11,9 @@ class World extends Model
     protected $_pri_key = 'id';
 
     protected $_cache_time = 0;
+
+    public int $id;
+
+    public int $randomNumber;
+
 }

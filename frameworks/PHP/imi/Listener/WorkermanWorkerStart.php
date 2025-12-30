@@ -19,9 +19,9 @@ class WorkermanWorkerStart implements IEventListener
      */
     public function handle(EventParam $e): void
     {
-        App::set('test_date', gmdate('D, d M Y H:i:s').' GMT');
+        App::set('test_date', gmdate(DATE_RFC7231));
         Timer::tick(1000, function() {
-            App::set('test_date', gmdate('D, d M Y H:i:s').' GMT');
+            App::set('test_date', gmdate(DATE_RFC7231));
         });
     }
 

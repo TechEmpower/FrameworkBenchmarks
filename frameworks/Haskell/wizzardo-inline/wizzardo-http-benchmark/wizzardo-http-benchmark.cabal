@@ -27,6 +27,9 @@ executable wizzardo-http-benchmark
     jni,
     jvm,
     linear-base,
+    monad-logger,
+    mtl,
+    singletons,
     template-haskell,
     text
   default-language:    Haskell2010

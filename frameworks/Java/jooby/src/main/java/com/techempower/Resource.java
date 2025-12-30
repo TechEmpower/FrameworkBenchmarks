@@ -1,12 +1,14 @@
 package com.techempower;
 
 import io.jooby.Context;
-import io.jooby.annotations.Dispatch;
+import io.jooby.annotation.GET;
+import io.jooby.annotation.Path;
+import io.jooby.annotation.Dispatch;
+import io.jooby.output.Output;
+import io.jooby.output.OutputFactory;
 import views.fortunes;
 
 import javax.sql.DataSource;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
@@ -28,14 +30,16 @@ public class Resource {
   private static final byte[] MESSAGE_BYTES = MESSAGE.getBytes(StandardCharsets.UTF_8);
 
   private final DataSource dataSource;
+  private final Output message;
 
-  public Resource(DataSource dataSource) {
+  public Resource(DataSource dataSource, OutputFactory factory) {
     this.dataSource = dataSource;
+    this.message = factory.wrap(MESSAGE_BYTES);
   }
 
   @GET @Path("/plaintext")
   public void plaintText(Context ctx) {
-    ctx.send(MESSAGE_BYTES);
+    ctx.send(message);
   }
 
   @GET @Path("/json")
@@ -117,7 +121,7 @@ public class Resource {
 
   @GET @Path("/fortunes")
   @Dispatch
-  public fortunes fortunes(Context ctx) throws Exception {
+  public fortunes fortunes() throws Exception {
     List<Fortune> fortunes = new ArrayList<>();
     try (Connection connection = dataSource.getConnection()) {
       try (PreparedStatement stt = connection.prepareStatement("select * from fortune")) {

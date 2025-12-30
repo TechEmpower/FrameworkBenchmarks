@@ -1,54 +1,57 @@
-FROM mcr.microsoft.com/dotnet/sdk:6.0.100 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 RUN apt-get update
-RUN apt-get -yqq install clang zlib1g-dev libkrb5-dev libtinfo5
-RUN apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev \
-   libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
-   xz-utils tk-dev libffi-dev liblzma-dev pgpool2 vim-tiny
-
-WORKDIR /odbc
-
-RUN curl -L -o unixODBC-2.3.9.tar.gz ftp://ftp.unixodbc.org/pub/unixODBC/unixODBC-2.3.9.tar.gz
-RUN tar -xvf unixODBC-2.3.9.tar.gz
-
-WORKDIR /odbc/unixODBC-2.3.9
-RUN ./configure --prefix=/usr/local/unixODBC
-RUN make
-RUN make install
-
-ENV PATH=/usr/local/unixODBC/lib:$PATH
+RUN apt-get -yqq install clang zlib1g-dev
+RUN apt-get update
 
 WORKDIR /app
 COPY src .
-RUN dotnet publish -c Release -o out -r linux-x64 /p:Database=mysql
+RUN dotnet publish -c Release -o out /p:Database=mysql
 
 # Construct the actual image that will run
-FROM mcr.microsoft.com/dotnet/aspnet:6.0.0 AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:10.0.1 AS runtime
 
 RUN apt-get update
-# The following installs standard versions unixodbc 2.3.6 and pgsqlodbc 11
-#RUN apt-get install -y unixodbc odbc-postgresql
+# The following installs standard versions unixodbc and pgsqlodbc
 # unixodbc still needs to be installed even if compiled locally
-RUN apt-get install -y unixodbc wget curl
+RUN apt-get install -y unixodbc-dev unixodbc wget curl
+RUN apt-get update
 
 WORKDIR /odbc
 
-RUN curl -L -o mariadb-connector-odbc-3.1.14-debian-9-stretch-amd64.tar.gz https://downloads.mariadb.com/Connectors/odbc/connector-odbc-3.1.14/mariadb-connector-odbc-3.1.14-debian-9-stretch-amd64.tar.gz
-RUN tar -xvzf mariadb-connector-odbc-3.1.14-debian-9-stretch-amd64.tar.gz
-RUN cp mariadb-connector-odbc-3.1.14-debian-9-stretch-amd64/lib/mariadb/libm* /usr/lib/
-
-COPY --from=build /usr/local/unixODBC /usr/local/unixODBC
-
-# Check unixODBC version by: 
-# 1. Logging into containter: docker run --rm -it --entrypoint=/bin/bash techempower/tfb.test.appmpower
-# 2. odbcinst  --version
+#TODOGITHUB
+RUN curl -L -o mariadb-connector-odbc-3.1.20-debian-bookworm-amd64.tar.gz https://downloads.mariadb.com/Connectors/odbc/connector-odbc-3.1.20/mariadb-connector-odbc-3.1.20-debian-bookworm-amd64.tar.gz
+RUN tar -xvzf mariadb-connector-odbc-3.1.20-debian-bookworm-amd64.tar.gz
+RUN cp mariadb-connector-odbc-3.1.20-debian-bookworm-amd64/lib/mariadb/libm* /usr/lib/
+RUN cp -r /odbc/mariadb-connector-odbc-3.1.20-debian-bookworm-amd64/lib/mariadb /usr/local/lib/mariadb
+RUN rm mariadb-connector-odbc-3.1.20-debian-bookworm-amd64.tar.gz
+#TODOLOCAL
+#RUN curl -L -o mariadb-connector-odbc-3.1.20-debian-bookworm-aarch64.tar.gz https://downloads.mariadb.com/Connectors/odbc/connector-odbc-3.1.20/mariadb-connector-odbc-3.1.20-debian-bookworm-aarch64.tar.gz
+#RUN tar -xvzf mariadb-connector-odbc-3.1.20-debian-bookworm-aarch64.tar.gz
+#RUN cp mariadb-connector-odbc-3.1.20-debian-bookworm-aarch64/lib/mariadb/libm* /usr/lib/
+#RUN cp -r /odbc/mariadb-connector-odbc-3.1.20-debian-bookworm-aarch64/lib/mariadb /usr/local/lib/mariadb
+#RUN rm mariadb-connector-odbc-3.1.20-debian-bookworm-aarch64.tar.gz
 
 ENV PATH=/usr/local/unixODBC/bin:$PATH
 
 WORKDIR /etc/
 COPY odbcinst.ini .
 
+# Full PGO
+ENV DOTNET_TieredPGO 1 
+ENV DOTNET_TC_QuickJitForLoops 1 
+ENV DOTNET_ReadyToRun 0
+
+ENV ASPNETCORE_URLS http://+:8080
 WORKDIR /app
 COPY --from=build /app/out ./
+
+RUN cp /usr/lib/libm* /app
+#TODOGITHUB
+RUN cp /usr/lib/x86_64-linux-gnu/libodbc* /app
+#TODOLOCAL
+#RUN cp /usr/lib/aarch64-linux-gnu/libodbc* /app
+
+#TEST: ./tfb --test appmpower-odbc-my  --type db
 
 EXPOSE 8080
 

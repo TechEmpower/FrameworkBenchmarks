@@ -3,13 +3,14 @@
   "tests": [{
     "default": {
       "json_url": "/json",
+      "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Stripped",
       "classification": "Platform",
       "database": "None",
       "framework": "None",
       "language": "Python",
-      "flavor": "Python2",
+      "flavor": "Python3",
       "orm": "Raw",
       "platform": "None",
       "webserver": "uWSGI",
@@ -17,17 +18,19 @@
       "database_os": "Linux",
       "display_name": "uwsgi",
       "notes": "",
-      "versus": ""
+      "versus": "",
+      "tags": [ ]
     },
     "nginx-uwsgi": {
       "json_url": "/json",
+      "plaintext_url": "/plaintext",
       "port": 8080,
       "approach": "Stripped",
       "classification": "Platform",
       "database": "None",
       "framework": "None",
       "language": "Python",
-      "flavor": "Python2",
+      "flavor": "Python3",
       "orm": "Raw",
       "platform": "None",
       "webserver": "nginx-uWSGI",
@@ -35,7 +38,8 @@
       "database_os": "Linux",
       "display_name": "uwsgi",
       "notes": "",
-      "versus": ""
+      "versus": "",
+      "tags": [ ]
     }
   }]
 }

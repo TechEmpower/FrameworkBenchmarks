@@ -1,95 +1,105 @@
-extern crate serde_derive;
-extern crate dotenv;
-#[macro_use]
-extern crate async_trait;
-
-mod models_common;
-mod models_mongo;
-mod database_mongo;
-mod utils;
-mod server;
 mod common;
+mod mongo;
+mod server;
+//mod mongo_raw;
 
-use dotenv::dotenv;
-use std::env;
 use std::time::Duration;
+
 use axum::{
-    extract::{Query},
-    http::StatusCode,
-    response::IntoResponse,
-    routing::get,
-    AddExtensionLayer, Json, Router,
+    extract::Query, http::StatusCode, response::IntoResponse, routing::get, Router,
 };
-use axum::http::{header, HeaderValue};
-use futures::stream::StreamExt;
-use tower_http::set_header::SetResponseHeaderLayer;
-use hyper::Body;
-use rand::rngs::SmallRng;
-use rand::{SeedableRng};
+
+#[cfg(not(feature = "simd-json"))]
+use axum::Json;
+#[cfg(feature = "simd-json")]
+use common::simd_json::Json;
+use common::{
+    models::{FortuneInfo, World}, random_id
+};
+use dotenv::dotenv;
+use mongodb::{
+    options::{ClientOptions, Compressor},
+    Client,
+};
+use rand::{rngs::SmallRng, rng, SeedableRng};
 use yarte::Template;
-use mongodb::{bson::doc, Client, Database};
-use mongodb::options::ClientOptions;
+use mimalloc::MiMalloc;
 
-use models_mongo::{World, Fortune};
-use utils::{Params, parse_params, random_number, Utf8Html};
-use database_mongo::DatabaseConnection;
-use models_mongo::FortuneInfo;
+#[global_allocator]
+static GLOBAL: MiMalloc = MiMalloc;
 
-async fn db(DatabaseConnection(mut db): DatabaseConnection) -> impl IntoResponse {
-    let mut rng = SmallRng::from_entropy();
-    let number = random_number(&mut rng);
+use common::{
+    get_env,
+    utils::{parse_params, Params, Utf8Html},
+};
+use mongo::database::{
+    fetch_fortunes, find_world_by_id, find_worlds, update_worlds, DatabaseConnection,
+};
 
-    let world = find_world_by_id(&mut db, number).await;
+#[derive(Template)]
+#[template(path = "fortunes.html.hbs")]
+pub struct FortunesTemplate<'a> {
+    pub fortunes: &'a Vec<FortuneInfo>,
+}
+
+async fn db(DatabaseConnection(db): DatabaseConnection) -> impl IntoResponse {
+    let random_id = random_id(&mut rng());
+
+    let world = find_world_by_id(db, random_id)
+        .await
+        .expect("world could not be found");
 
     (StatusCode::OK, Json(world))
 }
 
-async fn find_world_by_id(db: &mut Database, number: i32) -> World {
-    let world_collection = db.collection::<World>("world");
-
-    let filter = doc! { "id": number as f32 };
-
-    let world: World = world_collection.find_one(Some(filter), None).await.expect("world could not be found").unwrap();
-    world
-}
-
-async fn queries(DatabaseConnection(mut db): DatabaseConnection, Query(params): Query<Params>) -> impl IntoResponse {
+async fn queries(
+    DatabaseConnection(db): DatabaseConnection,
+    Query(params): Query<Params>,
+) -> impl IntoResponse {
     let q = parse_params(params);
 
-    let mut rng = SmallRng::from_entropy();
-
-    let mut results = Vec::with_capacity(q as usize);
-
-    for _ in 0..q {
-        let query_id = random_number(&mut rng);
-
-        let result :World =  find_world_by_id(&mut db, query_id).await;
-
-        results.push(result);
-    }
+    let mut rng = SmallRng::from_rng(&mut rng());
+    let worlds = find_worlds(db, &mut rng, q).await;
+    let results = worlds.expect("worlds could not be retrieved");
 
     (StatusCode::OK, Json(results))
 }
 
-async fn fortunes(DatabaseConnection(db): DatabaseConnection) -> impl IntoResponse {
-    let fortune_collection = db.collection::<Fortune>("fortune");
+async fn updates(
+    DatabaseConnection(db): DatabaseConnection,
+    Query(params): Query<Params>,
+) -> impl IntoResponse {
+    let q = parse_params(params);
 
-    let mut fortune_cursor = fortune_collection.find(None, None).await.expect("fortunes could not be loaded");
+    let mut rng = SmallRng::from_rng(&mut rng());
 
-    let mut fortunes: Vec<Fortune> = Vec::with_capacity(100 as usize);
+    let worlds = find_worlds(db.clone(), &mut  rng, q)
+        .await
+        .expect("worlds could not be retrieved");
+    let mut updated_worlds: Vec<World> = Vec::with_capacity(q);
 
-    while let Some(doc) = fortune_cursor.next().await {
-        fortunes.push(doc.expect("could not load fortune"));
+    for mut world in worlds {
+        world.random_number = random_id(&mut rng);
+        updated_worlds.push(world);
     }
 
-    fortunes.push(Fortune {
-        id: 0.0,
-        message: "Additional fortune added at request time.".to_string(),
-    });
+    update_worlds(db.clone(), updated_worlds.clone())
+        .await
+        .expect("could not update worlds");
 
-    fortunes.sort_by(|a, b| a.message.cmp(&b.message));
+    (StatusCode::OK, Json(updated_worlds.clone()))
+}
 
-    let fortune_infos: Vec<FortuneInfo> = fortunes.iter().map(|f| FortuneInfo { id: f.id as i32, message: f.message.clone() }).collect();
+async fn fortunes(DatabaseConnection(db): DatabaseConnection) -> impl IntoResponse {
+    let fortunes = fetch_fortunes(db).await.expect("could not fetch fortunes");
+
+    let fortune_infos: Vec<FortuneInfo> = fortunes
+        .iter()
+        .map(|f| FortuneInfo {
+            id: f.id,
+            message: f.message.clone(),
+        })
+        .collect();
 
     Utf8Html(
         FortunesTemplate {
@@ -100,36 +110,43 @@ async fn fortunes(DatabaseConnection(db): DatabaseConnection) -> impl IntoRespon
     )
 }
 
-#[tokio::main]
-async fn main() {
+fn main() {
     dotenv().ok();
+    server::start_tokio(serve_app)
+}
 
-    let database_url = env::var("AXUM_TECHEMPOWER_MONGODB_URL").ok()
-        .expect("AXUM_TECHEMPOWER_MONGODB_URL environment variable was not set");
+async fn serve_app() {
+    let database_url: String = get_env("MONGODB_URL");
+    let max_pool_size: u32 = get_env("MONGODB_MAX_POOL_SIZE");
+    let min_pool_size: u32 = get_env("MONGODB_MIN_POOL_SIZE");
+
+    let mut client_options = ClientOptions::parse(database_url).await.unwrap();
 
     // setup connection pool
-    let mut client_options = ClientOptions::parse(database_url).await.unwrap();
-    client_options.max_pool_size = Some(common::POOL_SIZE);
-    client_options.min_pool_size = Some(common::POOL_SIZE);
+    client_options.max_pool_size = Some(max_pool_size);
+    client_options.min_pool_size = Some(min_pool_size);
     client_options.connect_timeout = Some(Duration::from_millis(200));
 
+    // the server will select the algorithm it supports from the list provided by the driver
+    client_options.compressors = Some(vec![
+        Compressor::Snappy,
+        Compressor::Zlib {
+            level: Default::default(),
+        },
+        Compressor::Zstd {
+            level: Default::default(),
+        },
+    ]);
+
     let client = Client::with_options(client_options).unwrap();
+    let database = client.database("hello_world");
 
     let app = Router::new()
         .route("/fortunes", get(fortunes))
         .route("/db", get(db))
         .route("/queries", get(queries))
-        .layer(AddExtensionLayer::new(client))
-        .layer(SetResponseHeaderLayer::<_, Body>::if_not_present(header::SERVER, HeaderValue::from_static("Axum")));
+        .route("/updates", get(updates))
+        .with_state(database);
 
-    server::builder()
-        .serve(app.into_make_service())
-        .await
-        .unwrap();
-}
-
-#[derive(Template)]
-#[template(path = "fortunes.html.hbs")]
-pub struct FortunesTemplate<'a> {
-    pub fortunes: &'a Vec<FortuneInfo>,
+    server::serve(app, Some(8000)).await
 }

@@ -4,7 +4,7 @@ import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import com.typesafe.akka.http.benchmark.handlers._
 
-trait RequestMapping { _: PlaintextHandler with JsonHandler with DbHandler with QueriesHandler with FortunesHandler with UpdatesHandler =>
+trait RequestMapping { _: JsonHandler with DbHandler with QueriesHandler with FortunesHandler with UpdatesHandler =>
   def asRoute: Route =
-    plainTextEndpoint ~ jsonEndpoint ~ dbEndpoint ~ queriesEndpoint ~ fortunesEndpoint ~ updatesEndpoint
+    jsonEndpoint ~ dbEndpoint ~ queriesEndpoint ~ fortunesEndpoint ~ updatesEndpoint
 }

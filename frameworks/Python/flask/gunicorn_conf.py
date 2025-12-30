@@ -16,3 +16,13 @@ pidfile = "gunicorn.pid"
 
 if _is_pypy:
     worker_class = "sync"
+else:
+    worker_class = "meinheld.gmeinheld.MeinheldWorker"
+
+    def post_fork(server, worker):
+        import meinheld
+        import meinheld.server
+        import meinheld.patch
+        meinheld.server.set_access_logger(None)
+        meinheld.set_keepalive(keepalive)
+        meinheld.patch.patch_all()

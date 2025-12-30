@@ -9,9 +9,9 @@
 	<version>0.1</version>
 
 	<properties>
-		<maven.compiler.source>11</maven.compiler.source>
-		<maven.compiler.target>11</maven.compiler.target>
-		<netty.version>4.1.71.Final</netty.version>
+		<maven.compiler.source>24</maven.compiler.source>
+		<maven.compiler.target>24</maven.compiler.target>
+		<netty.version>4.2.0.Final</netty.version>
 	</properties>
 
 	<packaging>jar</packaging>
@@ -20,7 +20,7 @@
 
 		<dependency>
 			<groupId>io.netty</groupId>
-			<artifactId>netty-codec-http</artifactId>
+			<artifactId>netty-all</artifactId>
 			<version>${netty.version}</version>
 		</dependency>
 
@@ -39,9 +39,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>io.netty.incubator</groupId>
-			<artifactId>netty-incubator-transport-native-io_uring</artifactId>
-			<version>0.0.5.Final</version>
+			<groupId>io.netty</groupId>
+			<artifactId>netty-transport-native-io_uring</artifactId>
+			<version>${netty.version}</version>
 			<classifier>linux-x86_64</classifier>
 		</dependency>
 
@@ -73,6 +73,7 @@
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
+					<finalName>app</finalName>
 					<archive>
 						<manifest>
 							<mainClass>hello.HelloWebServer</mainClass>
@@ -81,6 +82,7 @@
 					<descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
 					</descriptorRefs>
+					<appendAssemblyId>false</appendAssemblyId>
 				</configuration>
 				<executions>
 					<execution>

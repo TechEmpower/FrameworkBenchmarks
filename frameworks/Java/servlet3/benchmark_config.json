@@ -17,6 +17,7 @@
       "database_os": "Linux",
       "display_name": "servlet3",
       "notes": "Servlet 3.1 Async I/O",
+      "tags": ["broken"],
       "versus": "servlet"
     },
     "sync": {
@@ -35,6 +36,7 @@
       "database_os": "Linux",
       "display_name": "servlet3",
       "notes": "",
+      "tags": ["broken"],
       "versus": "servlet"
     }
   }]

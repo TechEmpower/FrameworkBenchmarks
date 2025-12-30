@@ -1,0 +1,4 @@
+asyncpg==0.29.0
+heaven==0.2.4
+orjson==3.9.15
+gunicorn==22.0.0

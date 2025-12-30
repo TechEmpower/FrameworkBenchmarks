@@ -8,7 +8,7 @@ class Scaffolding:
     def __init__(self, benchmarker):
         print("""
 -------------------------------------------------------------------------------
-    This wizard is intended to help build the scaffolding required for a new 
+    This wizard is intended to help build the scaffolding required for a new
     test to be benchmarked.
 
     From here, you will be prompted for values related to the test you
@@ -45,7 +45,7 @@ class Scaffolding:
         self.name = self.display_name.lower()
 
     def __prompt_display_name(self):
-        self.display_name = raw_input("Name: ").strip()
+        self.display_name = input("Name: ").strip()
 
         found = False
         for framework in self.benchmarker.metadata.gather_frameworks():
@@ -70,7 +70,7 @@ class Scaffolding:
             self.__prompt_language()
 
     def __prompt_language(self):
-        self.language = raw_input("Language: ").strip()
+        self.language = input("Language: ").strip()
 
         known_languages = self.benchmarker.metadata.gather_languages()
         language = None
@@ -87,12 +87,12 @@ class Scaffolding:
 
             print("""
   That language is not currently in our list of known languages.
-  
+
   Here is a list of similar languages present in our benchmark suite that you
   may have meant:
 
   %s
-      
+
   Did you mean to add the new language, '%s', to the benchmark suite?
       """ % (similar, self.language))
             valid = self.__prompt_confirm_new_language()
@@ -107,7 +107,7 @@ class Scaffolding:
         return self.language
 
     def __prompt_confirm_new_language(self):
-        self.confirm_new_lang = raw_input("Create New Language '%s' (y/n): " %
+        self.confirm_new_lang = input("Create New Language '%s' (y/n): " %
                                           self.language).strip().lower()
         return self.confirm_new_lang == 'y' or self.confirm_new_lang == 'n'
 
@@ -115,8 +115,8 @@ class Scaffolding:
         print("""
   The approach of your test implementation.
 
-  1) Realistic: Uses the framework with most out-of-the-box functionality 
-                enabled. We consider this realistic because most applications 
+  1) Realistic: Uses the framework with most out-of-the-box functionality
+                enabled. We consider this realistic because most applications
                 built with the framework will leave these features enabled.
   2) Stripped:  Removes or outright avoids implementing features that are
                 unnecessary for the particulars of the benchmark exercise. This
@@ -132,7 +132,7 @@ class Scaffolding:
             valid = self.__prompt_approach()
 
     def __prompt_approach(self):
-        self.approach = raw_input("Approach [1/2]: ").strip()
+        self.approach = input("Approach [1/2]: ").strip()
         if self.approach == '1':
             self.approach = 'Realistic'
         if self.approach == '2':
@@ -143,14 +143,14 @@ class Scaffolding:
         print("""
   The classification of your test implementation.
 
-  1) Fullstack: Robust framework expected to provide high-level functionality 
-                for serving as a web application; for example, ability to 
-                compose views, provide functions for responding with several 
-                data types (json, html, etc), connecting to a database, form 
+  1) Fullstack: Robust framework expected to provide high-level functionality
+                for serving as a web application; for example, ability to
+                compose views, provide functions for responding with several
+                data types (json, html, etc), connecting to a database, form
                 processing, etc.
   2) Micro:     Simple framework expected to provide enough middleware to build
-                a robust web application such as request routing and some 
-                simple plumbing, but may not include built-in functionality 
+                a robust web application such as request routing and some
+                simple plumbing, but may not include built-in functionality
                 such as, for example, server-composed views.
   3) Platform:  Barebones infrastructure for servicing HTTP requests, but does
                 not include a framework at all.
@@ -166,7 +166,7 @@ class Scaffolding:
             self.__gather_platform()
 
     def __prompt_classification(self):
-        self.classification = raw_input("Classification [1/2/3]: ").strip()
+        self.classification = input("Classification [1/2/3]: ").strip()
         if self.classification == '1':
             self.classification = 'Fullstack'
         if self.classification == '2':
@@ -181,7 +181,7 @@ class Scaffolding:
         print("""
   The platform of your test implementation.
 
-  The platform is the low-level software or API used to host web applications 
+  The platform is the low-level software or API used to host web applications
   for the framework; the platform provides an implementation of the HTTP
   fundamentals.
 
@@ -193,7 +193,7 @@ class Scaffolding:
         self.__prompt_platform()
 
     def __prompt_platform(self):
-        self.platform = raw_input("Platform (optional): ").strip()
+        self.platform = input("Platform (optional): ").strip()
         if self.platform == '':
             self.platform = 'None'
 
@@ -218,7 +218,7 @@ class Scaffolding:
             valid = self.__prompt_database(prompt, options)
 
     def __prompt_database(self, prompt, options):
-        self.database = raw_input(prompt).strip()
+        self.database = input(prompt).strip()
         if 0 < int(self.database) <= len(options):
             self.database = options[int(self.database) - 1]
             return True
@@ -233,11 +233,11 @@ class Scaffolding:
         print("""
   How you would classify the ORM (object relational mapper) of your test?
 
-  1) Full:  A feature-rich ORM which provides functionality for interacting 
-            with a database without writing a query in all but the most edge 
+  1) Full:  A feature-rich ORM which provides functionality for interacting
+            with a database without writing a query in all but the most edge
             cases.
   2) Micro: An ORM which provides functionality for interacting with a database
-            for many trivial operations (querying, updating), but not more 
+            for many trivial operations (querying, updating), but not more
             robust cases (for example, gathering relations).
   3) Raw:   No ORM; raw database access.
     """)
@@ -246,7 +246,7 @@ class Scaffolding:
             valid = self.__prompt_orm()
 
     def __prompt_orm(self):
-        self.orm = raw_input("ORM [1/2/3]: ").strip()
+        self.orm = input("ORM [1/2/3]: ").strip()
         if self.orm == '1':
             self.orm = 'Full'
         if self.orm == '2':
@@ -269,7 +269,7 @@ class Scaffolding:
         self.__prompt_webserver()
 
     def __prompt_webserver(self):
-        self.webserver = raw_input("Webserver (optional): ").strip()
+        self.webserver = input("Webserver (optional): ").strip()
         if self.webserver == '':
             self.webserver = 'None'
 
@@ -277,9 +277,9 @@ class Scaffolding:
         print("""
   The name of another test (elsewhere in this project) that is a subset of this
   framework.
-  This allows for the generation of the framework efficiency chart in the 
+  This allows for the generation of the framework efficiency chart in the
   results web site.
-  For example, Compojure is compared to "servlet" since Compojure is built on 
+  For example, Compojure is compared to "servlet" since Compojure is built on
   the Servlet platform.
 
   Example: Servlet, Wai, Undertow
@@ -287,7 +287,7 @@ class Scaffolding:
         self.__prompt_versus()
 
     def __prompt_versus(self):
-        self.versus = raw_input("Versus (optional): ").strip()
+        self.versus = input("Versus (optional): ").strip()
         if self.versus == '':
             self.versus = 'None'
 
@@ -319,7 +319,7 @@ class Scaffolding:
             print('Aborting')
 
     def __prompt_confirmation(self):
-        self.confirmation = raw_input("Initialize [y/n]: ").strip().lower()
+        self.confirmation = input("Initialize [y/n]: ").strip().lower()
         return self.confirmation == 'y' or self.confirmation == 'n'
 
     def __build_scaffolding(self):
@@ -344,31 +344,31 @@ class Scaffolding:
     def __edit_scaffold_files(self):
         for file in os.listdir(os.path.join(self.test_dir)):
             self.__replace_text(
-                os.path.join(self.test_dir, file), "\$NAME", self.name)
+                os.path.join(self.test_dir, file), r'\$NAME', self.name)
             self.__replace_text(
-                os.path.join(self.test_dir, file), "\$DISPLAY_NAME",
+                os.path.join(self.test_dir, file), r'\$DISPLAY_NAME',
                 self.display_name)
             self.__replace_text(
-                os.path.join(self.test_dir, file), "\$APPROACH", self.approach)
+                os.path.join(self.test_dir, file), r'\$APPROACH', self.approach)
             self.__replace_text(
-                os.path.join(self.test_dir, file), "\$CLASSIFICATION",
+                os.path.join(self.test_dir, file), r'\$CLASSIFICATION',
                 self.classification)
             self.__replace_text(
-                os.path.join(self.test_dir, file), "\$FRAMEWORK",
+                os.path.join(self.test_dir, file), r'\$FRAMEWORK',
                 self.framework)
             self.__replace_text(
-                os.path.join(self.test_dir, file), "\$LANGUAGE", self.language)
+                os.path.join(self.test_dir, file), r'\$LANGUAGE', self.language)
             self.__replace_text(
-                os.path.join(self.test_dir, file), "\$DATABASE", self.database)
+                os.path.join(self.test_dir, file), r'\$DATABASE', self.database)
             self.__replace_text(
-                os.path.join(self.test_dir, file), "\$ORM", self.orm)
+                os.path.join(self.test_dir, file), r'\$ORM', self.orm)
             self.__replace_text(
-                os.path.join(self.test_dir, file), "\$PLATFORM", self.platform)
+                os.path.join(self.test_dir, file), r'\$PLATFORM', self.platform)
             self.__replace_text(
-                os.path.join(self.test_dir, file), "\$WEBSERVER",
+                os.path.join(self.test_dir, file), r'\$WEBSERVER',
                 self.webserver)
             self.__replace_text(
-                os.path.join(self.test_dir, file), "\$VERSUS", self.versus)
+                os.path.join(self.test_dir, file), r'\$VERSUS', self.versus)
 
     def __print_success(self):
         print("""

@@ -34,7 +34,7 @@ Amber::Server.configure do |settings|
   # spinning an instance for each number of process specified here.
   # Rule of thumb, always leave at least 1 core available for system processes/resources.
   #
-  settings.process_count = 1
+  settings.process_count = (System.cpu_count).to_i32
   #
   #
   # PORT: This is the port that you're application will run on. Examples would be (80, 443, 3000, 8080)
@@ -45,7 +45,5 @@ Amber::Server.configure do |settings|
   # Log: Is the logger that will be used for Amber and it defaults to ::Logger.new(STDOUT).
   # You can supply a custom logger.
   #
-  settings.logger = Amber::Environment::Logger.new(nil)
-  #
-  #
+  settings.logging.severity = "info"
 end

@@ -5,8 +5,22 @@ use trillium::{async_trait, Conn, Handler, Info};
 #[derive(Debug, Default)]
 pub struct Db(Option<DatabaseConnection>);
 
+pub mod cached_world;
 pub mod fortune;
 pub mod world;
+
+impl Db {
+    pub(crate) async fn connection() -> DatabaseConnection {
+        let db_url = env::var("DATABASE_URL").expect("env var DATABASE_URL not found");
+
+        let connect_options = ConnectOptions::new(db_url.clone());
+
+        Database::connect(connect_options)
+            .await
+            .map_err(|e| format!("could not connect to {}: {}", &db_url, e))
+            .unwrap()
+    }
+}
 
 #[async_trait]
 impl Handler for Db {
@@ -16,16 +30,7 @@ impl Handler for Db {
 
     async fn init(&mut self, _info: &mut Info) {
         if self.0.is_none() {
-            let db_url = env::var("DATABASE_URL").expect("env var DATABASE_URL not found");
-
-            let connect_options = ConnectOptions::new(db_url.clone());
-
-            let db = Database::connect(connect_options)
-                .await
-                .map_err(|e| format!("could not connect to {}: {}", &db_url, e))
-                .unwrap();
-
-            self.0 = Some(db);
+            self.0 = Some(Self::connection().await);
         }
     }
 }

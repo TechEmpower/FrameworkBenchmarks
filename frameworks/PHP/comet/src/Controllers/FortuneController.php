@@ -30,7 +30,6 @@ class FortuneController
         		.$html.
         		'</table></body></html>'
         	)
-        	->withHeader('Content-Type', 'text/html; charset=utf-8')
         	->withHeader('Date', Storage::$date);
 	}
 }

@@ -1,3 +1,8 @@
+<p align="center">
+<img src="	https://cakephp.org/img/cake-logo.svg" height=100>
+</p>
+https://www.cakephp.org
+
 # Cake PHP Benchmarking Test
 
 This is the Cake PHP portion of a [benchmarking test suite](../) comparing a variety of web development platforms.
@@ -18,10 +23,8 @@ Uses the CakePHP Model functionality.
 ## Infrastructure Software Versions
 The tests were run with:
 
-* [Cake Version 4.0](https://cakephp.org/)
-* [PHP Version 7.4](http://www.php.net/)
-* [nginx 1.12.0](http://nginx.org/)
-* [MySQL 5.7.20](https://dev.mysql.com/)
+* [Cake Version 5](https://cakephp.org/)
+* [PHP Version 8.2](http://www.php.net/)
 
 Cake Debug mode is set to false in [core.php](config/app.php), as
 appropriate for a production deployment.

@@ -1,13 +1,22 @@
-FROM ruby:2.4
+FROM ruby:4.0-rc
 
-RUN apt-get update -yqq && apt-get install -yqq nginx
+ENV RUBY_YJIT_ENABLE=1
 
-ADD ./ /rack
+# Use Jemalloc
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends libjemalloc2
+ENV LD_PRELOAD=libjemalloc.so.2
 
 WORKDIR /rack
 
-RUN bundle install --jobs=4 --gemfile=/rack/Gemfile --path=/rack/rack/bundle
+COPY Gemfile* ./
+
+ENV BUNDLE_FORCE_RUBY_PLATFORM=true
+RUN bundle config set with 'falcon'
+RUN bundle install --jobs=8
+
+COPY . .
 
 EXPOSE 8080
 
-CMD bundle exec falcon serve --forked --bind tcp://0.0.0.0:8080
+CMD bundle exec falcon host

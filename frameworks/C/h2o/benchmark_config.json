@@ -1,5 +1,6 @@
 {
   "framework": "h2o",
+  "maintainers": ["volyrique"],
   "tests": [{
     "default": {
       "json_url": "/json",
@@ -13,7 +14,7 @@
       "approach": "Realistic",
       "classification": "Platform",
       "database": "Postgres",
-      "framework": "None",
+      "framework": "libh2o",
       "language": "C",
       "flavor": "None",
       "orm": "Raw",

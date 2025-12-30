@@ -1,11 +1,12 @@
 package main
 
 import (
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
+	"github.com/goccy/go-json"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/utils"
 )
@@ -14,6 +15,8 @@ import (
 func Benchmark_Plaintext(b *testing.B) {
 	app := fiber.New(fiber.Config{
 		DisableStartupMessage: true,
+		JSONEncoder:           json.Marshal,
+		JSONDecoder:           json.Unmarshal,
 	})
 
 	app.Get("/plaintext", plaintextHandler)
@@ -33,7 +36,7 @@ func Benchmark_Plaintext(b *testing.B) {
 	utils.AssertEqual(b, nil, err, "app.Test(req)")
 	utils.AssertEqual(b, 200, resp.StatusCode, "Status code")
 	utils.AssertEqual(b, fiber.MIMETextPlainCharsetUTF8, resp.Header.Get("Content-Type"))
-	body, _ := ioutil.ReadAll(resp.Body)
+	body, _ := io.ReadAll(resp.Body)
 	utils.AssertEqual(b, helloworldRaw, body)
 }
 
@@ -41,6 +44,8 @@ func Benchmark_Plaintext(b *testing.B) {
 func Benchmark_JSON(b *testing.B) {
 	app := fiber.New(fiber.Config{
 		DisableStartupMessage: true,
+		JSONEncoder:           json.Marshal,
+		JSONDecoder:           json.Unmarshal,
 	})
 
 	app.Get("/json", jsonHandler)
@@ -60,6 +65,6 @@ func Benchmark_JSON(b *testing.B) {
 	utils.AssertEqual(b, nil, err, "app.Test(req)")
 	utils.AssertEqual(b, 200, resp.StatusCode, "Status code")
 	utils.AssertEqual(b, fiber.MIMEApplicationJSON, resp.Header.Get("Content-Type"))
-	body, _ := ioutil.ReadAll(resp.Body)
+	body, _ := io.ReadAll(resp.Body)
 	utils.AssertEqual(b, `{"message":"Hello, World!"}`, string(body))
 }

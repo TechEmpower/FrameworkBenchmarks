@@ -1,0 +1,2 @@
+gunicorn==23.0.0
+meinheld==1.0.2

@@ -1,0 +1,67 @@
+{
+  "framework": "kit",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
+        "update_url": "/updates?queries=",
+        "cached_query_url": "/cached-queries?queries=",
+        "fortune_url": "/fortunes",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "postgres",
+        "framework": "Kit",
+        "language": "Clojure",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "Undertow",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Kit",
+        "notes": "",
+        "versus": "None"
+      },
+      "majavat": {
+        "fortune_url": "/majavat-fortunes",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "postgres",
+        "framework": "None",
+        "language": "Clojure",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "kit-majavat",
+        "notes": "",
+        "versus": "kit"
+      },
+      "hiccup": {
+        "fortune_url": "/hiccup-fortunes",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "postgres",
+        "framework": "None",
+        "language": "Clojure",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "kit-hiccup",
+        "notes": "",
+        "versus": "kit"
+      }
+    }
+  ]
+}

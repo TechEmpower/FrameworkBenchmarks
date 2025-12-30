@@ -1,0 +1,4 @@
+orjson==3.10.16
+litestar==2.18.0
+sniffio==1.3.0
+git+https://github.com/cirospaciari/socketify.py.git@main#socketify

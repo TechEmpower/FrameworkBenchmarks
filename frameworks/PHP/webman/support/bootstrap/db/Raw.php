@@ -24,30 +24,12 @@ use PDO;
  */
 class Raw implements Bootstrap
 {
-    /**
-     * @var \PDO
-     */
-    public static $pdo;
 
-    /**
-     * @var PDOStatement
-     */
-    public static $statement;
+    public static PDO $pdo;
 
-    /**
-     * @var PDOStatement
-     */
-    public static $fortune;
+    public static PDOStatement $fortune;
 
-    /**
-     * @var PDOStatement
-     */
-    public static $random;
-
-    /**
-     * @var PDOStatement
-     */
-    public static $update;
+    public static PDOStatement $random;
 
     /**
      * @param Worker $worker
@@ -61,10 +43,9 @@ class Raw implements Bootstrap
             [PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                 PDO::ATTR_EMULATE_PREPARES    => false]
         );
-        self::$statement = $pdo->prepare('SELECT id,randomNumber FROM World WHERE id=?');
-        self::$fortune   = $pdo->prepare('SELECT id,message FROM Fortune');
         self::$random    = $pdo->prepare('SELECT id,randomNumber FROM World WHERE id=?');
-        self::$update    = $pdo->prepare('UPDATE World SET randomNumber=? WHERE id=?');
+        self::$fortune   = $pdo->prepare('SELECT id,message FROM Fortune');
         self::$pdo = $pdo;
     }
+
 }

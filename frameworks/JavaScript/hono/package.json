@@ -1,0 +1,17 @@
+{
+  "dependencies": {
+    "@hono/node-server": "^1.10.1",
+    "hono": "^3.10.4",
+    "postgres": "^3.4.3"
+  },
+  "license": "MIT",
+  "main": "src/server.js",
+  "name": "hono",
+  "private": true,
+  "scripts": {
+    "dev": "node src/server.js",
+    "start": "node src/clustered.js"
+  },
+  "type": "module",
+  "version": "0.0.1"
+}

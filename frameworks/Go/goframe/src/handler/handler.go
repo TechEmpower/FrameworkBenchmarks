@@ -8,7 +8,7 @@ import (
 	"github.com/bytedance/sonic"
 	"github.com/jackc/pgx/v4"
 
-	"goframe/template"
+	"goframe/app/template"
 )
 
 const (

@@ -33,8 +33,7 @@
 #define ARRAY_SIZE(a) (sizeof(a) / sizeof(*(a)))
 // mainly used to silence compiler warnings about unused function parameters
 #define IGNORE_FUNCTION_PARAMETER(p) ((void) (p))
-// Do not use the following MAX and MIN macros with parameters that have side effects.
-#define MAX(x, y) ((x) > (y) ? (x) : (y))
+// Do not use the following MIN macro with parameters that have side effects.
 #define MIN(x, y) ((x) < (y) ? (x) : (y))
 #define TOSTRING(x) # x
 #define MKSTR(x) TOSTRING(x)
@@ -50,8 +49,6 @@ yajl_gen_status gen_integer(long long number, char *buf, size_t len, yajl_gen ge
 json_generator_t *get_json_generator(list_t **pool, size_t *gen_num);
 size_t get_maximum_cache_line_size(void);
 uint32_t get_random_number(uint32_t max_rand, unsigned int *seed);
-bool is_power_of_2(size_t x);
-size_t round_up_to_power_of_2(size_t x);
 // stable sort
 list_t *sort_list(list_t *head, int (*compare)(const list_t *, const list_t *));
 

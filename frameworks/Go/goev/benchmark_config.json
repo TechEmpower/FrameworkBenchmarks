@@ -1,0 +1,23 @@
+{
+  "framework": "goev",
+  "tests": [{
+    "default": {
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Stripped",
+      "classification": "Platform",
+      "database": "None",
+      "framework": "goev",
+      "language": "Go",
+      "flavor": "None",
+      "orm": "Raw",
+      "platform": "None",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Goev",
+      "notes": "",
+      "versus": "go"
+    }
+  }]
+}

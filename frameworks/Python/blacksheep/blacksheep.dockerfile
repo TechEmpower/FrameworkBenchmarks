@@ -1,17 +1,16 @@
-FROM python:3.8
+FROM python:3.13
 
 WORKDIR /blacksheep
 
-RUN pip3 install cython==0.29.13
+COPY ./ /blacksheep
 
-ADD requirements.txt /blacksheep/
+RUN apt-get update; apt-get install libuv1 -y
 
-RUN pip3 install -r /blacksheep/requirements.txt
-
-ADD templates/fortune.html /blacksheep/templates/
-
-ADD blacksheep_conf.py app.py /blacksheep/
-
+RUN pip3 install -U pip -q
+RUN pip3 install Cython==3.0.12 -q
+RUN pip3 install -r /blacksheep/requirements.txt -q
+RUN pip3 install -r /blacksheep/requirements-uvicorn.txt -q
+ENV GUNICORN=1
 EXPOSE 8080
 
-CMD gunicorn app:app -k uvicorn.workers.UvicornWorker -c blacksheep_conf.py
+CMD gunicorn app:app -k uvicorn_worker.UvicornWorker -c blacksheep_conf.py

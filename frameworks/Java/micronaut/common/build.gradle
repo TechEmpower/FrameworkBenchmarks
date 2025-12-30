@@ -1,0 +1,54 @@
+plugins {
+    id 'java'
+    id "io.micronaut.library"
+    id "gg.jte.gradle" version "3.1.12"
+}
+
+group 'io.micronaut.benchmark'
+version '1.0'
+
+repositories {
+    mavenCentral()
+}
+
+micronaut {
+    runtime "netty"
+    testRuntime "junit5"
+}
+
+jte {
+    sourceDirectory = file("src/main/jte").toPath()
+    generate()
+    binaryStaticContent = true
+}
+
+dependencies {
+    annotationProcessor("io.micronaut.data:micronaut-data-document-processor")
+
+    api("io.micronaut:micronaut-jackson-databind")
+    api("io.micronaut:micronaut-inject")
+    api("io.micronaut:micronaut-http-server-netty")
+    api("io.micronaut.reactor:micronaut-reactor")
+
+    implementation("io.micronaut.data:micronaut-data-model") {
+        transitive = false
+    }
+
+    implementation("gg.jte:jte")
+
+    runtimeOnly("io.netty:netty-transport-native-io_uring::linux-x86_64")
+
+    runtimeOnly("ch.qos.logback:logback-classic")
+    runtimeOnly("org.yaml:snakeyaml")
+}
+
+test {
+    useJUnitPlatform()
+}
+
+// Gradle requires that generateJte is run before some tasks
+tasks.configureEach {
+    if (name == "inspectRuntimeClasspath") {
+        mustRunAfter("generateJte")
+    }
+}

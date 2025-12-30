@@ -5,7 +5,7 @@
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries?queries=",
-      "fortune_url": "/fortune",
+      "fortune_url": "/fortunes",
       "update_url": "/updates?queries=",
       "plaintext_url": "/plaintext",
       "port": 8080,
@@ -28,7 +28,7 @@
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries?queries=",
-      "fortune_url": "/fortune",
+      "fortune_url": "/fortunes",
       "update_url": "/updates?queries=",
       "plaintext_url": "/plaintext",
       "port": 8080,
@@ -45,7 +45,8 @@
       "database_os": "Linux",
       "display_name": "Bottle",
       "notes": "PyPy2",
-      "versus": "wsgi"
+      "versus": "wsgi",
+      "tags": ["broken"]
     },
     "raw": {
       "db_url": "/raw-db",
@@ -72,7 +73,7 @@
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries?queries=",
-      "fortune_url": "/fortune",
+      "fortune_url": "/fortunes",
       "update_url": "/updates?queries=",
       "plaintext_url": "/plaintext",
       "port": 8080,
@@ -89,7 +90,8 @@
       "database_os": "Linux",
       "display_name": "Bottle-uWSGI",
       "notes": "",
-      "versus": "wsgi"
+      "versus": "wsgi",
+      "tags": ["broken"]
     }
   }]
 }

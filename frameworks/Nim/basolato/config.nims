@@ -1,20 +1,9 @@
-import os
-
-# DB Connection
-putEnv("DB_DRIVER", "postgres")
-putEnv("DB_CONNECTION", "tfb-database:5432")
-putEnv("DB_USER", "benchmarkdbuser")
-putEnv("DB_PASSWORD", "benchmarkdbpass")
-putEnv("DB_DATABASE", "hello_world")
-
-# Logging
-putEnv("LOG_IS_DISPLAY", "false")
-putEnv("LOG_IS_FILE", "false")
-putEnv("LOG_DIR", "/basolato/logs")
-
-# Security
-putEnv("SECRET_KEY", "1p>G<bEpKnvD^d/nQ,26#!g~") # 24 length
-putEnv("CSRF_TIME", "525600") # minutes of 1 year
-putEnv("SESSION_TIME", "20160") # minutes of 2 weeks
-putEnv("SESSION_DB", "/basolato/session.db")
-putEnv("IS_SESSION_MEMORY", "false")
+import std/os
+putEnv("HOST", "0.0.0.0")
+# putEnv("DB_SQLITE", $true) # "true" or "false"
+putEnv("DB_POSTGRES", $true) # "true" or "false"
+# putEnv("DB_MYSQL", $true) # "true" or "false"
+# putEnv("DB_MARIADB", $true) # "true" or "false"
+putEnv("SESSION_TYPE", "file") # "file" or "redis"
+putEnv("SESSION_DB_PATH", "./session.db") # Session file path or redis host:port. ex:"127.0.0.1:6379"
+putEnv("LIBSASS", $false) # "true" or "false"

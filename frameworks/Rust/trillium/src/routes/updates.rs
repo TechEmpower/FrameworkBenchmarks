@@ -1,13 +1,11 @@
-use crate::db::{
-    world::{Entity as Worlds, Model as World},
-    DbConnExt,
-};
-
-use futures_util::stream::{futures_unordered::FuturesUnordered, StreamExt};
+use crate::db::{world::Entity as Worlds, DbConnExt};
+use futures_lite::StreamExt;
 use sea_orm::{entity::prelude::*, IntoActiveModel, Set};
-use trillium::Conn;
+use std::iter;
+use trillium::{Conn, Status};
 use trillium_api::ApiConnExt;
 use trillium_router::RouterConnExt;
+use unicycle::FuturesUnordered;
 
 pub async fn handler(conn: Conn) -> Conn {
     let queries = conn
@@ -18,19 +16,22 @@ pub async fn handler(conn: Conn) -> Conn {
         .max(1);
 
     let db = conn.db();
+    let worlds = iter::repeat_with(|| async {
+        let mut world = Worlds::find_by_id(fastrand::i32(1..=10_000))
+            .one(db)
+            .await?
+            .ok_or_else(|| DbErr::RecordNotFound(String::from("not found")))?
+            .into_active_model();
+        world.random_number = Set(fastrand::i32(1..=10_000));
+        world.update(db).await
+    })
+    .take(queries)
+    .collect::<FuturesUnordered<_>>()
+    .try_collect::<_, _, Vec<_>>()
+    .await;
 
-    let vec_of_worlds: Vec<World> =
-        std::iter::repeat_with(|| Worlds::find_by_id(fastrand::i32(1..10000)).one(db))
-            .take(queries)
-            .collect::<FuturesUnordered<_>>()
-            .filter_map(|x| async move { x.ok().flatten() })
-            .filter_map(|w| async move {
-                let mut am = w.clone().into_active_model();
-                am.random_number = Set(fastrand::i32(1..10000));
-                am.update(db).await.ok().and_then(|a| a.try_into().ok())
-            })
-            .collect()
-            .await;
-
-    conn.with_json(&vec_of_worlds)
+    match worlds {
+        Ok(worlds) => conn.with_json(&worlds),
+        Err(_) => conn.with_status(Status::InternalServerError),
+    }
 }

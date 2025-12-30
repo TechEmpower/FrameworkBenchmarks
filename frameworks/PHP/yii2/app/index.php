@@ -51,4 +51,12 @@ $config = [
     ],
 ];
 
-(new yii\web\Application($config))->run();
+(new  yii\web\Application($config))->run();
+
+function handleWorkerman()
+{
+    global $config;
+    ob_start();
+    (new yii\web\Application($config))->run();
+    return ob_get_clean();
+}

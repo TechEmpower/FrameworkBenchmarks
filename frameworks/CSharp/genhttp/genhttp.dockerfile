@@ -1,18 +1,33 @@
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS build
+WORKDIR /source
+
+ENV GENHTTP_ENGINE_NAME=INTERNAL
+ENV GENHTTP_ENGINE_PACKAGE=GenHTTP.Core
+
+# copy csproj and restore as distinct layers
+COPY Benchmarks/*.csproj .
+RUN dotnet restore -r linux-musl-x64
+
+# copy and publish app and libraries
+COPY Benchmarks/ .
+RUN dotnet publish -c release -o /app -r linux-musl-x64 --no-restore --self-contained
+
+# final stage/image
+FROM mcr.microsoft.com/dotnet/runtime-deps:10.0-alpine
+
+ENV DOTNET_GCDynamicAdaptationMode=0 \
+    DOTNET_EnableDiagnostics=0 \
+    COMPlus_EnableDiagnostics=0 \
+    COMPlus_DbgEnableMiniDump=0 \
+    COMPlus_DbgEnableMiniDumpCollection=0 \
+    COMPlus_DbgMiniDumpType=0 \
+    DOTNET_TieredPGO=0 \
+    DOTNET_TC_QuickJitForLoops=1 \
+    DOTNET_TC_QuickJit=1    
+
 WORKDIR /app
-COPY Benchmarks .
-RUN dotnet publish -c Release -o out
+COPY --from=build /app .
 
-FROM mcr.microsoft.com/dotnet/runtime:6.0 AS runtime
-
-# Full PGO
-ENV DOTNET_TieredPGO 1 
-ENV DOTNET_TC_QuickJitForLoops 1 
-ENV DOTNET_ReadyToRun 0
-
-WORKDIR /app
-COPY --from=build /app/out ./
+ENTRYPOINT ["./Benchmarks"]
 
 EXPOSE 8080
-
-ENTRYPOINT ["dotnet", "Benchmarks.dll"]

@@ -5,32 +5,24 @@
  */
 package org.redkalex.benchmark;
 
-import org.redkale.convert.ConvertSmallString;
+import org.redkale.annotation.Serial;
+import org.redkale.convert.ConvertStandardString;
 import org.redkale.convert.json.JsonConvert;
-import org.redkale.util.Bean;
 
 /**
  *
  * @author zhangjx
  */
-@Bean
+@Serial
 public final class Message {
 
-    private static final Message instance = new Message();
-
-    @ConvertSmallString
+    @ConvertStandardString
     private String message;
 
-    public Message() {
-    }
+    public Message() {}
 
     public Message(String message) {
         this.message = message;
-    }
-
-    public static Message create(String str) {
-        instance.message = str;
-        return instance;
     }
 
     public String getMessage() {

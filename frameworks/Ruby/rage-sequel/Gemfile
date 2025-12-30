@@ -1,0 +1,8 @@
+source "https://rubygems.org"
+
+gem "rage-rb", "~> 1.19"
+
+gem "pg", "~> 1.0"
+gem 'sequel', '~> 5.0'
+gem 'sequel_pg', '~> 1.6', platforms: :ruby, require: false
+gem 'logger' # required for ruby 3.5

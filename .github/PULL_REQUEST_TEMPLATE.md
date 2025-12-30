@@ -1,7 +1,7 @@
 <!--
 Thank you for submitting to the TechEmpower Framework Benchmarks!
 
-If you are submitting a new framework, please make sure that you add the appropriate line in the `.github/workflows/build.yml` file for proper integration testing. Also please make sure that an appropriate `README.md` is added in your framework directory with information about the framework and a link to its homepage and documentation.
+If you are submitting a new framework, please make sure that an appropriate `README.md` is added in your framework directory with information about the framework and a link to its homepage and documentation.
 
 For new frameworks, please do not include source code that isn't required for the benchmarks.
 

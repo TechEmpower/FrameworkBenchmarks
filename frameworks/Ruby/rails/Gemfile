@@ -1,12 +1,29 @@
-ruby '~> 3.1.0'
-
 source 'https://rubygems.org'
 
-gem 'listen', '~> 3.3', group: :development
-gem 'mysql2', '0.5.3', group: :mysql
-gem 'oj', '~> 3.13'
-gem 'pg', '1.2.3', group: :postgresql
-gem 'puma', '~> 5.6'
-gem 'rails', '~> 7.0.1'
-gem 'redis', '~> 4.0'
-gem 'tzinfo-data', '1.2021.5'
+gem 'rails', '~> 8.1.0'
+gem 'redis', '~> 5.0'
+gem 'tzinfo-data'
+
+group :mysql, optional: true do
+  gem 'trilogy', '~> 2.8.1'
+end
+
+group :postgresql, optional: true do
+  gem 'pg', '~> 1.5'
+end
+
+group :iodine, optional: true do
+  gem 'iodine', '~> 0.7', require: false
+end
+
+group :falcon, optional: true do
+  gem 'falcon', '~> 0.47', require: false
+end
+
+group :puma, optional: true do
+  gem 'puma', '~> 7.1', require: false
+end
+
+group :pitchfork, optional: true do
+  gem 'pitchfork', '~> 0.17'
+end

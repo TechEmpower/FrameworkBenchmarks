@@ -1,0 +1,2 @@
+granian==2.5.0
+litestar-granian==0.14.2

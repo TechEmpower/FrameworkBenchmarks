@@ -61,7 +61,8 @@
         "database_os": "Linux",
         "display_name": "javalin-mongodb",
         "notes": "",
-        "versus": "None"
+        "versus": "None",
+        "tags": ["broken"]
       }
     }
   ]

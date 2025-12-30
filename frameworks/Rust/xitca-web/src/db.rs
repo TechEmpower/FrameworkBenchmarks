@@ -1,146 +1,127 @@
-use std::{cell::RefCell, error::Error, fmt::Write};
+use xitca_postgres::{
+    Execute,
+    dev::Query,
+    iter::AsyncLendingIterator,
+    statement::{Statement, StatementNamed},
+    types::Type,
+};
 
-use ahash::AHashMap;
-use futures_util::stream::{FuturesUnordered, StreamExt, TryStreamExt};
-use rand::{rngs::SmallRng, Rng, SeedableRng};
-use tokio::pin;
-use tokio_postgres::{types::ToSql, NoTls, Statement};
+use crate::{
+    ser::{Fortune, Fortunes, World},
+    util::{Error, HandleResult, Rand},
+};
 
-use super::ser::{Fortune, Fortunes, World};
-
-pub struct Client {
-    client: tokio_postgres::Client,
-    rng: RefCell<SmallRng>,
-    fortune: Statement,
-    world: Statement,
-    updates: AHashMap<u16, Statement>,
+#[cold]
+#[inline(never)]
+fn not_found() -> Error {
+    "request World does not exist".into()
 }
 
-pub async fn create(config: &str) -> Client {
-    let (client, conn) = tokio_postgres::connect(config, NoTls).await.unwrap();
-
-    tokio::task::spawn_local(async move {
-        let _ = conn.await;
-    });
-
-    let fortune = client.prepare("SELECT * FROM fortune").await.unwrap();
-    let world = client
-        .prepare("SELECT * FROM world WHERE id=$1")
-        .await
-        .unwrap();
-    let mut updates = AHashMap::new();
-    for num in 1..=500u16 {
-        let mut pl = 1;
-        let mut q = String::new();
-        q.push_str("UPDATE world SET randomnumber = CASE id ");
-        for _ in 1..=num {
-            let _ = write!(&mut q, "when ${} then ${} ", pl, pl + 1);
-            pl += 2;
-        }
-        q.push_str("ELSE randomnumber END WHERE id IN (");
-        for _ in 1..=num {
-            let _ = write!(&mut q, "${},", pl);
-            pl += 1;
-        }
-        q.pop();
-        q.push(')');
-
-        let st = client.prepare(&q).await.unwrap();
-        updates.insert(num, st);
-    }
-
-    Client {
-        client,
-        rng: RefCell::new(SmallRng::from_entropy()),
-        fortune,
-        world,
-        updates,
-    }
+#[derive(Default)]
+pub struct Exec {
+    rng: core::cell::RefCell<Rand>,
 }
 
-type DbResult<T> = Result<T, Box<dyn Error>>;
+impl Exec {
+    pub const FORTUNE_STMT: StatementNamed<'_> = Statement::named("SELECT id,message FROM fortune", &[]);
+    pub const WORLD_STMT: StatementNamed<'_> =
+        Statement::named("SELECT id,randomNumber FROM world WHERE id=$1", &[Type::INT4]);
+    pub const UPDATE_STMT: StatementNamed<'_> = Statement::named(
+        "UPDATE world SET randomNumber=w.r FROM (SELECT unnest($1) as i,unnest($2) as r) w WHERE world.id=w.i",
+        &[Type::INT4_ARRAY, Type::INT4_ARRAY],
+    );
 
-impl Client {
-    async fn query_one_world(&self, id: i32) -> DbResult<World> {
-        let stream = self.client.query_raw(&self.world, &[&id]).await?;
-        pin!(stream);
-        let row = stream.next().await.unwrap()?;
+    pub(crate) async fn db<C>(&self, conn: C, stmt: &Statement) -> HandleResult<World>
+    where
+        C: Query,
+    {
+        let id = self.rng.borrow_mut().gen_id();
+        let mut res = stmt.bind([id]).query(&conn).await?;
+        drop(conn);
+        let row = res.try_next().await?.ok_or_else(not_found)?;
         Ok(World::new(row.get(0), row.get(1)))
     }
 
-    pub async fn get_world(&self) -> DbResult<World> {
-        let id = (self.rng.borrow_mut().gen::<u32>() % 10_000 + 1) as i32;
-        self.query_one_world(id).await
-    }
+    pub(crate) async fn queries<C>(&self, conn: C, stmt: &Statement, num: u16) -> HandleResult<Vec<World>>
+    where
+        C: Query,
+    {
+        let get = self
+            .rng
+            .borrow_mut()
+            .gen_multi()
+            .take(num as _)
+            .map(|id| stmt.bind([id]).query(&conn))
+            .collect::<Vec<_>>();
 
-    pub async fn get_worlds(&self, num: u16) -> DbResult<Vec<World>> {
-        let worlds = {
-            let mut rng = self.rng.borrow_mut();
-            (0..num)
-                .map(|_| {
-                    let id = (rng.gen::<u32>() % 10_000 + 1) as i32;
-                    self.query_one_world(id)
-                })
-                .collect::<FuturesUnordered<_>>()
-        };
+        drop(conn);
 
-        worlds.try_collect().await
-    }
+        let mut worlds = Vec::with_capacity(num as _);
 
-    pub async fn update(&self, num: u16) -> DbResult<Vec<World>> {
-        let worlds = {
-            let mut rng = self.rng.borrow_mut();
-
-            (0..num)
-                .map(|_| {
-                    let id = (rng.gen::<u32>() % 10_000 + 1) as i32;
-                    let w_id = (rng.gen::<u32>() % 10_000 + 1) as i32;
-                    async move {
-                        let mut world = self.query_one_world(w_id).await?;
-                        world.randomnumber = id;
-                        Ok::<_, Box<dyn Error>>(world)
-                    }
-                })
-                .collect::<FuturesUnordered<_>>()
-        };
-
-        let worlds = worlds.try_collect::<Vec<_>>().await?;
-
-        let mut params = Vec::<&(dyn ToSql + Sync)>::with_capacity(num as usize * 3);
-
-        for w in &worlds {
-            params.push(&w.id);
-            params.push(&w.randomnumber);
+        for get in get {
+            let mut res = get.await?;
+            let row = res.try_next().await?.ok_or_else(not_found)?;
+            worlds.push(World::new(row.get(0), row.get(1)));
         }
-        for w in &worlds {
-            params.push(&w.id);
-        }
-
-        let st = self.updates.get(&num).unwrap();
-
-        let _ = self.client.query(st, params.as_slice()).await?;
 
         Ok(worlds)
     }
 
-    pub async fn tell_fortune(&self) -> DbResult<Fortunes> {
-        let mut items = Vec::with_capacity(32);
+    pub(crate) async fn updates<C>(
+        &self,
+        conn: C,
+        world_stmt: &Statement,
+        update_stmt: &Statement,
+        num: u16,
+    ) -> HandleResult<Vec<World>>
+    where
+        C: Query,
+    {
+        let (worlds, get, update) = {
+            let mut rng = self.rng.borrow_mut();
+            let mut ids = rng.gen_multi().take(num as _).collect::<Vec<_>>();
+            ids.sort();
 
-        items.push(Fortune::new(0, "Additional fortune added at request time."));
+            let (get, rngs, worlds) = ids
+                .iter()
+                .cloned()
+                .zip(rng.gen_multi())
+                .map(|(id, rand)| {
+                    let get = world_stmt.bind([id]).query(&conn);
+                    (get, rand, World::new(id, rand))
+                })
+                .collect::<(Vec<_>, Vec<_>, Vec<_>)>();
 
-        let stream = self
-            .client
-            .query_raw::<_, _, &[i32; 0]>(&self.fortune, &[])
-            .await?;
+            let update = update_stmt.bind([&ids, &rngs]).execute(&conn);
 
-        pin!(stream);
+            drop(conn);
 
-        while let Some(row) = stream.try_next().await? {
-            items.push(Fortune::new(row.get(0), row.get::<_, String>(1)));
+            (worlds, get, update)
+        };
+
+        for get in get {
+            let _rand = get.await?.try_next().await?.ok_or_else(not_found)?.get::<i32>(1);
         }
 
-        items.sort_by(|it, next| it.message.cmp(&next.message));
+        update.await?;
 
-        Ok(Fortunes::new(items))
+        Ok(worlds)
+    }
+
+    pub(crate) async fn fortunes<C>(conn: C, stmt: &Statement) -> HandleResult<Fortunes>
+    where
+        C: Query,
+    {
+        let mut res = stmt.query(&conn).await?;
+
+        drop(conn);
+
+        let mut fortunes = Vec::with_capacity(16);
+
+        while let Some(row) = res.try_next().await? {
+            fortunes.push(Fortune::new(row.get(0), row.get_zc(1)));
+        }
+
+        Ok(Fortunes::new(fortunes))
     }
 }

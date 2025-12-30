@@ -6,7 +6,6 @@
 		<shared-cache-mode>NONE</shared-cache-mode>
 		<properties>
 			<property name="hibernate.hbm2ddl.auto" value="none"/>
-			<property name="hibernate.dialect" value="MySQL57InnoDB" />
 		</properties>
 	</persistence-unit>
 </persistence>

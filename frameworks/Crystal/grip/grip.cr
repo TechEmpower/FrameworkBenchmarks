@@ -32,8 +32,10 @@ private def sanitized_query_count(request)
   queries.clamp(1..500)
 end
 
-class Json < Grip::Controllers::Http
-  def get(context)
+class JsonController
+  include Grip::Controllers::HTTP
+
+  def get(context : Context)
     context
       .put_resp_header("Server", "Grip")
       .put_resp_header("Date", HTTP.format_time(Time.utc))
@@ -45,8 +47,10 @@ class Json < Grip::Controllers::Http
   end
 end
 
-class Plaintext < Grip::Controllers::Http
-  def get(context)
+class PlaintextController
+  include Grip::Controllers::HTTP
+
+  def get(context : Context)
     context
       .put_resp_header("Server", "Grip")
       .put_resp_header("Date", HTTP.format_time(Time.utc))
@@ -56,8 +60,10 @@ class Plaintext < Grip::Controllers::Http
   end
 end
 
-class Db < Grip::Controllers::Http
-  def get(context)
+class DbController
+  include Grip::Controllers::HTTP
+
+  def get(context : Context)
     context
       .put_resp_header("Server", "Grip")
       .put_resp_header("Date", HTTP.format_time(Time.utc))
@@ -67,8 +73,10 @@ class Db < Grip::Controllers::Http
   end
 end
 
-class Queries < Grip::Controllers::Http
-  def get(context)
+class QueriesController
+  include Grip::Controllers::HTTP
+
+  def get(context : Context)
     results = (1..sanitized_query_count(context.request)).map do
       random_world
     end
@@ -82,8 +90,10 @@ class Queries < Grip::Controllers::Http
   end
 end
 
-class Updates < Grip::Controllers::Http
-  def get(context)
+class UpdatesController
+  include Grip::Controllers::HTTP
+
+  def get(context : Context)
     updated = (1..sanitized_query_count(context.request)).map do
       set_world({id: random_world[:id], randomNumber: rand(1..ID_MAXIMUM)})
     end
@@ -97,8 +107,10 @@ class Updates < Grip::Controllers::Http
   end
 end
 
-class Fortunes < Grip::Controllers::Http
-  def get(context)
+class FortunesController
+  include Grip::Controllers::HTTP
+
+  def get(context : Context)
     data = fortunes
     additional_fortune = {
       id:      0,
@@ -119,24 +131,23 @@ class Fortunes < Grip::Controllers::Http
   end
 end
 
-class Application < Grip::Application
-  def routes
-    get "/json", Json
-    get "/plaintext", Plaintext
-    get "/db", Db
-    get "/queries", Queries
-    get "/updates", Updates
-    get "/fortunes", Fortunes
-  end
+class Application
+  include Grip::Application
 
-  def router : Array(HTTP::Handler)
-    [
-      @http_handler,
-    ] of HTTP::Handler
-  end
+  property handlers : Array(HTTP::Handler) = [
+    Grip::Handlers::HTTP.new
+  ] of HTTP::Handler
 
-  def server : HTTP::Server
-    HTTP::Server.new(@router)
+  property environment : String =
+        ENV["ENVIRONMENT"]? || "PRODUCTION"
+
+  def initialize
+    get "/json", JsonController
+    get "/plaintext", PlaintextController
+    get "/db", DbController
+    get "/queries", QueriesController
+    get "/updates", UpdatesController
+    get "/fortunes", FortunesController
   end
 
   def reuse_port

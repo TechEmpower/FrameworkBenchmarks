@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Npgsql" Version="5.0.0-alpha1" />
+    <PackageReference Include="Npgsql" Version="8.0.3" />
     <PackageReference Include="System.IO.Pipelines" Version="5.0.0-rc.1.20451.14" />
   </ItemGroup>
 

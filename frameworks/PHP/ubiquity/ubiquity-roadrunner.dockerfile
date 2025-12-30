@@ -5,14 +5,14 @@ ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update -yqq && apt-get install -yqq software-properties-common > /dev/null
 RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php
 RUN apt-get update -yqq > /dev/null && \
-    apt-get install -yqq php8.0 php8.0-common php8.0-cgi php8.0-pgsql php-curl > /dev/null
+    apt-get install -yqq php8.3 php8.3-common php8.3-cgi php8.3-pgsql php-curl > /dev/null
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
 RUN apt-get install -y php-pear php-dev > /dev/null
 
 
-COPY deploy/conf/php-async.ini /etc/php/8.0/cgi/php.ini
+COPY deploy/conf/php-async.ini /etc/php/8.3/cgi/php.ini
 
 ADD ./ /ubiquity
 WORKDIR /ubiquity
@@ -34,8 +34,8 @@ RUN chmod 755 /bin/envwrapper.sh
 
 RUN chmod 777 -R /ubiquity/.ubiquity/*
 
-#RUN echo "opcache.preload=/ubiquity/app/config/preloader.script.php" >> /etc/php/8.0/cgi/php.ini
-RUN echo "opcache.jit_buffer_size=128M\nopcache.jit=function\n" >> /etc/php/8.0/cgi/php.ini
+#RUN echo "opcache.preload=/ubiquity/app/config/preloader.script.php" >> /etc/php/8.3/cgi/php.ini
+RUN echo "opcache.jit_buffer_size=128M\nopcache.jit=function\n" >> /etc/php/8.3/cgi/php.ini
 
 COPY deploy/conf/roadrunner/pgsql/rrServices.php app/config/rrServices.php
 

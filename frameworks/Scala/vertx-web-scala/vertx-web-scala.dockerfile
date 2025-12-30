@@ -1,14 +1,6 @@
-FROM openjdk:11-jdk
+FROM sbtscala/scala-sbt:eclipse-temurin-25.0.1_8_1.11.7_3.7.4
 
-ARG SBT_VERSION=1.2.8
-
-RUN \
-  curl -L -o sbt-$SBT_VERSION.deb https://dl.bintray.com/sbt/debian/sbt-$SBT_VERSION.deb && \
-  dpkg -i sbt-$SBT_VERSION.deb && \
-  rm sbt-$SBT_VERSION.deb && \
-  apt-get update && \
-  apt-get install sbt && \
-  sbt sbtVersion
+ARG SBT_VERSION=1.11.7
 
 WORKDIR /vertx
 COPY src src
@@ -33,5 +25,5 @@ CMD export DBIP=`getent hosts tfb-database | awk '{ print $1 }'` && \
       -Dvertx.disableTCCL=true \
       -Dvertx.disableHttpHeadersValidation=true \
       -jar \
-      target/scala-2.12/vertx-web-scala-assembly-1.jar \
+      target/scala-3.7.4/vertx-web-scala-assembly-1.jar \
       src/main/conf/config.json

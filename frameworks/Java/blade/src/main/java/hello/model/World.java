@@ -1,8 +1,9 @@
 package hello.model;
 
-import io.github.biezhi.anima.Model;
-import io.github.biezhi.anima.annotation.Column;
-import io.github.biezhi.anima.annotation.Table;
+
+import com.hellokaton.anima.Model;
+import com.hellokaton.anima.annotation.Column;
+import com.hellokaton.anima.annotation.Table;
 
 /**
  * World model

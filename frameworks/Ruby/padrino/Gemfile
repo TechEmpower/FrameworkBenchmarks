@@ -1,10 +1,15 @@
-source 'http://rubygems.org'
+source 'https://rubygems.org'
 
-gem 'mysql2', '0.4.10'
-gem "unicorn", '5.3.0'
-gem 'puma', '3.12.6'
-gem 'json', '1.8.6'
-gem 'slim', '2.0.3'
-gem 'dm-mysql-adapter', '1.2.0'
-gem 'dm-core', '1.2.1'
-gem 'padrino', '0.14.3'
+gem 'trilogy', '~> 2.9', platforms: [:ruby, :windows]
+
+gem 'json'
+gem 'activerecord', '~> 8.1.0', :require => 'active_record'
+
+gem 'slim'
+gem 'padrino', '0.16.0'
+gem 'rack'
+gem 'ostruct' # required for Ruby 3.5
+
+group :iodine, optional: true do
+  gem "iodine", "~> 0.7", require: false
+end

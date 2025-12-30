@@ -1,4 +1,4 @@
-FROM crystallang/crystal:1.0.0
+FROM crystallang/crystal:1.18.2
 
 WORKDIR /crystal
 COPY shard.yml shard.yml

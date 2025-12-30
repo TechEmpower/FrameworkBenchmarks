@@ -1,6 +1,7 @@
 <?php
 namespace models;
 
+#[\AllowDynamicProperties]
 class World {
 
 	/**

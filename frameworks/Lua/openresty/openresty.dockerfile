@@ -1,4 +1,4 @@
-FROM openresty/openresty:1.19.9.1-focal
+FROM openresty/openresty:1.25.3.1-2-jammy
 
 ADD ./nginx.conf /openresty/
 ADD ./app.lua /openresty/

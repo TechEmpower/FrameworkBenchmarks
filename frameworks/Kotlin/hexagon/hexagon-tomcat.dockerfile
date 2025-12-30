@@ -1,20 +1,22 @@
 #
 # BUILD
 #
-FROM gradle:7.4-jdk11 AS gradle_build
+FROM docker.io/bellsoft/liberica-runtime-container:jdk-all-25-cds-musl AS build
 USER root
 WORKDIR /hexagon
 
-COPY src src
-COPY build.gradle build.gradle
-RUN gradle --quiet
+ADD . .
+RUN ./gradlew --quiet classes
+RUN ./gradlew --quiet -x test war
 
 #
 # RUNTIME
 #
-FROM tomcat:10.0.14-jre17-temurin
-ENV DBSTORE postgresql
-ENV POSTGRESQL_DB_HOST tfb-database
+FROM docker.io/tomcat:11-jre25-temurin-noble
+ARG MODULE=/hexagon/hexagon_tomcat_postgresql
 
-COPY --from=gradle_build /hexagon/build/libs/ROOT.war /usr/local/tomcat/webapps/ROOT.war
-EXPOSE 8080
+ENV POSTGRESQL_DB_HOST tfb-database
+ENV JDK_JAVA_OPTIONS -XX:+AlwaysPreTouch -XX:+UseParallelGC -XX:+UseNUMA
+ENV maximumPoolSize 300
+
+COPY --from=build $MODULE/build/libs/ROOT.war /usr/local/tomcat/webapps/ROOT.war

@@ -1,0 +1,31 @@
+{:system/env
+ #profile {:dev  :dev
+           :test :test
+           :prod :prod}
+
+ :server/http
+ {:port    #long #or [#env PORT 8080]
+  :host    #or [#env HTTP_HOST "0.0.0.0"]
+  :handler #ig/ref :handler/ring}
+
+ :handler/ring
+ {:router #ig/ref :router/core}
+
+ :reitit.routes/bench
+ {:base-path ""
+  :db-conn   #ig/ref :db.sql/hikari-connection
+  :cache     #ig/ref :cache/inmem}
+
+ :router/routes
+ {:routes #ig/refset :reitit/routes}
+
+ :router/core
+ {:routes #ig/ref :router/routes}
+
+ :db.sql/hikari-connection
+ {:jdbc-url #or [#env JDBC_URL "jdbc:postgresql://localhost:5432/hello_world?user=benchmarkdbuser&password=benchmarkdbpass"]}
+
+ :cache/inmem
+ {:db-conn  #ig/ref :db.sql/hikari-connection
+  :threshold 10000}
+ }

@@ -1,13 +1,15 @@
-FROM python:3.8-buster
+FROM python:3.9-bullseye
 
 
 RUN apt-get update
 RUN apt-get install libpq-dev python3-dev -y
-ADD ./requirements.txt /flask/requirements.txt
-RUN pip3 install -r /flask/requirements.txt
-ADD ./ /flask
+
 WORKDIR /flask
+COPY ./ /flask
+RUN pip3 install -U pip; pip3 install -r /flask/requirements-gunicorn.txt 
 
 EXPOSE 8080
 
-CMD gunicorn app_raw:app -c gunicorn_conf.py -k egg:meinheld#gunicorn_worker
+ENV USE_RAW=1
+
+CMD gunicorn app:app -c gunicorn_conf.py

@@ -1,6 +1,6 @@
 [package]
-name = "ntex"
-version = "0.3.0"
+name = "ntex-bench"
+version = "3.0.0"
 edition = "2018"
 
 [[bin]]
@@ -8,7 +8,15 @@ name = "ntex"
 path = "src/main.rs"
 
 [[bin]]
-name = "ntex-astd"
+name = "ntex-compio"
+path = "src/main.rs"
+
+[[bin]]
+name = "ntex-neon"
+path = "src/main.rs"
+
+[[bin]]
+name = "ntex-neon-uring"
 path = "src/main.rs"
 
 [[bin]]
@@ -16,7 +24,15 @@ name = "ntex-db"
 path = "src/main_db.rs"
 
 [[bin]]
-name = "ntex-db-astd"
+name = "ntex-db-compio"
+path = "src/main_db.rs"
+
+[[bin]]
+name = "ntex-db-neon"
+path = "src/main_db.rs"
+
+[[bin]]
+name = "ntex-db-neon-uring"
 path = "src/main_db.rs"
 
 [[bin]]
@@ -24,7 +40,15 @@ name = "ntex-plt"
 path = "src/main_plt.rs"
 
 [[bin]]
-name = "ntex-plt-astd"
+name = "ntex-plt-compio"
+path = "src/main_plt.rs"
+
+[[bin]]
+name = "ntex-plt-neon"
+path = "src/main_plt.rs"
+
+[[bin]]
+name = "ntex-plt-neon-uring"
 path = "src/main_plt.rs"
 
 [features]
@@ -33,28 +57,41 @@ default = []
 # tokio runtime
 tokio = ["ntex/tokio"]
 
-# async-std runtime
-async-std = ["ntex/async-std"]
+# compio runtime
+compio = ["ntex/compio"]
+
+# neon runtime
+neon = ["ntex/neon"]
+
+# neon runtime
+neon-uring = ["ntex/neon-uring"]
 
 [dependencies]
-ntex = "0.5.14"
+ntex = "3.0.0-pre.5"
+ntex-neon = "0.1.35"
+ntex-net = "3.0.0"
+ntex-bytes = { version = "1", features=["simd"] }
 mimalloc = { version = "0.1.25", default-features = false }
-snmalloc-rs = { version = "0.2.26", features = ["1mib", "native-cpu"] }
+snmalloc-rs = { version = "0.3.3", features = ["native-cpu"] }
 yarte = { version = "0.15", features = ["bytes-buf", "json"] }
-env_logger = "0.9"
-nanorand = { version = "0.6", default-features = false, features = ["std", "wyrand"] }
-atoi = "0.4"
-num_cpus = "1.13"
+buf-min = { version = "0.7", features = ["ntex-bytes"] }
+env_logger = "0.11"
+nanorand = { version = "0.7", default-features = false, features = ["std", "wyrand", "tls"] }
+atoi = "2.0"
 futures = "0.3"
-http = "0.2"
-smallvec = "1.6.1"
-simd-json = "0.4.13"
-simd-json-derive = "0.2.2"
-serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
+sonic-rs = "0.5.1"
+smallvec = "1.15"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
 log = { version = "0.4", features = ["release_max_level_off"] }
-tok_io = {version = "=1.15.0", package = "tokio" }
-tokio-postgres = { git="https://github.com/fafhrd91/postgres.git" }
+tok_io = {version = "1", package = "tokio" }
+tokio-postgres = { git="https://github.com/fafhrd91/postgres.git", branch="ntex-3" }
+
+[target.'cfg(target_os = "linux")'.dependencies]
+compio-driver = { version = "*", features = ["io-uring"]}
+
+[patch.crates-io]
+buf-min = { git = "https://github.com/fafhrd91/buf-min.git" }
 
 [profile.release]
 opt-level = 3

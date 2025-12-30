@@ -1,18 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Benchmarks.Model
+namespace Benchmarks.Model;
+
+[Table("world")]
+public class World
 {
 
-    [Table("world")]
-    public class World
-    {
+    [Column("id")]
+    public int Id { get; set; }
 
-        [Column("id")]
-        public int Id { get; set; }
-
-        [Column("randomnumber")]
-        public int RandomNumber { get; set; }
-
-    }
+    [Column("randomnumber")]
+    public int RandomNumber { get; set; }
 
 }

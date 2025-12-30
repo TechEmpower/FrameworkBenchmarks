@@ -1,0 +1,9 @@
+{
+  "connection_string": "mongodb://tfb-database:27017",
+  "db_name": "hello_world",
+  "host": "tfb-database",
+  "username": "benchmarkdbuser",
+  "password": "benchmarkdbpass",
+  "database": "hello_world",
+  "maxPoolSize": 64
+}

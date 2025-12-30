@@ -1,0 +1,31 @@
+
+{
+  "framework": "hserver-business",
+  "tests": [
+    {
+      "default": {
+        "db_url": "/db",
+        "fortune_url": "/fortunes",
+        "plaintext_url": "/plaintext",
+        "json_url": "/json",
+        "query_url": "/queries?queries=",
+        "update_url": "/updates?queries=",
+        "port": 8888,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "Postgres",
+        "framework": "hserver-business",
+        "language": "Java",
+        "flavor": "None",
+        "orm": "Full",
+        "platform": "hserver-business",
+        "webserver": "hserver-business",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "hserver-business",
+        "notes": "",
+        "versus": "hserver-business"
+      }
+    }
+  ]
+}

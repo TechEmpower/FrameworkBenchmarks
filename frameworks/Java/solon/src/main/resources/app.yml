@@ -1,0 +1,23 @@
+database:
+  name: hello_world
+  host: tfb-database
+  port: 5432
+  username: benchmarkdbuser
+  password: benchmarkdbpass
+
+server.http:
+  ioBound: false
+
+solon.threads:
+  virtual:
+    enabled: true
+
+solon.dataSources:
+  test!:
+    class: "com.zaxxer.hikari.HikariDataSource"
+    driverClassName: "org.postgresql.Driver"
+    url: jdbc:postgresql://${database.host}:${database.port}/${database.name}?loggerLevel=OFF&disableColumnSanitiser=true&assumeMinServerVersion=16&sslmode=disable
+    username: ${database.username}
+    password: ${database.password}
+    hikari:
+      maximum-pool-size: 256
