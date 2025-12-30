@@ -17,6 +17,25 @@ const jsonSerializer = fjs({
   }
 });
 
+const worldSerializer = fjs({
+  type: 'object',
+  properties: {
+    id: { type: 'integer' },
+    randomNumber: { type: 'integer' }
+  }
+});
+
+const worldsSerializer = fjs({
+  type: 'array',
+  items: {
+    type: 'object',
+    properties: {
+      id: { type: 'integer' },
+      randomNumber: { type: 'integer' }
+    }
+  }
+});
+
 const generateRandomNumber = () => ((Math.random() * maxRows) | 0) + 1;
 
 const parseQueries = (i) => i > maxQuery ? maxQuery : (i | 0) || 1;
@@ -51,7 +70,7 @@ if (db) {
   app.get('/db', async (req, res) => {
     res.setHeader('Server', 'UltimateExpress');
     const world = await db.find(generateRandomNumber());
-    res.json(world);
+    res.end(worldSerializer(world));
   });
 
   app.get('/queries', async (req, res) => {
@@ -66,7 +85,7 @@ if (db) {
 
     const worlds = await Promise.all(worldPromises);
 
-    res.json(worlds);
+    res.end(worldsSerializer(worlds));
   })
 
   app.get('/updates', async (req, res) => {
@@ -87,7 +106,7 @@ if (db) {
 
     await db.bulkUpdate(worlds);
 
-    res.json(worlds);
+    res.end(worldsSerializer(worlds));
   })
 
   app.get('/fortunes', async (req, res) => {
@@ -127,7 +146,7 @@ if (db) {
       worlds[i] = cache.get(generateRandomNumber());
     }
 
-    res.json(worlds);
+    res.end(worldsSerializer(worlds));
   });
 }
 
