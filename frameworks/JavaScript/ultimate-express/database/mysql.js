@@ -8,7 +8,10 @@ const execute = (text, values) => pool.execute(text, values || undefined)
 
 export const fortunes = () => execute('SELECT id, message FROM fortune')
 
-export const find = (id) => execute('SELECT id, randomNumber FROM world WHERE id = ?', [id]).then(arr => arr[0])
+export const find = async(id) => {
+    const arr = await execute('SELECT id, randomNumber FROM world WHERE id = ?', [id]);
+    return arr[0];
+}
 
 export const getAllWorlds = () => execute('SELECT id, randomNumber FROM world')
 
