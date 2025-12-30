@@ -1,30 +1,39 @@
-const db = require( '../db' )
-const { escape } = require( 'html-escaper' )
+const db = require('../db')
+const { escape } = require('html-escaper')
 
 const runTimeFortune = {
     id: 0,
     message: 'Additional fortune added at request time.'
 }
 
-const renderBody = fortunes => {
-    let body = '<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>'
-    for( let fortune of fortunes ) {
-        body += `<tr><td>${fortune.id}</td><td>${escape( fortune.message )}</td></tr>`
+function sortByMessage(arr) {
+    const n = arr.length
+    for (let i = 1; i < n; i++) {
+        const c = arr[i]
+        let j = i - 1
+        while ((j > -1) && (c.message < arr[j].message)) {
+            arr[j + 1] = arr[j]
+            j--
+        }
+        arr[j + 1] = c
     }
-    body += '</table></body></html>'
-    return body
+    return arr
 }
 
 module.exports = {
-    GET: async () => {
+    GET: async ({ res }) => {
         let fortunes = await db.allFortunes()
-        fortunes.push( runTimeFortune )
-        fortunes.sort( ( a, b ) => a.message.localeCompare( b.message ) )
-        return {
-            headers: {
-                'Content-Type': 'text/html; charset=utf-8'
-            },
-            body: renderBody( fortunes )
+        fortunes.push(runTimeFortune)
+        sortByMessage(fortunes)
+        
+        let html = '<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>';
+        for (let i = 0; i < fortunes.length; i++) {
+            html += `<tr><td>${fortunes[i].id}</td><td>${escape(fortunes[i].message)}</td></tr>`;
         }
+        html += '</table></body></html>';
+
+        res.headers['server'] = 'spliffy';
+        res.headers['content-type'] = 'text/html; charset=utf-8';
+        return html;
     }
 }
