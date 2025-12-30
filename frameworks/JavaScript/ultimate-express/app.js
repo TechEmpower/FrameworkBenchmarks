@@ -69,12 +69,14 @@ app.get('/json', (req, res) => {
 if (db) {
   app.get('/db', async (req, res) => {
     res.setHeader('Server', 'UltimateExpress');
+    res.setHeader('Content-Type', 'application/json');
     const world = await db.find(generateRandomNumber());
     res.end(worldSerializer(world));
   });
 
   app.get('/queries', async (req, res) => {
     res.setHeader('Server', 'UltimateExpress');
+    res.setHeader('Content-Type', 'application/json');
 
     const queries = parseQueries(req.query.queries);
     const worldPromises = new Array(queries);
@@ -90,6 +92,7 @@ if (db) {
 
   app.get('/updates', async (req, res) => {
     res.setHeader('Server', 'UltimateExpress');
+    res.setHeader('Content-Type', 'application/json');
 
     const queries = parseQueries(req.query.queries);
     const worldPromises = new Array(queries);
@@ -131,6 +134,7 @@ if (db) {
   let isCachePopulated = false
   app.get('/cached-worlds', async (req, res) => {
     res.setHeader('Server', 'UltimateExpress');
+    res.setHeader('Content-Type', 'application/json');
 
     if (!isCachePopulated) {
       const worlds = await db.getAllWorlds();
