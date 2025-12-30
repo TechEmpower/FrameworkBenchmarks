@@ -13,7 +13,7 @@ exclude = ["target", "Cargo.lock", "sh", ".github", "logs", "**/*.log"]
 
 [dependencies]
 futures = "0.3.31"
-hyperlane = "10.23.3"
+hyperlane = "10.23.6"
 hyperlane-time = "0.7.15"
 num_cpus = "1.17.0"
 once_cell = "1.21.3"
