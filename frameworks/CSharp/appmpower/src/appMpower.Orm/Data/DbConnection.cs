@@ -1,6 +1,6 @@
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Data;
-using System.Data.Odbc;
 
 namespace appMpower.Orm.Data
 {
@@ -9,9 +9,9 @@ namespace appMpower.Orm.Data
       private string _connectionString;
       private bool _keyed = false;
       private int _number;
-      private OdbcConnection _odbcConnection;
-      private ConcurrentStack<OdbcCommand> _odbcCommands = new();
-      private Dictionary<string, OdbcCommand> _keyedOdbcCommands;
+      private System.Data.Common.DbConnection _dbConnection;
+      private ConcurrentStack<System.Data.Common.DbCommand> _dbCommands = new();
+      private Dictionary<string, System.Data.Common.DbCommand> _keyedDbCommands;
 
       public DbConnection()
       {
@@ -20,19 +20,27 @@ namespace appMpower.Orm.Data
       public DbConnection(string connectionString, bool keyed = false)
       {
          _keyed = keyed;
-         _connectionString = connectionString; 
-         GetConnection();
+         _connectionString = connectionString;
+
+         if (Constants.DbProvider == DbProvider.ODBC)
+         {
+            GetConnection();
+         }
+         else
+         {
+            _dbConnection = DbFactory.GetConnection(_connectionString); 
+         }
       }
 
       public IDbConnection Connection
       {
          get
          {
-            return _odbcConnection;
+            return _dbConnection;
          }
          set
          {
-            _odbcConnection = (OdbcConnection)value;
+            _dbConnection = (System.Data.Common.DbConnection)value;
          }
       }
 
@@ -40,7 +48,7 @@ namespace appMpower.Orm.Data
       {
          get
          {
-            return _odbcConnection.ConnectionString;
+            return _dbConnection.ConnectionString;
          }
          set
          {
@@ -53,13 +61,13 @@ namespace appMpower.Orm.Data
       {
          if (_keyed)
          {
-            (_number, _odbcConnection, _keyedOdbcCommands) = 
-               DbConnectionsKeyed.GetConnectionBase(_connectionString);
+            (_number, _dbConnection, _keyedDbCommands) = 
+               DbConnectionsKeyed.GetConnectionBase();
          }
          else
          {
-            (_number, _odbcConnection, _odbcCommands) =
-               DbConnections.GetConnectionBase(_connectionString);
+            (_number, _dbConnection, _dbCommands) =
+               DbConnections.GetConnectionBase();
          }
       }
 
@@ -67,7 +75,7 @@ namespace appMpower.Orm.Data
       {
          get
          {
-            return _odbcConnection.ConnectionTimeout;
+            return _dbConnection.ConnectionTimeout;
          }
       }
 
@@ -75,7 +83,7 @@ namespace appMpower.Orm.Data
       {
          get
          {
-            return _odbcConnection.Database;
+            return _dbConnection.Database;
          }
       }
 
@@ -83,92 +91,107 @@ namespace appMpower.Orm.Data
       {
          get
          {
-            if (_odbcConnection is null) return ConnectionState.Closed;
-            return _odbcConnection.State;
+            if (_dbConnection is null) return ConnectionState.Closed;
+            return _dbConnection.State;
          }
       }
 
       public IDbTransaction BeginTransaction()
       {
-         return _odbcConnection.BeginTransaction();
+         return _dbConnection.BeginTransaction();
       }
 
       public IDbTransaction BeginTransaction(IsolationLevel il)
       {
-         return _odbcConnection.BeginTransaction(il);
+         return _dbConnection.BeginTransaction(il);
       }
 
       public void ChangeDatabase(string databaseName)
       {
-         _odbcConnection.ChangeDatabase(databaseName);
+         _dbConnection.ChangeDatabase(databaseName);
       }
 
       public void Close()
       {
-         _odbcConnection.Close();
+         _dbConnection.Close();
       }
 
       public IDbCommand CreateCommand()
       {
-         return _odbcConnection.CreateCommand();
+         return _dbConnection.CreateCommand();
       }
 
       public void Open()
       {
-         if (_odbcConnection.State == ConnectionState.Closed)
+         if (_dbConnection.State == ConnectionState.Closed)
          {
-            _odbcConnection.Open();
+            _dbConnection.Open();
          }
       }
 
+      /*
       public async Task OpenAsync()
       {
-         if (_odbcConnection.State == ConnectionState.Closed)
+         if (_dbConnection.State == ConnectionState.Closed)
          {
-            await _odbcConnection.OpenAsync();
+            await _dbConnection.OpenAsync();
          }
       }
+      */
 
       public void Dispose()
       {
-         if (_keyed)
+         if (Constants.DbProvider == DbProvider.ODBC)
          {
-            DbConnectionsKeyed.Release((Number: _number, OdbcConnection: _odbcConnection, KeyedOdbcCommands: _keyedOdbcCommands));
+            if (_keyed)
+            {
+               DbConnectionsKeyed.Release((Number: _number, DbConnection: _dbConnection, KeyedDbCommands: _keyedDbCommands));
+            }
+            else
+            {
+               DbConnections.Release((Number: _number, DbConnection: _dbConnection, DbCommands: _dbCommands));
+            }
          }
          else
          {
-            DbConnections.Release((Number: _number, OdbcConnection: _odbcConnection, OdbcCommands: _odbcCommands));
+            _dbConnection.Dispose();
          }
       }
 
-      internal OdbcCommand GetCommand(string commandText, CommandType commandType)
+      internal System.Data.Common.DbCommand GetCommand(string commandText, CommandType commandType)
       {
-         OdbcCommand odbcCommand;
+         System.Data.Common.DbCommand dbCommand;
 
-         if (_odbcCommands.TryPop(out odbcCommand))
+         if (Constants.DbProvider == DbProvider.ODBC)
          {
-            if (commandText != odbcCommand.CommandText)
+            if (_dbCommands.TryPop(out dbCommand))
             {
-               odbcCommand.CommandText = commandText; 
-               odbcCommand.Parameters.Clear();
+               if (commandText != dbCommand.CommandText)
+               {
+                  dbCommand.CommandText = commandText; 
+                  dbCommand.Parameters.Clear();
+               }
+
+               return dbCommand; 
             }
-
-            return odbcCommand; 
+            else if (_keyed && _keyedDbCommands.TryGetValue(commandText, out dbCommand)) return dbCommand; 
          }
-         else if (_keyed && _keyedOdbcCommands.TryGetValue(commandText, out odbcCommand)) return odbcCommand; 
 
-         odbcCommand = _odbcConnection.CreateCommand();
-         odbcCommand.CommandText = commandText;
-         odbcCommand.CommandType = commandType;
-         odbcCommand.Prepare();
+         dbCommand = _dbConnection.CreateCommand();
+         dbCommand.CommandText = commandText;
+         dbCommand.CommandType = commandType;
+         dbCommand.Prepare();
 
-         return odbcCommand;
+         return dbCommand;
       }
 
-      internal void Release(OdbcCommand odbcCommand)
+      internal void Release(System.Data.Common.DbCommand dbCommand)
       {
-         if (_keyed) _keyedOdbcCommands.TryAdd(odbcCommand.CommandText, odbcCommand);
-         else _odbcCommands.Push(odbcCommand);
+         if (Constants.DbProvider == DbProvider.ODBC)
+         {
+            if (_keyed) _keyedDbCommands.TryAdd(dbCommand.CommandText, dbCommand);
+            else _dbCommands.Push(dbCommand);
+         }
       }
    }
 }
