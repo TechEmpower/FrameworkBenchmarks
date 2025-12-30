@@ -15,7 +15,7 @@ impl ServerHook for JsonRoute {
             ctx.send().await.unwrap();
         };
         run().await;
-        while ctx.http_from_stream(HTTP_BUFFER).await.is_ok() {
+        while ctx.http_from_stream(RequestConfig::default()).await.is_ok() {
             run().await;
         }
         ctx.closed().await;
@@ -34,7 +34,7 @@ impl ServerHook for PlaintextRoute {
             ctx.send().await.unwrap();
         };
         run().await;
-        while ctx.http_from_stream(HTTP_BUFFER).await.is_ok() {
+        while ctx.http_from_stream(RequestConfig::default()).await.is_ok() {
             run().await;
         }
         ctx.closed().await;
@@ -57,7 +57,7 @@ impl ServerHook for DbRoute {
                 .unwrap();
         };
         run().await;
-        while ctx.http_from_stream(HTTP_BUFFER).await.is_ok() {
+        while ctx.http_from_stream(RequestConfig::default()).await.is_ok() {
             run().await;
         }
         ctx.closed().await;
@@ -87,7 +87,7 @@ impl ServerHook for QueryRoute {
                 .unwrap();
         };
         run().await;
-        while ctx.http_from_stream(HTTP_BUFFER).await.is_ok() {
+        while ctx.http_from_stream(RequestConfig::default()).await.is_ok() {
             run().await;
         }
         ctx.closed().await;
@@ -123,7 +123,7 @@ impl ServerHook for FortunesRoute {
             ctx.set_response_body(&res).await.send().await.unwrap();
         };
         run().await;
-        while ctx.http_from_stream(HTTP_BUFFER).await.is_ok() {
+        while ctx.http_from_stream(RequestConfig::default()).await.is_ok() {
             run().await;
         }
         ctx.closed().await;
@@ -152,7 +152,7 @@ impl ServerHook for UpdateRoute {
                 .unwrap();
         };
         run().await;
-        while ctx.http_from_stream(HTTP_BUFFER).await.is_ok() {
+        while ctx.http_from_stream(RequestConfig::default()).await.is_ok() {
             run().await;
         }
         ctx.closed().await;
@@ -181,7 +181,7 @@ impl ServerHook for CachedQueryRoute {
                 .unwrap();
         };
         run().await;
-        while ctx.http_from_stream(HTTP_BUFFER).await.is_ok() {
+        while ctx.http_from_stream(RequestConfig::default()).await.is_ok() {
             run().await;
         }
         ctx.closed().await;

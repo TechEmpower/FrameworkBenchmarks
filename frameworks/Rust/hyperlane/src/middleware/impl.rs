@@ -6,7 +6,7 @@ impl ServerHook for RequestMiddleware {
     }
 
     async fn handle(self, ctx: &Context) {
-        ctx.set_response_version(HttpVersion::HTTP1_1)
+        ctx.set_response_version(HttpVersion::Http1_1)
             .await
             .set_response_header(CONNECTION, KEEP_ALIVE)
             .await
