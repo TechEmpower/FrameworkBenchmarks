@@ -21,7 +21,7 @@ const worldSerializer = fjs({
   type: 'object',
   properties: {
     id: { type: 'integer' },
-    randomNumber: { type: 'integer' }
+    randomnumber: { type: 'integer' }
   }
 });
 
@@ -31,7 +31,7 @@ const worldsSerializer = fjs({
     type: 'object',
     properties: {
       id: { type: 'integer' },
-      randomNumber: { type: 'integer' }
+      randomnumber: { type: 'integer' }
     }
   }
 });
