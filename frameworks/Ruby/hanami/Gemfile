@@ -10,9 +10,16 @@ gem "hanami-validations", "~> 2.3"
 gem "hanami-view", "~> 2.3"
 
 gem "dry-types", "~> 1.0", ">= 1.6.1"
-gem "puma"
 gem "rake"
 
 gem "rom", "~> 5.3"
 gem "rom-sql", "~> 3.6"
 gem "pg"
+
+group :iodine, optional: true do
+  gem 'iodine', '~> 0.7', platforms: %i[ruby windows]
+end
+
+group :puma, optional: true do
+  gem 'puma', '~> 7.1'
+end
