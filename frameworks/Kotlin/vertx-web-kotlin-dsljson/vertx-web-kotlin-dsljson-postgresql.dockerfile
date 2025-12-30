@@ -26,18 +26,22 @@ EXPOSE 8080
 CMD java \
   -server \
   --enable-native-access=ALL-UNNAMED \
-  --add-opens=java.base/java.lang=ALL-UNNAMED \
   --sun-misc-unsafe-memory-access=allow \
+  --add-opens=java.base/java.nio=ALL-UNNAMED \
+  --add-opens=java.base/sun.nio.ch=ALL-UNNAMED \
+  --add-opens=java.base/jdk.internal.misc=ALL-UNNAMED \
+  --add-opens=java.base/java.lang=ALL-UNNAMED \
   -Xms2G \
   -Xmx2G \
+  -XX:MaxDirectMemorySize=6G \
   -XX:+AlwaysPreTouch \
   -XX:+UseParallelGC \
+  -XX:+DisableExplicitGC \
   -XX:InitialCodeCacheSize=512m \
   -XX:ReservedCodeCacheSize=512m \
-  -XX:MaxInlineLevel=20 \
   -XX:+UseNUMA \
-  -XX:-UseCodeCacheFlushing \
-  -XX:AutoBoxCacheMax=10001 \
+  -XX:AutoBoxCacheMax=20000 \
+  -XX:+UnlockExperimentalVMOptions \
   -XX:+UseCompactObjectHeaders \
   -Djava.net.preferIPv4Stack=true \
   -Dvertx.disableMetrics=true \
@@ -50,7 +54,8 @@ CMD java \
   -Dio.netty.buffer.checkBounds=false \
   -Dio.netty.buffer.checkAccessible=false \
   -Dio.netty.leakDetection.level=disabled \
-  -Dio.netty.iouring.ringSize=4096 \
+  -Dio.netty.tryReflectionSetAccessible=true \
   -Dio.netty.iouring.ringSize=16384 \
+  -Dio.netty.iouring.cqSize=32768 \
   -Dtfb.type=postgres \
   -jar /app/vertx-web-kotlin-dsljson.jar
