@@ -1,6 +1,9 @@
 ﻿using Benchmarks.Model;
+
 using GenHTTP.Modules.Webservices;
-using Microsoft.EntityFrameworkCore;
+
+using Npgsql;
+using NpgsqlTypes;
 
 namespace Benchmarks.Tests;
 
@@ -14,9 +17,10 @@ public sealed class UpdateResource
     [ResourceMethod]
     public async ValueTask<List<World>> UpdateWorlds(string queries)
     {
-        var count = 1;
-
-        int.TryParse(queries, out count);
+        if (!int.TryParse(queries, out var count))
+        {
+            count = 1;
+        }
 
         if (count < 1)
         {
@@ -26,39 +30,94 @@ public sealed class UpdateResource
         {
             count = 500;
         }
+        
+        await using var connection = Database.Connection();
 
+        await connection.OpenAsync();
+
+        var worlds = await GetRandomWorlds(connection, count);
+
+        Shuffle(worlds);
+        
+        await Persist(connection, worlds);
+        
+        await connection.CloseAsync();
+
+        return worlds;
+    }
+
+    private static void Shuffle(List<World> worlds)
+    {
+        for (var i = 0; i < worlds.Count; i++)
+        {
+            var world = worlds[i];
+            
+            var old = world.RandomNumber;
+
+            var current = old;
+
+            for (var j = 0; j < 5; j++)
+            {
+                current = Random.Next(1, 10001);
+
+                if (current != old)
+                {
+                    break;
+                }
+            }
+
+            world.RandomNumber = current;            
+        }
+    }
+    
+    private static async Task<List<World>> GetRandomWorlds(NpgsqlConnection connection, int count)
+    {
         var result = new List<World>(count);
 
-        var ids = Enumerable.Range(1, 10000).Select(x => Random.Next(1, 10001)).Distinct().Take(count).ToArray();
+        await using var command = connection.CreateCommand();
 
-        using (var context = DatabaseContext.Create())
+        command.CommandText = "SELECT id, randomnumber FROM world WHERE id = @Id";
+
+        var parameter = command.Parameters.Add("@Id", NpgsqlDbType.Integer);
+
+        for (int i = 0; i < count; i++)
         {
-            foreach (var id in ids)
+            parameter.Value = Random.Next(1, 10001);
+
+            await using var reader = await command.ExecuteReaderAsync();
+
+            if (await reader.ReadAsync())
             {
-                var record = await context.World.FirstOrDefaultAsync(w => w.Id == id).ConfigureAwait(false);
-
-                var old = record.RandomNumber;
-
-                var current = old;
-
-                for (var i = 0; i < 5; i++)
+                result.Add(new()
                 {
-                    current = Random.Next(1, 10001);
-
-                    if (current != old)
-                    {
-                        break;
-                    }
-                }
-
-                record.RandomNumber = current;
-
-                result.Add(record);
-
-                await context.SaveChangesAsync();
+                    Id = reader.GetInt32(0),
+                    RandomNumber = reader.GetInt32(1)
+                });
             }
         }
-
+        
         return result;
     }
+
+    private static async Task Persist(NpgsqlConnection connection, List<World> worlds)
+    {
+        await using var command = connection.CreateCommand();
+
+        command.CommandText = "UPDATE world SET randomnumber = u.randomnumber FROM UNNEST(@Ids, @RandomNumbers) AS u(id, randomnumber) WHERE world.id = u.id";
+
+        var ids = new int[worlds.Count];
+        var randomNumbers = new int[worlds.Count];
+
+        for (int i = 0; i < worlds.Count; i++)
+        {
+            ids[i] = worlds[i].Id;
+            randomNumbers[i] = worlds[i].RandomNumber;
+        }
+
+        command.Parameters.AddWithValue("@Ids", ids);
+        command.Parameters.AddWithValue("@RandomNumbers", randomNumbers);
+
+        await command.ExecuteNonQueryAsync();
+    }
+    
 }

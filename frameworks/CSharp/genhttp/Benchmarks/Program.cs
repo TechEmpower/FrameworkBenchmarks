@@ -9,16 +9,19 @@ using GenHTTP.Engine.Kestrel;
 
 using GenHTTP.Modules.IO;
 using GenHTTP.Modules.Layouting;
+using GenHTTP.Modules.Reflection;
 using GenHTTP.Modules.Webservices;
+
+var mode = ExecutionMode.Auto;
 
 var tests = Layout.Create()
                   .Add("plaintext", Content.From(Resource.FromString("Hello, World!")))
                   .Add("json", new JsonHandler())
                   .Add("fortunes", new FortuneHandler())
-                  .AddService<DbResource>("db")
-                  .AddService<QueryResource>("queries")
-                  .AddService<UpdateResource>("updates")
-                  .AddService<CacheResource>("cached-worlds")
+                  .AddService<DbResource>("db", mode: mode)
+                  .AddService<QueryResource>("queries", mode: mode)
+                  .AddService<UpdateResource>("updates", mode: mode)
+                  .AddService<CacheResource>("cached-worlds", mode: mode)
                   .Add(ServerHeader.Create());
 
 return await Host.Create()

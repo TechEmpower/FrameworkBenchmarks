@@ -1,85 +1,99 @@
-﻿using System.Web;
-using Benchmarks.Model;
+﻿using Benchmarks.Model;
+
 using Cottle;
+
 using GenHTTP.Api.Content;
 using GenHTTP.Api.Protocol;
 
 using GenHTTP.Modules.IO;
 using GenHTTP.Modules.Pages;
-using GenHTTP.Modules.Pages.Rendering;
-
-using Microsoft.EntityFrameworkCore;
 
 namespace Benchmarks.Tests;
 
 public class FortuneHandler : IHandler
 {
-
-    #region Get-/Setters
-
-    private TemplateRenderer Template { get; }
-
-    #endregion
-
-    #region Initialization
-
-    public FortuneHandler()
-    {
-        var resource = Resource.FromAssembly("Template.html").Build();
-
-        Template = Renderer.From(resource);
-    }
-
-    #endregion
+    private IDocument _template;
 
     #region Functionality
 
-    public ValueTask PrepareAsync() => new();
+    public async ValueTask PrepareAsync()
+    {
+        var resource = Resource.FromAssembly("Template.html").Build();
+
+        using var reader = new StreamReader(await resource.GetContentAsync());
+        
+        _template = Document.CreateDefault(reader).DocumentOrThrow;
+    }
 
     public async ValueTask<IResponse> HandleAsync(IRequest request)
     {
-        var data = new Dictionary<Value, Value>
-        {
-            ["cookies"] = Value.FromEnumerable(await GetFortunes())
-        };
+        var template = _template ?? throw new InvalidOperationException("Template has not been initialized");
+        
+        var fortunes = await GetFortunes();
+        
+        var context = BuildContext(fortunes);
 
-        return request.GetPage(await Template.RenderAsync(data)).Build();
+        var content = template.Render(context);
+
+        return request.GetPage(content).Build();
     }
 
-    private static async ValueTask<List<Value>> GetFortunes()
+    private static async Task<List<Fortune>> GetFortunes()
     {
-        await using var context = DatabaseContext.CreateNoTracking();
+        var fortunes = await QueryDatabaseAsync();
+        
+        fortunes.Add(new() { Id = 0, Message = "Additional fortune added at request time." });
+        
+        fortunes.Sort((x, y) => string.CompareOrdinal(x.Message, y.Message));
+        
+        return fortunes;
+    }
 
-        var fortunes = await context.Fortune.ToListAsync().ConfigureAwait(false);
+    private static async Task<List<Fortune>> QueryDatabaseAsync()
+    {
+        await using var connection = Database.Connection();
 
-        var result = new List<Value>(fortunes.Count + 1);
+        await connection.OpenAsync();
 
-        foreach (var fortune in fortunes)
+        await using var command = connection.CreateCommand();
+
+        command.CommandText = "SELECT id, message FROM fortune";
+        
+        var result = new List<Fortune>(16);
+        
+        await using var reader = await command.ExecuteReaderAsync();
+        
+        while (await reader.ReadAsync())
         {
-            result.Add(Value.FromDictionary(new Dictionary<Value, Value>()
+            result.Add(new ()
             {
-                ["id"] = fortune.Id,
-                ["message"] = HttpUtility.HtmlEncode(fortune.Message)
-            }));
+                Id = reader.GetInt32(0),
+                Message = reader.GetString(1)
+            });
         }
 
-        result.Add(Value.FromDictionary(new Dictionary<Value, Value>()
-        {
-            ["id"] = 0,
-            ["message"] = "Additional fortune added at request time."
-        }));
-
-        result.Sort((one, two) =>
-        {
-            var firstMessage = one.Fields["message"].AsString;
-            var secondMessage = two.Fields["message"].AsString;
-
-            return string.Compare(firstMessage, secondMessage, StringComparison.Ordinal);
-        });
+        await connection.CloseAsync();
 
         return result;
     }
 
+    private static IContext BuildContext(List<Fortune> cookies)
+    {
+        var values = new Value[cookies.Count];
+        
+        for (var i = 0; i < cookies.Count; i++)
+        {
+            values[i] = Value.FromMap(new FortuneMap(cookies[i].Id, cookies[i].Message));
+        }
+        
+        var store = new Dictionary<Value, Value>
+        {
+            ["cookies"] = Value.FromEnumerable(values.ToArray())
+        };
+        
+        return Context.CreateBuiltin(store);
+    }
+    
     #endregion
-
+    
 }

@@ -23,7 +23,8 @@ ENV DOTNET_GCDynamicAdaptationMode=0 \
     COMPlus_DbgMiniDumpType=0 \
     DOTNET_TieredPGO=0 \
     DOTNET_TC_QuickJitForLoops=1 \
-    DOTNET_TC_QuickJit=1    
+    DOTNET_TC_QuickJit=1 \
+    DB_CONNECTION="Server=tfb-database;Database=hello_world;User Id=benchmarkdbuser;Password=benchmarkdbpass;Maximum Pool Size=256;NoResetOnClose=true;Enlist=false;Max Auto Prepare=4;Multiplexing=true;Write Coalescing Delay Us=500;Write Coalescing Buffer Threshold Bytes=1000"
 
 WORKDIR /app
 COPY --from=build /app .
