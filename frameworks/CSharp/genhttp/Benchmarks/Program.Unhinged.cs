@@ -7,7 +7,7 @@ var project = Project.Create();
 
 UnhingedEngine.CreateBuilder()
               .SetPort(8080)
-              .SetNWorkersSolver(() => Environment.ProcessorCount - 2)
+              .SetNWorkersSolver(() => Environment.ProcessorCount)
               .SetBacklog(16384)
               .SetMaxEventsPerWake(512)
               .SetMaxNumberConnectionsPerWorker(1024)
