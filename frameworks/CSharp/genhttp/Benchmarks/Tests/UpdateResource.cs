@@ -9,7 +9,6 @@ namespace Benchmarks.Tests;
 
 public sealed class UpdateResource
 {
-    private static readonly Random Random = new();
 
     [ResourceMethod(":queries")]
     public ValueTask<List<World>> UpdateWorldsFromPath(string queries) => UpdateWorlds(queries);
@@ -30,7 +29,7 @@ public sealed class UpdateResource
         {
             count = 500;
         }
-        
+
         await using var connection = Database.Connection();
 
         await connection.OpenAsync();
@@ -38,9 +37,9 @@ public sealed class UpdateResource
         var worlds = await GetRandomWorlds(connection, count);
 
         Shuffle(worlds);
-        
+
         await Persist(connection, worlds);
-        
+
         await connection.CloseAsync();
 
         return worlds;
@@ -51,14 +50,14 @@ public sealed class UpdateResource
         for (var i = 0; i < worlds.Count; i++)
         {
             var world = worlds[i];
-            
+
             var old = world.RandomNumber;
 
             var current = old;
 
             for (var j = 0; j < 5; j++)
             {
-                current = Random.Next(1, 10001);
+                current = Random.Shared.Next(1, 10001);
 
                 if (current != old)
                 {
@@ -66,10 +65,10 @@ public sealed class UpdateResource
                 }
             }
 
-            world.RandomNumber = current;            
+            world.RandomNumber = current;
         }
     }
-    
+
     private static async Task<List<World>> GetRandomWorlds(NpgsqlConnection connection, int count)
     {
         var result = new List<World>(count);
@@ -82,7 +81,7 @@ public sealed class UpdateResource
 
         for (int i = 0; i < count; i++)
         {
-            parameter.Value = Random.Next(1, 10001);
+            parameter.Value = Random.Shared.Next(1, 10001);
 
             await using var reader = await command.ExecuteReaderAsync();
 
@@ -95,7 +94,7 @@ public sealed class UpdateResource
                 });
             }
         }
-        
+
         return result;
     }
 
@@ -119,5 +118,5 @@ public sealed class UpdateResource
 
         await command.ExecuteNonQueryAsync();
     }
-    
+
 }

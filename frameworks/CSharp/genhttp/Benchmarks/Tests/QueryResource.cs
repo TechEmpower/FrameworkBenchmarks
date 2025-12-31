@@ -8,7 +8,6 @@ namespace Benchmarks.Tests;
 
 public sealed class QueryResource
 {
-    private static readonly Random Random = new();
 
     [ResourceMethod(":queries")]
     public Task<List<World>> GetWorldsFromPath(string queries) => GetWorlds(queries);
@@ -49,7 +48,7 @@ public sealed class QueryResource
 
         for (var i = 0; i < count; i++)
         {
-            parameter.Value = Random.Next(1, 10001);
+            parameter.Value = Random.Shared.Next(1, 10001);
 
             await using var reader = await command.ExecuteReaderAsync();
 
@@ -62,7 +61,7 @@ public sealed class QueryResource
                 });
             }
         }
-        
+
         await connection.CloseAsync();
 
         return result;

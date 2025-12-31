@@ -10,8 +10,6 @@ namespace Benchmarks.Tests;
 
 public sealed class CacheResource
 {
-    private static readonly Random Random = new();
-
     private static readonly MemoryCache Cache = new(new MemoryCacheOptions
     {
         ExpirationScanFrequency = TimeSpan.FromMinutes(60)
@@ -45,7 +43,7 @@ public sealed class CacheResource
 
         for (var i = 0; i < count; i++)
         {
-            var id = Random.Next(1, 10001);
+            var id = Random.Shared.Next(1, 10001);
 
             var key = CacheKeys[id];
 
@@ -60,10 +58,10 @@ public sealed class CacheResource
                 if (connection == null)
                 {
                     connection = Database.Connection();
-                    
+
                     await connection.OpenAsync();
                 }
-                
+
                 var resolved = await GetWorldById(connection, id);
 
                 Cache.Set(key, resolved);

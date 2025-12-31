@@ -6,10 +6,9 @@ namespace Benchmarks.Tests;
 
 public sealed class DbResource
 {
-    private static readonly Random Random = new();
 
     [ResourceMethod]
-    public Task<World> GetRandomWorld() => GetWorldById(Random.Next(1, 10001));
+    public Task<World> GetRandomWorld() => GetWorldById(Random.Shared.Next(1, 10001));
 
     private static async Task<World> GetWorldById(int id)
     {
