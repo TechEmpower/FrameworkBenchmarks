@@ -54,7 +54,7 @@ class PostgresVerticle : CoroutineVerticle() {
         logger.info("HTTP server started on port ${server.actualPort()}")
     }
 
-    companion object : Logging {
+    private companion object : Logging {
         private const val FORTUNES_PATH = "/fortunes"
         private const val DB_PATH = "/db"
         private const val QUERIES_PATH = "/queries"

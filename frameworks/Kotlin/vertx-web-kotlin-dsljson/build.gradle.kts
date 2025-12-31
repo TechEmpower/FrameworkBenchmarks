@@ -1,9 +1,16 @@
+import nu.studer.gradle.rocker.RockerConfig
+import org.jetbrains.kotlin.gradle.dsl.JvmDefaultMode
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
+import org.jetbrains.kotlin.gradle.internal.KaptWithoutKotlincTask
+import java.net.URI
+import java.nio.charset.StandardCharsets
 
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.shadow)
+    alias(libs.plugins.rocker.nu)
     application
 }
 
@@ -19,13 +26,16 @@ java {
 kotlin {
     compilerOptions {
         jvmTarget = JvmTarget.JVM_25
-        apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_3)
-        languageVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_3)
-        freeCompilerArgs.addAll(listOf(
-            "-Xjvm-default=all",
+        apiVersion.set(KotlinVersion.KOTLIN_2_3)
+        languageVersion.set(KotlinVersion.KOTLIN_2_3)
+        jvmDefault = JvmDefaultMode.ENABLE
+        freeCompilerArgs.addAll(
             "-Xlambdas=indy",
-            "-Xjdk-release=25"
-        ))
+            "-Xstring-concat=indy-with-constants",
+            "-Xno-call-assertions",
+            "-Xno-param-assertions",
+            "-Xno-receiver-assertions",
+        )
     }
     jvmToolchain(25)
 }
@@ -33,6 +43,8 @@ kotlin {
 application {
     mainClass = "com.example.starter.AppKt"
 }
+
+val patchedNettyJar = file("libs/netty-patched.jar")
 
 dependencies {
     // Kotlin
@@ -46,13 +58,12 @@ dependencies {
     implementation(libs.vertx.pg.client)
     implementation(libs.vertx.lang.kotlin)
     implementation(libs.vertx.lang.kotlin.coroutines)
-    implementation(libs.vertx.micrometer)
-
-    // Micrometer
-    implementation(libs.micrometer.registry.prometheus)
 
     // Netty
-    implementation(platform(libs.netty.bom))
+    implementation(files(patchedNettyJar))
+    implementation(platform(libs.netty.bom)) {
+        exclude(group = "io.netty", module = "netty-transport-classes-io_uring")
+    }
     resolvePlatformSpecificNettyDependencies(libs.versions.netty.get())
         .forEach { implementation(it) }
 
@@ -65,9 +76,53 @@ dependencies {
     implementation(libs.log4j.api)
     implementation(libs.log4j.api.kotlin)
     implementation(libs.disruptor)
+
+    // Rocker
+    implementation(libs.rocker.runtime)
+    kapt(libs.rocker.compiler)
+}
+
+rocker {
+    version = libs.versions.rocker.asProvider().get()
+    configurations {
+        create("main") {
+            javaVersion = "25"
+            templateDir = project.layout.projectDirectory.dir("src/main/resources/rocker")
+            outputDir = project.layout.buildDirectory.dir("generated/source/rocker")
+            targetCharset = StandardCharsets.UTF_8.name()
+            optimize = true
+            markAsGenerated = true
+        }
+    }
+}
+
+val downloadPatchedNetty by tasks.registering {
+    outputs.file(patchedNettyJar)
+    doLast {
+        val uri = URI.create("https://github.com/awmcc90/netty/releases/download/4.2-patched/netty-transport-classes-io_uring-4.2.9.Final.jar")
+        logger.lifecycle("Downloading Patched Netty to ${patchedNettyJar.path}...")
+        patchedNettyJar.parentFile.mkdirs()
+        uri.toURL().openStream().use { input ->
+            patchedNettyJar.outputStream().use { output ->
+                input.copyTo(output)
+            }
+        }
+    }
 }
 
 tasks {
+    withType<KaptWithoutKotlincTask>().configureEach {
+        dependsOn(downloadPatchedNetty)
+    }
+
+    compileKotlin {
+        dependsOn(downloadPatchedNetty)
+    }
+
+    compileJava {
+        dependsOn(downloadPatchedNetty)
+    }
+
     register<JavaExec>("server") {
         dependsOn(this@tasks.classes)
 
@@ -77,21 +132,26 @@ tasks {
         jvmArgs = listOf(
             "-server",
             "--enable-native-access=ALL-UNNAMED",
-            "--add-opens=java.base/java.lang=ALL-UNNAMED",
             "--sun-misc-unsafe-memory-access=allow",
+            "--add-opens=java.base/java.nio=ALL-UNNAMED",
+            "--add-opens=java.base/sun.nio.ch=ALL-UNNAMED",
+            "--add-opens=java.base/jdk.internal.misc=ALL-UNNAMED",
+            "--add-opens=java.base/java.lang=ALL-UNNAMED",
+            "-XX:+UnlockDiagnosticVMOptions",
+            "-XX:+DebugNonSafepoints",
+            "-XX:+EnableDynamicAgentLoading",
+            "-XX:+PreserveFramePointer",
             "-Xms2G",
             "-Xmx2G",
+            "-XX:MaxDirectMemorySize=6G",
             "-XX:+AlwaysPreTouch",
             "-XX:+UseParallelGC",
             "-XX:InitialCodeCacheSize=512m",
             "-XX:ReservedCodeCacheSize=512m",
-            "-XX:MaxInlineLevel=20",
             "-XX:+UseNUMA",
-            "-XX:-UseCodeCacheFlushing",
-            "-XX:AutoBoxCacheMax=10001",
+            "-XX:AutoBoxCacheMax=20000",
+            "-XX:+UnlockExperimentalVMOptions",
             "-XX:+UseCompactObjectHeaders",
-            "-XX:+UnlockDiagnosticVMOptions",
-            "-XX:+DebugNonSafepoints",
             "-Djava.net.preferIPv4Stack=true",
             "-Dvertx.disableMetrics=true",
             "-Dvertx.disableWebsockets=true",
@@ -103,8 +163,9 @@ tasks {
             "-Dio.netty.buffer.checkBounds=false",
             "-Dio.netty.buffer.checkAccessible=false",
             "-Dio.netty.leakDetection.level=disabled",
-            "-Dio.netty.iouring.ringSize=4096",
-            "-Dio.netty.iouring.cqSize=8192",
+            "-Dio.netty.tryReflectionSetAccessible=true",
+            "-Dio.netty.iouring.ringSize=8192",
+            "-Dio.netty.iouring.cqSize=16384",
             "-Dtfb.type=basic",
         )
     }
