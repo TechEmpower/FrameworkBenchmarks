@@ -1,12 +1,16 @@
-import java.net.URI
+import nu.studer.gradle.rocker.RockerConfig
+import org.jetbrains.kotlin.gradle.dsl.JvmDefaultMode
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.internal.KaptWithoutKotlincTask
+import java.net.URI
+import java.nio.charset.StandardCharsets
 
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.shadow)
+    alias(libs.plugins.rocker.nu)
     application
 }
 
@@ -24,8 +28,8 @@ kotlin {
         jvmTarget = JvmTarget.JVM_25
         apiVersion.set(KotlinVersion.KOTLIN_2_3)
         languageVersion.set(KotlinVersion.KOTLIN_2_3)
+        jvmDefault = JvmDefaultMode.ENABLE
         freeCompilerArgs.addAll(
-            "-Xjvm-default=all",
             "-Xlambdas=indy",
             "-Xstring-concat=indy-with-constants",
             "-Xno-call-assertions",
@@ -72,6 +76,24 @@ dependencies {
     implementation(libs.log4j.api)
     implementation(libs.log4j.api.kotlin)
     implementation(libs.disruptor)
+
+    // Rocker
+    implementation(libs.rocker.runtime)
+    kapt(libs.rocker.compiler)
+}
+
+rocker {
+    version = libs.versions.rocker.asProvider().get()
+    configurations {
+        create("main") {
+            javaVersion = "25"
+            templateDir = project.layout.projectDirectory.dir("src/main/resources/rocker")
+            outputDir = project.layout.buildDirectory.dir("generated/source/rocker")
+            targetCharset = StandardCharsets.UTF_8.name()
+            optimize = true
+            markAsGenerated = true
+        }
+    }
 }
 
 val downloadPatchedNetty by tasks.registering {
