@@ -3,7 +3,7 @@ FROM pypy:3.11-slim
 ADD ./ /django
 
 WORKDIR /django
-RUN apt-get update; apt-get install libuv1 zlib1g -y
+RUN apt-get update; apt-get install libuv1 zlib1g pkg-config default-libmysqlclient-dev gcc -y
 RUN pip install -r /django/requirements-socketify.txt
 
 EXPOSE 8080
