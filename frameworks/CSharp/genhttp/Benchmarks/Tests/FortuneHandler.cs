@@ -1,4 +1,10 @@
-﻿using Benchmarks.Model;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web;
+using Benchmarks.Model;
 
 using Cottle;
 
@@ -68,7 +74,7 @@ public class FortuneHandler : IHandler
             result.Add(new ()
             {
                 Id = reader.GetInt32(0),
-                Message = reader.GetString(1)
+                Message = HttpUtility.HtmlEncode(reader.GetString(1))
             });
         }
 
