@@ -33,6 +33,11 @@ public class FortuneHandler : IHandler
 
     public async ValueTask<IResponse> HandleAsync(IRequest request)
     {
+        if (_template == null)
+        {
+            await PrepareAsync();
+        }
+        
         var template = _template ?? throw new InvalidOperationException("Template has not been initialized");
         
         var fortunes = await GetFortunes();
