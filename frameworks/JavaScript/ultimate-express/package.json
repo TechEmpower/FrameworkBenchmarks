@@ -8,11 +8,11 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "fast-json-stringify": "^6.0.0",
-    "lru-cache": "^10.0.1",
-    "mariadb": "^3.2.0",
-    "postgres": "^3.3.5",
-    "ultimate-express": "^2.0.9"
+    "fast-json-stringify": "^6.1.1",
+    "lru-cache": "^11.2.4",
+    "mariadb": "^3.4.5",
+    "postgres": "^3.4.7",
+    "ultimate-express": "^2.0.14"
   },
   "type": "module"
 }

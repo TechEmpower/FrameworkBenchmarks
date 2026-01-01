@@ -28,9 +28,9 @@ object Properties {
 
     /**
      * Whether metrics are enabled.
-     * Default: Reverse of `vertx.disableMetrics` (defaults to false)
+     * Default: Reverse of `vertx.disableMetrics` (defaults to true)
      */
-    val METRICS_ENABLED: Boolean = SystemPropertyUtil.getBoolean("vertx.disableMetrics", false).not()
+    val METRICS_ENABLED: Boolean = SystemPropertyUtil.getBoolean("vertx.disableMetrics", true).not()
 
     /**
      * Port the HTTP server listens on.
@@ -42,25 +42,25 @@ object Properties {
      * Size of TCP send buffer for HTTP connections, in bytes.
      * Default: 32768 (tfb.http.sendBufferSize)
      */
-    val HTTP_SEND_BUFFER_SIZE: Int = SystemPropertyUtil.getInt("tfb.http.sendBufferSize", 16 * 1024)
+    val HTTP_SEND_BUFFER_SIZE: Int = SystemPropertyUtil.getInt("tfb.http.sendBufferSize", 256 * 1024)
 
     /**
      * Size of TCP receive buffer for HTTP connections, in bytes.
      * Default: 32768 (tfb.http.receiveBufferSize)
      */
-    val HTTP_RECEIVE_BUFFER_SIZE: Int = SystemPropertyUtil.getInt("tfb.http.receiveBufferSize", 16 * 1024)
+    val HTTP_RECEIVE_BUFFER_SIZE: Int = SystemPropertyUtil.getInt("tfb.http.receiveBufferSize", 256 * 1024)
 
     /**
      * Enables TCP Fast Open on the HTTP server.
      * Default: true (tfb.http.tcpFastOpen)
      */
-    val HTTP_TCP_FASTOPEN: Boolean = SystemPropertyUtil.getBoolean("tfb.http.tcpFastOpen", true)
+    val HTTP_TCP_FASTOPEN: Boolean = SystemPropertyUtil.getBoolean("tfb.http.tcpFastOpen", false)
 
     /**
      * Enables TCP_NODELAY (disables Nagle) on HTTP connections.
      * Default: true (tfb.http.tcpNoDelay)
      */
-    val HTTP_TCP_NODELAY: Boolean = SystemPropertyUtil.getBoolean("tfb.http.tcpNoDelay", true)
+    val HTTP_TCP_NODELAY: Boolean = SystemPropertyUtil.getBoolean("tfb.http.tcpNoDelay", false)
 
     /**
      * Idle timeout for HTTP connections in seconds.
@@ -140,14 +140,6 @@ object Properties {
     val HTTP by lazy {
         httpServerOptionsOf(
             port = HTTP_PORT,
-            sendBufferSize = HTTP_SEND_BUFFER_SIZE,
-            receiveBufferSize = HTTP_RECEIVE_BUFFER_SIZE,
-            tcpFastOpen = HTTP_TCP_FASTOPEN,
-            tcpNoDelay = HTTP_TCP_NODELAY,
-            idleTimeout = HTTP_IDLE_TIMEOUT,
-            reuseAddress = HTTP_REUSE_ADDRESS,
-            reusePort = HTTP_REUSE_PORT,
-            acceptBacklog = HTTP_ACCEPT_BACKLOG,
             compressionSupported = false,
             tracingPolicy = TracingPolicy.IGNORE,
             http2ClearTextEnabled = false,

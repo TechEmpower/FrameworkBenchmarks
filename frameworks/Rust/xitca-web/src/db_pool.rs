@@ -13,8 +13,17 @@ pub struct Client {
 
 impl Client {
     pub async fn create() -> HandleResult<Self> {
+        let mut pool = Pool::builder(DB_URL);
+
+        #[cfg(feature = "compio")]
+        {
+            pool = pool.connector(crate::CompIoConnector);
+        }
+
+        pool = pool.capacity(1);
+
         Ok(Self {
-            pool: Pool::builder(DB_URL).capacity(1).build()?,
+            pool: pool.build()?,
             exec: Default::default(),
         })
     }

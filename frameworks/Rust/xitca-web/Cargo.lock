@@ -152,9 +152,9 @@ checksum = "b35204fbdc0b3f4446b89fc1ac2cf84a8a68971995d0bf2e925ec7cd960f9cb3"
 
 [[package]]
 name = "cc"
-version = "1.2.50"
+version = "1.2.51"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9f50d563227a1c37cc0a263f64eca3334388c01c5e4c4861a9def205c614383c"
+checksum = "7a0aeaff4ff1a90589618835a598e545176939b97874f7abc7851caa0618f203"
 dependencies = [
  "find-msvc-tools",
  "shlex",
@@ -544,9 +544,9 @@ dependencies = [
 
 [[package]]
 name = "find-msvc-tools"
-version = "0.1.5"
+version = "0.1.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3a3076410a55c90011c298b04d0cfa770b00fa04e1e3c97d3f6c9de105a03844"
+checksum = "645cbb3a84e60b7531617d5ae4e57f7e27308f6445f5abf653209ea76dec8dff"
 
 [[package]]
 name = "flume"
@@ -852,9 +852,9 @@ dependencies = [
 
 [[package]]
 name = "itoa"
-version = "1.0.16"
+version = "1.0.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7ee5b5339afb4c41626dde77b7a611bd4f2c202b897852b4bcf5d03eddc61010"
+checksum = "92ecc6618181def0457392ccd0ee51198e065e016d1d527a7ac1b6dc7c1f09d2"
 
 [[package]]
 name = "itoap"
@@ -1144,9 +1144,9 @@ dependencies = [
 
 [[package]]
 name = "proc-macro2"
-version = "1.0.103"
+version = "1.0.104"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5ee95bc4ef87b8d5ba32e8b7714ccc834865276eab0aed5c9958d00ec45f49e8"
+checksum = "9695f8df41bb4f3d222c95a67532365f569318332d03d5f3f67f37b20e6ebdf0"
 dependencies = [
  "unicode-ident",
 ]
@@ -1368,9 +1368,9 @@ checksum = "b39cdef0fa800fc44525c84ccb54a029961a8215f9619753635a9c0d2538d46d"
 
 [[package]]
 name = "ryu"
-version = "1.0.21"
+version = "1.0.22"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "62049b2877bf12821e8f9ad256ee38fdc31db7387ec2d3b3f403024de2034aea"
+checksum = "a50f4cf475b65d88e057964e0e9bb1f0aa9bbb2036dc65c64596b42932536984"
 
 [[package]]
 name = "sailfish"
@@ -1436,9 +1436,9 @@ dependencies = [
 
 [[package]]
 name = "serde_json"
-version = "1.0.147"
+version = "1.0.148"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6af14725505314343e673e9ecb7cd7e8a36aa9791eb936235a3567cc31447ae4"
+checksum = "3084b546a1dd6289475996f182a22aba973866ea8e8b02c51d9f46b1336a22da"
 dependencies = [
  "itoa",
  "memchr",
@@ -1478,10 +1478,11 @@ checksum = "0fda2ff0d084019ba4d7c6f371c95d8fd75ce3524c3cb8fb653a3023f6323e64"
 
 [[package]]
 name = "signal-hook-registry"
-version = "1.4.7"
+version = "1.4.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7664a098b8e616bdfcc2dc0e9ac44eb231eedf41db4e9fe95d8d32ec728dedad"
+checksum = "c4db69cba1110affc0e9f7bcd48bbf87b3f4fc7c61fc9155afd4c469eb3d6c1b"
 dependencies = [
+ "errno",
  "libc",
 ]
 
@@ -1773,9 +1774,10 @@ dependencies = [
 ]
 
 [[package]]
-name = "tokio-uring"
-version = "0.5.1"
-source = "git+http://github.com/fakeshadow/tokio-uring?rev=c3d5887#c3d588793dc88cb05b57b982356b5e28bc73c192"
+name = "tokio-uring-xitca"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "51113468aadc91bb484bcd63c785c2ed2d50104d41d48039d0ac9ee25b6a6d4e"
 dependencies = [
  "bytes",
  "io-uring",
@@ -2068,7 +2070,8 @@ checksum = "9edde0db4769d2dc68579893f2306b26c6ecfbe0ef499b013d731b7b9247e0b9"
 [[package]]
 name = "xitca-codegen"
 version = "0.4.0"
-source = "git+http://github.com/HFQR/xitca-web?rev=b3d7dc0be3783fe1ad66ba94236c3a1dcfc1af8b#b3d7dc0be3783fe1ad66ba94236c3a1dcfc1af8b"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "dc921afd144bf419038845eba96c19949953d7c041018b12fb984c1a0c85bcce"
 dependencies = [
  "quote",
  "syn",
@@ -2076,8 +2079,9 @@ dependencies = [
 
 [[package]]
 name = "xitca-http"
-version = "0.7.1"
-source = "git+http://github.com/HFQR/xitca-web?rev=b3d7dc0be3783fe1ad66ba94236c3a1dcfc1af8b#b3d7dc0be3783fe1ad66ba94236c3a1dcfc1af8b"
+version = "0.8.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ba51754e98a98549a1bae7a2f4c20e6b71d931cee6f43acd0307c2c70ba83f2a"
 dependencies = [
  "compio-buf",
  "compio-io",
@@ -2090,9 +2094,8 @@ dependencies = [
  "pin-project-lite",
  "socket2",
  "tokio",
- "tokio-uring",
  "tracing",
- "xitca-io",
+ "xitca-io 0.5.1",
  "xitca-router",
  "xitca-service",
  "xitca-unsafe-collection",
@@ -2106,14 +2109,42 @@ checksum = "19b91b7a5ff9e3bed167b7e3bcc7b4462d2cb16d05e3ae913dbc384e463fdd7f"
 dependencies = [
  "bytes",
  "tokio",
- "tokio-uring",
+ "xitca-unsafe-collection",
+]
+
+[[package]]
+name = "xitca-io"
+version = "0.5.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1bf2806223b57d14035c3ef09b02c2b15f5c16def43620353e5af8985ec94c40"
+dependencies = [
+ "bytes",
+ "tokio",
+ "tokio-uring-xitca",
  "xitca-unsafe-collection",
 ]
 
 [[package]]
 name = "xitca-postgres"
 version = "0.3.0"
-source = "git+http://github.com/HFQR/xitca-web?rev=b3d7dc0be3783fe1ad66ba94236c3a1dcfc1af8b#b3d7dc0be3783fe1ad66ba94236c3a1dcfc1af8b"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "63a215cf0054b17dbc237c9cac91dab4d4d873a7e56ba8898d287472dc20dd32"
+dependencies = [
+ "fallible-iterator",
+ "futures-core",
+ "percent-encoding",
+ "postgres-protocol",
+ "postgres-types",
+ "tokio",
+ "tracing",
+ "xitca-io 0.4.1",
+ "xitca-unsafe-collection",
+]
+
+[[package]]
+name = "xitca-postgres"
+version = "0.4.0"
+source = "git+http://github.com/HFQR/xitca-web?rev=ae0db84#ae0db845390d23b62b9748111fab9347d9fe9090"
 dependencies = [
  "compio",
  "fallible-iterator",
@@ -2123,7 +2154,7 @@ dependencies = [
  "postgres-types",
  "tokio",
  "tracing",
- "xitca-io",
+ "xitca-io 0.5.1",
  "xitca-unsafe-collection",
 ]
 
@@ -2137,7 +2168,7 @@ dependencies = [
  "futures-core",
  "scoped-futures",
  "tokio",
- "xitca-postgres",
+ "xitca-postgres 0.3.0",
 ]
 
 [[package]]
@@ -2154,28 +2185,29 @@ dependencies = [
  "toasty-sql",
  "tokio",
  "uuid",
- "xitca-postgres",
+ "xitca-postgres 0.3.0",
 ]
 
 [[package]]
 name = "xitca-router"
-version = "0.3.0"
+version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "35a771113f381c9a2f5ae1096b70d629ed241a1a473304ea902258c3d528f536"
+checksum = "042ca11062ddf876f584c8a54d821328eac9f3a7727c1ec35bbb3f72838a4c5d"
 dependencies = [
  "xitca-unsafe-collection",
 ]
 
 [[package]]
 name = "xitca-server"
-version = "0.5.0"
-source = "git+http://github.com/HFQR/xitca-web?rev=b3d7dc0be3783fe1ad66ba94236c3a1dcfc1af8b#b3d7dc0be3783fe1ad66ba94236c3a1dcfc1af8b"
+version = "0.6.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b94cbf5013af573c362caebeba0e2b6c62ebecc121ab24e3fd0523543e490ce8"
 dependencies = [
  "socket2",
  "tokio",
- "tokio-uring",
+ "tokio-uring-xitca",
  "tracing",
- "xitca-io",
+ "xitca-io 0.5.1",
  "xitca-service",
  "xitca-unsafe-collection",
 ]
@@ -2183,7 +2215,8 @@ dependencies = [
 [[package]]
 name = "xitca-service"
 version = "0.3.0"
-source = "git+http://github.com/HFQR/xitca-web?rev=b3d7dc0be3783fe1ad66ba94236c3a1dcfc1af8b#b3d7dc0be3783fe1ad66ba94236c3a1dcfc1af8b"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c7f9f7ff163aa7a466a40c6ee92571cbfba705f295bff4412854189454c54ed7"
 
 [[package]]
 name = "xitca-unsafe-collection"
@@ -2215,26 +2248,25 @@ dependencies = [
  "sonic-rs",
  "toasty",
  "tokio",
- "tokio-uring",
  "xitca-http",
- "xitca-io",
- "xitca-postgres",
+ "xitca-io 0.5.1",
+ "xitca-postgres 0.4.0",
  "xitca-postgres-diesel",
  "xitca-postgres-toasty",
  "xitca-server",
  "xitca-service",
  "xitca-unsafe-collection",
- "xitca-web 0.7.1",
+ "xitca-web 0.8.0",
 ]
 
 [[package]]
 name = "xitca-web"
-version = "0.7.1"
-source = "git+http://github.com/HFQR/xitca-web?rev=b3d7dc0be3783fe1ad66ba94236c3a1dcfc1af8b#b3d7dc0be3783fe1ad66ba94236c3a1dcfc1af8b"
+version = "0.8.0"
+source = "git+http://github.com/HFQR/xitca-web?rev=ae0db84#ae0db845390d23b62b9748111fab9347d9fe9090"
 dependencies = [
  "futures-core",
  "pin-project-lite",
- "serde",
+ "serde_core",
  "serde_json",
  "serde_urlencoded",
  "tokio",
@@ -2344,6 +2376,6 @@ dependencies = [
 
 [[package]]
 name = "zmij"
-version = "0.1.7"
+version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9e404bcd8afdaf006e529269d3e85a743f9480c3cef60034d77860d02964f3ba"
+checksum = "e6d6085d62852e35540689d1f97ad663e3971fc19cf5eceab364d62c646ea167"

@@ -193,4 +193,4 @@ DEPENDENCIES
   tzinfo-data (= 1.2023.3)
 
 BUNDLED WITH
-   2.7.0
+   4.0.3
