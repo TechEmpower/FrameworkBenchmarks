@@ -1,8 +1,7 @@
-FROM dunglas/frankenphp:php8.4
+FROM dunglas/frankenphp:php8.5
 
 # add additional extensions here:
 RUN install-php-extensions \
-    opcache \
     pdo_pgsql \
     zip > /dev/null
 

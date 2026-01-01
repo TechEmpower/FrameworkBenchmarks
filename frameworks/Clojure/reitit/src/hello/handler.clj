@@ -84,7 +84,7 @@
                      :else (constantly nil))]
     (-> (ring/ring-handler
           (ring/router
-            [["/plaintext" (exchange/constantly plain-text-handler)]
+            [["/plaintext" plain-text-handler]
              ["/json" json-handler]
              ["/db" db-handler]])
           (ring/create-default-handler)

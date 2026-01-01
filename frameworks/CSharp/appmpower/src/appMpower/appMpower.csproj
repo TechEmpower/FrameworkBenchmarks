@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <OutputType>Exe</OutputType>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
@@ -11,13 +11,12 @@
 
     <!--TODOLOCAL-->
     <!--
-    <Content Include="../appMpower.Orm/bin/Release/net9.0/appMpower.Orm.dll">
+    <Content Include="../appMpower.Orm/bin/Release/net10.0/appMpower.Orm.dll">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content> 
     -->
-    <!--TODOLOCAL AOT-->
-    <!--
-    <Content Include="../appMpower.Orm/bin/Release/net9.0/osx-arm64/native/appMpower.Orm.dylib">
+    <!--TODOLOCAL AOT
+    <Content Include="../appMpower.Orm/bin/Release/net10.0/osx-arm64/native/appMpower.Orm.dylib">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content> 
     -->
@@ -25,10 +24,13 @@
 
   <ItemGroup>
     <ProjectReference Include = "..\appMpower.Orm\appMpower.Orm.csproj" />
+    <PackageReference Include="Npgsql" Version="10.0.0" />
+    <PackageReference Include="MySqlConnector" Version="2.5.0" />
     <PackageReference Include="RazorSlices" Version="0.8.1" />
   </ItemGroup>
 
   <PropertyGroup>
+      <DefineConstants Condition=" '$(Driver)' == 'ado' ">$(DefineConstants);ADO</DefineConstants>
       <DefineConstants Condition=" '$(Driver)' == 'odbc' ">$(DefineConstants);ODBC</DefineConstants>
       <DefineConstants Condition=" '$(Database)' == 'postgresql' ">$(DefineConstants);POSTGRESQL</DefineConstants>
       <DefineConstants Condition=" '$(Database)' == 'mysql' ">$(DefineConstants);MYSQL</DefineConstants>

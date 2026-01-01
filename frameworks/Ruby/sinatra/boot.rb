@@ -30,10 +30,9 @@ def connect(dbtype)
     opts[:adapter] = 'postgresql'
   end
 
-
   # Determine threading/thread pool size and timeout
-  if defined?(Puma) && (threads = Puma.cli_config.options.fetch(:max_threads)) > 1
-    opts[:pool] = threads
+  if defined?(Puma)
+    opts[:pool] = ENV.fetch('MAX_THREADS')
     opts[:checkout_timeout] = 10
   else
     opts[:pool] = 512

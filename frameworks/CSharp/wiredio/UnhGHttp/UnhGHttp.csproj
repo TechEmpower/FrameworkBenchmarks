@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <IsTestAssetProject>true</IsTestAssetProject>
+        <ServerGarbageCollection>true</ServerGarbageCollection>
+        <TieredPGO>true</TieredPGO>
+
+        <RuntimeIdentifier>linux-musl-x64</RuntimeIdentifier>
+        
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="GenHTTP.Modules.Layouting" Version="9.8.0" />
+      <PackageReference Include="Unhinged.GenHttp.Experimental" Version="9.8.3" />
+    </ItemGroup>
+
+</Project>

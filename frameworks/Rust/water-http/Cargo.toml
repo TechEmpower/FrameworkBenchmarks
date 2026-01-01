@@ -1,0 +1,45 @@
+[package]
+name = "water-http"
+version = "0.1.0"
+edition = "2018"
+
+[dependencies]
+askama = "0.14.0"
+tokio = { version = "1.47.1", features = ["full"] }
+water_http = { version = "3.2.1-beta.14" ,optional = true , features = ["use_only_http1"]}
+smallvec = "1.15.1"
+nanorand = "0.8.0"
+tokio-postgres = "0.7.15"
+sonic-rs = "0.5.5"
+bytes = "1.11.0"
+serde = { version = "1.0.228", features = ["derive","rc"] }
+futures-util = "0.3.31"
+num_cpus = "1.17.0"
+httpdate = "1.0.3"
+parking_lot = "0.12.5"
+yarte = { version = "0.15.7" ,features = ["bytes-buf", "json"] }
+itoa = {version = "1.0.15" ,optional = true}
+
+
+[[bin]]
+name = "plaintext"
+path = "src/plaintext.rs"
+required-features = ["json_plaintext"]
+
+[[bin]]
+name = "json"
+path = "src/json.rs"
+required-features = ["json_plaintext"]
+
+
+[[bin]]
+name = "cache"
+path = "src/cached.rs"
+required-features = ["cache"]
+
+
+[features]
+json_plaintext = ["water_http"]
+db = ["water_http/thread_shared_struct"]
+cache = ["water_http/thread_shared_struct","itoa"]
+all = ["water_http/thread_shared_struct"]

@@ -94,7 +94,7 @@ if (db) {
   });
 }
 
-app.all("*", (req, res) => {
+app.all("/{*splat}", (req, res) => {
   res.status(404).send("Not Found");
 });
 

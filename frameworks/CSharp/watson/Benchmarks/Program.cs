@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Linq;
-using System.Net;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
 using WatsonWebserver;
+using WatsonWebserver.Core;
 
 namespace Benchmarks
 {
@@ -23,7 +22,7 @@ namespace Benchmarks
 
     public static class Program
     {
-        private static readonly ManualResetEvent _WaitEvent = new ManualResetEvent(false);
+        private static readonly ManualResetEvent WaitEvent = new(false);
 
         public static async Task<int> Main(string[] args)
         {
@@ -33,21 +32,23 @@ namespace Benchmarks
             var host = "tfb-server";
 #endif
 
-            using var server = new Server(host, 8080, false, DefaultRoute);
+            var settings = new WebserverSettings(host, 8080, false);
 
-            server.Routes.Static.Add(HttpMethod.GET, "/plaintext", PlaintextRoute);
-            server.Routes.Static.Add(HttpMethod.GET, "/json", JsonRoute);
+            using var server = new Webserver(settings, DefaultRoute);
+
+            server.Routes.PreAuthentication.Static.Add(HttpMethod.GET, "/plaintext", PlaintextRoute);
+            server.Routes.PreAuthentication.Static.Add(HttpMethod.GET, "/json", JsonRoute);
 
             try
             {
                 AppDomain.CurrentDomain.ProcessExit += (_, __) =>
                 {
-                    _WaitEvent.Set();
+                    WaitEvent.Set();
                 };
 
                 await server.StartAsync();
 
-                _WaitEvent.WaitOne();
+                WaitEvent.WaitOne();
 
                 return 0;
             }
@@ -59,22 +60,21 @@ namespace Benchmarks
             }
         }
 
-        static async Task DefaultRoute(HttpContext ctx)
+        static async Task DefaultRoute(HttpContextBase ctx)
         {
             ctx.Response.StatusCode = 404;
-            ctx.Response.StatusDescription = "Not Found";
 
             await ctx.Response.Send("Not found.");
         }
 
-        static async Task PlaintextRoute(HttpContext ctx)
+        static async Task PlaintextRoute(HttpContextBase ctx)
         {
             ctx.Response.Headers.Add("Content-Type", "text/plain; charset=UTF-8");
 
             await ctx.Response.Send("Hello, World!");
         }
 
-        static async Task JsonRoute(HttpContext ctx)
+        static async Task JsonRoute(HttpContextBase ctx)
         {
             var response = new JsonResult() { Message = "Hello, World!" };
             var serialized = JsonSerializer.Serialize(response);

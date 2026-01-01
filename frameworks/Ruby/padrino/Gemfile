@@ -1,17 +1,15 @@
 source 'https://rubygems.org'
 
-gem 'mysql2', '> 0.5'
+gem 'trilogy', '~> 2.9', platforms: [:ruby, :windows]
+
 gem 'json'
-gem 'activerecord', '>= 7.1', :require => 'active_record'
+gem 'activerecord', '~> 8.1.0', :require => 'active_record'
 
-gem 'slim', '2.0.3'
-gem 'padrino', git: 'https://github.com/padrino/padrino-framework.git'
+gem 'slim'
+gem 'padrino', '0.16.0'
 gem 'rack'
+gem 'ostruct' # required for Ruby 3.5
 
-group :puma, optional: true do
-  gem 'puma', '~> 6.4', require: false
-end
-
-group :unicorn, optional: true do
-  gem 'unicorn', '~> 6.1', platforms: [:ruby, :windows], require: false
+group :iodine, optional: true do
+  gem "iodine", "~> 0.7", require: false
 end

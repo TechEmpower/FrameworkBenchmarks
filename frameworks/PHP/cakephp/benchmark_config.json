@@ -43,9 +43,10 @@
             "webserver": "none",
             "os": "Linux",
             "database_os": "Linux",
-            "display_name": "CakePHP-workerman",
+            "display_name": "CakePHP [workerman]",
             "notes": "",
             "versus": "php"
         }
     }]
 }
+

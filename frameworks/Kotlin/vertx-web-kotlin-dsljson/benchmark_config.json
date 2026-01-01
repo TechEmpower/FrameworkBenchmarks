@@ -24,8 +24,8 @@
       "postgresql": {
         "db_url": "/db",
         "query_url": "/queries?queries=",
-        "fortune_url": "/fortunes",
         "update_url": "/updates?queries=",
+        "fortune_url": "/fortunes",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Micro",

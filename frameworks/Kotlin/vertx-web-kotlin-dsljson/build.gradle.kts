@@ -1,86 +1,177 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import nu.studer.gradle.rocker.RockerConfig
+import org.jetbrains.kotlin.gradle.dsl.JvmDefaultMode
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
+import org.jetbrains.kotlin.gradle.internal.KaptWithoutKotlincTask
+import java.net.URI
+import java.nio.charset.StandardCharsets
 
 plugins {
-    kotlin("jvm") version "1.9.22"
-    kotlin("kapt") version "1.9.22"
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.shadow)
+    alias(libs.plugins.rocker.nu)
     application
-    id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
 group = "com.example"
 version = "1.0.0-SNAPSHOT"
 
-repositories {
-    mavenCentral()
-}
-
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(21))
+        languageVersion.set(JavaLanguageVersion.of(25))
     }
 }
 
 kotlin {
     compilerOptions {
-        jvmTarget = JvmTarget.JVM_21
+        jvmTarget = JvmTarget.JVM_25
+        apiVersion.set(KotlinVersion.KOTLIN_2_3)
+        languageVersion.set(KotlinVersion.KOTLIN_2_3)
+        jvmDefault = JvmDefaultMode.ENABLE
+        freeCompilerArgs.addAll(
+            "-Xlambdas=indy",
+            "-Xstring-concat=indy-with-constants",
+            "-Xno-call-assertions",
+            "-Xno-param-assertions",
+            "-Xno-receiver-assertions",
+        )
     }
-    jvmToolchain(21)
+    jvmToolchain(25)
 }
-
-val mainClassName = "com.example.starter.App"
-
-val vertxVersion = "4.5.9"
-val nettyVersion = "4.1.112.Final"
-val scramVersion = "2.1"
-val dslJsonVersion = "2.0.2"
-val htmlFlowVersion = "4.6"
-val log4jVersion = "2.23.1"
 
 application {
-    mainClass = mainClassName
+    mainClass = "com.example.starter.AppKt"
 }
+
+val patchedNettyJar = file("libs/netty-patched.jar")
 
 dependencies {
-    listOfNotNull(
-        // Kotlin
-        kotlin("stdlib-jdk8"),
-        kotlin("reflect"),
+    // Kotlin
+    implementation(libs.kotlin.stdlib)
+    implementation(libs.kotlin.reflect)
 
-        // Vertx
-        platform("io.vertx:vertx-stack-depchain:$vertxVersion"),
-        "io.vertx:vertx-core",
-        "io.vertx:vertx-web",
-        "io.vertx:vertx-pg-client",
-        "io.vertx:vertx-lang-kotlin",
-        "io.vertx:vertx-lang-kotlin-coroutines",
+    // Vert.x
+    implementation(platform(libs.vertx.bom))
+    implementation(libs.vertx.core)
+    implementation(libs.vertx.web)
+    implementation(libs.vertx.pg.client)
+    implementation(libs.vertx.lang.kotlin)
+    implementation(libs.vertx.lang.kotlin.coroutines)
 
-        // Netty
-        "io.netty:netty-transport-native-epoll:$nettyVersion:linux-x86_64",
+    // Netty
+    implementation(files(patchedNettyJar))
+    implementation(platform(libs.netty.bom)) {
+        exclude(group = "io.netty", module = "netty-transport-classes-io_uring")
+    }
+    resolvePlatformSpecificNettyDependencies(libs.versions.netty.get())
+        .forEach { implementation(it) }
 
-        // Postgres
-        "com.ongres.scram:client:$scramVersion",
+    // DSL-JSON
+    implementation(libs.dsl.json)
+    kapt(libs.dsl.json)
 
-        // dsljson
-        "com.dslplatform:dsl-json:$dslJsonVersion",
+    // Log4j
+    implementation(libs.log4j.core)
+    implementation(libs.log4j.api)
+    implementation(libs.log4j.api.kotlin)
+    implementation(libs.disruptor)
 
-        // HtmlFlow
-        "com.github.xmlet:htmlflow:$htmlFlowVersion",
-
-        // Logging
-        "org.apache.logging.log4j:log4j-core:$log4jVersion",
-        "org.apache.logging.log4j:log4j-api:$log4jVersion",
-        "org.apache.logging.log4j:log4j-api-kotlin:1.4.0",
-        "com.lmax:disruptor:4.0.0",
-    ).map { implementation(it) }
-
-    listOf(
-        "com.dslplatform:dsl-json:$dslJsonVersion",
-        "org.apache.logging.log4j:log4j-core:$log4jVersion",
-    ).map { kapt(it) }
+    // Rocker
+    implementation(libs.rocker.runtime)
+    kapt(libs.rocker.compiler)
 }
 
-tasks.withType<ShadowJar> {
-    archiveClassifier = "fat"
-    mergeServiceFiles()
+rocker {
+    version = libs.versions.rocker.asProvider().get()
+    configurations {
+        create("main") {
+            javaVersion = "25"
+            templateDir = project.layout.projectDirectory.dir("src/main/resources/rocker")
+            outputDir = project.layout.buildDirectory.dir("generated/source/rocker")
+            targetCharset = StandardCharsets.UTF_8.name()
+            optimize = true
+            markAsGenerated = true
+        }
+    }
+}
+
+val downloadPatchedNetty by tasks.registering {
+    outputs.file(patchedNettyJar)
+    doLast {
+        val uri = URI.create("https://github.com/awmcc90/netty/releases/download/4.2-patched/netty-transport-classes-io_uring-4.2.9.Final.jar")
+        logger.lifecycle("Downloading Patched Netty to ${patchedNettyJar.path}...")
+        patchedNettyJar.parentFile.mkdirs()
+        uri.toURL().openStream().use { input ->
+            patchedNettyJar.outputStream().use { output ->
+                input.copyTo(output)
+            }
+        }
+    }
+}
+
+tasks {
+    withType<KaptWithoutKotlincTask>().configureEach {
+        dependsOn(downloadPatchedNetty)
+    }
+
+    compileKotlin {
+        dependsOn(downloadPatchedNetty)
+    }
+
+    compileJava {
+        dependsOn(downloadPatchedNetty)
+    }
+
+    register<JavaExec>("server") {
+        dependsOn(this@tasks.classes)
+
+        mainClass.set(application.mainClass.get())
+        classpath = sourceSets.main.get().runtimeClasspath
+
+        jvmArgs = listOf(
+            "-server",
+            "--enable-native-access=ALL-UNNAMED",
+            "--sun-misc-unsafe-memory-access=allow",
+            "--add-opens=java.base/java.nio=ALL-UNNAMED",
+            "--add-opens=java.base/sun.nio.ch=ALL-UNNAMED",
+            "--add-opens=java.base/jdk.internal.misc=ALL-UNNAMED",
+            "--add-opens=java.base/java.lang=ALL-UNNAMED",
+            "-XX:+UnlockDiagnosticVMOptions",
+            "-XX:+DebugNonSafepoints",
+            "-XX:+EnableDynamicAgentLoading",
+            "-XX:+PreserveFramePointer",
+            "-Xms2G",
+            "-Xmx2G",
+            "-XX:MaxDirectMemorySize=6G",
+            "-XX:+AlwaysPreTouch",
+            "-XX:+UseParallelGC",
+            "-XX:InitialCodeCacheSize=512m",
+            "-XX:ReservedCodeCacheSize=512m",
+            "-XX:+UseNUMA",
+            "-XX:AutoBoxCacheMax=20000",
+            "-XX:+UnlockExperimentalVMOptions",
+            "-XX:+UseCompactObjectHeaders",
+            "-Djava.net.preferIPv4Stack=true",
+            "-Dvertx.disableMetrics=true",
+            "-Dvertx.disableWebsockets=true",
+            "-Dvertx.disableContextTimings=true",
+            "-Dvertx.cacheImmutableHttpResponseHeaders=true",
+            "-Dvertx.internCommonHttpRequestHeadersToLowerCase=true",
+            "-Dvertx.disableHttpHeadersValidation=true",
+            "-Dio.netty.noUnsafe=false",
+            "-Dio.netty.buffer.checkBounds=false",
+            "-Dio.netty.buffer.checkAccessible=false",
+            "-Dio.netty.leakDetection.level=disabled",
+            "-Dio.netty.tryReflectionSetAccessible=true",
+            "-Dio.netty.iouring.ringSize=8192",
+            "-Dio.netty.iouring.cqSize=16384",
+            "-Dtfb.type=basic",
+        )
+    }
+
+    shadowJar {
+        archiveClassifier = "fat"
+        mergeServiceFiles()
+    }
 }

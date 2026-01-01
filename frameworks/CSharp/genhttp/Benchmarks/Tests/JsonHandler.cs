@@ -1,9 +1,7 @@
-﻿using System.Text.Json;
+﻿using Benchmarks.Utilities;
 
 using GenHTTP.Api.Content;
 using GenHTTP.Api.Protocol;
-
-using GenHTTP.Modules.Conversion.Serializers.Json;
 
 namespace Benchmarks.Tests;
 
@@ -15,9 +13,7 @@ public sealed class JsonResult
 
 public sealed class JsonHandler : IHandler
 {
-    private static readonly FlexibleContentType _ContentType = new(ContentType.ApplicationJson, "utf-8");
-
-    private static readonly JsonSerializerOptions _Options = new();
+    private static readonly FlexibleContentType ContentType = new(GenHTTP.Api.Protocol.ContentType.ApplicationJson, "utf-8");
 
     public ValueTask PrepareAsync() => new();
 
@@ -29,8 +25,8 @@ public sealed class JsonHandler : IHandler
         };
 
         var response = request.Respond()
-                              .Content(new JsonContent(result, _Options))
-                              .Type(_ContentType)
+                              .Content(new FixedLengthJsonContent(result))
+                              .Type(ContentType)
                               .Build();
 
         return new(response);

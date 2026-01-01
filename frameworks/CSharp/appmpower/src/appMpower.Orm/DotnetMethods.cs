@@ -1,6 +1,10 @@
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text; 
-using System.Text.Json; 
+using System.Text.Json;
+using System.Threading.Tasks;
 using appMpower.Orm.Data; 
 using appMpower.Orm.Objects; 
 using appMpower.Orm.Serializers; 
@@ -19,9 +23,9 @@ public static class DotnetMethods
     private readonly static WorldSerializer _worldSerializer = new WorldSerializer();
     private readonly static WorldsSerializer _worldsSerializer = new WorldsSerializer();
 
-    public static byte[] Db()
+    public static async Task<byte[]> Db()
     {
-        var world = RawDb.LoadSingleQueryRow().GetAwaiter().GetResult();
+        var world = RawDb.LoadSingleQueryRow();
 
         var memoryStream = new MemoryStream();
         using var utf8JsonWriter = new Utf8JsonWriter(memoryStream, _jsonWriterOptions);
@@ -33,7 +37,7 @@ public static class DotnetMethods
 
     public static byte[] Query(int queries)
     {
-        World[] worlds = RawDb.ReadMultipleRows(queries).GetAwaiter().GetResult();
+        World[] worlds = RawDb.ReadMultipleRows(queries);
 
         var memoryStream = new MemoryStream();
         using var utf8JsonWriter = new Utf8JsonWriter(memoryStream, _jsonWriterOptions);
@@ -45,7 +49,7 @@ public static class DotnetMethods
 
     public static byte[] Updates(int count)
     {
-        World[] worlds = RawDb.LoadMultipleUpdatesRows(count).GetAwaiter().GetResult();
+        World[] worlds = RawDb.LoadMultipleUpdatesRows(count);
 
         var memoryStream = new MemoryStream();
         using var utf8JsonWriter = new Utf8JsonWriter(memoryStream, _jsonWriterOptions);
@@ -57,7 +61,7 @@ public static class DotnetMethods
 
     public static byte[] Fortunes()
     {
-        List<Fortune> fortunes = RawDb.LoadFortunesRows().GetAwaiter().GetResult(); 
+        List<Fortune> fortunes = RawDb.LoadFortunesRows();
         string fortunesView = FortunesView.Render(fortunes);
         byte[] byteArray = Encoding.UTF8.GetBytes(fortunesView);
 

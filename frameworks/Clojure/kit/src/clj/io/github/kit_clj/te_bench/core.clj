@@ -4,8 +4,6 @@
     [integrant.core :as ig]
     [io.github.kit-clj.te-bench.config :as config]
     [io.github.kit-clj.te-bench.env :refer [defaults]]
-
-    ;; Edges       
     [io.github.kit-clj.te-bench.cache.inmem]
     [io.github.kit-clj.te-bench.db.sql.hikari]
     [io.github.kit-clj.te-bench.web.handler]
@@ -17,11 +15,10 @@
 
 ;; log uncaught exceptions in threads
 (Thread/setDefaultUncaughtExceptionHandler
-  (reify Thread$UncaughtExceptionHandler
-    (uncaughtException [_ thread ex]
-      (log/error {:what :uncaught-exception
-                  :exception ex
-                  :where (str "Uncaught exception on" (.getName thread))}))))
+  (fn [thread ex]
+    (log/error {:what      :uncaught-exception
+                :exception ex
+                :where     (str "Uncaught exception on" (.getName thread))})))
 
 (defonce system (atom nil))
 

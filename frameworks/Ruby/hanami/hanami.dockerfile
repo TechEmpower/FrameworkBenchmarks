@@ -1,4 +1,4 @@
-FROM ruby:3.5-rc
+FROM ruby:4.0
 
 ENV RUBY_YJIT_ENABLE=1
 ENV WEB_CONCURRENCY=auto
@@ -12,6 +12,7 @@ ADD ./ /hanami
 WORKDIR /hanami
 
 ENV BUNDLE_FORCE_RUBY_PLATFORM=true
+RUN bundle config set with 'puma'
 RUN bundle install --jobs=8
 
 EXPOSE 8080

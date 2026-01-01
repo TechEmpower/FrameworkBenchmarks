@@ -1,3 +1,2 @@
 -r requirements.txt
-
-socketify==0.0.31
+https://github.com/cirospaciari/socketify.py/archive/refs/heads/main.zip#egg=socketify

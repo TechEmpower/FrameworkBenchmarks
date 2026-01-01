@@ -9,3 +9,5 @@ worker_processes num_workers
 before_fork do |_server|
   Sequel::DATABASES.each(&:disconnect)
 end
+
+listen "/tmp/.sock", :backlog => 4096
