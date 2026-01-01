@@ -2,19 +2,55 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:isolate';
 
+/// The maximum number of isolates managed by a single OS process group.
+const _isolatesPerGroup = 8;
+
+/// Internal token used to notify newly spawned processes that they
+/// belong to a secondary "worker group".
+const _workerGroupTag = '--workerGroup';
+
 void main(List<String> args) async {
-  /// Create an [Isolate] containing an [HttpServer]
-  /// for each processor after the first
-  for (var i = 1; i < Platform.numberOfProcessors; i++) {
+  /// Determine if this process instance was initialized as a worker group.
+  final isWorkerGroup = args.contains(_workerGroupTag);
+  if (isWorkerGroup) {
+    /// Sanitize the argument list to ensure the internal token does not
+    /// interfere with application-level argument parsing.
+    args.removeAt(args.indexOf(_workerGroupTag));
+  }
+
+  /// Calculate the number of secondary worker groups required
+  /// to fully utilize the available hardware capacity.
+  ///
+  /// Each group serves as a container for multiple isolates,
+  /// helping to bypass internal VM scaling bottlenecks.
+  final workerGroups = Platform.numberOfProcessors ~/ _isolatesPerGroup - 1;
+  if (!isWorkerGroup) {
+    for (var i = 0; i < workerGroups; i++) {
+      /// [Platform.script] identifies the AOT snapshot or executable.
+      /// [Isolate.spawnUri] bootstraps an entirely new group by re-executing [main()].
+      Isolate.spawnUri(Platform.script, [_workerGroupTag], null);
+    }
+  }
+
+  /// Determine the isolate quota for the current group.
+  /// Secondary worker groups run a full set defined by [_isolatesPerGroup];
+  /// the primary group manages the remaining available cores.
+  final currentGroupIsolates = isWorkerGroup
+      ? _isolatesPerGroup
+      : Platform.numberOfProcessors - workerGroups * _isolatesPerGroup;
+
+  /// Create an [Isolate] for the "Local Group" containing an [HttpServer]
+  /// for each processor available in this group after the first
+  for (var i = 1; i < currentGroupIsolates; i++) {
     await Isolate.spawn(_startServer, args);
   }
 
-  /// Create a [HttpServer] for the first processor
+  /// Initialize the server instance for the group's lead isolate.
   await _startServer(args);
 }
 
 /// Creates and setup a [HttpServer]
-Future<void> _startServer(List<String> _) async {
+Future<void> _startServer(List<String> args) async {
   /// Binds the [HttpServer] on `0.0.0.0:8080`.
   final server = await HttpServer.bind(
     InternetAddress.anyIPv4,
