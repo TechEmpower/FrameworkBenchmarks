@@ -56,25 +56,24 @@ const updateRandomWorld = async () => {
     return {"id": world.id, "randomNumber": world.randomnumber};
 };
 
-const getAllFortunes = async () => {
-
-    return await db.many('select * from fortune', [true]);
+const getAllFortunes =  () => {
+    return db.many('select * from fortune', [true]);
 };
 
 module.exports = {
     Query: {
-        singleDatabaseQuery: async() => await getRandomWorld(),
-        multipleDatabaseQueries: async(parent, args) => await arrayOfRandomWorlds(args.total),
-        getAllFortunes: async() => await getAllFortunes(),
-        getRandomAndUpdate: async(parent, args) => await updateRandomWorlds(args.total)
+        singleDatabaseQuery: () => getRandomWorld(),
+        multipleDatabaseQueries: (parent, args) => arrayOfRandomWorlds(args.total),
+        getAllFortunes: () => getAllFortunes(),
+        getRandomAndUpdate: (parent, args) => updateRandomWorlds(args.total)
     },
     Mutation: {
         createWorld: async(parent, args) => {
             let randInt = Math.floor(Math.random() * 1000) + 1;
             return await World.create({ id: null, randomNumber: randInt });
         },
-        updateWorld: async(parent, args) => {
-            return await World.update({id: args.id, randomNumber: args.randomNumber});
+        updateWorld: (parent, args) => {
+            return World.update({id: args.id, randomNumber: args.randomNumber});
         }
     }
 }
