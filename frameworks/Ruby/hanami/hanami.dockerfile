@@ -1,7 +1,6 @@
 FROM ruby:4.0
 
 ENV RUBY_YJIT_ENABLE=1
-ENV WEB_CONCURRENCY=auto
 
 # Use Jemalloc
 RUN apt-get update && \
@@ -21,4 +20,5 @@ ENV HANAMI_ENV=production
 ENV HANAMI_PORT=8080
 ENV DATABASE_URL=postgres://benchmarkdbuser:benchmarkdbpass@tfb-database:5432/hello_world
 
-CMD bundle exec hanami server
+CMD export WEB_CONCURRENCY=$(($(nproc)*5/4)) && \
+    bundle exec hanami server
