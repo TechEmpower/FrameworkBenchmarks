@@ -43,8 +43,9 @@ const parseQueries = (i) => i > maxQuery ? maxQuery : (i | 0) || 1;
 const escapeHTMLRules = { '&': '&#38;', '<': '&#60;', '>': '&#62;', '"': '&#34;', "'": '&#39;', '/': '&#47;' };
 
 const unsafeHTMLMatcher = /[&<>"'\/]/g;
+const unsafeHTMLTester = /[&<>"'\/]/;
 
-const escapeHTMLCode = (text) => unsafeHTMLMatcher.test(text) ? text.replace(unsafeHTMLMatcher,  m => escapeHTMLRules[m] || m) : text;
+const escapeHTMLCode = (text) => unsafeHTMLTester.test(text) ? text.replace(unsafeHTMLMatcher, m => escapeHTMLRules[m]) : text;
 
 const cache = new LRUCache({
   max: maxRows
@@ -53,6 +54,9 @@ const cache = new LRUCache({
 const app = express();
 app.set("etag", false);
 app.set("x-powered-by", false);
+
+// see uwebsockets.js benchmark
+app.uwsApp._cfg('silent');
 
 app.get('/plaintext', (req, res) => {
   res.setHeader('Server', 'UltimateExpress');
@@ -131,17 +135,21 @@ if (db) {
       .end(`<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>${html}</table></body></html>`);
   })
 
-  let isCachePopulated = false
+  let cachePromise = null;
   app.get('/cached-worlds', async (req, res) => {
     res.setHeader('Server', 'UltimateExpress');
     res.setHeader('Content-Type', 'application/json');
 
     if (!isCachePopulated) {
-      const worlds = await db.getAllWorlds();
-      for (let i = 0; i < worlds.length; i++) {
-        cache.set(worlds[i].id, worlds[i]);
+      if (!cachePromise) {
+        cachePromise = db.getAllWorlds().then(worlds => {
+          for (let i = 0; i < worlds.length; i++) {
+            cache.set(worlds[i].id, worlds[i]);
+          }
+          isCachePopulated = true;
+        });
       }
-      isCachePopulated = true;
+      await cachePromise;
     }
     const count = parseQueries(req.query.count);
     const worlds = new Array(count);
