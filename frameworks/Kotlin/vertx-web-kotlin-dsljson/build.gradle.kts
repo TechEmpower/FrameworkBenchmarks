@@ -1,10 +1,9 @@
-import nu.studer.gradle.rocker.RockerConfig
+import java.net.URI
+import java.nio.charset.StandardCharsets
 import org.jetbrains.kotlin.gradle.dsl.JvmDefaultMode
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.internal.KaptWithoutKotlincTask
-import java.net.URI
-import java.nio.charset.StandardCharsets
 
 plugins {
     alias(libs.plugins.kotlin.jvm)
@@ -73,8 +72,12 @@ dependencies {
 
     // Log4j
     implementation(libs.log4j.core)
+    kapt(libs.log4j.core)
+
     implementation(libs.log4j.api)
     implementation(libs.log4j.api.kotlin)
+
+    // Disruptor
     implementation(libs.disruptor)
 
     // Rocker
@@ -85,7 +88,7 @@ dependencies {
 rocker {
     version = libs.versions.rocker.asProvider().get()
     configurations {
-        create("main") {
+        create("main").apply {
             javaVersion = "25"
             templateDir = project.layout.projectDirectory.dir("src/main/resources/rocker")
             outputDir = project.layout.buildDirectory.dir("generated/source/rocker")
@@ -171,7 +174,12 @@ tasks {
     }
 
     shadowJar {
+        mainClass = application.mainClass.get()
         archiveClassifier = "fat"
         mergeServiceFiles()
+        entryCompression = ZipEntryCompression.STORED
+
+        exclude("META-INF/versions/**/module-info.class")
+        exclude("module-info.class")
     }
 }
