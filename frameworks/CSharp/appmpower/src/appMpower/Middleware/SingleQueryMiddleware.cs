@@ -18,7 +18,7 @@ public class SingleQueryMiddleware
         SkipValidation = true
     };
 
-    private readonly static WorldSerializer _worldSerializer = new();
+    //private readonly static WorldSerializer _worldSerializer = new();
 
     private readonly static KeyValuePair<string, StringValues> _headerServer =
          new KeyValuePair<string, StringValues>("Server", new StringValues("k"));
