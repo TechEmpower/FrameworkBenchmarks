@@ -55,9 +55,6 @@ const app = express();
 app.set("etag", false);
 app.set("x-powered-by", false);
 
-// see uwebsockets.js benchmark
-app.uwsApp._cfg('silent');
-
 app.get('/plaintext', (req, res) => {
   res.setHeader('Server', 'UltimateExpress');
   res.setHeader('Content-Type', 'text/plain');
@@ -163,5 +160,7 @@ if (db) {
 }
 
 app.listen(8080, () => {
+  // see uwebsockets.js benchmark
+  app.uwsApp._cfg('silent');
   console.log(`${isWorker ? `${cluster.worker.id}: ` : ''}Successfully bound to http://0.0.0.0:8080`);
 });
