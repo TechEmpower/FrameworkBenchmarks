@@ -1,3 +1,4 @@
+#if AOTDLL
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -43,3 +44,4 @@ public static partial class NativeMethods
     public static partial IntPtr DbById(int id, out int length, out IntPtr handlePointer);
 
 }
+#endif

@@ -7,6 +7,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 
+#if !AOTDLL
+using appMpower.Orm;
+#endif
+
 namespace appMpower;
 
 class Program
@@ -83,7 +87,7 @@ class Program
 
     private static void ApplyDatabaseDefaults(IConfiguration config)
     {
-#if !DEBUG
+#if AOTDLL
     #if ODBC      
         NativeMethods.DbProvider(1); //ODBC
     #else
@@ -94,6 +98,18 @@ class Program
         NativeMethods.Dbms(1); //PostgreSQL
     #else
         NativeMethods.Dbms(0); //MySQL
+    #endif
+#else
+    #if ODBC      
+        DotnetMethods.DbProvider(1); //ODBC
+    #else
+        DotnetMethods.DbProvider(0); //ADO
+    #endif        
+
+    #if POSTGRESQL      
+        DotnetMethods.Dbms(1); //PostgreSQL
+    #else
+        DotnetMethods.Dbms(0); //MySQL
     #endif
 #endif
     }

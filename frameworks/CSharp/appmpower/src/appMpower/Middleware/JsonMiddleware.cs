@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Text.Json; 
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 using appMpower.Serializers; 
@@ -20,45 +18,25 @@ public class JsonMiddleware
     private readonly static JsonMessageSerializer _jsonMessageSerializer = new JsonMessageSerializer();
 
     private readonly static KeyValuePair<string, StringValues> _headerServer =
-         new KeyValuePair<string, StringValues>("Server", new StringValues("k"));
+         new("Server", new StringValues("k"));
     private readonly static KeyValuePair<string, StringValues> _headerContentType =
-         new KeyValuePair<string, StringValues>("Content-Type", new StringValues("application/json"));
+         new("Content-Type", new StringValues("application/json"));
          
-    private readonly RequestDelegate _nextStage;
-
-    public JsonMiddleware(RequestDelegate nextStage)
+    public static Task Invoke(HttpContext httpContext)
     {
-        _nextStage = nextStage;
-    }
+        var response = httpContext.Response; 
+        response.Headers.Add(_headerServer);
+        response.Headers.Add(_headerContentType);
 
-    public unsafe Task Invoke(HttpContext httpContext)
-    {
-        //if (httpContext.Request.Path.StartsWithSegments("/json", StringComparison.Ordinal))
-        {
-            var response = httpContext.Response; 
-            response.Headers.Add(_headerServer);
-            response.Headers.Add(_headerContentType);
+        using var utf8JsonWriter = new Utf8JsonWriter(httpContext.Response.Body, _jsonWriterOptions);
 
-            using var utf8JsonWriter = new Utf8JsonWriter(httpContext.Response.Body, _jsonWriterOptions);
+        _jsonMessageSerializer.Serialize(utf8JsonWriter, new JsonMessage { Message = "Hello, World!" });
 
-            _jsonMessageSerializer.Serialize(utf8JsonWriter, new JsonMessage { Message = "Hello, World!" });
+        response.Headers.Add(
+            new KeyValuePair<string, StringValues>("Content-Length", utf8JsonWriter.BytesPending.ToString()));
 
-            response.Headers.Add(
-                new KeyValuePair<string, StringValues>("Content-Length", utf8JsonWriter.BytesPending.ToString()));
+        utf8JsonWriter.Flush();
 
-            utf8JsonWriter.Flush();
-
-            return Task.CompletedTask;
-        }
-
-        //return _nextStage(httpContext);
-    }
-}
-
-public static class JsonMiddlewareExtensions
-{
-    public static IApplicationBuilder UseJson(this IApplicationBuilder builder)
-    {
-        return builder.UseMiddleware<JsonMiddleware>();
+        return Task.CompletedTask;
     }
 }

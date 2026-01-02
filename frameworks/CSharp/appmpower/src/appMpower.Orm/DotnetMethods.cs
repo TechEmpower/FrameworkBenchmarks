@@ -1,11 +1,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text; 
 using System.Text.Json;
-using System.Threading.Tasks;
-using appMpower.Orm.Data; 
+using appMpower.Orm.Data;
 using appMpower.Orm.Objects; 
 using appMpower.Orm.Serializers; 
 
@@ -23,9 +21,35 @@ public static class DotnetMethods
     private readonly static WorldSerializer _worldSerializer = new WorldSerializer();
     private readonly static WorldsSerializer _worldsSerializer = new WorldsSerializer();
 
-    public static async Task<byte[]> Db()
+    public static void Dbms(int dbms)
+    {
+        Constants.Dbms = (Dbms)dbms;
+        DbFactory.SetConnectionString();
+        DbFactory.SetInstance();
+    }
+
+    public static void DbProvider(int dbProvider)
+    {
+        Constants.DbProvider = (DbProvider)dbProvider;
+        DbFactory.SetConnectionString();
+        DbFactory.SetInstance();
+    }
+
+    public static byte[] Db()
     {
         var world = RawDb.LoadSingleQueryRow();
+
+        var memoryStream = new MemoryStream();
+        using var utf8JsonWriter = new Utf8JsonWriter(memoryStream, _jsonWriterOptions);
+
+        _worldSerializer.Serialize(utf8JsonWriter, world);
+
+        return memoryStream.ToArray();
+    }
+
+    public static byte[] DbById(int id)
+    {
+        var world = RawDb.LoadSingleQueryRowById(id);
 
         var memoryStream = new MemoryStream();
         using var utf8JsonWriter = new Utf8JsonWriter(memoryStream, _jsonWriterOptions);

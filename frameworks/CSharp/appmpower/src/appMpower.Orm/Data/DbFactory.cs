@@ -48,21 +48,15 @@ namespace appMpower.Orm.Data
 
       public static void SetInstance()
       {
-         if (Constants.DbProvider == DbProvider.ODBC)
-         {
+#if ODBC
             Instance = System.Data.Odbc.OdbcFactory.Instance;
-         }         
-         else if (Constants.DbProvider == DbProvider.ADO)
-         {
-            if (Constants.Dbms == Dbms.MySQL)
-            {
+#else
+   #if MYSQL
                Instance = MySqlConnector.MySqlConnectorFactory.Instance;
-            }
-            else
-            {
+   #elif POSTGRESQL
                Instance = Npgsql.NpgsqlFactory.Instance; 
-            }
-         }
+   #endif
+#endif
       }
    }
 }
