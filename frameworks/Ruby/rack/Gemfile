@@ -27,7 +27,7 @@ group :itsi, optional: true do
 end
 
 group :passenger, optional: true do
-  gem 'logger' # required by passenger on Ruby 3.5
+  gem 'logger' # required by passenger on Ruby 4.0
   gem 'passenger', '~> 6.1', platforms: [:ruby, :windows], require: false
 end
 
