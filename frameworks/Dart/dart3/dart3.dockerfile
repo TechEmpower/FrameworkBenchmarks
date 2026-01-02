@@ -1,5 +1,5 @@
 
-FROM dart:latest AS builder
+FROM dart:3.10.7 AS builder
 WORKDIR /app
 
 # Define the build-time argument (Default to 8)
