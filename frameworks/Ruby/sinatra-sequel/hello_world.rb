@@ -13,6 +13,8 @@ class HelloWorld < Sinatra::Base
   QUERIES_MIN = 1
   QUERIES_MAX = 500
 
+  DATE_HEADER = 'Date'
+  SERVER_HEADER = 'Server'
   SERVER_STRING = 'Sinatra'
 
   configure do
@@ -49,12 +51,12 @@ class HelloWorld < Sinatra::Base
 
   if defined?(Puma)
     after do
-      response['Server'] = SERVER_STRING
-      response['Date'] = Time.now.httpdate
+      response[SERVER_HEADER] = SERVER_STRING
+      response[DATE_HEADER] = Time.now.httpdate
     end
   else
     after do
-      response['Server'] = SERVER_STRING
+      response[SERVER_HEADER] = SERVER_STRING
     end
   end
 
