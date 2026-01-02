@@ -531,9 +531,9 @@ checksum = "c894fa5134967b007f4eb7d1204240ab3ba52707ef98ccdb49f5adc37076499f"
 
 [[package]]
 name = "http-type"
-version = "5.26.2"
+version = "5.30.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0a6318004b422e63ac965a662de8810c5df2c8a1fee15bad87e69b53b54d5094"
+checksum = "ee45bdeebd66330e42df03d5a9d2adbd915612a2948ac87549573711465177ea"
 dependencies = [
  "hex",
  "http-compress",
@@ -549,9 +549,9 @@ dependencies = [
 
 [[package]]
 name = "hyperlane"
-version = "10.23.6"
+version = "10.25.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ed2bb0815fca7e5f15786ad32ec48c8797a93819cb1d6ea9dae8bf31bce8cb63"
+checksum = "133c225e583113dc0afd03cb9f8c5470584117b63b9c40d596f2b6e3f28c4575"
 dependencies = [
  "http-type",
  "inventory",
@@ -773,9 +773,9 @@ checksum = "5e5032e24019045c762d3c0f28f5b6b8bbf38563a65908389bf7978758920897"
 
 [[package]]
 name = "lombok-macros"
-version = "1.13.18"
+version = "1.13.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3f0304bd5bbf8dbdaf33068cf13c37bade7e050d403ccc30dfb9808254c07c2e"
+checksum = "c13a953bf01bc24da932ef6d1be7a27a3c42c36d2b18050f9051656369b4d317"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1521,9 +1521,9 @@ checksum = "13c2bddecc57b384dee18652358fb23172facb8a2c51ccc10d74c157bdea3292"
 
 [[package]]
 name = "syn"
-version = "2.0.111"
+version = "2.0.112"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "390cc9a294ab71bdb1aa2e99d13be9c753cd2d7bd6560c77118597410c4d2e87"
+checksum = "21f182278bf2d2bcb3c88b1b08a37df029d71ce3d3ae26168e3c653b213b99d4"
 dependencies = [
  "proc-macro2",
  "quote",
