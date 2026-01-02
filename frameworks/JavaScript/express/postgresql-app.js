@@ -6,9 +6,6 @@ const cluster = require('cluster'),
   express = require('express'),
   helper = require('./helper');
 
-// Middleware
-const bodyParser = require('body-parser');
-
 const Sequelize = require('sequelize');
 const sequelize = new Sequelize('hello_world', 'benchmarkdbuser', 'benchmarkdbpass', {
   host: 'tfb-database',
@@ -62,7 +59,8 @@ if (cluster.isPrimary) {
 } else {
   const app = module.exports = express();
 
-  app.use(bodyParser.urlencoded({ extended: true }));
+  app.set('x-powered-by', false);
+  app.set('etag', false)
 
   // Set headers for all routes
   app.use((req, res, next) => {

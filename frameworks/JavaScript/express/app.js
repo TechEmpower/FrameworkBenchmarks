@@ -7,7 +7,6 @@ const cluster = require('cluster'),
   numCPUs = require('os').cpus().length,
   express = require('express');
 
-const bodyParser = require('body-parser');
 
 if (cluster.isPrimary) {
   console.log(`Primary ${process.pid} is running`);
@@ -23,8 +22,8 @@ if (cluster.isPrimary) {
 } else {
   const app = module.exports = express();
 
-  // Configuration
-  app.use(bodyParser.urlencoded({ extended: true }));
+  app.set('x-powered-by', false);
+  app.set('etag', false)
 
   // Set headers for all routes
   app.use((req, res, next) => {
