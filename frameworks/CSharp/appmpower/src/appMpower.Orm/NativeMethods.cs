@@ -71,11 +71,10 @@ public static class NativeMethods
         return handle.AddrOfPinnedObject();
     }
 
-    /*
     [UnmanagedCallersOnly(EntryPoint = "Fortunes")]
     public static unsafe IntPtr Fortunes(int* length, IntPtr* handlePointer)
     {
-        List<Fortune> fortunes = RawDb.LoadFortunesRows().GetAwaiter().GetResult(); 
+        List<Fortune> fortunes = RawDb.LoadFortunesRows(); 
         string fortunesView = FortunesView.Render(fortunes);
         byte[] byteArray = Encoding.UTF8.GetBytes(fortunesView);
 
@@ -87,8 +86,8 @@ public static class NativeMethods
 
         return byteArrayPointer;
     }
-    */
 
+    /*
     [UnmanagedCallersOnly(EntryPoint = "Fortunes")]
     public static unsafe IntPtr Fortunes(int* length, IntPtr* handlePointer)
     {
@@ -126,22 +125,13 @@ public static class NativeMethods
         byte[] byteArray = buffer.ToArray();
         *length = byteArray.Length;
 
-        /*
-        var memoryStream = new MemoryStream();
-        using var utf8JsonWriter = new Utf8JsonWriter(memoryStream, _jsonWriterOptions);
-
-        _fortunesSerializer.Serialize(utf8JsonWriter, fortunes);
-
-        byte[] byteArray = memoryStream.ToArray();
-        *length = (int)utf8JsonWriter.BytesCommitted; 
-        */
-
         GCHandle handle = GCHandle.Alloc(byteArray, GCHandleType.Pinned);
         IntPtr byteArrayPointer = handle.AddrOfPinnedObject();
         *handlePointer = GCHandle.ToIntPtr(handle);
 
         return byteArrayPointer;
     }
+    */
 
     [UnmanagedCallersOnly(EntryPoint = "Query")]
     public static unsafe IntPtr Query(int queries, int* length, IntPtr* handlePointer)

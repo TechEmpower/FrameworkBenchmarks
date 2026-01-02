@@ -28,7 +28,6 @@ public static partial class NativeMethods
 
     [LibraryImport(LibName, EntryPoint = "Fortunes", StringMarshalling = StringMarshalling.Utf16)]
     [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
-
     public static partial IntPtr Fortunes(out int length, out IntPtr handlePointer);
 
     [LibraryImport(LibName, EntryPoint = "Query", StringMarshalling = StringMarshalling.Utf16)]

@@ -147,9 +147,18 @@ namespace appMpower.Orm
 
       internal static (DbCommand dbCommand, IDbDataParameter dbDataParameter) CreateReadCommand(DbConnection pooledConnection)
       {
-         DbCommand dbCommand = new DbCommand("SELECT * FROM world WHERE id=?", pooledConnection);
+         if (Constants.Dbms == Dbms.PostgreSQL && Constants.DbProvider == DbProvider.ADO)
+         {
+            DbCommand dbCommand = new DbCommand("SELECT * FROM world WHERE id = @Id", pooledConnection);
 
-         return (dbCommand, dbCommand.CreateParameter("Id", DbType.Int32, _random.Next(1, 10001)));
+            return (dbCommand, dbCommand.CreateParameter("Id", DbType.Int32, _random.Next(1, 10001)));
+         }
+         else
+         {
+            DbCommand dbCommand = new DbCommand("SELECT * FROM world WHERE id=?", pooledConnection);
+
+            return (dbCommand, dbCommand.CreateParameter("Id", DbType.Int32, _random.Next(1, 10001)));
+         }
       }
 
       internal static (DbCommand dbCommand, IDbDataParameter dbDataParameter) CreateReadCommandById(DbConnection pooledConnection, int id)

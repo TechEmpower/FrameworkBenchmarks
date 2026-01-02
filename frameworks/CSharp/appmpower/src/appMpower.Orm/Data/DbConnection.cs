@@ -180,7 +180,8 @@ namespace appMpower.Orm.Data
          dbCommand = _dbConnection.CreateCommand();
          dbCommand.CommandText = commandText;
          dbCommand.CommandType = commandType;
-         dbCommand.Prepare();
+
+         if (!(Constants.Dbms == Dbms.PostgreSQL && Constants.DbProvider == DbProvider.ADO)) dbCommand.Prepare();
 
          return dbCommand;
       }

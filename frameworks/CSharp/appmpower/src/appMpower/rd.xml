@@ -1,0 +1,116 @@
+<Directives>
+  <Application>
+
+    <!-- ================= ASP.NET CORE BOOTSTRAP ================= -->
+
+    <Assembly Name="Microsoft.AspNetCore">
+      <Type Name="Microsoft.AspNetCore.Builder.WebApplicationBuilder" Dynamic="Required All" />
+      <Type Name="Microsoft.AspNetCore.HostFilteringStartupFilter" Activate="Required Public" />
+      <Type Name="Microsoft.AspNetCore.ForwardedHeadersStartupFilter" Activate="Required Public" />
+    </Assembly>
+
+    <Assembly Name="Microsoft.AspNetCore.Hosting">
+      <Type Name="Microsoft.AspNetCore.Hosting.GenericWebHostService" Dynamic="Required All" />
+      <Type Name="Microsoft.AspNetCore.Http.DefaultHttpContextFactory" Dynamic="Required All" />
+      <Type Name="Microsoft.AspNetCore.Hosting.Builder.ApplicationBuilderFactory" Dynamic="Required All" />
+      <Type Name="Microsoft.AspNetCore.Hosting.HostingMetrics" Dynamic="Required All" />
+    </Assembly>
+
+    <Assembly Name="Microsoft.Extensions.Hosting">
+      <Type Name="Microsoft.Extensions.Hosting.Internal.ApplicationLifetime" Dynamic="Required All" />
+      <Type Name="Microsoft.Extensions.Hosting.Internal.ConsoleLifetime" Dynamic="Required All" />
+    </Assembly>
+
+    <!-- ================= LOGGING ================= -->
+
+    <Assembly Name="Microsoft.Extensions.Logging.Abstractions">
+      <Type Name="Microsoft.Extensions.Logging.Logger`1" Dynamic="Required All" />
+    </Assembly>
+
+    <Assembly Name="Microsoft.Extensions.Logging">
+      <Type Name="Microsoft.Extensions.Logging.LoggerFactory" Dynamic="Required All" />
+      <Type Name="Microsoft.Extensions.Logging.LoggerFilterOptions" Activate="Required Public" />
+    </Assembly>
+
+    <!--
+    <Assembly Name="Microsoft.Extensions.Logging.Console">
+      <Type Name="Microsoft.Extensions.Logging.Console.ConsoleLoggerProvider" Dynamic="Required All" />
+      <Type Name="Microsoft.Extensions.Logging.Console.ConsoleLoggerOptions" Activate="Required Public" />
+      <Type Name="Microsoft.Extensions.Logging.ConsoleLoggerConfigureOptions" Dynamic="Required All" />
+      <Type Name="Microsoft.Extensions.Logging.ConsoleFormatterConfigureOptions" Dynamic="Required All" />
+      <Type Name="Microsoft.Extensions.Logging.ConsoleLoggerFormatterOptionsChangeTokenSource`2" Dynamic="Required All" />
+      <Type Name="Microsoft.Extensions.Logging.Console.ConsoleFormatter" Activate="Required Public" />
+      <Type Name="Microsoft.Extensions.Logging.Console.SimpleConsoleFormatter" Dynamic="Required All" />
+      <Type Name="Microsoft.Extensions.Logging.Console.JsonConsoleFormatter" Dynamic="Required All" />
+      <Type Name="Microsoft.Extensions.Logging.Console.SystemdConsoleFormatter" Dynamic="Required All" />
+    </Assembly>
+    -->
+
+    <Assembly Name="Microsoft.Extensions.Logging.Configuration">
+      <Type Name="Microsoft.Extensions.Logging.Configuration.LoggerProviderConfiguration`1" Dynamic="Required All" />
+      <Type Name="Microsoft.Extensions.Logging.Configuration.LoggerProviderConfigurationFactory" Dynamic="Required All" />
+      <Type Name="Microsoft.Extensions.Logging.Configuration.LoggerProviderOptionsChangeTokenSource`2" Dynamic="Required All" />
+    </Assembly>
+
+    <!-- ================= OPTIONS / CONFIG ================= -->
+
+    <Assembly Name="Microsoft.Extensions.Options">
+      <Type Name="Microsoft.Extensions.Options.OptionsMonitor`1" Dynamic="Required All" />
+      <Type Name="Microsoft.Extensions.Options.OptionsFactory`1" Dynamic="Required All" />
+      <Type Name="Microsoft.Extensions.Options.OptionsCache`1" Dynamic="Required All" />
+      <Type Name="Microsoft.Extensions.Options.UnnamedOptionsManager`1" Dynamic="Required All" />
+      <Type Name="Microsoft.Extensions.Options.StartupValidator" Dynamic="Required All" />
+    </Assembly>
+
+    <Assembly Name="Microsoft.Extensions.Configuration.Binder">
+      <Type Name="Microsoft.Extensions.Configuration.ConfigurationBinder" Activate="Required Public" />
+    </Assembly>
+
+    <Assembly Name="Microsoft.Extensions.Validation">
+      <Type Name="Microsoft.Extensions.Validation.ValidationOptions" Activate="Required Public" />
+    </Assembly>
+
+    <!-- ================= DI / REFLECTION ================= -->
+
+    <Assembly Name="Microsoft.Extensions.DependencyInjection.Abstractions">
+      <Type Name="Microsoft.Extensions.DependencyInjection.ActivatorUtilities" Dynamic="Required All" />
+    </Assembly>
+
+    <!-- Required for parameter metadata under NativeAOT -->
+    <Assembly Name="System.Runtime">
+      <Type Name="System.Runtime.InteropServices.OptionalAttribute" Dynamic="Required All" />
+      <Type Name="System.Runtime.InteropServices.DefaultParameterValueAttribute" Activate="Required Public" />
+    </Assembly>
+
+    <!-- ================= HTTP / MIDDLEWARE ================= -->
+
+    <Assembly Name="Microsoft.AspNetCore.Http">
+      <Type Name="Microsoft.AspNetCore.Http.Features.FormOptions" Dynamic="Required All" />
+    </Assembly>
+
+    <!-- ================= KESTREL ================= -->
+
+    <Assembly Name="Microsoft.AspNetCore.Server.Kestrel.Core">
+      <Type Name="Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerImpl" Dynamic="Required All" />
+      <Type Name="Microsoft.AspNetCore.Server.Kestrel.Core.Internal.KestrelServerOptionsSetup" Dynamic="Required All" />
+      <Type Name="Microsoft.AspNetCore.Server.Kestrel.Core.HttpsConfigurationService" Dynamic="Required All" />
+      <Type Name="Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure.KestrelMetrics" Dynamic="Required All" />
+      <Type Name="Microsoft.AspNetCore.Server.Kestrel.Core.Internal.PinnedBlockMemoryPoolFactory" Dynamic="Required All" />
+      <Type Name="Microsoft.AspNetCore.MemoryPoolMetrics" Dynamic="Required All" />
+    </Assembly>
+
+    <Assembly Name="Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets">
+      <Type Name="Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.SocketTransportFactory" Dynamic="Required All" />
+    </Assembly>
+
+    <!-- ================= METRICS ================= -->
+
+    <Assembly Name="Microsoft.Extensions.Diagnostics">
+      <Type Name="Microsoft.Extensions.Diagnostics.Metrics.DefaultMeterFactory" Dynamic="Required All" />
+      <Type Name="Microsoft.Extensions.DependencyInjection.MetricsServiceExtensions+SubscriptionActivator" Dynamic="Required All" />
+      <Type Name="Microsoft.Extensions.DependencyInjection.MetricsServiceExtensions+NoOpOptions" Dynamic="Required All" />
+      <Type Name="Microsoft.Extensions.Diagnostics.Metrics.MetricsSubscriptionManager" Dynamic="Required All" />
+    </Assembly>
+
+  </Application>
+</Directives>

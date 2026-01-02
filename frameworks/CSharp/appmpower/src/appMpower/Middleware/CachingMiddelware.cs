@@ -33,7 +33,7 @@ public class CachingMiddleware
 
    public unsafe Task Invoke(HttpContext httpContext)
    {
-      if (httpContext.Request.Path.StartsWithSegments("/cached-worlds", StringComparison.Ordinal))
+      //if (httpContext.Request.Path.StartsWithSegments("/cached-worlds", StringComparison.Ordinal))
       {
          int payloadLength;
          IntPtr handlePointer;
@@ -119,7 +119,7 @@ public class CachingMiddleware
          return response.Body.WriteAsync(result, 0, result.Length);
       }
 
-      return _next(httpContext);
+      //return _next(httpContext);
    }
 }
 

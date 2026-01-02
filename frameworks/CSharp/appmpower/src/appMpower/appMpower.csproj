@@ -4,7 +4,50 @@
     <TargetFramework>net10.0</TargetFramework>
     <OutputType>Exe</OutputType>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+
+    <PublishAot>true</PublishAot>
+    <SelfContained>true</SelfContained>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+
+    <!--TODOGITHUB-->
+    <!--<RuntimeIdentifier>linux-x64</RuntimeIdentifier>--> <!-- docker server -->
+    <!--TODOLOCAL-->
+    <RuntimeIdentifier>linux-arm64</RuntimeIdentifier> <!-- docker local -->
+    <!--<RuntimeIdentifier>osx-arm64</RuntimeIdentifier>--> <!-- outside docker local -->
+
+    <PublishTrimmed>true</PublishTrimmed>
+    <TrimMode>full</TrimMode>
+
+    <OptimizationPreference>Size</OptimizationPreference>
+    <IlcOptimizationPreference>Size</IlcOptimizationPreference>
+
+    <DebuggerSupport>false</DebuggerSupport>
+    <EventSourceSupport>false</EventSourceSupport>
+    <HttpActivityPropagationSupport>false</HttpActivityPropagationSupport>
+    <MetadataUpdaterSupport>false</MetadataUpdaterSupport>
+    <MetricsSupport>false</MetricsSupport>
+    <Http3Support>false</Http3Support>
+
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <UseSystemResourceKeys>true</UseSystemResourceKeys>
+
+    <StackTraceSupport>false</StackTraceSupport>
+    <IlcGenerateStackTraceData>false</IlcGenerateStackTraceData>
+    <TrimmerRemoveSymbols>true</TrimmerRemoveSymbols>
+
+    <IlcScanReflection>false</IlcScanReflection>
+
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+
+    <StripSymbols>true</StripSymbols>
+
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
+
+  <ItemGroup>
+    <RdXmlFile Include="rd.xml" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Include="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
@@ -26,7 +69,6 @@
     <ProjectReference Include = "..\appMpower.Orm\appMpower.Orm.csproj" />
     <PackageReference Include="Npgsql" Version="10.0.0" />
     <PackageReference Include="MySqlConnector" Version="2.5.0" />
-    <PackageReference Include="RazorSlices" Version="0.8.1" />
   </ItemGroup>
 
   <PropertyGroup>

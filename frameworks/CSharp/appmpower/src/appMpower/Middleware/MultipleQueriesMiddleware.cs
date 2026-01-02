@@ -24,7 +24,7 @@ public class MultipleQueriesMiddleware
 
     public unsafe Task Invoke(HttpContext httpContext)
    {
-      if (httpContext.Request.Path.StartsWithSegments("/queries", StringComparison.Ordinal))
+      //if (httpContext.Request.Path.StartsWithSegments("/queries", StringComparison.Ordinal))
       {
          var queryString = httpContext.Request.QueryString.ToString(); 
          int queries; 
@@ -55,7 +55,7 @@ public class MultipleQueriesMiddleware
          return response.Body.WriteAsync(json, 0, payloadLength);
       }
 
-      return _next(httpContext);
+      //return _next(httpContext);
    }
 }
 

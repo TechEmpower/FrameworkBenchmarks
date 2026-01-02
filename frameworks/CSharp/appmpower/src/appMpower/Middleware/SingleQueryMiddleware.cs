@@ -1,15 +1,25 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 
+using appMpower.Serializers;
+
 namespace appMpower; 
 
 public class SingleQueryMiddleware
 {
+    private readonly static JsonWriterOptions _jsonWriterOptions = new()
+    {
+        Indented = false, 
+        SkipValidation = true
+    };
+
+    private readonly static WorldSerializer _worldSerializer = new();
+
     private readonly static KeyValuePair<string, StringValues> _headerServer =
          new KeyValuePair<string, StringValues>("Server", new StringValues("k"));
     private readonly static KeyValuePair<string, StringValues> _headerContentType =
@@ -23,8 +33,9 @@ public class SingleQueryMiddleware
     }
 
     public unsafe Task Invoke(HttpContext httpContext)
+    //public async Task Invoke(HttpContext httpContext)
     {
-        if (httpContext.Request.Path.StartsWithSegments("/db", StringComparison.Ordinal))
+        //if (httpContext.Request.Path.StartsWithSegments("/db", StringComparison.Ordinal))
         {
             var response = httpContext.Response; 
             response.Headers.Add(_headerServer);
@@ -48,9 +59,22 @@ public class SingleQueryMiddleware
                 new KeyValuePair<string, StringValues>("Content-Length", payloadLength.ToString()));
 
             return response.Body.WriteAsync(json, 0, payloadLength);
+
+            /*
+            var world = await RawDbNpgsql.LoadSingleQueryRow(); 
+            //var world = await RawDbMySql.LoadSingleQueryRow(); 
+            //var world = RawDbMySql.LoadSingleQueryRow(); 
+            
+            using var utf8JsonWriter = new Utf8JsonWriter(httpContext.Response.Body, _jsonWriterOptions);
+
+            _worldSerializer.Serialize(utf8JsonWriter, world);
+
+            await utf8JsonWriter.FlushAsync();
+            */
         }
 
-        return _nextStage(httpContext);
+        //return _nextStage(httpContext);
+        //await _nextStage(httpContext);
     }
 }
 

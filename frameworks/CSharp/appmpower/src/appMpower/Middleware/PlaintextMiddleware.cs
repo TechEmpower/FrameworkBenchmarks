@@ -25,7 +25,7 @@ public unsafe class PlaintextMiddleware
 
     public Task Invoke(HttpContext httpContext)
     {
-        if (httpContext.Request.Path.StartsWithSegments("/plaintext", StringComparison.Ordinal))
+        //if (httpContext.Request.Path.StartsWithSegments("/plaintext", StringComparison.Ordinal))
         {
             var payloadLength = _helloWorldPayload.Length;
             var response = httpContext.Response; 
@@ -37,7 +37,7 @@ public unsafe class PlaintextMiddleware
             return response.Body.WriteAsync(_helloWorldPayload, 0, payloadLength);
         }
 
-        return _nextStage(httpContext);
+        //return _nextStage(httpContext);
     }
 }
 

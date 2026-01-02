@@ -24,7 +24,7 @@ public class MultipleUpdatesMiddelware
 
     public unsafe Task Invoke(HttpContext httpContext)
    {
-      if (httpContext.Request.Path.StartsWithSegments("/updates", StringComparison.Ordinal))
+      //if (httpContext.Request.Path.StartsWithSegments("/updates", StringComparison.Ordinal))
       {
          var queryString = httpContext.Request.QueryString.ToString(); 
          int count; 
@@ -55,7 +55,7 @@ public class MultipleUpdatesMiddelware
          return response.Body.WriteAsync(json, 0, payloadLength);
       }
 
-      return _next(httpContext);
+      //return _next(httpContext);
    }
 }
 

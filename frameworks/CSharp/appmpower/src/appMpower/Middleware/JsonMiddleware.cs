@@ -33,7 +33,7 @@ public class JsonMiddleware
 
     public unsafe Task Invoke(HttpContext httpContext)
     {
-        if (httpContext.Request.Path.StartsWithSegments("/json", StringComparison.Ordinal))
+        //if (httpContext.Request.Path.StartsWithSegments("/json", StringComparison.Ordinal))
         {
             var response = httpContext.Response; 
             response.Headers.Add(_headerServer);
@@ -51,7 +51,7 @@ public class JsonMiddleware
             return Task.CompletedTask;
         }
 
-        return _nextStage(httpContext);
+        //return _nextStage(httpContext);
     }
 }
 
