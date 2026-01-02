@@ -1,7 +1,20 @@
 # frozen_string_literal: true
+require 'bundler/setup'
+Bundler.require(:default) # Load core modules
+
+require_relative 'db'
+require 'time'
 
 # Our Rack application to be executed by rackup
 class HelloWorld < Sinatra::Base
+  MAX_PK = 10_000
+  ID_RANGE = (1..MAX_PK).freeze
+  ALL_IDS = ID_RANGE.to_a
+  QUERIES_MIN = 1
+  QUERIES_MAX = 500
+
+  SERVER_STRING = 'Sinatra'
+
   configure do
     # Static file serving is ostensibly disabled in modular mode but Sinatra
     # still calls an expensive Proc on every request...
