@@ -53,13 +53,6 @@ public sealed class Startup
                 return;
             }
 
-            // ---------- CACHING ----------
-            if (httpContext.Request.Path.StartsWithSegments("/cached-worlds", StringComparison.Ordinal))
-            {
-                await CachingMiddleware.Invoke(httpContext);
-                return;
-            }
-
             // ---------- FORTUNES ----------
             if (httpContext.Request.Path.StartsWithSegments("/fortunes", StringComparison.Ordinal))
             {
@@ -77,7 +70,7 @@ public sealed class Startup
             // ---------- MULTIPLE UPDATES ----------
             if (httpContext.Request.Path.StartsWithSegments("/updates", StringComparison.Ordinal))
             {
-                await MultipleQueriesMiddleware.Invoke(httpContext);
+                await MultipleUpdatesMiddelware.Invoke(httpContext);
                 return;
             }
 
