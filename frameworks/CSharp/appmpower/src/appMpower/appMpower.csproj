@@ -21,9 +21,9 @@
     <SelfContained>true</SelfContained>
 
     <!--TODOGITHUB-->
-    <!--<RuntimeIdentifier>linux-x64</RuntimeIdentifier>--> <!-- docker server -->
+    <RuntimeIdentifier>linux-x64</RuntimeIdentifier> <!-- docker server -->
     <!--TODOLOCAL-->
-    <RuntimeIdentifier>linux-arm64</RuntimeIdentifier> <!-- docker local -->
+    <!--<RuntimeIdentifier>linux-arm64</RuntimeIdentifier>--> <!-- docker local -->
     <!--<RuntimeIdentifier>osx-arm64</RuntimeIdentifier>--> <!-- outside docker local -->
 
     <PublishTrimmed>true</PublishTrimmed>
