@@ -1,5 +1,5 @@
 {
-  "framework": "dart3",
+  "framework": "dart3_aot",
   "tests": [
     {
       "default": {
@@ -17,7 +17,7 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "dart3",
+        "display_name": "dart3_aot",
         "notes": "",
         "versus": "None"
       }
