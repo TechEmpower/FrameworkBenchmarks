@@ -159,7 +159,7 @@ if (db) {
   });
 }
 
-const server = app.listen(8080, () => {
+app.listen(8080, () => {
   // see uwebsockets.js benchmark
   app.uwsApp._cfg('silent');
   console.log(`${isWorker ? `${cluster.worker.id}: ` : ''}Successfully bound to http://0.0.0.0:8080`);
