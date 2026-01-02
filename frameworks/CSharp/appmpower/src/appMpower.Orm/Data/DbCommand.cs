@@ -1,4 +1,5 @@
 using System.Data;
+using System.Threading.Tasks;
 
 namespace appMpower.Orm.Data
 {
@@ -166,24 +167,20 @@ namespace appMpower.Orm.Data
          return _dbCommand.ExecuteReader();
       }
 
-      /*
       public async Task<int> ExecuteNonQueryAsync()
       {
          return await _dbCommand.ExecuteNonQueryAsync();
       }
-      */
 
       public IDataReader ExecuteReader(CommandBehavior behavior)
       {
          return _dbCommand.ExecuteReader(behavior);
       }
 
-      /*
       public async Task<System.Data.Common.DbDataReader> ExecuteReaderAsync(CommandBehavior behavior)
       {
          return await _dbCommand.ExecuteReaderAsync(behavior);
       }
-      */
 
 #nullable enable
       public object? ExecuteScalar()

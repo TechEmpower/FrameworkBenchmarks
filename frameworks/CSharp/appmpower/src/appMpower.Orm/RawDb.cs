@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Threading.Tasks;
 using appMpower.Orm.Data; 
 using appMpower.Orm.Objects;
 using PlatformBenchmarks;
@@ -25,6 +26,21 @@ namespace appMpower.Orm
          using (dbCommand)
          {
             World world = ReadSingleRow(dbCommand);
+
+            return world;
+         }
+      }
+
+      public static async Task<World> LoadSingleQueryRowAsync()
+      {
+         using var pooledConnection = new DbConnection(DbFactory.ConnectionString);
+         pooledConnection.Open();
+
+         var (dbCommand, _) = CreateReadCommand(pooledConnection);
+
+         using (dbCommand)
+         {
+            World world = await ReadSingleRowAsync(dbCommand);
 
             return world;
          }
@@ -181,6 +197,21 @@ namespace appMpower.Orm
          };
 
          dataReader.Close();
+
+         return world;
+      }
+
+      internal static async Task<World> ReadSingleRowAsync(DbCommand dbCommand)
+      {
+         var dataReader = await dbCommand.ExecuteReaderAsync(CommandBehavior.SingleRow & CommandBehavior.SequentialAccess);
+
+         await dataReader.ReadAsync();
+
+         var world = new World
+         {
+            Id = dataReader.GetInt32(0),
+            RandomNumber = dataReader.GetInt32(1)
+         };
 
          return world;
       }
