@@ -1,15 +1,4 @@
 # frozen_string_literal: true
-require 'bundler/setup'
-require 'time'
-
-MAX_PK = 10_000
-ID_RANGE = (1..MAX_PK).freeze
-ALL_IDS = ID_RANGE.to_a
-QUERIES_MIN = 1
-QUERIES_MAX = 500
-SERVER_STRING = "Sinatra"
-
-Bundler.require(:default) # Load core modules
 
 def connect(dbtype)
   Bundler.require(dbtype) # Load database-specific modules
@@ -64,5 +53,3 @@ end
 class Fortune < ActiveRecord::Base
   self.table_name = name
 end
-
-ActiveRecord::Base.connection_handler.clear_active_connections!
