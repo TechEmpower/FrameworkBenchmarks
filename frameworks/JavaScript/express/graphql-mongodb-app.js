@@ -3,7 +3,6 @@ const numCPUs = require('os').cpus().length
 const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
-const bodyParser = require('body-parser');
 const port = 8080;
 
 mongoose.Promise = global.Promise;
@@ -23,8 +22,8 @@ if (cluster.isPrimary) {
   cluster.on('exit', (worker, code, signal) =>
     console.log('worker ' + worker.pid + ' died'));
 } else {
-  app.use(bodyParser.urlencoded({ extended:false }));
-  app.use(bodyParser.json());
+  app.set('x-powered-by', false);
+  app.set('etag', false)
 
   const resolvers = require('./resolver-mongo');
 

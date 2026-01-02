@@ -6,6 +6,7 @@ import {
   escape,
   jsonSerializer,
   worldObjectSerializer,
+  worldsObjectSerializer,
   sortByMessage,
   writeResponse,
   headerTypes,
@@ -40,12 +41,13 @@ if (db) {
 
   app.get("/queries", async (req, res) => {
     try {
-      const queriesCount = getQueriesCount(req);
-      const databaseJobs = new Array(queriesCount)
-        .fill()
-        .map(() => db.find(generateRandomNumber()));
-      const worldObjects = await Promise.all(databaseJobs);
-      writeResponse(res, JSON.stringify(worldObjects));
+      const queries = getQueriesCount(req);
+      const worldPromises = new Array(queries);
+      for (let i = 0; i < queries; i++) {
+        worldPromises[i] = db.find(generateRandomNumber());
+      }
+      const worlds = await Promise.all(worldPromises);
+      writeResponse(res, worldsObjectSerializer(worlds));
     } catch (error) {
       handleError(error, res);
     }
