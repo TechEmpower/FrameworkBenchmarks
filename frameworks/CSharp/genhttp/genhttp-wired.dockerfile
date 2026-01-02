@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS build
 WORKDIR /source
 
-ENV GENHTTP_ENGINE_NAME=Internal
+ENV GENHTTP_ENGINE_NAME=Wired
 
 # copy csproj and restore as distinct layers
 COPY Benchmarks/*.csproj .
