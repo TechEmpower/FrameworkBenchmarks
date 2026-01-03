@@ -106,7 +106,7 @@ if (db) {
       }
       isCachePopulated = true;
     }
-    const count = parseQueries(req.query.queries);
+    const count = parseQueries(req.query.count);
     const worlds = new Array(count);
 
     for (let i = 0; i < count; i++) {
