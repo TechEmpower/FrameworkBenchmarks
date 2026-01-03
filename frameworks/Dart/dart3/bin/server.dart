@@ -28,15 +28,15 @@ void main(List<String> args) async {
 
     /// Determine if this process instance was initialized as a worker group.
     final isWorkerGroup = args.contains(workerGroupTag);
+
     if (isWorkerGroup) {
       /// Sanitize the argument list to ensure the internal token does not
       /// interfere with application-level argument parsing.
       args.removeAt(args.indexOf(workerGroupTag));
     }
-
     /// Prevents recursive spawning
     /// by ensuring only the primary process can spawn worker groups
-    if (!isWorkerGroup) {
+    else {
       /// Calculate the number of secondary worker groups required
       /// to fully utilize the available hardware capacity.
       ///
