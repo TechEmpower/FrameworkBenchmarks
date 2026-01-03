@@ -47,6 +47,12 @@ class Program
         builder.Configuration.AddEnvironmentVariables(prefix: "ASPNETCORE_");
         builder.Configuration.AddCommandLine(args);
 
+        builder.WebHost.ConfigureKestrel(options =>
+        {
+            options.AddServerHeader = false;
+            options.AllowSynchronousIO = true;
+        });
+
         var startup = new Startup();
         startup.ConfigureServices(builder.Services, builder.Configuration);
 

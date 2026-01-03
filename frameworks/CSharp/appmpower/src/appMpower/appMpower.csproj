@@ -85,12 +85,6 @@
 
   <ItemGroup>
     <ProjectReference Include = "..\appMpower.Orm\appMpower.Orm.csproj" />
-    <!-- ADO + PostgreSQL -->
-    <PackageReference Include="Npgsql" Version="10.0.0"
-                      Condition="'$(Driver)' == 'ado' AND '$(Database)' == 'postgresql'" />
-    <!-- ADO + MySQL -->
-    <PackageReference Include="MySqlConnector" Version="2.5.0"
-                      Condition="'$(Driver)' == 'ado' AND '$(Database)' == 'mysql'" />
   </ItemGroup>
 
 </Project>
