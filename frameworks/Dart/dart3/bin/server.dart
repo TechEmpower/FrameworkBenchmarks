@@ -20,7 +20,7 @@ void main(List<String> args) async {
       ? min(_maxIsolatesfromEnvironment, Platform.numberOfProcessors)
       : Platform.numberOfProcessors;
 
-  ///Triggers process-level horizontal scaling when running in AOT.
+  /// Triggers process-level horizontal scaling when running in AOT.
   if (Platform.script.toFilePath().endsWith('.aot')) {
     /// Internal token used to notify newly spawned processes that they
     /// belong to a secondary "worker group".
@@ -34,8 +34,8 @@ void main(List<String> args) async {
       args.removeAt(args.indexOf(workerGroupTag));
     }
 
-    ///Prevents recursive spawning
-    ///by ensuring only the primary process can spawn worker groups
+    /// Prevents recursive spawning
+    /// by ensuring only the primary process can spawn worker groups
     if (!isWorkerGroup) {
       /// Calculate the number of secondary worker groups required
       /// to fully utilize the available hardware capacity.
@@ -44,8 +44,8 @@ void main(List<String> args) async {
       /// helping to bypass internal VM scaling bottlenecks.
       final workerGroups = Platform.numberOfProcessors ~/ maxIsolates - 1;
 
-      ///Bootstraps independent worker processes via AOT snapshots.
-      ///Each process initializes its own Isolate Group.
+      /// Bootstraps independent worker processes via AOT snapshots.
+      /// Each process initializes its own Isolate Group.
       for (var i = 0; i < workerGroups; i++) {
         /// [Platform.script] identifies the AOT snapshot or executable.
         /// [Isolate.spawnUri] spawns a new process group via [main()].
