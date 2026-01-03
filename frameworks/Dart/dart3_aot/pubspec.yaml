@@ -1,7 +1,0 @@
-name: dart3_aot_benchmark
-description: A benchmark of dart
-environment:
-  sdk: ^3.10.3
-
-dev_dependencies:
-  lints: ^6.0.0
