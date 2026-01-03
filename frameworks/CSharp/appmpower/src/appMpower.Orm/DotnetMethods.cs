@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Text; 
 using System.Text.Json;
+using System.Threading.Tasks;
 using appMpower.Orm.Data;
 using appMpower.Orm.Objects; 
 using appMpower.Orm.Serializers; 
@@ -35,9 +36,9 @@ public static class DotnetMethods
         DbFactory.SetInstance();
     }
 
-    public static byte[] Db()
+    public static async Task<byte[]> Db()
     {
-        var world = RawDb.LoadSingleQueryRow();
+        var world = await RawDb.LoadSingleQueryRowAsync();
 
         var memoryStream = new MemoryStream();
         using var utf8JsonWriter = new Utf8JsonWriter(memoryStream, _jsonWriterOptions);
@@ -47,9 +48,9 @@ public static class DotnetMethods
         return memoryStream.ToArray();
     }
 
-    public static byte[] DbById(int id)
+    public static async Task<byte[]> DbById(int id)
     {
-        var world = RawDb.LoadSingleQueryRowById(id);
+        var world = await RawDb.LoadSingleQueryRowByIdAsync(id);
 
         var memoryStream = new MemoryStream();
         using var utf8JsonWriter = new Utf8JsonWriter(memoryStream, _jsonWriterOptions);
@@ -59,9 +60,9 @@ public static class DotnetMethods
         return memoryStream.ToArray();
     }
 
-    public static byte[] Query(int queries)
+    public static async Task<byte[]> Query(int queries)
     {
-        World[] worlds = RawDb.ReadMultipleRows(queries);
+        World[] worlds = await RawDb.ReadMultipleRowsAsync(queries);
 
         var memoryStream = new MemoryStream();
         using var utf8JsonWriter = new Utf8JsonWriter(memoryStream, _jsonWriterOptions);
@@ -71,9 +72,9 @@ public static class DotnetMethods
         return memoryStream.ToArray();
     }
 
-    public static byte[] Updates(int count)
+    public static async Task<byte[]> Updates(int count)
     {
-        World[] worlds = RawDb.LoadMultipleUpdatesRows(count);
+        World[] worlds = await RawDb.LoadMultipleUpdatesRowsAsync(count);
 
         var memoryStream = new MemoryStream();
         using var utf8JsonWriter = new Utf8JsonWriter(memoryStream, _jsonWriterOptions);
@@ -83,9 +84,9 @@ public static class DotnetMethods
         return memoryStream.ToArray();
     }
 
-    public static byte[] Fortunes()
+    public static async Task<byte[]> Fortunes()
     {
-        List<Fortune> fortunes = RawDb.LoadFortunesRows();
+        List<Fortune> fortunes = await RawDb.LoadFortunesRowsAsync();
         string fortunesView = FortunesView.Render(fortunes);
         byte[] byteArray = Encoding.UTF8.GetBytes(fortunesView);
 

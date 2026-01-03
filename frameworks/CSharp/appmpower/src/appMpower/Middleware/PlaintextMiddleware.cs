@@ -6,7 +6,7 @@ using Microsoft.Extensions.Primitives;
 
 namespace appMpower; 
 
-public unsafe class PlaintextMiddleware
+public class PlaintextMiddleware
 {
     private readonly static KeyValuePair<string, StringValues> _headerServer =
          new("Server", new StringValues("k"));
@@ -14,7 +14,7 @@ public unsafe class PlaintextMiddleware
          new("Content-Type", new StringValues("text/plain"));
     private static readonly byte[] _helloWorldPayload = Encoding.UTF8.GetBytes("Hello, World!");
 
-    public static Task Invoke(HttpContext httpContext)
+    public static async Task Invoke(HttpContext httpContext)
     {
         var payloadLength = _helloWorldPayload.Length;
         var response = httpContext.Response; 
@@ -23,6 +23,6 @@ public unsafe class PlaintextMiddleware
         response.Headers.Add(
             new KeyValuePair<string, StringValues>("Content-Length", payloadLength.ToString()));
 
-        return response.Body.WriteAsync(_helloWorldPayload, 0, payloadLength);
+        await response.Body.WriteAsync(_helloWorldPayload);
     }
 }

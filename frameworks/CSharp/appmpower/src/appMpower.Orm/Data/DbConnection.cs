@@ -1,6 +1,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
+using System.Threading.Tasks;
 
 namespace appMpower.Orm.Data
 {
@@ -129,7 +130,6 @@ namespace appMpower.Orm.Data
          }
       }
 
-      /*
       public async Task OpenAsync()
       {
          if (_dbConnection.State == ConnectionState.Closed)
@@ -137,7 +137,6 @@ namespace appMpower.Orm.Data
             await _dbConnection.OpenAsync();
          }
       }
-      */
 
       public void Dispose()
       {
