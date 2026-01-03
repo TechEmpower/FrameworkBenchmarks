@@ -84,6 +84,19 @@ Future<void> _startServer(List<String> _) async {
 
   /// Handles [HttpRequest]'s from [HttpServer].
   await for (final request in server) {
+    /// Asynchronously processes each request with an 8-second safety deadline
+    /// to prevent stalled connections from blocking the isolate event loop.
+    _handleRequest(request).timeout(
+      const Duration(seconds: 8),
+      onTimeout: () => _sendResponse(request, HttpStatus.internalServerError),
+    );
+  }
+}
+
+/// Dispatches requests to specific test handlers. Wrapped in a try-catch
+/// to ensure stable execution and guaranteed response delivery.
+Future<void> _handleRequest(HttpRequest request) async {
+  try {
     switch (request.uri.path) {
       case '/json':
         _jsonTest(request);
@@ -94,6 +107,8 @@ Future<void> _startServer(List<String> _) async {
       default:
         _sendResponse(request, HttpStatus.notFound);
     }
+  } catch (e) {
+    _sendResponse(request, HttpStatus.internalServerError);
   }
 }
 
