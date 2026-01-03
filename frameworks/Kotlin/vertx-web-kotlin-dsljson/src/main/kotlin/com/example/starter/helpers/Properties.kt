@@ -27,65 +27,10 @@ object Properties {
     val EVENT_LOOP_POOL_SIZE: Int = SystemPropertyUtil.getInt("tfb.eventLoopPoolSize", CpuCoreSensor.availableProcessors())
 
     /**
-     * Whether metrics are enabled.
-     * Default: Reverse of `vertx.disableMetrics` (defaults to true)
-     */
-    val METRICS_ENABLED: Boolean = SystemPropertyUtil.getBoolean("vertx.disableMetrics", true).not()
-
-    /**
      * Port the HTTP server listens on.
      * Default: 8080 (tfb.http.port)
      */
     val HTTP_PORT: Int = SystemPropertyUtil.getInt("tfb.http.port", 8080)
-
-    /**
-     * Size of TCP send buffer for HTTP connections, in bytes.
-     * Default: 32768 (tfb.http.sendBufferSize)
-     */
-    val HTTP_SEND_BUFFER_SIZE: Int = SystemPropertyUtil.getInt("tfb.http.sendBufferSize", 256 * 1024)
-
-    /**
-     * Size of TCP receive buffer for HTTP connections, in bytes.
-     * Default: 32768 (tfb.http.receiveBufferSize)
-     */
-    val HTTP_RECEIVE_BUFFER_SIZE: Int = SystemPropertyUtil.getInt("tfb.http.receiveBufferSize", 256 * 1024)
-
-    /**
-     * Enables TCP Fast Open on the HTTP server.
-     * Default: true (tfb.http.tcpFastOpen)
-     */
-    val HTTP_TCP_FASTOPEN: Boolean = SystemPropertyUtil.getBoolean("tfb.http.tcpFastOpen", false)
-
-    /**
-     * Enables TCP_NODELAY (disables Nagle) on HTTP connections.
-     * Default: true (tfb.http.tcpNoDelay)
-     */
-    val HTTP_TCP_NODELAY: Boolean = SystemPropertyUtil.getBoolean("tfb.http.tcpNoDelay", false)
-
-    /**
-     * Idle timeout for HTTP connections in seconds.
-     * 0 disables idle timeout.
-     * Default: 0 (tfb.http.idleTimeout)
-     */
-    val HTTP_IDLE_TIMEOUT: Int = SystemPropertyUtil.getInt("tfb.http.idleTimeout", 0)
-
-    /**
-     * Enables SO_REUSEADDR on the HTTP server socket.
-     * Default: true (tfb.http.reuseAddress)
-     */
-    val HTTP_REUSE_ADDRESS: Boolean = SystemPropertyUtil.getBoolean("tfb.http.reuseAddress", true)
-
-    /**
-     * Enables SO_REUSEPORT on the HTTP server socket.
-     * Default: true (tfb.http.reusePort)
-     */
-    val HTTP_REUSE_PORT: Boolean = SystemPropertyUtil.getBoolean("tfb.http.reusePort", true)
-
-    /**
-     * Size of the TCP accept backlog for the HTTP server.
-     * Default: 8192 (tfb.http.acceptBacklog)
-     */
-    val HTTP_ACCEPT_BACKLOG: Int = SystemPropertyUtil.getInt("tfb.http.acceptBacklog", 8192)
 
     /**
      * PostgreSQL username used for connections.
@@ -157,7 +102,7 @@ object Properties {
             cachePreparedStatements = PG_CACHE_PREPARED_STATEMENTS,
             preparedStatementCacheMaxSize = PG_PREPARED_STATEMENT_CACHE_MAX_SIZE,
             tracingPolicy = TracingPolicy.IGNORE,
-            pipeliningLimit = PG_PIPELINING_LIMIT
+            pipeliningLimit = PG_PIPELINING_LIMIT,
         )
     }
 }

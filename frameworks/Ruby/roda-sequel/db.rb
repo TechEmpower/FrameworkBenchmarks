@@ -1,9 +1,6 @@
 # frozen_string_literal: true
-require 'bundler/setup'
 
 SEQUEL_NO_ASSOCIATIONS = true
-
-Bundler.require(:default) # Load core modules
 
 def connect(dbtype)
   Bundler.require(dbtype) # Load database-specific modules
@@ -27,20 +24,21 @@ def connect(dbtype)
     opts[:max_connections] = 512
   end
 
-  Sequel.connect \
-    '%{adapter}://%{host}/%{database}?user=%{user}&password=%{password}' % {
-      adapter: adapter,
-      host: 'tfb-database',
-      database: 'hello_world',
-      user: 'benchmarkdbuser',
-      password: 'benchmarkdbpass'
-    }, opts
+  Sequel.connect "%{adapter}://%{host}/%{database}?user=%{user}&password=%{password}" %
+                   {
+                     adapter: adapter,
+                     host: "tfb-database",
+                     database: "hello_world",
+                     user: "benchmarkdbuser",
+                     password: "benchmarkdbpass"
+                   },
+                 opts
 end
 
-DB = connect ENV.fetch('DBTYPE').to_sym
+DB = connect ENV.fetch("DBTYPE").to_sym
 
 # Define ORM models
-class World < Sequel::Model(:World)
+class World < Sequel.Model(:World)
   def_column_alias(:randomnumber, :randomNumber) if DB.database_type == :mysql
 
   def self.batch_update(worlds)
@@ -50,8 +48,8 @@ class World < Sequel::Model(:World)
       ids = []
       sql = String.new("UPDATE world SET randomnumber = CASE id ")
       worlds.each do |world|
-        sql << "when #{world[:id]} then #{world[:randomnumber]} "
-        ids << world[:id]
+        sql << "when #{world.id} then #{world.randomnumber} "
+        ids << world.id
       end
       sql << "ELSE randomnumber END WHERE id IN ( #{ids.join(',')})"
       DB.run(sql)
@@ -59,7 +57,7 @@ class World < Sequel::Model(:World)
   end
 end
 
-class Fortune < Sequel::Model(:Fortune)
+class Fortune < Sequel.Model(:Fortune)
   # Allow setting id to zero (0) per benchmark requirements
   unrestrict_primary_key
 end

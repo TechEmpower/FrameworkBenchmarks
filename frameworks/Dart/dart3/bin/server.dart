@@ -3,9 +3,17 @@ import 'dart:io';
 import 'dart:isolate';
 
 void main(List<String> args) async {
+  /// Isolate count per process, set at build-time via:
+  /// dart compile exe --define=MAX_ISOLATES=X
+  /// Defaults to machine core count for dynamic scaling.
+  final maxIsolates = int.fromEnvironment(
+    'MAX_ISOLATES',
+    defaultValue: Platform.numberOfProcessors,
+  );
+
   /// Create an [Isolate] containing an [HttpServer]
   /// for each processor after the first
-  for (var i = 1; i < Platform.numberOfProcessors; i++) {
+  for (var i = 1; i < maxIsolates; i++) {
     await Isolate.spawn(_startServer, args);
   }
 

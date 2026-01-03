@@ -1,8 +1,12 @@
 # frozen_string_literal: true
+require 'bundler/setup'
+Bundler.require(:default) # Load core modules
 
 require 'rack/app'
 require 'rack/app/front_end'
+require_relative 'db'
 require 'json'
+require 'time'
 
 class App < Rack::App
   MAX_PK = 10_000

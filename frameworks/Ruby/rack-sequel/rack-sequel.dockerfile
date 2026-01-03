@@ -17,9 +17,9 @@ RUN bundle install --jobs=4 --gemfile=/rack-sequel/Gemfile
 
 ENV DBTYPE=mysql
 
-ENV MAX_THREADS=5
+ENV MAX_THREADS=8
 
 EXPOSE 8080
 
-CMD export WEB_CONCURRENCY=$(($(nproc)*5/4)) && \
+CMD export WEB_CONCURRENCY=auto && \
     bundle exec puma -C config/puma.rb -b tcp://0.0.0.0:8080 -e production
