@@ -1,4 +1,5 @@
 import express from "express";
+import { LRUCache } from 'lru-cache';
 import {
   generateRandomNumber,
   getQueriesCount,
@@ -12,6 +13,10 @@ import {
 let db;
 const { DATABASE } = process.env;
 if (DATABASE) db = await import(`./database/${DATABASE}.mjs`);
+
+const cache = new LRUCache({
+  max: maxRows
+});
 
 const extra = { id: 0, message: "Additional fortune added at request time." };
 
