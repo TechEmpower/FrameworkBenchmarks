@@ -89,7 +89,7 @@ if (db) {
     res.writeHead(200, {
       "content-type": "application/json",
       server: "Express",
-    }).end(worldsSerializer(worldObjects));
+    }).end(worldsObjectSerializer(worldObjects));
   });
 
   let isCachePopulated = false
@@ -111,7 +111,7 @@ if (db) {
     res.writeHead(200, {
       "content-type": "application/json",
       server: "Express",
-    }).end(worldsSerializer(worlds));
+    }).end(worldsObjectSerializer(worlds));
   });
 }
 
