@@ -28,8 +28,10 @@ export function getQueriesCount(request) {
   return Math.min(parseInt(request.query["queries"]) || 1, maxQuery);
 }
 
+export const parseQueries = (i) => i > maxQuery ? maxQuery : (i | 0) || 1;
+
 export function generateRandomNumber() {
-  return Math.ceil(Math.random() * maxRows);
+  return ((Math.random() * maxRows) | 0) + 1;
 }
 
 const escapeHTMLRules = {

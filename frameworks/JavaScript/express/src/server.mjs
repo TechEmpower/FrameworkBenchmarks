@@ -2,7 +2,7 @@ import express from "express";
 import { LRUCache } from 'lru-cache';
 import {
   generateRandomNumber,
-  getQueriesCount,
+  parseQueries,
   escape,
   jsonSerializer,
   worldObjectSerializer,
@@ -22,6 +22,9 @@ const cache = new LRUCache({
 const extra = { id: 0, message: "Additional fortune added at request time." };
 
 const app = express();
+
+app.set('x-powered-by', false);
+app.set('etag', false);
 
 app.get("/plaintext", (req, res) => {
   res.writeHead(200, {
@@ -47,7 +50,7 @@ if (db) {
   });
 
   app.get("/queries", async (req, res) => {
-    const queries = getQueriesCount(req);
+    const queries = parseQueries(req.query.queries);
     const worldPromises = new Array(queries);
     for (let i = 0; i < queries; i++) {
       worldPromises[i] = db.find(generateRandomNumber());
@@ -60,7 +63,8 @@ if (db) {
   });
 
   app.get("/fortunes", async (req, res) => {
-    const rows = [extra, ...(await db.fortunes())];
+    const rows = await db.fortunes();
+    rows.push(extra);
     rows.sort((a, b) => (a.message < b.message) ? -1 : 1);
     const n = rows.length;
     let html = "",
@@ -76,7 +80,7 @@ if (db) {
   });
 
   app.get("/updates", async (req, res) => {
-    const queriesCount = getQueriesCount(req);
+    const queriesCount = parseQueries(req.query.queries);
     const databaseJobs = new Array(queriesCount);
     for (let i = 0; i < queriesCount; i++) {
       databaseJobs[i] = db.find(generateRandomNumber());
@@ -102,7 +106,7 @@ if (db) {
       }
       isCachePopulated = true;
     }
-    const count = getQueriesCount(req);
+    const count = parseQueries(req.query.queries);
     const worlds = new Array(count);
 
     for (let i = 0; i < count; i++) {
