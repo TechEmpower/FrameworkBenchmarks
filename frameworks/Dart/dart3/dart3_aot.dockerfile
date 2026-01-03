@@ -1,3 +1,4 @@
+
 FROM dart:3.10.7 AS build
 WORKDIR /app
 
@@ -7,7 +8,6 @@ ARG MAX_ISOLATES=8
 COPY pubspec.yaml .
 COPY bin bin
 
-RUN dart pub get
 RUN dart compile aot-snapshot bin/server.dart \
     --define=MAX_ISOLATES=${MAX_ISOLATES} \
     -o server.aot
