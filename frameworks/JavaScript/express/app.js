@@ -7,6 +7,11 @@ const cluster = require('cluster'),
   numCPUs = require('os').cpus().length,
   express = require('express');
 
+const {
+  jsonSerializer,
+  GREETING,
+} = require("./src/utils.mjs");
+
 
 if (cluster.isPrimary) {
   console.log(`Primary ${process.pid} is running`);
@@ -23,22 +28,22 @@ if (cluster.isPrimary) {
   const app = module.exports = express();
 
   app.set('x-powered-by', false);
-  app.set('etag', false)
-
-  // Set headers for all routes
-  app.use((req, res, next) => {
-    res.setHeader("Server", "Express");
-    return next();
-  });
-
-  app.set('view engine', 'jade');
-  app.set('views', __dirname + '/views');
+  app.set('etag', false);
 
   // Routes
-  app.get('/json', (req, res) => res.send({ message: 'Hello, World!' }));
+  app.get('/json', (req, res) => {
+    res.writeHead(200, {
+      "content-type": "application/json",
+      server: "Express",
+    }).end(jsonSerializer({ message: GREETING }))
+  });
 
-  app.get('/plaintext', (req, res) =>
-    res.header('Content-Type', 'text/plain').send('Hello, World!'));
+  app.get('/plaintext', (req, res) => {
+    res.writeHead(200, {
+      "content-type": "text/plain",
+      server: "Express",
+    }).end(GREETING);
+  });
 
   const server = app.listen(8080);
   server.keepAliveTimeout = 0;

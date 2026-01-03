@@ -2,6 +2,9 @@ import fjs from 'fast-json-stringify';
 
 export const GREETING = "Hello, World!";
 
+export const maxQuery = 500
+export const maxRows = 10000
+
 export const headerTypes = {
   plain: "text/plain",
   json: "application/json",
@@ -22,11 +25,13 @@ export function handleError(error, response) {
 }
 
 export function getQueriesCount(request) {
-  return Math.min(parseInt(request.query["queries"]) || 1, 500);
+  return Math.min(parseInt(request.query["queries"]) || 1, maxQuery);
 }
 
+export const parseQueries = (i) => i > maxQuery ? maxQuery : (i | 0) || 1;
+
 export function generateRandomNumber() {
-  return Math.ceil(Math.random() * 10000);
+  return ((Math.random() * maxRows) | 0) + 1;
 }
 
 const escapeHTMLRules = {
@@ -42,9 +47,7 @@ const unsafeHTMLMatcher = /[&<>"'\/]/g;
 
 export function escape(text) {
   if (unsafeHTMLMatcher.test(text) === false) return text;
-  return text.replace(unsafeHTMLMatcher, function (m) {
-    return escapeHTMLRules[m] || m;
-  });
+  return text.replace(unsafeHTMLMatcher, (m) => escapeHTMLRules[m] || m);
 }
 
 export const jsonSerializer = fjs({
