@@ -1,26 +1,22 @@
-# ---------- Build stage ----------
-FROM dart:stable AS build
-
+FROM dart:3.10.7 AS build
 WORKDIR /app
+
+# Define the build-time argument (Default to 8)
+ARG MAX_ISOLATES=8
 
 COPY pubspec.yaml .
-RUN dart pub get
-
 COPY bin bin
 
-RUN dart compile aot-snapshot bin/server.dart -o server.aot
+RUN dart pub get
+RUN dart compile aot-snapshot bin/server.dart \
+    --define=MAX_ISOLATES=${MAX_ISOLATES} \
+    -o server.aot
 
-
-# ---------- Runtime stage ----------
 FROM gcr.io/distroless/base-debian12
-
-# Copy Dart AOT runtime
-COPY --from=build /usr/lib/dart/bin/dartaotruntime /usr/lib/dart/bin/dartaotruntime
-
-# Copy snapshot
-COPY --from=build /app/server.aot /app/server.aot
-
 WORKDIR /app
+
+COPY --from=build /usr/lib/dart/bin/dartaotruntime /usr/lib/dart/bin/dartaotruntime
+COPY --from=build /app/server.aot /app/server.aot
 
 EXPOSE 8080
 
