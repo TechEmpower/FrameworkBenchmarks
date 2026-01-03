@@ -42,9 +42,7 @@ const unsafeHTMLMatcher = /[&<>"'\/]/g;
 
 export function escape(text) {
   if (unsafeHTMLMatcher.test(text) === false) return text;
-  return text.replace(unsafeHTMLMatcher, function (m) {
-    return escapeHTMLRules[m] || m;
-  });
+  return text.replace(unsafeHTMLMatcher, (m) => escapeHTMLRules[m] || m);
 }
 
 export const jsonSerializer = fjs({

@@ -2,14 +2,10 @@ import express from "express";
 import {
   generateRandomNumber,
   getQueriesCount,
-  handleError,
   escape,
   jsonSerializer,
   worldObjectSerializer,
   worldsObjectSerializer,
-  sortByMessage,
-  writeResponse,
-  headerTypes,
   GREETING,
 } from "./utils.mjs";
 
@@ -22,83 +18,97 @@ const extra = { id: 0, message: "Additional fortune added at request time." };
 const app = express();
 
 app.get("/plaintext", (req, res) => {
-  writeResponse(res, GREETING, headerTypes["plain"]);
+  res.writeHead(200, {
+    "content-type": "text/plain",
+    server: "Express",
+  }).end(GREETING);
 });
 
 app.get("/json", (req, res) => {
-  writeResponse(res, jsonSerializer({ message: GREETING }));
+  res.writeHead(200, {
+    "content-type": "application/json",
+    server: "Express",
+  }).end(jsonSerializer({ message: GREETING }));
 });
 
 if (db) {
   app.get("/db", async (req, res) => {
-    try {
-      const row = await db.find(generateRandomNumber());
-      writeResponse(res, worldObjectSerializer(row));
-    } catch (error) {
-      handleError(error, res);
-    }
+    const row = await db.find(generateRandomNumber());
+    res.writeHead(200, {
+      "content-type": "application/json",
+      server: "Express",
+    }).end(worldObjectSerializer(row));
   });
 
   app.get("/queries", async (req, res) => {
-    try {
-      const queries = getQueriesCount(req);
-      const worldPromises = new Array(queries);
-      for (let i = 0; i < queries; i++) {
-        worldPromises[i] = db.find(generateRandomNumber());
-      }
-      const worlds = await Promise.all(worldPromises);
-      writeResponse(res, worldsObjectSerializer(worlds));
-    } catch (error) {
-      handleError(error, res);
+    const queries = getQueriesCount(req);
+    const worldPromises = new Array(queries);
+    for (let i = 0; i < queries; i++) {
+      worldPromises[i] = db.find(generateRandomNumber());
     }
+    const worlds = await Promise.all(worldPromises);
+    res.writeHead(200, {
+      "content-type": "application/json",
+      server: "Express",
+    }).end(worldsObjectSerializer(worlds));
   });
 
   app.get("/fortunes", async (req, res) => {
-    try {
-      const rows = [extra, ...(await db.fortunes())];
-      sortByMessage(rows);
-      const n = rows.length;
-      let html = "",
-        i = 0;
-      for (; i < n; i++) {
-        html += `<tr><td>${rows[i].id}</td><td>${escape(
-          rows[i].message
-        )}</td></tr>`;
-      }
-
-      writeResponse(
-        res,
-        `<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>${html}</table></body></html>`,
-        headerTypes["html"]
-      );
-    } catch (error) {
-      handleError(error, res);
+    const rows = [extra, ...(await db.fortunes())];
+    rows.sort((a, b) => (a.message < b.message) ? -1 : 1);
+    const n = rows.length;
+    let html = "",
+      i = 0;
+    for (; i < n; i++) {
+      const row = rows[i];
+      html += `<tr><td>${row.id}</td><td>${escape(row.message)}</td></tr>`;
     }
+    res.writeHead(200, {
+      "content-type": "text/html; charset=UTF-8",
+      server: "Express",
+    }).end(`<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>${html}</table></body></html>`);
   });
 
   app.get("/updates", async (req, res) => {
-    try {
-      const queriesCount = getQueriesCount(req);
-      const databaseJobs = new Array(queriesCount);
-      for (let i = 0; i < queriesCount; i++) {
-        databaseJobs[i] = db.find(generateRandomNumber());
-      }
-      const worldObjects = await Promise.all(databaseJobs);
-
-      for (let i = 0; i < queriesCount; i++) {
-        worldObjects[i].randomNumber = generateRandomNumber();
-      }
-      await db.bulkUpdate(worldObjects);
-      writeResponse(res, JSON.stringify(worldObjects));
-    } catch (error) {
-      handleError(error, res);
+    const queriesCount = getQueriesCount(req);
+    const databaseJobs = new Array(queriesCount);
+    for (let i = 0; i < queriesCount; i++) {
+      databaseJobs[i] = db.find(generateRandomNumber());
     }
+    const worldObjects = await Promise.all(databaseJobs);
+
+    for (let i = 0; i < queriesCount; i++) {
+      worldObjects[i].randomNumber = generateRandomNumber();
+    }
+    await db.bulkUpdate(worldObjects);
+    res.writeHead(200, {
+      "content-type": "application/json",
+      server: "Express",
+    }).end(worldsSerializer(worldObjects));
+  });
+
+  let isCachePopulated = false
+  app.get('/cached-worlds', async (req, res) => {
+    if (!isCachePopulated) {
+      const worlds = await db.getAllWorlds();
+      for (let i = 0; i < worlds.length; i++) {
+        cache.set(worlds[i].id, worlds[i]);
+      }
+      isCachePopulated = true;
+    }
+    const count = getQueriesCount(req);
+    const worlds = new Array(count);
+
+    for (let i = 0; i < count; i++) {
+      worlds[i] = cache.get(generateRandomNumber());
+    }
+
+    res.writeHead(200, {
+      "content-type": "application/json",
+      server: "Express",
+    }).end(worldsSerializer(worlds));
   });
 }
-
-app.all("/{*splat}", (req, res) => {
-  res.status(404).send("Not Found");
-});
 
 const host = process.env.HOST || "0.0.0.0";
 const port = parseInt(process.env.PORT || "8080");
