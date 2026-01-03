@@ -1,15 +1,62 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:isolate';
+import 'dart:math' show min;
+
+/// Environment declarations are evaluated at compile-time. Use 'const' to
+/// ensure values are baked into AOT/Native binaries for the benchmark.
+///
+/// From https://api.dart.dev/dart-core/int/int.fromEnvironment.html:
+/// "This constructor is only guaranteed to work when invoked as const.
+/// It may work as a non-constant invocation on some platforms
+/// which have access to compiler options at run-time,
+/// but most ahead-of-time compiled platforms will not have this information."
+const _maxIsolatesfromEnvironment = int.fromEnvironment('MAX_ISOLATES');
 
 void main(List<String> args) async {
-  /// Isolate count per process, set at build-time via:
-  /// dart compile exe --define=MAX_ISOLATES=X
-  /// Defaults to machine core count for dynamic scaling.
-  final maxIsolates = int.fromEnvironment(
-    'MAX_ISOLATES',
-    defaultValue: Platform.numberOfProcessors,
-  );
+  /// Defines local isolate quota, using MAX_ISOLATES if provided.
+  /// Falls back to total available cores while respecting hardware limits.
+  var maxIsolates = _maxIsolatesfromEnvironment > 0
+      ? min(_maxIsolatesfromEnvironment, Platform.numberOfProcessors)
+      : Platform.numberOfProcessors;
+
+  ///Triggers process-level horizontal scaling when running in AOT.
+  if (Platform.script.toFilePath().endsWith('.aot')) {
+    /// Internal token used to notify newly spawned processes that they
+    /// belong to a secondary "worker group".
+    const workerGroupTag = '--workerGroup';
+
+    /// Determine if this process instance was initialized as a worker group.
+    final isWorkerGroup = args.contains(workerGroupTag);
+    if (isWorkerGroup) {
+      /// Sanitize the argument list to ensure the internal token does not
+      /// interfere with application-level argument parsing.
+      args.removeAt(args.indexOf(workerGroupTag));
+    }
+
+    ///Prevents recursive spawning
+    ///by ensuring only the primary process can spawn worker groups
+    if (!isWorkerGroup) {
+      /// Calculate the number of secondary worker groups required
+      /// to fully utilize the available hardware capacity.
+      ///
+      /// Each group serves as a container for multiple isolates,
+      /// helping to bypass internal VM scaling bottlenecks.
+      final workerGroups = Platform.numberOfProcessors ~/ maxIsolates - 1;
+
+      ///Bootstraps independent worker processes via AOT snapshots.
+      ///Each process initializes its own Isolate Group.
+      for (var i = 0; i < workerGroups; i++) {
+        /// [Platform.script] identifies the AOT snapshot or executable.
+        /// [Isolate.spawnUri] spawns a new process group via [main()].
+        Isolate.spawnUri(Platform.script, [workerGroupTag, ...args], null);
+      }
+
+      /// Updates local isolate limits, assigning the primary group
+      /// the remaining cores after worker group allocation.
+      maxIsolates = Platform.numberOfProcessors - workerGroups * maxIsolates;
+    }
+  }
 
   /// Create an [Isolate] containing an [HttpServer]
   /// for each processor after the first
