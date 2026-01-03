@@ -186,12 +186,12 @@ namespace appMpower.Orm
          using (dbCommand)
          {
 #if AOTDLL
-            IDataReader dataReader = dbCommand.ExecuteReader(CommandBehavior.SingleResult & CommandBehavior.SequentialAccess);
-#else
-            IDataReader dataReader = await dbCommand.ExecuteReaderAsync(CommandBehavior.SingleResult & CommandBehavior.SequentialAccess);
-#endif
-
+            var dataReader = dbCommand.ExecuteReader(CommandBehavior.SingleResult & CommandBehavior.SequentialAccess);
             while (dataReader.Read())
+#else
+            var dataReader = await dbCommand.ExecuteReaderAsync(CommandBehavior.SingleResult & CommandBehavior.SequentialAccess);
+            while (await dataReader.ReadAsync())
+#endif
             {
                fortunes.Add(new Fortune
                (

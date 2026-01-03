@@ -8,11 +8,13 @@ namespace appMpower.Orm.Data
    public class DbConnection : IDbConnection
    {
       private string _connectionString;
+      private System.Data.Common.DbConnection _dbConnection;
+#if ODBC
       private bool _keyed = false;
       private int _number;
-      private System.Data.Common.DbConnection _dbConnection;
       private ConcurrentStack<System.Data.Common.DbCommand> _dbCommands = new();
       private Dictionary<string, System.Data.Common.DbCommand> _keyedDbCommands;
+#endif
 
       public DbConnection()
       {
@@ -20,17 +22,14 @@ namespace appMpower.Orm.Data
 
       public DbConnection(string connectionString, bool keyed = false)
       {
-         _keyed = keyed;
          _connectionString = connectionString;
 
-         if (Constants.DbProvider == DbProvider.ODBC)
-         {
-            GetConnection();
-         }
-         else
-         {
-            _dbConnection = DbFactory.GetConnection(_connectionString); 
-         }
+#if ODBC
+         _keyed = keyed;
+         GetConnection();
+#else
+         _dbConnection = DbFactory.GetConnection(_connectionString); 
+#endif
       }
 
       public IDbConnection Connection
@@ -54,10 +53,13 @@ namespace appMpower.Orm.Data
          set
          {
             _connectionString = value; 
+#if ODBC
             GetConnection();
+#endif
          }
       }
 
+#if ODBC
       private void GetConnection()
       {
          if (_keyed)
@@ -71,6 +73,7 @@ namespace appMpower.Orm.Data
                DbConnections.GetConnectionBase();
          }
       }
+#endif
 
       public int ConnectionTimeout
       {
@@ -140,58 +143,55 @@ namespace appMpower.Orm.Data
 
       public void Dispose()
       {
-         if (Constants.DbProvider == DbProvider.ODBC)
+#if ODBC
+         if (_keyed)
          {
-            if (_keyed)
-            {
-               DbConnectionsKeyed.Release((Number: _number, DbConnection: _dbConnection, KeyedDbCommands: _keyedDbCommands));
-            }
-            else
-            {
-               DbConnections.Release((Number: _number, DbConnection: _dbConnection, DbCommands: _dbCommands));
-            }
+            DbConnectionsKeyed.Release((Number: _number, DbConnection: _dbConnection, KeyedDbCommands: _keyedDbCommands));
          }
          else
          {
-            _dbConnection.Dispose();
+            DbConnections.Release((Number: _number, DbConnection: _dbConnection, DbCommands: _dbCommands));
          }
+#else
+         _dbConnection.Dispose();
+#endif
       }
 
       internal System.Data.Common.DbCommand GetCommand(string commandText, CommandType commandType)
       {
          System.Data.Common.DbCommand dbCommand;
 
-         if (Constants.DbProvider == DbProvider.ODBC)
+#if ODBC 
+         if (_dbCommands.TryPop(out dbCommand))
          {
-            if (_dbCommands.TryPop(out dbCommand))
+            if (commandText != dbCommand.CommandText)
             {
-               if (commandText != dbCommand.CommandText)
-               {
-                  dbCommand.CommandText = commandText; 
-                  dbCommand.Parameters.Clear();
-               }
-
-               return dbCommand; 
+               dbCommand.CommandText = commandText; 
+               dbCommand.Parameters.Clear();
             }
-            else if (_keyed && _keyedDbCommands.TryGetValue(commandText, out dbCommand)) return dbCommand; 
+
+            return dbCommand; 
          }
+         else if (_keyed && _keyedDbCommands.TryGetValue(commandText, out dbCommand)) return dbCommand; 
+#endif
 
          dbCommand = _dbConnection.CreateCommand();
          dbCommand.CommandText = commandText;
          dbCommand.CommandType = commandType;
 
-         if (!(Constants.Dbms == Dbms.PostgreSQL && Constants.DbProvider == DbProvider.ADO)) dbCommand.Prepare();
+#if !(ADO && POSTGRESQL)
+         dbCommand.Prepare();
+#endif
 
          return dbCommand;
       }
 
       internal void Release(System.Data.Common.DbCommand dbCommand)
       {
-         if (Constants.DbProvider == DbProvider.ODBC)
-         {
-            if (_keyed) _keyedDbCommands.TryAdd(dbCommand.CommandText, dbCommand);
-            else _dbCommands.Push(dbCommand);
-         }
+#if ODBC
+         if (_keyed) _keyedDbCommands.TryAdd(dbCommand.CommandText, dbCommand);
+         else _dbCommands.Push(dbCommand);
+#endif
       }
    }
 }
