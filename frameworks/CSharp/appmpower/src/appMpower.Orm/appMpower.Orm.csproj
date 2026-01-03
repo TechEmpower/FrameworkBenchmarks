@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <!-- Defaults (non-AOT build) -->
+  <!-- Defaults (non-AOTDLL build) -->
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -14,7 +14,7 @@
     <TrimMode>partial</TrimMode>
   </PropertyGroup>
 
-  <!-- AOT build -->
+  <!-- AOTDLL build -->
   <PropertyGroup Condition="'$(AOTDLL)'=='true'">
     <PublishAot>true</PublishAot>
     <SelfContained>true</SelfContained>
@@ -52,9 +52,6 @@
     <StripSymbols>true</StripSymbols>
 
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-
-    <!-- Optional: also define a compile-time symbol -->
-    <DefineConstants>$(DefineConstants);AOTDLL</DefineConstants>
   </PropertyGroup>
 
   <!-- show more specific warning

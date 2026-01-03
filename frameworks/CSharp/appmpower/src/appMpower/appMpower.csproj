@@ -1,13 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <!-- Defaults (non-AOT build) -->
+  <!-- Defaults (non-AOTEXE build) -->
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <OutputType>Exe</OutputType>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 
     <!-- Default OFF unless enabled -->
-    <AOT Condition="'$(AOT)'==''">false</AOT>
+    <AOTEXE Condition="'$(AOTEXE)'==''">false</AOTEXE>
 
     <PublishAot>false</PublishAot>
     <SelfContained>false</SelfContained>
@@ -15,8 +15,8 @@
     <TrimMode>partial</TrimMode>
   </PropertyGroup>
 
-  <!-- AOT build -->
-  <PropertyGroup Condition="'$(AOT)'=='true'">
+  <!-- AOTEXE build -->
+  <PropertyGroup Condition="'$(AOTEXE)'=='true'">
     <PublishAot>true</PublishAot>
     <SelfContained>true</SelfContained>
 
@@ -52,9 +52,6 @@
     <StripSymbols>true</StripSymbols>
 
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-
-    <!-- Optional: also define a compile-time symbol -->
-    <DefineConstants>$(DefineConstants);AOT</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
@@ -78,6 +75,7 @@
   </ItemGroup>
 
   <PropertyGroup>
+      <DefineConstants Condition=" '$(AOTEXE)' == 'true' ">$(DefineConstants);AOTEXE</DefineConstants>
       <DefineConstants Condition=" '$(AOTDLL)' == 'true' ">$(DefineConstants);AOTDLL</DefineConstants>
       <DefineConstants Condition=" '$(Driver)' == 'ado' ">$(DefineConstants);ADO</DefineConstants>
       <DefineConstants Condition=" '$(Driver)' == 'odbc' ">$(DefineConstants);ODBC</DefineConstants>
