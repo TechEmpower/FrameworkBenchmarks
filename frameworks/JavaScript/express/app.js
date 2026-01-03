@@ -7,6 +7,11 @@ const cluster = require('cluster'),
   numCPUs = require('os').cpus().length,
   express = require('express');
 
+const {
+  jsonSerializer,
+  GREETING,
+} = require("./src/utils.mjs");
+
 
 if (cluster.isPrimary) {
   console.log(`Primary ${process.pid} is running`);
@@ -27,11 +32,17 @@ if (cluster.isPrimary) {
 
   // Routes
   app.get('/json', (req, res) => {
-    res.setHeader("Server", "Express").send({ message: 'Hello, World!' })
+    res.writeHead(200, {
+      "content-type": "application/json",
+      server: "Express",
+    }).end(jsonSerializer({ message: GREETING }))
   });
 
   app.get('/plaintext', (req, res) => {
-    res.setHeader("Server", "Express").header('Content-Type', 'text/plain').send('Hello, World!');
+    res.writeHead(200, {
+      "content-type": "text/plain",
+      server: "Express",
+    }).end(GREETING);
   });
 
   const server = app.listen(8080);
