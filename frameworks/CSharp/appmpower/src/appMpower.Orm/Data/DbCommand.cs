@@ -1,4 +1,6 @@
 using System.Data;
+using System.Data.Common;
+using System.Threading.Tasks;
 
 namespace appMpower.Orm.Data
 {
@@ -129,31 +131,31 @@ namespace appMpower.Orm.Data
          return _dbCommand.CreateParameter();
       }
 
-      public IDbDataParameter CreateParameter(string name, object value)
+      public DbParameter CreateParameter(string name, object value)
       {
          return CreateParameter(name, DbType.String, value);
       }
 
-      public IDbDataParameter CreateParameter(string name, DbType dbType, object value)
+      public DbParameter CreateParameter(string name, DbType dbType, object value)
       {
-         IDbDataParameter dbDataParameter;
+         DbParameter dbParameter;
 
          if (_dbCommand.Parameters.Contains(name))
          {
-            dbDataParameter = _dbCommand.Parameters[name];
-            dbDataParameter.Value = value;
+            dbParameter = _dbCommand.Parameters[name];
+            dbParameter.Value = value;
          }
          else
          {
-            dbDataParameter = _dbCommand.CreateParameter();
+            dbParameter = _dbCommand.CreateParameter();
 
-            dbDataParameter.ParameterName = name;
-            dbDataParameter.DbType = dbType;
-            dbDataParameter.Value = value;
-            _dbCommand.Parameters.Add(dbDataParameter);
+            dbParameter.ParameterName = name;
+            dbParameter.DbType = dbType;
+            dbParameter.Value = value;
+            _dbCommand.Parameters.Add(dbParameter);
          }
 
-         return dbDataParameter;
+         return dbParameter;
       }
 
       public int ExecuteNonQuery()
@@ -166,24 +168,20 @@ namespace appMpower.Orm.Data
          return _dbCommand.ExecuteReader();
       }
 
-      /*
       public async Task<int> ExecuteNonQueryAsync()
       {
          return await _dbCommand.ExecuteNonQueryAsync();
       }
-      */
 
       public IDataReader ExecuteReader(CommandBehavior behavior)
       {
          return _dbCommand.ExecuteReader(behavior);
       }
 
-      /*
       public async Task<System.Data.Common.DbDataReader> ExecuteReaderAsync(CommandBehavior behavior)
       {
          return await _dbCommand.ExecuteReaderAsync(behavior);
       }
-      */
 
 #nullable enable
       public object? ExecuteScalar()

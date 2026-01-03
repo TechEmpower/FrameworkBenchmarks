@@ -1,3 +1,4 @@
+#if AOTDLL
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -28,7 +29,6 @@ public static partial class NativeMethods
 
     [LibraryImport(LibName, EntryPoint = "Fortunes", StringMarshalling = StringMarshalling.Utf16)]
     [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
-
     public static partial IntPtr Fortunes(out int length, out IntPtr handlePointer);
 
     [LibraryImport(LibName, EntryPoint = "Query", StringMarshalling = StringMarshalling.Utf16)]
@@ -44,3 +44,4 @@ public static partial class NativeMethods
     public static partial IntPtr DbById(int id, out int length, out IntPtr handlePointer);
 
 }
+#endif

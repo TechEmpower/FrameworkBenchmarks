@@ -1,3 +1,4 @@
+#if ODBC
 using System.Collections.Concurrent;
 
 namespace appMpower.Orm.Data
@@ -29,3 +30,4 @@ namespace appMpower.Orm.Data
       }
    }
 }
+#endif
