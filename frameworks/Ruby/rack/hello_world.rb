@@ -45,6 +45,8 @@ class HelloWorld
   def initialize
     if defined?(Puma) || defined?(Itsi)
       max_connections = ENV.fetch('MAX_THREADS')
+    elsif defined?(Iodine)
+      max_connections = ENV.fetch('THREADS')
     else
       max_connections = 512
     end
