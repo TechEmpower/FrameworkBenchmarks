@@ -23,22 +23,16 @@ if (cluster.isPrimary) {
   const app = module.exports = express();
 
   app.set('x-powered-by', false);
-  app.set('etag', false)
-
-  // Set headers for all routes
-  app.use((req, res, next) => {
-    res.setHeader("Server", "Express");
-    return next();
-  });
-
-  app.set('view engine', 'jade');
-  app.set('views', __dirname + '/views');
+  app.set('etag', false);
 
   // Routes
-  app.get('/json', (req, res) => res.send({ message: 'Hello, World!' }));
+  app.get('/json', (req, res) => {
+    res.setHeader("Server", "Express").send({ message: 'Hello, World!' })
+  });
 
-  app.get('/plaintext', (req, res) =>
-    res.header('Content-Type', 'text/plain').send('Hello, World!'));
+  app.get('/plaintext', (req, res) => {
+    res.setHeader("Server", "Express").header('Content-Type', 'text/plain').send('Hello, World!');
+  });
 
   const server = app.listen(8080);
   server.keepAliveTimeout = 0;
