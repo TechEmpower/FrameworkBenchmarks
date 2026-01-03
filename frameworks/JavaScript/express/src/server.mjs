@@ -11,6 +11,7 @@ import {
   maxRows
 } from "./utils.mjs";
 
+
 let db;
 const { DATABASE } = process.env;
 if (DATABASE) db = await import(`./database/${DATABASE}.mjs`);
