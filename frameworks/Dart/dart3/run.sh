@@ -9,10 +9,10 @@ MAX_ISO=${MAX_ISOLATES_PER_PROCESS}
 NUM_WORKERS=$((TOTAL_CORES / MAX_ISO))
 if [ "$NUM_WORKERS" -le 0 ]; then NUM_WORKERS=1; fi
 
-echo "Scaling: $TOTAL_CORES cores / $MAX_ISO isolates = $NUM_WORKERS processes"
-
+# Bootstrap the calculated number of independent Dart processes.
 for i in $(seq 1 $NUM_WORKERS); do
-  /bin/server & 
+  /app/server & 
 done
 
+# Keep the shell alive to manage the backgrounded process group.
 wait
