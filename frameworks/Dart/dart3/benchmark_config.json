@@ -2,7 +2,7 @@
   "framework": "dart3",
   "tests": [
     {
-      "dart3": { 
+      "default": { 
         "display_name": "dart3_native",
         "json_url": "/json",
         "plaintext_url": "/plaintext",
