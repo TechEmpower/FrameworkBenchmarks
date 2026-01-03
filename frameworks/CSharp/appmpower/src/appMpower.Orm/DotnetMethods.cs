@@ -10,7 +10,8 @@ using appMpower.Orm.Serializers;
 
 namespace appMpower.Orm;
 
-//These methods are for test purposes only; not used in actual execution
+#if !AOTDLL
+
 public static class DotnetMethods
 {
     private static JsonWriterOptions _jsonWriterOptions = new JsonWriterOptions
@@ -93,3 +94,5 @@ public static class DotnetMethods
         return byteArray.ToArray();
     }
 }
+
+#endif
