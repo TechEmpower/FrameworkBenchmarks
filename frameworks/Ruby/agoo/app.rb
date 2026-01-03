@@ -14,7 +14,7 @@ $pool = ConnectionPool.new(size: 1, timeout: 5) do
     password: 'benchmarkdbpass'
   })
   conn.set_error_verbosity(PG::PQERRORS_VERBOSE)
-  conn.prepare('select_world', 'SELECT * FROM world WHERE id = $1')
+  conn.prepare('select_world', 'SELECT id, randomNumber FROM world WHERE id = $1')
   conn.prepare('select_fortune', 'SELECT id, message FROM fortune')
   conn
 end
