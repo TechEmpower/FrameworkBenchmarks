@@ -63,7 +63,7 @@ public static class DotnetMethods
 
     public static async Task<byte[]> Query(int queries)
     {
-        World[] worlds = await RawDb.ReadMultipleRowsAsync(queries);
+        World[] worlds = await RawDb.LoadMultipleQueriesRowsAsync(queries);
 
         var memoryStream = new MemoryStream();
         using var utf8JsonWriter = new Utf8JsonWriter(memoryStream, _jsonWriterOptions);

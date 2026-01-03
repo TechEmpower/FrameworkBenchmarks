@@ -69,7 +69,6 @@ namespace appMpower.Orm
 #else
             World world = await ReadSingleRowAsync(dbCommand);
 #endif
-
             return world;
          }
       }
@@ -245,7 +244,6 @@ namespace appMpower.Orm
          var dataReader = await dbCommand.ExecuteReaderAsync(CommandBehavior.SingleRow & CommandBehavior.SequentialAccess);
          await dataReader.ReadAsync();
 #endif
-
 
          var world = new World
          {
