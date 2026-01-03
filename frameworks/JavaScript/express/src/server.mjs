@@ -8,6 +8,7 @@ import {
   worldObjectSerializer,
   worldsObjectSerializer,
   GREETING,
+  maxRows
 } from "./utils.mjs";
 
 let db;

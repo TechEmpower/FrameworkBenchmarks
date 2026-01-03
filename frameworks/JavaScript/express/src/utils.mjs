@@ -2,6 +2,9 @@ import fjs from 'fast-json-stringify';
 
 export const GREETING = "Hello, World!";
 
+export const maxQuery = 500
+export const maxRows = 10000
+
 export const headerTypes = {
   plain: "text/plain",
   json: "application/json",
@@ -22,11 +25,11 @@ export function handleError(error, response) {
 }
 
 export function getQueriesCount(request) {
-  return Math.min(parseInt(request.query["queries"]) || 1, 500);
+  return Math.min(parseInt(request.query["queries"]) || 1, maxQuery);
 }
 
 export function generateRandomNumber() {
-  return Math.ceil(Math.random() * 10000);
+  return Math.ceil(Math.random() * maxRows);
 }
 
 const escapeHTMLRules = {
