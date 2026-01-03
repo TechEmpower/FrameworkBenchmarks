@@ -1,4 +1,0 @@
-(library
- (name server_io_single)
- (implements server_io)
- (libraries lwt lwt.unix piaf unix))
