@@ -541,9 +541,9 @@ checksum = "8b3b8be124d9169d8670598a31b575969b2830c93957cecfb1d75250d138680f"
 
 [[package]]
 name = "http-type"
-version = "5.31.1"
+version = "5.31.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4518a40a467e42c8ff2eab000ef8fa7bd3f7fc47e3e48f6e6453984fcadc4253"
+checksum = "dcc2e6c5ee5ea55187e53e1c4b057758456de92bf68d13787c859262ac8ff8d3"
 dependencies = [
  "hex",
  "http-compress",
@@ -559,9 +559,9 @@ dependencies = [
 
 [[package]]
 name = "hyperlane"
-version = "10.34.2"
+version = "10.34.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9d6c89fe1d707d82e73192c5577d1e48b9d57c9ea58bf8f8302163f67a770983"
+checksum = "9f1af0bbd93a017eee5a60ce4e420a0cdea4402be47cf2834226e72ae06eab8c"
 dependencies = [
  "http-type",
  "inventory",
@@ -783,9 +783,9 @@ checksum = "5e5032e24019045c762d3c0f28f5b6b8bbf38563a65908389bf7978758920897"
 
 [[package]]
 name = "lombok-macros"
-version = "1.13.20"
+version = "1.13.21"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8ec6a4dfebf3f48af7a3a7b808b15c80b91fc0f3815065866837aca002d25cb3"
+checksum = "921205d493d884b1ddc6d651d32c4fb3d89860cf56cf6176f14793fa31010bdf"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1532,9 +1532,9 @@ checksum = "13c2bddecc57b384dee18652358fb23172facb8a2c51ccc10d74c157bdea3292"
 
 [[package]]
 name = "syn"
-version = "2.0.112"
+version = "2.0.113"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "21f182278bf2d2bcb3c88b1b08a37df029d71ce3d3ae26168e3c653b213b99d4"
+checksum = "678faa00651c9eb72dd2020cbdf275d92eccb2400d568e419efdd64838145cb4"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1599,9 +1599,9 @@ checksum = "1f3ccbac311fea05f86f61904b462b55fb3df8837a366dfc601a0161d0532f20"
 
 [[package]]
 name = "tokio"
-version = "1.48.0"
+version = "1.49.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ff360e02eab121e0bc37a2d3b4d4dc622e6eda3a8e5253d5435ecf5bd4c68408"
+checksum = "72a2903cd7736441aac9df9d7688bd0ce48edccaadf181c3b90be801e81d3d86"
 dependencies = [
  "bytes",
  "libc",
