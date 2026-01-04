@@ -17,6 +17,7 @@ RUN bundle install --jobs=4 --gemfile=/rack-sequel/Gemfile
 
 ENV DBTYPE=mysql
 
+ENV MIN_THREADS=8
 ENV MAX_THREADS=8
 
 EXPOSE 8080
