@@ -1,0 +1,22 @@
+/**
+ * EN: Define the plugin download address
+ */
+pluginManagement {
+    repositories {
+        mavenLocal()
+        maven {url 'https://maven.aliyun.com/repository/public'}
+        maven {url 'https://maven.aliyun.com/repository/spring'}
+        maven {url 'https://maven.aliyun.com/repository/spring-plugin'}
+        mavenCentral()
+    }
+}
+
+rootProject.name = 'tadx-benchmark'
+
+/**
+ * EN: Source code mode to reference Tad.x dependencies  <br/>
+ *     1. Check out the Tad.x project source code to a directory  <br/>
+ *     2. Reference the dev.gradle file in the project
+ */
+ext.TADX_FOLDER = '../../../../tadx.io/tadx'
+apply from: ext.TADX_FOLDER+'/dev.gradle'
