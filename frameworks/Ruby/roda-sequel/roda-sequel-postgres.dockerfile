@@ -1,9 +1,10 @@
-FROM ruby:4.0-rc
+FROM ruby:4.0
 
 ADD ./ /roda-sequel
 WORKDIR /roda-sequel
 
 ENV RUBY_YJIT_ENABLE=1
+ENV RUBY_MN_THREADS=1
 
 # Use Jemalloc
 RUN apt-get update && \
@@ -18,8 +19,8 @@ ENV RACK_ENV=production
 ENV DBTYPE=postgresql
 
 ENV MAX_THREADS=5
-ENV WEB_CONCURRENCY=auto
 
 EXPOSE 8080
 
-CMD bundle exec puma -C config/puma.rb -b tcp://0.0.0.0:8080
+CMD export WEB_CONCURRENCY=$(($(nproc)*5/4)) && \
+    bundle exec puma -C config/puma.rb -b tcp://0.0.0.0:8080

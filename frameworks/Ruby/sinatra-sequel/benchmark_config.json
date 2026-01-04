@@ -42,6 +42,26 @@
         "versus": "rack-sequel-postgres-puma-mri",
         "notes": ""
       },
+      "iodine": {
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
+        "fortune_url": "/fortunes",
+        "update_url": "/updates?queries=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "MySQL",
+        "framework": "sinatra",
+        "language": "Ruby",
+        "orm": "Full",
+        "platform": "Rack",
+        "webserver": "Iodine",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "sinatra-sequel [iodine, mysql]",
+        "versus": "",
+        "notes": ""
+      },
       "postgres-iodine-mri": {
         "db_url": "/db",
         "query_url": "/queries?queries=",

@@ -1,6 +1,6 @@
 use diesel::prelude::*;
 use diesel_async::{AsyncConnection, RunQueryDsl};
-use futures_util::future::{TryFutureExt, TryJoinAll, try_join};
+use futures_util::future::TryJoinAll;
 use xitca_postgres_diesel::AsyncPgConnection;
 
 use crate::{
@@ -23,72 +23,49 @@ impl Pool {
         })
     }
 
-    pub async fn get_world(&self) -> HandleResult<World> {
-        {
-            use schema::world::dsl::*;
+    pub async fn db(&self) -> HandleResult<World> {
+        use schema::world::dsl::{id, world};
 
-            let w_id = self.rng.borrow_mut().gen_id();
-            world.filter(id.eq(w_id)).first(&mut &self.pool).map_err(Into::into)
-        }
-        .await
+        let w_id = self.rng.borrow_mut().gen_id();
+        let w = world.filter(id.eq(w_id)).first(&mut &self.pool).await?;
+        Ok(w)
     }
 
-    pub async fn get_worlds(&self, num: u16) -> HandleResult<Vec<World>> {
-        {
-            use schema::world::dsl::*;
+    pub async fn queries(&self, num: u16) -> HandleResult<Vec<World>> {
+        use schema::world::dsl::{id, world};
 
-            self.rng
-                .borrow_mut()
-                .gen_multi()
-                .take(num as _)
-                .map(|w_id| world.filter(id.eq(w_id)).first(&mut &self.pool).map_err(Into::into))
-                .collect::<TryJoinAll<_>>()
-        }
-        .await
+        let get = self
+            .rng
+            .borrow_mut()
+            .gen_multi()
+            .take(num as _)
+            .map(|w_id| world.filter(id.eq(w_id)).first(&mut &self.pool))
+            .collect::<TryJoinAll<_>>();
+
+        get.await.map_err(Into::into)
     }
 
-    pub async fn update(&self, num: u16) -> HandleResult<Vec<World>> {
-        {
-            use schema::world::dsl::*;
+    pub async fn updates(&self, num: u16) -> HandleResult<Vec<World>> {
+        let mut worlds = self.queries(num).await?;
 
-            let mut rng = self.rng.borrow_mut();
-            let mut params = Vec::with_capacity(num as _);
+        let params = worlds
+            .iter_mut()
+            .zip(self.rng.borrow_mut().gen_multi())
+            .map(|(world, rand)| {
+                world.randomnumber = rand;
+                (world.id, rand)
+            })
+            .collect();
 
-            let get = rng
-                .clone()
-                .gen_multi()
-                .take(num as _)
-                .zip(rng.gen_multi())
-                .map(|(w_id, rng)| {
-                    let get = world.filter(id.eq(w_id)).first::<World>(&mut &self.pool);
+        let sql = update_query_from_ids(params);
+        diesel::sql_query(sql).execute(&mut &self.pool).await?;
 
-                    params.push((w_id, rng));
-
-                    async move {
-                        let mut w = get.await?;
-                        w.randomnumber = rng;
-                        HandleResult::Ok(w)
-                    }
-                })
-                .collect::<TryJoinAll<_>>();
-
-            let sql = update_query_from_ids(params);
-            let update = diesel::sql_query(sql).execute(&mut &self.pool).map_err(Into::into);
-
-            try_join(get, update)
-        }
-        .await
-        .map(|(worlds, _)| worlds)
+        Ok(worlds)
     }
 
-    pub async fn tell_fortune(&self) -> HandleResult<Fortunes> {
-        {
-            use schema::fortune::dsl::*;
-
-            fortune.load(&mut &self.pool).map_err(Into::into)
-        }
-        .await
-        .map(Fortunes::new)
+    pub async fn fortunes(&self) -> HandleResult<Fortunes> {
+        let fortunes = schema::fortune::dsl::fortune.load(&mut &self.pool).await?;
+        Ok(Fortunes::new(fortunes))
     }
 }
 
@@ -113,14 +90,29 @@ mod schema {
 fn update_query_from_ids(mut rngs: Vec<(i32, i32)>) -> String {
     rngs.sort_by(|(a, _), (b, _)| a.cmp(b));
 
-    const PREFIX: &str = "UPDATE world SET randomNumber=w.r FROM (VALUES ";
-    const SUFFIX: &str = ") AS w (i,r) WHERE world.id=w.i";
+    const PREFIX: &str = "UPDATE world SET randomNumber = w.r FROM (SELECT unnest(ARRAY[";
+    const MID: &str = "]) as i, unnest(ARRAY[";
+    const SUFFIX: &str = "]) as r) w WHERE world.id = w.i";
+    const SIZE_HINT: usize = PREFIX.len() + MID.len() + SUFFIX.len() + "10000,".len();
 
-    let mut query = String::from(PREFIX);
+    let mut query = String::with_capacity(SIZE_HINT);
+
+    query.push_str(PREFIX);
 
     use core::fmt::Write;
-    rngs.iter().for_each(|(w_id, num)| {
-        write!(query, "({}::int,{}::int),", w_id, num).unwrap();
+
+    rngs.iter().for_each(|(w_id, _)| {
+        write!(query, "{},", w_id).unwrap();
+    });
+
+    if query.ends_with(',') {
+        query.pop();
+    }
+
+    query.push_str(MID);
+
+    rngs.iter().for_each(|(_, rand)| {
+        write!(query, "{},", rand).unwrap();
     });
 
     if query.ends_with(',') {

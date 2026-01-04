@@ -1,6 +1,7 @@
 package com.litongjava.tio.http.server;
 
 import com.litongjava.tio.boot.TioApplication;
+import com.litongjava.tio.http.server.config.MainAppConfig;
 
 public class MainApp {
 

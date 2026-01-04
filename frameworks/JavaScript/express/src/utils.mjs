@@ -1,4 +1,4 @@
-import { sjs, attr } from "slow-json-stringify";
+import fjs from 'fast-json-stringify';
 
 export const GREETING = "Hello, World!";
 
@@ -47,10 +47,33 @@ export function escape(text) {
   });
 }
 
-export const jsonSerializer = sjs({ message: attr("string") });
-export const worldObjectSerializer = sjs({
-  id: attr("number"),
-  randomnumber: attr("number"),
+export const jsonSerializer = fjs({
+  type: 'object',
+  properties: {
+    message: {
+      type: 'string',
+      format: 'unsafe',
+    }
+  }
+});
+
+export const worldObjectSerializer = fjs({
+  type: 'object',
+  properties: {
+    id: { type: 'integer' },
+    randomnumber: { type: 'integer' }
+  }
+});
+
+export const worldsObjectSerializer = fjs({
+  type: 'array',
+  items: {
+    type: 'object',
+    properties: {
+      id: { type: 'integer' },
+      randomnumber: { type: 'integer' }
+    }
+  }
 });
 
 export function sortByMessage(arr) {

@@ -19,6 +19,8 @@ RUN bundle install --jobs=8
 
 COPY . .
 
+ENV MAX_THREADS=5
+
 EXPOSE 8080
 
 CMD bundle exec itsi start -C config/itsi.rb --bind "http://tfb-server:8080"

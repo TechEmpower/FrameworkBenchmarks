@@ -4,8 +4,6 @@
     [integrant.core :as ig]
     [io.github.kit-clj.te-bench.config :as config]
     [io.github.kit-clj.te-bench.env :refer [defaults]]
-
-    ;; Edges       
     [io.github.kit-clj.te-bench.cache.inmem]
     [io.github.kit-clj.te-bench.db.sql.hikari]
     [io.github.kit-clj.te-bench.web.handler]

@@ -12,10 +12,10 @@ impl ServerHook for JsonRoute {
         let run = || async {
             ctx.set_response_body(&serde_json::to_vec(&json).unwrap_or_default())
                 .await;
-            ctx.send().await.unwrap();
+            ctx.send().await;
         };
         run().await;
-        while ctx.http_from_stream(HTTP_BUFFER).await.is_ok() {
+        while ctx.http_from_stream(RequestConfig::default()).await.is_ok() {
             run().await;
         }
         ctx.closed().await;
@@ -31,10 +31,10 @@ impl ServerHook for PlaintextRoute {
         ctx.set_response_header(CONTENT_TYPE, TEXT_PLAIN).await;
         ctx.set_response_body(&RESPONSEDATA_BIN).await;
         let run = || async {
-            ctx.send().await.unwrap();
+            ctx.send().await;
         };
         run().await;
-        while ctx.http_from_stream(HTTP_BUFFER).await.is_ok() {
+        while ctx.http_from_stream(RequestConfig::default()).await.is_ok() {
             run().await;
         }
         ctx.closed().await;
@@ -53,11 +53,10 @@ impl ServerHook for DbRoute {
             ctx.set_response_body(&serde_json::to_vec(&query_row).unwrap_or_default())
                 .await
                 .send()
-                .await
-                .unwrap();
+                .await;
         };
         run().await;
-        while ctx.http_from_stream(HTTP_BUFFER).await.is_ok() {
+        while ctx.http_from_stream(RequestConfig::default()).await.is_ok() {
             run().await;
         }
         ctx.closed().await;
@@ -83,11 +82,10 @@ impl ServerHook for QueryRoute {
             ctx.set_response_body(&serde_json::to_vec(&data).unwrap_or_default())
                 .await
                 .send()
-                .await
-                .unwrap();
+                .await;
         };
         run().await;
-        while ctx.http_from_stream(HTTP_BUFFER).await.is_ok() {
+        while ctx.http_from_stream(RequestConfig::default()).await.is_ok() {
             run().await;
         }
         ctx.closed().await;
@@ -120,10 +118,10 @@ impl ServerHook for FortunesRoute {
             ));
             fortunes_list.sort_by(|it, next| it.message.cmp(&next.message));
             let res: String = FortunesTemplate::new(fortunes_list).to_string();
-            ctx.set_response_body(&res).await.send().await.unwrap();
+            ctx.set_response_body(&res).await.send().await;
         };
         run().await;
-        while ctx.http_from_stream(HTTP_BUFFER).await.is_ok() {
+        while ctx.http_from_stream(RequestConfig::default()).await.is_ok() {
             run().await;
         }
         ctx.closed().await;
@@ -148,11 +146,10 @@ impl ServerHook for UpdateRoute {
             ctx.set_response_body(&serde_json::to_vec(&res).unwrap_or_default())
                 .await
                 .send()
-                .await
-                .unwrap();
+                .await;
         };
         run().await;
-        while ctx.http_from_stream(HTTP_BUFFER).await.is_ok() {
+        while ctx.http_from_stream(RequestConfig::default()).await.is_ok() {
             run().await;
         }
         ctx.closed().await;
@@ -177,11 +174,10 @@ impl ServerHook for CachedQueryRoute {
             ctx.set_response_body(&serde_json::to_vec(&res).unwrap_or_default())
                 .await
                 .send()
-                .await
-                .unwrap();
+                .await;
         };
         run().await;
-        while ctx.http_from_stream(HTTP_BUFFER).await.is_ok() {
+        while ctx.http_from_stream(RequestConfig::default()).await.is_ok() {
             run().await;
         }
         ctx.closed().await;

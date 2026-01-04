@@ -20,6 +20,8 @@ import io.vertx.sqlclient.Row
 import io.vertx.sqlclient.RowSet
 import io.vertx.sqlclient.Tuple
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.datetime.UtcOffset
 import kotlinx.datetime.format.DateTimeComponents
 import kotlinx.datetime.format.format
@@ -32,6 +34,7 @@ import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.io.encodeToSink
 import java.net.SocketException
+import kotlin.random.Random
 import kotlin.time.Clock
 
 class MainVerticle(val hasDb: Boolean) : CoroutineVerticle(), CoroutineRouterSupport {
@@ -50,6 +53,8 @@ class MainVerticle(val hasDb: Boolean) : CoroutineVerticle(), CoroutineRouterSup
     lateinit var selectWorldQuery: PreparedQuery<RowSet<Row>>
     lateinit var selectFortuneQuery: PreparedQuery<RowSet<Row>>
     lateinit var updateWorldQuery: PreparedQuery<RowSet<Row>>
+
+    val random = Random(0)
 
     fun setCurrentDate() {
         date = DateTimeComponents.Formats.RFC_1123.format {
@@ -156,22 +161,38 @@ class MainVerticle(val hasDb: Boolean) : CoroutineVerticle(), CoroutineRouterSup
             }
         }
 
+    suspend fun selectRandomWorld() =
+        selectWorldQuery.execute(Tuple.of(random.nextIntBetween1And10000())).coAwait()
+            .single().toWorld()
 
-    suspend fun selectRandomWorlds(queries: Int): List<World> {
-        val rowSets = List(queries) {
-            selectWorldQuery.execute(Tuple.of(randomIntBetween1And10000()))
-        }.awaitAll()
-        return rowSets.map { it.single().toWorld() }
-    }
+    suspend fun selectRandomWorlds(queries: Int): List<World> =
+    //List(queries) { async { selectRandomWorld() } }.awaitAll()
+        // This should be slightly more efficient.
+        awaitAll(*Array(queries) { async { selectRandomWorld() } })
 
-    fun Router.routes() {
+
+    fun Router.routes() =
+        if (!hasDb) routesWithoutDb() else routesWithDb()
+
+    fun Router.routesWithoutDb() {
         get("/json").jsonResponseCoHandler(Serializers.message) {
             Message("Hello, World!")
         }
 
+        get("/plaintext").coHandlerUnconfined {
+            it.response().run {
+                headers().run {
+                    addCommonHeaders()
+                    add(HttpHeaders.CONTENT_TYPE, HttpHeaderValues.textPlain)
+                }
+                end("Hello, World!")/*.coAwait()*/
+            }
+        }
+    }
+
+    fun Router.routesWithDb() {
         get("/db").jsonResponseCoHandler(Serializers.world) {
-            val rowSet = selectWorldQuery.execute(Tuple.of(randomIntBetween1And10000())).coAwait()
-            rowSet.single().toWorld()
+            selectRandomWorld()
         }
 
         get("/queries").jsonResponseCoHandler(Serializers.worlds) {
@@ -222,7 +243,7 @@ class MainVerticle(val hasDb: Boolean) : CoroutineVerticle(), CoroutineRouterSup
         get("/updates").jsonResponseCoHandler(Serializers.worlds) {
             val queries = it.request().getQueries()
             val worlds = selectRandomWorlds(queries)
-            val updatedWorlds = worlds.map { it.copy(randomNumber = randomIntBetween1And10000()) }
+            val updatedWorlds = worlds.map { it.copy(randomNumber = random.nextIntBetween1And10000()) }
 
             // Approach 1
             // The updated worlds need to be sorted first to avoid deadlocks.
@@ -237,16 +258,6 @@ class MainVerticle(val hasDb: Boolean) : CoroutineVerticle(), CoroutineRouterSup
             */
 
             updatedWorlds
-        }
-
-        get("/plaintext").coHandlerUnconfined {
-            it.response().run {
-                headers().run {
-                    addCommonHeaders()
-                    add(HttpHeaders.CONTENT_TYPE, HttpHeaderValues.textPlain)
-                }
-                end("Hello, World!")/*.coAwait()*/
-            }
         }
     }
 }

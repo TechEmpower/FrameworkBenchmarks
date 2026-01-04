@@ -1,5 +1,6 @@
 use super::*;
 
+#[inline(always)]
 pub(crate) fn get_db_connection() -> &'static DbPoolConnection {
     &DB
 }

@@ -1,0 +1,26 @@
+FROM ruby:4.0
+
+ENV RUBY_ZJIT_ENABLE=1
+ENV RUBY_MN_THREADS=1
+
+# Use Jemalloc
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends libjemalloc2
+ENV LD_PRELOAD=libjemalloc.so.2
+
+WORKDIR /rack
+
+COPY Gemfile* ./
+
+ENV BUNDLE_FORCE_RUBY_PLATFORM=true
+RUN bundle config set with 'puma'
+RUN bundle install --jobs=8
+
+COPY . .
+
+ENV MAX_THREADS=5
+
+EXPOSE 8080
+
+CMD export WEB_CONCURRENCY=$(($(nproc)*5/4)) && \
+    bundle exec puma -C config/puma.rb -b tcp://0.0.0.0:8080 -e production

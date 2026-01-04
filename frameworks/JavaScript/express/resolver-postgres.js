@@ -13,35 +13,28 @@ const connection = {
 
 const db = pgp(`postgres://${connection.username}:${connection.password}@${connection.host}:5432/${connection.db}`);
 
-async function arrayOfRandomWorlds(totalWorldsToReturn) {
+function arrayOfRandomWorlds(totalWorldsToReturn) {
 
-    var totalIterations = helper.sanititizeTotal(totalWorldsToReturn);
-    var arr = [];
+    const totalIterations = helper.sanititizeTotal(totalWorldsToReturn);
+    const arr = [];
 
-    return new Promise(async(resolve, reject) => {
+    for(let i = 0; i < totalIterations; i++) {
+        arr.push(getRandomWorld());
+    }
 
-        for(var i = 0; i < totalIterations; i++) {
-            arr.push(await getRandomWorld());
-        }
-        
-        if(arr.length == totalIterations) {
-            resolve(arr);
-        }
-    });
+    return Promise.all(arr);
 };
 
-async function updateRandomWorlds(totalToUpdate) {
+function updateRandomWorlds(totalToUpdate) {
 
     const total = helper.sanititizeTotal(totalToUpdate);
-    var arr = [];
+    const arr = [];
 
-    return new Promise(async(resolve, reject) => {
-        for(var i = 0; i < total; i++) {
-            arr.push(await updateRandomWorld());
-        }
+    for(let i = 0; i < total; i++) {
+        arr.push(updateRandomWorld());
+    }
 
-        if(arr.length === total) resolve(arr)
-    });
+    return Promise.all(arr);
 };
 
 const getRandomWorld = async () => {
@@ -56,25 +49,24 @@ const updateRandomWorld = async () => {
     return {"id": world.id, "randomNumber": world.randomnumber};
 };
 
-const getAllFortunes = async () => {
-
-    return await db.many('select * from fortune', [true]);
+const getAllFortunes =  () => {
+    return db.many('select * from fortune', [true]);
 };
 
 module.exports = {
     Query: {
-        singleDatabaseQuery: async() => await getRandomWorld(),
-        multipleDatabaseQueries: async(parent, args) => await arrayOfRandomWorlds(args.total),
-        getAllFortunes: async() => await getAllFortunes(),
-        getRandomAndUpdate: async(parent, args) => await updateRandomWorlds(args.total)
+        singleDatabaseQuery: () => getRandomWorld(),
+        multipleDatabaseQueries: (parent, args) => arrayOfRandomWorlds(args.total),
+        getAllFortunes: () => getAllFortunes(),
+        getRandomAndUpdate: (parent, args) => updateRandomWorlds(args.total)
     },
     Mutation: {
-        createWorld: async(parent, args) => {
+        createWorld: (parent, args) => {
             let randInt = Math.floor(Math.random() * 1000) + 1;
-            return await World.create({ id: null, randomNumber: randInt });
+            return World.create({ id: null, randomNumber: randInt });
         },
-        updateWorld: async(parent, args) => {
-            return await World.update({id: args.id, randomNumber: args.randomNumber});
+        updateWorld: (parent, args) => {
+            return World.update({id: args.id, randomNumber: args.randomNumber});
         }
     }
 }

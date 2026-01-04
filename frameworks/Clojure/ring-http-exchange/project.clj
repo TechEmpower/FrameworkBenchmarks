@@ -6,9 +6,9 @@
 
   :dependencies [[org.clojure/clojure "1.12.3"]
                  [org.clojure/tools.logging "1.3.0"]
-                 [org.clojars.jj/ring-http-exchange "1.2.9"]
+                 [org.clojars.jj/ring-http-exchange "1.2.14"]
                  [seancorfield/next.jdbc "1.2.659"]
-                 [org.clojars.jj/majavat "1.13.0"]
+                 [org.clojars.jj/majavat "1.15.1"]
                  [hikari-cp "3.3.0"]
                  [org.clojars.jj/boa-sql "1.0.0"]
                  [org.postgresql/postgresql "42.7.8"]
