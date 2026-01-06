@@ -5,29 +5,6 @@ export const GREETING = "Hello, World!";
 export const maxQuery = 500
 export const maxRows = 10000
 
-export const headerTypes = {
-  plain: "text/plain",
-  json: "application/json",
-  html: "text/html; charset=UTF-8",
-};
-
-export function writeResponse(res, text, type = headerTypes["json"]) {
-  res.writeHead(200, {
-    "content-type": type,
-    server: "Express",
-  });
-  res.end(text);
-}
-
-export function handleError(error, response) {
-  console.error(error);
-  response.end("Internal Server Error");
-}
-
-export function getQueriesCount(request) {
-  return Math.min(parseInt(request.query["queries"]) || 1, maxQuery);
-}
-
 export const parseQueries = (i) => i > maxQuery ? maxQuery : (i | 0) || 1;
 
 export function generateRandomNumber() {
@@ -79,16 +56,3 @@ export const worldsObjectSerializer = fjs({
   }
 });
 
-export function sortByMessage(arr) {
-  const n = arr.length;
-  for (let i = 1; i < n; i++) {
-    const c = arr[i];
-    let j = i - 1;
-    while (j > -1 && c.message < arr[j].message) {
-      arr[j + 1] = arr[j];
-      j--;
-    }
-    arr[j + 1] = c;
-  }
-  return arr;
-}
