@@ -1,4 +1,4 @@
-# Gotham Benchmarking Test
+# [Gotham](https://github.com/gotham-rs/gotham) Benchmarking Test
 
 ### Test Type Implementation Source Code
 
