@@ -117,5 +117,6 @@ if (cluster.isPrimary) {
     res.send(await Promise.all(promises));
   });
 
-  app.listen(8080);
+  const server = app.listen(8080);
+  server.keepAliveTimeout = 0;
 }

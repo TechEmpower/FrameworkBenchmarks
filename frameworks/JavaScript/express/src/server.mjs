@@ -123,6 +123,7 @@ if (db) {
 
 const host = process.env.HOST || "0.0.0.0";
 const port = parseInt(process.env.PORT || "8080");
-app.listen(port, host, () => {
+const server =app.listen(port, host, () => {
   console.log(`Server running at http://${host}:${port}/`);
 });
+server.keepAliveTimeout = 0;
