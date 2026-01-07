@@ -2,8 +2,6 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information. 
 
 using System.Linq;
-using appMpower.Orm; 
-using appMpower.Orm.Data; 
 
 namespace PlatformBenchmarks
 {
@@ -35,31 +33,50 @@ namespace PlatformBenchmarks
          //sb.Append("(?::int,?::int)) AS temp(id, randomNumber) WHERE temp.id = world.id");
          */
 
-         if (Constants.Dbms == Dbms.MySQL)
+#if MYSQL
+         for (int i = 0; i < batchSize; i++)
          {
-            for (int i = 0; i < batchSize; i++)
-            {
-               sb.Append("UPDATE world SET randomNumber=? WHERE id=?;");
-            }
+            sb.Append("UPDATE world SET randomNumber=? WHERE id=?;");
          }
-         else
+#elif ADO
+         /*
+         sb.Append("UPDATE world SET randomNumber = temp.randomNumber FROM (VALUES ");
+         Enumerable.Range(0, lastIndex).ToList().ForEach(i => sb.Append($"(@i{i}, @r{i}), "));
+         sb.Append($"(@i{lastIndex}, @r{lastIndex}) ORDER BY 1) AS temp(id, randomNumber) WHERE temp.id = world.id");
+         */
+
+         sb.Append("UPDATE world SET randomNumber=CASE id ");
+
+         for (int i = 0; i < batchSize; i++)
          {
-            sb.Append("UPDATE world SET randomNumber=CASE id ");
-
-            for (int i = 0; i < batchSize; i++)
-            {
-               sb.Append("WHEN ? THEN ? ");
-            }
-
-            sb.Append("ELSE randomnumber END WHERE id IN(");
-
-            for (int i = 0; i < lastIndex; i++)
-            {
-               sb.Append("?,");
-            }
-
-            sb.Append("?)");
+            sb.Append("WHEN @i" + i + " THEN @r" + i + " ");
          }
+
+         sb.Append("ELSE randomnumber END WHERE id IN(");
+
+         for (int i = 0; i < lastIndex; i++)
+         {
+            sb.Append("@j" + i + ",");
+         }
+
+         sb.Append("@j" + lastIndex + ")");
+#else
+         sb.Append("UPDATE world SET randomNumber=CASE id ");
+
+         for (int i = 0; i < batchSize; i++)
+         {
+            sb.Append("WHEN ? THEN ? ");
+         }
+
+         sb.Append("ELSE randomnumber END WHERE id IN(");
+
+         for (int i = 0; i < lastIndex; i++)
+         {
+            sb.Append("?,");
+         }
+
+         sb.Append("?)");
+#endif
 
          return _queries[batchSize] = StringBuilderCache.GetStringAndRelease(sb);
       }

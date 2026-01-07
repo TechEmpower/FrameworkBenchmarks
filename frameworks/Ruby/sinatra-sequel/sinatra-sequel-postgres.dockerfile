@@ -16,6 +16,7 @@ RUN bundle install --jobs=4 --gemfile=/sinatra-sequel/Gemfile
 ENV APP_ENV=production
 ENV DBTYPE=postgresql
 
+ENV MIN_THREADS=5
 ENV MAX_THREADS=5
 
 EXPOSE 8080

@@ -18,6 +18,7 @@ RUN bundle install --jobs=8
 
 COPY . .
 
+ENV MIN_THREADS=5
 ENV MAX_THREADS=5
 
 EXPOSE 8080

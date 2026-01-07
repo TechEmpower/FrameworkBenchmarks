@@ -17,6 +17,8 @@ RUN bundle install --jobs=8
 
 COPY . .
 
+ENV THREADS=2
+
 EXPOSE 8080
 
-CMD bundle exec iodine -p 8080 -w $(($(nproc)*5/4))
+CMD bundle exec iodine -p 8080 -w $(nproc)
