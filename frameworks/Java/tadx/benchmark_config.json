@@ -3,13 +3,13 @@
   "tests": [
     {
       "default": {
-        "json_url": "/json",
-        "plaintext_url": "/plaintext",
+        "//json_url": "/json",
+        "//plaintext_url": "/plaintext",
         "db_url": "/db",
-        "query_url": "/queries?queries=",
-        "fortune_url": "/fortunes",
-        "update_url": "/update?queries=",
-        "cached_query_url" : "/cached_queries?count=",
+        "//query_url": "/queries?queries=",
+        "//fortune_url": "/fortunes",
+        "//update_url": "/update?queries=",
+        "//cached_query_url" : "/cached_queries?count=",
         "port": 8000,
         "approach": "Realistic",
         "classification": "Fullstack",

@@ -16,7 +16,7 @@ import java.util.SplittableRandom;
 /**
  * RouteMapper+Postgresql Client 模式的/db测试
  */
-@RouteMapping(path = "/db")
+@RouteMapping(path = "/db_reactive")
 public class DbRouteMapper_Postgresql implements RouteMapper {
 
     private static final SplittableRandom RANDOM = new SplittableRandom();

@@ -18,7 +18,7 @@ import java.util.SplittableRandom;
  * EN: The entry point of the application.
  */
 
-@RestController(mapping = "/db_rest_reactive")
+@RestController(mapping = "/db2")
 public class Db2 {
     private static final SplittableRandom RANDOM = new SplittableRandom();
     private static final String SELECT_WORLD = "SELECT id, randomnumber from WORLD where id=$1";
