@@ -541,9 +541,9 @@ checksum = "8b3b8be124d9169d8670598a31b575969b2830c93957cecfb1d75250d138680f"
 
 [[package]]
 name = "http-type"
-version = "5.31.3"
+version = "5.33.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dcc2e6c5ee5ea55187e53e1c4b057758456de92bf68d13787c859262ac8ff8d3"
+checksum = "f6a5979045ce761f80585d34e6e281d28464a87314f9574b0805d4f27de1d615"
 dependencies = [
  "hex",
  "http-compress",
@@ -559,9 +559,9 @@ dependencies = [
 
 [[package]]
 name = "hyperlane"
-version = "10.34.5"
+version = "10.35.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9f1af0bbd93a017eee5a60ce4e420a0cdea4402be47cf2834226e72ae06eab8c"
+checksum = "3ef4475030102f5072fab3af23694ec29f5b4cdb0b6f554102ee6227f39008c5"
 dependencies = [
  "http-type",
  "inventory",
@@ -783,9 +783,9 @@ checksum = "5e5032e24019045c762d3c0f28f5b6b8bbf38563a65908389bf7978758920897"
 
 [[package]]
 name = "lombok-macros"
-version = "1.13.21"
+version = "1.15.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "921205d493d884b1ddc6d651d32c4fb3d89860cf56cf6176f14793fa31010bdf"
+checksum = "054ee105d78c157609f35cccc44edbd2ec853aa9aef4694feb58f95230df98cd"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -994,18 +994,18 @@ dependencies = [
 
 [[package]]
 name = "proc-macro2"
-version = "1.0.104"
+version = "1.0.105"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9695f8df41bb4f3d222c95a67532365f569318332d03d5f3f67f37b20e6ebdf0"
+checksum = "535d180e0ecab6268a3e718bb9fd44db66bbbc256257165fc699dadf70d16fe7"
 dependencies = [
  "unicode-ident",
 ]
 
 [[package]]
 name = "quote"
-version = "1.0.42"
+version = "1.0.43"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a338cc41d27e6cc6dce6cefc13a0729dfbb81c262b1f519331575dd80ef3067f"
+checksum = "dc74d9a594b72ae6656596548f56f667211f8a97b3d4c3d467150794690dc40a"
 dependencies = [
  "proc-macro2",
 ]
@@ -1204,9 +1204,9 @@ dependencies = [
 
 [[package]]
 name = "serde_json"
-version = "1.0.148"
+version = "1.0.149"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3084b546a1dd6289475996f182a22aba973866ea8e8b02c51d9f46b1336a22da"
+checksum = "83fc039473c5595ace860d8c4fafa220ff474b3fc6bfdb4293327f1a37e94d86"
 dependencies = [
  "itoa",
  "memchr",
@@ -1532,9 +1532,9 @@ checksum = "13c2bddecc57b384dee18652358fb23172facb8a2c51ccc10d74c157bdea3292"
 
 [[package]]
 name = "syn"
-version = "2.0.113"
+version = "2.0.114"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "678faa00651c9eb72dd2020cbdf275d92eccb2400d568e419efdd64838145cb4"
+checksum = "d4d107df263a3013ef9b1879b0df87d706ff80f65a86ea879bd9c31f9b307c2a"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1712,9 +1712,9 @@ checksum = "7df058c713841ad818f1dc5d3fd88063241cc61f49f5fbea4b951e8cf5a8d71d"
 
 [[package]]
 name = "url"
-version = "2.5.7"
+version = "2.5.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "08bc136a29a3d1758e07a9cca267be308aeebf5cfd5a10f3f67ab2097683ef5b"
+checksum = "ff67a8a4397373c3ef660812acab3268222035010ab8680ec4215f38ba3d0eed"
 dependencies = [
  "form_urlencoded",
  "idna",
