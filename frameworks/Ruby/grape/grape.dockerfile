@@ -15,6 +15,7 @@ RUN bundle config set with 'puma'
 RUN bundle install --jobs=8 --gemfile=/grape/Gemfile
 
 ENV WEB_CONCURRENCY=auto
+ENV MIN_THREADS=5
 ENV MAX_THREADS=5
 
 EXPOSE 8080

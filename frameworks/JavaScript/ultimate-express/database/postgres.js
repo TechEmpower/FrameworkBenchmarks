@@ -1,7 +1,7 @@
 import postgres from 'postgres'
 import { clientOpts } from '../config.js'
 
-const sql = postgres({ ...clientOpts, max: 1 })
+const sql = postgres({ ...clientOpts, max: 1, fetch_types: false })
 
 export const fortunes = () => sql`SELECT id, message FROM fortune`
 

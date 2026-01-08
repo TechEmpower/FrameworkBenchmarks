@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
-require_relative 'auto_tune'
+require 'etc'
 require 'sequel'
-num_workers, = auto_tune
 
-worker_processes num_workers
+worker_processes (Etc.nprocessors * 1.5).to_i
 
 before_fork do |_server|
   Sequel::DATABASES.each(&:disconnect)

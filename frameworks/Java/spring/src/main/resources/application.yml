@@ -7,7 +7,7 @@ server:
 spring:
   config:
     activate:
-      on-profile: jdbc
+      on-profile: jdbc | data-jdbc
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration,org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration,org.springframework.boot.autoconfigure.data.mongo.MongoRepositoriesAutoConfiguration,org.springframework.boot.autoconfigure.data.web.SpringDataWebAutoConfiguration
   datasource:
