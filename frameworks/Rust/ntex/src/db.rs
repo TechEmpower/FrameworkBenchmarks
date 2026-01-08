@@ -1,7 +1,7 @@
 use std::cell::Cell;
 
 use nanorand::{Rng, WyRand};
-use ntex::util::{Bytes, BytesVec, BufMut};
+use ntex::util::{Bytes, BytesVec};
 use smallvec::SmallVec;
 use tokio_postgres::{connect, Client, Statement};
 use yarte::TemplateBytesTrait;
@@ -155,11 +155,7 @@ impl PgConnection {
         fortunes.sort_by(|it, next| it.message.cmp(&next.message));
 
         let mut body = self.buf.take().unwrap();
-        let remaining = body.remaining_mut();
-        if remaining < 4 * 1024 {
-            body.reserve(128 * 1024);
-        }
-
+        utils::reserve(&mut body, 4 * 1024);
         FortunesTemplate {
             fortunes: &fortunes,
         }

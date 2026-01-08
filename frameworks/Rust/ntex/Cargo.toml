@@ -67,7 +67,7 @@ neon = ["ntex/neon-polling"]
 neon-uring = ["ntex/neon-uring"]
 
 [dependencies]
-ntex = "3.0.0-pre.10"
+ntex = "3.0.0-pre.11"
 ntex-bytes = { version = "1.2", features=["simd"] }
 mimalloc = { version = "0.1.25", default-features = false }
 snmalloc-rs = { version = "0.3.3", features = ["native-cpu"] }
