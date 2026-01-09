@@ -3,7 +3,8 @@ use std::{cmp, io, io::Write, mem::MaybeUninit, slice::from_raw_parts_mut};
 
 use atoi::FromRadix10;
 use ntex::http::{header::HeaderValue, HttpServiceConfig, KeepAlive};
-use ntex::{io::IoConfig, time::Seconds, util::BufMut, util::Bytes, util::BytesMut, SharedCfg};
+use ntex::util::{BufMut, Bytes, BytesVec};
+use ntex::{io::IoConfig, time::Seconds, SharedCfg};
 use sonic_rs::writer::WriteExt;
 
 pub const HDR_SERVER: HeaderValue = HeaderValue::from_static("N");
@@ -57,16 +58,23 @@ pub fn get_query_param(query: Option<&str>) -> usize {
     cmp::min(500, cmp::max(1, q) as usize)
 }
 
-pub fn reserve(buf: &mut BytesMut, lw: usize) {
+pub fn reserve(buf: &mut BytesVec, lw: usize) {
     let remaining = buf.remaining_mut();
     if remaining < lw {
         buf.reserve(HW);
     }
 }
 
-pub struct BytesWriter<'a>(pub &'a mut BytesMut);
+pub struct BVecWriter<'a>(pub &'a mut BytesVec);
 
-impl Write for BytesWriter<'_> {
+impl<'a> BVecWriter<'a> {
+    pub fn new(buf: &'a mut BytesVec) -> BVecWriter<'a> {
+        reserve(buf, 2048);
+        Self(buf)
+    }
+}
+
+impl Write for BVecWriter<'_> {
     fn write(&mut self, src: &[u8]) -> Result<usize, io::Error> {
         self.0.extend_from_slice(src);
         Ok(src.len())
@@ -77,7 +85,7 @@ impl Write for BytesWriter<'_> {
     }
 }
 
-impl WriteExt for BytesWriter<'_> {
+impl WriteExt for BVecWriter<'_> {
     #[inline(always)]
     fn reserve_with(&mut self, additional: usize) -> Result<&mut [MaybeUninit<u8>], io::Error> {
         self.0.reserve(additional);
