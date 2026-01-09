@@ -1,8 +1,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS build
 WORKDIR /source
 
-ENV GENHTTP_ENGINE_NAME=KESTREL
-ENV GENHTTP_ENGINE_PACKAGE=GenHTTP.Core.Kestrel
+ENV GENHTTP_ENGINE_NAME=Kestrel
 
 # copy csproj and restore as distinct layers
 COPY Benchmarks/*.csproj .
@@ -23,7 +22,8 @@ ENV DOTNET_GCDynamicAdaptationMode=0 \
     COMPlus_DbgMiniDumpType=0 \
     DOTNET_TieredPGO=0 \
     DOTNET_TC_QuickJitForLoops=1 \
-    DOTNET_TC_QuickJit=1    
+    DOTNET_TC_QuickJit=1 \
+    DB_CONNECTION="Server=tfb-database;Database=hello_world;User Id=benchmarkdbuser;Password=benchmarkdbpass;Maximum Pool Size=256;NoResetOnClose=true;Enlist=false;Max Auto Prepare=4;Multiplexing=true;"
 
 WORKDIR /app
 COPY --from=build /app .
