@@ -19,6 +19,9 @@ RUN docker-php-ext-enable uv
 #    && pecl install event-3.1.4 > /dev/null
 # RUN docker-php-ext-enable event
 
+# Use Jemalloc for optimize
+RUN apt install libjemalloc2
+ENV LD_PRELOAD=libjemalloc.so.2
 
 COPY --from=composer/composer:latest-bin --link /composer /usr/local/bin/composer
 
