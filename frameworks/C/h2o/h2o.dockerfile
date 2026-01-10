@@ -2,7 +2,7 @@ ARG UBUNTU_VERSION=25.10
 
 ARG H2O_APP_PREFIX=/opt/h2o-app
 
-FROM "ubuntu:${UBUNTU_VERSION}" AS compile
+FROM "buildpack-deps:${UBUNTU_VERSION}" AS compile
 
 RUN echo "[timing] Installing system packages: $(date)"
 ARG DEBIAN_FRONTEND=noninteractive
@@ -24,15 +24,12 @@ RUN apt-get install \
       libnuma-dev \
       libpq-dev \
       libssl-dev \
-      libstdc++-15-dev \
       libtool \
       liburing-dev \
       libuv1-dev \
-      libwslay-dev \
       libyajl-dev \
       libz-dev \
       make \
-      ninja-build \
       pkg-config \
       ruby \
       systemtap-sdt-dev
@@ -47,7 +44,6 @@ RUN curl -LSs "https://github.com/h2o/h2o/archive/${H2O_VERSION}.tar.gz" | \
       -B build \
       -DCMAKE_C_FLAGS="-flto=auto -march=native -mtune=native" \
       -DWITH_MRUBY=on \
-      -G Ninja \
       -S . && \
     cmake --build build -j && \
     cmake --install build
@@ -72,7 +68,6 @@ RUN cmake \
       -DCMAKE_BUILD_TYPE=Release \
       -DCMAKE_C_FLAGS="-march=native -mtune=native" \
       -DCMAKE_INSTALL_PREFIX="${H2O_APP_PREFIX}" \
-      -G Ninja \
       -S .. && \
     cmake --build . -j && \
     cmake --install .

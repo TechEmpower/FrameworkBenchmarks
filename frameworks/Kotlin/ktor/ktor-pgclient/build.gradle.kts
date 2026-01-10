@@ -1,8 +1,11 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     application
-    kotlin("jvm") version "2.0.21"
-    kotlin("plugin.serialization") version "2.0.0"
-    id("com.github.johnrengelman.shadow") version "8.1.0"
+    kotlin("jvm") version "2.1.21"
+    kotlin("plugin.serialization") version "2.1.21"
+    id("com.gradleup.shadow") version "8.3.9"
 }
 
 group = "org.jetbrains.ktor"
@@ -16,8 +19,8 @@ application {
     mainClass = "io.ktor.server.netty.EngineMain"
 }
 
-val ktor_version = "3.1.2"
-val vertx_version = "4.5.11"
+val ktor_version = "3.3.3"
+val vertx_version = "5.0.5"
 
 dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
@@ -33,6 +36,16 @@ dependencies {
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+kotlin {
+    jvmToolchain(21)
+}
+
+tasks.withType<KotlinCompile>().configureEach {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_21)
     }
 }
 

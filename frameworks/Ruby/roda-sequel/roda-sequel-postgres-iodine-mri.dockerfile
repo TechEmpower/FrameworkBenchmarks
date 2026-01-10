@@ -1,4 +1,4 @@
-FROM ruby:3.5-rc
+FROM ruby:4.0
 
 ADD ./ /roda-sequel
 WORKDIR /roda-sequel
@@ -14,8 +14,9 @@ ENV BUNDLE_FORCE_RUBY_PLATFORM=true
 RUN bundle config set with 'postgresql iodine'
 RUN bundle install --jobs=8
 
+ENV RACK_ENV=production
 ENV DBTYPE=postgresql
 
 EXPOSE 8080
 
-CMD bundle exec iodine -p 8080 -w $(ruby config/auto_tune.rb | grep -Eo '[0-9]+' | head -n 1)
+CMD bundle exec iodine -p 8080 -w $(($(nproc)*5/4))

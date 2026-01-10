@@ -4,78 +4,60 @@ import com.example.starter.db.FortuneRepository
 import com.example.starter.db.WorldRepository
 import com.example.starter.handlers.FortuneHandler
 import com.example.starter.handlers.WorldHandler
-import com.example.starter.io.JsonResource
+import com.example.starter.helpers.Properties
 import com.example.starter.utils.isConnectionReset
-import io.vertx.core.AbstractVerticle
-import io.vertx.core.Promise
-import io.vertx.core.http.HttpServerOptions
-import io.vertx.ext.web.Router
-import io.vertx.pgclient.PgConnectOptions
+import io.vertx.kotlin.coroutines.CoroutineVerticle
+import io.vertx.kotlin.coroutines.coAwait
 import io.vertx.pgclient.PgConnection
 import org.apache.logging.log4j.kotlin.Logging
 
-class PostgresVerticle : AbstractVerticle() {
-    override fun start(startPromise: Promise<Void>) {
-        PgConnection.connect(vertx, PG_CONNECT_OPTIONS)
-            .onSuccess { conn ->
-                val fortuneHandler = FortuneHandler(FortuneRepository(conn))
-                val worldHandler = WorldHandler(WorldRepository(conn))
+class PostgresVerticle : CoroutineVerticle() {
+    override suspend fun start() {
+        val conn = PgConnection.connect(vertx, Properties.PG_CONNECT).coAwait()
 
-                val router = Router.router(vertx)
+        val fortuneRepository = FortuneRepository.init(conn)
+        val worldRepository = WorldRepository.init(conn)
 
-                router
-                    .get("/fortunes")
-                    .handler(fortuneHandler::templateFortunes)
+        val fortuneHandler = FortuneHandler(fortuneRepository.coAwait())
+        val worldHandler = WorldHandler(worldRepository.coAwait())
 
-                router
-                    .get("/db")
-                    .handler(worldHandler::readRandomWorld)
-
-                router
-                    .get("/queries")
-                    .handler(worldHandler::readRandomWorlds)
-
-                router
-                    .get("/updates")
-                    .handler(worldHandler::updateRandomWorlds)
-
-                val server = vertx
-                    .createHttpServer(HTTP_SERVER_OPTIONS)
-                    .requestHandler(router)
-                    .exceptionHandler {
-                        if (it.isConnectionReset()) return@exceptionHandler
-                        logger.error(it) { "Exception in HttpServer" }
+        val server = vertx
+            .createHttpServer(Properties.HTTP)
+            .requestHandler {
+                val path = it.path()
+                val code = when (path.length) {
+                    9 -> if (path == FORTUNES_PATH) 1 else 0
+                    3 -> if (path == DB_PATH)       2 else 0
+                    8 -> when (path) {
+                        QUERIES_PATH -> 3
+                        UPDATES_PATH -> 4
+                        else         -> 0
                     }
-
-                server
-                    .listen()
-                    .onSuccess {
-                        logger.info { "HTTP server started on port 8080" }
-                        startPromise.complete()
-                    }
-                    .onFailure {
-                        logger.error(it) { "Failed to start" }
-                        startPromise.fail(it)
-                    }
+                    else -> 0
+                }
+                when (code) {
+                    1 -> fortuneHandler.templateFortunes(it)
+                    2 -> worldHandler.readRandomWorld(it)
+                    3 -> worldHandler.readRandomWorlds(it)
+                    4 -> worldHandler.updateRandomWorlds(it)
+                    else -> it.response().setStatusCode(404).end()
+                }
             }
-            .onFailure {
-                logger.error(it) { "Failed to start" }
-                startPromise.fail(it)
+            .exceptionHandler {
+                if (!it.isConnectionReset()) {
+                    logger.error("Exception in HttpServer", it)
+                }
             }
+            .listen()
+            .coAwait()
+
+        logger.info("HTTP server started on port ${server.actualPort()}")
     }
 
-    companion object : Logging {
-        private const val HTTP_SERVER_OPTIONS_RESOURCE = "http-server-options.json"
-        private const val PG_CONNECT_OPTIONS_RESOURCE = "pg-connect-options.json"
-
-        private val HTTP_SERVER_OPTIONS: HttpServerOptions by lazy {
-            val json = JsonResource.of(HTTP_SERVER_OPTIONS_RESOURCE)
-            HttpServerOptions(json)
-        }
-
-        private val PG_CONNECT_OPTIONS: PgConnectOptions by lazy {
-            val json = JsonResource.of(PG_CONNECT_OPTIONS_RESOURCE)
-            PgConnectOptions(json)
-        }
+    private companion object : Logging {
+        private const val FORTUNES_PATH = "/fortunes"
+        private const val DB_PATH = "/db"
+        private const val QUERIES_PATH = "/queries"
+        private const val UPDATES_PATH = "/updates"
     }
 }

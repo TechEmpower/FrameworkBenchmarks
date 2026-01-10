@@ -18,11 +18,11 @@
       "webserver": "Puma",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "grape-puma-mri",
+      "display_name": "grape [puma]",
       "notes": "",
       "versus": "rack-puma-mri"
     },
-    "unicorn": {
+    "iodine": {
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/query?queries=",
@@ -36,12 +36,12 @@
       "language": "Ruby",
       "orm": "Full",
       "platform": "Rack",
-      "webserver": "Unicorn",
+      "webserver": "Iodine",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "grape-unicorn-mri",
+      "display_name": "grape [iodine]",
       "notes": "",
-      "versus": "rack-unicorn-mri"
+      "versus": "rack-iodine-mri"
     }
   }]
 }

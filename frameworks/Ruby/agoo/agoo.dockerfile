@@ -1,4 +1,4 @@
-FROM ruby:3.4
+FROM ruby:4.0
 
 RUN apt-get update -q \
     && apt-get install --no-install-recommends -q -y \

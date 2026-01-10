@@ -1,0 +1,22 @@
+{
+  "framework": "simplew",
+  "tests": [{
+    "default": {
+      "plaintext_url": "/api/plaintext",
+        "json_url": "/api/json",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "None",
+        "framework": "SimpleW",
+        "language": "C#",
+        "orm": "None",
+        "platform": ".NET",
+        "webserver": "Netcoreserver",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "SimpleW",
+        "notes": "Only plaintext and JSON benchmarks implemented yet"
+    }
+  }]
+}

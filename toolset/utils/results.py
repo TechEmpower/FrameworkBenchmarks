@@ -12,6 +12,7 @@ import re
 import math
 import csv
 import traceback
+import platform
 from datetime import datetime
 
 # Cross-platform colored text
@@ -52,6 +53,10 @@ class Results:
         except Exception:
             #Could not read local git repository, which is fine.
             self.git = None
+        # OS information - only set once during initialization
+        self.operatingSystem = dict()
+        self.operatingSystem['name'] = platform.system()
+        self.operatingSystem['version'] = platform.release()
         self.startTime = int(round(time.time() * 1000))
         self.completionTime = None
         self.concurrencyLevels = self.config.concurrency_levels
@@ -320,6 +325,7 @@ class Results:
         toRet['name'] = self.name
         toRet['environmentDescription'] = self.environmentDescription
         toRet['git'] = self.git
+        toRet['operatingSystem'] = self.operatingSystem
         toRet['startTime'] = self.startTime
         toRet['completionTime'] = self.completionTime
         toRet['concurrencyLevels'] = self.concurrencyLevels

@@ -15,16 +15,16 @@ The tests were run with:
 ## Test URLs
 ### DB
 
-http://localhost:8080/db
+http://localhost:9090/db
 
 ### QUERY
 
-http://localhost:8080/query?queries=
+http://localhost:9090/query?queries=
 
 ### UPDATE
 
-http://localhost:8080/update?queries=
+http://localhost:9090/update?queries=
 
 ### FORTUNES
 
-http://localhost:8080/fortunes
+http://localhost:9090/fortunes

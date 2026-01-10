@@ -40,7 +40,7 @@
         "database_os": "Linux",
         "display_name": "vertx-web-kotlinx-postgresql",
         "notes": "",
-        "versus": "vertx-web"
+        "versus": "vertx-web-postgres"
       }
     }
   ]
