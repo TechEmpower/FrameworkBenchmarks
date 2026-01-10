@@ -6,12 +6,12 @@ gem 'rack', '~> 3.1'
 gem "concurrent-ruby"
 
 group :mysql, optional: true do
-  gem 'trilogy', '~> 2.9', platforms: [:ruby, :windows]
+  gem 'trilogy', '~> 2.9'
 end
 
 group :postgresql, optional: true do
-  gem 'pg', '~> 1.5', platforms: [:ruby, :windows]
-  gem 'sequel_pg', '~> 1.6', platforms: :ruby, require: false
+  gem 'pg', '~> 1.5'
+  gem 'sequel_pg', '~> 1.17', require: 'sequel'
 end
 
 group :puma, optional: true do
