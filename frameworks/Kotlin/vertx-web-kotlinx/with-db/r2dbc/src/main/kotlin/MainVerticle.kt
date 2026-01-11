@@ -38,9 +38,11 @@ class MainVerticle : CommonWithDbVerticle<Connection, Unit>(),
             if (index < lastIndex) statement.add()
         }
         // wait for the execution to complete
-        // There is only a single result.
-        // None of `awaitSingle`, `awaitLast`, `collect`, and `.asFlow().take(sortedWorlds.size).collect {}` returns here and leads to timeout.
-        statement.execute().awaitFirst()
+        // For batch statements, execute() returns multiple Result objects.
+        // We must consume the rowsUpdated Publisher from each Result.
+        statement.execute().collect { result ->
+            result.rowsUpdated.awaitFirst()
+        }
     }
 
     override suspend fun Unit.selectFortunesInto(fortunes: MutableList<Fortune>) {
