@@ -1,3 +1,4 @@
+import io.vertx.core.Verticle
 import io.vertx.core.Vertx
 import io.vertx.core.impl.cpu.CpuCoreSensor
 import io.vertx.kotlin.core.deploymentOptionsOf
@@ -6,15 +7,16 @@ import io.vertx.kotlin.coroutines.coAwait
 import java.util.function.Supplier
 import java.util.logging.Logger
 
-const val SERVER_NAME = "Vert.x-Web Kotlinx Benchmark server"
 val numProcessors = CpuCoreSensor.availableProcessors()
 
 val logger = Logger.getLogger("Vert.x-Web Kotlinx Benchmark")
-suspend fun main(args: Array<String>) {
-    val hasDb = args.getOrNull(0)?.toBooleanStrictOrNull()
-        ?: throw IllegalArgumentException("Specify the first `hasDb` Boolean argument")
-
-    logger.info("$SERVER_NAME starting...")
+suspend fun <SharedResources> commonRunVertxServer(
+    benchmarkName: String,
+    createSharedResources: (Vertx) -> SharedResources,
+    createVerticle: (SharedResources) -> Verticle
+) {
+    val serverName = "$benchmarkName benchmark server"
+    logger.info("$serverName starting...")
     val vertx = Vertx.vertx(
         vertxOptionsOf(
             eventLoopPoolSize = numProcessors, preferNativeTransport = true, disableTCCL = true
@@ -24,9 +26,10 @@ suspend fun main(args: Array<String>) {
         logger.info("Vertx exception caught: $it")
         it.printStackTrace()
     }
+    val sharedResources = createSharedResources(vertx)
     vertx.deployVerticle(
-        Supplier { MainVerticle(hasDb) },
+        Supplier { createVerticle(sharedResources) },
         deploymentOptionsOf(instances = numProcessors)
     ).coAwait()
-    logger.info("$SERVER_NAME started.")
+    logger.info("$serverName started.")
 }
