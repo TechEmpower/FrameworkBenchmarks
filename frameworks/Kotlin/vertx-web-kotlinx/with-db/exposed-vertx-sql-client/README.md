@@ -1,6 +1,6 @@
 # Exposed Vert.x SQL Client Benchmarking Test
 
-Adapted from the [`vertx-web-kotlinx` portion](../vertx-web-kotlinx) for the [Exposed Vert.x SQL Client](https://github.com/huanshankeji/exposed-vertx-sql-client) library.
+Adapted from the [`vertx-web-kotlinx` portion](../default) for the [Exposed Vert.x SQL Client](https://github.com/huanshankeji/exposed-vertx-sql-client) library.
 
 ### Test Type Implementation Source Code
 
