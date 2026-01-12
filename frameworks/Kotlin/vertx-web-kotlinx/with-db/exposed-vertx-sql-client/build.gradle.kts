@@ -3,8 +3,7 @@ plugins {
 }
 
 repositories {
-    // TODO comment out
-    mavenLocal() // for snapshot dependencies
+    //mavenLocal() // for snapshot dependencies
 }
 
 dependencies {
