@@ -27,7 +27,7 @@ namespace Benchmarks
             }
             else
             {
-                SendResponseAsync(Response.MakeErrorResponse("Not found", 404));
+                SendResponseAsync(Response.MakeErrorResponse(404, "Not found"));
             }
         }
 

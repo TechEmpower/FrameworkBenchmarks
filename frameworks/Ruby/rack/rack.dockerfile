@@ -1,7 +1,7 @@
-FROM ruby:3.5-rc
+FROM ruby:4.0
 
 ENV RUBY_YJIT_ENABLE=1
-ENV RUBY_THREAD_TIMESLICE=10
+ENV RUBY_MN_THREADS=1
 
 # Use Jemalloc
 RUN apt-get update && \
@@ -18,7 +18,10 @@ RUN bundle install --jobs=8
 
 COPY . .
 
-EXPOSE 8080
-ENV WEB_CONCURRENCY=auto
+ENV MIN_THREADS=5
+ENV MAX_THREADS=5
 
-CMD bundle exec puma -C config/puma.rb -b tcp://0.0.0.0:8080 -e production
+EXPOSE 8080
+
+CMD export WEB_CONCURRENCY=$(($(nproc)*5/4)) && \
+    bundle exec puma -C config/puma.rb -b tcp://0.0.0.0:8080 -e production

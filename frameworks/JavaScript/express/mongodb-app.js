@@ -8,9 +8,6 @@ const express = require('express');
 const mongoose = require('mongoose');
 const connection = mongoose.createConnection('mongodb://tfb-database/hello_world');
 
-// Middleware
-const bodyParser = require('body-parser');
-
 /**
  * Note! The benchmarks say we should use "id" as a property name.
  * However, Mongo provides a default index on "_id", so to be equivalent to the other tests, we use
@@ -43,6 +40,9 @@ if (cluster.isPrimary) {
 } else {
   const app = module.exports = express();
 
+  app.set('x-powered-by', false);
+  app.set('etag', false)
+
   const randomTfbNumber = () => Math.floor(Math.random() * 10000) + 1;
   const toClientWorld = (world) => {
     if (world) {
@@ -51,9 +51,6 @@ if (cluster.isPrimary) {
     }
     return world;
   };
-
-  // Configuration
-  app.use(bodyParser.urlencoded({extended: true}));
 
   // Set headers for all routes
   app.use((req, res, next) => {
@@ -120,5 +117,6 @@ if (cluster.isPrimary) {
     res.send(await Promise.all(promises));
   });
 
-  app.listen(8080);
+  const server = app.listen(8080);
+  server.keepAliveTimeout = 0;
 }

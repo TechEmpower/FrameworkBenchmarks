@@ -1,21 +1,24 @@
-FROM php:8.3-cli
+FROM php:8.5-cli
+
+ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update -yqq >> /dev/null
 RUN apt-get install -y libevent-dev \
     libssl-dev \
     pkg-config \
+    libicu-dev \
     build-essential \
     unzip >> /dev/null
 
 RUN docker-php-ext-install pdo_mysql \
-    opcache \
+    intl \
     posix \
     pcntl \
     sockets >> /dev/null
 
 RUN pecl install event >> /dev/null
 
-RUN docker-php-ext-enable pdo_mysql opcache posix pcntl sockets
+RUN docker-php-ext-enable intl pdo_mysql posix pcntl sockets
 RUN docker-php-ext-enable --ini-name zz-event.ini event
 RUN echo "opcache.enable_cli=1" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
 RUN echo "opcache.jit=1205" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini

@@ -51,13 +51,24 @@ public class Server {
         return fortunes;
     }
 
-    private static DataSource createPostgresDataSource() throws ClassNotFoundException {
-        Class.forName("org.postgresql.Driver");
+    private static DataSource createPostgresDataSource() {
         HikariConfig config = new HikariConfig();
+
         config.setJdbcUrl("jdbc:postgresql://tfb-database:5432/hello_world");
         config.setUsername("benchmarkdbuser");
         config.setPassword("benchmarkdbpass");
-        config.setMaximumPoolSize(512);
+
+        config.setMaximumPoolSize(64);
+        config.setMinimumIdle(0);
+
+        config.setConnectionTimeout(1000);
+        config.setIdleTimeout(15000);
+        config.setMaxLifetime(60000);
+
+        config.setAutoCommit(true);
+
+        config.setPoolName("PostgreSQL-HikariCP-Pool");
+
         return new HikariDataSource(config);
     }
 
@@ -77,6 +88,7 @@ public class Server {
             t.getResponseHeaders().add("Server", SERVER_NAME);
             t.sendResponseHeaders(200, HELLO_LENGTH);
             t.getResponseBody().write(HELLO_BYTES);
+            t.getResponseBody().flush();
             t.getResponseBody().close();
         };
     }
@@ -120,6 +132,7 @@ public class Server {
                 t.getResponseHeaders().add("Server", SERVER_NAME);
                 t.sendResponseHeaders(200, bytes.length);
                 t.getResponseBody().write(bytes);
+                t.getResponseBody().flush();
                 t.getResponseBody().close();
             } catch (SQLException | ParseException e) {
                 throw new IOException(e);

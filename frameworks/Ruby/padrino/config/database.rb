@@ -1,22 +1,19 @@
-Bundler.require('mysql')
+Bundler.require('trilogy')
 opts = {
-  adapter:  'mysql2',
+  adapter:  'trilogy',
   username: 'benchmarkdbuser',
   password: 'benchmarkdbpass',
   host:     'tfb-database',
-  database: 'hello_world'
+  database: 'hello_world',
+  ssl:      true,
+  ssl_mode: 4, # Trilogy::SSL_PREFERRED_NOVERIFY
+  tls_min_version: 3 # Trilogy::TLS_VERSION_12
 }
 
 # Determine threading/thread pool size and timeout
-if defined?(Puma) && (threads = Puma.cli_config.options.fetch(:max_threads)) > 1
-  opts[:pool] = threads
-  opts[:checkout_timeout] = 10
-else
-  # TODO: ActiveRecord doesn't have a single-threaded mode?
-  opts[:pool] = 1
-  opts[:checkout_timeout] = 0
-end
-
+# TODO: ActiveRecord doesn't have a single-threaded mode?
+opts[:pool] = 512
+opts[:checkout_timeout] = 5
 
 # Setup our logger
 ActiveRecord::Base.logger = logger

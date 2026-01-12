@@ -15,10 +15,12 @@
 
            ;; HTML templating
            selmer/selmer                    {:mvn/version "1.12.62"}
-           org.clojars.jj/majavat           {:mvn/version "1.12.3"}
+           org.clojars.jj/majavat           {:mvn/version "1.15.1"}
+           hiccup/hiccup                    {:mvn/version "2.0.0"}
 
            ;; Database
            org.postgresql/postgresql        {:mvn/version "42.7.8"}
+           org.clojars.jj/boa-sql           {:mvn/version "1.0.0"}
 
 
            ;; kit Libs

@@ -28,7 +28,7 @@ fn set_socket_options(addr: SocketAddr) -> io::Result<tokio::net::TcpListener> {
     socket.set_reuse_port(true)?;
     socket.set_reuse_address(true)?;
     socket.set_nonblocking(true)?;
-    socket.set_nodelay(true)?;
+    socket.set_tcp_nodelay(true)?;
     socket.bind(&addr.into())?;
     socket.listen(4096)?;
 

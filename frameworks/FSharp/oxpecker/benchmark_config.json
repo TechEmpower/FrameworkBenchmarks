@@ -1,5 +1,6 @@
 {
   "framework": "oxpecker",
+  "maintainers": ["Lanayx"],
   "tests": [
     {
       "default": {

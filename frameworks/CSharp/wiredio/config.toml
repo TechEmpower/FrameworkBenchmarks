@@ -13,11 +13,35 @@ platform = ".NET"
 webserver = "Wired.IO"
 versus = "None"
 
-[plt]
+[mcr]
 urls.plaintext = "/plaintext"
 urls.json = "/json"
 approach = "Realistic"
-classification = "Platform"
+classification = "Micro"
+os = "Linux"
+database_os = "Linux"
+orm = "None"
+platform = ".NET"
+webserver = "Unhinged"
+versus = "None"
+
+[mcr-p]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+approach = "Realistic"
+classification = "Micro"
+os = "Linux"
+database_os = "Linux"
+orm = "None"
+platform = ".NET"
+webserver = "Unhinged"
+versus = "None"
+
+[gen]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+approach = "Realistic"
+classification = "Fullstack"
 os = "Linux"
 database_os = "Linux"
 orm = "None"

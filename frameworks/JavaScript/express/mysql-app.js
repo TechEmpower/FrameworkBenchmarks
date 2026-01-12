@@ -8,9 +8,6 @@ const cluster = require('cluster'),
   express = require('express'),
   Sequelize = require('sequelize');
 
-// Middleware
-const bodyParser = require('body-parser');
-
 const sequelize = new Sequelize('hello_world', 'benchmarkdbuser', 'benchmarkdbpass', {
   host: 'tfb-database',
   dialect: 'mysql',
@@ -59,9 +56,8 @@ if (cluster.isPrimary) {
 } else {
   const app = module.exports = express();
 
-  // Configuration
-  // https://github.com/expressjs/method-override#custom-logic
-  app.use(bodyParser.urlencoded({ extended: true }));
+  app.set('x-powered-by', false);
+  app.set('etag', false)
 
   // Set headers for all routes
   app.use((req, res, next) => {
@@ -132,5 +128,6 @@ if (cluster.isPrimary) {
     res.send(results);
   });
 
-  app.listen(8080);
+  const server = app.listen(8080);
+  server.keepAliveTimeout = 0;
 }

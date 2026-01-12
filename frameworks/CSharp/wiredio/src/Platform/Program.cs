@@ -39,7 +39,7 @@ internal static class Program
             // It's the number of real cpu cores not cpu threads
             // This can improve the cache hits on L1/L2 since only one thread
             // is running per cpu core.
-            .SetNWorkersSolver(() => Environment.ProcessorCount/2)  
+            .SetNWorkersSolver(() => Environment.ProcessorCount - 2)  
             
             // Accept up to 16384 connections
             .SetBacklog(16384) 
@@ -58,14 +58,19 @@ internal static class Program
         engine.Run();
     }
 
-    private static void RequestHandler(Connection connection)
+    private const string Json = "/json";
+    private const string PlainText = "/plaintext";
+
+    private static ValueTask RequestHandler(Connection connection)
     {
         // FNV-1a Hashed routes to avoid string allocations
-        if(connection.HashedRoute == 291830056)          // /json
+        if(connection.H1HeaderData.Route == Json)          // /json
             CommitJsonResponse(connection);
        
-        else if (connection.HashedRoute == 3454831873)   // /plaintext
+        else if (connection.H1HeaderData.Route == PlainText)   // /plaintext
             CommitPlainTextResponse(connection);
+        
+        return  ValueTask.CompletedTask;
     }
     
     [ThreadStatic] private static Utf8JsonWriter? t_utf8JsonWriter;

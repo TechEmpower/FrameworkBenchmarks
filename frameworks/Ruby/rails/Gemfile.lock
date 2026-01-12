@@ -155,7 +155,7 @@ GEM
       pp (>= 0.6.0)
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
-    json (2.15.2)
+    json (2.16.0)
     localhost (1.6.0)
     logger (1.7.0)
     loofah (2.24.1)
@@ -177,7 +177,8 @@ GEM
     metrics (0.15.0)
     mini_mime (1.1.5)
     mini_portile2 (2.8.9)
-    minitest (5.26.0)
+    minitest (6.0.0)
+      prism (~> 1.5)
     msgpack (1.8.0)
     net-imap (0.5.12)
       date
@@ -204,6 +205,7 @@ GEM
     pp (0.6.3)
       prettyprint
     prettyprint (0.2.0)
+    prism (1.7.0)
     process-metrics (0.6.0)
       console (~> 1.8)
       json (~> 2)
@@ -315,4 +317,4 @@ DEPENDENCIES
   tzinfo-data
 
 BUNDLED WITH
-   2.7.0
+   4.0.3

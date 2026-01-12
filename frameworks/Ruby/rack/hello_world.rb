@@ -6,6 +6,7 @@ require_relative 'pg_db'
 require_relative 'config/auto_tune'
 require 'rack'
 require 'json'
+require 'erb'
 
 if RUBY_PLATFORM == 'java'
   DEFAULT_DATABASE_URL = 'jdbc:postgresql://tfb-database/hello_world?user=benchmarkdbuser&password=benchmarkdbpass'
@@ -18,8 +19,8 @@ class HelloWorld
   ALL_IDS = QUERY_RANGE.to_a # enumeration of all the IDs in fortune DB
   MIN_QUERIES = 1 # min number of records that can be retrieved
   MAX_QUERIES = 500 # max number of records that can be retrieved
+
   CONTENT_TYPE = 'Content-Type'
-  CONTENT_LENGTH = 'Content-Length'
   JSON_TYPE = 'application/json'
   HTML_TYPE = 'text/html; charset=utf-8'
   PLAINTEXT_TYPE = 'text/plain'
@@ -42,8 +43,10 @@ class HelloWorld
   </html>'
 
   def initialize
-    if defined?(Puma) && (threads = Puma.cli_config.options.fetch(:max_threads)) > 1
-      max_connections = threads
+    if defined?(Puma) || defined?(Itsi)
+      max_connections = ENV.fetch('MAX_THREADS')
+    elsif defined?(Iodine)
+      max_connections = ENV.fetch('THREADS')
     else
       max_connections = 512
     end
@@ -96,21 +99,13 @@ class HelloWorld
   def respond(content_type, body)
     [
       200,
-      headers(content_type, body),
+      headers(content_type),
       [body]
     ]
   end
 
-  if defined?(Unicorn)
-    def headers(content_type, body)
-      {
-        CONTENT_TYPE => content_type,
-        SERVER => SERVER_STRING,
-        CONTENT_LENGTH => body.bytesize.to_s
-      }
-    end
-  elsif defined?(Falcon) || defined?(Puma)
-    def headers(content_type, _)
+  if defined?(Puma) || defined?(Falcon)
+    def headers(content_type)
       {
         CONTENT_TYPE => content_type,
         SERVER => SERVER_STRING,
@@ -118,7 +113,7 @@ class HelloWorld
       }
     end
   else
-    def headers(content_type, _)
+    def headers(content_type)
       {
         CONTENT_TYPE => content_type,
         SERVER => SERVER_STRING

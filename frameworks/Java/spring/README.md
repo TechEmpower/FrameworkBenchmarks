@@ -4,8 +4,9 @@ This is the Spring MVC portion of a [benchmarking test suite](../) comparing a v
 
 An embedded undertow is used for the web server.
 
-There are two implementations :
+There are three implementations :
 * For postgresql access, JdbcTemplate is used. See [JdbcDbRepository](src/main/java/hello/JdbcDbRepository.java).
+* For postgresql access, Spring Data JDBC is used. See [DataJdbcDbRepository](src/main/java/hello/DataJdbcDbRepository.java).
 * For mongoDB access, MongoTemplate is used. See [MongoDbRepository](src/main/java/hello/MongoDbRepository.java).
 
 ### Plaintext Test

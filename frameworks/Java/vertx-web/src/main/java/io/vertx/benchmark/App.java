@@ -26,7 +26,6 @@ public class App extends AbstractVerticle {
 
   static {
     DatabindCodec.mapper().registerModule(new BlackbirdModule());
-    DatabindCodec.prettyMapper().registerModule(new BlackbirdModule());
   }
 
   // TODO: this function can be moved into `PgClientBenchmark`, made static, and renamed when static declarations in inner classes are supported (when the JDK is upgraded to 16 or above).
@@ -50,9 +49,9 @@ public class App extends AbstractVerticle {
    */
   private final class PgClientBenchmark {
 
-    private static final String UPDATE_WORLD = "UPDATE world SET randomnumber=$1 WHERE id=$2";
-    private static final String SELECT_WORLD = "SELECT id, randomnumber from WORLD where id=$1";
-    private static final String SELECT_FORTUNE = "SELECT id, message from FORTUNE";
+    private static final String UPDATE_WORLD = "UPDATE world SET randomnumber = $1 WHERE id = $2";
+    private static final String SELECT_WORLD = "SELECT id, randomnumber FROM world WHERE id = $1";
+    private static final String SELECT_FORTUNE = "SELECT id, message FROM fortune";
 
     private final PgConnection client;
 
@@ -67,7 +66,7 @@ public class App extends AbstractVerticle {
     public void dbHandler(final RoutingContext ctx) {
       client
         .preparedQuery(SELECT_WORLD)
-        .execute(Tuple.of(randomWorld()), res -> {
+        .execute(Tuple.of(randomWorld())).andThen(res -> {
         if (res.succeeded()) {
           final RowIterator<Row> resultSet = res.result().iterator();
           if (!resultSet.hasNext()) {
@@ -97,7 +96,7 @@ public class App extends AbstractVerticle {
       final int[] cnt = { 0 };
 
       for (int i = 0; i < queries; i++) {
-        client.preparedQuery(SELECT_WORLD).execute(Tuple.of(randomWorld()), res -> {
+        client.preparedQuery(SELECT_WORLD).execute(Tuple.of(randomWorld())).andThen(res -> {
           if (!failed[0]) {
             if (res.failed()) {
               failed[0] = true;
@@ -124,7 +123,7 @@ public class App extends AbstractVerticle {
 
     public void fortunesHandler(final RoutingContext ctx) {
 
-      client.preparedQuery(SELECT_FORTUNE).execute(ar -> {
+      client.preparedQuery(SELECT_FORTUNE).execute().andThen(ar -> {
           if (ar.succeeded()) {
             final RowIterator<Row> resultSet = ar.result().iterator();
             if (!resultSet.hasNext()) {
@@ -145,7 +144,7 @@ public class App extends AbstractVerticle {
             ctx.put("fortunes", fortunes);
 
             // and now delegate to the engine to render it.
-            engine.render(ctx.data(), "templates/Fortunes.rocker.html", res -> {
+            engine.render(ctx.data(), "templates/Fortunes.rocker.html").andThen(res -> {
               if (res.succeeded()) {
                 ctx.response()
                         .putHeader(HttpHeaders.SERVER, SERVER)
@@ -171,7 +170,7 @@ public class App extends AbstractVerticle {
 
          for (int i = 0; i < worlds.length; i++) {
            int id = randomWorld();
-           client.preparedQuery(SELECT_WORLD).execute(Tuple.of(id), ar2 -> {
+           client.preparedQuery(SELECT_WORLD).execute(Tuple.of(id)).andThen(ar2 -> {
              if (!failed[0]) {
                if (ar2.failed()) {
                  failed[0] = true;
@@ -190,7 +189,7 @@ public class App extends AbstractVerticle {
                    batch.add(Tuple.of(world.getRandomNumber(), world.getId()));
                  }
 
-                 client.preparedQuery(UPDATE_WORLD).executeBatch(batch, ar3 -> {
+                 client.preparedQuery(UPDATE_WORLD).executeBatch(batch).andThen(ar3 -> {
                    if (ar3.failed()) {
                      ctx.fail(ar3.cause());
                      return;
@@ -273,7 +272,7 @@ public class App extends AbstractVerticle {
             .end("Hello, World!");
       });
 
-      vertx.createHttpServer().requestHandler(app).listen(8080, listen -> {
+      vertx.createHttpServer().requestHandler(app).listen(8080).andThen(listen -> {
         if (listen.failed()) {
           listen.cause().printStackTrace();
           System.exit(1);

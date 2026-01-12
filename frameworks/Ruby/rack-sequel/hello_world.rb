@@ -1,4 +1,8 @@
 # frozen_string_literal: true
+require 'bundler/setup'
+Bundler.require(:default) # Load core modules
+
+require_relative 'db'
 require 'time'
 
 # Our Rack application to be executed by rackup
@@ -8,8 +12,8 @@ class HelloWorld
   ALL_IDS = ID_RANGE.to_a
   QUERIES_MIN = 1
   QUERIES_MAX = 500
+
   CONTENT_TYPE = 'Content-Type'
-  CONTENT_LENGTH = 'Content-Length'
   JSON_TYPE = 'application/json'
   HTML_TYPE = 'text/html; charset=utf-8'
   PLAINTEXT_TYPE = 'text/plain'
@@ -128,13 +132,13 @@ class HelloWorld
   def respond(content_type, body)
     [
       200,
-      headers(content_type, body),
+      headers(content_type),
       [body]
     ]
   end
 
   if defined?(Puma)
-    def headers(content_type, _)
+    def headers(content_type)
       {
         CONTENT_TYPE => content_type,
         SERVER => SERVER_STRING,
@@ -142,7 +146,7 @@ class HelloWorld
       }
     end
   else
-    def headers(content_type, _)
+    def headers(content_type)
       {
         CONTENT_TYPE => content_type,
         SERVER => SERVER_STRING

@@ -1,0 +1,14 @@
+[framework]
+name = "simplew"
+
+[main]
+urls.plaintext = "/api/plaintext"
+urls.json = "/api/json"
+approach = "Realistic"
+classification = "Fullstack"
+os = "Linux"
+database_os = "Linux"
+orm = "None"
+platform = ".NET"
+webserver = "Netcoreserver"
+versus = "None"

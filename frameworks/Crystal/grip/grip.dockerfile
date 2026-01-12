@@ -1,4 +1,4 @@
-FROM crystallang/crystal:1.12.1
+FROM crystallang/crystal:1.18.2
 
 WORKDIR /grip
 COPY views views
