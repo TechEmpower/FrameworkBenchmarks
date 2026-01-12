@@ -45,11 +45,11 @@ http://localhost:8080/db
 
 ### QUERY
 
-http://localhost:8080/query?queries=
+http://localhost:8080/queries?queries=
 
 ### UPDATE
 
-http://localhost:8080/update?queries=
+http://localhost:8080/updates?queries=
 
 ### FORTUNES
 
