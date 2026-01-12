@@ -54,7 +54,7 @@
         "framework": "vertx-web",
         "language": "Kotlin",
         "flavor": "None",
-        "orm": "Full",
+        "orm": "Raw",
         "platform": "Vert.x",
         "webserver": "None",
         "os": "Linux",
