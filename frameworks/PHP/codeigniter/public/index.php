@@ -23,8 +23,6 @@ if (getcwd() . DIRECTORY_SEPARATOR !== FCPATH) {
  */
 
 const ENVIRONMENT = "production";
-const CI_DEBUG = false;
-
 
 // Load our paths config file
 // This is the line that might need to be changed, depending on your folder structure.

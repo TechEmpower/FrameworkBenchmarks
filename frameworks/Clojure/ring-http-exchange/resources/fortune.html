@@ -4,12 +4,12 @@
 <body>
     <table>
     <tr><th>id</th><th>message</th></tr>
-    {% for message in messages %}
+    {% each message in messages %}
     <tr>
         <td>{{message.id}}</td>
         <td>{{message.message}}</td>
     </tr>
-    {% endfor %}
+    {% endeach %}
 </table>
 </body>
 </html>

@@ -120,7 +120,8 @@
       "database_os": "Linux",
       "display_name": "act-eclipselink-pgsql",
       "notes": "",
-      "versus": "undertow-postgresql"
+      "versus": "undertow-postgresql",
+      "tags": ["broken"]
     },
     "eclipselink-pgsql-rythm": {
       "fortune_url": "/fortunes",

@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gem 'trilogy', '~> 2.9'
 gem 'activerecord', '~> 8.1.0', :require => 'active_record'
-gem 'grape', '2.1.1'
+gem 'grape', '~> 3.0'
 gem 'json', '~> 2.9'
 
 group :iodine, optional: true do

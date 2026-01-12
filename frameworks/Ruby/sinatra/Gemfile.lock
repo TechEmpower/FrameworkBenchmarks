@@ -61,7 +61,7 @@ GEM
     trilogy (2.9.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
-    uri (1.0.3)
+    uri (1.0.4)
 
 PLATFORMS
   ruby
@@ -78,4 +78,4 @@ DEPENDENCIES
   trilogy (~> 2.9.0)
 
 BUNDLED WITH
-   2.7.0
+   4.0.3

@@ -19,8 +19,8 @@ class HelloWorld
   ALL_IDS = QUERY_RANGE.to_a # enumeration of all the IDs in fortune DB
   MIN_QUERIES = 1 # min number of records that can be retrieved
   MAX_QUERIES = 500 # max number of records that can be retrieved
+
   CONTENT_TYPE = 'Content-Type'
-  CONTENT_LENGTH = 'Content-Length'
   JSON_TYPE = 'application/json'
   HTML_TYPE = 'text/html; charset=utf-8'
   PLAINTEXT_TYPE = 'text/plain'
@@ -45,6 +45,8 @@ class HelloWorld
   def initialize
     if defined?(Puma) || defined?(Itsi)
       max_connections = ENV.fetch('MAX_THREADS')
+    elsif defined?(Iodine)
+      max_connections = ENV.fetch('THREADS')
     else
       max_connections = 512
     end

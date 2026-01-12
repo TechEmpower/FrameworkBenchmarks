@@ -19,6 +19,7 @@ abstract class AbstractHandler {
 
         // Headers
         val SERVER: CharSequence = HttpHeaders.createOptimized(Properties.SERVER_NAME)
+        val CONTENT_TYPE_TEXT_HTML: CharSequence = HttpHeaders.createOptimized("text/html; charset=UTF-8")
 
         inline fun MultiMap.common(): MultiMap = this
             .add(HttpHeaderNames.SERVER, SERVER)
@@ -42,7 +43,7 @@ abstract class AbstractHandler {
             .apply {
                 headers()
                     .common()
-                    .add(HttpHeaderNames.CONTENT_TYPE, HttpHeaderValues.TEXT_HTML)
+                    .add(HttpHeaderNames.CONTENT_TYPE, CONTENT_TYPE_TEXT_HTML)
             }
 
         inline fun HttpServerRequest.error(): Future<Void> = plaintext()
