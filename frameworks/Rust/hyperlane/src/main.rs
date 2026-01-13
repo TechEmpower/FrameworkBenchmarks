@@ -9,6 +9,7 @@ pub(crate) use server::*;
 pub(crate) use utils::*;
 
 pub(crate) use std::fmt;
+use std::{u64, usize};
 
 pub(crate) use futures::{executor::block_on, future::join_all};
 pub(crate) use hyperlane::{
@@ -33,7 +34,24 @@ use route::*;
 async fn main() {
     init_db().await;
 
+    let mut request_config: RequestConfig = RequestConfig::default();
+    request_config
+        .set_buffer_size(KB_4)
+        .set_http_read_timeout_ms(u64::MAX)
+        .set_max_body_size(usize::MAX)
+        .set_max_header_count(usize::MAX)
+        .set_max_header_key_length(usize::MAX)
+        .set_max_header_line_length(usize::MAX)
+        .set_max_header_value_length(usize::MAX)
+        .set_max_path_length(usize::MAX)
+        .set_max_query_length(usize::MAX)
+        .set_max_request_line_length(usize::MAX)
+        .set_max_ws_frame_size(usize::MAX)
+        .set_max_ws_frames(usize::MAX)
+        .set_ws_read_timeout_ms(u64::MAX);
+
     let config: ServerConfig = ServerConfig::new().await;
+    config.request_config(request_config).await;
     config.port(8080).await;
     config.disable_nodelay().await;
 
