@@ -8,7 +8,7 @@ ADD ./ /hyperlane_techempower
 WORKDIR /hyperlane_techempower
 
 RUN cargo clean
-RUN RUSTFLAGS="-C target-cpu=native -C link-arg=-fuse-ld=lld" cargo build --release
+RUN cargo build --release
 
 EXPOSE 8080
 
