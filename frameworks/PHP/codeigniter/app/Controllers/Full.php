@@ -37,9 +37,8 @@ class Full extends Controller
             $row = model('World')->find(mt_rand(1, 10000));
             $row['randomNumber'] = mt_rand(1, 10000);
             $world[] = $row;
+            model('World')->save($row);
         }
-
-        model('World')->builder->updateBatch($world, 'id');
 
         return $this->response->setJSON($world);
     }

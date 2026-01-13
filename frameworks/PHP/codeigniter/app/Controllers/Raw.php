@@ -13,18 +13,14 @@ class Raw extends Controller
 {
     public function db()
     {
-        return $this->response->setJSON(
-            db_connect()->query('SELECT id, randomNumber FROM World WHERE id = ?', mt_rand(1, 10000))->getRowArray()
-        );
+        return $this->response->setJSON(db_connect()->query('SELECT id, randomNumber FROM World WHERE id = ?', mt_rand(1, 10000))->getRowArray());
     }
 
     public function queries($queries = 1)
     {
         $db = db_connect();
 
-        $select = $db->prepare(
-            fn () => $db->query('SELECT id, randomNumber FROM World WHERE id = ?')
-        );
+        $select = $db->prepare(static fn ($db) => $db->query('SELECT id, randomNumber FROM World WHERE id = ?'));
 
         $queries = is_numeric($queries) ? min(max($queries, 1), 500) : 1;
         $world = [];
@@ -40,13 +36,9 @@ class Raw extends Controller
     {
         $db = db_connect();
 
-        $select = $db->prepare(
-            fn () => $db->query('SELECT id, randomNumber FROM World WHERE id = ?')
-        );
+        $select = $db->prepare(static fn ($db) => $db->query('SELECT id, randomNumber FROM World WHERE id = ?'));
 
-        $update = $db->prepare(
-            fn () => $db->query('UPDATE World SET randomNumber = ? WHERE id = ?')
-        );
+        $update = $db->prepare(static fn ($db) => $db->query('UPDATE World SET randomNumber = ? WHERE id = ?'));
 
         $queries = is_numeric($queries) ? min(max($queries, 1), 500) : 1;
         $world = [];
@@ -54,7 +46,7 @@ class Raw extends Controller
         while ($queries--) {
             $row = $select->execute(mt_rand(1, 10000))->getRowArray();
             $row['randomNumber'] = mt_rand(1, 10000);
-            $update->execute($row);
+            $update->execute($row['randomNumber'], $row['id']);
             $world[] = $row;
         }
 
