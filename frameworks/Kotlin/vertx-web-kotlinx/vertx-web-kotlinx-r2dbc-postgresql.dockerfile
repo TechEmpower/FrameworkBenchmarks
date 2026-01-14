@@ -15,11 +15,17 @@ RUN mkdir -p common without-db/default with-db/common with-db/default with-db/r2
 COPY common/build.gradle.kts common/build.gradle.kts
 COPY common/src common/src
 
-COPY without-db/default/build.gradle.kts without-db/default/build.gradle.kts
-COPY without-db/default/src without-db/default/src
+COPY with-db/common/build.gradle.kts with-db/common/build.gradle.kts
+COPY with-db/common/src with-db/common/src
+
+COPY with-db/r2dbc-common/build.gradle.kts with-db/r2dbc-common/build.gradle.kts
+COPY with-db/r2dbc-common/src with-db/r2dbc-common/src
+
+COPY with-db/r2dbc/build.gradle.kts with-db/r2dbc/build.gradle.kts
+COPY with-db/r2dbc/src with-db/r2dbc/src
 
 
-RUN gradle --no-daemon without-db:default:installDist
+RUN gradle --no-daemon with-db:r2dbc:installDist
 
 EXPOSE 8080
 
@@ -44,4 +50,4 @@ CMD export JAVA_OPTS=" \
     -Dio.netty.buffer.checkAccessible=false \
     -Dio.netty.iouring.ringSize=16384 \
     " && \
-    without-db/default/build/install/default/bin/default
+    with-db/r2dbc/build/install/r2dbc/bin/r2dbc
