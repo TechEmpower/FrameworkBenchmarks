@@ -1,10 +1,7 @@
 # frozen_string_literal: true
 
-require 'agoo'
-require 'connection_pool'
-require 'oj'
-require 'pg'
-require 'rack'
+require 'bundler/setup'
+Bundler.require(:default) # Load core modules
 
 $pool = ConnectionPool.new(size: 1, timeout: 5) do
   conn = PG::Connection.new({
