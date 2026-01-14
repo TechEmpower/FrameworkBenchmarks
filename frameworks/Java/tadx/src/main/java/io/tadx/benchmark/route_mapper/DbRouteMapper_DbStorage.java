@@ -6,6 +6,7 @@ import io.tadx.web.TadxWebApplication;
 import io.tadx.web.WebContext;
 import io.tadx.web.annotation.RouteMapping;
 import io.tadx.web.route.RouteMapper;
+import io.vertx.sqlclient.Tuple;
 
 import java.util.SplittableRandom;
 
@@ -28,7 +29,7 @@ public class DbRouteMapper_DbStorage implements RouteMapper {
     @Override
     public void run(WebContext webContext) {
         //World world = dbStorage.findEntity(World.class, randomWorld());
-        DataMap row = dbStorage.queryRow("SELECT id, randomnumber FROM world WHERE id = ?", randomWorld());
+        DataMap row = dbStorage.queryRow("SELECT id, randomnumber FROM world WHERE id = ?", Tuple.of(randomWorld()));
 
         webContext.routingContext().response()
                 .putHeader("Content-Type", "application/json;charset=UTF-8")
