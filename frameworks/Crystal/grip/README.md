@@ -8,13 +8,13 @@ Grip is a microframework for building RESTful web applications, with ease and jo
 
 ### Test Type Implementation Source Code
 
-* [JSON](grip.cr)
-* [PLAINTEXT](grip.cr)
-* [DB](grip.cr)
-* [QUERY](grip.cr)
-* [CACHED QUERY](grip.cr)
-* [UPDATE](grip.cr)
-* [FORTUNES](grip.cr)
+* [JSON](server-postgres.cr)
+* [PLAINTEXT](server-postgres.cr)
+* [DB](server-postgres.cr)
+* [QUERY](server-postgres.cr)
+* [CACHED QUERY](server-postgres.cr)
+* [UPDATE](server-postgres.cr)
+* [FORTUNES](server-postgres.cr)
 
 ## Important Libraries
 The tests were run with:

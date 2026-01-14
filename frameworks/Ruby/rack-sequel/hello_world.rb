@@ -142,7 +142,7 @@ class HelloWorld
       {
         CONTENT_TYPE => content_type,
         SERVER => SERVER_STRING,
-        DATE => Time.now.utc.httpdate
+        DATE => Time.now.httpdate
       }
     end
   else

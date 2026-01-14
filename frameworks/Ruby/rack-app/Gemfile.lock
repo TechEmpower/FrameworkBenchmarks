@@ -59,7 +59,7 @@ DEPENDENCIES
   rack-app
   rack-app-front_end
   sequel (~> 5.0)
-  sequel_pg (~> 1.6)
+  sequel_pg (~> 1.17)
 
 BUNDLED WITH
-   4.0.3
+  4.0.3

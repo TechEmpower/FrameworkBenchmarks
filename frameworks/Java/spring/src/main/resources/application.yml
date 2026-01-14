@@ -7,7 +7,7 @@ server:
 spring:
   config:
     activate:
-      on-profile: jdbc | data-jdbc
+      on-profile: jdbc | data-jdbc | jooq
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration,org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration,org.springframework.boot.autoconfigure.data.mongo.MongoRepositoriesAutoConfiguration,org.springframework.boot.autoconfigure.data.web.SpringDataWebAutoConfiguration
   datasource:
@@ -32,9 +32,7 @@ spring:
     exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration,org.springframework.boot.autoconfigure.data.web.SpringDataWebAutoConfiguration
 
 spring.data.mongodb:
-  host: tfb-database
-  port: 27017
-  database: hello_world
+  uri: mongodb://tfb-database:27017/hello_world?maxPoolSize=256
 
 ---
 spring:
