@@ -1,4 +1,4 @@
-FROM php:8.5-cli
+FROM php:8.4-cli
 
 COPY --from=ghcr.io/roadrunner-server/roadrunner:2025.1 --link /usr/bin/rr /usr/local/bin/rr
 COPY --from=mlocati/php-extension-installer --link /usr/bin/install-php-extensions /usr/local/bin/
