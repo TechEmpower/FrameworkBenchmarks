@@ -11,7 +11,7 @@ GEM
       pp (>= 0.6.0)
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
-    json (2.16.0)
+    json (2.18.0)
     logger (1.7.0)
     pg (1.6.3)
     pg (1.6.3-arm64-darwin)
@@ -53,7 +53,7 @@ DEPENDENCIES
   cgi
   iodine (~> 0.7)
   irb
-  json (~> 2.10)
+  json
   logger
   pg (~> 1.5)
   rack-app

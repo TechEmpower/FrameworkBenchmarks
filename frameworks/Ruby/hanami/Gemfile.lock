@@ -126,7 +126,7 @@ GEM
       pp (>= 0.6.0)
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
-    json (2.16.0)
+    json (2.18.0)
     logger (1.7.0)
     mustermann (3.0.3)
       ruby2_keywords (~> 0.0.1)
@@ -209,4 +209,4 @@ DEPENDENCIES
   rom-sql (~> 3.6)
 
 BUNDLED WITH
-   2.7.0
+  2.7.0
