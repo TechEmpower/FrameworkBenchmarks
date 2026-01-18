@@ -30,10 +30,10 @@ class Program : IPostFunctionWrapper
             .SetPwd("benchmarkdbpass")
             //.SetServer("localhost:3306")
             //.SetUser("root")
-            //.SetPwd("1u23456")
+            //.SetPwd("123456")
             .SetDatabase("hello_world")
             .SetCharset()
-            .SetOtherset()
+            .SetOtherset("Pooling=true;MaximumPoolSize=32767;SslMode=none;AllowPublicKeyRetrieval=true;")
             .Build<Mysql>();
     }
     static async Task Main()
