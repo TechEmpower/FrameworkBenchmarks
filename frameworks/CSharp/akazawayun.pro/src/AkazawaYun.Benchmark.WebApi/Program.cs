@@ -7,23 +7,23 @@ namespace AkazawaYun.Benchmark.WebApi;
 
 class Program : IPostFunctionWrapper
 {
-    static readonly akzWebBuilder builder;
-    static readonly akzDbFactory mysql;
+    static readonly akaWebBuilder builder;
+    static readonly akaDbFactory mysql;
     const int port = 8080;
 
     static Program()
     {
-        akzJson.Config(null, AotJsonContext.Default);
-        builder = akzWebBuilder.Shared.SetPort(port).SetDev()
-            .Add<akzXmlSummary, akzXmlSummary>(() => null)
+        akaJson.Config(null, AotJsonContext.Default);
+        builder = akaWebBuilder.Shared.SetPort(port).SetDev()
+            .Add<akaXmlSummary, akaXmlSummary>(() => null)
             .Build()
-            .Config<IWebListener, akzHttpListenerVBase>(lis => lis.LogLevel = 0)
-            .Config<IWebReceptor, akzWebInterceptor>(itc =>
+            .Config<IWebListener, akaHttpListenerVBase>(lis => lis.LogLevel = 0)
+            .Config<IWebReceptor, akaWebInterceptor>(itc =>
             {
                 itc.ClearInterceptor();
-                itc.AddInterceptor(new akzWebInterceptorAsPost());
+                itc.AddInterceptor(new akaWebInterceptorAsPost());
             });
-        mysql = new akzDbBuilderII()
+        mysql = new akaDbBuilderII()
             .SetServer("tfb-database")
             //.SetServer("localhost:3306")
             .SetUser("benchmarkdbuser")
@@ -39,15 +39,15 @@ class Program : IPostFunctionWrapper
     {
         await builder.Launch();
 
-        akzLog.Inf("[API SELF-TEST]");
+        akaLog.Inf("[API SELF-TEST]");
         string url = $"http://localhost:{port}/plaintext";
-        akzLog.Inf(" REQ URL :" + url);
-        string res = await akzHttpClient.Shared.Get(url).FetchString();
-        akzLog.Inf(" RES LEN :" + res.Length);
-        akzLog.Inf(" RES BODY:" + res);
-        akzLog.Inf("[OK, I WORK FINE]");
+        akaLog.Inf(" REQ URL :" + url);
+        string res = await akaHttpClient.Shared.Get(url).FetchString();
+        akaLog.Inf(" RES LEN :" + res.Length);
+        akaLog.Inf(" RES BODY:" + res);
+        akaLog.Inf("[OK, I WORK FINE]");
 
-        akzLog.Default = akzLog.Output.NoneButWar;
+        akaLog.Default = akaLog.Output.NoneButWar;
         await Task.Delay(-1);
     }
 
@@ -102,7 +102,7 @@ class Program : IPostFunctionWrapper
 
 }
 
-public class akzWebInterceptorAsPost : WebInterceptor
+public class akaWebInterceptorAsPost : WebInterceptor
 {
     public override ValueTask<InterceptorHttpRes> Intercept(IHttpContext http)
     {

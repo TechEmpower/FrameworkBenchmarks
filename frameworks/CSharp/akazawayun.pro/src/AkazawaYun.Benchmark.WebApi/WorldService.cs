@@ -6,13 +6,13 @@ class WorldService
 {
     static readonly int @id;
     // SELECT id, randomNumber FROM world WHERE id=@id ;
-    public static readonly string SqlSelect = akzSqlinq<world>.Query().Select(m => new
+    public static readonly string SqlSelect = akaSqlinq<world>.Query().Select(m => new
     {
         m.id,
         m.randomNumber,
     }).Where(m => m.id == @id).Build();
     // UPDATE world SET randomNumber=@randomNumber WHERE id=@id ;
-    public static readonly string SqlUpdate = akzSqlinq<world>.Update().Set(m => new()
+    public static readonly string SqlUpdate = akaSqlinq<world>.Update().Set(m => new()
     {
         randomNumber = m.randomNumber,
     }).Where(m => m.id == @id).Build();
