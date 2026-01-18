@@ -2,6 +2,7 @@
 
 using AkazawaYun.AOT;
 using AkazawaYun.PRO7;
+using AkazawaYun.PRO7.AkazawaYunWebInterceptor;
 
 namespace AkazawaYun.Benchmark.WebApi;
 
@@ -21,15 +22,15 @@ class Program : IPostFunctionWrapper
             .Config<IWebReceptor, akaWebInterceptor>(itc =>
             {
                 itc.ClearInterceptor();
-                itc.AddInterceptor(new akaWebInterceptorAsPost());
+                itc.AddInterceptor(new akaWebInterceptorAllAsPost());
             });
         mysql = new akaDbBuilderII()
             .SetServer("tfb-database")
-            //.SetServer("localhost:3306")
             .SetUser("benchmarkdbuser")
-            //.SetUser("root")
             .SetPwd("benchmarkdbpass")
-            //.SetPwd("123456")
+            //.SetServer("localhost:3306")
+            //.SetUser("root")
+            //.SetPwd("1u23456")
             .SetDatabase("hello_world")
             .SetCharset()
             .SetOtherset()
@@ -100,13 +101,4 @@ class Program : IPostFunctionWrapper
         return count;
     }
 
-}
-
-public class akaWebInterceptorAsPost : WebInterceptor
-{
-    public override ValueTask<InterceptorHttpRes> Intercept(IHttpContext http)
-    {
-        http.Method = "POST";
-        return InterceptorHttpRes.No();
-    }
 }
