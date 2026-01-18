@@ -18,7 +18,7 @@ class WorldService
     }).Where(m => m.id == @id).Build();
 
 
-    public static async Task<world> GetRandomWorld(akaDbFactory con, IDictionary<string, object?>? shared = null)
+    public static async Task<world> GetRandomWorld(IDb con, IDictionary<string, object?>? shared = null)
     {
         int id = Random.Shared.Next(1, 10001);
         shared ??= new DpSingleBuilder().Build();
@@ -27,7 +27,7 @@ class WorldService
         world? obj = await con.Find(SqlSelect, shared).Toworld();
         return obj!;
     }
-    public static async Task<world[]> GetWorlds(akaDbFactory con, int count)
+    public static async Task<world[]> GetWorlds(IDb con, int count)
     {
         world[] lst = new world[count];
         var dp = new DpSingleBuilder().Build();
@@ -38,7 +38,7 @@ class WorldService
         }
         return lst;
     }
-    public static async Task SaveWorlds(akaDbFactory con, world[] lst)
+    public static async Task SaveWorlds(IDb con, world[] lst)
     {
         await con.Execute(SqlUpdate, lst.ToDp());
     }
