@@ -43,9 +43,7 @@ const Fortunes = sequelize.define('fortune', {
 const randomWorldPromise = () => {
   return Worlds.findOne({
     where: { id: helper.randomizeNum() }
-  }).then((results) => {
-    return results;
-  }).catch((err) => process.exit(1));
+  });
 };
 
 if (cluster.isPrimary) {
@@ -62,12 +60,6 @@ if (cluster.isPrimary) {
   app.set('x-powered-by', false);
   app.set('etag', false)
 
-  // Set headers for all routes
-  app.use((req, res, next) => {
-    res.setHeader("Server", "Express");
-    return next();
-  });
-
   app.set('view engine', 'pug');
   app.set('views', __dirname + '/views');
 
@@ -76,6 +68,7 @@ if (cluster.isPrimary) {
     let world = await randomWorldPromise();
 
     res.setHeader("Content-Type", "application/json");
+    res.setHeader("Server", "Express");
     res.json(world);
   });
 
@@ -88,6 +81,7 @@ if (cluster.isPrimary) {
       promisesArray.push(randomWorldPromise());
     }
 
+    res.setHeader("Server", "Express");
     res.json(await Promise.all(promisesArray))
   });
 
@@ -97,6 +91,7 @@ if (cluster.isPrimary) {
     fortunes.push(newFortune);
     fortunes.sort((a, b) => (a.message < b.message) ? -1 : 1);
 
+    res.setHeader("Server", "Express");
     res.render('fortunes/index', { fortunes: fortunes });
   });
 
@@ -108,26 +103,26 @@ if (cluster.isPrimary) {
       worldPromises.push(randomWorldPromise());
     }
 
-    const worldUpdate = (world) => {
+    const worldUpdate = async(world) => {
       world.randomnumber = helper.randomizeNum();
 
-      return Worlds.update({
-            randomnumber: world.randomnumber
-          },
-          {
-            where: { id: world.id }
-          }).then((results) => {
-        return world;
-      }).catch((err) => process.exit(1));
+      await Worlds.update({
+        randomnumber: world.randomnumber
+      },
+      {
+        where: { id: world.id }
+      });
+      return world;
     };
 
-    Promise.all(worldPromises).then((worlds) => {
-      const updates = worlds.map((e) => worldUpdate(e));
+    const worlds = await Promise.all(worldPromises);
+    
+    const updates = worlds.map((e) => worldUpdate(e));
 
-      Promise.all(updates).then((updated) => {
-        res.json(updated);
-      });
-    });
+    const updated = await Promise.all(updates);
+    
+    res.setHeader("Server", "Express");
+    res.json(updated);
   });
 
   const server = app.listen(8080, () => {
