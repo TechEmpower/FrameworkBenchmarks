@@ -59,12 +59,6 @@ if (cluster.isPrimary) {
   app.set('x-powered-by', false);
   app.set('etag', false)
 
-  // Set headers for all routes
-  app.use((req, res, next) => {
-    res.setHeader("Server", "Express");
-    return next();
-  });
-
   app.set('view engine', 'pug');
   app.set('views', __dirname + '/views');
 
@@ -84,6 +78,7 @@ if (cluster.isPrimary) {
     }
 
     res.setHeader("Content-Type", "application/json");
+    res.setHeader("Server", "Express");
     res.send(results);
   });
 
@@ -96,6 +91,7 @@ if (cluster.isPrimary) {
     );
 
     res.setHeader("Content-Type", "application/json");
+    res.setHeader("Server", "Express");
     res.send(world)
   });
 
@@ -105,6 +101,7 @@ if (cluster.isPrimary) {
       fortunes.push(newFortune);
       fortunes.sort((a, b) => (a.message < b.message) ? -1 : 1);
 
+      res.setHeader("Server", "Express");
       res.render('fortunes/index', { fortunes: fortunes });
     });
   });
@@ -125,6 +122,7 @@ if (cluster.isPrimary) {
       results.push(world);
     }
 
+    res.setHeader("Server", "Express");
     res.send(results);
   });
 
