@@ -34,7 +34,7 @@
       "orm": "Full",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "express",
+      "display_name": "express[mongoose]",
       "notes": "",
       "versus": "nodejs"
     },

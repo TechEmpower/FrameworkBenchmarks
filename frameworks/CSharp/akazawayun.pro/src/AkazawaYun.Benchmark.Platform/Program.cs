@@ -8,7 +8,7 @@ class Program
 
     static Program()
     {
-        akaLog.War("AkazawaYun.PRO 平台压力测试特供版 ver2025.11.3, 只支持 /plaintext 和 /json");
+        akaLog.War("AkazawaYun.PRO 平台压力测试特供版 ver2026.1.15, 只支持 /plaintext 和 /json");
         akaJson.Config(AotJsonContext.Default);
         builder = akaWebBuilder.Shared.Build(new MyBenchmarkReceptor());
     }
