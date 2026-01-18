@@ -62,8 +62,8 @@ class Program : IPostFunctionWrapper
     //[WebFunctionAopTry]
     public static async Task<world> db()
     {
-        await using IDb con = await mysql.Connect();
-        world obj = await WorldService.GetRandomWorld(con);
+        //await using IDb con = await mysql.Connect();
+        world obj = await WorldService.GetRandomWorld(mysql);
         return obj;
     }
     //[WebFunctionAopTry]
@@ -71,8 +71,8 @@ class Program : IPostFunctionWrapper
     {
         int count = ParseCount(queries);
 
-        await using IDb con = await mysql.Connect();
-        world[] lst = await WorldService.GetWorlds(con, count);
+        //await using IDb con = await mysql.Connect();
+        world[] lst = await WorldService.GetWorlds(mysql, count);
         return lst;
     }
     //[WebFunctionAopTry]
@@ -80,13 +80,13 @@ class Program : IPostFunctionWrapper
     {
         int count = ParseCount(queries);
 
-        await using IDb con = await mysql.Connect();
-        world[] lst = await WorldService.GetWorlds(con, count);
+        //await using IDb con = await mysql.Connect();
+        world[] lst = await WorldService.GetWorlds(mysql, count);
 
         foreach (world obj in lst)
             obj.randomNumber = Random.Shared.Next(1, 10001);
 
-        await WorldService.SaveWorlds(con, lst);
+        await WorldService.SaveWorlds(mysql, lst);
 
         return lst;
     }
