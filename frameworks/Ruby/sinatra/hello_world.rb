@@ -65,10 +65,10 @@ class HelloWorld < Sinatra::Base
     @fortunes = ActiveRecord::Base.with_connection do
       Fortune.all
     end.to_a
-    @fortunes << Fortune.new(
-      id: 0,
-      message: 'Additional fortune added at request time.'
-    )
+    fortune = Fortune.new
+    fortune.id = 0
+    fortune.message = "Additional fortune added at request time."
+    @fortunes << fortune
     @fortunes.sort_by!(&:message)
 
     render_html :fortunes
