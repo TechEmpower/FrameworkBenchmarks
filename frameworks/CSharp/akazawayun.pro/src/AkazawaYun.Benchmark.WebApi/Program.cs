@@ -8,9 +8,9 @@ namespace AkazawaYun.Benchmark.WebApi;
 
 class Program : IPostFunctionWrapper
 {
+    const int port = 8080;
     static readonly akaWebBuilder builder;
     static readonly akaDbFactory mysql;
-    const int port = 8080;
 
     static Program()
     {
@@ -19,10 +19,10 @@ class Program : IPostFunctionWrapper
             .Add<akaXmlSummary, akaXmlSummary>(() => null)
             .Build()
             .Config<IWebListener, akaHttpListenerVBase>(lis => lis.LogLevel = 0)
-            .Config<IWebReceptor, akaWebInterceptor>(itc =>
+            .Config<IWebReceptor, akaWebInterceptor>(rcp =>
             {
-                itc.ClearInterceptor();
-                itc.AddInterceptor(new akaWebInterceptorAllAsPost());
+                rcp.ClearInterceptor();
+                rcp.AddInterceptor(new akaWebInterceptorAllAsPost());
             });
         mysql = new akaDbBuilderII()
             .SetServer("tfb-database")

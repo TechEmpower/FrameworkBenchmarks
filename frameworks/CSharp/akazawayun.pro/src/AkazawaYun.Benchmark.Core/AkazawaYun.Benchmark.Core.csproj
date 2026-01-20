@@ -15,7 +15,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AkazawaYun.PRO" Version="1.15.26.115" />
+    <PackageReference Include="AkazawaYun.PRO" Version="1.14.25.1024-cs" />
   </ItemGroup>
 
 </Project>
