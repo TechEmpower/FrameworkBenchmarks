@@ -5,10 +5,11 @@
 		<Nullable>enable</Nullable>
 		<OutputType>Exe</OutputType>
 		<ImplicitUsings>enable</ImplicitUsings>
+		<ServerGarbageCollection>true</ServerGarbageCollection>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="TouchSocket.Http" Version="4.0.6" />
+		<PackageReference Include="TouchSocket.Http" Version="4.0.8" />
 	</ItemGroup>
 </Project>
 
