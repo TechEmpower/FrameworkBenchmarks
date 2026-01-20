@@ -2,7 +2,7 @@ FROM phpswoole/swoole:php8.4
 
 RUN apt-get update -yqq && \
     apt-get install -yqq libpq-dev libicu-dev > /dev/null && \
-    docker-php-ext-install pdo_pgsql intl > /dev/null
+    docker-php-ext-install pdo_pgsql opcache intl > /dev/null
 
 RUN pecl install apcu > /dev/null && \
     docker-php-ext-enable apcu
