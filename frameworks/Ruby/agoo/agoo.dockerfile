@@ -21,5 +21,4 @@ RUN bundle install --jobs=4
 
 EXPOSE 8080
 
-
 CMD AGOO_WORKER_COUNT=$(nproc) ruby app.rb

@@ -128,5 +128,6 @@ if (cluster.isPrimary) {
     res.send(results);
   });
 
-  app.listen(8080);
+  const server = app.listen(8080);
+  server.keepAliveTimeout = 0;
 }

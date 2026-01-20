@@ -1,7 +1,7 @@
-use std::cell::RefCell;
+use std::cell::Cell;
 
 use nanorand::{Rng, WyRand};
-use ntex::util::{Bytes, BytesMut};
+use ntex::util::{Bytes, BytesVec};
 use smallvec::SmallVec;
 use tokio_postgres::{connect, Client, Statement};
 use yarte::TemplateBytesTrait;
@@ -33,7 +33,7 @@ pub struct PgConnection {
     world: Statement,
     rng: WyRand,
     updates: Statement,
-    buf: RefCell<BytesMut>,
+    buf: Cell<Option<BytesVec>>,
 }
 
 impl PgConnection {
@@ -55,7 +55,7 @@ impl PgConnection {
             world,
             updates,
             rng: WyRand::new(),
-            buf: RefCell::new(BytesMut::with_capacity(10 * 1024 * 1024)),
+            buf: Cell::new(Some(BytesVec::with_capacity(10 * 1024 * 1024))),
         }
     }
 }
@@ -66,17 +66,18 @@ impl PgConnection {
 
         let row = self.cl.query_one(&self.world, &[&random_id]).await.unwrap();
 
-        let mut body = self.buf.borrow_mut();
-        utils::reserve(&mut body, 1024);
+        let mut body = self.buf.take().unwrap();
         sonic_rs::to_writer(
-            utils::BytesWriter(&mut body),
+            utils::BVecWriter::new(&mut body),
             &World {
                 id: row.get(0),
                 randomnumber: row.get(1),
             },
         )
         .unwrap();
-        body.split().freeze()
+        let result = body.take_bytes();
+        self.buf.set(Some(body));
+        result
     }
 
     pub async fn get_worlds(&self, num: usize) -> Bytes {
@@ -96,10 +97,11 @@ impl PgConnection {
             })
         }
 
-        let mut body = self.buf.borrow_mut();
-        utils::reserve(&mut body, 2 * 1024);
-        sonic_rs::to_writer(utils::BytesWriter(&mut body), &worlds[..]).unwrap();
-        body.split().freeze()
+        let mut body = self.buf.take().unwrap();
+        sonic_rs::to_writer(utils::BVecWriter::new(&mut body), &worlds[..]).unwrap();
+        let result = body.take_bytes();
+        self.buf.set(Some(body));
+        result
     }
 
     pub async fn update(&self, num: usize) -> Bytes {
@@ -131,10 +133,11 @@ impl PgConnection {
 
         update.await.unwrap();
 
-        let mut body = self.buf.borrow_mut();
-        utils::reserve(&mut body, 2 * 1024);
-        sonic_rs::to_writer(utils::BytesWriter(&mut body), &worlds[..]).unwrap();
-        body.split().freeze()
+        let mut body = self.buf.take().unwrap();
+        sonic_rs::to_writer(utils::BVecWriter::new(&mut body), &worlds[..]).unwrap();
+        let result = body.take_bytes();
+        self.buf.set(Some(body));
+        result
     }
 
     pub async fn tell_fortune(&self) -> Bytes {
@@ -151,17 +154,16 @@ impl PgConnection {
         }));
         fortunes.sort_by(|it, next| it.message.cmp(&next.message));
 
-        let mut body = std::mem::replace(&mut *self.buf.borrow_mut(), BytesMut::new());
+        let mut body = self.buf.take().unwrap();
         utils::reserve(&mut body, 4 * 1024);
-
         FortunesTemplate {
             fortunes: &fortunes,
         }
         .write_call(&mut body);
         fortunes.clear();
 
-        let result = body.split().freeze();
-        let _ = std::mem::replace(&mut *self.buf.borrow_mut(), body);
+        let result = body.take_bytes();
+        self.buf.set(Some(body));
         result
     }
 }

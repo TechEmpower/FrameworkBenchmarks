@@ -5,7 +5,7 @@ RUN apt-get update
 
 WORKDIR /app
 COPY src .
-RUN dotnet publish -c Release -o out /p:Database=mysql /p:Driver=odbc
+RUN dotnet publish -c Release -o out /p:AOTEXE=true /p:Database=mysql /p:Driver=odbc
 
 # Construct the actual image that will run
 FROM mcr.microsoft.com/dotnet/aspnet:10.0.1 AS runtime

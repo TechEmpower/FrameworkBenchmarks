@@ -9,12 +9,12 @@ gem "cgi" # Make sure the h plugin uses the faster CGI.escape_html
 gem "concurrent-ruby"
 
 group :mysql, optional: true do
-  gem 'trilogy', '~> 2.9', platforms: [:ruby, :windows]
+  gem "trilogy", "~> 2.9"
 end
 
 group :postgresql, optional: true do
-  gem "pg", "~> 1.4", platforms: %i[ruby windows]
-  gem "sequel_pg", "~> 1.17", platforms: :ruby, require: false
+  gem "pg", "~> 1.4"
+  gem "sequel_pg", "~> 1.17", require: "sequel"
 end
 
 group :iodine, optional: true do
