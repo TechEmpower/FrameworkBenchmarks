@@ -4,7 +4,7 @@ RUN apt-get update -yqq && \
     apt-get install -yqq libpq-dev libicu-dev git > /dev/null && \
     docker-php-ext-install pdo_pgsql intl pcntl > /dev/null
 
-COPY --link deploy/swoole/php.ini /usr/local/etc/php/
+COPY --link deploy/react/php.ini /usr/local/etc/php/
 WORKDIR /symfony
 COPY --link . .
 
