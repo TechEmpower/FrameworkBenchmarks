@@ -11,6 +11,9 @@ COPY --link deploy/swoole/php.ini /usr/local/etc/php/
 WORKDIR /symfony
 COPY --link . .
 
+# Fix to enable symfony/polyfill-php85
+COPY deploy/swoole/composer.json /symfony/composer.json
+
 #ENV APP_DEBUG=1
 ENV APP_RUNTIME="Runtime\Swoole\Runtime"
 RUN composer require runtime/swoole --update-no-dev --no-scripts --quiet
