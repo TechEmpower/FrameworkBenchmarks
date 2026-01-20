@@ -28,6 +28,9 @@ ENV APP_ENV prod
 #ENV APP_RUNTIME "Runtime\React\Runtime"
 #RUN composer require runtime/react --update-no-dev --no-scripts --quiet
 
+#fix to run Symfony 7 with React Zolex bundle
+RUN sed -i "s|\\^8|\\^7|g" /symfony/composer.json
+
 ENV APP_RUNTIME "Zolex\ReactPhpBundle\Runtime\ReactPhpRuntime"
 ENV REACT_HOST "0.0.0.0"
 RUN composer require zolex/reactphp-bundle --update-no-dev --no-scripts --quiet

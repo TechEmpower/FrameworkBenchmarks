@@ -70,7 +70,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "^8",
+            "require": "^7",
             "docker": true
         }
     }
