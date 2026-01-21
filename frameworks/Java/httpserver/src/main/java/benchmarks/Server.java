@@ -151,10 +151,8 @@ public class Server {
         server.setExecutor(Executors.newCachedThreadPool());
         server.createContext("/plaintext", createPlaintextHandler());
         server.createContext("/json", createJSONHandler());
-        if (settings.contains("postgres")) {
-            DataSource ds = createPostgresDataSource();
-            server.createContext("/fortunes", createFortunesHandler(ds));
-        }
+        DataSource ds = createPostgresDataSource();
+        server.createContext("/fortunes", createFortunesHandler(ds));
         // start server
         server.start();
     }

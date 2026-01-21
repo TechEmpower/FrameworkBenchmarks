@@ -4,6 +4,7 @@
     {
       "default": {
         "json_url": "/json",
+        "fortune_url": "/fortunes",
         "plaintext_url": "/plaintext",
         "port": 8080,
         "approach": "Realistic",
@@ -21,26 +22,9 @@
         "notes": "",
         "versus": ""
       },
-      "postgres": {
-        "fortune_url": "/fortunes",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Platform",
-        "database": "Postgres",
-        "framework": "None",
-        "language": "Java",
-        "flavor": "None",
-        "orm": "Raw",
-        "platform": "httpserver",
-        "webserver": "None",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "httpserver-postgres",
-        "notes": "",
-        "versus": ""
-      },
       "graalvm": {
         "json_url": "/json",
+        "fortune_url": "/fortunes",
         "plaintext_url": "/plaintext",
         "port": 8080,
         "approach": "Realistic",
@@ -60,6 +44,7 @@
       },
       "robaho": {
         "json_url": "/json",
+        "fortune_url": "/fortunes",
         "plaintext_url": "/plaintext",
         "port": 8080,
         "approach": "Realistic",
@@ -77,26 +62,9 @@
         "notes": "",
         "versus": ""
       },
-      "robaho-postgres": {
-        "fortune_url": "/fortunes",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Platform",
-        "database": "Postgres",
-        "framework": "None",
-        "language": "Java",
-        "flavor": "None",
-        "orm": "Raw",
-        "platform": "httpserver",
-        "webserver": "None",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "httpserver-robaho-postgres",
-        "notes": "",
-        "versus": ""
-      },
       "robaho-graalvm": {
         "json_url": "/json",
+        "fortune_url": "/fortunes",
         "plaintext_url": "/plaintext",
         "port": 8080,
         "approach": "Realistic",

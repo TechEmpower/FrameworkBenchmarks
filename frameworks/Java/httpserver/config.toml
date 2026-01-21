@@ -3,6 +3,7 @@ name = "httpserver"
 
 [main]
 urls.plaintext = "/plaintext"
+urls.fortune = "/fortunes"
 urls.json = "/json"
 approach = "Realistic"
 classification = "Platform"
@@ -14,21 +15,9 @@ platform = "httpserver"
 webserver = "None"
 versus = ""
 
-[postgres]
-urls.fortune = "/fortunes"
-approach = "Realistic"
-classification = "Platform"
-database = "Postgres"
-database_os = "Linux"
-os = "Linux"
-orm = "Raw"
-platform = "httpserver"
-webserver = "None"
-versus = ""
-
-
 [graalvm]
 urls.plaintext = "/plaintext"
+urls.fortune = "/fortunes"
 urls.json = "/json"
 approach = "Realistic"
 classification = "Platform"
@@ -43,6 +32,7 @@ versus = "httpserver"
 
 [robaho]
 urls.plaintext = "/plaintext"
+urls.fortune = "/fortunes"
 urls.json = "/json"
 approach = "Realistic"
 classification = "Platform"
@@ -55,21 +45,9 @@ webserver = "None"
 versus = "httpserver"
 
 
-[robaho-postgres]
-urls.fortune = "/fortunes"
-approach = "Realistic"
-classification = "Platform"
-database = "Postgres"
-database_os = "Linux"
-os = "Linux"
-orm = "Raw"
-platform = "httpserver"
-webserver = "None"
-versus = ""
-
-
 [robaho-graalvm]
 urls.plaintext = "/plaintext"
+urls.fortune = "/fortunes"
 urls.json = "/json"
 approach = "Realistic"
 classification = "Platform"
