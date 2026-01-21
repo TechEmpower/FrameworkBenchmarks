@@ -1,14 +1,12 @@
 source 'https://rubygems.org'
 
-gem 'trilogy', '~> 2.9', platforms: [:ruby, :windows]
-
+gem 'activerecord', '~> 8.1.0', require: 'active_record'
 gem 'json'
-gem 'activerecord', '~> 8.1.0', :require => 'active_record'
-
-gem 'slim'
-gem 'padrino', '0.16.0'
-gem 'rack'
 gem 'ostruct' # required for Ruby 3.5
+gem 'padrino', '~> 0.16'
+gem 'pg'
+gem 'rack'
+gem 'slim'
 
 group :iodine, optional: true do
   gem "iodine", "~> 0.7", require: false
