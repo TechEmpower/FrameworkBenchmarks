@@ -2,29 +2,22 @@
   (:require
     [jj.majavat :as majavat]
     [jj.majavat.renderer :refer [->InputStreamRenderer]]
-    [jj.majavat.renderer.sanitizer :refer [->Html]]
-    [jj.sql.boa :as boa]
-    [jsonista.core :as json])
+    [jj.sql.boa :as boa])
   (:import (java.io ByteArrayInputStream)))
 
 (defrecord Response [body status headers])
 
-(def query-fortunes (boa/execute (boa/->NextJdbcAdapter) "fortune.sql"))
+(def query-fortunes (boa/build-query (boa/->NextJdbcAdapter) "fortune.sql"))
 
-(def ^:private hello-world "Hello, World!")
 (def ^:private hello-world-bytes (.getBytes "Hello, World!"))
 (def ^:private ^:const additional-message {:id      0
                                            :message "Additional fortune added at request time."})
 (def ^:private ^:const fortune-headers {"Server"       "ring-http-exchange"
                                         "Content-Type" "text/html; charset=UTF-8"})
-(def ^:private ^:const json-headers {"Server"       "ring-http-exchange"
-                                     "Content-Type" "application/json"})
-(def ^:private ^:const plain-text-headers {"Server"       "ring-http-exchange"
-                                           "Content-Type" "text/plain"})
 
-(def ^:private render-fortune (majavat/build-renderer "fortune.html"
-                                                      {:renderer (->InputStreamRenderer
-                                                                   {:sanitizer (->Html)})}))
+
+(def ^:private render-fortune (majavat/build-html-renderer "fortune.html"
+                                                           {:renderer (->InputStreamRenderer)}))
 
 (defn- get-body [datasource]
   (let [context (as-> (query-fortunes datasource) fortunes

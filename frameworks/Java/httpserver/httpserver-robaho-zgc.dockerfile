@@ -4,10 +4,10 @@ COPY pom.xml pom.xml
 COPY src src
 RUN mvn compile -P robaho assembly:single -q
 
-FROM ghcr.io/graalvm/graalvm-community:25
+FROM amazoncorretto:25
 WORKDIR /httpserver-robaho
 COPY --from=maven /httpserver-robaho/target/httpserver-1.0-jar-with-dependencies.jar app.jar
 
 EXPOSE 8080
 
-CMD ["java", "-server", "-XX:MaxRAMPercentage=70", "-Drobaho.net.httpserver.nodelay=true", "-XX:+UseParallelGC", "-jar", "app.jar"]
+CMD ["java", "-server", "-XX:+UseZGC", "-XX:MaxRAMPercentage=70", "-Drobaho.net.httpserver.nodelay=true", "-jar", "app.jar"]
