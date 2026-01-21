@@ -5,11 +5,11 @@ mod route;
 mod server;
 mod utils;
 
-pub(crate) use {config::*, db::*, server::*, utils::*};
+use {config::*, db::*, middleware::*, route::*, server::*, utils::*};
 
-pub(crate) use std::fmt;
+use std::fmt;
 
-pub(crate) use {
+use {
     futures::{executor::block_on, future::join_all},
     hyperlane::{
         tokio::{spawn, task::JoinHandle},
@@ -26,10 +26,6 @@ pub(crate) use {
         query as db_query,
     },
 };
-
-use {middleware::*, route::*};
-
-use std::{u64, usize};
 
 #[tokio::main]
 async fn main() {
