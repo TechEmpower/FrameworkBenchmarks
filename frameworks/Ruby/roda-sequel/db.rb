@@ -42,18 +42,14 @@ class World < Sequel.Model(:World)
   def_column_alias(:randomnumber, :randomNumber) if DB.database_type == :mysql
 
   def self.batch_update(worlds)
-    if DB.database_type == :mysql
-      worlds.map(&:save_changes)
-    else
-      ids = []
-      sql = String.new("UPDATE world SET randomnumber = CASE id ")
-      worlds.each do |world|
-        sql << "when #{world.id} then #{world.randomnumber} "
-        ids << world.id
-      end
-      sql << "ELSE randomnumber END WHERE id IN ( #{ids.join(',')})"
-      DB.run(sql)
+    ids = []
+    sql = String.new("UPDATE world SET randomnumber = CASE id ")
+    worlds.each do |world|
+      sql << "when #{world.id} then #{world.randomnumber} "
+      ids << world.id
     end
+    sql << "ELSE randomnumber END WHERE id IN ( #{ids.join(',')})"
+    DB.run(sql)
   end
 end
 
