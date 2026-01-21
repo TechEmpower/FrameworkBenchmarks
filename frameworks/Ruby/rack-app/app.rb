@@ -78,3 +78,24 @@ class App < Rack::App
     response.headers['Server'] = 'rack-app'
   end
 end
+
+# Override `expand_path` to use `__FILE__` instead of the expensive `caller`.
+module Rack::App::Utils
+  def expand_path(file_path)
+    case file_path
+
+      when /^\.\//
+        #File.expand_path(File.join(File.dirname(caller[1]), file_path))
+        File.expand_path(File.join(File.dirname(__FILE__), file_path))
+
+      when /^[^\/]/
+        #File.join(namespace_folder(caller[1]), file_path)
+        File.join(namespace_folder(__FILE__), file_path)
+
+      when /^\//
+        from_project_root_path = pwd(file_path)
+        File.exist?(from_project_root_path) ? from_project_root_path : file_path
+
+    end
+  end
+end

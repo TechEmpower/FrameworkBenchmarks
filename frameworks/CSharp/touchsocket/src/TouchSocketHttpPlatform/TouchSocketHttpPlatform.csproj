@@ -5,9 +5,10 @@
 		<TargetFramework>net10.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+		<ServerGarbageCollection>true</ServerGarbageCollection>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="TouchSocket" Version="4.0.6" />
+		<PackageReference Include="TouchSocket" Version="4.0.8" />
 	</ItemGroup>
 </Project>
