@@ -1,23 +1,15 @@
-require 'erb'
-require 'active_record'
-require 'yaml'
-
-MAX_PK = 10_000
-ID_RANGE = (1..MAX_PK).freeze
-ALL_IDS = ID_RANGE.to_a
-QUERIES_MIN = 1
-QUERIES_MAX = 500
-
+require 'bundler/setup'
 Bundler.require :default
 
-db_config = YAML.load(ERB.new(File.read('config/database.yml')).result)[ENV['RACK_ENV']]
-ActiveRecord::Base.establish_connection(db_config)
-
-class World < ActiveRecord::Base
-  self.table_name = 'World'
-end
+require_relative 'db'
 
 module Acme
+  MAX_PK = 10_000
+  ID_RANGE = (1..MAX_PK).freeze
+  ALL_IDS = ID_RANGE.to_a
+  QUERIES_MIN = 1
+  QUERIES_MAX = 500
+
   class HelloWorld < Grape::API
     get '/json' do
       {message:'Hello, World!'}
@@ -62,16 +54,21 @@ module Acme
     end
 
     get '/updates' do
-      worlds =
-        ActiveRecord::Base.with_connection do
-          ALL_IDS.sample(bounded_queries).map do |id|
-            world = World.find(id)
-            new_value = rand1
-            new_value = rand1 while new_value == world.randomNumber
-            world.update_columns(randomNumber: new_value)
-            world
-          end
+      worlds = nil
+      ids = ALL_IDS.sample(bounded_queries)
+      ActiveRecord::Base.with_connection do
+        worlds = ids.map do |id|
+          world = World.find(id)
+          new_value = rand1
+          new_value = rand1 until new_value != world.randomNumber
+          { id: id, randomnumber: new_value }
         end
+      end
+      worlds.sort_by!{_1[:id]}
+      ActiveRecord::Base.with_connection do
+        World.upsert_all(worlds)
+      end
+      worlds
     end
   end
 
