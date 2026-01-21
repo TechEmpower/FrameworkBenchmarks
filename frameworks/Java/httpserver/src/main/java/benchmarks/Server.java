@@ -58,7 +58,7 @@ public class Server {
         config.setUsername("benchmarkdbuser");
         config.setPassword("benchmarkdbpass");
 
-        config.setMaximumPoolSize(64);
+        config.setMaximumPoolSize(1024);
         config.setMinimumIdle(0);
 
         config.setConnectionTimeout(1000);
@@ -148,7 +148,7 @@ public class Server {
             System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "DEBUG");
         // create server
         HttpServer server = HttpServer.create(new InetSocketAddress(port), 1024 * 8);
-        server.setExecutor(Executors.newVirtualThreadPerTaskExecutor());
+        server.setExecutor(Executors.newCachedThreadPool());
         server.createContext("/plaintext", createPlaintextHandler());
         server.createContext("/json", createJSONHandler());
         if (settings.contains("postgres")) {

@@ -12,7 +12,7 @@
 (def db-spec {:idle-timeout      15000
               :max-lifetime      60000
               :minimum-idle      0
-              :maximum-pool-size 128
+              :maximum-pool-size 1024
               :jdbcUrl           "jdbc:postgresql://tfb-database/hello_world?user=benchmarkdbuser&password=benchmarkdbpass"})
 
 (defn -main

@@ -63,8 +63,6 @@
         "versus": "ring-http-exchange-robaho"
       },
       "robaho-is": {
-        "json_url": "/json",
-        "plaintext_url": "/plaintext",
         "fortune_url": "/fortunes",
         "port": 8080,
         "approach": "Realistic",

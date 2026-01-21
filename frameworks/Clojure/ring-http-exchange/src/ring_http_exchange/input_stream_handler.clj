@@ -35,8 +35,6 @@
 (defn get-handler [data-source]
   (fn [req]
     (case (req :uri)
-      "/plaintext" (Response. (ByteArrayInputStream. hello-world-bytes) 200 plain-text-headers)
-      "/json" (Response. (ByteArrayInputStream. (json/write-value-as-bytes {:message hello-world})) 200 json-headers)
       "/fortunes" (Response. (get-body data-source) 200 fortune-headers)
       (Response. (ByteArrayInputStream. hello-world-bytes) 200 {"Server"       "ring-http-exchange"
                                                                 "Content-Type" "text/plain"}))))
