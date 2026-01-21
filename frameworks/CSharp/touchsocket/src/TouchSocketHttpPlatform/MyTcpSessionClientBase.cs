@@ -119,9 +119,11 @@ internal sealed class MyTcpSessionClientBase : TcpSessionClient
         while (!seqReader.End)
         {
             var startConsumed = seqReader.Consumed;
+            var startPosition = seqReader.Position;
 
             if (!TryReadLine(ref seqReader, out var requestLineLength))
             {
+                seqReader.Rewind(seqReader.Consumed - startConsumed);
                 break;
             }
 
@@ -152,6 +154,7 @@ internal sealed class MyTcpSessionClientBase : TcpSessionClient
 
             if (!headersComplete)
             {
+                seqReader.Rewind(seqReader.Consumed - startConsumed);
                 break;
             }
 
@@ -187,28 +190,30 @@ internal sealed class MyTcpSessionClientBase : TcpSessionClient
     [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
     private static bool TryReadLine(ref SequenceReader<byte> reader, out long length)
     {
-        if (reader.TryAdvanceTo((byte)'\r', advancePastDelimiter: false))
+        var startPosition = reader.Position;
+        var startConsumed = reader.Consumed;
+        
+        while (reader.TryAdvanceTo((byte)'\r', advancePastDelimiter: false))
         {
-            var start = reader.Consumed;
-            
             if (!reader.TryPeek(1, out var next))
             {
+                reader.Rewind(reader.Consumed - startConsumed);
                 length = 0;
                 return false;
             }
             
             if (next == '\n')
             {
-                var lineLength = reader.Consumed;
+                var lineLength = reader.Consumed - startConsumed;
                 reader.Advance(2);
-                length = lineLength - start;
+                length = lineLength;
                 return true;
             }
             
             reader.Advance(1);
-            return TryReadLine(ref reader, out length);
         }
 
+        reader.Rewind(reader.Consumed - startConsumed);
         length = 0;
         return false;
     }
