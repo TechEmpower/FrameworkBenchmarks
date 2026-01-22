@@ -559,9 +559,9 @@ dependencies = [
 
 [[package]]
 name = "hyperlane"
-version = "11.0.8"
+version = "11.0.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dbc7484e4cb44b109c8570e3a2aed7228c24da5559dcf78f5463ba7f0ebf06db"
+checksum = "5410aea5b13d325d2689789f6fa3aea8ee7cbc49ddd7f46c45644bb6dabb5cc7"
 dependencies = [
  "http-type",
  "inventory",
