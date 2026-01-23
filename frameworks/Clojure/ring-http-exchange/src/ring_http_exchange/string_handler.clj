@@ -1,14 +1,12 @@
 (ns ring-http-exchange.string-handler
   (:require
     [jj.majavat :as majavat]
-    [jj.majavat.renderer :refer [->StringRenderer]]
-    [jj.majavat.renderer.sanitizer :refer [->Html]]
     [jj.sql.boa :as boa]
     [jsonista.core :as json]))
 
 (defrecord Response [body status headers])
 
-(def query-fortunes (boa/execute (boa/->NextJdbcAdapter) "fortune.sql"))
+(def query-fortunes (boa/build-query (boa/->NextJdbcAdapter) "fortune.sql"))
 
 (def ^:private ^:const hello-world "Hello, World!")
 (def ^:private ^:const additional-message {:id      0
@@ -20,9 +18,7 @@
 (def ^:private ^:const plain-text-headers {"Server"       "ring-http-exchange"
                                            "Content-Type" "text/plain"})
 
-(def ^:private render-fortune (majavat/build-renderer "fortune.html"
-                                                      {:renderer (->StringRenderer
-                                                                   {:sanitizer (->Html)})}))
+(def ^:private render-fortune (majavat/build-html-renderer "fortune.html"))
 
 (defn- get-body [datasource]
   (let [context (as-> (query-fortunes datasource) fortunes
