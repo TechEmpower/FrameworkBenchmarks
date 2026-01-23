@@ -23,7 +23,6 @@
       "platform": "None",
       "webserver": "feersum",
       "os": "Linux",
-      "database_os": "Linux",
       "display_name": "feersum",
       "notes": ""
     },
@@ -46,7 +45,6 @@
       "platform": "None",
       "webserver": "feersum",
       "os": "Linux",
-      "database_os": "Linux",
       "display_name": "feersum",
       "notes": ""
     }
