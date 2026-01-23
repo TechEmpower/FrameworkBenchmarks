@@ -1,9 +1,9 @@
 #![allow(dead_code)]
-use std::{cmp, io, io::Write, mem::MaybeUninit, slice::from_raw_parts_mut};
+use std::{cell::Cell, cmp, io, io::Write, mem::MaybeUninit, slice::from_raw_parts_mut};
 
 use atoi::FromRadix10;
 use ntex::http::{header::HeaderValue, HttpServiceConfig, KeepAlive};
-use ntex::util::{BufMut, Bytes, BytesVec};
+use ntex::util::{BufMut, Bytes, BytesMut};
 use ntex::{io::IoConfig, time::Seconds, SharedCfg};
 use sonic_rs::writer::WriteExt;
 
@@ -15,7 +15,7 @@ pub const HDR_HTML_CONTENT_TYPE: HeaderValue =
 pub const BODY_PLAIN_TEXT: Bytes = Bytes::from_static(b"Hello, World!");
 
 const HW: usize = 128 * 1024;
-pub const SIZE: usize = 27;
+pub const SIZE: usize = 23;
 
 pub fn config() -> SharedCfg {
     thread_local! {
@@ -58,21 +58,27 @@ pub fn get_query_param(query: Option<&str>) -> usize {
     cmp::min(500, cmp::max(1, q) as usize)
 }
 
-pub fn reserve(buf: &mut BytesVec, lw: usize) {
-    let remaining = buf.remaining_mut();
-    if remaining < lw {
-        buf.reserve(HW);
+pub fn buffer<F, R>(lw: usize, f: F) -> R
+where
+    F: FnOnce(&mut BytesMut) -> R,
+{
+    thread_local! {
+        static BUF: Cell<Option<BytesMut>> = Cell::new(Some(BytesMut::new()));
     }
+    BUF.with(|buf| {
+        let mut b = buf.take().unwrap();
+        let remaining = b.remaining_mut();
+        if remaining < lw {
+            b.reserve_capacity(HW);
+        }
+
+        let result = f(&mut b);
+        buf.set(Some(b));
+        result
+    })
 }
 
-pub struct BVecWriter<'a>(pub &'a mut BytesVec);
-
-impl<'a> BVecWriter<'a> {
-    pub fn new(buf: &'a mut BytesVec) -> BVecWriter<'a> {
-        reserve(buf, 2048);
-        Self(buf)
-    }
-}
+pub struct BVecWriter<'a>(pub &'a mut BytesMut);
 
 impl Write for BVecWriter<'_> {
     fn write(&mut self, src: &[u8]) -> Result<usize, io::Error> {

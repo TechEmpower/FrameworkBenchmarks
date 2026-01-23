@@ -35,7 +35,7 @@ impl Future for App {
             match ready!(this.io.poll_recv(&this.codec, cx)) {
                 Ok((req, _)) => {
                     let _ = this.io.with_write_buf(|buf| {
-                        utils::reserve(buf, 2 * 1024);
+                        this.io.cfg().write_buf().resize(buf);
                         match req.path() {
                             "/json" => {
                                 buf.extend_from_slice(JSON);
