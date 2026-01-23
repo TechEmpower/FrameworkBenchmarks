@@ -1,4 +1,9 @@
-﻿using Benchmarks.Model;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+using Benchmarks.Model;
 
 using GenHTTP.Modules.Webservices;
 
@@ -57,9 +62,7 @@ public sealed class CacheResource
             {
                 if (connection == null)
                 {
-                    connection = Database.Connection();
-
-                    await connection.OpenAsync();
+                    connection = await Database.DataSource.OpenConnectionAsync();
                 }
 
                 var resolved = await GetWorldById(connection, id);
@@ -68,11 +71,6 @@ public sealed class CacheResource
 
                 result.Add(resolved);
             }
-        }
-
-        if (connection != null)
-        {
-            await connection.CloseAsync();
         }
 
         return result;

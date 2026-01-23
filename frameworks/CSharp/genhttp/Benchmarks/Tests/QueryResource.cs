@@ -1,4 +1,8 @@
-﻿using Benchmarks.Model;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+using Benchmarks.Model;
 
 using GenHTTP.Modules.Webservices;
 
@@ -36,9 +40,7 @@ public sealed class QueryResource
     {
         var result = new List<World>(count);
 
-        await using var connection = Database.Connection();
-
-        await connection.OpenAsync();
+        await using var connection = await Database.DataSource.OpenConnectionAsync();
 
         await using var command = connection.CreateCommand();
 
@@ -61,9 +63,7 @@ public sealed class QueryResource
                 });
             }
         }
-
-        await connection.CloseAsync();
-
+        
         return result;
     }
 

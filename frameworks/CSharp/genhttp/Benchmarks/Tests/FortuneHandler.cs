@@ -62,9 +62,7 @@ public class FortuneHandler : IHandler
 
     private static async Task<List<Fortune>> QueryDatabaseAsync()
     {
-        await using var connection = Database.Connection();
-
-        await connection.OpenAsync();
+        await using var connection = await Database.DataSource.OpenConnectionAsync();
 
         await using var command = connection.CreateCommand();
 
@@ -82,8 +80,6 @@ public class FortuneHandler : IHandler
                 Message = HttpUtility.HtmlEncode(reader.GetString(1))
             });
         }
-
-        await connection.CloseAsync();
 
         return result;
     }

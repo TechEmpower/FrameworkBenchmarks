@@ -4,8 +4,14 @@ using Npgsql;
 
 public static class Database
 {
-    private static readonly string ConnectionString = Environment.GetEnvironmentVariable("DB_CONNECTION");
+    
+    public static readonly NpgsqlDataSource DataSource = BuildDataSource();
 
-    public static NpgsqlConnection Connection() => new(ConnectionString);
-
+    private static NpgsqlDataSource BuildDataSource()
+    {
+        var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION");
+        
+        return new NpgsqlSlimDataSourceBuilder(connectionString).EnableArrays().Build();
+    }
+    
 }
