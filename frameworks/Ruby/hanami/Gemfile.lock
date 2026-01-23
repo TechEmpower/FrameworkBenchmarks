@@ -133,7 +133,6 @@ GEM
     mustermann-contrib (3.0.3)
       hansi (~> 0.2.0)
       mustermann (= 3.0.3)
-    nio4r (2.7.4)
     pg (1.5.9)
     pp (0.6.3)
       prettyprint
@@ -141,8 +140,6 @@ GEM
     psych (5.2.6)
       date
       stringio
-    puma (7.1.0)
-      nio4r (~> 2.0)
     rack (3.2.4)
     rack-session (2.1.1)
       base64 (>= 0.1.0)
@@ -207,7 +204,6 @@ DEPENDENCIES
   hanami-view (~> 2.3)
   iodine (~> 0.7)
   pg
-  puma (~> 7.1)
   rake
   rom (~> 5.3)
   rom-sql (~> 3.6)
