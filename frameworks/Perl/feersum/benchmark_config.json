@@ -46,7 +46,8 @@
       "webserver": "feersum",
       "os": "Linux",
       "display_name": "feersum",
-      "notes": ""
+      "notes": "",
+      "tags": ["broken"]
     }
   }]
 }
