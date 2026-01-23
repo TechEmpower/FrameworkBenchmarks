@@ -103,10 +103,10 @@ if (cluster.isPrimary) {
 
   app.get('/mongoose-update', async (req, res) => {
     const queryCount = Math.min(parseInt(req.query.queries, 10) || 1, 500);
-    const promises = [];
+    const promises = new Array(queryCount);
 
     for (let i = 1; i <= queryCount; i++) {
-      promises.push(getUpdateRandomWorld());
+      promises[i - 1] = getUpdateRandomWorld();
     }
 
     res.setHeader("Server", "Express");
