@@ -16,10 +16,10 @@ const db = pgp(`postgres://${connection.username}:${connection.password}@${conne
 function arrayOfRandomWorlds(totalWorldsToReturn) {
 
     const totalIterations = helper.sanititizeTotal(totalWorldsToReturn);
-    const arr = [];
+    const arr = new Array(totalIterations);
 
     for(let i = 0; i < totalIterations; i++) {
-        arr.push(getRandomWorld());
+        arr[i] = getRandomWorld();
     }
 
     return Promise.all(arr);
@@ -28,10 +28,10 @@ function arrayOfRandomWorlds(totalWorldsToReturn) {
 function updateRandomWorlds(totalToUpdate) {
 
     const total = helper.sanititizeTotal(totalToUpdate);
-    const arr = [];
+    const arr = new Array(total);
 
     for(let i = 0; i < total; i++) {
-        arr.push(updateRandomWorld());
+        arr[i] = updateRandomWorld();
     }
 
     return Promise.all(arr);

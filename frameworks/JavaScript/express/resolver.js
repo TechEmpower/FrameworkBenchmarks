@@ -51,10 +51,10 @@ const Fortune = sequelize.define('fortune', {
 function arrayOfRandomWorlds(totalWorldToReturn) {
 
     const totalIterations = helper.sanititizeTotal(totalWorldToReturn);
-    const arr = [];
+    const arr = new Array();
 
     for(let i = 0; i < totalIterations; i++) {
-        arr.push(World.findByPk(helper.randomizeNum()));
+        arr[i] = World.findByPk(helper.randomizeNum());
     }
 
     return Promise.all(arr);
@@ -63,19 +63,20 @@ function arrayOfRandomWorlds(totalWorldToReturn) {
 async function updateRandomWorlds(totalToUpdate) {
 
     const total = helper.sanititizeTotal(totalToUpdate);
-    const arr = [];
+    const arr = new Array(total);
 
     for(let i = 0; i < total; i++) {
-        arr.push(World.findByPk(helper.randomizeNum()));
+        arr[i] = World.findByPk(helper.randomizeNum());
     }
 
     const results = await Promise.all(arr);
 
-    const updates = [];
-    for(const world of results){
-        updates.push(world.updateAttributes({
+    const updates = new Array(total);
+    for (let index = 0; index < results.length; index++) {
+        const element = results[index];
+        updates[index] = element.updateAttributes({
             randomNumber: helper.randomizeNum()
-        }));
+        });
     }
 
     await Promise.all(updates);

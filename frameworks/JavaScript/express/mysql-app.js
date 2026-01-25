@@ -64,8 +64,9 @@ if (cluster.isPrimary) {
 
   // Routes
   app.get('/mysql-orm-query', async (req, res) => {
-    const results = [],
-      queries = Math.min(parseInt(req.query.queries) || 1, 500);
+   
+    const queries = Math.min(parseInt(req.query.queries) || 1, 500);
+    const results = new Array(queries);
 
     for (let i = 1; i <= queries; i++) {
       const world = await World.findOne({
@@ -74,7 +75,7 @@ if (cluster.isPrimary) {
         }
       }
       );
-      results.push(world);
+      results[i - 1] = world;
     }
 
     res.setHeader("Content-Type", "application/json");
@@ -95,20 +96,19 @@ if (cluster.isPrimary) {
     res.send(world)
   });
 
-  app.get('/mysql-orm-fortune', (req, res) => {
-    Fortune.findAll().then((fortunes) => {
-      const newFortune = { id: 0, message: "Additional fortune added at request time." };
-      fortunes.push(newFortune);
-      fortunes.sort((a, b) => (a.message < b.message) ? -1 : 1);
+  app.get('/mysql-orm-fortune', async(req, res) => {
+    const fortunes = await Fortune.findAll()
+    const newFortune = { id: 0, message: "Additional fortune added at request time." };
+    fortunes.push(newFortune);
+    fortunes.sort((a, b) => (a.message < b.message) ? -1 : 1);
 
-      res.setHeader("Server", "Express");
-      res.render('fortunes/index', { fortunes: fortunes });
-    });
+    res.setHeader("Server", "Express");
+    res.render('fortunes/index', { fortunes: fortunes });
   });
 
   app.get('/mysql-orm-update', async (req, res) => {
-    const results = [],
-      queries = Math.min(parseInt(req.query.queries) || 1, 500);
+    const queries = Math.min(parseInt(req.query.queries) || 1, 500);
+    const results = new Array(queries);
 
     for (let i = 1; i <= queries; i++) {
       const world = await World.findOne({
@@ -119,7 +119,7 @@ if (cluster.isPrimary) {
       );
       world.randomNumber = ~~(Math.random() * 10000) + 1;
       await world.save();
-      results.push(world);
+      results[i - 1] = world;
     }
 
     res.setHeader("Server", "Express");

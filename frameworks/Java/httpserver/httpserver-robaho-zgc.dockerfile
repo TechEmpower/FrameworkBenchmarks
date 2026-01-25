@@ -10,4 +10,4 @@ COPY --from=maven /httpserver-robaho/target/httpserver-1.0-jar-with-dependencies
 
 EXPOSE 8080
 
-CMD ["java", "-server", "-XX:MaxRAMPercentage=70", "-jar", "app.jar", "postgres"]
+CMD ["java", "-server", "-XX:+UseZGC", "-XX:MaxRAMPercentage=70", "-Drobaho.net.httpserver.nodelay=true", "-jar", "app.jar"]

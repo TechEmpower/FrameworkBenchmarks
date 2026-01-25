@@ -45,9 +45,9 @@ HelloWorld::App.controllers  do
         world = World.find(id)
         new_value = rand1
         new_value = rand1 while new_value == world.randomNumber
-        world.randomNumber = new_value
-        world
+        { id: id, randomNumber: new_value }
       end
+      worlds.sort_by!{_1[:id]}
       World.upsert_all(worlds)
     end
 

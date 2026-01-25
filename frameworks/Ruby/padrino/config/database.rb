@@ -1,13 +1,10 @@
-Bundler.require('trilogy')
+Bundler.require('pg')
 opts = {
-  adapter:  'trilogy',
+  adapter:  'postgresql',
   username: 'benchmarkdbuser',
   password: 'benchmarkdbpass',
   host:     'tfb-database',
   database: 'hello_world',
-  ssl:      true,
-  ssl_mode: 4, # Trilogy::SSL_PREFERRED_NOVERIFY
-  tls_min_version: 3 # Trilogy::TLS_VERSION_12
 }
 
 # Determine threading/thread pool size and timeout
