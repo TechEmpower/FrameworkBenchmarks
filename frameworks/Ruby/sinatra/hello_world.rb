@@ -30,6 +30,9 @@ class HelloWorld < Sinatra::Base
 
     # Only add the charset parameter to specific content types per the requirements
     set :add_charset, [mime_type(:html)]
+
+    # Disable logging middleware
+    set :logging, nil
   end
 
   # Test type 1: JSON serialization
