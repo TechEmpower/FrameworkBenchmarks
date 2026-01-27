@@ -7,7 +7,7 @@
     <name>${project.artifactId}</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>1.8</java.version>
+        <java.version>25</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <main.class>com.litongjava.aio.http.server.HttpServer</main.class>
@@ -58,21 +58,26 @@
     </pluginRepositories>
     <build>
         <plugins>
-
             <plugin>
                 <inherited>true</inherited>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.0</version>
+                <version>3.14.1</version>
                 <configuration>
                     <debug>false</debug>
+                    <source>25</source>
+                    <target>25</target>
                 </configuration>
             </plugin>
-
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>3.1.0</version>
                 <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.litongjava.aio.http.server.HttpServer</mainClass>
+                        </manifest>
+                    </archive>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>

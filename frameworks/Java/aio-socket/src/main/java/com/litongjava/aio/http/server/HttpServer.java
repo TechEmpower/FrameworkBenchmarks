@@ -21,27 +21,13 @@ import com.litongjava.enhance.channel.EnhanceAsynchronousServerSocketChannel;
 
 public class HttpServer {
 
-    private static int cpuNum = Runtime.getRuntime().availableProcessors();
     private static BufferPagePool pool = new BufferPagePool(8192, true);
-    private static VirtualBuffer virtualBuf = pool.allocateByThreadId(1024 * cpuNum);
     private static final String HELLO_WORLD = "Hello, World!";
 
     public static void main(String[] args) throws Exception {
 
         // 创建异步通道提供者
-        EnhanceAsynchronousChannelProvider provider = new EnhanceAsynchronousChannelProvider(false);
-
-        // 创建通道组
-        AsynchronousChannelGroup group = provider.openAsynchronousChannelGroup(2, new ThreadFactory() {
-            @Override
-            public Thread newThread(Runnable r) {
-                return new Thread(r, "http-server-thread");
-            }
-        });
-
-        // 创建服务器通道并绑定端口
-        EnhanceAsynchronousServerSocketChannel server = (EnhanceAsynchronousServerSocketChannel) provider.openAsynchronousServerSocketChannel(group);
-        server.bind(new InetSocketAddress(8080), 8192);
+        EnhanceAsynchronousServerSocketChannel server = getEnhanceAsynchronousServerSocketChannel();
 
         System.out.println("HTTP Server 正在监听端口 8080 ...");
 
@@ -64,7 +50,25 @@ public class HttpServer {
         Thread.currentThread().join();
     }
 
+    private static EnhanceAsynchronousServerSocketChannel getEnhanceAsynchronousServerSocketChannel() throws IOException {
+        EnhanceAsynchronousChannelProvider provider = new EnhanceAsynchronousChannelProvider(false);
+
+        // 创建通道组
+        AsynchronousChannelGroup group = provider.openAsynchronousChannelGroup(2, new ThreadFactory() {
+            @Override
+            public Thread newThread(Runnable r) {
+                return new Thread(r, "http-server-thread");
+            }
+        });
+
+        // 创建服务器通道并绑定端口
+        EnhanceAsynchronousServerSocketChannel server = (EnhanceAsynchronousServerSocketChannel) provider.openAsynchronousServerSocketChannel(group);
+        server.bind(new InetSocketAddress(8080), 8192);
+        return server;
+    }
+
     private static void handleClient(AsynchronousSocketChannel channel) {
+        VirtualBuffer virtualBuf = pool.allocateSequentially(1024);
         ByteBuffer buffer = virtualBuf.buffer();
         buffer.clear();
 
