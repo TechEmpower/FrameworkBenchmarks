@@ -20,7 +20,7 @@ GEM
     rake (13.3.1)
     sequel (5.100.0)
       bigdecimal
-    sequel_pg (1.17.2)
+    sequel_pg (1.18.2)
       pg (>= 0.18.0, != 1.2.0)
       sequel (>= 4.38.0)
     thor (1.5.0)
