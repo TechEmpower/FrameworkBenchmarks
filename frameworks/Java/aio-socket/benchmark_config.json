@@ -10,6 +10,7 @@
       "framework": "aio-socket",
       "language": "Java",
       "flavor": "None",
+      "tags": ["broken"],
       "orm": "Raw",
       "platform": "t-io",
       "webserver": "None",
