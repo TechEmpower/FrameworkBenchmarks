@@ -7,12 +7,17 @@ puts "Platform: #{Gem::Platform.local}"
 
 gem 'rack', '~> 3.0'
 gem 'connection_pool'
-gem 'jdbc-postgres', '~> 42.2', platforms: :jruby, require: 'jdbc/postgres'
 gem 'json', '~> 2.10'
-gem 'pg', '~> 1.5', platforms: %i[ruby windows]
-gem 'sequel'
-gem 'sequel_pg', platforms: %i[ruby windows], require: 'sequel'
 gem 'tzinfo-data', '1.2023.3'
+
+platforms :ruby, :windows do
+  gem 'pg', '~> 1.5', platforms: %i[ruby windows]
+end
+
+platforms :jruby do
+  gem 'jdbc-postgres', '~> 42.2', require: 'jdbc/postgres'
+  gem 'sequel'
+end
 
 group :falcon, optional: true do
   gem 'falcon', '~> 0.52', platforms: %i[ruby windows]
