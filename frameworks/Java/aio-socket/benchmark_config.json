@@ -5,7 +5,7 @@
       "plaintext_url": "/plaintext",
       "json_url": "/json",
       "port": 8080,
-      "approach": "Realistic",
+      "approach": "Stripped",
       "classification": "Micro",
       "framework": "aio-socket",
       "language": "Java",
