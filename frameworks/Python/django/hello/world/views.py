@@ -3,6 +3,7 @@ from operator import itemgetter
 from functools import partial
 from orjson import dumps
 
+from django.db import connection
 from django.http import HttpResponse
 from django.shortcuts import render
 
@@ -36,18 +37,19 @@ def json(request):
 
 def db(request):
     r = _random_int()
-    world = dumps({"id": r, "randomNumber": World.objects.get(id=r).randomnumber})
-    return HttpResponse(world, content_type="application/json")
+    row = World.objects.values_list('id', 'randomnumber').get(id=r)
+    return HttpResponse(dumps({"id": row[0], "randomNumber": row[1]}), content_type="application/json")
 
 
 def dbs(request):
     queries = _get_queries(request)
-    ids = [_random_int() for _ in range(queries)]
+    result = []
 
-    # Batch fetch with only needed fields
-    worlds = World.objects.filter(id__in=ids).only('id', 'randomnumber')
+    for _ in range(queries):
+        r = _random_int()
+        row = World.objects.values_list('id', 'randomnumber').get(id=r)
+        result.append({"id": row[0], "randomNumber": row[1]})
 
-    result = [{"id": w.id, "randomNumber": w.randomnumber} for w in worlds]
     return HttpResponse(dumps(result), content_type="application/json")
 
 
@@ -61,17 +63,22 @@ def fortunes(request):
 
 def update(request):
     queries = _get_queries(request)
-    ids = [_random_int() for _ in range(queries)]
+    result = []
+    updates = []
 
-    # Batch fetch
-    worlds = list(World.objects.filter(id__in=ids))
 
-    # Update in memory
-    for world in worlds:
-        world.randomnumber = _random_int()
+    for _ in range(queries):
+        r = _random_int()
+        World.objects.values_list('id', 'randomnumber').get(id=r)  # Required read
+        new_number = _random_int()
+        result.append({"id": r, "randomNumber": new_number})
+        updates.append((new_number, r))
 
-    # Batch save
-    World.objects.bulk_update(worlds, ['randomnumber'])
+    # Batch update using raw SQL executemany
+    with connection.cursor() as cursor:
+        cursor.executemany(
+            "UPDATE world SET randomnumber = %s WHERE id = %s",
+            updates
+        )
 
-    result = [{"id": w.id, "randomNumber": w.randomnumber} for w in worlds]
     return HttpResponse(dumps(result), content_type="application/json")
