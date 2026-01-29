@@ -1,5 +1,5 @@
-Django==5.2.9
+Django==6.0.1
 mysqlclient==2.2.7
-psycopg2-binary==2.9.10
+psycopg2-binary==2.9.11
 pytz==2025.2
 orjson==3.11.3

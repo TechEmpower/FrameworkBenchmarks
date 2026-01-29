@@ -3,7 +3,7 @@ from operator import itemgetter
 from functools import partial
 from orjson import dumps
 
-from django.http import HttpResponse, StreamingHttpResponse
+from django.http import HttpResponse
 from django.shortcuts import render
 
 from world.models import World, Fortune
@@ -25,7 +25,7 @@ def _get_queries(request):
 
 
 def plaintext(request):
-    return StreamingHttpResponse("Hello, World!", content_type="text/plain")
+    return HttpResponse("Hello, World!", content_type="text/plain")
 
 
 def json(request):
@@ -42,14 +42,13 @@ def db(request):
 
 def dbs(request):
     queries = _get_queries(request)
+    ids = [_random_int() for _ in range(queries)]
 
-    def caller(input_):
-        int_ = _random_int()
-        return {"id": int_, "randomNumber": World.objects.get(id=int_).randomnumber}
+    # Batch fetch with only needed fields
+    worlds = World.objects.filter(id__in=ids).only('id', 'randomnumber')
 
-    worlds = tuple(map(caller, range(queries)))
-
-    return HttpResponse(dumps(worlds), content_type="application/json")
+    result = [{"id": w.id, "randomNumber": w.randomnumber} for w in worlds]
+    return HttpResponse(dumps(result), content_type="application/json")
 
 
 def fortunes(request):
@@ -62,13 +61,17 @@ def fortunes(request):
 
 def update(request):
     queries = _get_queries(request)
+    ids = [_random_int() for _ in range(queries)]
 
-    def caller(input_):
-        w = World.objects.get(id=_random_int())
-        w.randomnumber = _random_int()
-        w.save()
-        return {"id": w.id, "randomNumber": w.randomnumber}
+    # Batch fetch
+    worlds = list(World.objects.filter(id__in=ids))
 
-    worlds = tuple(map(caller, range(queries)))
+    # Update in memory
+    for world in worlds:
+        world.randomnumber = _random_int()
 
-    return HttpResponse(dumps(worlds), content_type="application/json")
+    # Batch save
+    World.objects.bulk_update(worlds, ['randomnumber'])
+
+    result = [{"id": w.id, "randomNumber": w.randomnumber} for w in worlds]
+    return HttpResponse(dumps(result), content_type="application/json")
