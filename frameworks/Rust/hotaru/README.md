@@ -10,7 +10,7 @@
 - **Language**: Rust
 - **Platform**: Tokio async runtime
 
-## 📋 Implemented Tests
+## Implemented Tests
 
 According to the [TechEmpower Framework Benchmarks specification](https://github.com/TechEmpower/FrameworkBenchmarks/wiki/Project-Information-Framework-Tests-Overview), this implementation includes all 7 required test types:
 
@@ -57,7 +57,7 @@ According to the [TechEmpower Framework Benchmarks specification](https://github
 - **Content-Type**: `text/html; charset=utf-8`
 - Fetches all Fortune rows, adds test fortune, sorts, and renders HTML template
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 - **Web Framework**: Hotaru 0.7.7
 - **Template Engine**: Akari (Hotaru's built-in template system)
@@ -66,7 +66,7 @@ According to the [TechEmpower Framework Benchmarks specification](https://github
 - **Cache**: moka (in-memory, 10,000 entry capacity)
 - **Async Runtime**: Tokio
 
-## 🚀 Running Locally
+## Running Locally
 
 ### Prerequisites
 - Rust 1.93.0+
@@ -88,7 +88,7 @@ DATABASE_URL=postgres://benchmarkdbuser:benchmarkdbpass@localhost/hello_world
 DB_POOL_SIZE=56  # Database connection pool size
 ```
 
-## 🧪 Test Endpoints
+## Test Endpoints
 
 ```bash
 # JSON serialization
@@ -113,7 +113,7 @@ curl "http://localhost:8080/cached-worlds?count=100"
 curl http://localhost:8080/fortunes
 ```
 
-## 📊 Performance
+## Performance
 
 Benchmark results on TechEmpower infrastructure (512 concurrent connections):
 
@@ -125,7 +125,7 @@ Benchmark results on TechEmpower infrastructure (512 concurrent connections):
 
 Average latency: 1.94-6.21ms under heavy load
 
-## 🏗️ Implementation Details
+## Implementation Details
 
 ### Architecture
 
@@ -159,7 +159,7 @@ CREATE TABLE Fortune (
 );
 ```
 
-## 📁 File Structure
+## File Structure
 
 ```
 frameworks/Rust/hotaru/
@@ -177,7 +177,7 @@ frameworks/Rust/hotaru/
     └── fortunes_hotaru.html  # Fortune HTML template (Akari syntax)
 ```
 
-## 📝 Notes
+## Notes
 
 - Uses Rust edition 2024
 - All dependencies from crates.io (no local path dependencies)
@@ -185,7 +185,7 @@ frameworks/Rust/hotaru/
 - Cache implementation uses lazy population on miss
 - Prepared statements cached for all database queries
 
-## 🔗 Links
+## Links
 
 - **Hotaru Framework**: https://github.com/Field-of-Dreams-Studio/hotaru
 - **Documentation**: https://docs.rs/hotaru
