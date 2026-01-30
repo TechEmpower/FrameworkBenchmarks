@@ -1,0 +1,17 @@
+global:
+  checkNewVersion: false
+  sendAnonymousUsage: false
+
+entryPoints:
+  web:
+    address: ":8080"
+    transport:
+      respondingTimeouts:
+        readTimeout: "0s"
+        writeTimeout: "0s"
+        idleTimeout: "0s"
+
+providers:
+  file:
+    filename: /etc/traefik/traefik_dynamic.yaml
+    watch: false

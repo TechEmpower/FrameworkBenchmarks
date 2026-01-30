@@ -1,0 +1,13 @@
+http:
+  routers:
+    to-dart:
+      rule: "PathPrefix(`/`)"
+      service: dart-service
+      entryPoints:
+        - web
+
+  services:
+    dart-service:
+      loadBalancer:
+        servers:
+          # DART_WORKERS_PLACEHOLDER
