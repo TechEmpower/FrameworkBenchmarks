@@ -3,6 +3,8 @@ http:
     to-dart:
       rule: "PathPrefix(`/`)"
       service: dart-service
+      middlewares:
+        - dart-header
       entryPoints:
         - web
   middlewares:

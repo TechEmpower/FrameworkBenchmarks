@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:isolate';
 import 'dart:math' show min;
+import 'package:args/args.dart' show ArgParser;
 
 /// Environment declarations are evaluated at compile-time. Use 'const' to
 /// ensure values are baked into AOT/Native binaries for the benchmark.
@@ -73,7 +74,7 @@ void _startServer(List<String> args) async {
   /// Binds the [HttpServer] on `0.0.0.0:8080`.
   final server = await HttpServer.bind(
     InternetAddress.anyIPv4,
-    8080,
+    _portParser(args, defaultPort: 8080),
     shared: true,
   );
 
@@ -131,10 +132,28 @@ void _sendText(HttpRequest request, String response) => _sendResponse(
 );
 
 /// Responds with the JSON test to the [request].
-void _jsonTest(HttpRequest request) =>
-    _sendJson(request, const {'message': 'Hello, World!'});
+void _jsonTest(HttpRequest request) => _sendJson(
+  request,
+  const {'message': 'Hello, World!'},
+);
 
 /// Responds with the plaintext test to the [request].
-void _plaintextTest(HttpRequest request) => _sendText(request, 'Hello, World!');
+void _plaintextTest(HttpRequest request) => _sendText(
+  request,
+  'Hello, World!',
+);
 
 final _jsonEncoder = JsonUtf8Encoder();
+
+int _portParser(
+  List<String> args, {
+  required int defaultPort,
+  portTag = 'port',
+}) {
+  final parser = ArgParser()
+    ..addOption(
+      portTag,
+      defaultsTo: '$defaultPort',
+    );
+  return int.tryParse(parser.parse(args)[portTag]) ?? defaultPort;
+}
