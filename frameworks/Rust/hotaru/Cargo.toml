@@ -12,7 +12,6 @@ httpdate = "1"
 
 # Hotaru framework
 hotaru = "0.7.7"
-hotaru_core = "0.7.7"
 akari = "0.2.6"
 ctor = "0.4"
 
