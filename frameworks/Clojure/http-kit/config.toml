@@ -16,7 +16,7 @@ os = "Linux"
 orm = "Micro"
 platform = "Ring"
 webserver = "None"
-versus = "http-kit"
+versus = ""
 
 [raw]
 urls.db = "/raw/db"

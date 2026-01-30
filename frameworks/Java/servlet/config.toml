@@ -12,7 +12,7 @@ os = "Linux"
 orm = "Raw"
 platform = "Servlet"
 webserver = "Resin"
-versus = "servlet"
+versus = ""
 
 [lib-native]
 urls.plaintext = "/plaintext"
