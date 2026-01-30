@@ -12,4 +12,4 @@ COPY --from=build /runtime/ /
 COPY --from=build /app/server /bin/server
 
 EXPOSE 8080
-CMD ["server"]
+ENTRYPOINT ["server"]
