@@ -49,7 +49,7 @@ void main(List<String> args) {
       for (var i = 0; i < workerGroups; i++) {
         /// [Platform.script] identifies the AOT snapshot or executable.
         /// [Isolate.spawnUri] spawns a new process group via [main()].
-        Isolate.spawnUri(Platform.script, [workerGroupTag, ...args], null);
+        Isolate.spawnUri(Platform.script, [...args, workerGroupTag], null);
       }
 
       /// Updates local isolate limits, assigning the primary group
