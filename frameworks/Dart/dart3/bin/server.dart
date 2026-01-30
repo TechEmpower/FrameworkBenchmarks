@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:isolate';
 import 'dart:math' show min;
+import 'package:args/args.dart' show ArgParser;
 
 /// Environment declarations are evaluated at compile-time. Use 'const' to
 /// ensure values are baked into AOT/Native binaries for the benchmark.
@@ -13,7 +14,7 @@ import 'dart:math' show min;
 /// but most ahead-of-time compiled platforms will not have this information."
 const _maxIsolatesfromEnvironment = int.fromEnvironment('MAX_ISOLATES');
 
-void main(List<String> args) async {
+void main(List<String> args) {
   /// Defines local isolate quota, using MAX_ISOLATES if provided.
   /// Falls back to total available cores while respecting hardware limits.
   var maxIsolates = _maxIsolatesfromEnvironment > 0
@@ -49,7 +50,7 @@ void main(List<String> args) async {
       for (var i = 0; i < workerGroups; i++) {
         /// [Platform.script] identifies the AOT snapshot or executable.
         /// [Isolate.spawnUri] spawns a new process group via [main()].
-        Isolate.spawnUri(Platform.script, [workerGroupTag, ...args], null);
+        Isolate.spawnUri(Platform.script, [...args, workerGroupTag], null);
       }
 
       /// Updates local isolate limits, assigning the primary group
@@ -61,54 +62,41 @@ void main(List<String> args) async {
   /// Create an [Isolate] containing an [HttpServer]
   /// for each processor after the first
   for (var i = 1; i < maxIsolates; i++) {
-    await Isolate.spawn(_startServer, args);
+    Isolate.spawn(_startServer, args);
   }
 
   /// Create a [HttpServer] for the first processor
-  await _startServer(args);
+  _startServer(args);
 }
 
 /// Creates and setup a [HttpServer]
-Future<void> _startServer(List<String> _) async {
+void _startServer(List<String> args) async {
   /// Binds the [HttpServer] on `0.0.0.0:8080`.
   final server = await HttpServer.bind(
     InternetAddress.anyIPv4,
-    8080,
+    _portParser(args, defaultPort: 8080),
     shared: true,
   );
 
-  /// Sets [HttpServer]'s [serverHeader].
   server
     ..defaultResponseHeaders.clear()
-    ..serverHeader = 'dart';
-
-  /// Handles [HttpRequest]'s from [HttpServer].
-  await for (final request in server) {
-    /// Asynchronously processes each request with an 8-second safety deadline
-    /// to prevent stalled connections from blocking the isolate event loop.
-    _handleRequest(request).timeout(
-      const Duration(seconds: 8),
-      onTimeout: () => _sendResponse(request, HttpStatus.internalServerError),
-    );
-  }
+    /// Sets [HttpServer]'s [serverHeader].
+    ..serverHeader = 'dart'
+    /// Handles [HttpRequest]'s from [HttpServer].
+    ..listen(_handleRequest);
 }
 
-/// Dispatches requests to specific test handlers. Wrapped in a try-catch
-/// to ensure stable execution and guaranteed response delivery.
-Future<void> _handleRequest(HttpRequest request) async {
-  try {
-    switch (request.uri.path) {
-      case '/json':
-        _jsonTest(request);
-        break;
-      case '/plaintext':
-        _plaintextTest(request);
-        break;
-      default:
-        _sendResponse(request, HttpStatus.notFound);
-    }
-  } catch (e) {
-    _sendResponse(request, HttpStatus.internalServerError);
+/// Dispatches requests to specific handlers.
+void _handleRequest(HttpRequest request) {
+  switch (request.uri.path) {
+    case '/json':
+      _jsonTest(request);
+      break;
+    case '/plaintext':
+      _plaintextTest(request);
+      break;
+    default:
+      _sendResponse(request, HttpStatus.notFound);
   }
 }
 
@@ -144,10 +132,28 @@ void _sendText(HttpRequest request, String response) => _sendResponse(
 );
 
 /// Responds with the JSON test to the [request].
-void _jsonTest(HttpRequest request) =>
-    _sendJson(request, const {'message': 'Hello, World!'});
+void _jsonTest(HttpRequest request) => _sendJson(
+  request,
+  const {'message': 'Hello, World!'},
+);
 
 /// Responds with the plaintext test to the [request].
-void _plaintextTest(HttpRequest request) => _sendText(request, 'Hello, World!');
+void _plaintextTest(HttpRequest request) => _sendText(
+  request,
+  'Hello, World!',
+);
 
 final _jsonEncoder = JsonUtf8Encoder();
+
+int _portParser(
+  List<String> args, {
+  required int defaultPort,
+  portTag = 'port',
+}) {
+  final parser = ArgParser()
+    ..addOption(
+      portTag,
+      defaultsTo: '$defaultPort',
+    );
+  return int.tryParse(parser.parse(args)[portTag]) ?? defaultPort;
+}
