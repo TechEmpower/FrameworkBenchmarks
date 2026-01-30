@@ -13,7 +13,7 @@ import 'dart:math' show min;
 /// but most ahead-of-time compiled platforms will not have this information."
 const _maxIsolatesfromEnvironment = int.fromEnvironment('MAX_ISOLATES');
 
-void main(List<String> args) async {
+void main(List<String> args) {
   /// Defines local isolate quota, using MAX_ISOLATES if provided.
   /// Falls back to total available cores while respecting hardware limits.
   var maxIsolates = _maxIsolatesfromEnvironment > 0
@@ -61,15 +61,15 @@ void main(List<String> args) async {
   /// Create an [Isolate] containing an [HttpServer]
   /// for each processor after the first
   for (var i = 1; i < maxIsolates; i++) {
-    await Isolate.spawn(_startServer, args);
+    Isolate.spawn(_startServer, args);
   }
 
   /// Create a [HttpServer] for the first processor
-  await _startServer(args);
+  _startServer(args);
 }
 
 /// Creates and setup a [HttpServer]
-Future<void> _startServer(List<String> _) async {
+void _startServer(List<String> _) async {
   /// Binds the [HttpServer] on `0.0.0.0:8080`.
   final server = await HttpServer.bind(
     InternetAddress.anyIPv4,
