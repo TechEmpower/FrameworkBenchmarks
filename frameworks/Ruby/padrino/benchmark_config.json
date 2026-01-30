@@ -21,7 +21,7 @@
       "database_os": "Linux",
       "display_name": "padrino",
       "notes": "",
-      "versus": "rack-iodine"
+      "versus": "sinatra"
     }
   }]
 }
