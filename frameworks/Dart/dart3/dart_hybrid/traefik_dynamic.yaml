@@ -5,7 +5,11 @@ http:
       service: dart-service
       entryPoints:
         - web
-
+  middlewares:
+    dart-header:
+      headers:
+        customResponseHeaders:
+          Server: "dart"
   services:
     dart-service:
       loadBalancer:
