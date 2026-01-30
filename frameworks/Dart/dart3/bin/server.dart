@@ -69,7 +69,7 @@ void main(List<String> args) {
 }
 
 /// Creates and setup a [HttpServer]
-void _startServer(List<String> _) async {
+void _startServer(List<String> args) async {
   /// Binds the [HttpServer] on `0.0.0.0:8080`.
   final server = await HttpServer.bind(
     InternetAddress.anyIPv4,
