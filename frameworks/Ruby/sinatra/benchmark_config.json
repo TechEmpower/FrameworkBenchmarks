@@ -20,7 +20,7 @@
         "os": "Linux",
         "database_os": "Linux",
         "display_name": "sinatra [puma, mysql]",
-        "versus": "rack-puma-mri",
+        "versus": "",
         "notes": ""
       },
       "postgres": {
@@ -40,7 +40,7 @@
         "os": "Linux",
         "database_os": "Linux",
         "display_name": "sinatra [puma, postgres]",
-        "versus": "rack-postgres-puma-mri",
+        "versus": "rack",
         "notes": ""
       },
       "iodine": {
@@ -81,7 +81,7 @@
         "os": "Linux",
         "database_os": "Linux",
         "display_name": "sinatra [iodine, postgres]",
-        "versus": "rack-postgres-iodine-mri",
+        "versus": "rack-iodine",
         "notes": ""
       }
     }

@@ -18,7 +18,7 @@
         "os": "Linux",
         "database_os": "Linux",
         "display_name": "sinatra-sequel [puma, mysql]",
-        "versus": "rack-sequel-puma-mri",
+        "versus": "rack-sequel",
         "notes": ""
       },
       "postgres": {
@@ -38,7 +38,7 @@
         "os": "Linux",
         "database_os": "Linux",
         "display_name": "sinatra-sequel [puma, postgres]",
-        "versus": "rack-sequel-postgres-puma-mri",
+        "versus": "rack-sequel-postgres",
         "notes": ""
       },
       "iodine": {
@@ -57,7 +57,7 @@
         "os": "Linux",
         "database_os": "Linux",
         "display_name": "sinatra-sequel [iodine, mysql]",
-        "versus": "",
+        "versus": "rack-sequel-iodine",
         "notes": ""
       },
       "postgres-iodine-mri": {
@@ -77,7 +77,7 @@
         "os": "Linux",
         "database_os": "Linux",
         "display_name": "sinatra-sequel [iodine, postgres]",
-        "versus": "rack-sequel-postgres-iodine-mri",
+        "versus": "rack-sequel-iodine-postgres",
         "notes": ""
       }
     }

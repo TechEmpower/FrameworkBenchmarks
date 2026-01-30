@@ -20,7 +20,7 @@
         "os": "Linux",
         "database_os": "Linux",
         "display_name": "roda-sequel [mysql]",
-        "versus": "",
+        "versus": "rack-sequel-iodine",
         "notes": ""
       },
       "postgres": {
@@ -40,7 +40,7 @@
         "os": "Linux",
         "database_os": "Linux",
         "display_name": "roda-sequel [postgres]",
-        "versus": "",
+        "versus": "rack-sequel-iodine-postgres",
         "notes": ""
       }
     }

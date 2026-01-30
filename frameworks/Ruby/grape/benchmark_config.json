@@ -20,7 +20,7 @@
       "database_os": "Linux",
       "display_name": "grape [puma]",
       "notes": "",
-      "versus": "rack-puma-mri"
+      "versus": "rack"
     },
     "iodine": {
       "json_url": "/json",
@@ -41,7 +41,7 @@
       "database_os": "Linux",
       "display_name": "grape [iodine]",
       "notes": "",
-      "versus": "rack-iodine-mri"
+      "versus": "rack-iodine"
     }
   }]
 }

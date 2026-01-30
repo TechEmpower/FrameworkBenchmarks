@@ -21,7 +21,7 @@
         "database_os": "Linux",
         "display_name": "Rage-Sequel",
         "notes": "",
-        "versus": "None"
+        "versus": "rack-sequel-iodine-postgres"
       }
     }
   ]
