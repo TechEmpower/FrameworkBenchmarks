@@ -5,7 +5,7 @@ MAX_ISO=${MAX_ISOLATES:-8}
 RESERVED=${MIN_TRAEFIK_PROCESSES:-4}
 
 if [ "$TOTAL_PROCESSES" -le "$((MAX_ISO * 2))" ]; then
-    exec /bin/server
+    exec /app/server
 else
     DART_POOL=$((TOTAL_PROCESSES - RESERVED))
     NUM_WORKERS=$(( DART_POOL / MAX_ISO ))
@@ -23,12 +23,15 @@ else
 
         /app/server --port=$PORT &
     done
-    
+
     sed -i "/# DART_WORKERS_PLACEHOLDER/ {
       r $TMP_URLS
       d
     }" /etc/traefik/traefik_dynamic.yaml
+
+    rm "$TMP_URLS"
     
     until nc -z 127.0.0.1 9001; do sleep 0.1; done
+
     exec traefik --configfile=/etc/traefik/traefik.yaml
 fi
