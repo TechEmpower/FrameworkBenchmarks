@@ -1,5 +1,5 @@
 
-FROM dart:3.10.7 AS build
+FROM dart:3.10.8 AS build
 WORKDIR /app
 
 COPY pubspec.yaml .
