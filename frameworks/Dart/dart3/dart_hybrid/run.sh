@@ -14,13 +14,21 @@ else
 
     export GOMAXPROCS=$TRAEFIK_PROCESSES
 
-    URL_LIST=""
+    TMP_URLS="/tmp/urls.yaml"
+    true > "$TMP_URLS"
+
     for i in $(seq 1 $NUM_WORKERS); do
         PORT=$((9000 + i))
-        URL_LIST="${URL_LIST}          - url: \"http://127.0.0.1:$PORT\"\n"
+        echo "          - url: \"http://127.0.0.1:$PORT\"" >> "$TMP_URLS"
+
         /app/server --port=$PORT &
     done
-    sed -i "s|# DART_WORKERS_PLACEHOLDER|$URL_LIST|" /etc/traefik/traefik_dynamic.yaml
+    
+    sed -i "/# DART_WORKERS_PLACEHOLDER/ {
+      r $TMP_URLS
+      d
+    }" /etc/traefik/traefik_dynamic.yaml
+    
     until nc -z 127.0.0.1 9001; do sleep 0.1; done
     exec traefik --configfile=/etc/traefik/traefik.yaml
 fi
