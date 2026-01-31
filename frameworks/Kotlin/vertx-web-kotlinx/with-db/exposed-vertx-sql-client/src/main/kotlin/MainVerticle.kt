@@ -1,4 +1,6 @@
 import com.huanshankeji.exposedvertxsqlclient.DatabaseClient
+import com.huanshankeji.exposedvertxsqlclient.ExperimentalEvscApi
+import com.huanshankeji.exposedvertxsqlclient.JdbcTransactionExposedTransactionProvider
 import com.huanshankeji.exposedvertxsqlclient.postgresql.PgDatabaseClientConfig
 import com.huanshankeji.exposedvertxsqlclient.postgresql.vertx.pgclient.createPgConnection
 import database.*
@@ -8,6 +10,7 @@ import org.jetbrains.exposed.v1.core.statements.buildStatement
 import org.jetbrains.exposed.v1.jdbc.Database
 import org.jetbrains.exposed.v1.jdbc.select
 
+@OptIn(ExperimentalEvscApi::class)
 class MainVerticle(val exposedDatabase: Database) : CommonWithDbVerticle<DatabaseClient<PgConnection>, Unit>(),
     CommonWithDbVerticleI.ParallelOrPipelinedSelectWorlds<DatabaseClient<PgConnection>, Unit>,
     CommonWithDbVerticleI.WithoutTransaction<DatabaseClient<PgConnection>> {
@@ -24,7 +27,10 @@ class MainVerticle(val exposedDatabase: Database) : CommonWithDbVerticle<Databas
             cachePreparedStatements = true
             pipeliningLimit = 256
         })
-        return DatabaseClient(pgConnection, exposedDatabase, PgDatabaseClientConfig(validateBatch = false))
+        return DatabaseClient(
+            pgConnection,
+            PgDatabaseClientConfig(JdbcTransactionExposedTransactionProvider(exposedDatabase), validateBatch = false)
+        )
     }
 
     override suspend fun Unit.selectWorld(id: Int): World =

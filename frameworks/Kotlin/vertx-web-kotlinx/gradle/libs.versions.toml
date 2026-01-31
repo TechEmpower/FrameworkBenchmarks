@@ -10,7 +10,7 @@ r2dbc-spi = "1.0.0.RELEASE"
 r2dbc-postgresql = "1.1.1.RELEASE"
 r2dbc-pool = "1.0.2.RELEASE"
 exposed = "1.0.0-rc-4"
-exposedVertxSqlClient = "0.7.0"
+exposedVertxSqlClient = "0.8.0-SNAPSHOT"
 
 [libraries]
 # Kotlin Gradle plugin as a library for buildSrc
