@@ -30,6 +30,9 @@ class HelloWorld < Sinatra::Base
 
     # Only add the charset parameter to specific content types per the requirements
     set :add_charset, [mime_type(:html)]
+
+    # Disable logging middleware
+    set :logging, nil
   end
 
   # Test type 1: JSON serialization
@@ -65,10 +68,10 @@ class HelloWorld < Sinatra::Base
     @fortunes = ActiveRecord::Base.with_connection do
       Fortune.all
     end.to_a
-    @fortunes << Fortune.new(
-      id: 0,
-      message: 'Additional fortune added at request time.'
-    )
+    fortune = Fortune.new
+    fortune.id = 0
+    fortune.message = "Additional fortune added at request time."
+    @fortunes << fortune
     @fortunes.sort_by!(&:message)
 
     render_html :fortunes
