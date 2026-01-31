@@ -54,6 +54,22 @@
                 "os": "Linux",
                 "database_os": "Linux",
                 "notes": ""
+            },
+            "core-aot": {
+                "display_name": "akazawayun.pro [core-aot]",
+                "framework": "akazawayun.pro",
+                "webserver": "akazawayun.pro",
+                "plaintext_url": "/plaintext",
+                "json_url": "/json",
+                "port": 8080,
+                "classification": "Platform",
+                "approach": "Realistic",
+                "platform": ".NET",
+                "language": "C#",
+                "flavor": "CoreCLR",
+                "os": "Linux",
+                "database_os": "Linux",
+                "notes": ""
             }
         }
     ]
