@@ -5,8 +5,8 @@ WORKDIR /vertx-web-kotlinx
 
 # copy the Maven local dependencies into the container for snapshot dependencies
 # First publish with `publishToMavenLocal` and copy the Maven local dependencies into this directory with `cp -r ~/.m2 ./`.
-COPY .m2/repository/com/huanshankeji/exposed-vertx-sql-client-core/0.8.0-SNAPSHOT /root/.m2/repository/com/huanshankeji/exposed-vertx-sql-client-core/0.7.0-SNAPSHOT
-COPY .m2/repository/com/huanshankeji/exposed-vertx-sql-client-postgresql/0.8.0-SNAPSHOT /root/.m2/repository/com/huanshankeji/exposed-vertx-sql-client-postgresql/0.7.0-SNAPSHOT
+COPY .m2/repository/com/huanshankeji/exposed-vertx-sql-client-core/0.8.0-SNAPSHOT /root/.m2/repository/com/huanshankeji/exposed-vertx-sql-client-core/0.8.0-SNAPSHOT
+COPY .m2/repository/com/huanshankeji/exposed-vertx-sql-client-postgresql/0.8.0-SNAPSHOT /root/.m2/repository/com/huanshankeji/exposed-vertx-sql-client-postgresql/0.8.0-SNAPSHOT
 
 COPY gradle/libs.versions.toml gradle/libs.versions.toml
 COPY buildSrc buildSrc
