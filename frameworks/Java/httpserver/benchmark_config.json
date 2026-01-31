@@ -78,9 +78,9 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "httpserver-robaho",
+        "display_name": "httpserver-robaho-zgc",
         "notes": "",
-        "versus": ""
+        "versus": "httpserver-robaho"
       },
       "robaho-graalvm": {
         "json_url": "/json",
