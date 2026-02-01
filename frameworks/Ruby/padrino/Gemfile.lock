@@ -23,7 +23,7 @@ GEM
     base64 (0.3.0)
     bigdecimal (3.1.9)
     concurrent-ruby (1.3.5)
-    connection_pool (2.5.0)
+    connection_pool (3.0.2)
     date (3.5.0)
     drb (2.2.1)
     i18n (1.14.7)
@@ -88,6 +88,9 @@ GEM
       mime-types (>= 3.1, < 4)
       padrino-core (= 0.16.0)
     padrino-support (0.16.0)
+    pg (1.6.3)
+    pg (1.6.3-x86_64-darwin)
+    pg (1.6.3-x86_64-linux)
     rack (3.2.4)
     rack-protection (4.2.1)
       base64 (>= 0.1.0)
@@ -114,7 +117,6 @@ GEM
     thor (1.4.0)
     tilt (2.6.1)
     timeout (0.4.4)
-    trilogy (2.9.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     uri (1.0.3)
@@ -129,10 +131,10 @@ DEPENDENCIES
   iodine (~> 0.7)
   json
   ostruct
-  padrino (= 0.16.0)
+  padrino (~> 0.16)
+  pg
   rack
   slim
-  trilogy (~> 2.9)
 
 BUNDLED WITH
    2.7.0

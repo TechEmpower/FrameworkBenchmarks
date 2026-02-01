@@ -1,4 +1,4 @@
-FROM ruby:4.0-rc
+FROM ruby:4.0
 
 RUN apt-get update -yqq && apt-get install -yqq --no-install-recommends redis-server
 
@@ -6,6 +6,7 @@ EXPOSE 8080
 WORKDIR /rails
 
 # ENV RUBY_YJIT_ENABLE=1 YJIT is enabled in config/initializers/enable_yjit.rb
+ENV RUBY_MN_THREADS=1
 
 # Use Jemalloc
 RUN apt-get update && \

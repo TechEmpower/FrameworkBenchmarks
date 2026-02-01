@@ -42,7 +42,7 @@ web-codegen = ["xitca-web/codegen", "xitca-web/urlencoded"]
 # template optional
 template = ["dep:sailfish"]
 # io-uring optional
-io-uring = ["dep:tokio-uring", "xitca-http/io-uring", "xitca-server/io-uring"]
+io-uring = ["xitca-http/io-uring", "xitca-server/io-uring"]
 # zero-copy database row parsing optional(not supported by ORMs)
 zero-copy = []
 # unrealistic performance optimization
@@ -56,9 +56,9 @@ perf-json = ["sonic-rs"]
 compio = ["dep:compio", "dep:socket2", "xitca-http/compio", "xitca-postgres/compio"]
 
 [dependencies]
-xitca-http = "0.7"
-xitca-io = "0.4.1"
-xitca-server = "0.5"
+xitca-http = "0.8.2"
+xitca-io = "0.5.1"
+xitca-server = "0.6.1"
 xitca-service = "0.3"
 xitca-unsafe-collection = "0.2"
 
@@ -67,10 +67,10 @@ httparse = "1"
 serde_core = { version = "1" }
 
 # web optional
-xitca-web = { version = "0.7", features = ["json"], optional = true }
+xitca-web = { version = "0.8", features = ["json"], optional = true }
 
 # raw-pg optional
-xitca-postgres = { version = "0.3", optional = true }
+xitca-postgres = { version = "0.4", optional = true }
 
 # diesel orm optional
 diesel = { version = "2", features = ["postgres"], optional = true }
@@ -84,9 +84,6 @@ toasty = { version = "0.1", optional = true }
 
 # template optional
 sailfish = { version = "0.10", default-features = false, features = ["perf-inline"], optional = true }
-
-# io-uring optional
-tokio-uring = { version = "0.5", optional = true }
 
 # perf optional
 core_affinity = { version = "0.8.1", optional = true }
@@ -118,12 +115,5 @@ toasty = { git = "https://github.com/fakeshadow/toasty", rev = "51c8186" }
 toasty-core = { git = "https://github.com/fakeshadow/toasty", rev = "51c8186" }
 toasty-sql = { git = "https://github.com/fakeshadow/toasty", rev = "51c8186" }
 
-# personal fork of tokio-uring with tokio local runtime enabled
-tokio-uring = { git = "http://github.com/fakeshadow/tokio-uring", rev = "c3d5887" }
-
-xitca-codegen = { git = "http://github.com/HFQR/xitca-web", rev = "b3d7dc0be3783fe1ad66ba94236c3a1dcfc1af8b" }
-xitca-http = { git = "http://github.com/HFQR/xitca-web", rev = "b3d7dc0be3783fe1ad66ba94236c3a1dcfc1af8b" }
-xitca-postgres = { git = "http://github.com/HFQR/xitca-web", rev = "b3d7dc0be3783fe1ad66ba94236c3a1dcfc1af8b" }
-xitca-server = { git = "http://github.com/HFQR/xitca-web", rev = "b3d7dc0be3783fe1ad66ba94236c3a1dcfc1af8b" }
-xitca-service = { git = "http://github.com/HFQR/xitca-web", rev = "b3d7dc0be3783fe1ad66ba94236c3a1dcfc1af8b" }
-xitca-web = { git = "http://github.com/HFQR/xitca-web", rev = "b3d7dc0be3783fe1ad66ba94236c3a1dcfc1af8b" }
+xitca-postgres = { git = "http://github.com/HFQR/xitca-web", rev = "ae0db84" }
+xitca-web = { git = "http://github.com/HFQR/xitca-web", rev = "ae0db84" }

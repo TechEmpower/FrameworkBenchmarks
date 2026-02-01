@@ -12,7 +12,7 @@
 			"approach": "Realistic",
 			"classification": "Fullstack",
 			"database": "MySQL",
-			"framework": "lypervel",
+			"framework": "hypervel",
 			"language": "PHP",
 			"flavor": "PHP8",
 			"orm": "Full",

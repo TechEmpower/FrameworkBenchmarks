@@ -1,6 +1,0 @@
-(library
- (name server_io)
- (libraries lwt lwt.unix piaf unix)
- (modules server_io)
- (virtual_modules server_io)
- (default_implementation server_io_single))

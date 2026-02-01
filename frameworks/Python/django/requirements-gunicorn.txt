@@ -1,4 +1,3 @@
 -r requirements.txt
-greenlet==3.1.1
-gunicorn==21.2.0
-gevent==24.10.2
+
+gunicorn==23.0.0

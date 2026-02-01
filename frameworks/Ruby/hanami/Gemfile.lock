@@ -121,6 +121,7 @@ GEM
     hansi (0.2.1)
     ice_nine (0.11.2)
     io-console (0.8.1)
+    iodine (0.7.58)
     irb (1.15.3)
       pp (>= 0.6.0)
       rdoc (>= 4.0.0)
@@ -132,7 +133,6 @@ GEM
     mustermann-contrib (3.0.3)
       hansi (~> 0.2.0)
       mustermann (= 3.0.3)
-    nio4r (2.7.4)
     pg (1.5.9)
     pp (0.6.3)
       prettyprint
@@ -140,8 +140,6 @@ GEM
     psych (5.2.6)
       date
       stringio
-    puma (6.6.0)
-      nio4r (~> 2.0)
     rack (3.2.4)
     rack-session (2.1.1)
       base64 (>= 0.1.0)
@@ -204,8 +202,8 @@ DEPENDENCIES
   hanami-router (~> 2.3)
   hanami-validations (~> 2.3)
   hanami-view (~> 2.3)
+  iodine (~> 0.7)
   pg
-  puma
   rake
   rom (~> 5.3)
   rom-sql (~> 3.6)

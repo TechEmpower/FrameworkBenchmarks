@@ -119,7 +119,7 @@
         "json_url": "/json",
         "plaintext_url": "/plaintext",
         "port": 8080,
-        "approach": "Realistic",
+        "approach": "Stripped",
         "classification": "Platform",
         "database": "Postgres",
         "framework": "ntex",

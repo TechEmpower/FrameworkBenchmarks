@@ -1,13 +1,7 @@
 # frozen_string_literal: true
 
-require_relative 'auto_tune'
-require 'sequel'
-num_workers, = auto_tune
+require 'etc'
 
-worker_processes num_workers
-
-before_fork do |_server|
-  Sequel::DATABASES.each(&:disconnect)
-end
+worker_processes (Etc.nprocessors * 1.5).to_i
 
 listen "/tmp/.sock", :backlog => 4096

@@ -1,2 +1,2 @@
-git+https://github.com/cirospaciari/socketify.py.git@main#socketify
+https://github.com/cirospaciari/socketify.py/archive/refs/heads/main.zip#egg=socketify
 ujson

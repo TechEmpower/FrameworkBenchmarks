@@ -6,16 +6,17 @@ impl ServerHook for JsonRoute {
     }
 
     async fn handle(self, ctx: &Context) {
+        let request_config: RequestConfigData = *REQUEST_CONFIG;
         let json: Value = json!({
             KEY_MESSAGE: RESPONSEDATA_STR
         });
         let run = || async {
             ctx.set_response_body(&serde_json::to_vec(&json).unwrap_or_default())
                 .await;
-            ctx.send().await.unwrap();
+            ctx.send().await;
         };
         run().await;
-        while ctx.http_from_stream(HTTP_BUFFER).await.is_ok() {
+        while ctx.http_from_stream(&request_config).await.is_ok() {
             run().await;
         }
         ctx.closed().await;
@@ -28,13 +29,14 @@ impl ServerHook for PlaintextRoute {
     }
 
     async fn handle(self, ctx: &Context) {
+        let request_config: RequestConfigData = *REQUEST_CONFIG;
         ctx.set_response_header(CONTENT_TYPE, TEXT_PLAIN).await;
         ctx.set_response_body(&RESPONSEDATA_BIN).await;
         let run = || async {
-            ctx.send().await.unwrap();
+            ctx.send().await;
         };
         run().await;
-        while ctx.http_from_stream(HTTP_BUFFER).await.is_ok() {
+        while ctx.http_from_stream(&request_config).await.is_ok() {
             run().await;
         }
         ctx.closed().await;
@@ -47,17 +49,17 @@ impl ServerHook for DbRoute {
     }
 
     async fn handle(self, ctx: &Context) {
+        let request_config: RequestConfigData = *REQUEST_CONFIG;
         let db_connection: &DbPoolConnection = get_db_connection();
         let run = || async {
             let query_row: QueryRow = random_world_row(db_connection).await;
             ctx.set_response_body(&serde_json::to_vec(&query_row).unwrap_or_default())
                 .await
                 .send()
-                .await
-                .unwrap();
+                .await;
         };
         run().await;
-        while ctx.http_from_stream(HTTP_BUFFER).await.is_ok() {
+        while ctx.http_from_stream(&request_config).await.is_ok() {
             run().await;
         }
         ctx.closed().await;
@@ -70,6 +72,7 @@ impl ServerHook for QueryRoute {
     }
 
     async fn handle(self, ctx: &Context) {
+        let request_config: RequestConfigData = *REQUEST_CONFIG;
         let run = || async {
             let queries: Queries = ctx
                 .try_get_request_query(QUERY_DB_QUERY_KEY)
@@ -83,11 +86,10 @@ impl ServerHook for QueryRoute {
             ctx.set_response_body(&serde_json::to_vec(&data).unwrap_or_default())
                 .await
                 .send()
-                .await
-                .unwrap();
+                .await;
         };
         run().await;
-        while ctx.http_from_stream(HTTP_BUFFER).await.is_ok() {
+        while ctx.http_from_stream(&request_config).await.is_ok() {
             run().await;
         }
         ctx.closed().await;
@@ -100,6 +102,7 @@ impl ServerHook for FortunesRoute {
     }
 
     async fn handle(self, ctx: &Context) {
+        let request_config: RequestConfigData = *REQUEST_CONFIG;
         ctx.set_response_header(
             CONTENT_TYPE,
             &ContentType::format_content_type_with_charset(TEXT_HTML, UTF8),
@@ -120,10 +123,10 @@ impl ServerHook for FortunesRoute {
             ));
             fortunes_list.sort_by(|it, next| it.message.cmp(&next.message));
             let res: String = FortunesTemplate::new(fortunes_list).to_string();
-            ctx.set_response_body(&res).await.send().await.unwrap();
+            ctx.set_response_body(&res).await.send().await;
         };
         run().await;
-        while ctx.http_from_stream(HTTP_BUFFER).await.is_ok() {
+        while ctx.http_from_stream(&request_config).await.is_ok() {
             run().await;
         }
         ctx.closed().await;
@@ -136,6 +139,7 @@ impl ServerHook for UpdateRoute {
     }
 
     async fn handle(self, ctx: &Context) {
+        let request_config: RequestConfigData = *REQUEST_CONFIG;
         let run = || async {
             let queries: Queries = ctx
                 .try_get_request_query(UPDATE_DB_QUERY_KEY)
@@ -148,11 +152,10 @@ impl ServerHook for UpdateRoute {
             ctx.set_response_body(&serde_json::to_vec(&res).unwrap_or_default())
                 .await
                 .send()
-                .await
-                .unwrap();
+                .await;
         };
         run().await;
-        while ctx.http_from_stream(HTTP_BUFFER).await.is_ok() {
+        while ctx.http_from_stream(&request_config).await.is_ok() {
             run().await;
         }
         ctx.closed().await;
@@ -165,6 +168,7 @@ impl ServerHook for CachedQueryRoute {
     }
 
     async fn handle(self, ctx: &Context) {
+        let request_config: RequestConfigData = *REQUEST_CONFIG;
         let run = || async {
             let count: Queries = ctx
                 .try_get_request_query(CACHE_QUERY_KEY)
@@ -177,11 +181,10 @@ impl ServerHook for CachedQueryRoute {
             ctx.set_response_body(&serde_json::to_vec(&res).unwrap_or_default())
                 .await
                 .send()
-                .await
-                .unwrap();
+                .await;
         };
         run().await;
-        while ctx.http_from_stream(HTTP_BUFFER).await.is_ok() {
+        while ctx.http_from_stream(&request_config).await.is_ok() {
             run().await;
         }
         ctx.closed().await;

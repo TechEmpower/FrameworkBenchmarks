@@ -16,7 +16,7 @@
       "language": "Ruby",
       "orm": "Full",
       "platform": "Rack",
-      "webserver": "Puma",
+      "webserver": "Iodine",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "hanami",

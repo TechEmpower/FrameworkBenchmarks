@@ -54,5 +54,7 @@ fun resolvePlatformSpecificNettyDependencies(version: String) = when (CURRENT_SY
         "io.netty:netty-transport-native-kqueue:$version:osx-aarch_64",
         "io.netty:netty-resolver-dns-native-macos:$version:osx-aarch_64",
     )
-    else -> throw IllegalStateException("Unsupported system: $CURRENT_SYSTEM_INFO")
+    else -> arrayOf(
+        "io.netty:netty-transport-native-io_uring:$version:linux-x86_64",
+    )
 }

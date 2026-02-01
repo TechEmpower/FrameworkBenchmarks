@@ -2,52 +2,53 @@
 
 using AkazawaYun.AOT;
 using AkazawaYun.PRO7;
+using AkazawaYun.PRO7.AkazawaYunWebInterceptor;
 
 namespace AkazawaYun.Benchmark.WebApi;
 
 class Program : IPostFunctionWrapper
 {
-    static readonly akzWebBuilder builder;
-    static readonly akzDbFactory mysql;
     const int port = 8080;
+    static readonly akaWebBuilder builder;
+    static readonly akaDbFactory mysql;
 
     static Program()
     {
-        akzJson.Config(null, AotJsonContext.Default);
-        builder = akzWebBuilder.Shared.SetPort(port).SetDev()
-            .Add<akzXmlSummary, akzXmlSummary>(() => null)
+        akaJson.Config(null, AotJsonContext.Default);
+        builder = akaWebBuilder.Shared.SetPort(port).SetDev()
+            .Add<akaXmlSummary, akaXmlSummary>(() => null)
             .Build()
-            .Config<IWebListener, akzHttpListenerVBase>(lis => lis.LogLevel = 0)
-            .Config<IWebReceptor, akzWebInterceptor>(itc =>
+            .Config<IWebListener, akaHttpListenerVBase>(lis => lis.LogLevel = 0)
+            .Config<IWebReceptor, akaWebInterceptor>(rcp =>
             {
-                itc.ClearInterceptor();
-                itc.AddInterceptor(new akzWebInterceptorAsPost());
+                rcp.ClearInterceptor();
+                rcp.AddInterceptor(new akaWebInterceptorAllAsPost());
             });
-        mysql = new akzDbBuilderII()
+        mysql = new akaDbBuilderII()
             .SetServer("tfb-database")
-            //.SetServer("localhost:3306")
             .SetUser("benchmarkdbuser")
-            //.SetUser("root")
             .SetPwd("benchmarkdbpass")
+            //.SetServer("localhost:3306")
+            //.SetUser("root")
             //.SetPwd("123456")
             .SetDatabase("hello_world")
             .SetCharset()
-            .SetOtherset()
+            .SetOtherset("Pooling=true;MaximumPoolSize=32767;SslMode=none;AllowPublicKeyRetrieval=true;")
             .Build<Mysql>();
     }
     static async Task Main()
     {
         await builder.Launch();
 
-        akzLog.Inf("[API SELF-TEST]");
+        akaLog.Inf("[API SELF-TEST]");
         string url = $"http://localhost:{port}/plaintext";
-        akzLog.Inf(" REQ URL :" + url);
-        string res = await akzHttpClient.Shared.Get(url).FetchString();
-        akzLog.Inf(" RES LEN :" + res.Length);
-        akzLog.Inf(" RES BODY:" + res);
-        akzLog.Inf("[OK, I WORK FINE]");
+        akaLog.Inf(" REQ URL :" + url);
+        string res = await akaHttpClient.Shared.Get(url).FetchString();
+        akaLog.Inf(" RES LEN :" + res.Length);
+        akaLog.Inf(" RES BODY:" + res);
+        akaLog.Inf("[OK, I WORK FINE]");
 
-        akzLog.Default = akzLog.Output.NoneButWar;
+        akaLog.Default = akaLog.Output.NoneButWar;
         await Task.Delay(-1);
     }
 
@@ -100,13 +101,4 @@ class Program : IPostFunctionWrapper
         return count;
     }
 
-}
-
-public class akzWebInterceptorAsPost : WebInterceptor
-{
-    public override ValueTask<InterceptorHttpRes> Intercept(IHttpContext http)
-    {
-        http.Method = "POST";
-        return InterceptorHttpRes.No();
-    }
 }
