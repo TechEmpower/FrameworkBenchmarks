@@ -1,4 +1,5 @@
 (ns hello.handler
+  (:gen-class)
   (:require [next.jdbc :as jdbc]
             [clojure.tools.cli :only [cli]]
             [next.jdbc.result-set :as rs]
@@ -160,31 +161,18 @@
            (GET "/updates/" [] (db-updates 1))
            (route/not-found "Not Found"))
 
-
-(defn parse-port [s] 
-  "Convert stringy port number int. Defaults to 8080."
-  (cond
-    (string? s) (Integer/parseInt s)
-    (instance? Integer s) s
-    (instance? Long s) (.intValue ^Long s)
-    :else 8080))
+(def app
+  "Format responses as JSON"
+  (-> app-routes
+      (json-middleware/wrap-json-response)))
 
 (defn start-server [{:keys [port]}]
-  ;; Format responses as JSON
   (let [handler (json-middleware/wrap-json-response app-routes)
         cpu (.availableProcessors (Runtime/getRuntime))]
-    ;; double worker threads should increase database access performance
     (run-server handler {:port port
                          :thread (* 2 cpu)})
     (println (str "http-kit server listens at :" port))))
 
 
 (defn -main [& args]
-  (let [[options _ banner]
-        (cli args
-             ["-p" "--port" "Port to listen" :default 8080 :parse-fn parse-port]
-             ["--[no-]help" "Print this help"])]
-    (when (:help options)
-          (println banner)
-          (System/exit 0))
-    (start-server options)))
+  (start-server {:port 8080}))
