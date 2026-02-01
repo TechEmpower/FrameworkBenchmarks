@@ -1,17 +1,19 @@
 #![cfg(any(feature = "db",feature = "all"))]
-use std::{borrow::Cow, io};
+use std::{borrow::Cow, io, ptr};
 use std::fmt::Arguments;
 use std::io::Write;
 use std::mem::MaybeUninit;
 use std::rc::Rc;
 use std::cell::UnsafeCell;
+use std::collections::HashMap;
 use bytes::Buf;
 use nanorand::{Rng, WyRand};
-use tokio_postgres::{connect, Client, Statement, NoTls};
+use tokio_postgres::{connect, Client, Statement, NoTls, Error};
 use tokio_postgres::types::private::BytesMut;
 use crate::models::{Fortune, FortuneTemplate, World};
 use sonic_rs::prelude::WriteExt;
 use yarte::TemplateBytesTrait;
+pub static  mut CACHED_VALUES:Option<HashMap<i32,i32>> = None;
 
 /// Database connection pool with thread-local RNG
 pub struct DbConnectionPool {
@@ -262,11 +264,51 @@ impl PgConnection {
         // Return reference to buffer - zero-copy!
         Ok(&buffers.fortune_output)
     }
+
+
+    pub fn get_cached_queries(&self,num:usize)->&[u8]{
+        let buf = self.buffers();
+        let buf = &mut buf.body;
+        buf.clear();
+        buf.extend_from_slice(br#"["#);
+        let mut writer = BytesMuteWriter(buf);
+        let mut rn = self.rang.clone();
+        for _ in 0..num {
+            let rd = (rn.generate::<u32>() % 10_000 ) as i32;
+            let v = match self.get_world_id_for_cache(rd){
+                None => {continue}
+                Some(e)=>{e}
+            };
+            writer.extend_from_slice(br"{");
+            _ = write!(writer, r#""id":{},"randomnumber":{}"#, rd, v);
+            writer.extend_from_slice(br"},");
+        }
+        if buf.len() >1  {buf.truncate(buf.len() - 1);}
+        buf.extend_from_slice(b"]");
+        return &buf[..]
+    }
+
+    fn get_world_id_for_cache(&self, id: i32) -> Option<i32> {
+        unsafe {
+            let ptr = ptr::addr_of!(CACHED_VALUES);
+
+            match &*ptr {
+                Some(map) => map.get(&id).copied(),
+                None => None,
+            }
+        }
+    }
 }
 
 /// Zero-copy writer for BytesMut
 pub struct BytesMuteWriter<'a>(pub &'a mut BytesMut);
+impl BytesMuteWriter<'_> {
 
+    #[inline(always)]
+    pub fn extend_from_slice(&mut self,data:&[u8]){
+        self.0.extend_from_slice(data);
+    }
+}
 impl Write for BytesMuteWriter<'_> {
     #[inline(always)]
     fn write(&mut self, src: &[u8]) -> Result<usize, io::Error> {
