@@ -524,9 +524,9 @@ dependencies = [
 
 [[package]]
 name = "http-compress"
-version = "3.0.16"
+version = "3.0.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fdc4dd5ccc8ce574c90376710f74543c59712def7c0fd0f42b88c9b9ae42ba62"
+checksum = "fcc52cc56a1bcff8cd523dcf2fb6a6e11bd982444ae774811739ce1cdba7b18c"
 dependencies = [
  "brotli",
  "flate2",
@@ -535,15 +535,15 @@ dependencies = [
 
 [[package]]
 name = "http-constant"
-version = "3.3.3"
+version = "3.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7fe8ec3500f051b3d7120b3e349daeb13fd1c0bfd44ca4a5549beee6c3d178a9"
+checksum = "7250f9e702aae339609429a90eeb242d18aa58a746c2c8f7defe2e74eb515afa"
 
 [[package]]
 name = "http-type"
-version = "14.2.1"
+version = "14.3.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d9c27084b9427a9625bbc52fbad291b1c038b62da450ebde2e3bb3a801902ea1"
+checksum = "d1b22447f421ac195f1cbb8335419abbf90bb4a77fcb7f5fd6e11e9b2211c4a0"
 dependencies = [
  "hex",
  "http-compress",
@@ -559,9 +559,9 @@ dependencies = [
 
 [[package]]
 name = "hyperlane"
-version = "13.3.4"
+version = "13.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ed01902d678f8e576518a2666eadeec3187df057464249eadb9c76e57e7f5043"
+checksum = "c4f3b487b6370bc0f50a9bf360ee8f19cb6e4db3bf068ff2b50b6b7c7b738e65"
 dependencies = [
  "http-type",
  "inventory",
@@ -572,13 +572,13 @@ dependencies = [
 
 [[package]]
 name = "hyperlane-time"
-version = "0.7.21"
+version = "0.7.22"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e86f7227158e0b2fce6ff8e3f3e9f43255f56a17f5b53b4d00e396e1cc77ebfd"
+checksum = "9b6f580fff377190b818d8c2ef52f68d1296490916da4923fe90287b7c80028c"
 
 [[package]]
 name = "hyperlane_techempower"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "futures",
  "hyperlane",
@@ -783,9 +783,9 @@ checksum = "5e5032e24019045c762d3c0f28f5b6b8bbf38563a65908389bf7978758920897"
 
 [[package]]
 name = "lombok-macros"
-version = "2.0.20"
+version = "2.0.21"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fbffa247c90d459e77f87312e5e91155adc950a408b82cb204bb07daefc18d66"
+checksum = "7cc1e7d50b1809084fc48589dd5b83bacbdd61f0c8b9e772d4c5e94431fcd0bc"
 dependencies = [
  "proc-macro2",
  "quote",
