@@ -1,4 +1,4 @@
-FROM rust:1.89
+FROM rust:1.93
 
 RUN apt-get update -yqq && apt-get install -yqq cmake g++ binutils lld
 
