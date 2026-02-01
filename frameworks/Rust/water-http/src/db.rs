@@ -130,7 +130,7 @@ impl PgConnection {
     }    /// Connect to the database
 
     #[inline(always)]
-  pub fn generate_update_values_stmt(batch_size: usize) -> String {
+    pub fn generate_update_values_stmt(batch_size: usize) -> String {
 
         let mut sql = String::from("UPDATE world SET randomNumber = w.r FROM (VALUES ");
 
@@ -156,12 +156,10 @@ impl PgConnection {
     /// Get a single random world - optimized with buffer reuse
     #[inline]
     pub async fn get_world(&self) -> &[u8] {
-        let rd = (self.rang.clone().generate::<u32>() % 10_000 + 1) as i32;
+        let rd = (self.rang.clone().generate::<u32>() % 10_000 ) as i32;
         let row = self.cl.query_one(&self.world, &[&rd]).await.unwrap();
-
         let buffers = self.buffers();
         buffers.body.clear();
-
         sonic_rs::to_writer(
             BytesMuteWriter(&mut buffers.body),
             &World {
@@ -169,25 +167,24 @@ impl PgConnection {
                 randomnumber: row.get(1),
             },
         ).unwrap();
-
         buffers.body.chunk()
     }
 
     /// Get multiple random worlds - optimized with buffer reuse
     pub async fn get_worlds(&self, num: usize) -> &[u8] {
         let buffers = self.buffers();
-        buffers.worlds.clear();
+        let mut worlds = Vec::with_capacity(num);
         let mut rn = self.rang.clone();
         for _ in 0..num {
-            let id: i32 = (rn.generate::<u32>() & 0x3FFF) as i32 % 10_000 + 1;
+            let id = (self.rang.clone().generate::<u32>() % 10_000 ) as i32;
             let row = self.cl.query_one(&self.world, &[&id]).await.unwrap();
-            buffers.worlds.push(World {
+           worlds.push(World {
                 id: row.get(0),
                 randomnumber: row.get(1),
             });
         }
         buffers.body.clear();
-        sonic_rs::to_writer(BytesMuteWriter(&mut buffers.body), &buffers.worlds).unwrap();
+        sonic_rs::to_writer(BytesMuteWriter(&mut buffers.body), &worlds).unwrap();
         buffers.body.chunk()
     }
     /// Update worlds in batch - optimized with buffer reuse
@@ -215,23 +212,24 @@ impl PgConnection {
         futures.extend(ids.iter().map(|x| async move {self.cl.query_one(&self.world,&[&x]).await}));
         futures_util::future::join_all(futures).await;
         ids.sort_unstable();
-        buffers.worlds.clear();
+        let mut worlds = Vec::with_capacity(num);
+        let mut numbers = Vec::with_capacity(num);
         for index in 0..num {
             let s_id = (rng.generate::<u32>() % 10_000 + 1 ) as i32;
-            buffers.worlds.push(World{
+            worlds.push(World{
                 id:ids[index],
                 randomnumber:s_id
             });
-            buffers.numbers.push(s_id);
+           numbers.push(s_id);
         }
         buffers.body.clear();
         for index in 0..num {
             params.push(&ids[index]);
-            params.push(&buffers.numbers[index]);
+            params.push(&numbers[index]);
         }
 
         _=self.cl.execute(&self.updates[num - 1], &params).await.unwrap();
-        sonic_rs::to_writer(BytesMuteWriter(&mut buffers.body), &buffers.worlds).unwrap();
+        sonic_rs::to_writer(BytesMuteWriter(&mut buffers.body), &worlds).unwrap();
         buffers.body.chunk()
     }
 
