@@ -29,20 +29,24 @@ class HelloWorld
   DATE = 'Date'
   SERVER = 'Server'
   SERVER_STRING = 'Rack'
-  TEMPLATE_PREFIX = '<!DOCTYPE html>
-<html>
-<head>
-  <title>Fortunes</title>
-</head>
-<body>
-  <table>
-    <tr>
-      <th>id</th>
-      <th>message</th>
-    </tr>'
-  TEMPLATE_POSTFIX = '</table>
+  TEMPLATE_PREFIX = <<~HTML
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Fortunes</title>
+    </head>
+    <body>
+      <table>
+        <tr>
+          <th>id</th>
+          <th>message</th>
+        </tr>
+  HTML
+  TEMPLATE_POSTFIX = <<~HTML
+      </table>
     </body>
-  </html>'
+    </html>
+  HTML
 
   def call(env)
     case env['PATH_INFO']
@@ -102,9 +106,9 @@ class HelloWorld
     fortunes = $db.with(&:select_fortunes).map(&:to_h)
     fortunes << { 'id' => 0, 'message' => 'Additional fortune added at request time.' }
     fortunes.sort_by! { |item| item['message'] }
+
     buffer = String.new
     buffer << TEMPLATE_PREFIX
-
     fortunes.each do |item|
       buffer << "<tr><td>#{item['id']}</td><td>#{ERB::Escape.html_escape(item['message'])}</td></tr>"
     end
