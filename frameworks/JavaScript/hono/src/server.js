@@ -26,7 +26,10 @@ app
   });
 
 if (db) {
-  const extra = { id: 0, message: "Additional fortune added at request time." };
+  const extra = () => ({
+    id: 0,
+    message: "Additional fortune added at request time."
+  });
 
   app
     .get("/db", async (c) => {
@@ -49,7 +52,7 @@ if (db) {
       return c.json(worldObjects);
     })
     .get("/fortunes", async (c) => {
-      const rows = [extra, ...(await db.fortunes())];
+      const rows = [extra(), ...(await db.fortunes())];
 
       sortByMessage(rows);
 
