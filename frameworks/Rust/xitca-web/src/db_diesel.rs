@@ -14,7 +14,7 @@ pub struct Pool {
 
 impl Pool {
     pub async fn create() -> HandleResult<Self> {
-        let pool = AsyncPgConnection::establish(DB_URL)?;
+        let pool = AsyncPgConnection::establish(DB_URL).await?;
 
         Ok(Self {
             pool,

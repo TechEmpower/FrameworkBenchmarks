@@ -32,7 +32,7 @@ required-features = ["perf", "template", "toasty", "web-codegen"]
 # pg client optional
 pg = ["dep:xitca-postgres"]
 # diesel orm optional
-diesel = ["dep:diesel", "dep:xitca-postgres-diesel", "dep:futures-util"]
+diesel = ["dep:diesel", "dep:xitca-postgres-diesel", "futures-util/alloc"]
 # toasty orm optional
 toasty = ["dep:toasty", "dep:xitca-postgres-toasty", "futures-util/alloc"]
 # http router optional
@@ -107,7 +107,7 @@ codegen-units = 1
 panic = "abort"
 
 [patch.crates-io]
-xitca-postgres-diesel = { git = "https://github.com/fakeshadow/xitca-postgres-diesel", rev = "7831561" }
+xitca-postgres-diesel = { git = "https://github.com/fakeshadow/xitca-postgres-diesel", rev = "270cde0" }
 xitca-postgres-toasty = { git = "https://github.com/fakeshadow/xitca-postgres-toasty", rev = "f410f04" }
 
 toasty = { git = "https://github.com/fakeshadow/toasty", rev = "0edc941" }

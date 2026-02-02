@@ -445,18 +445,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "diesel-async"
-version = "0.7.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "13096fb8dae53f2d411c4b523bec85f45552ed3044a2ab4d85fb2092d9cb4f34"
-dependencies = [
- "diesel",
- "futures-core",
- "futures-util",
- "scoped-futures",
-]
-
-[[package]]
 name = "diesel_derives"
 version = "2.3.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2178,10 +2166,9 @@ dependencies = [
 [[package]]
 name = "xitca-postgres-diesel"
 version = "0.3.0"
-source = "git+https://github.com/fakeshadow/xitca-postgres-diesel?rev=7831561#7831561348b073a8758a237db73b9265d453c58e"
+source = "git+https://github.com/fakeshadow/xitca-postgres-diesel?rev=270cde0#270cde00b3ffc320b8b10bf790baf064cb730373"
 dependencies = [
  "diesel",
- "diesel-async",
  "futures-core",
  "scoped-futures",
  "tokio",
