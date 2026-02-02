@@ -9,7 +9,7 @@ gem "cgi" # Make sure the h plugin uses the faster CGI.escape_html
 gem "concurrent-ruby"
 
 group :mysql, optional: true do
-  gem "trilogy", "~> 2.9"
+  gem "trilogy", "~> 2.10"
 end
 
 group :postgresql, optional: true do
