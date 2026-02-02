@@ -1,7 +1,6 @@
 use diesel::prelude::*;
-use diesel_async::{AsyncConnection, RunQueryDsl};
 use futures_util::future::TryJoinAll;
-use xitca_postgres_diesel::AsyncPgConnection;
+use xitca_postgres_diesel::{AsyncPgConnection, RunQueryDsl};
 
 use crate::{
     ser::{Fortunes, World},
@@ -15,7 +14,7 @@ pub struct Pool {
 
 impl Pool {
     pub async fn create() -> HandleResult<Self> {
-        let pool = AsyncPgConnection::establish(DB_URL).await?;
+        let pool = AsyncPgConnection::establish(DB_URL)?;
 
         Ok(Self {
             pool,
@@ -27,7 +26,7 @@ impl Pool {
         use schema::world::dsl::{id, world};
 
         let w_id = self.rng.borrow_mut().gen_id();
-        let w = world.filter(id.eq(w_id)).first(&mut &self.pool).await?;
+        let w = world.filter(id.eq(w_id)).get_result(&self.pool).await?;
         Ok(w)
     }
 
@@ -39,7 +38,7 @@ impl Pool {
             .borrow_mut()
             .gen_multi()
             .take(num as _)
-            .map(|w_id| world.filter(id.eq(w_id)).first(&mut &self.pool))
+            .map(|w_id| world.filter(id.eq(w_id)).get_result(&self.pool))
             .collect::<TryJoinAll<_>>();
 
         get.await.map_err(Into::into)
@@ -58,13 +57,13 @@ impl Pool {
             .collect();
 
         let sql = update_query_from_ids(params);
-        diesel::sql_query(sql).execute(&mut &self.pool).await?;
+        diesel::sql_query(sql).execute(&self.pool).await?;
 
         Ok(worlds)
     }
 
     pub async fn fortunes(&self) -> HandleResult<Fortunes> {
-        let fortunes = schema::fortune::dsl::fortune.load(&mut &self.pool).await?;
+        let fortunes = schema::fortune::dsl::fortune.load(&self.pool).await?;
         Ok(Fortunes::new(fortunes))
     }
 }
@@ -93,9 +92,8 @@ fn update_query_from_ids(mut rngs: Vec<(i32, i32)>) -> String {
     const PREFIX: &str = "UPDATE world SET randomNumber = w.r FROM (SELECT unnest(ARRAY[";
     const MID: &str = "]) as i, unnest(ARRAY[";
     const SUFFIX: &str = "]) as r) w WHERE world.id = w.i";
-    const SIZE_HINT: usize = PREFIX.len() + MID.len() + SUFFIX.len() + "10000,".len();
 
-    let mut query = String::with_capacity(SIZE_HINT);
+    let mut query = String::with_capacity(512);
 
     query.push_str(PREFIX);
 
