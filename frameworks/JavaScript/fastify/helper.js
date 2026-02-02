@@ -5,8 +5,8 @@ module.exports = {
     return Math.min(Math.max(parseInt(queries) || 1, 1), 500);
   },
 
-  additionalFortune: {
+  additionalFortune: () => ({
     id: 0,
     message: "Additional fortune added at request time.",
-  },
+  }),
 };

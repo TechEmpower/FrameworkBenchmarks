@@ -93,7 +93,10 @@ if (db) {
     }
   });
 
-  const extra = { id: 0, message: "Additional fortune added at request time." };
+  const extra = () => ({
+    id: 0,
+    message: "Additional fortune added at request time."
+  });
 
   webserver.get("/fortunes", async (response) => {
     response.onAborted(() => {
@@ -101,7 +104,7 @@ if (db) {
     });
 
     try {
-      const rows = [extra, ...await db.fortunes()];
+      const rows = [extra(), ...await db.fortunes()];
 
       if (response.aborted) {
         return;
