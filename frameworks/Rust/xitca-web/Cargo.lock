@@ -2166,13 +2166,13 @@ dependencies = [
 [[package]]
 name = "xitca-postgres-diesel"
 version = "0.3.0"
-source = "git+https://github.com/fakeshadow/xitca-postgres-diesel?rev=270cde0#270cde00b3ffc320b8b10bf790baf064cb730373"
+source = "git+https://github.com/fakeshadow/xitca-postgres-diesel?rev=0e83af6#0e83af6bd6f7d5a47414687397afa6041c2f905d"
 dependencies = [
  "diesel",
  "futures-core",
  "scoped-futures",
  "tokio",
- "xitca-postgres 0.3.0",
+ "xitca-postgres 0.4.0",
 ]
 
 [[package]]
