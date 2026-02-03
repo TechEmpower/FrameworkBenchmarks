@@ -143,7 +143,7 @@ WaterController! {
         }
 
 
-          GET -> db -> db (context){
+        GET -> db -> db (context){
             let   connection:Shared = context.thread_shared_struct.clone().unwrap().clone();
             let connection = connection.pg_connection.get_connection();
             let data =  connection.get_world().await;

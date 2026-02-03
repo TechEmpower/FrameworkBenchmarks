@@ -62,8 +62,6 @@ impl DbConnectionPool {
 /// Reusable buffer pool per connection
 struct BufferPool {
     body: BytesMut,
-    worlds: Vec<World>,
-    numbers: Vec<i32>,
     fortunes: Vec<Fortune>,
     fortune_output: Vec<u8>,
 }
@@ -72,8 +70,6 @@ impl BufferPool {
     fn new() -> Self {
         Self {
             body: BytesMut::with_capacity(4096),
-            worlds: Vec::with_capacity(501),
-            numbers: Vec::with_capacity(501),
 
             fortunes: Vec::with_capacity(501),
             fortune_output: Vec::with_capacity(4096),
@@ -176,7 +172,6 @@ impl PgConnection {
     pub async fn get_worlds(&self, num: usize) -> &[u8] {
         let buffers = self.buffers();
         let mut worlds = Vec::with_capacity(num);
-        let mut rn = self.rang.clone();
         for _ in 0..num {
             let id = (self.rang.clone().generate::<u32>() % 10_000 ) as i32;
             let row = self.cl.query_one(&self.world, &[&id]).await.unwrap();
@@ -272,9 +267,8 @@ impl PgConnection {
         buf.clear();
         buf.extend_from_slice(br#"["#);
         let mut writer = BytesMuteWriter(buf);
-        let mut rn = self.rang.clone();
         for _ in 0..num {
-            let rd = (rn.generate::<u32>() % 10_000 ) as i32;
+            let rd = (self.rang.clone().generate::<u32>() % 10_000 ) as i32;
             let v = match self.get_world_id_for_cache(rd){
                 None => {continue}
                 Some(e)=>{e}
@@ -288,12 +282,12 @@ impl PgConnection {
         return &buf[..]
     }
 
-    fn get_world_id_for_cache(&self, id: i32) -> Option<i32> {
+    fn get_world_id_for_cache(&self, id: i32) -> Option<&i32> {
         unsafe {
             let ptr = ptr::addr_of!(CACHED_VALUES);
 
             match &*ptr {
-                Some(map) => map.get(&id).copied(),
+                Some(map) => map.get(&id),
                 None => None,
             }
         }
