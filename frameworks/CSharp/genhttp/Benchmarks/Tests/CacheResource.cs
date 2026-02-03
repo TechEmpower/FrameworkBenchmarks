@@ -1,20 +1,26 @@
-﻿using Benchmarks.Model;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+using Benchmarks.Model;
+
 using GenHTTP.Modules.Webservices;
-using Microsoft.EntityFrameworkCore;
+
 using Microsoft.Extensions.Caching.Memory;
+
+using Npgsql;
 
 namespace Benchmarks.Tests;
 
 public sealed class CacheResource
 {
-    private static readonly Random Random = new();
-
     private static readonly MemoryCache Cache = new(new MemoryCacheOptions
     {
         ExpirationScanFrequency = TimeSpan.FromMinutes(60)
     });
 
-    private static readonly object[] CacheKeys = Enumerable.Range(0, 10001).Select(i => new CacheKey(i)).ToArray();
+    private static readonly CacheKey[] CacheKeys = Enumerable.Range(0, 10001).Select(i => new CacheKey(i)).ToArray();
 
     [ResourceMethod(":queries")]
     public ValueTask<List<World>> GetWorldsFromPath(string queries) => GetWorlds(queries);
@@ -22,9 +28,10 @@ public sealed class CacheResource
     [ResourceMethod]
     public async ValueTask<List<World>> GetWorlds(string queries)
     {
-        var count = 1;
-
-        int.TryParse(queries, out count);
+        if (!int.TryParse(queries, out var count))
+        {
+            count = 1;
+        }
 
         if (count < 1)
         {
@@ -35,13 +42,13 @@ public sealed class CacheResource
             count = 500;
         }
 
-        var result = new List<World>(count);
+        NpgsqlConnection connection = null;
 
-        await using var context = DatabaseContext.CreateNoTracking();
+        var result = new List<World>(count);
 
         for (var i = 0; i < count; i++)
         {
-            var id = Random.Next(1, 10001);
+            var id = Random.Shared.Next(1, 10001);
 
             var key = CacheKeys[id];
 
@@ -53,7 +60,12 @@ public sealed class CacheResource
             }
             else
             {
-                var resolved = await context.World.FirstOrDefaultAsync(w => w.Id == id).ConfigureAwait(false);
+                if (connection == null)
+                {
+                    connection = await Database.DataSource.OpenConnectionAsync();
+                }
+
+                var resolved = await GetWorldById(connection, id);
 
                 Cache.Set(key, resolved);
 
@@ -62,6 +74,28 @@ public sealed class CacheResource
         }
 
         return result;
+    }
+
+    private static async Task<World> GetWorldById(NpgsqlConnection connection, int id)
+    {
+        await using var command = connection.CreateCommand();
+
+        command.CommandText = "SELECT id, randomnumber FROM world WHERE id = @Id";
+
+        command.Parameters.AddWithValue("@Id", id);
+
+        await using var reader = await command.ExecuteReaderAsync();
+
+        if (await reader.ReadAsync())
+        {
+            return new()
+            {
+                Id = reader.GetInt32(0),
+                RandomNumber = reader.GetInt32(1)
+            };
+        }
+
+        return null;
     }
 
     public sealed class CacheKey : IEquatable<CacheKey>
@@ -81,4 +115,5 @@ public sealed class CacheResource
 
         public override string ToString() => _value.ToString();
     }
+
 }

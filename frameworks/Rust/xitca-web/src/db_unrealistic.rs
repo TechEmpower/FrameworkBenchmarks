@@ -21,7 +21,9 @@ pub struct Client {
 
 impl Client {
     pub async fn create() -> HandleResult<Self> {
-        let (cli, mut drv) = xitca_postgres::Postgres::new(DB_URL).connect().await?;
+        let (cli, drv) = xitca_postgres::Postgres::new(DB_URL).connect().await?;
+
+        let mut drv = drv.try_into_tcp().expect("raw tcp is used for database connection");
 
         tokio::task::spawn(async move {
             while drv.try_next().await?.is_some() {}

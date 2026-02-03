@@ -1,4 +1,8 @@
 # frozen_string_literal: true
+require 'bundler/setup'
+Bundler.require(:default) # Load core modules
+
+require_relative 'db'
 require 'time'
 
 # Our Rack application to be executed by rackup
@@ -8,8 +12,8 @@ class HelloWorld
   ALL_IDS = ID_RANGE.to_a
   QUERIES_MIN = 1
   QUERIES_MAX = 500
+
   CONTENT_TYPE = 'Content-Type'
-  CONTENT_LENGTH = 'Content-Length'
   JSON_TYPE = 'application/json'
   HTML_TYPE = 'text/html; charset=utf-8'
   PLAINTEXT_TYPE = 'text/plain'
@@ -44,10 +48,12 @@ class HelloWorld
 
   def fortunes
     fortunes = Fortune.all
-    fortunes << Fortune.new(
-      id: 0,
-      message: 'Additional fortune added at request time.'
-    )
+
+    fortune = Fortune.new
+    fortune.id = 0
+    fortune.message = "Additional fortune added at request time."
+    fortunes << fortune
+
     fortunes.sort_by!(&:message)
 
     html = String.new(<<~'HTML')
@@ -138,7 +144,7 @@ class HelloWorld
       {
         CONTENT_TYPE => content_type,
         SERVER => SERVER_STRING,
-        DATE => Time.now.utc.httpdate
+        DATE => Time.now.httpdate
       }
     end
   else

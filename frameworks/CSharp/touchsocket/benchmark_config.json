@@ -82,7 +82,7 @@
         "plaintext_url": "/plaintext",
         "json_url": "/json",
         "port": 8080,
-        "approach": "Realistic",
+        "approach": "Stripped",
         "classification": "Platform",
         "database": "Postgres",
         "framework": "touchsocket.httpplatform",

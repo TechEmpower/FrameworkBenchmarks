@@ -37,7 +37,7 @@ class Kernel extends BaseKernel implements CompilerPassInterface
         $routes->import('../config/{routes}.yaml');
     }
 
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         if ($this->environment !== 'swoole') {
             return;

@@ -1,1 +1,0 @@
-requires 'DBD::mysql', '== 5.009';

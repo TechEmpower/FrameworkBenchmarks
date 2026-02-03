@@ -90,9 +90,9 @@ public class App extends VerticleBase implements Handler<HttpServerRequest> {
   private static final CharSequence JSON_LENGTH = HttpHeaders.createOptimized("" + new Message("Hello, World!").toJson().length());
   private static final CharSequence SERVER = HttpHeaders.createOptimized("vert.x");
 
-  private static final String SELECT_WORLD = "SELECT id, randomnumber from WORLD where id=$1";
-  private static final String SELECT_FORTUNE = "SELECT id, message from FORTUNE";
-  private static final String SELECT_WORLDS = "SELECT id, randomnumber from WORLD";
+  private static final String SELECT_WORLD = "SELECT id, randomnumber FROM world WHERE id = $1";
+  private static final String SELECT_FORTUNE = "SELECT id, message FROM fortune";
+  private static final String SELECT_WORLDS = "SELECT id, randomnumber FROM world";
 
   public static CharSequence createDateHeader() {
     return HttpHeaders.createOptimized(DateTimeFormatter.RFC_1123_DATE_TIME.format(ZonedDateTime.now()));
@@ -213,12 +213,12 @@ public class App extends VerticleBase implements Handler<HttpServerRequest> {
 
   private static String buildAggregatedUpdateQuery(int len) {
     StringBuilder sql = new StringBuilder();
-    sql.append("UPDATE WORLD SET RANDOMNUMBER = CASE ID");
+    sql.append("UPDATE world SET randomnumber = CASE ID");
     for (int i = 0; i < len; i++) {
       int offset = (i * 2) + 1;
       sql.append(" WHEN $").append(offset).append(" THEN $").append(offset + 1);
     }
-    sql.append(" ELSE RANDOMNUMBER");
+    sql.append(" ELSE randomnumber");
     sql.append(" END WHERE ID IN ($1");
     for (int i = 1; i < len; i++) {
       int offset = (i * 2) + 1;
@@ -304,12 +304,12 @@ public class App extends VerticleBase implements Handler<HttpServerRequest> {
           return;
         }
         Row row = resultSet.next();
-        World word = new World(row.getInteger(0), row.getInteger(1));
+        World world = new World(row.getInteger(0), row.getInteger(1));
         MultiMap headers = resp.headers();
         headers.add(HttpHeaders.SERVER, SERVER);
         headers.add(HttpHeaders.DATE, dateString);
         headers.add(HttpHeaders.CONTENT_TYPE, RESPONSE_TYPE_JSON);
-        resp.end(word.toJson());
+        resp.end(world.toJson());
       } else {
         sendError(req, res.cause());
       }

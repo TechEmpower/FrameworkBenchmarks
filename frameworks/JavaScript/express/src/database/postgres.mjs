@@ -8,12 +8,14 @@ const sql = postgres({
   max: 1,
 });
 
-export const fortunes = async () => await sql`SELECT id, message FROM fortune`;
+export const fortunes = () => sql`SELECT id, message FROM fortune`;
 
-export const find = async (id) =>
-  await sql`SELECT id, randomNumber FROM world WHERE id = ${id}`.then(
-    (arr) => arr[0]
-  );
+export const find = async (id) => {
+  const arr = await sql`SELECT id, randomNumber FROM world WHERE id = ${id}`
+  return arr[0]
+};
+
+export const getAllWorlds = () => sql`SELECT id, randomNumber FROM world`
 
 export const bulkUpdate = async (worlds) => {
   const sorted = sql(

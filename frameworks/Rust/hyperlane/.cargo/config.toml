@@ -1,0 +1,2 @@
+[build]
+rustflags = ["-C", "link-arg=-Wl,--as-needed", "-C", "link-arg=-fuse-ld=lld"]

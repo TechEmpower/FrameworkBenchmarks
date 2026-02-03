@@ -11,7 +11,7 @@
       "port": 8080,
       "approach": "Realistic",
       "classification": "Micro",
-      "database": "MySQL",
+      "database": "Postgres",
       "framework": "padrino",
       "language": "Ruby",
       "orm": "Full",
