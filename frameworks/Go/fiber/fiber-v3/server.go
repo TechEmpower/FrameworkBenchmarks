@@ -7,13 +7,14 @@ import (
 	"math/rand"
 	"os"
 	"runtime"
+	"slices"
 	"sort"
 	"sync"
 
 	"github.com/goccy/go-json"
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 
-	"fiber/app/templates"
+	"fiber-v3/app/templates"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -53,15 +54,9 @@ func main() {
 		JSONDecoder:              json.Unmarshal,
 	}
 
-	for i := range os.Args[1:] {
-		if os.Args[1:][i] == "-prefork" {
-			config.Prefork = true
-		}
-	}
-
 	app := fiber.New(config)
 
-	app.Use(func(c *fiber.Ctx) error {
+	app.Use(func(c fiber.Ctx) error {
 		switch c.Path() {
 		case pathJSON:
 			jsonHandler(c)
@@ -81,7 +76,11 @@ func main() {
 		return nil
 	})
 
-	log.Fatal(app.Listen(":8080"))
+	enablePrefork := slices.Contains(os.Args[1:], "-prefork")
+	log.Fatal(app.Listen(":8080", fiber.ListenConfig{
+		DisableStartupMessage: true,
+		EnablePrefork:         enablePrefork,
+	}))
 }
 
 // Message ...
@@ -197,7 +196,7 @@ func populateCache() {
 }
 
 // jsonHandler :
-func jsonHandler(c *fiber.Ctx) error {
+func jsonHandler(c fiber.Ctx) error {
 	m := AcquireJSON()
 	m.Message = helloworld
 	c.JSON(&m)
@@ -206,7 +205,7 @@ func jsonHandler(c *fiber.Ctx) error {
 }
 
 // dbHandler :
-func dbHandler(c *fiber.Ctx) error {
+func dbHandler(c fiber.Ctx) error {
 	w := AcquireWorld()
 	db.QueryRow(context.Background(), worldselectsql, RandomWorld()).Scan(&w.ID, &w.RandomNumber)
 	c.JSON(&w)
@@ -215,7 +214,7 @@ func dbHandler(c *fiber.Ctx) error {
 }
 
 // Frameworks/Go/fasthttp/src/server-postgresql/server.go#104
-func templateHandler(c *fiber.Ctx) error {
+func templateHandler(c fiber.Ctx) error {
 	rows, _ := db.Query(context.Background(), fortuneselectsql)
 
 	var f templates.Fortune
@@ -235,12 +234,12 @@ func templateHandler(c *fiber.Ctx) error {
 
 	c.Response().Header.SetContentType(fiber.MIMETextHTMLCharsetUTF8)
 
-	templates.WriteFortunePage(c.Context(), fortunes)
+	templates.WriteFortunePage(c.RequestCtx(), fortunes)
 	return nil
 }
 
 // queriesHandler :
-func queriesHandler(c *fiber.Ctx) error {
+func queriesHandler(c fiber.Ctx) error {
 	n := QueriesCount(c)
 	worlds := AcquireWorlds()[:n]
 	for i := 0; i < n; i++ {
@@ -253,7 +252,7 @@ func queriesHandler(c *fiber.Ctx) error {
 }
 
 // updateHandler :
-func updateHandler(c *fiber.Ctx) error {
+func updateHandler(c fiber.Ctx) error {
 	n := QueriesCount(c)
 	worlds := AcquireWorlds()[:n]
 	for i := 0; i < n; i++ {
@@ -280,12 +279,12 @@ func updateHandler(c *fiber.Ctx) error {
 var helloworldRaw = []byte("Hello, World!")
 
 // plaintextHandler :
-func plaintextHandler(c *fiber.Ctx) error {
+func plaintextHandler(c fiber.Ctx) error {
 	return c.Send(helloworldRaw)
 }
 
 // cachedHandler :
-func cachedHandler(c *fiber.Ctx) error {
+func cachedHandler(c fiber.Ctx) error {
 	n := QueriesCount(c)
 	worlds := AcquireWorlds()[:n]
 	for i := 0; i < n; i++ {
@@ -302,7 +301,7 @@ func RandomWorld() int {
 }
 
 // QueriesCount :
-func QueriesCount(c *fiber.Ctx) int {
+func QueriesCount(c fiber.Ctx) int {
 	n := c.Request().URI().QueryArgs().GetUintOrZero(queryparam)
 	if n < 1 {
 		n = 1
