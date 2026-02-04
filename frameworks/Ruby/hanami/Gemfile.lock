@@ -133,7 +133,9 @@ GEM
     mustermann-contrib (3.0.3)
       hansi (~> 0.2.0)
       mustermann (= 3.0.3)
-    pg (1.5.9)
+    pg (1.6.3)
+    pg (1.6.3-x86_64-darwin)
+    pg (1.6.3-x86_64-linux)
     pp (0.6.3)
       prettyprint
     prettyprint (0.2.0)
