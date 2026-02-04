@@ -1,4 +1,4 @@
-use diesel::prelude::*;
+use diesel::{ExpressionMethods, QueryDsl};
 use futures_util::future::TryJoinAll;
 use xitca_postgres_diesel::{AsyncPgConnection, RunQueryDsl};
 
@@ -63,7 +63,10 @@ impl Pool {
     }
 
     pub async fn fortunes(&self) -> HandleResult<Fortunes> {
-        let fortunes = schema::fortune::dsl::fortune.load(&self.pool).await?;
+        let mut fortunes = Vec::with_capacity(16);
+        schema::fortune::dsl::fortune
+            .load_into(&self.pool, &mut fortunes)
+            .await?;
         Ok(Fortunes::new(fortunes))
     }
 }
