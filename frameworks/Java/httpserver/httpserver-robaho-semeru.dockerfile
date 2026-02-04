@@ -1,13 +1,12 @@
-FROM clojure:lein as lein
-WORKDIR /ring-http-exchange
-COPY project.clj project.clj
-COPY resources resources
+FROM maven:3-eclipse-temurin-25-alpine as maven
+WORKDIR /httpserver-robaho
+COPY pom.xml pom.xml
 COPY src src
-RUN lein with-profile robaho uberjar
+RUN mvn compile -P robaho assembly:single -q
 
 FROM ibm-semeru-runtimes:open-25-jre-jammy
-WORKDIR /ring-http-exchange
-COPY --from=lein /ring-http-exchange/target/ring-http-server-1.0.0-standalone.jar app.jar
+WORKDIR /httpserver-robaho
+COPY --from=maven /httpserver-robaho/target/httpserver-1.0-jar-with-dependencies.jar app.jar
 
 EXPOSE 8080
 

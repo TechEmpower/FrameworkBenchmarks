@@ -2,31 +2,32 @@ package benchmarks;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.net.InetSocketAddress;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.concurrent.Executors;
 
 import javax.sql.DataSource;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
-import httl.Engine;
-import httl.Template;
+import io.pebbletemplates.pebble.PebbleEngine;
+import io.pebbletemplates.pebble.template.PebbleTemplate;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.module.blackbird.BlackbirdModule;
 
 public class Server {
 
@@ -34,11 +35,9 @@ public class Server {
     private static final byte[] HELLO_BYTES = HELLO_TEXT.getBytes();
     private static final int HELLO_LENGTH = HELLO_BYTES.length;
     private static final String SERVER_NAME = "httpserver";
-    private static final ObjectMapper MAPPER = new ObjectMapper();
-
-    static {
-        MAPPER.registerModule(new AfterburnerModule());
-    }
+    private static final ObjectMapper MAPPER = JsonMapper.builder()
+            .addModule(new BlackbirdModule())
+            .build();
 
     private static List<Fortune> queryFortunes(DataSource ds) throws SQLException {
         List<Fortune> fortunes = new ArrayList<>();
@@ -72,14 +71,12 @@ public class Server {
         return new HikariDataSource(config);
     }
 
-    private static Template loadTemplate() throws IOException, ParseException {
-        Properties props = new Properties();
-        props.put("import.packages", "java.util," + Fortune.class.getPackage().getName());
-        props.put("input.encoding", "UTF-8");
-        props.put("output.encoding", "UTF-8");
-        props.put("precompiled", "false");
-        Engine engine = Engine.getEngine(props);
-        return engine.getTemplate("/fortunes.template.httl");
+    private static PebbleTemplate loadTemplate() {
+        PebbleEngine engine = new PebbleEngine.Builder()
+                .autoEscaping(true)
+                .cacheActive(true)
+                .build();
+        return engine.getTemplate("fortunes.pebble.html");
     }
 
     private static HttpHandler createPlaintextHandler() {
@@ -113,8 +110,8 @@ public class Server {
         };
     }
 
-    private static HttpHandler createFortunesHandler(DataSource ds) throws IOException, ParseException {
-        Template template = loadTemplate();
+    private static HttpHandler createFortunesHandler(DataSource ds) throws IOException {
+        PebbleTemplate template = loadTemplate();
         return t -> {
             try {
                 // query db
@@ -125,7 +122,9 @@ public class Server {
                 Map<String, Object> context = new HashMap<>(1);
                 context.put("fortunes", fortunes);
                 ByteArrayOutputStream out = new ByteArrayOutputStream();
-                template.render(context, out);
+                Writer writer = new OutputStreamWriter(out, "UTF-8");
+                template.evaluate(writer, context);
+                writer.flush();
                 byte[] bytes = out.toByteArray();
                 // send response
                 t.getResponseHeaders().add("Content-Type", "text/html; charset=utf-8");
@@ -134,7 +133,7 @@ public class Server {
                 t.getResponseBody().write(bytes);
                 t.getResponseBody().flush();
                 t.getResponseBody().close();
-            } catch (SQLException | ParseException e) {
+            } catch (SQLException e) {
                 throw new IOException(e);
             }
         };
