@@ -35,7 +35,6 @@ abstract class CommonVerticle : CoroutineVerticle(), CoroutineRouterSupport {
 
     lateinit var httpServer: HttpServer
     lateinit var date: String
-    val random = Random(0)
 
     fun setCurrentDate() {
         date = DateTimeComponents.Formats.RFC_1123.format {

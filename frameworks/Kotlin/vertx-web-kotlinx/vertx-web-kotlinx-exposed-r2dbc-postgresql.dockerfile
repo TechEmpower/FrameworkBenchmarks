@@ -1,4 +1,4 @@
-FROM gradle:9.2.1-jdk25
+FROM gradle:9.3.1-jdk25
 
 WORKDIR /vertx-web-kotlinx
 
