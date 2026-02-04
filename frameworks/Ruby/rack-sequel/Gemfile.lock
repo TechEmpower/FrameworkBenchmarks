@@ -17,7 +17,8 @@ GEM
     sequel_pg (1.18.2)
       pg (>= 0.18.0, != 1.2.0)
       sequel (>= 4.38.0)
-    trilogy (2.9.0)
+    trilogy (2.10.0)
+      bigdecimal
 
 PLATFORMS
   ruby
@@ -33,7 +34,7 @@ DEPENDENCIES
   rack (~> 3.1)
   sequel (~> 5.0)
   sequel_pg (~> 1.17)
-  trilogy (~> 2.9)
+  trilogy (~> 2.10)
 
 BUNDLED WITH
   4.0.3
