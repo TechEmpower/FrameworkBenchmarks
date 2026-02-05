@@ -30,7 +30,7 @@ os = "Linux"
 orm = "Full"
 platform = "JAX-RS"
 webserver = "Jetty"
-versus = ""
+versus = "dropwizard"
 
 [postgres]
 urls.db = "/db"
@@ -45,7 +45,7 @@ os = "Linux"
 orm = "Full"
 platform = "JAX-RS"
 webserver = "Jetty"
-versus = "servlet-postgres-raw"
+versus = "dropwizard"
 
 [jdbi-postgres]
 urls.db = "/db"
@@ -60,4 +60,4 @@ os = "Linux"
 orm = "micro"
 platform = "JAX-RS"
 webserver = "Jetty"
-versus = "servlet-postgres-raw"
+versus = "dropwizard"

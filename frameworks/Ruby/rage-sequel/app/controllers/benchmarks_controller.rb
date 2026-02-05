@@ -26,7 +26,11 @@ class BenchmarksController < ApplicationController
   def fortunes
     records = Fortune.all
 
-    records << Fortune.new(id: 0, message: "Additional fortune added at request time.")
+    fortune = Fortune.new
+    fortune.id = 0
+    fortune.message = "Additional fortune added at request time."
+    records << fortune
+
     records.sort_by!(&:message)
 
     render plain: FORTUNES_TEMPLATE.result(binding)

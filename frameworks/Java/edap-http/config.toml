@@ -12,7 +12,7 @@ os = "Linux"
 orm = "Raw"
 platform = "edap"
 webserver = "None"
-versus = "edap-http"
+versus = ""
 
 [http-fast]
 urls.plaintext = "/plaintext"
