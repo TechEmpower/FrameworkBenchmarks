@@ -5,7 +5,7 @@
     [hiccup.util :as hu]
     [jj.majavat :as majavat]
     [jj.majavat.renderer :refer [->StringRenderer]]
-    [jj.sql.boa :as boa]
+    [jj.majavat.renderer.sanitizer :refer [->Html]]
     [next.jdbc :as jdbc]
     [next.jdbc.result-set :as rs]
     [ring.util.http-response :as http-response]
@@ -19,7 +19,10 @@
 (def ^:const MAX_ID_ZERO_IDX 9999)
 (def ^:const CACHE_TTL (* 24 60 60))
 (def ^:private render-fortune (majavat/build-html-renderer "html/majavat-fortunes.html"
-                                                           {:renderer (->StringRenderer)}))
+                                                                 {:renderer (->StringRenderer)}))
+
+(def ^:private ^:const fortunes-query ["select * from \"Fortune\";"])
+
 
 (defn render-hiccup-fortune [fortunes]
   (hp/html5
@@ -35,7 +38,7 @@
          [:td (:id x)]
          [:td (hu/escape-html (:message x))]])]]))
 
-(def query-fortunes (boa/build-query (boa/->NextJdbcAdapter) "sql/fortunes.sql"))
+
 (def selmer-opts {:custom-resource-path (clojure.java.io/resource "html")})
 
 (defn selmer-html-response
@@ -157,21 +160,21 @@
 
 (defn selmer-fortune-handler
   [db-conn _request]
-  (as-> (jdbc/execute! db-conn ["select * from \"Fortune\";"] jdbc-opts) fortunes
+  (as-> (jdbc/execute! db-conn fortunes-query jdbc-opts) fortunes
         (conj fortunes {:id 0 :message "Additional fortune added at request time."})
         (sort-by :message fortunes)
         (selmer-html-response "fortunes.html" {:messages fortunes})))
 
 (defn majavat-fortune-handler
   [db-conn _request]
-  (as-> (query-fortunes db-conn) fortunes
+  (as-> (jdbc/execute! db-conn fortunes-query jdbc-opts) fortunes
         (conj fortunes {:id 0 :message "Additional fortune added at request time."})
         (sort-by :message fortunes)
         (majavat-html-response {:messages fortunes})))
 
 (defn hiccup-fortune-handler
   [db-conn _request]
-  (as-> (query-fortunes db-conn) fortunes
+  (as-> (jdbc/execute! db-conn fortunes-query jdbc-opts) fortunes
         (conj fortunes {:id 0 :message "Additional fortune added at request time."})
         (sort-by :message fortunes)
         (render-hiccup-fortune fortunes)
