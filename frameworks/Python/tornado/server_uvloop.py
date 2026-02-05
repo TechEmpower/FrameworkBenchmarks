@@ -17,7 +17,6 @@ options.define('port', default=8080, type=int, help="Server port")
 
 READ_ROW_SQL = 'SELECT "randomnumber", "id" FROM "world" WHERE id = $1'
 WRITE_ROW_SQL = 'UPDATE "world" SET "randomnumber"=$1 WHERE id=$2'
-ADDITIONAL_ROW = [0, 'Additional fortune added at request time.']
 
 sort_fortunes_key = itemgetter(1)
 
@@ -105,7 +104,7 @@ class FortuneHandler(tornado.web.RequestHandler):
         async with self.application.pool.acquire() as connection:
             fortunes = await connection.fetch('SELECT * FROM Fortune')
 
-        fortunes.append(ADDITIONAL_ROW)
+        fortunes.append([0, 'Additional fortune added at request time.'])
         fortunes.sort(key=sort_fortunes_key)
 
         self.set_header("Content-Type", "text/html; charset=UTF-8")
