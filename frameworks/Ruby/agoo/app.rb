@@ -30,6 +30,25 @@ JSON_TYPE = 'application/json'
 HTML_TYPE = 'text/html; charset=utf-8'
 PLAINTEXT_TYPE = 'text/plain'
 
+TEMPLATE_PREFIX = <<~HTML
+  <!DOCTYPE html>
+  <html>
+  <head>
+    <title>Fortunes</title>
+  </head>
+  <body>
+    <table>
+    <tr>
+      <th>id</th>
+      <th>message</th>
+    </tr>
+HTML
+
+TEMPLATE_POSTFIX = <<~HTML
+    </table>
+  </body>
+  </html>
+HTML
 
 class BaseHandler
   def self.extract_queries_param(request = nil)
@@ -114,33 +133,20 @@ end
 
 class FortunesHandler < BaseHandler
   def self.call(_req)
-    f_1 = $pool.with do |conn|
+    fortunes = $pool.with do |conn|
       conn.exec_prepared('select_fortune', [])
+    end.map(&:to_h)
+
+    fortunes << { 'id' => 0, 'message' => 'Additional fortune added at request time.' }
+    fortunes.sort_by! { |item| item['message'] }
+
+    buffer = String.new
+    buffer << TEMPLATE_PREFIX
+    fortunes.each do |item|
+      buffer << "<tr><td>#{item['id']}</td><td>#{ERB::Escape.html_escape(item['message'])}</td></tr>"
     end
-
-    f_2 = f_1.map(&:to_h).
-            append({ 'id' => '0', 'message' => 'Additional fortune added at request time.' }).
-              sort_by { |item| item['message'] }.
-                map { |f| "<tr><td>#{ f['id'] }</td><td>#{ ERB::Escape.html_escape(f['message']) }</td></tr>" }.
-                  join
-
-    html_response(<<-HTML)
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <title>Fortunes</title>
-        </head>
-        <body>
-          <table>
-            <tr>
-              <th>id</th>
-              <th>message</th>
-            </tr>
-            #{ f_2 }
-          </table>
-        </body>
-      </html>
-    HTML
+    buffer << TEMPLATE_POSTFIX
+    html_response(buffer)
   end
 end
 
