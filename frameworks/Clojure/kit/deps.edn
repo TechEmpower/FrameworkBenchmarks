@@ -14,7 +14,8 @@
            metosin/muuntaja                 {:mvn/version "0.6.11"}
 
            ;; HTML templating
-           selmer/selmer                    {:mvn/version "1.12.62"}
+
+           selmer/selmer                    {:mvn/version "1.12.70"}
            org.clojars.jj/majavat           {:mvn/version "1.19.0"}
            hiccup/hiccup                    {:mvn/version "2.0.0"}
 

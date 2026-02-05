@@ -23,6 +23,7 @@
 
 (def ^:private ^:const fortunes-query ["select * from \"Fortune\";"])
 
+
 (defn render-hiccup-fortune [fortunes]
   (hp/html5
     [:head
@@ -36,6 +37,7 @@
         [:tr
          [:td (:id x)]
          [:td (hu/escape-html (:message x))]])]]))
+
 
 (def selmer-opts {:custom-resource-path (clojure.java.io/resource "html")})
 

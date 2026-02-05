@@ -22,7 +22,7 @@
         "database_os": "Linux",
         "display_name": "duct",
         "notes": "",
-        "versus": "None"
+        "versus": ""
       },
       "mongodb": {
         "db_url": "/db-mongo",
@@ -65,7 +65,7 @@
         "database_os": "Linux",
         "display_name": "duct-httpkit",
         "notes": "",
-        "versus": "None"
+        "versus": "duct"
       },
       "aleph": {
         "json_url": "/json",
@@ -87,7 +87,7 @@
         "database_os": "Linux",
         "display_name": "duct-aleph",
         "notes": "",
-        "versus": "None"
+        "versus": "duct"
       },
       "immutant": {
         "json_url": "/json",

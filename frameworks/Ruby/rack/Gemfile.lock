@@ -45,7 +45,7 @@ GEM
       fiber-annotation
       fiber-local (~> 1.1)
       json
-    falcon (0.53.0)
+    falcon (0.54.0)
       async
       async-container (~> 0.20)
       async-container-supervisor (~> 0.6)
@@ -54,7 +54,7 @@ GEM
       async-service (~> 0.16)
       bundler
       localhost (~> 1.1)
-      openssl (~> 3.0)
+      openssl (>= 3.0)
       protocol-http (~> 0.31)
       protocol-rack (~> 0.7)
       samovar (~> 2.3)
@@ -90,7 +90,7 @@ GEM
     metrics (0.15.0)
     msgpack (1.8.0)
     nio4r (2.7.4)
-    openssl (3.3.2)
+    openssl (4.0.0)
     parallel (1.26.3)
     parser (3.3.7.1)
       ast (~> 2.4.1)
@@ -99,9 +99,10 @@ GEM
       rack (>= 1.6.13)
       rackup (>= 1.0.1)
       rake (>= 12.3.3)
-    pg (1.6.2-arm64-darwin)
-    pg (1.6.2-x86_64-darwin)
-    pg (1.6.2-x86_64-linux)
+    pg (1.6.3)
+    pg (1.6.3-arm64-darwin)
+    pg (1.6.3-x86_64-darwin)
+    pg (1.6.3-x86_64-linux)
     pitchfork (0.17.0)
       logger
       rack (>= 2.0)
@@ -153,9 +154,9 @@ GEM
     samovar (2.4.1)
       console (~> 1.0)
       mapping (~> 1.0)
-    sequel (5.90.0)
+    sequel (5.100.0)
       bigdecimal
-    sequel_pg (1.17.1)
+    sequel_pg (1.18.2)
       pg (>= 0.18.0, != 1.2.0)
       sequel (>= 4.38.0)
     string-format (0.2.0)
@@ -170,6 +171,7 @@ GEM
 
 PLATFORMS
   arm64-darwin-24
+  ruby
   x86_64-darwin-23
   x86_64-linux
 

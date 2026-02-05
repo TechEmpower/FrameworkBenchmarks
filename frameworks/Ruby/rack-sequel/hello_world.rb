@@ -48,10 +48,12 @@ class HelloWorld
 
   def fortunes
     fortunes = Fortune.all
-    fortunes << Fortune.new(
-      id: 0,
-      message: 'Additional fortune added at request time.'
-    )
+
+    fortune = Fortune.new
+    fortune.id = 0
+    fortune.message = "Additional fortune added at request time."
+    fortunes << fortune
+
     fortunes.sort_by!(&:message)
 
     html = String.new(<<~'HTML')
