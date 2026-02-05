@@ -4,7 +4,7 @@ FROM rust:1.93.0 AS builder
 RUN cargo install solilang --locked
 
 # Runtime stage
-FROM debian:testing-slim
+FROM debian:testing-20260202-slim
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
