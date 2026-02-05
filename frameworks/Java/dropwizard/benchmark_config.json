@@ -40,9 +40,9 @@
       "webserver": "Jetty",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "Dropwizard",
+      "display_name": "Dropwizard mongodb",
       "notes": "dropwizard mongodb using mongojack",
-      "versus": ""
+      "versus": "dropwizard"
     },
     "postgres": {
       "db_url": "/db",
@@ -61,9 +61,9 @@
       "webserver": "Jetty",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "dropwizard",
+      "display_name": "dropwizard pg",
       "notes": "dropwizard PostgreSQL using hibernate",
-      "versus": "servlet-postgres-raw",
+      "versus": "dropwizard",
       "tags": []
     },
     "jdbi-postgres": {
@@ -82,9 +82,9 @@
       "webserver": "Jetty",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "dropwizard",
+      "display_name": "dropwizard jdbi",
       "notes": "dropwizard PostgreSQL using jdbi",
-      "versus": "servlet-postgres-raw",
+      "versus": "dropwizard",
       "tags": ["broken"]
     }
   }]

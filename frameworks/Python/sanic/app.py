@@ -20,7 +20,6 @@ logger = getLogger(__name__)
 READ_ROW_SQL = 'SELECT "randomnumber", "id" FROM "world" WHERE id = $1'
 READ_ROW_SQL_TO_UPDATE = 'SELECT "id", "randomnumber" FROM "world" WHERE id = $1'
 WRITE_ROW_SQL = 'UPDATE "world" SET "randomnumber"=$1 WHERE id=$2'
-ADDITIONAL_ROW = [0, 'Additional fortune added at request time.']
 
 
 def load_fortunes_template():
@@ -108,7 +107,7 @@ async def fortunes_view(request):
     async with request.app.ctx.pool.acquire() as connection:
         fortunes = await connection.fetch('SELECT * FROM Fortune')
 
-    fortunes.append(ADDITIONAL_ROW)
+    fortunes.append([0, 'Additional fortune added at request time.'])
     fortunes.sort(key=sort_fortunes_key)
     content = template.render(fortunes=fortunes)
     return response.html(content, headers=get_headers())

@@ -14,13 +14,13 @@
            metosin/muuntaja                 {:mvn/version "0.6.11"}
 
            ;; HTML templating
-           selmer/selmer                    {:mvn/version "1.12.62"}
-           org.clojars.jj/majavat           {:mvn/version "1.15.1"}
+           selmer/selmer                    {:mvn/version "1.12.70"}
+           org.clojars.jj/majavat           {:mvn/version "1.19.0"}
            hiccup/hiccup                    {:mvn/version "2.0.0"}
 
            ;; Database
            org.postgresql/postgresql        {:mvn/version "42.7.8"}
-           org.clojars.jj/boa-sql           {:mvn/version "1.0.0"}
+           org.clojars.jj/boa-sql           {:mvn/version "1.0.1"}
 
 
            ;; kit Libs
