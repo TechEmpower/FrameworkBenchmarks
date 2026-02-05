@@ -1,4 +1,4 @@
-FROM rust:latest AS builder
+FROM rust:1.93.0 AS builder
 
 # Install soli from crates.io with locked dependencies
 RUN cargo install solilang --locked
