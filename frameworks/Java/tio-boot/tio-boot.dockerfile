@@ -1,4 +1,4 @@
-FROM litongjava/maven:3.8.8-jdk8u391 AS builder
+FROM litongjava/maven:3.8.8-jdk_21_0_6 AS builder
 WORKDIR /app
 
 COPY pom.xml pom.xml
@@ -8,7 +8,7 @@ COPY src src
 RUN mvn package -Passembly -q
 RUN ls -l && ls -l target
 
-FROM litongjava/jre:8u391-stable-slim
+FROM litongjava/jdk:21_0_6-stable-slim
 
 WORKDIR /app
 
