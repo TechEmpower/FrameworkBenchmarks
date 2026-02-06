@@ -57,7 +57,8 @@
       "database_os": "Linux",
       "display_name": "cpoll-cppsp-raw",
       "notes": "",
-      "versus": "cpoll_cppsp"
+      "versus": "cpoll_cppsp",
+      "tags": [ "broken" ]
     },
     "postgres-raw-threadpool": {
       "db_url": "/db_pg_threadpool",
