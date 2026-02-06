@@ -24,7 +24,8 @@
         "database_os": "Linux",
         "display_name": "TODAY",
         "notes": "",
-        "versus": "None"
+        "versus": "None",
+        "tags": ["broken"]
       }
     }
   ]
