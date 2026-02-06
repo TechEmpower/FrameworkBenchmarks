@@ -1,0 +1,21 @@
+[package]
+name = "hotaru_bench"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+tokio = { version = "1", features = ["full"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+rand = { version = "0.8", features = ["small_rng"] }
+httpdate = "1"
+
+# Hotaru framework
+hotaru = "0.7.7"
+akari = "0.2.6"
+ctor = "0.4"
+
+# Database
+tokio-postgres = "0.7"
+deadpool-postgres = "0.14"
+moka = { version = "0.12", features = ["sync"] }

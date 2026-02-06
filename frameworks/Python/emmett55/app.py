@@ -76,7 +76,6 @@ db_ext = app.use_extension(AsyncPG)
 
 SQL_SELECT = 'SELECT "randomnumber", "id" FROM "world" WHERE id = $1'
 SQL_UPDATE = 'UPDATE "world" SET "randomnumber"=$1 WHERE id=$2'
-ROW_ADD = [0, 'Additional fortune added at request time.']
 sort_key = itemgetter(1)
 
 
@@ -115,7 +114,7 @@ async def get_random_worlds(db):
 @app.route(pipeline=[TemplatePipe("fortunes.html"), db_ext.pipe])
 async def fortunes(db):
     fortunes = await db.fetch('SELECT * FROM Fortune')
-    fortunes.append(ROW_ADD)
+    fortunes.append([0, "Additional fortune added at request time."])
     fortunes.sort(key=sort_key)
     return {"fortunes": fortunes}
 
