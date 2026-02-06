@@ -23,7 +23,8 @@
         "database_os": "Linux",
         "display_name": "one",
         "notes": "",
-        "versus": "swoole"
+        "versus": "swoole",
+        "tags": [ "broken" ]
       },
       "no-coroutine": {
         "json_url": "/json",
@@ -46,7 +47,8 @@
         "database_os": "Linux",
         "display_name": "one-no-coroutine",
         "notes": "",
-        "versus": "swoole"
+        "versus": "swoole",
+        "tags": [ "broken" ]
       }
     }
   ]
