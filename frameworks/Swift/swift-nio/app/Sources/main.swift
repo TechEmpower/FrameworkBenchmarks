@@ -61,6 +61,7 @@ private final class HTTPHandler: ChannelInboundHandler {
 
     private func responseHead(contentType: String, contentLength: String) -> HTTPResponseHead {
         var headers = HTTPHeaders()
+        headers.reserveCapacity(4)
         headers.add(name: "content-type", value: contentType)
         headers.add(name: "content-length", value: contentLength)
         headers.add(name: "server", value: "SwiftNIO")
@@ -73,7 +74,7 @@ private final class HTTPHandler: ChannelInboundHandler {
     }
 }
 
-let group = MultiThreadedEventLoopGroup(numberOfThreads: 2 /*System.coreCount*/)
+let group = MultiThreadedEventLoopGroup(numberOfThreads: System.coreCount)
 let bootstrap = ServerBootstrap(group: group)
     .serverChannelOption(ChannelOptions.backlog, value: 8192)
     .serverChannelOption(
