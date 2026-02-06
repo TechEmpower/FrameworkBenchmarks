@@ -21,7 +21,8 @@
       "database_os": "Linux",
       "display_name": "ringojs",
       "notes": "",
-      "versus": ""
+      "versus": "",
+      "tags": ["broken"]
     },
     "convenient": {
       "json_url": "/json",
@@ -44,7 +45,8 @@
       "database_os": "Linux",
       "display_name": "ringojs-conv",
       "notes": "Convenient",
-      "versus": "ringojs"
+      "versus": "ringojs",
+      "tags": ["broken"]
     }
   }]
 }
