@@ -10,7 +10,7 @@ COPY php.ini /usr/local/etc/php/
 WORKDIR /var/www
 COPY --link . .
 
-RUN composer install --optimize-autoloader --classmap-authoritative --no-dev 
+RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
 
 EXPOSE 8080
 
