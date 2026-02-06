@@ -20,7 +20,8 @@
       "webserver": "blaze",
       "os": "Linux",
       "display_name": "http4s",
-      "notes": ""
+      "notes": "",
+      "tags": [ "broken" ]
     }
   }]
 }
