@@ -7,7 +7,7 @@ puts "Platform: #{Gem::Platform.local}"
 
 gem 'rack', '~> 3.0'
 gem 'connection_pool'
-gem 'json', '~> 2.10'
+gem 'json'
 gem 'tzinfo-data', '1.2023.3'
 
 platforms :ruby, :windows do

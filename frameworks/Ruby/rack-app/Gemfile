@@ -8,7 +8,7 @@ gem 'cgi' # for Ruby 4.0
 gem 'iodine', '~> 0.7'
 gem 'irb' # for Ruby 3.5
 gem 'logger' # for Ruby 3.5
-gem 'json', '~> 2.10'
+gem 'json'
 gem 'pg', '~> 1.5'
 gem 'sequel', '~> 5.0'
 gem 'sequel_pg', '~> 1.17', require: 'sequel'

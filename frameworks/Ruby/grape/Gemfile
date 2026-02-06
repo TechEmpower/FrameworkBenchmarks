@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 gem 'activerecord', '~> 8.1.0', :require => 'active_record'
 gem 'grape', '~> 3.0'
 gem 'pg'
-gem 'json', '~> 2.9'
+gem 'json'
 
 group :iodine, optional: true do
   gem "iodine", "~> 0.7", require: false
