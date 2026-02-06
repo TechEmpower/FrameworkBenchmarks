@@ -1,16 +1,10 @@
 import Foundation
-import NIO
+import NIOCore
 import NIOHTTP1
+import NIOPosix
 
 struct JSONTestResponse: Encodable {
     let message = "Hello, World!"
-}
-
-enum Constants {
-    static let httpVersion = HTTPVersion(major: 1, minor: 1)
-    static let serverName = "SwiftNIO"
-
-    static let plainTextResponse: StaticString = "Hello, World!"
 }
 
 private final class HTTPHandler: ChannelInboundHandler {
@@ -20,14 +14,12 @@ private final class HTTPHandler: ChannelInboundHandler {
     let jsonEncoder: JSONEncoder
     let dateCache: RFC1123DateCache
 
-    var plaintextBuffer: ByteBuffer
-    var jsonBuffer: ByteBuffer
+    var outputBuffer: ByteBuffer
 
     init(channel: Channel) {
-        self.plaintextBuffer = .init(staticString: Constants.plainTextResponse)
-        self.jsonBuffer = .init()
-        self.jsonEncoder = .init()
+        self.outputBuffer = .init()
         self.dateCache = .on(channel.eventLoop)
+        self.jsonEncoder = JSONEncoder()
     }
 
     func channelRead(context: ChannelHandlerContext, data: NIOAny) {
@@ -35,31 +27,28 @@ private final class HTTPHandler: ChannelInboundHandler {
         case .head(let request):
             switch request.uri {
             case "/plaintext":
+                self.outputBuffer.clear()
+                self.outputBuffer.writeStaticString("Hello, World!")
                 let responseHead = self.responseHead(
                     contentType: "text/plain",
-                    contentLength: "\(self.plaintextBuffer.readableBytes)"
+                    contentLength: "\(self.outputBuffer.readableBytes)"
                 )
-                self.writeResponse(responseHead, body: self.plaintextBuffer, context: context)
+                self.writeResponse(responseHead, body: self.outputBuffer, context: context)
             case "/json":
                 let jsonResponse = try! self.jsonEncoder.encode(JSONTestResponse())
-                self.jsonBuffer.clear()
-                self.jsonBuffer.writeBytes(jsonResponse)
+                self.outputBuffer.clear()
+                self.outputBuffer.writeBytes(jsonResponse)
                 let responseHead = self.responseHead(
                     contentType: "application/json",
-                    contentLength: "\(jsonBuffer.readableBytes)"
+                    contentLength: "\(self.outputBuffer.readableBytes)"
                 )
-                self.writeResponse(responseHead, body: self.jsonBuffer, context: context)
+                self.writeResponse(responseHead, body: self.outputBuffer, context: context)
             default:
                 context.close(promise: nil)
             }
         case .body, .end:
             break
         }
-    }
-
-    func channelReadComplete(context: ChannelHandlerContext) {
-        context.flush()
-        context.fireChannelReadComplete()
     }
 
     private func writeResponse(
@@ -74,17 +63,17 @@ private final class HTTPHandler: ChannelInboundHandler {
         var headers = HTTPHeaders()
         headers.add(name: "content-type", value: contentType)
         headers.add(name: "content-length", value: contentLength)
-        headers.add(name: "server", value: Constants.serverName)
+        headers.add(name: "server", value: "SwiftNIO")
         headers.add(name: "date", value: self.dateCache.currentTimestamp())
         return HTTPResponseHead(
-            version: Constants.httpVersion,
+            version: HTTPVersion(major: 1, minor: 1),
             status: .ok,
             headers: headers
         )
     }
 }
 
-let group = MultiThreadedEventLoopGroup(numberOfThreads: System.coreCount)
+let group = MultiThreadedEventLoopGroup(numberOfThreads: 2 /*System.coreCount*/)
 let bootstrap = ServerBootstrap(group: group)
     .serverChannelOption(ChannelOptions.backlog, value: 8192)
     .serverChannelOption(
