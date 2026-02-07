@@ -1,5 +1,6 @@
 {
   "framework": "soli",
+  "maintainers": ["solisoft"],
   "tests": [{
     "default": {
       "plaintext_url": "/plaintext",
