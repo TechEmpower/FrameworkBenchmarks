@@ -15,12 +15,11 @@ def get_engine(settings):
         pool_size=100,
         max_overflow=25,
         enable_from_linting=False,
-        future=True,
     )
 
 
 def get_session_factory(engine):
-    Session = sessionmaker(bind=engine, autoflush=False, future=True)
+    Session = sessionmaker(bind=engine, autoflush=False)
     return Session
 
 
