@@ -9,8 +9,7 @@
 (def query-fortunes (boa/build-query (boa/->NextJdbcAdapter) "fortune.sql"))
 
 (def ^:private ^:const hello-world "Hello, World!")
-(def ^:private ^:const additional-message {:id      0
-                                           :message "Additional fortune added at request time."})
+
 (def ^:private ^:const fortune-headers {"Server"       "ring-http-exchange"
                                         "Content-Type" "text/html; charset=UTF-8"})
 (def ^:private ^:const json-headers {"Server"       "ring-http-exchange"
@@ -22,7 +21,8 @@
 
 (defn- get-body [datasource]
   (let [context (as-> (query-fortunes datasource) fortunes
-                      (conj fortunes additional-message)
+                      (conj fortunes {:id      0
+                                      :message "Additional fortune added at request time."})
                       (sort-by :message fortunes))]
     (render-fortune {:messages context})))
 
