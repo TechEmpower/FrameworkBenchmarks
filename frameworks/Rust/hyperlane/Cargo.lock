@@ -559,9 +559,9 @@ dependencies = [
 
 [[package]]
 name = "hyperlane"
-version = "14.1.1"
+version = "14.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5ba1f2c39a59569f5ea2afe53a9777e21dd4051c67b329da5a7078924b9e3e65"
+checksum = "5089b30dab7aae893b1df7cc43d2f2e9217d06ecddc732347d9886d317784225"
 dependencies = [
  "http-type",
  "inventory",
@@ -578,7 +578,7 @@ checksum = "9b6f580fff377190b818d8c2ef52f68d1296490916da4923fe90287b7c80028c"
 
 [[package]]
 name = "hyperlane_techempower"
-version = "0.1.4"
+version = "0.1.5"
 dependencies = [
  "futures",
  "hyperlane",
@@ -1095,9 +1095,9 @@ dependencies = [
 
 [[package]]
 name = "regex"
-version = "1.12.2"
+version = "1.12.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "843bc0191f75f3e22651ae5f1e72939ab2f72a4bc30fa80a066bd66edefc24d4"
+checksum = "e10754a14b9137dd7b1e3e5b0493cc9171fdd105e0ab477f51b72e7f3ac0e276"
 dependencies = [
  "aho-corasick",
  "memchr",
