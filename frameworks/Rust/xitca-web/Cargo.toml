@@ -32,7 +32,7 @@ required-features = ["perf", "template", "toasty", "web-codegen"]
 # pg client optional
 pg = ["dep:xitca-postgres"]
 # diesel orm optional
-diesel = ["dep:diesel", "dep:diesel-async", "dep:xitca-postgres-diesel", "dep:futures-util"]
+diesel = ["dep:diesel", "dep:xitca-postgres-diesel", "futures-util/alloc"]
 # toasty orm optional
 toasty = ["dep:toasty", "dep:xitca-postgres-toasty", "futures-util/alloc"]
 # http router optional
@@ -74,8 +74,7 @@ xitca-postgres = { version = "0.4", optional = true }
 
 # diesel orm optional
 diesel = { version = "2", features = ["postgres"], optional = true }
-diesel-async = { version = "0.7", optional = true }
-xitca-postgres-diesel = { version = "0.2", default-features = false, optional = true }
+xitca-postgres-diesel = { version = "0.3", default-features = false, optional = true }
 futures-util = { version = "0.3", default-features = false, optional = true }
 
 # toasty orm optional
@@ -108,12 +107,13 @@ codegen-units = 1
 panic = "abort"
 
 [patch.crates-io]
-xitca-postgres-diesel = { git = "https://github.com/fakeshadow/xitca-postgres-diesel", rev = "b6d1922" }
-xitca-postgres-toasty = { git = "https://github.com/fakeshadow/xitca-postgres-toasty", rev = "6e91d2f" }
+xitca-postgres-diesel = { git = "https://github.com/fakeshadow/xitca-postgres-diesel", rev = "9fab3a8" }
+xitca-postgres-toasty = { git = "https://github.com/fakeshadow/xitca-postgres-toasty", rev = "f410f04" }
 
-toasty = { git = "https://github.com/fakeshadow/toasty", rev = "51c8186" }
-toasty-core = { git = "https://github.com/fakeshadow/toasty", rev = "51c8186" }
-toasty-sql = { git = "https://github.com/fakeshadow/toasty", rev = "51c8186" }
+toasty = { git = "https://github.com/fakeshadow/toasty", rev = "0edc941" }
+toasty-core = { git = "https://github.com/fakeshadow/toasty", rev = "0edc941" }
+toasty-sql = { git = "https://github.com/fakeshadow/toasty", rev = "0edc941" }
 
-xitca-postgres = { git = "http://github.com/HFQR/xitca-web", rev = "ae0db84" }
-xitca-web = { git = "http://github.com/HFQR/xitca-web", rev = "ae0db84" }
+xitca-postgres = { git = "http://github.com/HFQR/xitca-web", rev = "e1c8c7b" }
+xitca-router = { git = "http://github.com/HFQR/xitca-web", rev = "e1c8c7b" }
+xitca-web = { git = "http://github.com/HFQR/xitca-web", rev = "e1c8c7b" }

@@ -1,14 +1,13 @@
 (ns io.github.kit-clj.te-bench.web.controllers.bench
   (:require
     [clojure.core.cache :as cache]
-    [next.jdbc :as jdbc]
-    [next.jdbc.result-set :as rs]
-    [jj.majavat :as majavat]
-    [jj.sql.boa :as boa]
     [hiccup.page :as hp]
     [hiccup.util :as hu]
+    [jj.majavat :as majavat]
     [jj.majavat.renderer :refer [->StringRenderer]]
-    [jj.majavat.renderer.sanitizer :refer [->Html]]
+    [jj.sql.boa :as boa]
+    [next.jdbc :as jdbc]
+    [next.jdbc.result-set :as rs]
     [ring.util.http-response :as http-response]
     [selmer.parser :as parser]))
 
@@ -19,9 +18,8 @@
 (def ^:const HELLO_WORLD "Hello, World!")
 (def ^:const MAX_ID_ZERO_IDX 9999)
 (def ^:const CACHE_TTL (* 24 60 60))
-(def ^:private render-fortune (majavat/build-renderer "html/majavat-fortunes.html"
-                                                      {:renderer (->StringRenderer
-                                                                   {:sanitizer (->Html)})}))
+(def ^:private render-fortune (majavat/build-html-renderer "html/majavat-fortunes.html"
+                                                           {:renderer (->StringRenderer)}))
 
 (defn render-hiccup-fortune [fortunes]
   (hp/html5
@@ -37,7 +35,7 @@
          [:td (:id x)]
          [:td (hu/escape-html (:message x))]])]]))
 
-(def query-fortunes (boa/execute (boa/->NextJdbcAdapter) "sql/fortunes.sql"))
+(def query-fortunes (boa/build-query (boa/->NextJdbcAdapter) "sql/fortunes.sql"))
 (def selmer-opts {:custom-resource-path (clojure.java.io/resource "html")})
 
 (defn selmer-html-response

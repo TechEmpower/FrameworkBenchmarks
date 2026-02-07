@@ -39,9 +39,9 @@
       "webserver": "Grizzly",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "grizzly",
+      "display_name": "grizzly-jersey",
       "notes": "",
-      "versus": ""
+      "versus": "grizzly"
     }
   }]
 }

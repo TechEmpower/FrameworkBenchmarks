@@ -21,7 +21,6 @@ async def setup():
 
 READ_ROW_SQL = 'SELECT "randomnumber", "id" FROM "world" WHERE id = $1'
 WRITE_ROW_SQL = 'UPDATE "world" SET "randomnumber"=$1 WHERE id=$2'
-ADDITIONAL_ROW = [0, 'Additional fortune added at request time.']
 
 JSON_RESPONSE = {
     'type': 'http.response.start',
@@ -142,7 +141,7 @@ async def fortunes(scope, receive, send):
     finally:
         await pool.release(connection)
 
-    fortunes.append(ADDITIONAL_ROW)
+    fortunes.append([0, 'Additional fortune added at request time.'])
     fortunes.sort(key=key)
     content = template.render(fortunes=fortunes).encode('utf-8')
     await send(HTML_RESPONSE)
