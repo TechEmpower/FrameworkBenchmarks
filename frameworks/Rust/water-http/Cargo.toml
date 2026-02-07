@@ -1,12 +1,12 @@
 [package]
 name = "water-http"
 version = "0.1.0"
-edition = "2018"
+edition = "2024"
 
 [dependencies]
 askama = "0.14.0"
 tokio = { version = "1.47.1", features = ["full"] }
-water_http = { version = "3.2.1-beta.14" ,optional = true , features = ["use_only_http1"]}
+water_http = { features = ["use_io_uring","use_only_http1"],optional = true , version = "3.4.2-beta.4" }
 smallvec = "1.15.1"
 nanorand = "0.8.0"
 tokio-postgres = "0.7.15"

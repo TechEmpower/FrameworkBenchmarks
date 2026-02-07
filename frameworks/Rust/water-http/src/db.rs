@@ -1,17 +1,19 @@
 #![cfg(any(feature = "db",feature = "all"))]
-use std::{borrow::Cow, io};
+use std::{borrow::Cow, io, ptr};
 use std::fmt::Arguments;
 use std::io::Write;
 use std::mem::MaybeUninit;
 use std::rc::Rc;
 use std::cell::UnsafeCell;
+use std::collections::HashMap;
 use bytes::Buf;
 use nanorand::{Rng, WyRand};
-use tokio_postgres::{connect, Client, Statement, NoTls};
+use tokio_postgres::{connect, Client, Statement, NoTls, Error};
 use tokio_postgres::types::private::BytesMut;
 use crate::models::{Fortune, FortuneTemplate, World};
 use sonic_rs::prelude::WriteExt;
 use yarte::TemplateBytesTrait;
+pub static  mut CACHED_VALUES:Option<HashMap<i32,i32>> = None;
 
 /// Database connection pool with thread-local RNG
 pub struct DbConnectionPool {
@@ -60,8 +62,6 @@ impl DbConnectionPool {
 /// Reusable buffer pool per connection
 struct BufferPool {
     body: BytesMut,
-    worlds: Vec<World>,
-    numbers: Vec<i32>,
     fortunes: Vec<Fortune>,
     fortune_output: Vec<u8>,
 }
@@ -70,8 +70,6 @@ impl BufferPool {
     fn new() -> Self {
         Self {
             body: BytesMut::with_capacity(4096),
-            worlds: Vec::with_capacity(501),
-            numbers: Vec::with_capacity(501),
 
             fortunes: Vec::with_capacity(501),
             fortune_output: Vec::with_capacity(4096),
@@ -130,7 +128,7 @@ impl PgConnection {
     }    /// Connect to the database
 
     #[inline(always)]
-  pub fn generate_update_values_stmt(batch_size: usize) -> String {
+    pub fn generate_update_values_stmt(batch_size: usize) -> String {
 
         let mut sql = String::from("UPDATE world SET randomNumber = w.r FROM (VALUES ");
 
@@ -156,12 +154,10 @@ impl PgConnection {
     /// Get a single random world - optimized with buffer reuse
     #[inline]
     pub async fn get_world(&self) -> &[u8] {
-        let rd = (self.rang.clone().generate::<u32>() % 10_000 + 1) as i32;
+        let rd = (self.rang.clone().generate::<u32>() % 10_000 ) as i32;
         let row = self.cl.query_one(&self.world, &[&rd]).await.unwrap();
-
         let buffers = self.buffers();
         buffers.body.clear();
-
         sonic_rs::to_writer(
             BytesMuteWriter(&mut buffers.body),
             &World {
@@ -169,25 +165,23 @@ impl PgConnection {
                 randomnumber: row.get(1),
             },
         ).unwrap();
-
         buffers.body.chunk()
     }
 
     /// Get multiple random worlds - optimized with buffer reuse
     pub async fn get_worlds(&self, num: usize) -> &[u8] {
         let buffers = self.buffers();
-        buffers.worlds.clear();
-        let mut rn = self.rang.clone();
+        let mut worlds = Vec::with_capacity(num);
         for _ in 0..num {
-            let id: i32 = (rn.generate::<u32>() & 0x3FFF) as i32 % 10_000 + 1;
+            let id = (self.rang.clone().generate::<u32>() % 10_000 ) as i32;
             let row = self.cl.query_one(&self.world, &[&id]).await.unwrap();
-            buffers.worlds.push(World {
+           worlds.push(World {
                 id: row.get(0),
                 randomnumber: row.get(1),
             });
         }
         buffers.body.clear();
-        sonic_rs::to_writer(BytesMuteWriter(&mut buffers.body), &buffers.worlds).unwrap();
+        sonic_rs::to_writer(BytesMuteWriter(&mut buffers.body), &worlds).unwrap();
         buffers.body.chunk()
     }
     /// Update worlds in batch - optimized with buffer reuse
@@ -215,23 +209,24 @@ impl PgConnection {
         futures.extend(ids.iter().map(|x| async move {self.cl.query_one(&self.world,&[&x]).await}));
         futures_util::future::join_all(futures).await;
         ids.sort_unstable();
-        buffers.worlds.clear();
+        let mut worlds = Vec::with_capacity(num);
+        let mut numbers = Vec::with_capacity(num);
         for index in 0..num {
             let s_id = (rng.generate::<u32>() % 10_000 + 1 ) as i32;
-            buffers.worlds.push(World{
+            worlds.push(World{
                 id:ids[index],
                 randomnumber:s_id
             });
-            buffers.numbers.push(s_id);
+           numbers.push(s_id);
         }
         buffers.body.clear();
         for index in 0..num {
             params.push(&ids[index]);
-            params.push(&buffers.numbers[index]);
+            params.push(&numbers[index]);
         }
 
         _=self.cl.execute(&self.updates[num - 1], &params).await.unwrap();
-        sonic_rs::to_writer(BytesMuteWriter(&mut buffers.body), &buffers.worlds).unwrap();
+        sonic_rs::to_writer(BytesMuteWriter(&mut buffers.body), &worlds).unwrap();
         buffers.body.chunk()
     }
 
@@ -264,11 +259,50 @@ impl PgConnection {
         // Return reference to buffer - zero-copy!
         Ok(&buffers.fortune_output)
     }
+
+
+    pub fn get_cached_queries(&self,num:usize)->&[u8]{
+        let buf = self.buffers();
+        let buf = &mut buf.body;
+        buf.clear();
+        buf.extend_from_slice(br#"["#);
+        let mut writer = BytesMuteWriter(buf);
+        for _ in 0..num {
+            let rd = (self.rang.clone().generate::<u32>() % 10_000 ) as i32;
+            let v = match self.get_world_id_for_cache(rd){
+                None => {continue}
+                Some(e)=>{e}
+            };
+            writer.extend_from_slice(br"{");
+            _ = write!(writer, r#""id":{},"randomnumber":{}"#, rd, v);
+            writer.extend_from_slice(br"},");
+        }
+        if buf.len() >1  {buf.truncate(buf.len() - 1);}
+        buf.extend_from_slice(b"]");
+        return &buf[..]
+    }
+
+    fn get_world_id_for_cache(&self, id: i32) -> Option<&i32> {
+        unsafe {
+            let ptr = ptr::addr_of!(CACHED_VALUES);
+
+            match &*ptr {
+                Some(map) => map.get(&id),
+                None => None,
+            }
+        }
+    }
 }
 
 /// Zero-copy writer for BytesMut
 pub struct BytesMuteWriter<'a>(pub &'a mut BytesMut);
+impl BytesMuteWriter<'_> {
 
+    #[inline(always)]
+    pub fn extend_from_slice(&mut self,data:&[u8]){
+        self.0.extend_from_slice(data);
+    }
+}
 impl Write for BytesMuteWriter<'_> {
     #[inline(always)]
     fn write(&mut self, src: &[u8]) -> Result<usize, io::Error> {
