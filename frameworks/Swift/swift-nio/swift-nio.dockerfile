@@ -1,7 +1,7 @@
 # ================================
 # Build image
 # ================================
-FROM swift:6.1 AS build
+FROM swift:6.2 AS build
 WORKDIR /build
 
 # Copy entire repo into container
@@ -15,7 +15,7 @@ RUN swift build \
 # ================================
 # Run image
 # ================================
-FROM swift:6.1-slim
+FROM swift:6.2-slim
 WORKDIR /run
 
 # Install Swift dependencies
@@ -31,4 +31,4 @@ COPY --from=build /usr/lib/swift/ /usr/lib/swift/
 
 EXPOSE 8080
 
-ENTRYPOINT ["./app"]
+ENTRYPOINT ["./App"]

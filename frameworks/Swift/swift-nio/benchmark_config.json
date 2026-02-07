@@ -1,5 +1,6 @@
 {
   "framework": "swift-nio",
+  "maintainers": ["adam-fowler"],
   "tests": [{
     "default": {
       "json_url": "/json",
