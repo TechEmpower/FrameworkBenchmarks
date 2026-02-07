@@ -3,10 +3,9 @@
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
 use ntex::http::header::{CONTENT_TYPE, SERVER};
-use ntex::http::{HttpService, KeepAlive, Request, Response, StatusCode};
-use ntex::service::{Service, ServiceCtx, ServiceFactory};
-use ntex::web::{Error, HttpResponse};
-use ntex::{time::Seconds, util::PoolId, util::Ready};
+use ntex::http::{HttpService, Request, Response, StatusCode};
+use ntex::service::{cfg::SharedCfg, Service, ServiceCtx, ServiceFactory};
+use ntex::{web::Error, web::HttpResponse};
 
 mod db;
 mod utils;
@@ -64,13 +63,13 @@ impl Service<Request> for App {
 
 struct AppFactory;
 
-impl ServiceFactory<Request> for AppFactory {
+impl ServiceFactory<Request, SharedCfg> for AppFactory {
     type Response = Response;
     type Error = Error;
     type Service = App;
     type InitError = ();
 
-    async fn create(&self, _: ()) -> Result<Self::Service, Self::InitError> {
+    async fn create(&self, _: SharedCfg) -> Result<Self::Service, Self::InitError> {
         const DB_URL: &str =
             "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
 
@@ -82,35 +81,11 @@ impl ServiceFactory<Request> for AppFactory {
 async fn main() -> std::io::Result<()> {
     println!("Starting http server: 127.0.0.1:8080");
 
-    let cores = core_affinity::get_core_ids().unwrap();
-    let total_cores = cores.len();
-    let cores = std::sync::Arc::new(std::sync::Mutex::new(cores));
-
     ntex::server::build()
         .backlog(1024)
-        .bind("techempower", "0.0.0.0:8080", |cfg| {
-            cfg.memory_pool(PoolId::P1);
-            PoolId::P1.set_read_params(65535, 2048);
-            PoolId::P1.set_write_params(65535, 2048);
-
-            HttpService::build()
-                .keep_alive(KeepAlive::Os)
-                .client_timeout(Seconds(0))
-                .headers_read_rate(Seconds::ZERO, Seconds::ZERO, 0)
-                .payload_read_rate(Seconds::ZERO, Seconds::ZERO, 0)
-                .h1(AppFactory)
-        })?
-        .configure(move |cfg| {
-            let cores = cores.clone();
-            cfg.on_worker_start(move |_| {
-                if let Some(core) = cores.lock().unwrap().pop() {
-                    core_affinity::set_for_current(core);
-                }
-                Ready::<_, &str>::Ok(())
-            });
-            Ok(())
-        })?
-        .workers(total_cores)
+        .enable_affinity()
+        .bind("tfb", "0.0.0.0:8080", async |_| HttpService::h1(AppFactory))?
+        .config("tfb", utils::config())
         .run()
         .await
 }

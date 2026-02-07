@@ -1,5 +1,5 @@
 @import java.util.*
-@import com.hexagonkt.model.Fortune
+@import com.hexagontk.model.Fortune
 
 @param List<Fortune> fortunes
 

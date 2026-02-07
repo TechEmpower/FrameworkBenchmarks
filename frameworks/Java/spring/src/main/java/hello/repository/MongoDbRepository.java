@@ -1,6 +1,5 @@
 package hello.repository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.context.annotation.Profile;
@@ -11,8 +10,6 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
-import com.mongodb.bulk.BulkWriteResult;
-import hello.Utils;
 import hello.model.Fortune;
 import hello.model.World;
 

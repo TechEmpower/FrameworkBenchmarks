@@ -1,4 +1,7 @@
+using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Threading.Tasks;
 using appMpower.Orm.Data; 
 using appMpower.Orm.Objects;
 using PlatformBenchmarks;
@@ -9,46 +12,81 @@ namespace appMpower.Orm
    {
       private const int MaxBatch = 500;
 
+#if ADO      
+      private static ConcurrentRandom _random = new ConcurrentRandom();
+#else
       private static Random _random = new Random();
+#endif
 
       private static string[] _queriesMultipleRows = new string[MaxBatch + 1];
 
-      public static async Task<World> LoadSingleQueryRow()
+#if AOTDLL
+      public static World LoadSingleQueryRow()
+#else
+      public static async Task<World> LoadSingleQueryRowAsync()
+#endif
       {
-         using var pooledConnection = new DbConnection(DbProviderFactory.ConnectionString);
+         using var pooledConnection = new DbConnection(DbFactory.ConnectionString);
+#if AOTDLL
+         pooledConnection.Open();
+#else
          await pooledConnection.OpenAsync();
+#endif
 
          var (dbCommand, _) = CreateReadCommand(pooledConnection);
 
          using (dbCommand)
          {
-            World world = await ReadSingleRow(dbCommand);
-
+#if AOTDLL
+            World world = ReadSingleRow(dbCommand);
+#else
+            World world = await ReadSingleRowAsync(dbCommand);
+#endif
             return world;
          }
       }
 
-      public static async Task<World> LoadSingleQueryRowById(int id)
+
+#if AOTDLL
+      public static World LoadSingleQueryRowById(int id)
+#else
+      public static async Task<World> LoadSingleQueryRowByIdAsync(int id)
+#endif
       {
-         using var pooledConnection = new DbConnection(DbProviderFactory.ConnectionString);
+         using var pooledConnection = new DbConnection(DbFactory.ConnectionString);
+#if AOTDLL
+         pooledConnection.Open();
+#else
          await pooledConnection.OpenAsync();
+#endif
 
          var (dbCommand, _) = CreateReadCommandById(pooledConnection, id);
 
          using (dbCommand)
          {
-            World world = await ReadSingleRow(dbCommand);
-
+#if AOTDLL
+            World world = ReadSingleRow(dbCommand);
+#else
+            World world = await ReadSingleRowAsync(dbCommand);
+#endif
             return world;
          }
       }
 
-      public static async Task<World[]> LoadMultipleQueriesRows(int count)
+#if AOTDLL
+      public static World[] LoadMultipleQueriesRows(int count)
+#else
+      public static async Task<World[]> LoadMultipleQueriesRowsAsync(int count)
+#endif
       {
          var worlds = new World[count];
 
-         using var pooledConnection = new DbConnection(DbProviderFactory.ConnectionString);
+         using var pooledConnection = new DbConnection(DbFactory.ConnectionString);
+#if AOTDLL
+         pooledConnection.Open();
+#else
          await pooledConnection.OpenAsync();
+#endif
 
          var (dbCommand, dbDataParameter) = CreateReadCommand(pooledConnection);
 
@@ -56,7 +94,11 @@ namespace appMpower.Orm
          {
             for (int i = 0; i < count; i++)
             {
-               worlds[i] = await ReadSingleRow(dbCommand);
+#if AOTDLL
+               worlds[i] = ReadSingleRow(dbCommand);
+#else
+               worlds[i] = await ReadSingleRowAsync(dbCommand);
+#endif
                dbDataParameter.Value = _random.Next(1, 10001);
             }
          }
@@ -64,45 +106,20 @@ namespace appMpower.Orm
          return worlds;
       }
 
-      public static async Task<List<Fortune>> LoadFortunesRows()
-      {
-         var fortunes = new List<Fortune>();
-
-         using var pooledConnection = new DbConnection(DbProviderFactory.ConnectionString);
-         await pooledConnection.OpenAsync();
-
-         var dbCommand = new DbCommand("SELECT * FROM fortune", pooledConnection);
-
-         using (dbCommand)
-         {
-            IDataReader dataReader = await dbCommand.ExecuteReaderAsync(CommandBehavior.SingleResult & CommandBehavior.SequentialAccess);
-
-            while (dataReader.Read())
-            {
-               fortunes.Add(new Fortune
-               (
-                  id: dataReader.GetInt32(0),
-                  //MariaDB ODBC connector does not correctly support Japanese characters in combination with default ADO.NET;
-                  //as a solution we custom read this string
-                  message: (Constants.Dbms == Dbms.MySQL ? ReadColumn(dataReader, 1) : dataReader.GetString(1))
-               ));
-            }
-
-            dataReader.Close();
-         }
-
-         fortunes.Add(new Fortune(id: 0, message: "Additional fortune added at request time."));
-         fortunes.Sort();
-
-         return fortunes;
-      }
-
-      public static async Task<World[]> LoadMultipleUpdatesRows(int count)
+#if AOTDLL
+      public static World[] LoadMultipleUpdatesRows(int count)
+#else
+      public static async Task<World[]> LoadMultipleUpdatesRowsAsync(int count)
+#endif
       {
          var worlds = new World[count];
 
-         using var pooledConnection = new DbConnection(DbProviderFactory.ConnectionString, true);
+         using var pooledConnection = new DbConnection(DbFactory.ConnectionString, true);
+#if AOTDLL
+         pooledConnection.Open();
+#else
          await pooledConnection.OpenAsync();
+#endif
 
          var (queryCommand, dbDataParameter) = CreateReadCommand(pooledConnection);
 
@@ -110,7 +127,12 @@ namespace appMpower.Orm
          {
             for (int i = 0; i < count; i++)
             {
-               worlds[i] = await ReadSingleRow(queryCommand);
+#if AOTDLL
+               worlds[i] = ReadSingleRow(queryCommand);
+#else
+               worlds[i] = await ReadSingleRowAsync(queryCommand);
+#endif
+
                dbDataParameter.Value = _random.Next(1, 10001);
             }
          }
@@ -130,40 +152,98 @@ namespace appMpower.Orm
             worlds[i].RandomNumber = randomNumber;
          }
 
-         if (Constants.Dbms != Dbms.MySQL)
-         {
-            var jds = BatchUpdateString.Jds;
+#if !MYSQL
+         var jds = BatchUpdateString.Jds;
 
-            for (int i = 0; i < count; i++)
-            {
-               updateCommand.CreateParameter(jds[i], DbType.Int32, worlds[i].Id);
-            }
+         for (int i = 0; i < count; i++)
+         {
+            updateCommand.CreateParameter(jds[i], DbType.Int32, worlds[i].Id);
          }
+#endif
 
          updateCommand.ExecuteNonQuery();
 
          return worlds;
       }
-
-      internal static (DbCommand dbCommand, IDbDataParameter dbDataParameter) CreateReadCommand(DbConnection pooledConnection)
+ 
+#if AOTDLL
+      public static List<Fortune> LoadFortunesRows()
+#else
+      public static async Task<List<Fortune>> LoadFortunesRowsAsync()
+#endif
       {
-         DbCommand dbCommand = new DbCommand("SELECT * FROM world WHERE id=?", pooledConnection);
+         var fortunes = new List<Fortune>();
+
+         using var pooledConnection = new DbConnection(DbFactory.ConnectionString);
+#if AOTDLL
+         pooledConnection.Open();
+#else
+         await pooledConnection.OpenAsync();
+#endif
+
+         var dbCommand = new DbCommand("SELECT * FROM fortune", pooledConnection);
+
+         using (dbCommand)
+         {
+#if AOTDLL
+            var dataReader = dbCommand.ExecuteReader(CommandBehavior.SingleResult & CommandBehavior.SequentialAccess);
+            while (dataReader.Read())
+#else
+            var dataReader = await dbCommand.ExecuteReaderAsync(CommandBehavior.SingleResult & CommandBehavior.SequentialAccess);
+            while (await dataReader.ReadAsync())
+#endif
+            {
+               fortunes.Add(new Fortune
+               (
+                  id: dataReader.GetInt32(0),
+                  message: dataReader.GetString(1))
+               );
+            }
+
+            dataReader.Close();
+         }
+
+         fortunes.Add(new Fortune(id: 0, message: "Additional fortune added at request time."));
+         fortunes.Sort();
+
+         return fortunes;
+      }
+
+      private static (DbCommand dbCommand, IDbDataParameter dbDataParameter) CreateReadCommand(DbConnection pooledConnection)
+      {
+#if ADO         
+         var dbCommand = new DbCommand("SELECT * FROM world WHERE id=@Id", pooledConnection);
+#else         
+         var dbCommand = new DbCommand("SELECT * FROM world WHERE id=?", pooledConnection);
+#endif         
 
          return (dbCommand, dbCommand.CreateParameter("Id", DbType.Int32, _random.Next(1, 10001)));
       }
 
       internal static (DbCommand dbCommand, IDbDataParameter dbDataParameter) CreateReadCommandById(DbConnection pooledConnection, int id)
       {
-         DbCommand dbCommand = new DbCommand("SELECT * FROM world WHERE id=?", pooledConnection);
+#if ADO         
+         var dbCommand = new DbCommand("SELECT * FROM world WHERE id=@Id", pooledConnection);
+#else         
+         var dbCommand = new DbCommand("SELECT * FROM world WHERE id=?", pooledConnection);
+#endif         
 
          return (dbCommand, dbCommand.CreateParameter("Id", DbType.Int32, id));
       }
 
-      internal static async Task<World> ReadSingleRow(DbCommand dbCommand)
+#if AOTDLL
+      internal static World ReadSingleRow(DbCommand dbCommand)
+#else
+      internal static async Task<World> ReadSingleRowAsync(DbCommand dbCommand)
+#endif
       {
-         var dataReader = await dbCommand.ExecuteReaderAsync(CommandBehavior.SingleRow & CommandBehavior.SequentialAccess);
-
+#if AOTDLL
+         var dataReader = dbCommand.ExecuteReader(CommandBehavior.SingleRow & CommandBehavior.SequentialAccess);
          dataReader.Read();
+#else
+         var dataReader = await dbCommand.ExecuteReaderAsync(CommandBehavior.SingleRow & CommandBehavior.SequentialAccess);
+         await dataReader.ReadAsync();
+#endif
 
          var world = new World
          {
@@ -176,7 +256,11 @@ namespace appMpower.Orm
          return world;
       }
 
-      public static async Task<World[]> ReadMultipleRows(int count)
+#if AOTDLL
+      public static World[] ReadMultipleRows(int count)
+#else
+      public static async Task<World[]> ReadMultipleRowsAsync(int count)
+#endif
       {
          int j = 0;
          var ids = BatchUpdateString.Ids;
@@ -199,8 +283,12 @@ namespace appMpower.Orm
             queryString = _queriesMultipleRows[count] = StringBuilderCache.GetStringAndRelease(stringBuilder);
          }
 
-         using var pooledConnection = new DbConnection(DbProviderFactory.ConnectionString);
+         using var pooledConnection = new DbConnection(DbFactory.ConnectionString);
+#if AOTDLL
+         pooledConnection.Open();
+#else
          await pooledConnection.OpenAsync();
+#endif
 
          using var dbCommand = new DbCommand(queryString, pooledConnection);
 
@@ -209,11 +297,19 @@ namespace appMpower.Orm
             dbCommand.CreateParameter(ids[i], DbType.Int32, _random.Next(1, 10001));
          }
 
-         var dataReader = await dbCommand.ExecuteReaderAsync(CommandBehavior.Default & CommandBehavior.SequentialAccess);
+#if AOTDLL
+            var dataReader = dbCommand.ExecuteReader(CommandBehavior.SingleResult & CommandBehavior.SequentialAccess);
+#else
+            var dataReader = await dbCommand.ExecuteReaderAsync(CommandBehavior.SingleResult & CommandBehavior.SequentialAccess);
+#endif
 
          do
          {
+#if AOTDLL
             dataReader.Read();
+#else
+            await dataReader.ReadAsync();
+#endif
 
             worlds[j] = new World
             {
@@ -222,29 +318,16 @@ namespace appMpower.Orm
             };
 
             j++;
-         } while (await dataReader.NextResultAsync());
+         }
+#if AOTDLL
+         while (dataReader.NextResult());
+#else
+         while (await dataReader.NextResultAsync());
+#endif
 
          dataReader.Close();
 
          return worlds;
-      }
-
-      public static string ReadColumn(IDataReader dataReader, int column)
-      {
-         long size = dataReader.GetBytes(column, 0, null, 0, 0);  //get the length of data
-         byte[] values = new byte[size];
-
-         int bufferSize = 64;
-         long bytesRead = 0;
-         int currentPosition = 0;
-
-         while (bytesRead < size)
-         {
-            bytesRead += dataReader.GetBytes(column, currentPosition, values, currentPosition, bufferSize);
-            currentPosition += bufferSize;
-         }
-
-         return System.Text.Encoding.Default.GetString(values);
       }
    }
 }

@@ -2,13 +2,13 @@
 
 ### Test Type Implementation Source Code
 
-- [PLAINTEXT](src/routes.ts#L15)
-- [JSON](src/routes.ts#L16)
-- [DB](src/routes.ts#L17)
-- [QUERY](src/routes.ts#L24)
-- [UPDATE](src/routes.ts#L37)
-- [FORTUNES](src/routes.ts#L53)
-- [CACHED QUERY](src/routes.ts#L67)
+- [PLAINTEXT](src/routes.ts#L18)
+- [JSON](src/routes.ts#L19)
+- [DB](src/routes.ts#L25)
+- [QUERY](src/routes.ts#L29)
+- [UPDATE](src/routes.ts#L39)
+- [FORTUNES](src/routes.ts#L59)
+- [CACHED QUERY](src/routes.ts#L73)
 
 ## Important Libraries
 
@@ -16,7 +16,7 @@ The tests were run with:
 
 - [deno](https://deno.land)
 - [oak](https://deno.land/x/oak/)
-- [cotton](https://deno.land/x/cotton/)
+- [Postgres.js](https://github.com/porsager/postgres/)
 
 ## Test URLs
 
@@ -34,11 +34,11 @@ http://localhost:8080/db
 
 ### QUERY
 
-http://localhost:8080/query?q=
+http://localhost:8080/queries?q=
 
 ### UPDATE
 
-http://localhost:8080/update?q=
+http://localhost:8080/updates?q=
 
 ### FORTUNES
 
@@ -46,4 +46,4 @@ http://localhost:8080/fortunes
 
 ### CACHED QUERY
 
-http://localhost:8080/cached_query?q=
+http://localhost:8080/cached_queries?q=

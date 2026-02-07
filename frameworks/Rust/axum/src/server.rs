@@ -28,7 +28,7 @@ fn set_socket_options(addr: SocketAddr) -> io::Result<tokio::net::TcpListener> {
     socket.set_reuse_port(true)?;
     socket.set_reuse_address(true)?;
     socket.set_nonblocking(true)?;
-    socket.set_nodelay(true)?;
+    socket.set_tcp_nodelay(true)?;
     socket.bind(&addr.into())?;
     socket.listen(4096)?;
 
@@ -37,7 +37,7 @@ fn set_socket_options(addr: SocketAddr) -> io::Result<tokio::net::TcpListener> {
 }
 
 /// Build an Axum server with consistent configuration, using the high-level API exposed
-/// by Axum 0.7. This is intended for convenience and intentionally does not provide much
+/// by Axum 0.8. This is intended for convenience and intentionally does not provide much
 /// customisability.
 #[allow(dead_code)]
 pub async fn serve(app: Router<()>, port: Option<u16>) {

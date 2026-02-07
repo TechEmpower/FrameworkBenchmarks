@@ -27,8 +27,8 @@ async fn find_random_world(pool: &Pool) -> Result<World> {
         .await
         .unwrap();
 
-    let mut rng = SmallRng::from_entropy();
-    let id = (rng.gen::<u32>() % 10_000 + 1) as i32;
+    let mut rng = SmallRng::from_os_rng();
+    let id = (rng.random::<u32>() % 10_000 + 1) as i32;
 
     let row = conn.query_one(&world, &[&id]).await?;
 
@@ -95,14 +95,14 @@ async fn updates(
 ) -> Result<HttpResponse<Vec<u8>>> {
     let mut worlds = find_random_worlds(&data, query.q).await?;
 
-    let mut rng = SmallRng::from_entropy();
+    let mut rng = SmallRng::from_os_rng();
 
     let mut updates = "UPDATE world SET randomnumber = CASE id ".to_string();
     let mut params: Vec<&(dyn ToSql + Sync)> = Vec::with_capacity(query.q as usize * 3);
 
     let mut n_params = 1;
     for world in worlds.iter_mut() {
-        let new_random_number = (rng.gen::<u32>() % 10_000 + 1) as i32;
+        let new_random_number = (rng.random::<u32>() % 10_000 + 1) as i32;
         write!(&mut updates, "when ${} then ${} ", n_params, n_params + 1).unwrap();
         world.randomnumber = new_random_number;
         n_params += 2;

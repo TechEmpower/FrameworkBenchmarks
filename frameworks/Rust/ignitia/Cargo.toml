@@ -1,0 +1,46 @@
+[package]
+name = "ignitia-techempower"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+ignitia = { version = "0.2.4" }
+tokio = { version = "1.46", features = ["full"] }
+tokio-postgres = "0.7.13"
+deadpool-postgres = { version = "0.14.1", features = ["rt_tokio_1", "serde"] }
+tokio-pg-mapper = "0.2.0"
+tokio-pg-mapper-derive = "0.2.0"
+mongodb = { version = "3.2.4", features = ["zstd-compression", "snappy-compression", "zlib-compression"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+dotenv = "0.15.0"
+rand = { version = "0.9.2", features = ["small_rng"] }
+futures = "0.3.31"
+futures-util = "0.3.31"
+yarte = "0.15.7"
+mimalloc = "0.1.47"
+num_cpus = "1.17.0"
+httpdate = "1.0"
+
+[profile.release]
+lto = "fat"
+codegen-units = 1
+opt-level = 3
+strip = true
+
+
+[[bin]]
+name = "ignitia"
+path = "src/main.rs"
+
+[[bin]]
+name = "ignitia-pg"
+path = "src/main_pg.rs"
+
+[[bin]]
+name = "ignitia-pg-pool"
+path = "src/main_pg_pool.rs"
+
+[[bin]]
+name = "ignitia-mongo"
+path = "src/main_mongo.rs"

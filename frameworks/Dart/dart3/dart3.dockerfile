@@ -1,14 +1,15 @@
 
-FROM dart:3.5 AS builder
-
-COPY . /app
+FROM dart:3.10.8 AS build
 WORKDIR /app
-RUN mkdir build
-RUN dart compile exe ./bin/server.dart -o build/server
+
+COPY pubspec.yaml .
+COPY bin bin
+
+RUN dart compile exe bin/server.dart -o server
 
 FROM scratch
-COPY --from=builder /runtime/ /
-COPY --from=builder /app/build /bin
+COPY --from=build /runtime/ /
+COPY --from=build /app/server /bin/server
 
 EXPOSE 8080
-CMD ["server"]
+ENTRYPOINT ["server"]

@@ -2,8 +2,8 @@
   
   <PropertyGroup>
     
-    <TargetFramework>net5.0</TargetFramework>
-    <LangVersion>9.0</LangVersion>
+    <TargetFramework>net9.0</TargetFramework>
+    <LangVersion>13.0</LangVersion>
     
     <AssemblyTitle>EmbedIO Benchmarks</AssemblyTitle>
     <Description>Test suite to be executed with TechEmpower FrameworkBenchmarks.</Description>
@@ -17,8 +17,8 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="System.Text.Json" Version="5.0.0" />
-    <PackageReference Include="Watson" Version="4.0.0.3" />
+    <PackageReference Include="System.Text.Json" Version="9.0.10" />
+    <PackageReference Include="Watson" Version="6.4.0" />
   </ItemGroup>
   
 </Project>

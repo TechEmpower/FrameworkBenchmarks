@@ -1,4 +1,4 @@
-FROM docker.io/golang:1.19
+FROM docker.io/golang:1.24.2
 
 ADD ./src /webgo
 WORKDIR /webgo

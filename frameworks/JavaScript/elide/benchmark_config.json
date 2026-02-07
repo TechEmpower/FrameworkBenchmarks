@@ -14,6 +14,7 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "elide",
+      "tags": ["broken"],
       "versus": "nodejs"
     }
   }]

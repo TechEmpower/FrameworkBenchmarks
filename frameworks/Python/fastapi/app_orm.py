@@ -43,9 +43,8 @@ sa_fortunes = Fortune.__table__
 ADDITIONAL_FORTUNE = Fortune(
     id=0, message="Additional fortune added at request time."
 )
-MAX_POOL_SIZE = 1000//multiprocessing.cpu_count()
-
 sort_fortunes_key = attrgetter("message")
+MAX_POOL_SIZE = 1000//(multiprocessing.cpu_count()*2)
 
 template_path = os.path.join(
     os.path.dirname(os.path.realpath(__file__)), "templates"

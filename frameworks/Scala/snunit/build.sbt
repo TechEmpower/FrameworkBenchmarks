@@ -2,8 +2,8 @@ import scala.scalanative.build._
 
 scalaVersion := "3.5.2"
 
-val snunitVersion = "0.10.2"
-val jsoniterScalaVersion = "2.31.3"
+val snunitVersion = "0.10.3"
+val jsoniterScalaVersion = "2.33.0"
 
 libraryDependencies ++= Seq(
   "com.github.lolgab" %%% "snunit" % snunitVersion,

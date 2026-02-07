@@ -1,4 +1,4 @@
-FROM docker.io/golang:latest
+FROM docker.io/golang:1.24.2
 
 WORKDIR /gnet
 

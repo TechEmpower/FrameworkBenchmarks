@@ -1,14 +1,14 @@
 use std::{convert::Infallible, io};
 
-use axum::{async_trait, extract::FromRequestParts, http::request::Parts};
+use axum::{extract::FromRequestParts, http::request::Parts};
 use futures_util::{stream::FuturesUnordered, StreamExt, TryStreamExt};
 use mongodb::{bson::doc, Database};
+use rand::rngs::SmallRng;
 
-use crate::common::models::{Fortune, World};
+use crate::common::{models::{Fortune, World}, random_ids};
 
 pub struct DatabaseConnection(pub Database);
 
-#[async_trait]
 impl FromRequestParts<Database> for DatabaseConnection {
     type Rejection = Infallible;
 
@@ -45,17 +45,17 @@ pub async fn find_world_by_id(db: Database, id: i32) -> Result<World, MongoError
     let filter = doc! { "_id": id as f32 };
 
     let world: World = world_collection
-        .find_one(Some(filter), None)
+        .find_one(filter)
         .await
         .unwrap()
         .expect("expected world, found none");
     Ok(world)
 }
 
-pub async fn find_worlds(db: Database, ids: Vec<i32>) -> Result<Vec<World>, MongoError> {
+pub async fn find_worlds(db: Database, rng: &mut SmallRng, count: usize) -> Result<Vec<World>, MongoError> {
     let future_worlds = FuturesUnordered::new();
 
-    for id in ids {
+    for id in random_ids(rng, count) {
         future_worlds.push(find_world_by_id(db.clone(), id));
     }
 
@@ -67,7 +67,7 @@ pub async fn fetch_fortunes(db: Database) -> Result<Vec<Fortune>, MongoError> {
     let fortune_collection = db.collection::<Fortune>("fortune");
 
     let mut fortune_cursor = fortune_collection
-        .find(None, None)
+        .find(doc! {})
         .await
         .expect("fortunes could not be loaded");
 
@@ -99,8 +99,7 @@ pub async fn update_worlds(
     }
 
     db.run_command(
-        doc! {"update": "world", "updates": updates, "ordered": false},
-        None,
+        doc! {"update": "world", "updates": updates, "ordered": false}
     )
     .await
     .expect("could not update worlds");

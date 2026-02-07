@@ -1,0 +1,23 @@
+{
+  "framework": "openrun",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "framework": "OpenRun",
+        "language": "python",
+        "flavor": "Starlark",
+        "platform": "None",
+        "webserver": "OpenRun",
+        "os": "Linux",
+        "display_name": "OpenRun",
+        "notes": "",
+        "versus": "None"
+      }
+    }
+  ]
+}

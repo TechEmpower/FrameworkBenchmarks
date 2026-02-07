@@ -4,8 +4,10 @@ This is the Spring MVC portion of a [benchmarking test suite](../) comparing a v
 
 An embedded undertow is used for the web server.
 
-There are two implementations :
+There are four implementations :
 * For postgresql access, JdbcTemplate is used. See [JdbcDbRepository](src/main/java/hello/JdbcDbRepository.java).
+* For postgresql access, Spring Data JDBC is used. See [DataJdbcDbRepository](src/main/java/hello/DataJdbcDbRepository.java).
+* For postgresql access, jOOQ is used. See [JooqDbRepository](src/main/java/hello/JooqDbRepository.java).
 * For mongoDB access, MongoTemplate is used. See [MongoDbRepository](src/main/java/hello/MongoDbRepository.java).
 
 ### Plaintext Test
@@ -62,3 +64,19 @@ There are two implementations :
 ### Template rendering Test
 
     http://localhost:8080/fortunes
+
+## Build
+
+### jOOQ
+
+The jOOQ version requires Java classes generated from the database schema into 
+`src/main/jooq/hello/db`. In order to generate them, you need to run a postgresql container and
+then execute the Maven `jooq-codegen:generate` command:
+
+```bash
+(../../../toolset/databases/postgres && docker run -p 5432:5432 --rm "$(docker build -q -f postgres.dockerfile .)")
+```
+
+```bash
+mvn jooq-codegen:generate
+```

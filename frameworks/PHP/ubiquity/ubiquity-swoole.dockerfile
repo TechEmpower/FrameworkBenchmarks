@@ -1,4 +1,4 @@
-FROM phpswoole/swoole:5.1.3-php8.3
+FROM phpswoole/swoole:php8.4
 
 RUN apt-get install -y libpq-dev \
     && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
@@ -7,7 +7,7 @@ RUN apt-get install -y libpq-dev \
 COPY deploy/conf/php-async.ini /usr/local/etc/php/php.ini
 
 WORKDIR /ubiquity
-ADD --link . .
+COPY --link . .
 
 RUN chmod -R 777 /ubiquity
 

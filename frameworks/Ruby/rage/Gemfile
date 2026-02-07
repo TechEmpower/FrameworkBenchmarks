@@ -1,9 +1,9 @@
 source "https://rubygems.org"
 
-gem "rage-rb", "~> 1.10"
+gem "rage-rb", "~> 1.19"
 
 gem "pg", "~> 1.0"
-gem "activerecord", "~> 7.2.0", require: "active_record"
+gem "activerecord", "~> 8.1.0", require: "active_record"
 
 # Build JSON APIs with ease
 # gem "alba"

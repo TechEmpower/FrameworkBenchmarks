@@ -10,6 +10,7 @@ use React\MySQL\QueryResult;
 use React\Promise\PromiseInterface;
 
 use function React\Promise\all;
+use function React\Promise\resolve;
 
 /** @return Closure(Request):ResponseInterface */
 function requestHandler(): Closure
@@ -29,7 +30,7 @@ function requestHandler(): Closure
     };
 
     return static function (Request $request) use ($world, $fortune, $update): ResponseInterface | PromiseInterface {
-        return match($request->getUri()->getPath()) {
+        return resolve((match($request->getUri()->getPath()) {
             '/plaintext' => Response::plaintext('Hello, World!'),
             '/json'      => Response::json(['message' => 'Hello, World!']),
             '/db'        => db($world),
@@ -38,7 +39,9 @@ function requestHandler(): Closure
             '/update'    => updateraw(queryCount($request), $world, $update),
             // '/info'      => info(),
             default      => new Response(404, [], 'Error 404'),
-        };
+        }))->catch(
+            static fn (Throwable $error): PromiseInterface => resolve(Response::plaintext($error->getMessage())->withStatus(500)),
+        );
     };
 }
 

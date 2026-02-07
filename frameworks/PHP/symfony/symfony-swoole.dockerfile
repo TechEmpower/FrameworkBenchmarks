@@ -1,4 +1,4 @@
-FROM phpswoole/swoole:5.1.3-php8.3
+FROM phpswoole/swoole:php8.4
 
 RUN apt-get update -yqq && \
     apt-get install -yqq libpq-dev libicu-dev > /dev/null && \
@@ -10,6 +10,9 @@ RUN pecl install apcu > /dev/null && \
 COPY --link deploy/swoole/php.ini /usr/local/etc/php/
 WORKDIR /symfony
 COPY --link . .
+
+# Fix to enable symfony/polyfill-php85
+COPY deploy/swoole/composer.json /symfony/composer.json
 
 #ENV APP_DEBUG=1
 ENV APP_RUNTIME="Runtime\Swoole\Runtime"

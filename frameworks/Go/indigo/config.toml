@@ -1,0 +1,20 @@
+[framework]
+name = "indigo"
+
+[main]
+urls.json = "/json"
+urls.db = "/db"
+urls.query = "/query?n="
+urls.update = "/update?n="
+urls.cached_query = "/cached-query?n="
+urls.fortune = "/fortunes"
+urls.plaintext = "/plaintext"
+approach = "Realistic"
+classification = "Platform"
+database = "Postgres"
+database_os = "Linux"
+os = "Linux"
+orm = "Raw"
+platform = "None"
+webserver = "None"
+versus = "go"

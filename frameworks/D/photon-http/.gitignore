@@ -1,0 +1,16 @@
+.dub
+docs.json
+__dummy.html
+docs/
+/photon-http
+photon-http.so
+photon-http.dylib
+photon-http.dll
+photon-http.a
+photon-http.lib
+photon-http-test-*
+*.exe
+*.pdb
+*.o
+*.obj
+*.lst

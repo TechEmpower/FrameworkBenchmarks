@@ -5,32 +5,30 @@ More information is available at [ktor.io](http://ktor.io).
 
 # Setup
 
-* Java 17
-* MySQL server
+* Java 21
+* Postgres server
 
 # Requirements
 
-* Maven 3
-* JDK 17
+* JDK 21
+* Gradle (wrapper provided)
 * Kotlin
 * ktor
 * netty 
 * hikariCP
 
-Maven is downloaded automatically via Maven Wrapper script (`mvnw`), add dependencies are specified in `pom.xml` so will be downloaded automatically from maven central and jcenter repositories.
-
 # Deployment
 
-Run maven to build a bundle
+Use the Gradle wrapper to assemble the desired runnable bundle (Netty shown below).
 
 ```bash
-./mvnw package
+./gradlew nettyBundle
 ```
 
-Once bundle build complete and mysql server is running you can launch the application
+Once the bundle build completes and Postgres is running you can launch the application
 
 ```bash
-java -jar target/tech-empower-framework-benchmark-1.0-SNAPSHOT.jar
+java -jar build/libs/tech-empower-framework-benchmark-1.0-SNAPSHOT-netty-bundle.jar
 ```
 
 Please note that the server holds tty so you may need nohup. See `setup.sh` for details.
@@ -38,6 +36,8 @@ Please note that the server holds tty so you may need nohup. See `setup.sh` for 
 # Contact
 
 [Leonid Stashevsky](https://github.com/e5l)
+
+[Bruce Hamilton](https://github.com/bjhham)
 
 [Sergey Mashkov](https://github.com/cy6erGn0m)
 

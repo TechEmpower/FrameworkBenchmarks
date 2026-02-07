@@ -14,16 +14,19 @@ use axum::Json;
 #[cfg(feature = "simd-json")]
 use common::simd_json::Json;
 use common::{
-    models::{FortuneInfo, World},
-    random_ids,
+    models::{FortuneInfo, World}, random_id
 };
 use dotenv::dotenv;
 use mongodb::{
     options::{ClientOptions, Compressor},
     Client,
 };
-use rand::{rngs::SmallRng, thread_rng, Rng, SeedableRng};
+use rand::{rngs::SmallRng, rng, SeedableRng};
 use yarte::Template;
+use mimalloc::MiMalloc;
+
+#[global_allocator]
+static GLOBAL: MiMalloc = MiMalloc;
 
 use common::{
     get_env,
@@ -40,9 +43,7 @@ pub struct FortunesTemplate<'a> {
 }
 
 async fn db(DatabaseConnection(db): DatabaseConnection) -> impl IntoResponse {
-    let mut rng = SmallRng::from_rng(&mut thread_rng()).unwrap();
-
-    let random_id = (rng.gen::<u32>() % 10_000 + 1) as i32;
+    let random_id = random_id(&mut rng());
 
     let world = find_world_by_id(db, random_id)
         .await
@@ -57,10 +58,8 @@ async fn queries(
 ) -> impl IntoResponse {
     let q = parse_params(params);
 
-    let mut rng = SmallRng::from_rng(&mut thread_rng()).unwrap();
-    let ids = random_ids(&mut rng, q);
-
-    let worlds = find_worlds(db, ids).await;
+    let mut rng = SmallRng::from_rng(&mut rng());
+    let worlds = find_worlds(db, &mut rng, q).await;
     let results = worlds.expect("worlds could not be retrieved");
 
     (StatusCode::OK, Json(results))
@@ -72,18 +71,15 @@ async fn updates(
 ) -> impl IntoResponse {
     let q = parse_params(params);
 
-    let mut rng = SmallRng::from_rng(&mut thread_rng()).unwrap();
-    let ids = random_ids(&mut rng, q);
+    let mut rng = SmallRng::from_rng(&mut rng());
 
-    let worlds = find_worlds(db.clone(), ids)
+    let worlds = find_worlds(db.clone(), &mut  rng, q)
         .await
         .expect("worlds could not be retrieved");
     let mut updated_worlds: Vec<World> = Vec::with_capacity(q);
 
     for mut world in worlds {
-        let random_number = (rng.gen::<u32>() % 10_000 + 1) as i32;
-
-        world.random_number = random_number;
+        world.random_number = random_id(&mut rng);
         updated_worlds.push(world);
     }
 

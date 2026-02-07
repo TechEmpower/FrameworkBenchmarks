@@ -1,0 +1,19 @@
+{
+  "name": "brahma-firelight",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "bun --hot src/main.ts",
+    "build": "bun build src/main.ts  --packages external --sourcemap  --outdir dist --minify",
+    "start": "bun dist/main.js"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "brahma-firelight": "^1.5.20"
+  }
+}

@@ -4,12 +4,12 @@ use Workerman\Timer;
 
 class Date
 {
-    public $date = null;
+    public $date;
     public function __construct()
     {
-        $this->date = gmdate('D, d M Y H:i:s').' GMT';
+        $this->date = gmdate(DATE_RFC7231);
         Timer::add(1, function() {
-            $this->date = gmdate('D, d M Y H:i:s').' GMT';
+            $this->date = gmdate(DATE_RFC7231);
         });
     }
 }

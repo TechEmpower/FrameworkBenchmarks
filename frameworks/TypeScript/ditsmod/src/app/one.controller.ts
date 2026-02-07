@@ -1,4 +1,4 @@
-import { AnyObj, controller, RequestContext, SingletonRequestContext, optional } from '@ditsmod/core';
+import { AnyObj, controller, RequestContext, optional } from '@ditsmod/core';
 import { route } from '@ditsmod/routing';
 import Handlebars from 'handlebars';
 
@@ -28,7 +28,7 @@ const tmpl = Handlebars.compile(
   ].join(''),
 );
 
-@controller({ scope: 'module' })
+@controller({ scope: 'ctx' })
 export class OneController {
   constructor(@optional() private dbService: DbService) {}
 
@@ -40,19 +40,19 @@ export class OneController {
   }
 
   @route('GET', 'queries')
-  async getMultiQueries(ctx: SingletonRequestContext) {
+  async getMultiQueries(ctx: RequestContext) {
     const result = await this.dbService.getMultiQueries(ctx.queryParams!.queries);
     this.sendJson(ctx, result);
   }
 
   @route('GET', 'cached-queries')
-  async getCachedWorlds(ctx: SingletonRequestContext) {
+  async getCachedWorlds(ctx: RequestContext) {
     const result = await this.dbService.getMultiQueries(ctx.queryParams!.count, false);
     this.sendJson(ctx, result);
   }
 
   @route('GET', 'updates')
-  async getUpdates(ctx: SingletonRequestContext) {
+  async getUpdates(ctx: RequestContext) {
     const worlds = await this.dbService.saveWorlds(ctx.queryParams!.queries);
     this.sendJson(ctx, worlds);
   }
@@ -68,18 +68,20 @@ export class OneController {
   }
 
   @route('GET', 'plaintext')
-  getHello(ctx: SingletonRequestContext) {
+  getHello(ctx: RequestContext) {
     ctx.rawRes.setHeader('Server', 'Ditsmod');
     ctx.rawRes.setHeader('Content-Type', 'text/plain; charset=utf-8');
     ctx.rawRes.end('Hello, World!');
   }
 
   @route('GET', 'json')
-  getJson(ctx: SingletonRequestContext) {
+  getJson(ctx: RequestContext) {
     this.sendJson(ctx, { message: 'Hello, World!' });
   }
 
   protected sendJson(ctx: RequestContext, value: AnyObj) {
-    ctx.setHeader('Server', 'Ditsmod').sendJson(value);
+    ctx.rawRes.setHeader('Server', 'Ditsmod');
+    ctx.rawRes.setHeader('Content-Type', 'application/json; charset=utf-8');
+    ctx.rawRes.end(JSON.stringify(value));
   }
 }

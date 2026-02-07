@@ -4,11 +4,11 @@ version: 0.2.0
 dependencies:
   grip:
     github: grip-framework/grip
-    version: 3.0.0
+    version: 4.1.0
 
   pg:
     github: will/crystal-pg
-    version: 0.28.0
+    version: 0.29.0
 targets:
   grip:
     main: grip.cr

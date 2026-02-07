@@ -1,15 +1,14 @@
-FROM php:8.3-cli
+FROM php:8.5-cli
 
 RUN apt-get update -yqq > /dev/null && apt-get install -yqq git unzip > /dev/null
 COPY --from=composer/composer:latest-bin --link /composer /usr/local/bin/composer
 
 RUN docker-php-ext-install \
-    opcache \
     pdo_mysql \
     sockets > /dev/null
 
 # RoadRunner >= 2024.x.x requires protobuf extensions to be installed
-ARG PROTOBUF_VERSION="4.26.1"
+ARG PROTOBUF_VERSION="4.30.1"
 RUN pecl channel-update pecl.php.net
 RUN MAKEFLAGS="-j $(nproc)" pecl install protobuf-${PROTOBUF_VERSION} > /dev/null
 
@@ -22,7 +21,7 @@ RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --q
 
 # pre-configure
 RUN ./vendor/bin/rr get-binary > /dev/null 2>&1
-RUN php app.php configure > /dev/null 2>&1
+RUN php app.php configure
 
 EXPOSE 8080
 

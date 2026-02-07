@@ -17,7 +17,7 @@
                 sb.Append(ht.Head) |> ignore
                 for fortune in fortunesData do
                     (tr() {
-                        td() { raw <| string fortune.id }
+                        td() { fortune.id }
                         td() { fortune.message }
                     }).Render(sb)
                 sb.Append(ht.Tail) |> ignore

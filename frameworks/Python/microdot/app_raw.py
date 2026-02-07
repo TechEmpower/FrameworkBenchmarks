@@ -50,11 +50,6 @@ def generate_ids(num_queries):
     return sample(range(1, 10001), num_queries)
 
 
-@app.route("/json")
-async def test_json(request):
-    return {"message": "Hello, World!"}
-
-
 @app.route("/db")
 async def test_db(request):
     id = randint(1, 10000)
@@ -105,11 +100,6 @@ async def test_updates(request):
             worlds.append({'id': id, 'randomNumber': new_value})
         await update_stmt.executemany(updated_worlds)
     return worlds
-
-
-@app.route("/plaintext")
-async def test_plaintext(request):
-    return b"Hello, World!"
 
 
 @cached(cache={}, key=lambda stmt, id: hashkey(id))

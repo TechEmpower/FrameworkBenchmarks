@@ -10,7 +10,7 @@
       "port": 8080,
       "approach": "Realistic",
       "classification": "Micro",
-      "database": "MySQL",
+      "database": "Postgres",
       "framework": "grape",
       "language": "Ruby",
       "orm": "Full",
@@ -18,11 +18,11 @@
       "webserver": "Puma",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "grape-puma-mri",
+      "display_name": "grape [puma]",
       "notes": "",
-      "versus": "rack-puma-mri"
+      "versus": "rack"
     },
-    "unicorn": {
+    "iodine": {
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/query?queries=",
@@ -31,17 +31,17 @@
       "port": 8080,
       "approach": "Realistic",
       "classification": "Micro",
-      "database": "MySQL",
+      "database": "Postgres",
       "framework": "grape",
       "language": "Ruby",
       "orm": "Full",
       "platform": "Rack",
-      "webserver": "Unicorn",
+      "webserver": "Iodine",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "grape-unicorn-mri",
+      "display_name": "grape [iodine]",
       "notes": "",
-      "versus": "rack-unicorn-mri"
+      "versus": "rack-iodine"
     }
   }]
 }

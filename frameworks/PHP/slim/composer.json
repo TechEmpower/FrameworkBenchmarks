@@ -4,7 +4,7 @@
         "slim/php-view": "3.2.0",
         "slim/psr7": "1.*",
         "slim/http": "1.*",
-        "php-di/php-di": "^6.4"
+        "php-di/php-di": "^7"
     },
     "autoload": {
         "psr-4": {

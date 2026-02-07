@@ -1,6 +1,6 @@
 [package]
-name = "ntex-bench"
-version = "2.0.0"
+name = "ntex-framework"
+version = "3.0.0"
 edition = "2018"
 
 [[bin]]
@@ -12,6 +12,14 @@ name = "ntex-compio"
 path = "src/main.rs"
 
 [[bin]]
+name = "ntex-neon"
+path = "src/main.rs"
+
+[[bin]]
+name = "ntex-neon-uring"
+path = "src/main.rs"
+
+[[bin]]
 name = "ntex-db"
 path = "src/main_db.rs"
 
@@ -20,11 +28,27 @@ name = "ntex-db-compio"
 path = "src/main_db.rs"
 
 [[bin]]
+name = "ntex-db-neon"
+path = "src/main_db.rs"
+
+[[bin]]
+name = "ntex-db-neon-uring"
+path = "src/main_db.rs"
+
+[[bin]]
 name = "ntex-plt"
 path = "src/main_plt.rs"
 
 [[bin]]
 name = "ntex-plt-compio"
+path = "src/main_plt.rs"
+
+[[bin]]
+name = "ntex-plt-neon"
+path = "src/main_plt.rs"
+
+[[bin]]
+name = "ntex-plt-neon-uring"
 path = "src/main_plt.rs"
 
 [features]
@@ -36,10 +60,15 @@ tokio = ["ntex/tokio"]
 # compio runtime
 compio = ["ntex/compio"]
 
+# neon polling runtime
+neon = ["ntex/neon-polling"]
+
+# neon io-uring runtime
+neon-uring = ["ntex/neon-uring"]
+
 [dependencies]
-ntex = "2.8"
-ntex-compio = "0.2"
-ntex-bytes = { version = "0.1.21", features=["simd"] }
+ntex = "3.0.0-pre.13"
+ntex-bytes = { version = "1.4", features=["simd"] }
 mimalloc = { version = "0.1.25", default-features = false }
 snmalloc-rs = { version = "0.3.3", features = ["native-cpu"] }
 yarte = { version = "0.15", features = ["bytes-buf", "json"] }
@@ -47,17 +76,20 @@ buf-min = { version = "0.7", features = ["ntex-bytes"] }
 env_logger = "0.11"
 nanorand = { version = "0.7", default-features = false, features = ["std", "wyrand", "tls"] }
 atoi = "2.0"
-core_affinity = "0.8"
 futures = "0.3"
-sonic-rs = "0.3.16"
+sonic-rs = "0.5.1"
+smallvec = "1.15"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 log = { version = "0.4", features = ["release_max_level_off"] }
 tok_io = {version = "1", package = "tokio" }
-tokio-postgres = { git="https://github.com/fafhrd91/postgres.git", branch="ntex-2" }
+tokio-postgres = { git="https://github.com/fafhrd91/postgres.git", branch="ntex-3" }
 
 [target.'cfg(target_os = "linux")'.dependencies]
 compio-driver = { version = "*", features = ["io-uring"]}
+
+[patch.crates-io]
+buf-min = { git = "https://github.com/fafhrd91/buf-min.git" }
 
 [profile.release]
 opt-level = 3

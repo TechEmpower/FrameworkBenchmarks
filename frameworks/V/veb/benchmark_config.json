@@ -1,0 +1,30 @@
+{
+  "framework": "veb",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "db_url": "/db",
+        "query_url": "/queries?q=",
+        "fortune_url": "/fortunes",
+        "update_url": "/update?q=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "Postgres",
+        "framework": "veb",
+        "language": "V",
+        "flavor": "None",
+        "orm": "Micro",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "veb",
+        "notes": "",
+        "versus": "None"
+      }
+    }
+  ]
+}

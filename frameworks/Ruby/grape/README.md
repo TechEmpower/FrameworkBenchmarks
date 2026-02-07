@@ -11,10 +11,10 @@ comparing a variety of web servers.
 ## Infrastructure Software Versions
 The tests were run with:
 
-* [Ruby 3.3](http://www.ruby-lang.org/)
-* [Grape 2.0.0](http://www.ruby-grape.org/)
-* [Unicorn 6.1.0](https://yhbt.net/unicorn/)
-* [Puma 6.4](https://puma.io/)
+* [Ruby 3.4](http://www.ruby-lang.org/)
+* [Grape 2.1](http://www.ruby-grape.org/)
+* [Iodine](https://github.com/boazsegev/iodine)
+* [Puma 7](https://puma.io/)
 
 ## Paths & Source for Tests
 

@@ -1,4 +1,9 @@
-FROM phpswoole/swoole:5.1.3-php8.3
+FROM phpswoole/swoole:php8.4
+
+RUN apt-get -y update > /dev/null \
+    && apt-get install -y libicu-dev > /dev/null \
+    && docker-php-ext-configure intl > /dev/null \
+    && docker-php-ext-install intl > /dev/null
 
 RUN docker-php-ext-install pcntl opcache curl > /dev/null
 

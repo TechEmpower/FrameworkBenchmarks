@@ -1,3 +1,3 @@
-package com.hexagonkt.model
+package com.hexagontk.model
 
 data class World(val id: Int, val randomNumber: Int)

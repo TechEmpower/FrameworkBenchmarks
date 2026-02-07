@@ -6,7 +6,7 @@ name := "pekko-http-benchmark"
 
 version := "0.1.0-SNAPSHOT"
 
-scalaVersion := "2.13.8"
+scalaVersion := "2.13.16"
 
 val pekkoV = "1.0.1"
 val pekkoHttpV = "1.0.0"

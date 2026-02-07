@@ -45,7 +45,7 @@
       "display_name": "Flask [Meinheld] [Raw]",
       "notes": "",
       "versus": "wsgi",
-      "tags": [ ]
+      "tags": [ "broken" ]
     },
     "socketify-wsgi": {
       "json_url": "/json-raw",
@@ -83,6 +83,7 @@
       "database_os": "Linux",
       "display_name": "Flask [socketify.py] [PyPy3]",
       "notes": "PyPy",
+      "tags": ["broken"],
       "versus": "wsgi"
     },
     "pypy": {

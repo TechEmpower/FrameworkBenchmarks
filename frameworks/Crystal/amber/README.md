@@ -8,17 +8,12 @@ This is the [Amber](https://amberframework.org) test of the Framework Benchmarks
 
 The purpose of Amber is not to create yet another framework, but to take advantage of the beautiful Crystal language capabilities and provide engineers an efficient, cohesive, and well maintain web framework for the crystal community that embraces the language philosophies, conventions, and guides.
 
-Amber Crystal borrows concepts that already have been battle tested, successful, and embrace new concepts through team and community collaboration and analysis, that aligns with Crystal philosophies.
+Amber borrows concepts that already have been battle tested, successful, and embrace new concepts through team and community collaboration and analysis, that aligns with Crystal philosophies.
+
+Updated for Amber 1.4.1 and Crystal 1.14.0
 
 ## Contributors
-
-- Dru Jensen [drujensen](https://github.com/drujensen) 
-- Elias Perez [eliasjpr](https://github.com/eliasjpr) 
-- Isaac Sloan [elorest](https://github.com/elorest) 
-- Faustino Aguilar [faustinoaq](https://github.com/faustinoaq) 
-- Nick Franken [fridgerator](https://github.com/fridgerator)
-- Mark Siemers [marksiemers](https://github.com/marksiemers)
-- Robert Carpenter [robacarp](https://github.com/robacarp) 
+- Seth Tucker [crimson-knight](https://github.com/crimson-knight)
 
 See more [Amber contributors](https://github.com/amberframework/amber/graphs/contributors)
 

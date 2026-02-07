@@ -19,7 +19,7 @@ platform = "Servlet"
 webserver = "None"
 versus = "servlet"
 
-[jettyloom]
+[jdk]
 urls.plaintext = "/plaintext"
 urls.json = "/json"
 urls.db = "/db"
@@ -37,7 +37,7 @@ platform = "Servlet"
 webserver = "None"
 versus = "servlet"
 
-[jettyloom-pgclient]
+[jdk-pgclient]
 urls.plaintext = "/plaintext"
 urls.json = "/json"
 urls.db = "/db"
@@ -56,24 +56,6 @@ webserver = "None"
 versus = "servlet"
 
 [nettyepoll]
-urls.plaintext = "/plaintext"
-urls.json = "/json"
-urls.db = "/db"
-urls.query = "/query?queries="
-urls.update = "/update?queries="
-urls.fortune = "/fortunes"
-urls.cached_query = "/cached-queries?count="
-approach = "Realistic"
-classification = "Micro"
-database = "postgres"
-database_os = "Linux"
-os = "Linux"
-orm = "Raw"
-platform = "Netty"
-webserver = "None"
-versus = "netty"
-
-[nettyepoll-native]
 urls.plaintext = "/plaintext"
 urls.json = "/json"
 urls.db = "/db"
@@ -110,24 +92,6 @@ webserver = "None"
 versus = "netty"
 
 [helidon]
-urls.plaintext = "/plaintext"
-urls.json = "/json"
-urls.db = "/db"
-urls.query = "/query?queries="
-urls.update = "/update?queries="
-urls.fortune = "/fortunes"
-urls.cached_query = "/cached-queries?count="
-approach = "Realistic"
-classification = "Micro"
-database = "postgres"
-database_os = "Linux"
-os = "Linux"
-orm = "Raw"
-platform = "Helidon"
-webserver = "None"
-versus = "helidon-helidon"
-
-[helidon-native]
 urls.plaintext = "/plaintext"
 urls.json = "/json"
 urls.db = "/db"

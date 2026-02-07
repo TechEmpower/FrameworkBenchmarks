@@ -1,9 +1,14 @@
 source 'https://rubygems.org'
 
-gem 'mysql2', '0.5.6'
-gem 'unicorn', '6.1.0'
-gem 'puma', '~> 6.4'
-gem 'activerecord', '~> 7.1.0', :require => 'active_record'
-gem 'grape', '2.0.0'
-gem 'multi_json', require: 'multi_json'
-gem 'oj', '~> 3.16'
+gem 'activerecord', '~> 8.1.0', :require => 'active_record'
+gem 'grape', '~> 3.0'
+gem 'pg'
+gem 'json', '~> 2.9'
+
+group :iodine, optional: true do
+  gem "iodine", "~> 0.7", require: false
+end
+
+group :puma, optional: true do
+  gem "puma", "~> 7.1", require: false
+end

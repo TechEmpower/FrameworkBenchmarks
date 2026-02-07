@@ -12,7 +12,6 @@ from aioworkers.net.uri import URI
 
 READ_ROW_SQL = 'SELECT "randomnumber", "id" FROM "world" WHERE id = $1'
 WRITE_ROW_SQL = 'UPDATE "world" SET "randomnumber"=$1 WHERE id=$2'
-ADDITIONAL_ROW = [0, "Additional fortune added at request time."]
 sort_fortunes_key = itemgetter(1)
 logger = logging.getLogger(__name__)
 
@@ -73,7 +72,7 @@ async def fortunes(context, request):
     async with context.pg.pool.acquire() as connection:
         fortunes = await connection.fetch("SELECT * FROM Fortune")
 
-    fortunes.append(ADDITIONAL_ROW)
+    fortunes.append([0, "Additional fortune added at request time."])
     fortunes.sort(key=sort_fortunes_key)
     content = context.templates.fortune.render(fortunes=fortunes)
 

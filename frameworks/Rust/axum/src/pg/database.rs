@@ -1,8 +1,8 @@
-use std::{convert::Infallible, io, sync::Arc};
+use std::{borrow::Cow, convert::Infallible, io, sync::Arc};
 
-use axum::{async_trait, extract::FromRequestParts, http::request::Parts};
+use axum::{extract::FromRequestParts, http::request::Parts};
 use futures::{stream::futures_unordered::FuturesUnordered, StreamExt, TryStreamExt};
-use rand::{rngs::SmallRng, thread_rng, SeedableRng};
+use rand::{rngs::SmallRng, rng, SeedableRng};
 use tokio::pin;
 use tokio_postgres::{connect, Client, NoTls, Statement};
 
@@ -78,7 +78,7 @@ impl PgConnection {
     }
 
     pub async fn fetch_random_worlds(&self, num: usize) -> Result<Vec<World>, PgError> {
-        let mut rng = SmallRng::from_rng(&mut thread_rng()).unwrap();
+        let mut rng = SmallRng::from_rng(&mut rng());
 
         let futures = FuturesUnordered::new();
 
@@ -93,21 +93,20 @@ impl PgConnection {
         let mut worlds = self.fetch_random_worlds(num).await?;
 
         // Update the worlds with new random numbers
-        let mut rng = SmallRng::from_rng(&mut thread_rng()).unwrap();
+        let mut rng = SmallRng::from_rng(&mut rng());
         let mut ids = Vec::with_capacity(num);
         let mut nids = Vec::with_capacity(num);
 
         for w in &mut worlds {
             w.randomnumber = random_id(&mut rng);
-            ids.push(w.id);
-            nids.push(w.randomnumber);
+            ids.push(&w.id);
+            nids.push(&w.randomnumber);
         }
 
         // Update the random worlds in the database.
         self.client
             .execute(&self.updates, &[&ids, &nids])
-            .await
-            .unwrap();
+            .await?;
 
         Ok(worlds)
     }
@@ -115,7 +114,7 @@ impl PgConnection {
     pub async fn fetch_all_fortunes(&self) -> Result<Vec<Fortune>, PgError> {
         let mut fortunes = vec![Fortune {
             id: 0,
-            message: "Additional fortune added at request time.".parse().unwrap(),
+            message: Cow::Borrowed("Additional fortune added at request time."),
         }];
 
         let rows = self
@@ -128,7 +127,7 @@ impl PgConnection {
         while let Some(row) = rows.next().await.transpose()? {
             fortunes.push(Fortune {
                 id: row.get(0),
-                message: row.get(1),
+                message: Cow::Owned(row.get(1)),
             });
         }
 
@@ -139,7 +138,6 @@ impl PgConnection {
 
 pub struct DatabaseConnection(pub Arc<PgConnection>);
 
-#[async_trait]
 impl FromRequestParts<Arc<PgConnection>> for DatabaseConnection {
     type Rejection = Infallible;
 

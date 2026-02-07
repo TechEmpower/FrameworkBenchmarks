@@ -1,2 +1,2 @@
-fastapi==0.109.1
-git+https://github.com/cirospaciari/socketify.py.git@main#socketify
+fastapi==0.120.3
+https://github.com/cirospaciari/socketify.py/archive/refs/heads/main.zip#egg=socketify

@@ -1,6 +1,7 @@
-FROM ruby:3.3
+FROM ruby:4.0
 
 ENV RUBY_YJIT_ENABLE=1
+ENV RUBY_MN_THREADS=1
 
 # Use Jemalloc
 RUN apt-get update && \
@@ -11,8 +12,13 @@ ADD ./ /grape
 
 WORKDIR /grape
 
-RUN bundle install --jobs=4 --gemfile=/grape/Gemfile
+RUN bundle config set with 'puma'
+RUN bundle install --jobs=8 --gemfile=/grape/Gemfile
+
+ENV WEB_CONCURRENCY=auto
+ENV MIN_THREADS=5
+ENV MAX_THREADS=5
 
 EXPOSE 8080
 
-CMD bundle exec puma -C config/puma.rb -b tcp://0.0.0.0:8080 -e production
+CMD bundle exec puma -b tcp://0.0.0.0:8080 -e production

@@ -7,4 +7,4 @@ RUN lein uberjar
 
 EXPOSE 8080
 
-CMD ["java", "-server", "-jar", "target/http-kit-standalone.jar"]
+CMD ["java", "-server", "-Dclojure.compiler.direct-linking=true", "-jar", "target/http-kit-standalone.jar"]

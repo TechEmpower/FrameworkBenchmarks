@@ -11,14 +11,9 @@ comparing a variety of web servers.
 ## Infrastructure Software Versions
 The tests were run with:
 
-* [Ruby 2.0.0-p0](http://www.ruby-lang.org/)
-* [JRuby 1.7.8](http://jruby.org/)
-* [Rubinius 2.2.10](http://rubini.us/)
+* [Ruby 3.5](http://www.ruby-lang.org/)
 * [Padrino 0.12.3](http://www.padrinorb.com/)
-* [Rack 1.5.2](http://rack.github.com/)
-* [Unicorn 4.8.3](http://unicorn.bogomips.org/)
-* [Puma 3.9](http://puma.io/)
-* [Thin 1.6.2](http://code.macournoyer.com/thin/)
+* [Iodine](https://github.com/boazsegev/iodine)
 
 ## Paths & Source for Tests
 

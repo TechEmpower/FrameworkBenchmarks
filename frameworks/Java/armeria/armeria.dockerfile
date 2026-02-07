@@ -1,10 +1,10 @@
-FROM maven:3.6.1-jdk-11-slim as maven
+FROM maven:3.9.11-eclipse-temurin-25-alpine as maven
 WORKDIR /armeria
 COPY src src
 COPY pom.xml pom.xml
 RUN mvn package -q
 
-FROM openjdk:11.0.3-jdk-slim
+FROM eclipse-temurin:25-jre-alpine
 WORKDIR /armeria
 COPY --from=maven /armeria/target/hello-1.0-SNAPSHOT.jar app.jar
 

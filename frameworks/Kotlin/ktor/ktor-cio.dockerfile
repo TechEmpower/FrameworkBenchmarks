@@ -1,13 +1,12 @@
-FROM maven:3.9.7-amazoncorretto-17-debian as maven
+FROM gradle:8.13-jdk21 AS build
 WORKDIR /ktor
-COPY ktor/pom.xml pom.xml
-COPY ktor/src src
-RUN mvn clean package -q
+COPY ktor/ ./
+RUN chmod +x gradlew && ./gradlew --no-daemon clean cioBundle
 
-FROM amazoncorretto:17.0.11-al2023-headless
+FROM amazoncorretto:21-al2023-headless
 WORKDIR /ktor
-COPY --from=maven /ktor/target/tech-empower-framework-benchmark-1.0-SNAPSHOT-cio-bundle.jar app.jar
+COPY --from=build /ktor/build/libs/tech-empower-framework-benchmark-1.0-SNAPSHOT-cio-bundle.jar app.jar
 
 EXPOSE 9090
 
-CMD ["java", "-jar", "app.jar"]
+CMD ["java", "-server","-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AlwaysPreTouch", "-jar", "app.jar"]

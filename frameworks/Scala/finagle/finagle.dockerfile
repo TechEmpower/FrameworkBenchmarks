@@ -1,4 +1,4 @@
-FROM hseeberger/scala-sbt:8u151-2.12.5-1.1.2
+FROM sbtscala/scala-sbt:eclipse-temurin-21.0.6_7_1.10.11_2.12.20
 WORKDIR /finagle
 COPY project project
 COPY src src
@@ -7,4 +7,4 @@ RUN sbt assembly -batch
 
 EXPOSE 8080
 
-CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AggressiveOpts", "-Dcom.twitter.finagle.tracing.enabled=false", "-Dio.netty.recycler.maxCapacityPerThread=0", "-Dio.netty.leakDetection.level=disabled", "-jar", "target/scala-2.12/finagle-benchmark.jar"]
+CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-Dcom.twitter.finagle.tracing.enabled=false", "-Dio.netty.recycler.maxCapacityPerThread=0", "-Dio.netty.leakDetection.level=disabled", "-jar", "target/scala-2.12/finagle-benchmark.jar"]

@@ -19,7 +19,7 @@
         "database_os": "Linux",
         "display_name": "edap-http",
         "notes": "",
-        "versus": "edap-http"
+        "versus": ""
       },
       "fast":{
         "plaintext_url": "/plaintext",

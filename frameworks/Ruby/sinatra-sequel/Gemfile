@@ -2,25 +2,22 @@ source 'https://rubygems.org'
 
 gem 'json', '~> 2.8'
 gem 'sequel', '~> 5.0'
-gem 'sinatra', '~> 4.0', :require=>'sinatra/base'
+gem 'sinatra', '~> 4.0', require: 'sinatra/base'
 
-group :mysql do
-  gem 'mysql2', '~> 0.5', :platforms=>[:ruby, :mswin]
+group :mysql, optional: true do
+  gem 'trilogy', '~> 2.9'
 end
 
-group :postgresql do
-  gem 'pg', '~> 1.5', :platforms=>[:ruby, :mswin]
-  gem 'sequel_pg', '~> 1.6', :platforms=>:ruby, :require=>false
+group :postgresql, optional: true do
+  gem 'pg', '~> 1.5'
+  gem 'sequel_pg', '~> 1.17', require: 'sequel'
 end
 
-group :passenger do
-  gem 'passenger', '~> 6.0', platforms: [:ruby, :mswin], require: false
+group :iodine, optional: true do
+  gem 'iodine', '~> 0.7', require: false
 end
 
-group :puma do
-  gem 'puma', '~> 6.4', require: false
-end
-
-group :unicorn do
-  gem 'unicorn', '~> 6.1', platforms: [:ruby, :mswin], require: false
+group :puma, optional: true do
+  gem 'puma', '~> 7.1', require: false
+  gem 'concurrent-ruby' # used by Puma for auto-tuning
 end

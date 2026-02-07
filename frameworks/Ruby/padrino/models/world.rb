@@ -1,9 +1,6 @@
-class World
-  include DataMapper::Resource
+class World < ActiveRecord::Base
+  self.table_name = name
 
-  storage_names[:default] = 'World'
-
-  # property <name>, <type>
-  property :id, Serial
-  property :randomNumber, Integer, field: 'randomNumber'
+  alias_attribute(:randomNumber, :randomnumber) \
+    if connection.adapter_name.downcase.start_with?('postgres')
 end

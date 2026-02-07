@@ -14,19 +14,19 @@
   "author": "Костя Третяк",
   "license": "MIT",
   "dependencies": {
-    "@ditsmod/core": "^3.0.0-alpha.2",
-    "@ditsmod/routing": "^3.0.0-alpha.2",
+    "@ditsmod/core": "3.0.0-alpha.3",
+    "@ditsmod/routing": "3.0.0-alpha.3",
     "handlebars": "^4.7.8",
-    "lru-cache": "^11.0.0",
-    "mariadb": "^3.3.1",
-    "postgres": "^3.4.4"
+    "lru-cache": "^11.0.2",
+    "mariadb": "^3.4.0",
+    "postgres": "^3.4.5"
   },
   "devDependencies": {
     "@types/eslint": "^8.44.2",
-    "@types/node": "^20.5.7",
+    "@types/node": "^24",
     "@typescript-eslint/eslint-plugin": "^6.5.0",
     "@typescript-eslint/parser": "^6.5.0",
-    "bun-types": "^1.1.22",
+    "bun-types": "^1.3",
     "eslint": "^8.48.0",
     "prettier": "^3.0.2",
     "typescript": "^5.2.2"

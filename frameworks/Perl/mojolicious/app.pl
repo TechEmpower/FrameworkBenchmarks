@@ -1,5 +1,4 @@
-use v5.36;
-use Mojolicious::Lite;
+use Mojolicious::Lite -signatures;
 use Mojo::Pg;
 use Mojo::Promise;
 

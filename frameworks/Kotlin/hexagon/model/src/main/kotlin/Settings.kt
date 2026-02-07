@@ -1,7 +1,7 @@
-package com.hexagonkt
+package com.hexagontk
 
-import com.hexagonkt.core.Jvm.systemFlag
-import com.hexagonkt.core.Jvm.systemSettingOrNull
+import com.hexagontk.core.Platform.systemFlag
+import com.hexagontk.core.Platform.systemSettingOrNull
 
 data class Settings(
     val bindPort: Int = systemSettingOrNull("bindPort") ?: 9090,

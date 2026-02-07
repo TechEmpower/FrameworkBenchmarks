@@ -23,15 +23,11 @@ class Application @Inject() (fortunesDAO: FortunesDAO, worldDAO: WorldDAO, val c
     fortunesDAO.getAll()
   }
 
-  def updateWorlds(n: Int): Future[Seq[World]] = {
-    val worlds: Seq[Future[World]] = for (_ <- 1 to n) yield {
-      val futureWorld: Future[World] = worldDAO.findById(getNextRandom)
-      val futureUpdatedWorld: Future[World] = futureWorld.map(_.copy(randomNumber = getNextRandom))
-      futureUpdatedWorld.map(world => worldDAO.updateRandom(world))
-      futureUpdatedWorld
-    }
-    Future.sequence(worlds)
-  }
+  def updateWorlds(n: Int): Future[Seq[World]] = for {
+    worlds <- getRandomWorlds(n)
+    updatedWorlds = worlds.map(_.copy(randomNumber = getNextRandom))
+    _ <- worldDAO.updateRandom(updatedWorlds)
+  } yield updatedWorlds
 
   def getNextRandom: Int = {
     ThreadLocalRandom.current().nextInt(TestDatabaseRows) + 1

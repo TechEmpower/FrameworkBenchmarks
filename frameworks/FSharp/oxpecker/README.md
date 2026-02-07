@@ -5,7 +5,7 @@ This includes tests for plaintext, json, fortunes, single query, mutliple querie
 
 **Language**
 
-* F# 8.0
+* F# 10.0
 
 **Platforms**
 

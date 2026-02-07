@@ -20,9 +20,9 @@
       "webserver": "Puma",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "rails-postgresql",
+      "display_name": "rails [puma, postgres]",
       "notes": "",
-      "versus": ""
+      "versus": "rack"
     },
     "mysql": {
       "db_url": "/db",
@@ -41,9 +41,9 @@
       "webserver": "Puma",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "rails-mysql",
+      "display_name": "rails [puma, mysql]",
       "notes": "",
-      "versus": "rack-puma-mri"
+      "versus": ""
     },
     "falcon": {
       "db_url": "/db",
@@ -64,11 +64,11 @@
       "webserver": "Falcon",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "rails-falcon",
+      "display_name": "rails [falcon]",
       "notes": "",
-      "versus": "rack-falcon-mri"
+      "versus": "rack-falcon"
     },
-    "agoo": {
+    "iodine": {
       "db_url": "/db",
       "json_url": "/json",
       "query_url": "/queries?queries=",
@@ -84,12 +84,35 @@
       "language": "Ruby",
       "orm": "Full",
       "platform": "Rack",
-      "webserver": "Agoo",
+      "webserver": "Iodine",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "rails-agoo",
+      "display_name": "rails [iodine]",
       "notes": "",
-      "versus": ""
+      "versus": "rack-iodine"
+    },
+    "pitchfork": {
+      "db_url": "/db",
+      "json_url": "/json",
+      "query_url": "/queries?queries=",
+      "fortune_url": "/fortunes",
+      "update_url": "/updates?queries=",
+      "plaintext_url": "/plaintext",
+      "cached_query_url": "/cached?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "Postgres",
+      "framework": "rails",
+      "language": "Ruby",
+      "orm": "Full",
+      "platform": "Rack",
+      "webserver": "Pitchfork",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "rails [pitchfork]",
+      "notes": "",
+      "versus": "rack-pitchfork"
     }
   }]
 }

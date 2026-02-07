@@ -1,4 +1,4 @@
-from toolset.test_types.verifications import basic_body_verification, verify_headers
+from toolset.test_types.verifications import basic_body_verification, verify_status, verify_headers
 from toolset.test_types.abstract_test_type import AbstractTestType
 
 
@@ -15,7 +15,7 @@ class TestType(AbstractTestType):
 
     def verify(self, base_url):
         url = base_url + self.plaintext_url
-        headers, body = self.request_headers_and_body(url)
+        headers, body, status = self.request_headers_and_body_and_status(url)
 
         _, problems = basic_body_verification(body, url, is_json_check=False)
 
@@ -45,7 +45,8 @@ class TestType(AbstractTestType):
                   "This may negatively affect benchmark performance." %
                   extra_bytes), url))
 
-        problems += verify_headers(self.request_headers_and_body, headers, url, should_be='plaintext')
+        problems += verify_status(self.request_headers_and_body_and_status, status, url)
+        problems += verify_headers(self.request_headers_and_body_and_status, headers, url, should_be='plaintext')
 
         if len(problems) == 0:
             return [('pass', '', url)]
