@@ -1,6 +1,7 @@
 
 {
   "framework": "water-http",
+  "maintainers" : ["HassanSharara"],
   "tests": [
     {
         "default": {
