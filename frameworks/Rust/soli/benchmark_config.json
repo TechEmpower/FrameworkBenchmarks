@@ -1,0 +1,24 @@
+{
+  "framework": "soli",
+  "maintainers": ["solisoft"],
+  "tests": [{
+    "default": {
+      "plaintext_url": "/plaintext",
+      "json_url": "/json",
+      "port": 3000,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "None",
+      "framework": "soli",
+      "language": "Rust",
+      "orm": "Raw",
+      "platform": "Rust",
+      "webserver": "soli",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Soli",
+      "notes": "Soli MVC Framework",
+      "versus": "hyper"
+    }
+  }]
+}
