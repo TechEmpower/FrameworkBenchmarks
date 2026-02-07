@@ -1,6 +1,7 @@
 {-# OPTIONS -Wno-orphans #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE QuasiQuotes #-}
 
 module TFB.Db
   ( Pool,
@@ -24,6 +25,7 @@ import Data.Pool qualified as Pool
 import Database.PostgreSQL.Simple (SomePostgreSqlException)
 import Database.PostgreSQL.Simple qualified as PG
 import Database.PostgreSQL.Simple.FromRow (FromRow (fromRow), field)
+import Database.PostgreSQL.Simple.SqlQQ (sql)
 import System.IO.Error qualified as Error
 import TFB.Types qualified as Types
 
@@ -137,7 +139,10 @@ updateWorlds dbPool wsUpdates = Pool.withResource dbPool $ \conn -> do
     try @SomePostgreSqlException $
       PG.executeMany
         conn
-        "UPDATE World SET randomNumber = upd.rnd FROM (VALUES (?,?)) as upd(wid,rnd) WHERE World.id = upd.wid"
+        [sql| UPDATE World 
+              SET randomNumber = upd.rnd 
+              FROM (VALUES (?,?)) as upd(wid,rnd) 
+              WHERE World.id = upd.wid |]
         worlds
   _ <- case res of
     Left e -> print e
