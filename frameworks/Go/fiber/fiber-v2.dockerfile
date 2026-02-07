@@ -2,7 +2,7 @@ FROM golang:1.25.6-alpine as builder
 
 WORKDIR /fiber
 
-COPY ./fiber-v3 /fiber
+COPY ./fiber-v2 /fiber
 
 RUN go mod download && \
     go install github.com/valyala/quicktemplate/qtc@latest && \
