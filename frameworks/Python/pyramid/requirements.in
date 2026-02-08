@@ -1,5 +1,5 @@
 gunicorn
-SQLAlchemy[postgresql]
+SQLAlchemy[postgresql_psycopgbinary]
 pyramid
 pyramid_chameleon
 orjson
