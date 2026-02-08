@@ -21,6 +21,8 @@ import Data.Bifunctor qualified as Bi
 import Data.ByteString (ByteString)
 import Data.ByteString.Char8 qualified as BSC
 import Data.Either qualified as Either
+import Data.List (sortBy)
+import Data.Ord (comparing)
 import Data.Pool qualified as Pool
 import Database.PostgreSQL.Simple (SomePostgreSqlException)
 import Database.PostgreSQL.Simple qualified as PG
@@ -134,7 +136,7 @@ queryWorldByIds dbPool wIds = Pool.withResource dbPool $ \conn -> do
 
 updateWorlds :: Pool -> [(Types.World, Int)] -> IO (Either Error [Types.World])
 updateWorlds dbPool wsUpdates = Pool.withResource dbPool $ \conn -> do
-  let worlds = Bi.first Types.wId <$> wsUpdates
+  let worlds = sortBy (comparing fst) $ Bi.first Types.wId <$> wsUpdates
   res <-
     try @SomePostgreSqlException $
       PG.executeMany
