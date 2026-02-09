@@ -1,5 +1,6 @@
 {
   "framework": "micronaut",
+  "maintainers": ["dstepanov", "yawkat", "graemerocher"],
   "tests": [
     {
       "default": {
@@ -23,7 +24,8 @@
         "database_os": "Linux",
         "display_name": "Micronaut [Vertx PG Client]",
         "notes": "",
-        "versus": "None"
+        "versus": "None",
+        "tags": []
       },
       "graalvm": {
         "json_url": "/json",
@@ -46,7 +48,8 @@
         "database_os": "Linux",
         "display_name": "Micronaut [Vertx PG Client] [GraalVM]",
         "notes": "",
-        "versus": "None"
+        "versus": "None",
+        "tags": []
       },
       "loom-fjp": {
         "json_url": "/json",
@@ -69,7 +72,8 @@
         "database_os": "Linux",
         "display_name": "Micronaut [Vertx PG Client] [Virtual Threads FJP]",
         "notes": "",
-        "versus": "None"
+        "versus": "None",
+        "tags": []
       },
       "loom-on-netty": {
         "json_url": "/json",
@@ -92,7 +96,8 @@
         "database_os": "Linux",
         "display_name": "Micronaut [Vertx PG Client] [Virtual Threads Loom-On-Netty]",
         "notes": "",
-        "versus": "None"
+        "versus": "None",
+        "tags": []
       },
       "jdbc": {
         "db_url": "/db",
@@ -113,7 +118,8 @@
         "database_os": "Linux",
         "display_name": "Micronaut [JDBC]",
         "notes": "",
-        "versus": "None"
+        "versus": "None",
+        "tags": []
       },
       "jdbc-graalvm": {
         "db_url": "/db",
@@ -134,7 +140,8 @@
         "database_os": "Linux",
         "display_name": "Micronaut [JDBC] [GraalVM]",
         "notes": "",
-        "versus": "None"
+        "versus": "None",
+        "tags": []
       },
       "r2dbc": {
         "db_url": "/db",
@@ -155,7 +162,8 @@
         "database_os": "Linux",
         "display_name": "Micronaut [R2DBC]",
         "notes": "",
-        "versus": "None"
+        "versus": "None",
+        "tags": []
       },
       "r2dbc-graalvm": {
         "db_url": "/db",
@@ -176,7 +184,8 @@
         "database_os": "Linux",
         "display_name": "Micronaut [R2DBC] [GraalVM]",
         "notes": "",
-        "versus": "None"
+        "versus": "None",
+        "tags": []
       },
       "data-jdbc": {
         "db_url": "/db",
@@ -197,7 +206,8 @@
         "database_os": "Linux",
         "display_name": "Micronaut [Data JDBC]",
         "notes": "",
-        "versus": "None"
+        "versus": "None",
+        "tags": []
       },
       "data-jdbc-graalvm": {
         "db_url": "/db",
@@ -218,7 +228,8 @@
         "database_os": "Linux",
         "display_name": "Micronaut [Data JDBC] [GraalVM]",
         "notes": "",
-        "versus": "None"
+        "versus": "None",
+        "tags": []
       }
     }
   ]
