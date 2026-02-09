@@ -618,7 +618,7 @@ checksum = "9b6f580fff377190b818d8c2ef52f68d1296490916da4923fe90287b7c80028c"
 
 [[package]]
 name = "hyperlane_techempower"
-version = "0.1.5"
+version = "0.1.6"
 dependencies = [
  "futures",
  "hyperlane",
