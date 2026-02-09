@@ -1,5 +1,6 @@
 import database.*
 import io.r2dbc.spi.Connection
+import io.r2dbc.spi.ConnectionFactory
 import io.r2dbc.spi.Readable
 import kotlinx.coroutines.reactive.awaitFirst
 import kotlinx.coroutines.reactive.awaitSingle
@@ -10,7 +11,7 @@ import kotlinx.coroutines.reactive.collect
 https://github.com/pgjdbc/r2dbc-postgresql/issues/360#issuecomment-869422327 offers a workaround, but it doesn't seem like the officially recommended approach.
 The PostgreSQL R2DBC driver doesn't seem to have full support for pipelining and multiplexing as discussed in https://github.com/pgjdbc/r2dbc-postgresql/pull/28.
  */
-class MainVerticle : CommonWithDbVerticle<Connection, Unit>(),
+class MainVerticle(private val connectionFactory: ConnectionFactory) : CommonWithDbVerticle<Connection, Unit>(),
     CommonWithDbVerticleI.SequentialSelectWorlds<Connection, Unit>,
     CommonWithDbVerticleI.WithoutTransaction<Connection> {
     override suspend fun initDbClient(): Connection =
@@ -52,4 +53,14 @@ class MainVerticle : CommonWithDbVerticle<Connection, Unit>(),
             //.asFlow().toList(fortunes)
             .collect(fortunes::add)
     }
+}
+
+// Factory function for creating MainVerticle with separate connection pools
+fun MainVerticleWithSeparatePool(poolSize: Int, useOptimizedConfig: Boolean): MainVerticle {
+    val connectionPool = if (useOptimizedConfig) {
+        connectionPoolOptimized(poolSize)
+    } else {
+        connectionPoolOriginal(poolSize)
+    }
+    return MainVerticle(connectionPool)
 }
