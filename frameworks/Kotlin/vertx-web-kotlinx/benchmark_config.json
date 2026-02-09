@@ -1,5 +1,6 @@
 {
   "framework": "vertx-web-kotlinx",
+  "maintainers": ["ShreckYe"],
   "tests": [
     {
       "default": {
