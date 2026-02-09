@@ -13,7 +13,7 @@ opts[:pool] = 512
 opts[:checkout_timeout] = 5
 
 # Setup our logger
-ActiveRecord::Base.logger = logger
+ActiveRecord::Base.logger = nil
 
 # Use ISO 8601 format for JSON serialized times and dates.
 ActiveSupport.use_standard_json_time_format = true
