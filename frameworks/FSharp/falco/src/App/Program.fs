@@ -22,16 +22,13 @@ type Fortune =
     { id : int
       message : string }
 
-    static member Default =
-        { id = 0
-          message = "Additional fortune added at request time." }
-
 let handleFortunes (connStr : string) : HttpHandler = fun ctx -> task {
 
     use conn = new NpgsqlConnection(connStr)
     let! data = conn.QueryAsync<Fortune>("SELECT id, message FROM fortune")
     let fortunes = data.AsList()
-    fortunes.Add(Fortune.Default)
+    fortunes.Add({ id = 0
+                   message = "Additional fortune added at request time." })
 
     let sortedFortunes =
         fortunes
