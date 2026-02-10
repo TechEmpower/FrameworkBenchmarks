@@ -3,7 +3,8 @@ static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
 use std::{future::Future, io, pin::Pin, task::ready, task::Context, task::Poll};
 
-use ntex::{fn_service, http::h1, http::DateService, io::Io, io::RecvError};
+use ntex::io::{Io, IoConfig, RecvError};
+use ntex::{fn_service, http::h1, http::DateService};
 use sonic_rs::Serialize;
 
 mod utils;
@@ -83,7 +84,7 @@ async fn main() -> io::Result<()> {
         .bind("tfb", "0.0.0.0:8080", async |_| {
             fn_service(|io| App {
                 io,
-                codec: h1::Codec::default(),
+                codec: h1::Codec::new(0, true, utils::config().get::<IoConfig>().into_static()),
             })
         })?
         .config("tfb", utils::config())
