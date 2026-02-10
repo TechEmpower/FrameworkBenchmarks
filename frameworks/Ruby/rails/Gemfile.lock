@@ -198,7 +198,9 @@ GEM
     nokogiri (1.19.0-x86_64-linux-gnu)
       racc (~> 1.4)
     openssl (3.3.2)
-    pg (1.5.9)
+    pg (1.6.3)
+    pg (1.6.3-x86_64-darwin)
+    pg (1.6.3-x86_64-linux)
     pitchfork (0.17.0)
       logger
       rack (>= 2.0)
