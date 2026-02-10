@@ -18,7 +18,8 @@
       "database_os": "Linux",
       "display_name": "undertow",
       "notes": "",
-      "versus": ""
+      "versus": "",
+      "tags": ["broken"]
     },
     "postgresql" : {
       "db_url": "/db",
@@ -39,7 +40,8 @@
       "database_os": "Linux",
       "display_name": "undertow-postgresql",
       "notes": "",
-      "versus": ""
+      "versus": "",
+      "tags": ["broken"]
     }
   }]
 }
