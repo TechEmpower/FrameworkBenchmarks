@@ -12,7 +12,7 @@ os = "Linux"
 orm = "Raw"
 platform = "Netty"
 webserver = "None"
-versus = "netty"
+versus = ""
 
 [loom]
 urls.plaintext = "/plaintext"

@@ -1,9 +1,9 @@
-FROM perl:5.40
+FROM perl:5.42
 
 RUN apt-get update -yqq && apt-get install -yqq nginx
 
-ADD ./ /dancer
 WORKDIR /dancer
+COPY . .
 
 RUN cpanm --notest --no-man-page \
       JSON IO::Socket::IP IO::Socket::SSL \

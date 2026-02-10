@@ -23,27 +23,6 @@
       "display_name": "compojure",
       "notes": "",
       "versus": "servlet"
-    },
-    "raw": {
-      "db_url": "/raw/db",
-      "query_url": "/raw/queries/",
-      "update_url": "/raw/updates/",
-      "fortune_url": "/raw/fortunes",
-      "port": 8080,
-      "approach": "Realistic",
-      "classification": "Micro",
-      "database": "MySQL",
-      "framework": "compojure",
-      "language": "Clojure",
-      "flavor": "None",
-      "orm": "Raw",
-      "platform": "Servlet",
-      "webserver": "Resin",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "compojure-raw",
-      "notes": "",
-      "versus": "servlet"
     }
   }]
 }

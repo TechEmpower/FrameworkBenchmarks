@@ -34,7 +34,7 @@
         "update_url": "/updates?queries=",
         "cached_query_url": "/cached-worlds?queries=",
         "port": 8080,
-        "approach": "Realistic",
+        "approach": "Stripped",
         "classification": "Platform",
         "database": "Postgres",
         "framework": "beetlex",

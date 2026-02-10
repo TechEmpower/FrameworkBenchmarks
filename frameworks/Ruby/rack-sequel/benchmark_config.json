@@ -6,7 +6,6 @@
         "db_url": "/db",
         "query_url": "/queries?queries=",
         "fortune_url": "/fortunes",
-        "update_url": "/updates?queries=",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Micro",
@@ -19,14 +18,12 @@
         "os": "Linux",
         "database_os": "Linux",
         "display_name": "rack-sequel [puma, mysql]",
-        "versus": "rack-puma-mri",
         "notes": ""
       },
       "iodine": {
         "db_url": "/db",
         "query_url": "/queries?queries=",
         "fortune_url": "/fortunes",
-        "update_url": "/updates?queries=",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Micro",
@@ -39,7 +36,7 @@
         "os": "Linux",
         "database_os": "Linux",
         "display_name": "rack-sequel [iodine, mysql]",
-        "versus": null,
+        "versus": "rack-iodine",
         "notes": ""
       },
       "iodine-postgres": {
@@ -59,7 +56,7 @@
         "os": "Linux",
         "database_os": "Linux",
         "display_name": "rack-sequel [iodine, postgres]",
-        "versus": null,
+        "versus": "rack-iodine",
         "notes": ""
       },
       "postgres": {
@@ -79,7 +76,7 @@
         "os": "Linux",
         "database_os": "Linux",
         "display_name": "rack-sequel [puma, postgres]",
-        "versus": null,
+        "versus": "rack",
         "notes": ""
       }
     }

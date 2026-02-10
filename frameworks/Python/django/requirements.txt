@@ -1,4 +1,4 @@
-Django==5.2.9
+Django==5.2.11
 mysqlclient==2.2.7
 psycopg2-binary==2.9.10
 pytz==2025.2

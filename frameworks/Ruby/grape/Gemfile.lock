@@ -63,13 +63,15 @@ GEM
     mustermann-grape (1.1.0)
       mustermann (>= 1.0.0)
     nio4r (2.7.4)
+    pg (1.6.3)
+    pg (1.6.3-x86_64-darwin)
+    pg (1.6.3-x86_64-linux)
     puma (7.1.0)
       nio4r (~> 2.0)
     rack (3.2.4)
     ruby2_keywords (0.0.5)
     securerandom (0.4.1)
     timeout (0.4.4)
-    trilogy (2.9.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     uri (1.1.1)
@@ -85,8 +87,8 @@ DEPENDENCIES
   grape (~> 3.0)
   iodine (~> 0.7)
   json (~> 2.9)
+  pg
   puma (~> 7.1)
-  trilogy (~> 2.9)
 
 BUNDLED WITH
   4.0.3

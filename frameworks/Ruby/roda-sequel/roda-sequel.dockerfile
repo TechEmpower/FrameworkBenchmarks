@@ -4,7 +4,6 @@ ADD ./ /roda-sequel
 WORKDIR /roda-sequel
 
 ENV RUBY_YJIT_ENABLE=1
-ENV RUBY_MN_THREADS=1
 
 # Use Jemalloc
 RUN apt-get update && \
@@ -12,16 +11,12 @@ RUN apt-get update && \
 ENV LD_PRELOAD=libjemalloc.so.2
 
 ENV BUNDLE_FORCE_RUBY_PLATFORM=true
-RUN bundle config set with 'mysql puma'
+RUN bundle config set with 'mysql iodine'
 RUN bundle install --jobs=8
 
 ENV RACK_ENV=production
 ENV DBTYPE=mysql
 
-ENV MIN_THREADS=5
-ENV MAX_THREADS=5
-
 EXPOSE 8080
 
-CMD export WEB_CONCURRENCY=$(($(nproc)*5/4)) && \
-    bundle exec puma -C config/puma.rb -b tcp://0.0.0.0:8080
+CMD bundle exec iodine -p 8080 -w $(($(nproc)*5/4))
