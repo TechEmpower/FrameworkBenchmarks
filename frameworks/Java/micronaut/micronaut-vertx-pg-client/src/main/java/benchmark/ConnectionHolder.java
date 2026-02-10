@@ -28,7 +28,6 @@ import io.vertx.core.net.NetServerOptions;
 import io.vertx.core.spi.transport.Transport;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.pgclient.PgConnection;
-import io.vertx.sqlclient.PoolOptions;
 import jakarta.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -123,12 +122,6 @@ public class ConnectionHolder {
         return Stream.of(io.vertx.core.transport.Transport.IO_URING, io.vertx.core.transport.Transport.NIO)
                 .filter(t -> t != null && t.available())
                 .findFirst().orElseThrow();
-    }
-
-    private PoolOptions poolOptions() {
-        PoolOptions poolOptions = new PoolOptions();
-        poolOptions.setMaxSize(maxPoolSize);
-        return poolOptions;
     }
 
     private PgConnectOptions connectOptions() {
