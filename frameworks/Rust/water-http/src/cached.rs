@@ -170,9 +170,9 @@ pub struct ThreadSharedStruct{
 impl ThreadSharedStruct {
 
     #[inline(always)]
-    pub fn get_value(id:i32)->&'static i32{
+    pub fn get_value(id:i32)->Option<&'static i32>{
         let map = unsafe {CACHED_VALUES.as_ref().unwrap().get(&id)} ;
-        map.unwrap()
+        map
     }
     pub fn get_cached_queries(&self,num:usize)->&[u8]{
         let buf = unsafe{&mut *(self.writing_buffer.get())};
@@ -181,8 +181,11 @@ impl ThreadSharedStruct {
         let mut writer = BytesMuteWriter(buf);
         let mut rn = self.rng.clone();
         for _ in 0..num {
-            let rd: i32 = (rn.generate::<u32>() & 0x3FFF) as i32 % 10_000 + 1;
-            let v = Self::get_value(rd);
+            let rd = (rn.generate::<u32>() % 10_000 ) as i32;
+            let v = match Self::get_value(rd) {
+                None => {continue}
+                Some(c) => {c}
+            };
             writer.extend_from_slice(br"{");
             _ = write!(writer, r#""id":{},"randomnumber":{}"#, rd, v);
             writer.extend_from_slice(br"},");
