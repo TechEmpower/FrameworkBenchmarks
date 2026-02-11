@@ -2,26 +2,23 @@ package cn.taketoday.benchmark;
 
 import java.time.ZonedDateTime;
 
-import javax.sql.DataSource;
-
 import infra.beans.factory.annotation.DisableAllDependencyInjection;
 import infra.beans.factory.config.BeanDefinition;
 import infra.context.annotation.Configuration;
 import infra.context.annotation.Role;
-import infra.jdbc.RepositoryManager;
-import infra.persistence.EntityManager;
 import infra.stereotype.Component;
 import infra.web.server.WebServerFactoryCustomizer;
-import infra.web.server.error.SendErrorHandler;
-import infra.web.server.support.NettyRequestConfig;
-import infra.web.server.support.NettyWebServerFactory;
+import infra.web.server.netty.NettyWebServerFactory;
+import infra.web.server.netty.config.NettyRequestConfigCustomizer;
+import io.netty.channel.IoHandlerFactory;
+import io.netty.channel.MultiThreadIoEventLoopGroup;
+import io.netty.channel.uring.IoUring;
+import io.netty.channel.uring.IoUringIoHandler;
+import io.netty.channel.uring.IoUringServerSocketChannel;
 import io.netty.handler.codec.http.DefaultHttpHeaders;
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpHeadersFactory;
-import io.netty.handler.codec.http.multipart.DefaultHttpDataFactory;
-import io.netty.incubator.channel.uring.IOUring;
-import io.netty.incubator.channel.uring.IOUringEventLoopGroup;
-import io.netty.incubator.channel.uring.IOUringServerSocketChannel;
+import io.netty.util.concurrent.DefaultThreadFactory;
 
 import static infra.http.HttpHeaders.DATE_FORMATTER;
 
@@ -35,51 +32,42 @@ import static infra.http.HttpHeaders.DATE_FORMATTER;
 class AppConfig {
 
   @Component
-  public static RepositoryManager repositoryManager(DataSource dataSource) {
-    return new RepositoryManager(dataSource);
-  }
-
-  @Component
-  public static EntityManager entityManager(RepositoryManager repositoryManager) {
-    return repositoryManager.getEntityManager();
-  }
-
-  @Component
   public static WebServerFactoryCustomizer<NettyWebServerFactory> factoryWebServerFactoryCustomizer() {
     return factory -> {
-      if (IOUring.isAvailable()) {
-        IOUringEventLoopGroup loopGroup = new IOUringEventLoopGroup();
-        factory.setAcceptorGroup(loopGroup);
-        factory.setWorkerGroup(loopGroup);
-        factory.setSocketChannel(IOUringServerSocketChannel.class);
+      if (IoUring.isAvailable()) {
+        factory.setSocketChannel(IoUringServerSocketChannel.class);
+
+        IoHandlerFactory ioHandlerFactory = IoUringIoHandler.newFactory();
+        if (factory.getAcceptorGroup() == null) {
+          factory.setAcceptorGroup(new MultiThreadIoEventLoopGroup(factory.getAcceptorThreadCount(),
+                  new DefaultThreadFactory("uring-acceptor"), ioHandlerFactory));
+        }
+        if (factory.getWorkerGroup() == null) {
+          factory.setWorkerGroup(new MultiThreadIoEventLoopGroup(
+                  factory.getWorkThreadCount(), new DefaultThreadFactory("uring-workers"), ioHandlerFactory));
+        }
       }
     };
   }
 
   @Component
   @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
-  public static NettyRequestConfig nettyRequestConfig(SendErrorHandler sendErrorHandler) {
-    var factory = new DefaultHttpDataFactory(false);
+  static NettyRequestConfigCustomizer nettyRequestConfigCustomizer() {
+    return builder -> builder.headersFactory(new HttpHeadersFactory() {
 
-    return NettyRequestConfig.forBuilder(false)
-            .httpDataFactory(factory)
-            .sendErrorHandler(sendErrorHandler)
-            .headersFactory(new HttpHeadersFactory() {
+      @Override
+      public HttpHeaders newHeaders() {
+        HttpHeaders headers = new ResponseHeaders();
+        headers.set("Server", "TODAY");
+        headers.set("Date", DATE_FORMATTER.format(ZonedDateTime.now()));
+        return headers;
+      }
 
-              @Override
-              public HttpHeaders newHeaders() {
-                HttpHeaders headers = new ResponseHeaders();
-                headers.set("Server", "TODAY");
-                headers.set("Date", DATE_FORMATTER.format(ZonedDateTime.now()));
-                return headers;
-              }
-
-              @Override
-              public HttpHeaders newEmptyHeaders() {
-                return new ResponseHeaders();
-              }
-            })
-            .build();
+      @Override
+      public HttpHeaders newEmptyHeaders() {
+        return new ResponseHeaders();
+      }
+    });
   }
 
   static class ResponseHeaders extends DefaultHttpHeaders {

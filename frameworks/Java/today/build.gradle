@@ -10,18 +10,20 @@ configure(allprojects) {
   repositories {
     mavenLocal()
     mavenCentral()
-    maven { url = "https://oss.sonatype.org/content/repositories/snapshots/" }
+    maven { url = "https://central.sonatype.com/repository/maven-snapshots/" }
   }
 }
 
 dependencies {
-  implementation 'cn.taketoday:today-starter-netty'
-  implementation 'cn.taketoday:today-starter-json'
-  implementation 'cn.taketoday:today-starter-jdbc'
-  implementation 'cn.taketoday:today-starter-web'
-  implementation 'cn.taketoday:today-starter-freemarker'
+  implementation 'cn.taketoday:infra-starter-application'
+  implementation 'cn.taketoday:infra-starter-netty-server'
+  implementation 'cn.taketoday:infra-starter-json'
+  implementation 'cn.taketoday:infra-starter-jdbc'
+  implementation 'cn.taketoday:infra-starter-persistence'
+  implementation 'cn.taketoday:infra-starter-webmvc'
+  implementation 'cn.taketoday:infra-starter-freemarker'
 
-  implementation 'mysql:mysql-connector-java'
+  implementation 'com.mysql:mysql-connector-j'
 
   implementation 'ch.qos.logback:logback-classic'
   implementation 'com.github.ben-manes.caffeine:caffeine'
@@ -32,7 +34,7 @@ dependencies {
     }
   }
 
-  implementation('io.netty.incubator:netty-incubator-transport-native-io_uring:0.0.21.Final') {
+  implementation('io.netty:netty-transport-native-io_uring') {
     artifact {
       classifier = 'linux-x86_64'
     }
@@ -47,8 +49,8 @@ dependencies {
 }
 
 java {
-  sourceCompatibility = JavaVersion.VERSION_21
-  targetCompatibility = JavaVersion.VERSION_21
+  sourceCompatibility = JavaVersion.VERSION_25
+  targetCompatibility = JavaVersion.VERSION_25
 }
 
 application {
