@@ -2,7 +2,6 @@ package cn.taketoday.benchmark.http;
 
 import org.jspecify.annotations.Nullable;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
@@ -89,7 +88,7 @@ final class BenchmarkHttpHandler {
   public ViewRef fortunes(Model model) {
     List<Fortune> fortunes = entityManager.find(Fortune.class);
     fortunes.add(new Fortune(0, "Additional fortune added at request time."));
-    fortunes.sort(Comparator.comparing(Fortune::getMessage));
+    fortunes.sort(null);
 
     model.addAttribute("fortunes", fortunes);
     return ViewRef.forViewName("fortunes");
