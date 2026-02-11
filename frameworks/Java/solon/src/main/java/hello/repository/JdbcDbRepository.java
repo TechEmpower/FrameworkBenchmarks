@@ -27,10 +27,14 @@ public class JdbcDbRepository implements DbRepository {
     @Override
     public void updateWorlds(List<World> worlds) throws SQLException {
         sqlUtils.sql("UPDATE world SET randomnumber = ? WHERE id = ?")
-                .updateBatch(worlds, (ps, w) -> {
-                    ps.setInt(1, w.randomNumber);
-                    ps.setInt(2, w.id);
-                });
+                .params(worlds, (ps, wl) -> {
+                    for (World w : wl) {
+                        ps.setInt(1, w.randomNumber);
+                        ps.setInt(2, w.id);
+                        ps.addBatch();
+                    }
+                })
+                .updateBatch();
     }
 
     @Override
