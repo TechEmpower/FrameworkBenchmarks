@@ -32,25 +32,27 @@
 #include <netinet/tcp.h>
 #include <openssl/ssl.h>
 #include <sys/socket.h>
-#include <sys/syscall.h>
 #include <sys/types.h>
 
 #include "error.h"
 #include "event_loop.h"
 #include "global_data.h"
 #include "thread.h"
-#include "utility.h"
 
-#define CONN_NUM_SAMPLE_PERIOD 2500
 #define DEFAULT_TCP_FASTOPEN_QUEUE_LEN 4096
 
 static void accept_connection(h2o_socket_t *listener, const char *err);
 static void accept_http_connection(h2o_socket_t *listener, const char *err);
-static int get_listener_socket(const char *bind_address, uint16_t port);
+static int get_listener_socket(bool is_main_thread,
+                               int bpf_fd,
+                               const char *bind_address,
+                               uint16_t port);
 static void on_close_connection(void *data);
 static void process_messages(h2o_multithread_receiver_t *receiver, h2o_linklist_t *messages);
 static void shutdown_server(h2o_socket_t *listener, const char *err);
-static void start_accept_polling(const config_t *config,
+static void start_accept_polling(bool is_main_thread,
+                                 int bpf_fd,
+                                 const config_t *config,
                                  h2o_socket_cb accept_cb,
                                  bool is_https,
                                  event_loop_t *loop);
@@ -75,7 +77,6 @@ static void accept_connection(h2o_socket_t *listener, const char *err)
 				if (!sock)
 					break;
 
-				ctx->event_loop.accepted_conn_num++;
 				ctx->event_loop.conn_num++;
 				sock->on_close.cb = on_close_connection;
 				sock->on_close.data = &ctx->event_loop.conn_num;
@@ -98,7 +99,10 @@ static void accept_http_connection(h2o_socket_t *listener, const char *err)
 	ctx->event_loop.h2o_accept_ctx.ssl_ctx = ssl_ctx;
 }
 
-static int get_listener_socket(const char *bind_address, uint16_t port)
+static int get_listener_socket(bool is_main_thread,
+                               int bpf_fd,
+                               const char *bind_address,
+                               uint16_t port)
 {
 	int ret = -1;
 	char buf[16];
@@ -148,6 +152,15 @@ static int get_listener_socket(const char *bind_address, uint16_t port)
 		LOCAL_CHECK_ERRNO(setsockopt, s, IPPROTO_TCP, TCP_FASTOPEN, &option, sizeof(option));
 		LOCAL_CHECK_ERRNO(bind, s, iter->ai_addr, iter->ai_addrlen);
 		LOCAL_CHECK_ERRNO(listen, s, INT_MAX);
+
+		if (is_main_thread && bpf_fd >= 0)
+			LOCAL_CHECK_ERRNO(setsockopt,
+			                  s,
+			                  SOL_SOCKET,
+			                  SO_ATTACH_REUSEPORT_EBPF,
+			                  &bpf_fd,
+			                  sizeof(bpf_fd));
+
 		ret = s;
 		break;
 
@@ -256,16 +269,17 @@ static void shutdown_server(h2o_socket_t *listener, const char *err)
 	}
 }
 
-static void start_accept_polling(const config_t *config,
+static void start_accept_polling(bool is_main_thread,
+                                 int bpf_fd,
+                                 const config_t *config,
                                  h2o_socket_cb accept_cb,
                                  bool is_https,
                                  event_loop_t *loop)
 {
-	const int listener_sd = get_listener_socket(config->bind_address,
+	const int listener_sd = get_listener_socket(is_main_thread,
+	                                            bpf_fd,
+	                                            config->bind_address,
 	                                            is_https ? config->https_port : config->port);
-	// Let all the threads race to call accept() on the socket; since the latter is
-	// non-blocking, that will virtually act as load balancing, and SO_REUSEPORT
-	// will make it efficient.
 	h2o_socket_t * const h2o_socket = h2o_evloop_socket_create(loop->h2o_ctx.loop,
 	                                                           listener_sd,
 	                                                           H2O_SOCKET_FLAG_DONT_READ);
@@ -281,36 +295,11 @@ static void start_accept_polling(const config_t *config,
 
 void event_loop(struct thread_context_t *ctx)
 {
-	uint64_t last_sample = 0;
-
 	while (!ctx->shutdown || ctx->event_loop.conn_num) {
 		h2o_evloop_run(ctx->event_loop.h2o_ctx.loop, INT32_MAX);
 		process_messages(&ctx->global_thread_data->h2o_receiver,
 		                 &ctx->event_loop.local_messages);
-
-		const uint64_t now = h2o_now(ctx->event_loop.h2o_ctx.loop);
-
-		if (now - last_sample > CONN_NUM_SAMPLE_PERIOD || last_sample > now) {
-			const size_t i = ctx->event_loop.conn_num_sample_idx;
-
-			ctx->event_loop.conn_num_sample[i] = ctx->event_loop.conn_num;
-			ctx->event_loop.conn_num_sample_idx =
-				(i + 1) % ARRAY_SIZE(ctx->event_loop.conn_num_sample);
-			last_sample = now;
-		}
 	}
-
-	flockfile(stdout);
-	printf("Thread %ld statistics:\nAccepted connections: %zu\nConnection number samples: %zu",
-	       syscall(SYS_gettid),
-	       ctx->event_loop.accepted_conn_num,
-	       *ctx->event_loop.conn_num_sample);
-
-	for (size_t i = 1; i < ARRAY_SIZE(ctx->event_loop.conn_num_sample); i++)
-		printf(",%zu", ctx->event_loop.conn_num_sample[i]);
-
-	putc_unlocked('\n', stdout);
-	funlockfile(stdout);
 }
 
 void free_event_loop(event_loop_t *event_loop, h2o_multithread_receiver_t *h2o_receiver)
@@ -345,13 +334,18 @@ void initialize_event_loop(bool is_main_thread,
 
 	if (global_data->ssl_ctx) {
 		loop->h2o_accept_ctx.ssl_ctx = global_data->ssl_ctx;
-		start_accept_polling(config, accept_connection, true, loop);
+		start_accept_polling(is_main_thread,
+		                     global_data->bpf_fd,
+		                     config,
+		                     accept_connection,
+		                     true,
+		                     loop);
 		// Assume that the majority of the connections use HTTPS,
 		// so HTTP can take a few extra operations.
 		accept_cb = accept_http_connection;
 	}
 
-	start_accept_polling(config, accept_cb, false, loop);
+	start_accept_polling(is_main_thread, global_data->bpf_fd, config, accept_cb, false, loop);
 	h2o_multithread_register_receiver(loop->h2o_ctx.queue,
 	                                  h2o_receiver,
 	                                  process_messages);

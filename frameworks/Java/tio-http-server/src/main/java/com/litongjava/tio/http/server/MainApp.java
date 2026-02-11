@@ -5,10 +5,10 @@ import com.litongjava.tio.http.common.handler.ITioHttpRequestHandler;
 import com.litongjava.tio.http.server.config.EhCachePluginConfig;
 import com.litongjava.tio.http.server.config.EnjoyEngineConfig;
 import com.litongjava.tio.http.server.config.MysqlDbConfig;
-import com.litongjava.tio.http.server.controller.CacheController;
-import com.litongjava.tio.http.server.controller.DbController;
-import com.litongjava.tio.http.server.controller.IndexController;
+import com.litongjava.tio.http.server.handler.CacheHandler;
+import com.litongjava.tio.http.server.handler.DbHandler;
 import com.litongjava.tio.http.server.handler.DefaultHttpRequestDispatcher;
+import com.litongjava.tio.http.server.handler.IndexHandler;
 import com.litongjava.tio.http.server.router.DefaultHttpRequestRouter;
 import com.litongjava.tio.http.server.router.HttpRequestRouter;
 import com.litongjava.tio.server.ServerTioConfig;
@@ -21,20 +21,20 @@ public class MainApp {
     EnvUtils.buildCmdArgsMap(args);
     EnvUtils.load();
     // add route
-    IndexController controller = new IndexController();
+    IndexHandler controller = new IndexHandler();
 
     HttpRequestRouter simpleHttpRoutes = new DefaultHttpRequestRouter();
     simpleHttpRoutes.add("/", controller::index);
     simpleHttpRoutes.add("/plaintext", controller::plaintext);
     simpleHttpRoutes.add("/json", controller::json);
 
-    DbController dbQueryController = new DbController();
+    DbHandler dbQueryController = new DbHandler();
     simpleHttpRoutes.add("/db", dbQueryController::db);
     simpleHttpRoutes.add("/queries", dbQueryController::queries);
     simpleHttpRoutes.add("/updates", dbQueryController::updates);
     simpleHttpRoutes.add("/fortunes", dbQueryController::fortunes);
 
-    CacheController cacheController = new CacheController();
+    CacheHandler cacheController = new CacheHandler();
     simpleHttpRoutes.add("/cachedQuery", cacheController::cachedQuery);
 
     // config server

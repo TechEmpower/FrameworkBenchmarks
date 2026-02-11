@@ -17,8 +17,7 @@
 
 🚀 A simple, lightweight and high-performance PHP coroutine framework.
 
-[Home Page](https://simps.io)
-[Documentation](https://doc.simps.io)
+[Source Code](https://github.com/simple-swoole/simps)
 
 ## Important Libraries
 

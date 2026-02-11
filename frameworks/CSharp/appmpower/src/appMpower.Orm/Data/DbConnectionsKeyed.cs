@@ -1,61 +1,34 @@
+#if ODBC
 using System.Collections.Concurrent;
-using System.Data.Odbc;
+using System.Collections.Generic;
 
 namespace appMpower.Orm.Data
 {
    internal static class DbConnectionsKeyed
    {
-      private static bool _maxConnectionsCreated = false;
       private static short _createdConnections = 0;
-      private static short _maxConnections = 500;
 
-      private static ConcurrentStack<(int Number, OdbcConnection OdbcConnection, Dictionary<string, OdbcCommand>)> _connectionsStack = new();
-      private static ConcurrentQueue<TaskCompletionSource<(int Number, OdbcConnection OdbcConnection, Dictionary<string, OdbcCommand>)>> _waitingQueue = new();
+      private static ConcurrentStack<(int Number, System.Data.Common.DbConnection DbConnection, Dictionary<string, System.Data.Common.DbCommand>)> _connectionsStack = new();
 
-      internal static async Task<(int Number, OdbcConnection OdbcConnection, Dictionary<string, OdbcCommand> KeyedOdbcCommands)> GetConnectionBase(string connectionString)
+      internal static (int Number, System.Data.Common.DbConnection DbConnection, Dictionary<string, System.Data.Common.DbCommand> KeyedDbCommands) GetConnectionBase()
       {
-         (int Number, OdbcConnection OdbcConnection, Dictionary<string, OdbcCommand> KeyedOdbcCommands) dbConnectionBase;
+         (int Number, System.Data.Common.DbConnection DbConnection, Dictionary<string, System.Data.Common.DbCommand> KeyedDbCommands) dbConnectionBase;
 
          if (!_connectionsStack.TryPop(out dbConnectionBase))
          {
-            if (_maxConnectionsCreated)
-            {
-               dbConnectionBase = await GetDbConnectionBaseAsync();
-            }
-            else
-            {
-               _createdConnections++;
-               dbConnectionBase = (Number: _maxConnections, OdbcConnection: new OdbcConnection(connectionString), KeyedOdbcCommands: new Dictionary<string, OdbcCommand>());
-
-               if (_createdConnections == _maxConnections) _maxConnectionsCreated = true;
-
-               //Console.WriteLine("opened connection number: " + dbConnectionBase._number);
-            }
+            _createdConnections++;
+            dbConnectionBase = (Number: _createdConnections, 
+                                DbConnection: DbFactory.GetConnection(), 
+                                KeyedDbCommands: new Dictionary<string, System.Data.Common.DbCommand>());
          }
 
          return dbConnectionBase;
       }
 
-      internal static void Release((int Number, OdbcConnection OdbcConnection, Dictionary<string, OdbcCommand> KeyedOdbcCommands) dbConnectionBase)
+      internal static void Release((int Number, System.Data.Common.DbConnection DbConnection, Dictionary<string, System.Data.Common.DbCommand> KeyedDbCommands) dbConnectionBase)
       {
-         TaskCompletionSource<(int Number, OdbcConnection OdbcConnection, Dictionary<string, OdbcCommand>)> taskCompletionSource;
-
-         if (_waitingQueue.TryDequeue(out taskCompletionSource))
-         {
-            taskCompletionSource.SetResult(dbConnectionBase);
-         }
-         else
-         {
-            _connectionsStack.Push(dbConnectionBase);
-         }
-      }
-
-      private static Task<(int Number, OdbcConnection OdbcConnection, Dictionary<string, OdbcCommand>)> GetDbConnectionBaseAsync()
-      {
-         var taskCompletionSource = new TaskCompletionSource<(int Number, OdbcConnection OdbcConnection, Dictionary<string, OdbcCommand>)>(TaskCreationOptions.RunContinuationsAsynchronously);
-
-         _waitingQueue.Enqueue(taskCompletionSource);
-         return taskCompletionSource.Task;
+         _connectionsStack.Push(dbConnectionBase);
       }
    }
 }
+#endif

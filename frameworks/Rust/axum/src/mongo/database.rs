@@ -1,6 +1,6 @@
 use std::{convert::Infallible, io};
 
-use axum::{async_trait, extract::FromRequestParts, http::request::Parts};
+use axum::{extract::FromRequestParts, http::request::Parts};
 use futures_util::{stream::FuturesUnordered, StreamExt, TryStreamExt};
 use mongodb::{bson::doc, Database};
 use rand::rngs::SmallRng;
@@ -9,7 +9,6 @@ use crate::common::{models::{Fortune, World}, random_ids};
 
 pub struct DatabaseConnection(pub Database);
 
-#[async_trait]
 impl FromRequestParts<Database> for DatabaseConnection {
     type Rejection = Infallible;
 

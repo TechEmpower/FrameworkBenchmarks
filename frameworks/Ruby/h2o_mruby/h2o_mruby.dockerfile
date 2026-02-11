@@ -1,49 +1,46 @@
-ARG UBUNTU_VERSION=24.04
+ARG UBUNTU_VERSION=26.04
 
 ARG H2O_PREFIX=/opt/h2o
 
-FROM "ubuntu:${UBUNTU_VERSION}" AS compile
+FROM "buildpack-deps:${UBUNTU_VERSION}" AS compile
 
-ARG H2O_VERSION=c54c63285b52421da2782f028022647fc2ea3dd1
+ARG H2O_VERSION=ccea64b17ade832753db933658047ede9f31a380
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG H2O_PREFIX
 WORKDIR /tmp/h2o-build
-RUN apt-get -yqq update && \
-    apt-get -yqq install \
+RUN apt-get install \
+      --no-install-recommends \
+      -qqUy \
       cmake \
       curl \
       g++ \
-      libbpfcc-dev \
       libbrotli-dev \
       libcap-dev \
       libssl-dev \
-      libtool \
+      liburing-dev \
       libuv1-dev \
-      libwslay-dev \
       libz-dev \
-      llvm-dev \
-      ninja-build \
+      make \
       pkg-config \
-      rsync \
       ruby \
-      systemtap-sdt-dev && \
+      systemtap-sdt-dev > /dev/null && \
     curl -LSs "https://github.com/h2o/h2o/archive/${H2O_VERSION}.tar.gz" | \
-      tar --strip-components=1 -xz && \
+      tar --strip-components=1 -xz > /dev/null && \
     cmake \
       -B build \
-      -DCMAKE_AR=/usr/bin/gcc-ar \
-      -DCMAKE_C_FLAGS="-flto -march=native -mtune=native" \
+      -DCMAKE_BUILD_TYPE=Release \
+      -DCMAKE_C_FLAGS="-flto=auto -march=native -mtune=native" \
       -DCMAKE_INSTALL_PREFIX="${H2O_PREFIX}" \
-      -DCMAKE_RANLIB=/usr/bin/gcc-ranlib \
       -DWITH_MRUBY=on \
-      -G Ninja \
-      -S . && \
-    cmake --build build -j && \
-    cmake --install build
+      -S . > /dev/null && \
+    cmake --build build -j > /dev/null && \
+    cmake --install build > /dev/null
 
 FROM "ubuntu:${UBUNTU_VERSION}"
 
+ARG DEBIAN_FRONTEND=noninteractive
+RUN apt-get install --no-install-recommends -qqUy liburing2
 ARG H2O_PREFIX
 COPY --from=compile "${H2O_PREFIX}/bin/h2o" "${H2O_PREFIX}/bin/"
 COPY --from=compile "${H2O_PREFIX}/share" "${H2O_PREFIX}/share/"

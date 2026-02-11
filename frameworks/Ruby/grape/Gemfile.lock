@@ -1,0 +1,94 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    activemodel (8.1.1)
+      activesupport (= 8.1.1)
+    activerecord (8.1.1)
+      activemodel (= 8.1.1)
+      activesupport (= 8.1.1)
+      timeout (>= 0.4.0)
+    activesupport (8.1.1)
+      base64
+      bigdecimal
+      concurrent-ruby (~> 1.0, >= 1.3.1)
+      connection_pool (>= 2.2.5)
+      drb
+      i18n (>= 1.6, < 2)
+      json
+      logger (>= 1.4.2)
+      minitest (>= 5.1)
+      securerandom (>= 0.3)
+      tzinfo (~> 2.0, >= 2.0.5)
+      uri (>= 0.13.1)
+    base64 (0.3.0)
+    bigdecimal (3.3.1)
+    concurrent-ruby (1.3.5)
+    connection_pool (3.0.2)
+    drb (2.2.3)
+    dry-configurable (1.3.0)
+      dry-core (~> 1.1)
+      zeitwerk (~> 2.6)
+    dry-core (1.1.0)
+      concurrent-ruby (~> 1.0)
+      logger
+      zeitwerk (~> 2.6)
+    dry-inflector (1.2.0)
+    dry-logic (1.6.0)
+      bigdecimal
+      concurrent-ruby (~> 1.0)
+      dry-core (~> 1.1)
+      zeitwerk (~> 2.6)
+    dry-types (1.8.3)
+      bigdecimal (~> 3.0)
+      concurrent-ruby (~> 1.0)
+      dry-core (~> 1.0)
+      dry-inflector (~> 1.0)
+      dry-logic (~> 1.4)
+      zeitwerk (~> 2.6)
+    grape (3.0.1)
+      activesupport (>= 7.0)
+      dry-configurable
+      dry-types (>= 1.1)
+      mustermann-grape (~> 1.1.0)
+      rack (>= 2)
+      zeitwerk
+    i18n (1.14.7)
+      concurrent-ruby (~> 1.0)
+    iodine (0.7.58)
+    json (2.18.0)
+    logger (1.7.0)
+    minitest (5.26.2)
+    mustermann (3.0.4)
+      ruby2_keywords (~> 0.0.1)
+    mustermann-grape (1.1.0)
+      mustermann (>= 1.0.0)
+    nio4r (2.7.4)
+    pg (1.6.3)
+    pg (1.6.3-x86_64-darwin)
+    pg (1.6.3-x86_64-linux)
+    puma (7.1.0)
+      nio4r (~> 2.0)
+    rack (3.2.4)
+    ruby2_keywords (0.0.5)
+    securerandom (0.4.1)
+    timeout (0.4.4)
+    tzinfo (2.0.6)
+      concurrent-ruby (~> 1.0)
+    uri (1.1.1)
+    zeitwerk (2.7.3)
+
+PLATFORMS
+  ruby
+  x86_64-darwin-23
+  x86_64-linux
+
+DEPENDENCIES
+  activerecord (~> 8.1.0)
+  grape (~> 3.0)
+  iodine (~> 0.7)
+  json
+  pg
+  puma (~> 7.1)
+
+BUNDLED WITH
+  4.0.3

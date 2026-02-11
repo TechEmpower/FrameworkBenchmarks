@@ -22,6 +22,8 @@ class BenchmarkConfig:
         else:
             self.types = {t: types[t] for t in args.type}
 
+        # Check if we're running in a CI environment
+        self.is_ci = os.getenv('CI')
         self.duration = args.duration
         self.exclude = args.exclude
         self.quiet = args.quiet
@@ -55,6 +57,7 @@ class BenchmarkConfig:
         self.cpuset_cpus = args.cpuset_cpus
         self.test_container_memory = args.test_container_memory
         self.extra_docker_runtime_args = args.extra_docker_runtime_args
+        self.force_rm_intermediate_docker_layers = args.force_rm
 
         if self.network_mode is None:
             self.network = 'tfb'

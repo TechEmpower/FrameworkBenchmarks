@@ -17,6 +17,14 @@ except:
 
 db_pool = None
 
+PG_POOL_SIZE = 4
+
+class NoResetConnection(asyncpg.Connection):
+    __slots__ = ()
+
+    def get_reset_query(self):
+        return ""
+
 async def db_setup():
     global db_pool
     db_pool = await asyncpg.create_pool(
@@ -24,12 +32,14 @@ async def db_setup():
         password=os.getenv('PGPASS', 'benchmarkdbpass'),
         database='hello_world',
         host='tfb-database',
-        port=5432
+        port=5432,
+        min_size=PG_POOL_SIZE,
+        max_size=PG_POOL_SIZE,
+        connection_class=NoResetConnection,
     )
 
 READ_ROW_SQL = 'SELECT "randomnumber", "id" FROM "world" WHERE id = $1'
 WRITE_ROW_SQL = 'UPDATE "world" SET "randomnumber"=$1 WHERE id=$2'
-ADDITIONAL_ROW = [0, 'Additional fortune added at request time.']
 
 JSON_RESPONSE = {
     'type': 'http.response.start',
@@ -102,15 +112,10 @@ async def multiple_database_queries(scope, receive, send):
     row_ids = random.sample(range(1, 10000), num_queries)
     worlds = [ ]
 
-    db_conn = await db_pool.acquire()
-    try:
-        statement = await db_conn.prepare(READ_ROW_SQL)
-        for row_id in row_ids:
-            number = await statement.fetchval(row_id)
-            worlds.append( {'id': row_id, 'randomNumber': number} )
-    finally:
-        await db_pool.release(db_conn)
+    async with db_pool.acquire() as db_conn:
+        rows = await db_conn.fetchmany(READ_ROW_SQL, [ (v, ) for v in row_ids ] )
 
+    worlds = [ { 'id': row_id, 'randomNumber': number[0] } for row_id, number in zip(row_ids, rows) ]
     content = jsonify(worlds)
     await send(JSON_RESPONSE)
     await send({
@@ -135,7 +140,7 @@ async def fortunes(scope, receive, send):
     finally:
         await db_pool.release(db_conn)
 
-    fortunes.append(ADDITIONAL_ROW)
+    fortunes.append([0, "Additional fortune added at request time."])
     fortunes.sort(key = _get_item1)
     content = fortunes_template.render(fortunes=fortunes)
     await send(HTML_RESPONSE)
@@ -154,14 +159,9 @@ async def database_updates(scope, receive, send):
     
     worlds = [ {"id": row_id, "randomNumber": number} for row_id, number in updates ]
 
-    db_conn = await db_pool.acquire()
-    try:
-        statement = await db_conn.prepare(READ_ROW_SQL)
-        for row_id, _ in updates:
-            await statement.fetchval(row_id)
+    async with db_pool.acquire() as db_conn:
+        await db_conn.executemany(READ_ROW_SQL, [ (i[0], ) for i in updates ] )
         await db_conn.executemany(WRITE_ROW_SQL, updates)
-    finally:
-        await db_pool.release(db_conn)
 
     content = jsonify(worlds)
     await send(JSON_RESPONSE)

@@ -4,7 +4,7 @@ import io.ktor.http.*
 import io.ktor.http.content.*
 import io.ktor.server.application.*
 import io.ktor.server.config.*
-import io.ktor.server.html.*
+import io.ktor.server.html.respondHtml
 import io.ktor.server.plugins.defaultheaders.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -15,31 +15,29 @@ import io.r2dbc.postgresql.PostgresqlConnectionFactory
 import io.r2dbc.postgresql.client.SSLMode
 import io.r2dbc.spi.Connection
 import io.r2dbc.spi.ConnectionFactory
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.reactive.awaitFirst
 import kotlinx.coroutines.reactive.awaitFirstOrNull
+import kotlinx.coroutines.reactor.awaitSingle
 import kotlinx.html.*
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
-import org.jetbrains.ktor.benchmarks.Constants.DB_ROWS
-import org.jetbrains.ktor.benchmarks.Constants.FORTUNES_QUERY
-import org.jetbrains.ktor.benchmarks.Constants.UPDATE_QUERY
-import org.jetbrains.ktor.benchmarks.Constants.WORLD_QUERY
-import org.jetbrains.ktor.benchmarks.models.Fortune
-import org.jetbrains.ktor.benchmarks.models.Message
-import org.jetbrains.ktor.benchmarks.models.World
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
-import kotlin.random.Random
+import java.time.Duration
+import java.util.concurrent.ThreadLocalRandom
+import kotlin.math.min
+
+const val HELLO_WORLD = "Hello, World!"
+const val WORLD_QUERY = "SELECT id, randomnumber FROM world WHERE id = $1"
+const val FORTUNES_QUERY = "SELECT id, message FROM fortune"
+const val UPDATE_QUERY = "UPDATE world SET randomnumber = $1 WHERE id = $2"
+const val DB_ROWS = 10000
 
 fun Application.main() {
     val config = ApplicationConfig("application.conf")
     val dbConnFactory = configurePostgresR2DBC(config)
 
-    install(DefaultHeaders)
-
     val helloWorldContent = TextContent("Hello, World!", ContentType.Text.Plain)
+
+    install(DefaultHeaders)
 
     routing {
         get("/plaintext") {
@@ -47,50 +45,22 @@ fun Application.main() {
         }
 
         get("/json") {
-            call.respondText(Json.encodeToString(Message("Hello, world!")), ContentType.Application.Json)
+            call.respondJson(Message(HELLO_WORLD))
         }
 
         get("/db") {
-            val random = Random.Default
-            val request = getWorld(dbConnFactory, random)
-            val result = request.awaitFirstOrNull()
-
-            call.respondText(Json.encodeToString(result), ContentType.Application.Json)
-        }
-
-        fun selectWorlds(queries: Int, random: Random): Flow<World> = flow {
-            repeat(queries) {
-                emit(getWorld(dbConnFactory, random).awaitFirst())
-            }
+            val world = dbConnFactory.fetchWorld()
+            call.respondJson(world)
         }
 
         get("/queries") {
             val queries = call.queries()
-            val random = Random.Default
-
-            val result = buildList {
-                selectWorlds(queries, random).collect {
-                    add(it)
-                }
-            }
-
-            call.respondText(Json.encodeToString(result), ContentType.Application.Json)
+            val worlds = dbConnFactory.fetchWorlds(queries)
+            call.respondJson(worlds)
         }
 
         get("/fortunes") {
-            val result = mutableListOf<Fortune>()
-
-            val request = Flux.usingWhen(dbConnFactory.create(), { connection ->
-                Flux.from(connection.createStatement(FORTUNES_QUERY).execute()).flatMap { r ->
-                    Flux.from(r.map { row, _ ->
-                        Fortune(
-                            row.get(0, Int::class.java)!!, row.get(1, String::class.java)!!
-                        )
-                    })
-                }
-            }, { connection -> connection.close() })
-
-            request.collectList().awaitFirstOrNull()?.let { result.addAll(it) }
+            val result = dbConnFactory.fetchFortunes().toMutableList()
 
             result.add(Fortune(0, "Additional fortune added at request time."))
             result.sortBy { it.message }
@@ -115,42 +85,86 @@ fun Application.main() {
 
         get("/updates") {
             val queries = call.queries()
-            val random = Random.Default
 
-            val worlds = selectWorlds(queries, random)
+            val worlds = dbConnFactory.fetchWorlds(queries)
+            val updatedWorlds = worlds.map {
+                it.copy(randomNumber = ThreadLocalRandom.current().nextInt(1, DB_ROWS + 1))
+            }.sortedBy { it.id }
 
-            val worldsUpdated = buildList {
-                worlds.collect { world ->
-                    world.randomNumber = random.nextInt(DB_ROWS) + 1
-                    add(world)
+            Mono.usingWhen(dbConnFactory.create(), { connection ->
+                Mono.from(connection.beginTransaction())
+                    .thenMany(
+                        Flux.fromIterable(updatedWorlds)
+                            .concatMap { world ->
+                                Mono.from(
+                                    connection.createStatement(UPDATE_QUERY)
+                                        .bind("$1", world.randomNumber)
+                                        .bind("$2", world.id)
+                                        .execute()
+                                ).flatMap { Mono.from(it.rowsUpdated) }
+                            }
+                    )
+                    .then(Mono.from(connection.commitTransaction()))
+            },
+                Connection::close,
+                { connection, _ -> connection.rollbackTransaction() },
+                { connection -> connection.rollbackTransaction() }
+            ).awaitFirstOrNull()
 
-                    Mono.usingWhen(dbConnFactory.create(), { connection ->
-                        Mono.from(
-                            connection.createStatement(UPDATE_QUERY)
-                                .bind(0, world.randomNumber)
-                                .bind(1, world.id)
-                                .execute()
-                        ).flatMap { Mono.from(it.rowsUpdated) }
-                    }, Connection::close).awaitFirstOrNull()
-                }
-            }
-
-            call.respondText(Json.encodeToString(worldsUpdated), ContentType.Application.Json)
+            call.respondJson(updatedWorlds)
         }
     }
 }
 
-private fun getWorld(
-    dbConnFactory: ConnectionFactory, random: Random
-): Mono<World> = Mono.usingWhen(dbConnFactory.create(), { connection ->
-    Mono.from(connection.createStatement(WORLD_QUERY).bind(0, random.nextInt(DB_ROWS) + 1).execute()).flatMap { r ->
-        Mono.from(r.map { row, _ ->
+private suspend fun ConnectionFactory.fetchWorld(): World =
+    Mono.usingWhen(create(), { connection ->
+        selectWorld(connection)
+    }, Connection::close).awaitSingle()
+
+private suspend fun ConnectionFactory.fetchWorlds(
+    count: Int
+): List<World> {
+    if (count <= 0) return emptyList()
+    val concurrency = min(count, 32)
+    return Mono.usingWhen(create(), { connection ->
+        Flux.range(0, count)
+            .flatMap({ selectWorldPublisher(connection) }, concurrency)
+            .collectList()
+    }, Connection::close).awaitSingle()
+}
+
+private fun selectWorld(connection: Connection): Mono<World> =
+    selectWorldPublisher(connection)
+
+private fun selectWorldPublisher(connection: Connection): Mono<World> {
+    val worldId = ThreadLocalRandom.current().nextInt(1, DB_ROWS + 1)
+    return Mono.from(
+        connection.createStatement(WORLD_QUERY)
+            .bind("$1", worldId)
+            .execute()
+    ).flatMap { result ->
+        Mono.from(result.map { row, _ ->
             World(
-                row.get(0, Int::class.java)!!, row.get(1, Int::class.java)!!
+                row.get(0, Int::class.java) ?: error("id is null"),
+                row.get(1, Int::class.java) ?: error("randomNumber is null")
             )
         })
     }
-}, Connection::close)
+}
+
+private suspend fun ConnectionFactory.fetchFortunes(): List<Fortune> =
+    Mono.usingWhen(create(), { connection ->
+        Flux.from(connection.createStatement(FORTUNES_QUERY).execute())
+            .flatMap { result ->
+                Flux.from(result.map { row, _ ->
+                    Fortune(
+                        row.get(0, Int::class.java) ?: error("id is null"),
+                        row.get(1, String::class.java) ?: error("message is null")
+                    )
+                })
+            }
+            .collectList()
+    }, Connection::close).awaitSingle()
 
 private fun configurePostgresR2DBC(config: ApplicationConfig): ConnectionFactory {
     val cfo = PostgresqlConnectionConfiguration.builder()
@@ -170,17 +184,12 @@ private fun configurePostgresR2DBC(config: ApplicationConfig): ConnectionFactory
     val cp = ConnectionPoolConfiguration.builder(cf)
         .initialSize(config.property("db.initPoolSize").getString().toInt())
         .maxSize(config.property("db.maxPoolSize").getString().toInt())
+        .maxIdleTime(Duration.ofSeconds(30))
+        .maxAcquireTime(Duration.ofSeconds(5))
+        .validationQuery("SELECT 1")
         .build()
 
     return ConnectionPool(cp)
 }
 
 private fun ApplicationCall.queries() = request.queryParameters["queries"]?.toIntOrNull()?.coerceIn(1, 500) ?: 1
-
-
-object Constants {
-    const val WORLD_QUERY = "SELECT id, randomnumber FROM world WHERE id = $1"
-    const val FORTUNES_QUERY = "SELECT id, message FROM fortune"
-    const val UPDATE_QUERY = "UPDATE world SET randomnumber = $1 WHERE id = $2"
-    const val DB_ROWS = 10000
-}

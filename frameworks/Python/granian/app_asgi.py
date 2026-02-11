@@ -1,4 +1,3 @@
-import asyncio
 import os
 
 from operator import itemgetter
@@ -10,6 +9,15 @@ import asyncpg
 import jinja2
 import orjson
 
+PG_POOL_SIZE = 4
+
+
+class NoResetConnection(asyncpg.Connection):
+    __slots__ = ()
+
+    def get_reset_query(self):
+        return ""
+
 
 async def pg_setup():
     global pool
@@ -18,13 +26,15 @@ async def pg_setup():
         password=os.getenv('PGPASS', 'benchmarkdbpass'),
         database='hello_world',
         host='tfb-database',
-        port=5432
+        port=5432,
+        min_size=PG_POOL_SIZE,
+        max_size=PG_POOL_SIZE,
+        connection_class=NoResetConnection,
     )
 
 
 SQL_SELECT = 'SELECT "randomnumber", "id" FROM "world" WHERE id = $1'
 SQL_UPDATE = 'UPDATE "world" SET "randomnumber"=$1 WHERE id=$2'
-ROW_ADD = [0, 'Additional fortune added at request time.']
 
 JSON_RESPONSE = {
     'type': 'http.response.start',
@@ -54,8 +64,6 @@ json_dumps = orjson.dumps
 
 with Path('templates/fortune.html').open('r') as f:
     template = jinja2.Template(f.read())
-
-asyncio.get_event_loop().run_until_complete(pg_setup())
 
 
 def get_num_queries(scope):
@@ -97,14 +105,11 @@ async def route_db(scope, receive, send):
 async def route_queries(scope, receive, send):
     num_queries = get_num_queries(scope)
     row_ids = sample(range(1, 10000), num_queries)
-    worlds = []
 
     async with pool.acquire() as connection:
-        statement = await connection.prepare(SQL_SELECT)
-        for row_id in row_ids:
-            number = await statement.fetchval(row_id)
-            worlds.append({'id': row_id, 'randomNumber': number})
+        rows = await connection.fetchmany(SQL_SELECT, [(v,) for v in row_ids])
 
+    worlds = [{'id': row_id, 'randomNumber': number[0]} for row_id, number in zip(row_ids, rows)]
     await send(JSON_RESPONSE)
     await send({
         'type': 'http.response.body',
@@ -117,7 +122,7 @@ async def route_fortunes(scope, receive, send):
     async with pool.acquire() as connection:
         fortunes = await connection.fetch('SELECT * FROM Fortune')
 
-    fortunes.append(ROW_ADD)
+    fortunes.append([0, 'Additional fortune added at request time.'])
     fortunes.sort(key=key)
     content = template.render(fortunes=fortunes).encode('utf-8')
     await send(HTML_RESPONSE)
@@ -137,9 +142,7 @@ async def route_updates(scope, receive, send):
     worlds = [{'id': row_id, 'randomNumber': number} for row_id, number in updates]
 
     async with pool.acquire() as connection:
-        statement = await connection.prepare(SQL_SELECT)
-        for row_id, _ in updates:
-            await statement.fetchval(row_id)
+        await connection.executemany(SQL_SELECT, [(i[0],) for i in updates])
         await connection.executemany(SQL_UPDATE, updates)
 
     await send(JSON_RESPONSE)
@@ -178,6 +181,26 @@ routes = {
 }
 
 
-def main(scope, receive, send):
-    handler = routes.get(scope['path'], handle_404)
-    return handler(scope, receive, send)
+class App:
+    __slots__ = ["_handler"]
+
+    def __init__(self):
+        self._handler = self._lifespan
+
+    def __call__(self, scope, receive, send):
+        return self._handler(scope, receive, send)
+
+    async def _lifespan(self, scope, receive, send):
+        if scope['type'] == 'lifespan':
+            message = await receive()
+            if message['type'] == 'lifespan.startup':
+                await pg_setup()
+                self._handler = self._asgi
+                await send({'type': 'lifespan.startup.complete'})
+
+    def _asgi(self, scope, receive, send):
+        handler = routes.get(scope['path'], handle_404)
+        return handler(scope, receive, send)
+
+
+main = App()

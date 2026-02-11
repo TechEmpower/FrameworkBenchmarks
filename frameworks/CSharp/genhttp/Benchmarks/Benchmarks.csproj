@@ -2,36 +2,78 @@
 
     <PropertyGroup>
 
-        <TargetFramework>net9.0</TargetFramework>
-        <LangVersion>13.0</LangVersion>
+        <TargetFramework>net10.0</TargetFramework>
+        <LangVersion>14.0</LangVersion>
         <ImplicitUsings>true</ImplicitUsings>
         <OutputType>Exe</OutputType>
 
         <AssemblyTitle>GenHTTP Benchmarks</AssemblyTitle>
         <Description>Test suite to be executed with TechEmpower FrameworkBenchmarks.</Description>
 
+        <EngineName>$(GENHTTP_ENGINE_NAME)</EngineName>
+        
         <ServerGarbageCollection>true</ServerGarbageCollection>
         <TieredPGO>true</TieredPGO>
 
+        <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+        
     </PropertyGroup>
 
     <ItemGroup>
+        
+        <Compile Include="**\*.cs" Exclude="Program.*.cs" />
+        
         <None Remove="Resources\Fortunes.html" />
         <None Remove="Resources\Template.html" />
-    </ItemGroup>
-
-    <ItemGroup>
+        
         <EmbeddedResource Include="Resources\Template.html" />
+        
+    </ItemGroup>
+    
+    <ItemGroup Condition="'$(EngineName)' == 'Internal'">
+        
+        <Compile Include="Program.Internal.cs" />
+
+        <PackageReference Include="GenHTTP.Core" Version="10.4.0" />
+        
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(EngineName)' == 'Kestrel'">
+
+        <Compile Include="Program.Kestrel.cs" />
+
+        <PackageReference Include="GenHTTP.Core.Kestrel" Version="10.4.0" />
+
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(EngineName)' == 'Wired'">
+
+        <Compile Include="Program.Wired.cs" />
+
+        <PackageReference Include="Wired.IO" Version="10.1.3" />
+
+        <PackageReference Include="GenHTTP.Adapters.WiredIO" Version="10.4.0" />
+
+    </ItemGroup>
+    
+    <ItemGroup Condition="'$(EngineName)' == 'Unhinged'">
+
+        <Compile Include="Program.Unhinged.cs" />
+
+        <PackageReference Include="Unhinged" Version="9.0.7" />
+
+        <PackageReference Include="Unhinged.GenHttp.Experimental" Version="10.4.0" />
+
     </ItemGroup>
 
     <ItemGroup>
 
-        <PackageReference Include="GenHTTP.Core" Version="9.6.2" />
-        <PackageReference Include="GenHTTP.Modules.Webservices" Version="9.6.2" />
+        <PackageReference Include="GenHTTP.Modules.Webservices" Version="10.4.0" />
 
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.1" />
-        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.3" />
+        <PackageReference Include="Npgsql" Version="10.0.1" />
 
+        <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="10.0.2" />
+        
     </ItemGroup>
 
 </Project>

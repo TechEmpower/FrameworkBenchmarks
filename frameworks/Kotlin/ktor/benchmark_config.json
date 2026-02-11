@@ -101,7 +101,7 @@
         "query_url": "/query/?queries=",
         "fortune_url": "/fortunes",
         "update_url": "/updates?queries=",
-        "port": 8080,
+        "port": 9090,
         "approach": "Realistic",
         "classification": "Fullstack",
         "database": "Postgres",
@@ -125,7 +125,7 @@
         "update_url": "/updates?queries=",
         "fortune_url": "/fortunes",
 
-        "port": 8080,
+        "port": 9090,
         "approach": "Realistic",
         "classification": "Micro",
         "database": "Postgres",
@@ -140,12 +140,12 @@
         "notes": "http://ktor.io/",
         "versus": "netty"
       },
-      "exposed-dsl": {
+      "exposed-jdbc-dsl": {
         "db_url": "/db",
         "query_url": "/queries?queries=",
         "update_url": "/updates?queries=",
         "fortune_url": "/fortunes",
-        "port": 8080,
+        "port": 9090,
         "approach": "Realistic",
         "classification": "Micro",
         "database": "postgres",
@@ -157,14 +157,14 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "ktor-netty-exposed-dsl",
+        "display_name": "ktor-netty-exposed-jdbc-dsl",
         "notes": "",
         "versus": "ktor"
       },
-      "exposed-dao": {
+      "exposed-jdbc-dao": {
         "db_url": "/db",
         "fortune_url": "/fortunes",
-        "port": 8080,
+        "port": 9090,
         "approach": "Realistic",
         "classification": "Micro",
         "database": "postgres",
@@ -176,7 +176,28 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "ktor-netty-exposed-dao",
+        "display_name": "ktor-netty-exposed-jdbc-dao",
+        "notes": "",
+        "versus": "ktor"
+      },
+      "exposed-r2dbc-dsl": {
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
+        "update_url": "/updates?queries=",
+        "fortune_url": "/fortunes",
+        "port": 9090,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "postgres",
+        "framework": "ktor",
+        "language": "Kotlin",
+        "flavor": "None",
+        "orm": "Full",
+        "platform": "Netty",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "ktor-netty-exposed-r2dbc-dsl",
         "notes": "",
         "versus": "ktor"
       }

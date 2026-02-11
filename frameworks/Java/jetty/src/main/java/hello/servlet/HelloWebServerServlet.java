@@ -4,14 +4,14 @@ import org.eclipse.jetty.server.HttpConfiguration;
 import org.eclipse.jetty.server.HttpConnectionFactory;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
-import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
 
 
 /**
  * An implementation of the TechEmpower benchmark tests using the Jetty web
  * server.  
  */
-public final class HelloWebServerServlet 
+public final class HelloWebServerServlet
 {
 
     public static void main(String[] args) throws Exception
@@ -26,7 +26,7 @@ public final class HelloWebServerServlet
         context.setContextPath("/");
         server.setHandler(context);
 
-        context.addServlet(org.eclipse.jetty.servlet.DefaultServlet.class,"/");
+        context.addServlet(org.eclipse.jetty.ee10.servlet.DefaultServlet.class,"/");
         context.addServlet(JsonServlet.class,"/json");
         context.addServlet(PlaintextServlet.class,"/plaintext");
 

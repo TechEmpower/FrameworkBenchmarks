@@ -17,6 +17,7 @@ The tests were run with:
 - [Puma 6.4](http://puma.io/)
 - [Iodine](https://github.com/boazsegev/iodine)
 - [Falcon](https://github.com/socketry/falcon)
+- [Pitchfork](https://github.com/Shopify/pitchfork)
 - [MySQL](https://dev.mysql.com/)
 - [PostgreSQL](https://www.postgresql.org/)
 - [Redis 6](https://redis.io)

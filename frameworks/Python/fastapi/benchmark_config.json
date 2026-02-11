@@ -1,6 +1,7 @@
 {
   "framework": "fastapi",
-  "tests": [{
+  "tests": [
+    {
       "default": {
         "json_url": "/json",
         "fortune_url": "/fortunes",
@@ -59,27 +60,6 @@
         "os": "Linux",
         "database_os": "Linux",
         "display_name": "FastAPI [Socketify.py ASGI PyPy3]",
-        "notes": "",
-        "versus": "None"
-      },
-      "gunicorn-orjson": {
-        "json_url": "/json",
-        "db_url": "/db",
-        "query_url": "/queries?queries=",
-        "update_url": "/updates?queries=",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Micro",
-        "database": "Postgres",
-        "framework": "FastAPI",
-        "language": "Python",
-        "flavor": "Python3",
-        "orm": "Raw",
-        "platform": "asyncio",
-        "webserver": "Gunicorn",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "FastAPI-gunicorn-orjson",
         "notes": "",
         "versus": "None"
       },
@@ -148,7 +128,7 @@
         "notes": "",
         "versus": "None"
       },
-      "nginx-unit": {
+      "nginx": {
         "json_url": "/json",
         "fortune_url": "/fortunes",
         "plaintext_url": "/plaintext",
@@ -164,35 +144,12 @@
         "flavor": "Python3",
         "orm": "Raw",
         "platform": "asyncio",
-        "webserver": "nginx-unit",
+        "webserver": "nginx",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "FastAPI-nginx-unit",
+        "display_name": "FastAPI-gnuicorn-nginx",
         "notes": "",
-        "versus": "None",
-        "tags": ["broken"]
-      },
-      "nginx-unit-orjson": {
-        "json_url": "/json",
-        "db_url": "/db",
-        "query_url": "/queries?queries=",
-        "update_url": "/updates?queries=",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Micro",
-        "database": "Postgres",
-        "framework": "FastAPI",
-        "language": "Python",
-        "flavor": "Python3",
-        "orm": "Raw",
-        "platform": "asyncio",
-        "webserver": "nginx-unit",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "FastAPI-nginx-unit-orjson",
-        "notes": "",
-        "versus": "None",
-        "tags": ["broken"]
+        "versus": "None"
       },
       "uvicorn": {
         "json_url": "/json",
@@ -216,27 +173,7 @@
         "display_name": "FastAPI-uvicorn",
         "notes": "",
         "versus": "None"
-      },
-      "uvicorn-orjson": {
-        "json_url": "/json",
-        "db_url": "/db",
-        "query_url": "/queries?queries=",
-        "update_url": "/updates?queries=",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Micro",
-        "database": "Postgres",
-        "framework": "FastAPI",
-        "language": "Python",
-        "flavor": "Python3",
-        "orm": "Raw",
-        "platform": "asyncio",
-        "webserver": "Uvicorn",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "FastAPI-uvicorn-orjson",
-        "notes": "",
-        "versus": "None"
       }
-    }]
+    }
+  ]
 }

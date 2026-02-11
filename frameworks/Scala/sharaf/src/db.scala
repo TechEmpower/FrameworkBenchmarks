@@ -10,7 +10,7 @@ class DAO {
   ds.setJdbcUrl("jdbc:postgresql://tfb-database:5432/hello_world")
   ds.setUsername("benchmarkdbuser")
   ds.setPassword("benchmarkdbpass")
-  ds.setMaximumPoolSize(48)
+  ds.setMaximumPoolSize(Runtime.getRuntime().availableProcessors() * 2 + 1)
   private val squeryContext = SqueryContext(ds)
 
   def getRandomWorld(): WorldRow = squeryContext.run {

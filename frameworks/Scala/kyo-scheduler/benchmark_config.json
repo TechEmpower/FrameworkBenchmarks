@@ -1,0 +1,49 @@
+{
+  "framework": "kyo-scheduler",
+  "tests": [
+    {
+      "default": {
+        "plaintext_url": "/plaintext",
+        "json_url": "/json",
+        "port": 8080,
+        "database": "None",
+        "approach": "Realistic",
+        "classification": "Micro",
+        "framework": "zio-http",
+        "language": "Scala",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "Netty",
+        "webserver": "None",
+        "database_os": "Linux",
+        "os": "Linux",
+        "display_name": "zio-http with kyo-scheduler",
+        "notes": "https://zio.dev/zio-http/",
+        "versus": "None"
+      },
+      "http4s": {
+        "orm": "Raw",
+        "database_os": "Linux",
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "query_url": "/queries?queries=",
+        "update_url": "/updates?queries=",
+        "fortune_url": "/fortunes",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "Postgres",
+        "db_url": "/db",
+        "framework": "http4s",
+        "language": "Scala",
+        "platform": "NIO2",
+        "webserver": "blaze",
+        "os": "Linux",
+        "display_name": "http4s with kyo-scheduler",
+        "notes": "https://http4s.org/",
+        "flavor": "None",
+        "versus": "None"
+      }
+    }
+  ]
+}

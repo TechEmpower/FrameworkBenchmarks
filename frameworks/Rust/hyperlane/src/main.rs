@@ -1,43 +1,51 @@
-pub(crate) mod constant;
-pub(crate) mod db;
-pub(crate) mod lazy;
-pub(crate) mod request_middleware;
-pub(crate) mod response_middleware;
-pub(crate) mod route;
-pub(crate) mod server;
-pub(crate) mod r#type;
-pub(crate) mod utils;
+mod config;
+mod db;
+mod middleware;
+mod route;
+mod server;
+mod utils;
 
-pub(crate) use bb8::{Pool, PooledConnection};
-pub(crate) use bb8_postgres::PostgresConnectionManager;
-pub(crate) use chrono::{DateTime, Utc};
-pub(crate) use constant::*;
-pub(crate) use db::*;
-pub(crate) use hyperlane::{
+use {config::*, db::*, middleware::*, route::*, server::*, utils::*};
+
+use std::fmt;
+
+use {
+    futures::{executor::block_on, future::join_all},
+    hyperlane::{
+        tokio::{spawn, task::JoinHandle},
+        *,
+    },
+    hyperlane_time::*,
     once_cell::sync::Lazy,
+    rand::{Rng, SeedableRng, rng, rngs::SmallRng},
     serde::*,
-    serde_json::json,
-    tokio::sync::{RwLock, RwLockWriteGuard},
-    *,
+    serde_json::{Value, json},
+    sqlx::{
+        Pool, Postgres, Row,
+        postgres::{PgPoolOptions, PgRow},
+        query as db_query,
+    },
 };
-pub(crate) use lazy::*;
-pub(crate) use r#type::*;
-pub(crate) use rand::Rng;
-pub(crate) use request_middleware::*;
-pub(crate) use response_middleware::*;
-pub(crate) use route::*;
-
-pub(crate) use server::*;
-pub(crate) use std::time::SystemTime;
-pub(crate) use std::{io, sync::Arc};
-pub(crate) use tokio_postgres::{Config, NoTls, Row, Statement};
-pub(crate) use utils::*;
 
 #[tokio::main]
 async fn main() {
-    println_warning!("start connect db");
     init_db().await;
-    println_success!("connect db finish");
-    println_warning!("start init server");
-    run_server().await;
+
+    let server_config: ServerConfig = init_server_config().await;
+    let request_config: RequestConfig = init_request_config().await;
+
+    let server: Server = Server::new().await;
+    server.server_config(server_config).await;
+    server.request_config(request_config).await;
+    server.request_middleware::<RequestMiddleware>().await;
+    server.route::<PlaintextRoute>("/plaintext").await;
+    server.route::<JsonRoute>("/json").await;
+    server.route::<CachedQueryRoute>("/cached-quer").await;
+    server.route::<DbRoute>("/db").await;
+    server.route::<QueryRoute>("/query").await;
+    server.route::<FortunesRoute>("/fortunes").await;
+    server.route::<UpdateRoute>("/upda").await;
+
+    let server_hook: ServerControlHook = server.run().await.unwrap();
+    server_hook.wait().await;
 }

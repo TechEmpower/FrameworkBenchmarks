@@ -1,4 +1,4 @@
-FROM ruby:3.3
+FROM ruby:4.0
 
 ENV RUBY_YJIT_ENABLE=1
 
@@ -11,6 +11,7 @@ ADD ./ /hanami
 WORKDIR /hanami
 
 ENV BUNDLE_FORCE_RUBY_PLATFORM=true
+RUN bundle config set with 'iodine'
 RUN bundle install --jobs=8
 
 EXPOSE 8080
@@ -19,4 +20,4 @@ ENV HANAMI_ENV=production
 ENV HANAMI_PORT=8080
 ENV DATABASE_URL=postgres://benchmarkdbuser:benchmarkdbpass@tfb-database:5432/hello_world
 
-CMD bundle exec hanami server
+CMD bundle exec iodine -p 8080 -w $(($(nproc)*5/4))

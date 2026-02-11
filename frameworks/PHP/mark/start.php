@@ -27,12 +27,12 @@ $api->get('/json', function () {
     ], \json_encode(['message' => 'Hello, World!']));
 });
 
-$date = gmdate('D, d M Y H:i:s').' GMT';
+$date = gmdate('D, d M Y H:i:s \G\M\T');
 
 $api->onWorkerStart = static function () {
     Timer::add(1, function () {
         global $date;
-        $date = gmdate('D, d M Y H:i:s').' GMT';
+        $date = gmdate('D, d M Y H:i:s \G\M\T');
     });
 };
 

@@ -1,5 +1,5 @@
-asyncpg==0.29.0
-Jinja2==3.1.4
-sanic==24.6.0
-uvloop==0.20.0
-orjson==3.10.7
+asyncpg==0.31.0
+Jinja2==3.1.6
+sanic==25.3.0
+uvloop==0.22.1
+orjson==3.11.5

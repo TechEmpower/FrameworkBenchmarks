@@ -1,18 +1,20 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    agoo (2.15.13)
-    bigdecimal (3.1.9)
-    connection_pool (2.5.0)
-    oj (3.16.10)
+    agoo (2.15.14)
+    bigdecimal (4.0.1)
+    connection_pool (3.0.2)
+    oj (3.16.13)
       bigdecimal (>= 3.0)
       ostruct (>= 0.2)
-    ostruct (0.6.1)
-    pg (1.5.9)
-    rack (3.1.11)
+    ostruct (0.6.3)
+    pg (1.6.3)
+    pg (1.6.3-x86_64-linux)
+    rack (3.2.4)
 
 PLATFORMS
   ruby
+  x86_64-linux
 
 DEPENDENCIES
   agoo
@@ -22,4 +24,4 @@ DEPENDENCIES
   rack
 
 BUNDLED WITH
-   2.5.10
+  4.0.3

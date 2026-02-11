@@ -1,20 +1,15 @@
 source 'https://rubygems.org'
 
-gem 'rails', '~> 8.0.0'
+gem 'rails', '~> 8.1.0'
 gem 'redis', '~> 5.0'
 gem 'tzinfo-data'
 
 group :mysql, optional: true do
-  gem 'trilogy', '~> 2.8.1'
+  gem 'trilogy', '~> 2.10'
 end
 
 group :postgresql, optional: true do
   gem 'pg', '~> 1.5'
-end
-
-group :agoo, optional: true do
-  gem 'agoo', require: false
-  gem 'rackup'
 end
 
 group :iodine, optional: true do
@@ -26,5 +21,9 @@ group :falcon, optional: true do
 end
 
 group :puma, optional: true do
-  gem 'puma', '~> 6.5', require: false
+  gem 'puma', '~> 7.1', require: false
+end
+
+group :pitchfork, optional: true do
+  gem 'pitchfork', '~> 0.17'
 end

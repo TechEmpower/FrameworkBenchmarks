@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
+using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+using appMpower.Orm;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 
@@ -11,47 +11,40 @@ namespace appMpower;
 public class SingleQueryMiddleware
 {
     private readonly static KeyValuePair<string, StringValues> _headerServer =
-         new KeyValuePair<string, StringValues>("Server", new StringValues("k"));
+         new("Server", new StringValues("k"));
     private readonly static KeyValuePair<string, StringValues> _headerContentType =
-         new KeyValuePair<string, StringValues>("Content-Type", new StringValues("application/json"));
+         new("Content-Type", new StringValues("application/json"));
 
-    private readonly RequestDelegate _nextStage;
-
-    public SingleQueryMiddleware(RequestDelegate nextStage)
+    public static async Task Invoke(HttpContext httpContext)
     {
-        _nextStage = nextStage;
-    }
+        var response = httpContext.Response; 
+        response.Headers.Add(_headerServer);
+        response.Headers.Add(_headerContentType);
 
-    public unsafe Task Invoke(HttpContext httpContext)
-    {
-        if (httpContext.Request.Path.StartsWithSegments("/db", StringComparison.Ordinal))
+#if AOTDLL
+        int payloadLength;
+        IntPtr handlePointer; 
+
+        IntPtr bytePointer = NativeMethods.Db(out payloadLength, out handlePointer);
+        byte[] json = new byte[payloadLength];
+        //Marshal.Copy(bytePointer, json, 0, payloadLength);
+
+        unsafe
         {
-            var response = httpContext.Response; 
-            response.Headers.Add(_headerServer);
-            response.Headers.Add(_headerContentType);
-
-            int payloadLength;
-            IntPtr handlePointer; 
-
-            IntPtr bytePointer = NativeMethods.Db(out payloadLength, out handlePointer);
-            byte[] json = new byte[payloadLength];
-            Marshal.Copy(bytePointer, json, 0, payloadLength);
-            NativeMethods.FreeHandlePointer(handlePointer);
-
-            response.Headers.Add(
-                new KeyValuePair<string, StringValues>("Content-Length", payloadLength.ToString()));
-
-            return response.Body.WriteAsync(json, 0, payloadLength);
+            fixed (byte* dest = json)
+            {
+                Buffer.MemoryCopy((void*)bytePointer, dest, payloadLength, payloadLength);
+            }
         }
 
-        return _nextStage(httpContext);
-    }
-}
+        NativeMethods.FreeHandlePointer(handlePointer);
+#else        
+        byte[] json = await DotnetMethods.Db();
+#endif
 
-public static class SingleQueryMiddlewareExtensions
-{
-    public static IApplicationBuilder UseSingleQuery(this IApplicationBuilder builder)
-    {
-        return builder.UseMiddleware<SingleQueryMiddleware>();
+        response.Headers.Add(
+            new KeyValuePair<string, StringValues>("Content-Length", json.Length.ToString()));
+
+        await response.Body.WriteAsync(json);
     }
 }

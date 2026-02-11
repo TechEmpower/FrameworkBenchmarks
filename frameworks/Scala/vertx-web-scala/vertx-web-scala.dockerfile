@@ -1,6 +1,6 @@
-FROM sbtscala/scala-sbt:eclipse-temurin-17.0.5_8_1.8.2_2.12.17
+FROM sbtscala/scala-sbt:eclipse-temurin-25.0.1_8_1.11.7_3.7.4
 
-ARG SBT_VERSION=1.8.2
+ARG SBT_VERSION=1.11.7
 
 WORKDIR /vertx
 COPY src src
@@ -25,5 +25,5 @@ CMD export DBIP=`getent hosts tfb-database | awk '{ print $1 }'` && \
       -Dvertx.disableTCCL=true \
       -Dvertx.disableHttpHeadersValidation=true \
       -jar \
-      target/scala-2.12/vertx-web-scala-assembly-1.jar \
+      target/scala-3.7.4/vertx-web-scala-assembly-1.jar \
       src/main/conf/config.json

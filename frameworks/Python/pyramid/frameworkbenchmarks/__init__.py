@@ -30,6 +30,7 @@ def main(global_config, **settings):
         config.add_route("test_4", "/fortunes")
         config.add_route("test_5", "/updates")
         config.add_route("test_6", "/plaintext")
+        config.add_route("test_7", "/cached-queries")
         config.set_default_csrf_options(require_csrf=False)
 
         engine = get_engine(settings)

@@ -13,11 +13,13 @@ The tests were run with:
 
 * [Ruby 3.4](http://www.ruby-lang.org/)
 * [JRuby 9.4](http://jruby.org/)
-* [Rack 3.1](http://rack.github.com/)
-* [Unicorn 6.1.0](http://unicorn.bogomips.org/)
-* [Puma 6.4](http://puma.io/)
-* [Iodine](https://github.com/boazsegev/iodine)
+* [Rack 3](http://rack.github.com/)
 * [Falcon](https://github.com/socketry/falcon)
+* [Iodine](https://github.com/boazsegev/iodine)
+* [Itsi](https://github.com/wouterken/itsi)
+* [Passenger](https://github.com/phusion/passenger)
+* [Pitchfork](https://github.com/Shopify/pitchfork)
+* [Puma](http://puma.io/)
 * [Sequel 5](https://sequel.jeremyevans.net/)
 
 

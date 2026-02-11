@@ -1,4 +1,4 @@
-FROM docker.io/golang:1.23
+FROM docker.io/golang:1.24.2
 
 COPY ./src /pine
 WORKDIR /pine

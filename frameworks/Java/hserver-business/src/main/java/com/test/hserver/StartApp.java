@@ -1,10 +1,8 @@
 package com.test.hserver;
 
 
-import cn.hserver.HServerApplication;
-import cn.hserver.core.ioc.annotation.HServerBoot;
-import cn.hserver.core.server.context.ConstConfig;
-
+import cn.hserver.core.boot.HServerApplication;
+import cn.hserver.core.boot.annotation.HServerBoot;
 
 /**
  * @author hxm
@@ -13,6 +11,6 @@ import cn.hserver.core.server.context.ConstConfig;
 public class StartApp {
 
     public static void main(String[] args) {
-        HServerApplication.run(StartApp.class, 8888, args);
+        HServerApplication.run(StartApp.class, args);
     }
 }

@@ -1,13 +1,12 @@
-FROM dunglas/frankenphp
+FROM dunglas/frankenphp:php8.5
 
 # add additional extensions here:
 RUN install-php-extensions \
     pdo_mysql \
-    zip \
-    opcache > /dev/null
+    zip > /dev/null
 
 
-COPY --link deploy/franken/Caddyfile /etc/caddy/Caddyfile
+COPY --link deploy/franken/Caddyfile /etc/frankenphp/Caddyfile
 COPY --link deploy/conf/php.ini /usr/local/etc/php/
 
 COPY --link . /php

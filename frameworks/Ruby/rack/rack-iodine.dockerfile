@@ -1,4 +1,4 @@
-FROM ruby:3.4
+FROM ruby:4.0
 
 ENV RUBY_YJIT_ENABLE=1
 
@@ -9,7 +9,7 @@ ENV LD_PRELOAD=libjemalloc.so.2
 
 WORKDIR /rack
 
-COPY Gemfile ./
+COPY Gemfile* ./
 
 ENV BUNDLE_FORCE_RUBY_PLATFORM=true
 RUN bundle config set with 'iodine'
@@ -17,6 +17,8 @@ RUN bundle install --jobs=8
 
 COPY . .
 
+ENV THREADS=2
+
 EXPOSE 8080
 
-CMD bundle exec iodine -p 8080 -w $(ruby config/auto_tune.rb | grep -Eo '[0-9]+' | head -n 1)
+CMD bundle exec iodine -p 8080 -w $(nproc)

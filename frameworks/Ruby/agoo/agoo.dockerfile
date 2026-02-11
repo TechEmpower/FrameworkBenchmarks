@@ -1,4 +1,4 @@
-FROM ruby:3.4
+FROM ruby:4.0
 
 RUN apt-get update -q \
     && apt-get install --no-install-recommends -q -y \
@@ -15,11 +15,10 @@ ENV LD_PRELOAD=libjemalloc.so.2
 
 WORKDIR /rack
 
-COPY Gemfile app.rb ./
+COPY Gemfile* app.rb ./
 
 RUN bundle install --jobs=4
 
 EXPOSE 8080
-
 
 CMD AGOO_WORKER_COUNT=$(nproc) ruby app.rb

@@ -6,10 +6,9 @@ import com.litongjava.tio.utils.environment.EnvUtils;
 
 public class MainAppTest {
 
-  @Test
+  // @Test
   public void test() {
     boolean boolean1 = EnvUtils.getBoolean("native", false);
     System.out.println(boolean1);
   }
-
 }

@@ -1,6 +1,7 @@
 module Program
 
 open System.Data
+open Dapper
 open Falco
 open Falco.Markup
 open Falco.Routing
@@ -21,43 +22,17 @@ type Fortune =
     { id : int
       message : string }
 
-    static member Default =
-        { id = 0
-          message = "Additional fortune added at request time." }
-
 let handleFortunes (connStr : string) : HttpHandler = fun ctx -> task {
+
     use conn = new NpgsqlConnection(connStr)
-
-    use comd = conn.CreateCommand()
-    comd.CommandText <- "SELECT id, message FROM fortune"
-
-    do! conn.OpenAsync()
-    use! redr = comd.ExecuteReaderAsync(CommandBehavior.SequentialAccess)
-
-    let! dbFortunes =
-        task {
-            let mutable shouldContinue = true
-            let fortunes = ResizeArray<Fortune>()
-
-            while shouldContinue do
-                let! fortunesRead = redr.ReadAsync()
-
-                if not fortunesRead then
-                    shouldContinue <- false
-                else
-                    fortunes.Add { id = redr.GetInt32(0)
-                                   message = redr.GetString(1) }
-            return fortunes |> List.ofSeq
-        }
-
-    redr.Dispose()
-    comd.Dispose()
-    conn.Dispose()
+    let! data = conn.QueryAsync<Fortune>("SELECT id, message FROM fortune")
+    let fortunes = data.AsList()
+    fortunes.Add({ id = 0
+                   message = "Additional fortune added at request time." })
 
     let sortedFortunes =
-        Fortune.Default ::
-        dbFortunes
-        |> List.sortBy (fun f -> f.message)
+        fortunes
+        |> Seq.sortBy (fun f -> f.message)
 
     let html =
         Elem.html [] [

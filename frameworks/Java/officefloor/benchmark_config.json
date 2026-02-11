@@ -23,6 +23,7 @@
 				"os": "Linux",
 				"database_os": "Linux",
 				"display_name": "OfficeFloor",
+				"tags": ["broken"],
 				"notes": "",
 				"versus": "officefloor-micro"
 			},
@@ -47,6 +48,7 @@
 				"os": "Linux",
 				"database_os": "Linux",
 				"display_name": "OfficeFloor-r2dbc",
+				"tags": ["broken"],
 				"notes": ""
 			},
 			"sqlclient": {
@@ -69,6 +71,7 @@
 				"os": "Linux",
 				"database_os": "Linux",
 				"display_name": "OfficeFloor-sqlclient",
+				"tags": ["broken"],
 				"notes": ""
 			},
 			"rawsqlclient": {
@@ -91,6 +94,7 @@
 				"os": "Linux",
 				"database_os": "Linux",
 				"display_name": "OfficeFloor-rawsqlclient",
+				"tags": ["broken"],
 				"notes": ""
 			},
 			"async": {
@@ -113,6 +117,7 @@
 				"os": "Linux",
 				"database_os": "Linux",
 				"display_name": "OfficeFloor-async",
+				"tags": ["broken"],
 				"notes": "",
 				"versus": "OfficeFloor-r2dbc"
 			},
@@ -137,6 +142,7 @@
 				"os": "Linux",
 				"database_os": "Linux",
 				"display_name": "OfficeFloor-micro",
+				"tags": ["broken"],
 				"notes": "",
 				"versus": "OfficeFloor-r2dbc"
 			},
@@ -161,6 +167,7 @@
 				"os": "Linux",
 				"database_os": "Linux",
 				"display_name": "OfficeFloor-thread_affinity",
+				"tags": ["broken"],
 				"notes": "",
 				"versus": "OfficeFloor-r2dbc"
 			},
@@ -185,6 +192,7 @@
 				"os": "Linux",
 				"database_os": "Linux",
 				"display_name": "OfficeFloor-netty",
+				"tags": ["broken"],
 				"notes": "",
 				"versus": "Netty"
 			},
@@ -209,6 +217,7 @@
 				"os": "Linux",
 				"database_os": "Linux",
 				"display_name": "OfficeFloor-undertow",
+				"tags": ["broken"],
 				"notes": "",
 				"versus": "undertow-postgresql"
 			},
@@ -233,6 +242,7 @@
 				"os": "Linux",
 				"database_os": "Linux",
 				"display_name": "OfficeFloor-vertx",
+				"tags": ["broken"],
 				"notes": "",
 				"versus": "vertx-postgres"
 			},
@@ -257,6 +267,7 @@
 				"os": "Linux",
 				"database_os": "Linux",
 				"display_name": "OfficeFloor-spring_data",
+				"tags": ["broken"],
 				"notes": "",
 				"versus": "spring"
 			}

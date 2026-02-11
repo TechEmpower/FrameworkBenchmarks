@@ -1,0 +1,103 @@
+# frozen_string_literal: true
+require 'bundler/setup'
+Bundler.require(:default) # Load core modules
+
+require 'rack/app'
+require 'rack/app/front_end'
+require_relative 'db'
+require 'json'
+require 'time'
+
+class App < Rack::App
+  MAX_PK = 10_000
+  ID_RANGE = (1..10_000).freeze
+  ALL_IDS = ID_RANGE.to_a
+  QUERIES_MIN = 1
+  QUERIES_MAX = 500
+  JSON_TYPE = 'application/json'
+  HTML_TYPE = 'text/html; charset=utf-8'
+  PLAINTEXT_TYPE = 'text/plain'
+
+  apply_extensions :front_end
+
+  helpers do
+    def fortunes
+      fortunes = Fortune.all
+
+      fortune = Fortune.new
+      fortune.id = 0
+      fortune.message = "Additional fortune added at request time."
+      fortunes << fortune
+
+      fortunes.sort_by!(&:message)
+    end
+  end
+
+  get '/json' do
+    set_headers(JSON_TYPE)
+    { message: 'Hello, World!' }.to_json
+  end
+
+  get '/db' do
+    set_headers(JSON_TYPE)
+    World.with_pk(rand1).values.to_json
+  end
+
+  get '/queries' do
+    set_headers(JSON_TYPE)
+    ids = ALL_IDS.sample(bounded_queries)
+    DB.synchronize do
+      ids.map do |id|
+        World.with_pk(id).values
+      end
+    end.to_json
+  end
+
+  get '/fortunes' do
+    set_headers(HTML_TYPE)
+    render 'fortunes.html.erb'
+  end
+
+  get '/plaintext' do
+    set_headers(PLAINTEXT_TYPE)
+    'Hello, World!'
+  end
+
+  private
+
+  # Return a random number between 1 and MAX_PK
+  def rand1
+    rand(MAX_PK).succ
+  end
+
+  def bounded_queries
+    queries = params['queries'].to_i
+    queries.clamp(QUERIES_MIN, QUERIES_MAX)
+  end
+
+  def set_headers(content_type)
+    response.headers[::Rack::CONTENT_TYPE] = content_type
+    response.headers['Server'] = 'rack-app'
+  end
+end
+
+# Override `expand_path` to use `__FILE__` instead of the expensive `caller`.
+module Rack::App::Utils
+  def expand_path(file_path)
+    case file_path
+
+      when /^\.\//
+        #File.expand_path(File.join(File.dirname(caller[1]), file_path))
+        File.expand_path(File.join(File.dirname(__FILE__), file_path))
+
+      when /^[^\/]/
+        #File.join(namespace_folder(caller[1]), file_path)
+        File.join(namespace_folder(__FILE__), file_path)
+
+      when /^\//
+        from_project_root_path = pwd(file_path)
+        File.exist?(from_project_root_path) ? from_project_root_path : file_path
+
+    end
+  end
+end

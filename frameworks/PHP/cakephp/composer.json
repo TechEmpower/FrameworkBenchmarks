@@ -5,11 +5,11 @@
     "type": "project",
     "license": "MIT",
     "require": {
-        "php": ">=8.1",
-        "cakephp/cakephp": "^5.0.1",
+        "php": ">=8.2",
+        "cakephp/cakephp": "^5.3.0",
         "cakephp/migrations": "^4.0.0",
         "cakephp/plugin-installer": "^2.0",
-        "mobiledetect/mobiledetectlib": "^3.74"
+        "mobiledetect/mobiledetectlib": "^4.8.03"
     },
     "require-dev": {
         "cakephp/bake": "^3.0.0",

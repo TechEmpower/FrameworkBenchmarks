@@ -35,7 +35,7 @@ object FortuneRoute {
 
 class FortuneRoute(fr: FortuneRepository, sd: ExecutionContextExecutor)(implicit val system: ActorSystem) {
 
-  private implicit val fmar = FortuneRoute.fm
+  private implicit val fmar: ToEntityMarshaller[Seq[Fortune]] = FortuneRoute.fm
 
   private def source(p: DatabasePublisher[Fortune]): Source[Fortune, NotUsed] = {
     Source

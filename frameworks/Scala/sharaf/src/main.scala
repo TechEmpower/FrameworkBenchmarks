@@ -7,6 +7,8 @@ import ba.sake.sharaf.*
 @main def run(): Unit = {
   val dao = DAO()
   val benchmarkRoutes = BenchmarkRoutes(dao)
+  // set to slf4j, thus disabling logging (slf4j-nop)
+  System.setProperty("org.jboss.logging.provider", "slf4j")
   val server = Undertow
     .builder()
     .addHttpListener(8080, "0.0.0.0")
@@ -18,5 +20,5 @@ import ba.sake.sharaf.*
     .setServerOption(UndertowOptions.ALWAYS_SET_KEEP_ALIVE, false)
     .build()
   server.start()
-  println(s"Started HTTP server at localhost:8080")
+  //println(s"Started HTTP server at localhost:8080")
 }

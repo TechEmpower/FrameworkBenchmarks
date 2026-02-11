@@ -1,7 +1,7 @@
 installs
 node_modules/
 .travis.bak
-
+t.bat
 # Added for pedestal framework test
 .lein-deps-sum
 
@@ -69,3 +69,4 @@ benchmark.cfg
 
 # python
 .venv/
+frameworks/CSharp/akazawayun.pro/Dockerfile

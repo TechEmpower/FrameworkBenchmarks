@@ -48,7 +48,7 @@ platform = "None"
 webserver = "granian"
 versus = "uvicorn"
 
-[wrk]
+[nogil]
 urls.plaintext = "/plaintext"
 urls.json = "/json"
 approach = "Realistic"

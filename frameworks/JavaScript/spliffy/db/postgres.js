@@ -1,44 +1,29 @@
-const { Client, Pool } = require( 'pg' ).native;
-const cpus = require( 'os' ).cpus().length
+const postgres = require('postgres');
 
-let clientOpts = {
-    host: process.env.DB_HOST || 'localhost',
-    user: 'benchmarkdbuser',
-    password: 'benchmarkdbpass',
-    database: 'hello_world'
-};
-
-let pool
-
-const query = async ( text, values ) => ( await pool.query( text, values || undefined ) ).rows;
+let sql;
 
 module.exports = {
     async init() {
-        const client = new Client( clientOpts )
-        await client.connect()
-        const res = await client.query( 'SHOW max_connections' )
-        let maxConnections = Math.floor( res.rows[0].max_connections * 0.9 / cpus )
-        //1 worker per cpu, each worker pool gets a fraction of the max connections
-        //only use 90% to avoid too many clients errors
-        pool = new Pool( Object.assign( { ...clientOpts }, { max: maxConnections } ) )
-        pool.on( 'error', ( err ) => {
-            console.error( 'Unexpected client error', err )
-        } )
-        await client.end()
+        sql = postgres({
+            host: process.env.DB_HOST || 'tfb-database',
+            user: 'benchmarkdbuser',
+            password: 'benchmarkdbpass',
+            database: 'hello_world',
+            fetch_types: false,
+            max: 1
+        });
     },
-    allFortunes: async () =>
-        query( 'SELECT * FROM fortune' ),
+    allFortunes: async () => await sql`SELECT id, message FROM fortune`,
 
-    worldById: async ( id ) =>
-        query( 'SELECT * FROM world WHERE id = $1', [id] )
-            .then( arr => arr[0] ),
+    worldById: async (id) => await sql`SELECT id, randomNumber FROM world WHERE id = ${id}`.then((arr) => arr[0]),
 
-    allWorlds: async () =>
-        query( 'SELECT * FROM world' ),
+    allWorlds: async () => await sql`SELECT id, randomNumber FROM world`,
 
-    bulkUpdateWorld: async worlds => Promise.all(
-        worlds.map( world =>
-            query( 'UPDATE world SET randomnumber = $1 WHERE id = $2',
-                [world.randomnumber, world.id] ) )
-    ).then( () => worlds )
+    bulkUpdateWorld: async (worlds) => {
+        const sortedWorlds = [...worlds].sort((a, b) => a.id - b.id);
+        await sql`UPDATE world SET randomNumber = (update_data.randomNumber)::int
+                  FROM (VALUES ${sql(sortedWorlds.map(w => [w.id, w.randomNumber]))}) AS update_data (id, randomNumber)
+                  WHERE world.id = (update_data.id)::int`;
+        return worlds;
+    }
 }

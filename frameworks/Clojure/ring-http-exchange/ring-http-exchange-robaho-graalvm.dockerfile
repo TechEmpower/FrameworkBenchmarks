@@ -1,0 +1,14 @@
+FROM clojure:lein as lein
+WORKDIR /ring-http-exchange
+COPY project.clj project.clj
+COPY resources resources
+COPY src src
+RUN lein with-profile robaho uberjar
+
+FROM ghcr.io/graalvm/graalvm-community:25
+WORKDIR /ring-http-exchange
+COPY --from=lein /ring-http-exchange/target/ring-http-server-1.0.0-standalone.jar app.jar
+
+EXPOSE 8080
+
+CMD ["java", "-server", "-XX:+UseParallelGC", "-XX:MaxRAMPercentage=70", "-Dclojure.compiler.direct-linking=true", "-Drobaho.net.httpserver.nodelay=true", "-jar", "app.jar"]
