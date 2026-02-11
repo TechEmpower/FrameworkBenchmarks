@@ -12,6 +12,7 @@ import infra.web.server.netty.NettyWebServerFactory;
 import infra.web.server.netty.config.NettyRequestConfigCustomizer;
 import io.netty.channel.IoHandlerFactory;
 import io.netty.channel.MultiThreadIoEventLoopGroup;
+import io.netty.channel.epoll.Epoll;
 import io.netty.channel.uring.IoUring;
 import io.netty.channel.uring.IoUringIoHandler;
 import io.netty.channel.uring.IoUringServerSocketChannel;
@@ -47,6 +48,9 @@ class AppConfig {
                   factory.getWorkThreadCount(), new DefaultThreadFactory("uring-workers"), ioHandlerFactory));
         }
       }
+
+      System.out.println("IoUring: " + IoUring.isAvailable());
+      System.out.println("Epoll: " + Epoll.isAvailable());
     };
   }
 
