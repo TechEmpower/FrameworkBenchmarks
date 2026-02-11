@@ -66,6 +66,7 @@ application {
       "-Dio.netty.leakDetection.level=disabled",
       "-Dio.netty.iouring.iosqeAsyncThreshold=32000",
       "-Djava.lang.Integer.IntegerCache.high=10000",
+      "--enable-native-access=ALL-UNNAMED",
       "--add-opens=java.base/java.nio=ALL-UNNAMED",
       "--add-opens=java.base/sun.nio.ch=ALL-UNNAMED"
   ]
