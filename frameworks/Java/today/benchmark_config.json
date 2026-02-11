@@ -1,5 +1,8 @@
 {
   "framework": "today",
+  "maintainers": [
+    "TAKETODAY"
+  ],
   "tests": [
     {
       "default": {
@@ -25,7 +28,7 @@
         "display_name": "TODAY",
         "notes": "",
         "versus": "None",
-        "tags": ["broken"]
+        "tags": []
       }
     }
   ]
