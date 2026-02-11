@@ -35,8 +35,7 @@ datasource:
   type: com.zaxxer.hikari.HikariDataSource
   driver-class-name: com.mysql.cj.jdbc.Driver
   hikari:
-    maximum-pool-size: 64
-    connection-test-query: 'select 1'
+    maximum-pool-size: 256
 
 logging:
   level:
