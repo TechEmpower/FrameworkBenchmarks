@@ -70,7 +70,8 @@
         "database_os": "Linux",
         "display_name": "Quarkus, Vert.x",
         "notes": "",
-        "versus": "Vert.x"
+        "versus": "Vert.x",
+        "tags": ["broken"]
       },
       "reactive-routes-pgclient": {
         "json_url": "/json",

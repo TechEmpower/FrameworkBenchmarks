@@ -1,21 +1,16 @@
-FROM php:8.4-cli
-
-RUN apt-get update && apt-get install -y git > /dev/null
+FROM openswoole/swoole:25.2-php8.4
 
 RUN docker-php-ext-install opcache pdo_mysql > /dev/null
 
-RUN pecl install openswoole > /dev/null && \
-    docker-php-ext-enable openswoole
-
-COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+ENV TINI_SUBREAPER 1
 
 COPY php.ini /usr/local/etc/php/
 
-ADD ./ /openswoole
-WORKDIR /openswoole
+WORKDIR /var/www
+COPY --link . .
 
 RUN composer install --optimize-autoloader --classmap-authoritative --no-dev --quiet
 
 EXPOSE 8080
 
-CMD php /openswoole/openswoole-server-mysql.php
+CMD ["php", "/var/www/openswoole-server-mysql.php"]

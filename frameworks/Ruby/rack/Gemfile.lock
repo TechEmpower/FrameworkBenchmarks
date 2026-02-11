@@ -156,9 +156,6 @@ GEM
       mapping (~> 1.0)
     sequel (5.100.0)
       bigdecimal
-    sequel_pg (1.18.2)
-      pg (>= 0.18.0, != 1.2.0)
-      sequel (>= 4.38.0)
     string-format (0.2.0)
     traces (0.18.2)
     tzinfo (2.0.6)
@@ -181,7 +178,7 @@ DEPENDENCIES
   iodine (~> 0.7)
   itsi
   jdbc-postgres (~> 42.2)
-  json (~> 2.10)
+  json
   logger
   passenger (~> 6.1)
   pg (~> 1.5)
@@ -191,7 +188,6 @@ DEPENDENCIES
   rack-test
   rubocop
   sequel
-  sequel_pg
   tzinfo-data (= 1.2023.3)
 
 BUNDLED WITH

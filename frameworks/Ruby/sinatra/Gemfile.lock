@@ -28,7 +28,7 @@ GEM
     i18n (1.14.7)
       concurrent-ruby (~> 1.0)
     iodine (0.7.58)
-    json (2.16.0)
+    json (2.18.0)
     logger (1.7.0)
     minitest (5.25.5)
     mustermann (3.0.4)
@@ -58,7 +58,8 @@ GEM
       tilt (~> 2.0)
     tilt (2.6.1)
     timeout (0.4.3)
-    trilogy (2.9.0)
+    trilogy (2.10.0)
+      bigdecimal
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     uri (1.0.4)
@@ -71,11 +72,11 @@ PLATFORMS
 DEPENDENCIES
   activerecord (~> 8.1.0)
   iodine (~> 0.7)
-  json (~> 2.8)
+  json
   pg (~> 1.5)
   puma (~> 7.1)
   sinatra (~> 4.2)
-  trilogy (~> 2.9.0)
+  trilogy (~> 2.10)
 
 BUNDLED WITH
   4.0.3

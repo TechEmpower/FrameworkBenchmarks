@@ -198,7 +198,9 @@ GEM
     nokogiri (1.19.0-x86_64-linux-gnu)
       racc (~> 1.4)
     openssl (3.3.2)
-    pg (1.5.9)
+    pg (1.6.3)
+    pg (1.6.3-x86_64-darwin)
+    pg (1.6.3-x86_64-linux)
     pitchfork (0.17.0)
       logger
       rack (>= 2.0)
@@ -286,7 +288,8 @@ GEM
     thor (1.5.0)
     timeout (0.6.0)
     traces (0.18.2)
-    trilogy (2.8.1)
+    trilogy (2.10.0)
+      bigdecimal
     tsort (0.2.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
@@ -313,7 +316,7 @@ DEPENDENCIES
   puma (~> 7.1)
   rails (~> 8.1.0)
   redis (~> 5.0)
-  trilogy (~> 2.8.1)
+  trilogy (~> 2.10)
   tzinfo-data
 
 BUNDLED WITH

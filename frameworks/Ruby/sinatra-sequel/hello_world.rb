@@ -33,6 +33,9 @@ class HelloWorld < Sinatra::Base
 
     # Disable logging middleware
     set :logging, nil
+
+    # Set root once instead executing the proc on every request
+    set :root, File.expand_path(__dir__)
   end
 
   # Test type 1: JSON serialization
