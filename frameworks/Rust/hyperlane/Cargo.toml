@@ -1,6 +1,6 @@
 [package]
 name = "hyperlane_techempower"
-version = "0.1.6"
+version = "0.1.7"
 readme = "README.md"
 edition = "2024"
 authors = ["root@ltpp.vip"]
