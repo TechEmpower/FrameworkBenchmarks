@@ -1,5 +1,6 @@
 {
   "framework": "vertx-web-kotlin-dsljson",
+  "maintainers": ["awmcc90"],
   "tests": [
     {
       "default": {

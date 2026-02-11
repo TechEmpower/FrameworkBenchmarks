@@ -15,6 +15,5 @@ class MessageHandler : AbstractHandler() {
 
     companion object {
         const val MESSAGE: String = "Hello, World!"
-        val DEFAULT_MESSAGE = Message(MESSAGE)
     }
 }
