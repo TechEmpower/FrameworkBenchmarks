@@ -26,7 +26,7 @@ sqlx = { version = "0.8.6", features = ["runtime-tokio", "postgres"] }
 incremental = false
 opt-level = 3
 lto = true
-panic = "unwind"
+panic = "abort"
 debug = false
 codegen-units = 1
 strip = "debuginfo"
@@ -35,7 +35,7 @@ strip = "debuginfo"
 incremental = false
 opt-level = 3
 lto = true
-panic = "unwind"
+panic = "abort"
 debug = false
 codegen-units = 1
 strip = "debuginfo"
