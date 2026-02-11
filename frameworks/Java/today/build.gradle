@@ -26,7 +26,6 @@ dependencies {
   implementation 'com.mysql:mysql-connector-j'
 
   implementation 'ch.qos.logback:logback-classic'
-  implementation 'com.github.ben-manes.caffeine:caffeine'
 
   implementation('io.netty:netty-transport-native-epoll') {
     artifact {
