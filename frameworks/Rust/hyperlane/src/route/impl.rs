@@ -12,14 +12,21 @@ impl ServerHook for JsonRoute {
         });
         let run = || async {
             ctx.set_response_body(&serde_json::to_vec(&json).unwrap_or_default())
-                .await;
-            ctx.send().await;
+                .await
+                .try_send()
+                .await
+                .is_err()
         };
-        run().await;
-        while ctx.http_from_stream(&request_config).await.is_ok() {
-            run().await;
+        if run().await {
+            ctx.closed().await;
+            return;
         }
-        ctx.closed().await;
+        while ctx.http_from_stream(&request_config).await.is_ok() {
+            if run().await {
+                ctx.closed().await;
+                return;
+            }
+        }
     }
 }
 
@@ -30,14 +37,20 @@ impl ServerHook for PlaintextRoute {
 
     async fn handle(self, ctx: &Context) {
         let request_config: RequestConfigData = *REQUEST_CONFIG;
-        ctx.set_response_header(CONTENT_TYPE, TEXT_PLAIN).await;
-        ctx.set_response_body(&RESPONSEDATA_BIN).await;
-        let run = || async {
-            ctx.send().await;
-        };
-        run().await;
+        ctx.set_response_header(CONTENT_TYPE, TEXT_PLAIN)
+            .await
+            .set_response_body(&RESPONSEDATA_BIN)
+            .await;
+        let run = || async { ctx.try_send().await.is_err() };
+        if run().await {
+            ctx.closed().await;
+            return;
+        }
         while ctx.http_from_stream(&request_config).await.is_ok() {
-            run().await;
+            if run().await {
+                ctx.closed().await;
+                break;
+            }
         }
         ctx.closed().await;
     }
@@ -55,12 +68,19 @@ impl ServerHook for DbRoute {
             let query_row: QueryRow = random_world_row(db_connection).await;
             ctx.set_response_body(&serde_json::to_vec(&query_row).unwrap_or_default())
                 .await
-                .send()
-                .await;
+                .try_send()
+                .await
+                .is_err()
         };
-        run().await;
+        if run().await {
+            ctx.closed().await;
+            return;
+        }
         while ctx.http_from_stream(&request_config).await.is_ok() {
-            run().await;
+            if run().await {
+                ctx.closed().await;
+                break;
+            }
         }
         ctx.closed().await;
     }
@@ -85,12 +105,19 @@ impl ServerHook for QueryRoute {
             let data: Vec<QueryRow> = get_some_row_id(queries, db_pool).await;
             ctx.set_response_body(&serde_json::to_vec(&data).unwrap_or_default())
                 .await
-                .send()
-                .await;
+                .try_send()
+                .await
+                .is_err()
         };
-        run().await;
+        if run().await {
+            ctx.closed().await;
+            return;
+        }
         while ctx.http_from_stream(&request_config).await.is_ok() {
-            run().await;
+            if run().await {
+                ctx.closed().await;
+                break;
+            }
         }
         ctx.closed().await;
     }
@@ -123,11 +150,17 @@ impl ServerHook for FortunesRoute {
             ));
             fortunes_list.sort_by(|it, next| it.message.cmp(&next.message));
             let res: String = FortunesTemplate::new(fortunes_list).to_string();
-            ctx.set_response_body(&res).await.send().await;
+            ctx.set_response_body(&res).await.try_send().await.is_err()
         };
-        run().await;
+        if run().await {
+            ctx.closed().await;
+            return;
+        }
         while ctx.http_from_stream(&request_config).await.is_ok() {
-            run().await;
+            if run().await {
+                ctx.closed().await;
+                break;
+            }
         }
         ctx.closed().await;
     }
@@ -151,12 +184,19 @@ impl ServerHook for UpdateRoute {
             let res: Vec<QueryRow> = update_world_rows(queries).await;
             ctx.set_response_body(&serde_json::to_vec(&res).unwrap_or_default())
                 .await
-                .send()
-                .await;
+                .try_send()
+                .await
+                .is_err()
         };
-        run().await;
+        if run().await {
+            ctx.closed().await;
+            return;
+        }
         while ctx.http_from_stream(&request_config).await.is_ok() {
-            run().await;
+            if run().await {
+                ctx.closed().await;
+                break;
+            }
         }
         ctx.closed().await;
     }
@@ -180,12 +220,19 @@ impl ServerHook for CachedQueryRoute {
             let res: Vec<&QueryRow> = CACHE.iter().take(count as usize).collect();
             ctx.set_response_body(&serde_json::to_vec(&res).unwrap_or_default())
                 .await
-                .send()
-                .await;
+                .try_send()
+                .await
+                .is_err()
         };
-        run().await;
+        if run().await {
+            ctx.closed().await;
+            return;
+        }
         while ctx.http_from_stream(&request_config).await.is_ok() {
-            run().await;
+            if run().await {
+                ctx.closed().await;
+                break;
+            }
         }
         ctx.closed().await;
     }
