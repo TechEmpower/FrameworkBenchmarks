@@ -10,3 +10,11 @@ fn plaintext(req: Any) -> Any {
 fn json(req: Any) -> Any {
     return render_json({ "message": "Hello, World!" });
 }
+
+// Fortune endpoint - queries fortunes from SoliDB, adds runtime fortune, sorts, renders HTML
+fn fortunes(req: Any) -> Any {
+    let fortunes = Fortune.all();
+    fortunes.push({ "id": 0, "message": "Additional fortune added at request time." });
+    let sorted = fortunes.sort_by("message");
+    return render("fortunes/index", { "fortunes": sorted });
+}
