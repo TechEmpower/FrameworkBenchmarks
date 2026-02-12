@@ -41,10 +41,14 @@ curl -sf -X POST "$DB/collection" \
     -H "$AUTH" \
     -d '{"name": "worlds"}' || true
 
+# Seeding errors should not kill the database container
+set +e
+
 # Seed fortune collection via batch insert
 curl -sf -X POST "$DB/document/fortunes/_batch" \
     -H "Content-Type: application/json" \
     -H "$AUTH" \
+    -H "X-Shard-Direct: true" \
     -d '[
         {"id": 1, "message": "fortune: No such file or directory"},
         {"id": 2, "message": "A computer scientist is someone who fixes things that aren'\''t broken."},
@@ -59,6 +63,7 @@ curl -sf -X POST "$DB/document/fortunes/_batch" \
         {"id": 11, "message": "<script>alert(\"This should not be displayed in a browser alert box.\");<\/script>"},
         {"id": 12, "message": "\u30d5\u30ec\u30fc\u30e0\u30ef\u30fc\u30af\u306e\u30d9\u30f3\u30c1\u30de\u30fc\u30af"}
     ]'
+echo "Fortunes seeded: exit code $?"
 
 # Seed world collection via batch inserts (1000 docs per batch)
 for batch in $(seq 0 9); do
@@ -74,9 +79,11 @@ for batch in $(seq 0 9); do
     curl -sf -X POST "$DB/document/worlds/_batch" \
         -H "Content-Type: application/json" \
         -H "$AUTH" \
+        -H "X-Shard-Direct: true" \
         -d "$docs"
+    echo "World batch $batch seeded: exit code $?"
 done
 
-echo "SoliDB seeded successfully"
+echo "SoliDB seeding complete"
 
 wait $SOLIDB_PID

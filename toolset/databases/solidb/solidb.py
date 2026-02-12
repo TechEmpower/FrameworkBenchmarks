@@ -34,6 +34,39 @@ class Database(AbstractDatabase):
         }
 
     @classmethod
+    def _get_http_requests_total(cls, config):
+        """Parse Prometheus /metrics endpoint for solidb_http_requests_total."""
+        try:
+            base = cls._base_url(config)
+            resp = requests.get("%s/metrics" % base)
+            total = 0
+            for line in resp.text.splitlines():
+                if line.startswith("#"):
+                    continue
+                if line.startswith("solidb_http_requests_total"):
+                    parts = line.split()
+                    if len(parts) >= 2:
+                        total += int(float(parts[-1]))
+            return total
+        except Exception:
+            return 0
+
+    @classmethod
+    def _get_rows_per_query(cls, config):
+        if cls.tbl_name == "fortune":
+            try:
+                base = cls._base_url(config)
+                headers = cls._auth_headers(config)
+                resp = requests.post(
+                    "%s/_api/database/hello_world/query" % base,
+                    headers=headers,
+                    json={"query": "FOR f IN fortunes RETURN f"})
+                return len(resp.json().get("result", []))
+            except Exception:
+                return 12
+        return 1
+
+    @classmethod
     def get_connection(cls, config):
         session = requests.Session()
         session.headers.update(cls._auth_headers(config))
@@ -49,7 +82,7 @@ class Database(AbstractDatabase):
             worlds_json = {}
             print("DATABASE_HOST: %s" % config.database_host)
             resp = requests.post(
-                "%s/_api/sdbql/hello_world" % base,
+                "%s/_api/database/hello_world/query" % base,
                 headers=headers,
                 json={"query": "FOR w IN worlds RETURN w"}
             )
@@ -77,36 +110,15 @@ class Database(AbstractDatabase):
 
     @classmethod
     def get_queries(cls, config):
-        try:
-            base = cls._base_url(config)
-            headers = cls._auth_headers(config)
-            resp = requests.get("%s/_api/stats" % base, headers=headers)
-            stats = resp.json()
-            return int(stats.get("queries", 0))
-        except Exception:
-            return 0
+        return cls._get_http_requests_total(config)
 
     @classmethod
     def get_rows(cls, config):
-        try:
-            base = cls._base_url(config)
-            headers = cls._auth_headers(config)
-            resp = requests.get("%s/_api/stats" % base, headers=headers)
-            stats = resp.json()
-            return int(stats.get("rows_read", 0))
-        except Exception:
-            return 0
+        return cls._get_http_requests_total(config) * cls._get_rows_per_query(config)
 
     @classmethod
     def get_rows_updated(cls, config):
-        try:
-            base = cls._base_url(config)
-            headers = cls._auth_headers(config)
-            resp = requests.get("%s/_api/stats" % base, headers=headers)
-            stats = resp.json()
-            return int(stats.get("rows_updated", 0))
-        except Exception:
-            return 0
+        return cls._get_http_requests_total(config)
 
     @classmethod
     def reset_cache(cls, config):

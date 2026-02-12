@@ -1,23 +1,16 @@
-FROM rust:1.93.0 AS builder
+FROM debian:trixie-slim
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    clang \
-    libclang-dev \
-    && rm -rf /var/lib/apt/lists/*
-
-RUN cargo install solidb --locked
-
-FROM debian:testing-20260202-slim
-
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    ca-certificates \
     curl \
+    ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /solidb
 
-COPY --from=builder /usr/local/cargo/bin/solidb /usr/local/bin/solidb
+# Install solidb via install script
+RUN curl -sSL https://raw.githubusercontent.com/solisoft/solidb/main/install.sh | sh
 
+ENV PATH="/root/.local/bin:$PATH"
 ENV SOLIDB_ADMIN_PASSWORD=benchmarkdbpass
 ENV SOLIDB_PORT=6745
 ENV SOLIDB_DATA_DIR=/data

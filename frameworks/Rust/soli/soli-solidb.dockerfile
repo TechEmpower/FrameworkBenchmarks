@@ -1,20 +1,16 @@
-FROM rust:1.93.0 AS builder
-
-# Install soli from crates.io with locked dependencies
-RUN cargo install solilang --locked
-
-# Runtime stage
-FROM debian:testing-20260202-slim
+FROM debian:trixie-slim
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    ca-certificates \
     curl \
+    ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-# Copy soli binary from builder
-COPY --from=builder /usr/local/cargo/bin/soli /usr/local/bin/soli
+# Install soli via install script
+RUN curl -sSL https://raw.githubusercontent.com/solisoft/soli_lang/main/install.sh | sh
+  
+ENV PATH="/root/.local/bin:$PATH"
 
 # Copy benchmark application files
 COPY app/ /app/app/
