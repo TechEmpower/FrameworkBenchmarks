@@ -5,7 +5,7 @@ gem 'sequel', '~> 5.0'
 gem 'sinatra', '~> 4.0', require: 'sinatra/base'
 
 group :mysql, optional: true do
-  gem 'trilogy', '~> 2.9'
+  gem 'trilogy', '~> 2.10'
 end
 
 group :postgresql, optional: true do

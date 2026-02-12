@@ -1,11 +1,12 @@
-FROM golang:1.24.2-alpine as builder
+FROM golang:1.25.6-alpine as builder
 
 WORKDIR /fiber
 
-COPY ./src /fiber
+COPY ./fiber-v3 /fiber
 
 RUN go mod download && \
-    go generate -x ./templates && \
+    go install github.com/valyala/quicktemplate/qtc@latest && \
+    qtc && \
     GOAMD64=v3 go build -ldflags="-s -w" -o app .
 
 FROM alpine:latest

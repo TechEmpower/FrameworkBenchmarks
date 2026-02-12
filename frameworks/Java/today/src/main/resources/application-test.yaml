@@ -11,5 +11,6 @@ server:
   netty:
     acceptor-threads: 8
     worker-threads: 16
-    max-connection: 8192
+    max-connection: 10240000
     validate-headers: false
+

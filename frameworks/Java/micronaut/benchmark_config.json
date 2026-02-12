@@ -1,5 +1,6 @@
 {
   "framework": "micronaut",
+  "maintainers": ["dstepanov", "yawkat", "graemerocher"],
   "tests": [
     {
       "default": {
@@ -24,7 +25,7 @@
         "display_name": "Micronaut [Vertx PG Client]",
         "notes": "",
         "versus": "None",
-        "tags": ["broken"]
+        "tags": []
       },
       "graalvm": {
         "json_url": "/json",
@@ -48,7 +49,7 @@
         "display_name": "Micronaut [Vertx PG Client] [GraalVM]",
         "notes": "",
         "versus": "None",
-        "tags": ["broken"]
+        "tags": []
       },
       "loom-fjp": {
         "json_url": "/json",
@@ -72,7 +73,7 @@
         "display_name": "Micronaut [Vertx PG Client] [Virtual Threads FJP]",
         "notes": "",
         "versus": "None",
-        "tags": ["broken"]
+        "tags": []
       },
       "loom-on-netty": {
         "json_url": "/json",
@@ -96,7 +97,7 @@
         "display_name": "Micronaut [Vertx PG Client] [Virtual Threads Loom-On-Netty]",
         "notes": "",
         "versus": "None",
-        "tags": ["broken"]
+        "tags": []
       },
       "jdbc": {
         "db_url": "/db",
@@ -118,7 +119,7 @@
         "display_name": "Micronaut [JDBC]",
         "notes": "",
         "versus": "None",
-        "tags": ["broken"]
+        "tags": []
       },
       "jdbc-graalvm": {
         "db_url": "/db",
@@ -140,7 +141,7 @@
         "display_name": "Micronaut [JDBC] [GraalVM]",
         "notes": "",
         "versus": "None",
-        "tags": ["broken"]
+        "tags": []
       },
       "r2dbc": {
         "db_url": "/db",
@@ -162,7 +163,7 @@
         "display_name": "Micronaut [R2DBC]",
         "notes": "",
         "versus": "None",
-        "tags": ["broken"]
+        "tags": []
       },
       "r2dbc-graalvm": {
         "db_url": "/db",
@@ -184,7 +185,7 @@
         "display_name": "Micronaut [R2DBC] [GraalVM]",
         "notes": "",
         "versus": "None",
-        "tags": ["broken"]
+        "tags": []
       },
       "data-jdbc": {
         "db_url": "/db",
@@ -206,7 +207,7 @@
         "display_name": "Micronaut [Data JDBC]",
         "notes": "",
         "versus": "None",
-        "tags": ["broken"]
+        "tags": []
       },
       "data-jdbc-graalvm": {
         "db_url": "/db",
@@ -228,51 +229,7 @@
         "display_name": "Micronaut [Data JDBC] [GraalVM]",
         "notes": "",
         "versus": "None",
-        "tags": ["broken"]
-      },
-      "data-mongodb": {
-        "db_url": "/db",
-        "query_url": "/queries?queries=",
-        "fortune_url": "/fortunes",
-        "update_url": "/updates?queries=",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "fullstack",
-        "database": "MongoDB",
-        "framework": "Micronaut",
-        "language": "Java",
-        "flavor": "None",
-        "orm": "Micro",
-        "platform": "Netty",
-        "webserver": "Netty",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "Micronaut [Data MongoDB]",
-        "notes": "",
-        "versus": "None",
-        "tags": ["broken"]
-      },
-      "data-mongodb-graalvm": {
-        "db_url": "/db",
-        "query_url": "/queries?queries=",
-        "fortune_url": "/fortunes",
-        "update_url": "/updates?queries=",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "fullstack",
-        "database": "MongoDB",
-        "framework": "Micronaut",
-        "language": "Java",
-        "flavor": "None",
-        "orm": "Micro",
-        "platform": "Netty",
-        "webserver": "Netty",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "Micronaut [Data MongoDB] [GraalVM]",
-        "notes": "",
-        "versus": "None",
-        "tags": ["broken"]
+        "tags": []
       }
     }
   ]

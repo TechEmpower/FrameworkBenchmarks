@@ -28,6 +28,7 @@ def connect(dbtype)
   end
 
   ActiveRecord::Base.establish_connection(opts)
+  ActiveRecord::Base.logger = nil
 end
 
 connect ENV.fetch('DBTYPE').to_sym

@@ -1,12 +1,12 @@
 source 'https://rubygems.org'
 
-gem 'json', '~> 2.8'
+gem 'json'
 gem 'sequel', '~> 5.0'
 gem 'rack', '~> 3.1'
 gem "concurrent-ruby"
 
 group :mysql, optional: true do
-  gem 'trilogy', '~> 2.9'
+  gem 'trilogy', '~> 2.10'
 end
 
 group :postgresql, optional: true do
