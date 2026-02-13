@@ -6,7 +6,6 @@ impl ServerHook for JsonRoute {
     }
 
     async fn handle(self, ctx: &Context) {
-        let request_config: RequestConfigData = *REQUEST_CONFIG;
         let json: Value = json!({
             KEY_MESSAGE: RESPONSEDATA_STR
         });
@@ -21,7 +20,7 @@ impl ServerHook for JsonRoute {
             ctx.closed().await;
             return;
         }
-        while ctx.http_from_stream(&request_config).await.is_ok() {
+        while ctx.http_from_stream().await.is_ok() {
             if run().await {
                 ctx.closed().await;
                 return;
@@ -36,7 +35,6 @@ impl ServerHook for PlaintextRoute {
     }
 
     async fn handle(self, ctx: &Context) {
-        let request_config: RequestConfigData = *REQUEST_CONFIG;
         ctx.set_response_header(CONTENT_TYPE, TEXT_PLAIN)
             .await
             .set_response_body(&RESPONSEDATA_BIN)
@@ -46,7 +44,7 @@ impl ServerHook for PlaintextRoute {
             ctx.closed().await;
             return;
         }
-        while ctx.http_from_stream(&request_config).await.is_ok() {
+        while ctx.http_from_stream().await.is_ok() {
             if run().await {
                 ctx.closed().await;
                 break;
@@ -62,7 +60,6 @@ impl ServerHook for DbRoute {
     }
 
     async fn handle(self, ctx: &Context) {
-        let request_config: RequestConfigData = *REQUEST_CONFIG;
         let db_connection: &DbPoolConnection = get_db_connection();
         let run = || async {
             let query_row: QueryRow = random_world_row(db_connection).await;
@@ -76,7 +73,7 @@ impl ServerHook for DbRoute {
             ctx.closed().await;
             return;
         }
-        while ctx.http_from_stream(&request_config).await.is_ok() {
+        while ctx.http_from_stream().await.is_ok() {
             if run().await {
                 ctx.closed().await;
                 break;
@@ -92,7 +89,6 @@ impl ServerHook for QueryRoute {
     }
 
     async fn handle(self, ctx: &Context) {
-        let request_config: RequestConfigData = *REQUEST_CONFIG;
         let run = || async {
             let queries: Queries = ctx
                 .try_get_request_query(QUERY_DB_QUERY_KEY)
@@ -113,7 +109,7 @@ impl ServerHook for QueryRoute {
             ctx.closed().await;
             return;
         }
-        while ctx.http_from_stream(&request_config).await.is_ok() {
+        while ctx.http_from_stream().await.is_ok() {
             if run().await {
                 ctx.closed().await;
                 break;
@@ -129,7 +125,6 @@ impl ServerHook for FortunesRoute {
     }
 
     async fn handle(self, ctx: &Context) {
-        let request_config: RequestConfigData = *REQUEST_CONFIG;
         ctx.set_response_header(
             CONTENT_TYPE,
             &ContentType::format_content_type_with_charset(TEXT_HTML, UTF8),
@@ -156,7 +151,7 @@ impl ServerHook for FortunesRoute {
             ctx.closed().await;
             return;
         }
-        while ctx.http_from_stream(&request_config).await.is_ok() {
+        while ctx.http_from_stream().await.is_ok() {
             if run().await {
                 ctx.closed().await;
                 break;
@@ -172,7 +167,6 @@ impl ServerHook for UpdateRoute {
     }
 
     async fn handle(self, ctx: &Context) {
-        let request_config: RequestConfigData = *REQUEST_CONFIG;
         let run = || async {
             let queries: Queries = ctx
                 .try_get_request_query(UPDATE_DB_QUERY_KEY)
@@ -192,7 +186,7 @@ impl ServerHook for UpdateRoute {
             ctx.closed().await;
             return;
         }
-        while ctx.http_from_stream(&request_config).await.is_ok() {
+        while ctx.http_from_stream().await.is_ok() {
             if run().await {
                 ctx.closed().await;
                 break;
@@ -208,7 +202,6 @@ impl ServerHook for CachedQueryRoute {
     }
 
     async fn handle(self, ctx: &Context) {
-        let request_config: RequestConfigData = *REQUEST_CONFIG;
         let run = || async {
             let count: Queries = ctx
                 .try_get_request_query(CACHE_QUERY_KEY)
@@ -228,7 +221,7 @@ impl ServerHook for CachedQueryRoute {
             ctx.closed().await;
             return;
         }
-        while ctx.http_from_stream(&request_config).await.is_ok() {
+        while ctx.http_from_stream().await.is_ok() {
             if run().await {
                 ctx.closed().await;
                 break;
