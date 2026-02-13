@@ -1,17 +1,17 @@
 import com.huanshankeji.exposedvertxsqlclient.DatabaseClient
 import com.huanshankeji.exposedvertxsqlclient.ExperimentalEvscApi
-import com.huanshankeji.exposedvertxsqlclient.StatementPreparationExposedTransactionProvider
+import com.huanshankeji.exposedvertxsqlclient.JdbcTransactionExposedTransactionProvider
 import com.huanshankeji.exposedvertxsqlclient.postgresql.PgDatabaseClientConfig
 import com.huanshankeji.exposedvertxsqlclient.postgresql.vertx.pgclient.createPgConnection
 import database.*
 import io.vertx.pgclient.PgConnection
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.core.statements.buildStatement
+import org.jetbrains.exposed.v1.jdbc.Database
 import org.jetbrains.exposed.v1.jdbc.select
 
 @OptIn(ExperimentalEvscApi::class)
-class MainVerticle(val exposedTransactionProvider: StatementPreparationExposedTransactionProvider) :
-    CommonWithDbVerticle<DatabaseClient<PgConnection>, Unit>(),
+class MainVerticle(val exposedDatabase: Database) : CommonWithDbVerticle<DatabaseClient<PgConnection>, Unit>(),
     CommonWithDbVerticleI.ParallelOrPipelinedSelectWorlds<DatabaseClient<PgConnection>, Unit>,
     CommonWithDbVerticleI.WithoutTransaction<DatabaseClient<PgConnection>> {
     // kept in case we support generating and reusing `PreparedQuery`
@@ -29,7 +29,7 @@ class MainVerticle(val exposedTransactionProvider: StatementPreparationExposedTr
         })
         return DatabaseClient(
             pgConnection,
-            PgDatabaseClientConfig(exposedTransactionProvider, validateBatch = false)
+            PgDatabaseClientConfig(JdbcTransactionExposedTransactionProvider(exposedDatabase), validateBatch = false)
         )
     }
 
