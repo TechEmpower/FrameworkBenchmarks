@@ -53,22 +53,22 @@ class HelloWorld
     when '/json'
       # Test type 1: JSON serialization
       respond JSON_TYPE,
-              { message: 'Hello, World!' }.to_json
+        JSON.generate({ message: 'Hello, World!' })
     when '/db'
       # Test type 2: Single database query
       id = random_id
-      respond JSON_TYPE, $db.with{ _1.select_world(id) }.to_json
+      respond JSON_TYPE, JSON.generate($db.with{ _1.select_world(id) })
     when '/queries'
       # Test type 3: Multiple database queries
       queries = bounded_queries(env)
-      respond JSON_TYPE, select_worlds(queries).to_json
+      respond JSON_TYPE, JSON.generate(select_worlds(queries))
     when '/fortunes'
       # Test type 4: Fortunes
       respond HTML_TYPE, fortunes
     when '/updates'
       # Test type 5: Database updates
       queries = bounded_queries(env)
-      respond JSON_TYPE, update_worlds(queries).to_json
+      respond JSON_TYPE, JSON.generate(update_worlds(queries))
     when '/plaintext'
       # Test type 6: Plaintext
       respond PLAINTEXT_TYPE, 'Hello, World!'
