@@ -22,7 +22,7 @@
       "database_os": "Linux",
       "display_name": "rails [puma, postgres]",
       "notes": "",
-      "versus": ""
+      "versus": "rack"
     },
     "mysql": {
       "db_url": "/db",
@@ -43,7 +43,7 @@
       "database_os": "Linux",
       "display_name": "rails [puma, mysql]",
       "notes": "",
-      "versus": "rack-puma-mri"
+      "versus": ""
     },
     "falcon": {
       "db_url": "/db",
@@ -66,7 +66,7 @@
       "database_os": "Linux",
       "display_name": "rails [falcon]",
       "notes": "",
-      "versus": "rack-falcon-mri-sequel-raw"
+      "versus": "rack-falcon"
     },
     "iodine": {
       "db_url": "/db",
@@ -89,7 +89,7 @@
       "database_os": "Linux",
       "display_name": "rails [iodine]",
       "notes": "",
-      "versus": "rack-iodine-mri-sequel-raw"
+      "versus": "rack-iodine"
     },
     "pitchfork": {
       "db_url": "/db",
@@ -112,7 +112,7 @@
       "database_os": "Linux",
       "display_name": "rails [pitchfork]",
       "notes": "",
-      "versus": "rack-pitchfork-mri-sequel-raw"
+      "versus": "rack-pitchfork"
     }
   }]
 }

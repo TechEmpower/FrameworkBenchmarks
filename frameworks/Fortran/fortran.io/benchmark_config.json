@@ -18,7 +18,8 @@
         "database_os": "Linux",
         "display_name": "Fortran.io",
         "notes": "",
-        "versus": "None"
+        "versus": "None",
+        "tags": [ "broken" ]
       }
     }
   ]

@@ -2,7 +2,7 @@ plugins {
     id 'java'
     id "io.micronaut.application"
     id 'io.micronaut.test-resources'
-    id 'com.github.johnrengelman.shadow'
+    id 'com.gradleup.shadow'
 }
 
 repositories {
@@ -29,6 +29,7 @@ dependencies {
 
 graalvmNative.binaries.all {
     buildArgs.add("--initialize-at-build-time=gg.jte.generated.precompiled")
+    buildArgs.add("-H:+SharedArenaSupport")
 }
 
 test {

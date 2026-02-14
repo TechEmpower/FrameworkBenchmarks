@@ -64,9 +64,7 @@
         "versus": "None"
       },
       "gunicorn-orm": {
-        "json_url": "/json",
         "fortune_url": "/fortunes",
-        "plaintext_url": "/plaintext",
         "db_url": "/db",
         "query_url": "/queries?queries=",
         "update_url": "/updates?queries=",

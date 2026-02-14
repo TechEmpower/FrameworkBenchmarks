@@ -17,7 +17,7 @@ use {
     },
     hyperlane_time::*,
     once_cell::sync::Lazy,
-    rand::{Rng, SeedableRng, rng, rngs::SmallRng},
+    rand::{RngExt, SeedableRng, rng, rngs::SmallRng},
     serde::*,
     serde_json::{Value, json},
     sqlx::{

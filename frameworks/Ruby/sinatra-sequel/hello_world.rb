@@ -30,6 +30,12 @@ class HelloWorld < Sinatra::Base
 
     # Only add the charset parameter to specific content types per the requirements
     set :add_charset, [mime_type(:html)]
+
+    # Disable logging middleware
+    set :logging, nil
+
+    # Set root once instead executing the proc on every request
+    set :root, File.expand_path(__dir__)
   end
 
   # Test type 1: JSON serialization
@@ -58,10 +64,12 @@ class HelloWorld < Sinatra::Base
   # Test type 4: Fortunes
   get '/fortunes' do
     @fortunes = Fortune.all
-    @fortunes << Fortune.new(
-      id: 0,
-      message: 'Additional fortune added at request time.'
-    )
+
+    fortune = Fortune.new
+    fortune.id = 0
+    fortune.message = "Additional fortune added at request time."
+    @fortunes << fortune
+
     @fortunes.sort_by!(&:message)
 
     render_html :fortunes

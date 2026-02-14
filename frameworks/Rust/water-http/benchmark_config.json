@@ -1,49 +1,16 @@
 
 {
   "framework": "water-http",
+  "maintainers" : ["HassanSharara"],
   "tests": [
     {
-      "default": {
+        "default": {
         "json_url": "/json",
         "plaintext_url": "/plaintext",
         "fortune_url": "/fortunes",
         "db_url": "/db",
         "query_url": "/queries?q=",
         "update_url": "/updates?q=",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Fullstack",
-        "database": "Postgres",
-        "framework": "water_http",
-        "language": "Rust",
-        "orm": "raw",
-        "platform": "Rust",
-        "webserver": "water_http",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "water_http"
-      },
-
-      "db": {
-        "fortune_url": "/fortunes",
-        "db_url": "/db",
-        "query_url": "/queries?q=",
-        "update_url": "/updates?q=",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Fullstack",
-        "database": "Postgres",
-        "framework": "water_http",
-        "language": "Rust",
-        "orm": "raw",
-        "platform": "Rust",
-        "webserver": "water_http",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "water_http"
-      },
-
-      "cached": {
         "cached_query_url": "/cached-queries?q=",
         "port": 8080,
         "approach": "Realistic",
@@ -57,35 +24,7 @@
         "os": "Linux",
         "database_os": "Linux",
         "display_name": "water_http"
-      },
-      "json": {
-        "json_url": "/json",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Fullstack",
-        "framework": "water_http",
-        "language": "Rust",
-        "orm": "raw",
-        "platform": "Rust",
-        "webserver": "water_http",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "water_http"
-      },
-      "plaintext": {
-        "plaintext_url": "/plaintext",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Fullstack",
-        "framework": "water_http",
-        "language": "Rust",
-        "orm": "raw",
-        "platform": "Rust",
-        "webserver": "water_http",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "water_http"
       }
     }
-  ]
+    ]
 }

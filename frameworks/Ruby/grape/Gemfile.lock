@@ -55,7 +55,7 @@ GEM
     i18n (1.14.7)
       concurrent-ruby (~> 1.0)
     iodine (0.7.58)
-    json (2.16.0)
+    json (2.18.0)
     logger (1.7.0)
     minitest (5.26.2)
     mustermann (3.0.4)
@@ -86,7 +86,7 @@ DEPENDENCIES
   activerecord (~> 8.1.0)
   grape (~> 3.0)
   iodine (~> 0.7)
-  json (~> 2.9)
+  json
   pg
   puma (~> 7.1)
 

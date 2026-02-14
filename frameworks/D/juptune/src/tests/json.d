@@ -2,6 +2,7 @@ module tests.json;
 
 import juptune.core.ds : ArrayNonShrink;
 import juptune.core.util : Result;
+import juptune.data.json : Json;
 import juptune.http : Http1Writer, Http1Version, Http1MessageSummary;
 
 import tests.common : putServerAndDate, log;
@@ -13,7 +14,7 @@ struct JsonHeaderInput
 
 private struct Message
 {
-    string message;
+    @Json string message;
 }
 
 void handleJson(
@@ -25,10 +26,16 @@ void handleJson(
     import juptune.core.util      : then;
     import juptune.core.util.conv : IntToCharBuffer, toBase10;
 
+    import juptune.data.json : JsonBuilder, jsonSerialise;
+
     ArrayNonShrink!char buffer;
     buffer.reserve(256);
 
-    auto result = serialise(buffer, Message("Hello, World!"));
+    ubyte[8] jsonDepth;
+    scope put = (scope const(char)[] slice) { buffer.put(slice); return Result.noError; };
+    scope builder = JsonBuilder!(typeof(put))(put, jsonDepth);
+
+    auto result = builder.jsonSerialise(Message("Hello, World!"));
     if(result.isError)
     {
         result = writer.putResponseLine(Http1Version.http11, 500, "Internal Error").then!(
@@ -66,38 +73,4 @@ void handleJson(
         log("writing response [json] failed: ", result);
         return;
     }
-}
-
-// There's currently no built-in serialiser, however because of D's incredibly powerful metaprogramming
-// this watered-down serialiser would likely generate almost the exact same code as a full-blown serialiser
-// in this simple case.
-private Result serialise(T)(scope ref ArrayNonShrink!char buffer, T value)
-if(is(T == struct))
-{
-    import juptune.data.json : JsonBuilder;
-    scope append = (scope const(char)[] text) {
-        buffer.put(text);
-        return Result.noError;
-    };
-
-    ubyte[8] depthBuffer;
-    auto builder = JsonBuilder!(typeof(append))(append, depthBuffer[]);
-
-    auto result = builder.startObject();
-    if(result.isError)
-        return result;
-
-    static foreach(fieldSymbol; value.tupleof)
-    {{
-        immutable FieldName = __traits(identifier, fieldSymbol);
-
-        result = builder.putObjectValue(FieldName, mixin("value."~FieldName));
-        if(result.isError)
-            return result;
-    }}
-
-    result = builder.endObject();
-    if(result.isError)
-        return result;
-    return builder.finish();
 }

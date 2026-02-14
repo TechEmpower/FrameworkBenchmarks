@@ -16,7 +16,8 @@
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "Watson Webserver",
-      "notes": ""
+      "notes": "",
+      "tags": ["broken"]
     }
   }]
 }

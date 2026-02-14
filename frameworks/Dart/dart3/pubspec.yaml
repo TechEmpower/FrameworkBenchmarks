@@ -1,7 +1,11 @@
 name: dartbenchmark
 description: A benchmark of dart
 environment:
-  sdk: ^3.10.7
+  sdk: ^3.10.8
+
+dependencies:
+  args: ^2.7.0
 
 dev_dependencies:
   lints: ^6.0.0
+
