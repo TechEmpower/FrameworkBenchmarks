@@ -1,5 +1,8 @@
 {
     "framework": "akazawayun.pro",
+    "maintainers": [
+        "AkazawaYun"
+    ],
     "tests": [
         {
             "default": {
