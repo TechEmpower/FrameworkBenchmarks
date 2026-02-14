@@ -38,8 +38,8 @@ abstract class CommonVerticle : CoroutineVerticle(), CoroutineRouterSupport {
     val random = Random(0)
 
     object DateTimeComponentsFormats {
-        // adapted from `DateTimeComponents.Formats.RFC_1123` with seconds made mandatory
-        val RFC_1123_WITH_MANDATORY_SECONDS = Format {
+        // adapted from `DateTimeComponents.Formats.RFC_1123` with the second field made mandatory
+        val RFC_1123_WITH_MANDATORY_SECOND = Format {
             alternativeParsing({
                 // the day of week may be missing
             }) {
@@ -71,7 +71,7 @@ abstract class CommonVerticle : CoroutineVerticle(), CoroutineRouterSupport {
     }
 
     fun setCurrentDate() {
-        date = DateTimeComponentsFormats.RFC_1123_WITH_MANDATORY_SECONDS.format {
+        date = DateTimeComponentsFormats.RFC_1123_WITH_MANDATORY_SECOND.format {
             // We don't need a more complicated system `TimeZone` here (whose offset depends dynamically on the actual time due to DST) since UTC works.
             setDateTimeOffset(Clock.System.now(), UtcOffset.ZERO)
         }
