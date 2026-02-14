@@ -6,11 +6,8 @@ import io.r2dbc.spi.ConnectionFactories
 import io.r2dbc.spi.ConnectionFactoryOptions
 import io.r2dbc.spi.ConnectionFactoryOptions.DRIVER
 
-// not used currently
-// Note that this URL doesn't have `USER` and `PASSWORD`
-const val POSTGRESQL_R2DBC_URL = "r2dbc:postgresql://$HOST:5432/$DATABASE"
-
-val connectionFactory = ConnectionFactories.get(
+// Original configuration before optimizations
+val connectionFactoryOriginal = ConnectionFactories.get(
     ConnectionFactoryOptions.builder()
         .option(DRIVER, "postgresql")
         .option(ConnectionFactoryOptions.HOST, HOST)
@@ -20,11 +17,11 @@ val connectionFactory = ConnectionFactories.get(
         .build()
 )
 
-fun connectionPoolConfiguration(size: Int) =
-    ConnectionPoolConfiguration.builder(connectionFactory)
+fun connectionPoolConfigurationOriginal(size: Int) =
+    ConnectionPoolConfiguration.builder(connectionFactoryOriginal)
         .initialSize(size)
         .maxSize(size)
         .build()
 
-fun connectionPool(size: Int) =
-    ConnectionPool(connectionPoolConfiguration(size))
+fun connectionPoolOriginal(size: Int) =
+    ConnectionPool(connectionPoolConfigurationOriginal(size))
