@@ -1,4 +1,4 @@
-FROM mysql:9.5
+FROM mysql:9.4
 
 ENV MYSQL_ROOT_PASSWORD=root
 ENV MYSQL_USER=benchmarkdbuser
