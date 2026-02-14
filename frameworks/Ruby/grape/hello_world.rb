@@ -48,7 +48,7 @@ module Acme
     get '/query' do
       ActiveRecord::Base.with_connection do
         ALL_IDS.sample(bounded_queries).map do |id|
-          World.find(id)
+          World.find(id).attributes
         end
       end
     end
