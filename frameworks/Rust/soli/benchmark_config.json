@@ -5,20 +5,22 @@
     "default": {
       "plaintext_url": "/plaintext",
       "json_url": "/json",
+      "fortune_url": "/fortunes",
       "port": 3000,
       "approach": "Realistic",
-      "classification": "Platform",
-      "database": "None",
+      "classification": "Fullstack",
       "framework": "soli",
       "language": "Rust",
-      "orm": "Raw",
+      "database": "solidb",
+      "orm": "Full",
       "platform": "Rust",
       "webserver": "soli",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "Soli",
       "notes": "Soli MVC Framework",
-      "versus": "hyper"
+      "versus": "hyper",
+      "dockerfile": "soli-solidb.dockerfile"
     }
   }]
 }
