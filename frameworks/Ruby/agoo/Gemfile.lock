@@ -1,16 +1,16 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    agoo (2.15.14)
+    agoo (2.15.13)
     bigdecimal (4.0.1)
-    connection_pool (3.0.2)
-    oj (3.16.13)
+    connection_pool (2.5.0)
+    oj (3.16.12)
       bigdecimal (>= 3.0)
       ostruct (>= 0.2)
     ostruct (0.6.3)
     pg (1.6.3)
     pg (1.6.3-x86_64-linux)
-    rack (3.2.4)
+    rack (3.2.0)
 
 PLATFORMS
   ruby
