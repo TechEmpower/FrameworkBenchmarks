@@ -1,16 +1,16 @@
 [versions]
 kotlin = "2.3.0"
-vertx = "5.0.6"
+vertx = "5.0.7"
 kotlinx-coroutines = "1.10.2"
-kotlinx-serialization = "1.9.0"
+kotlinx-serialization = "1.10.0"
 kotlinx-io = "0.8.2"
 kotlinx-html = "0.12.0"
 kotlinx-datetime = "0.7.1"
 r2dbc-spi = "1.0.0.RELEASE"
 r2dbc-postgresql = "1.1.1.RELEASE"
 r2dbc-pool = "1.0.2.RELEASE"
-exposed = "1.0.0-rc-4"
-exposedVertxSqlClient = "0.7.0"
+exposed = "1.0.0"
+exposedVertxSqlClient = "0.8.0"
 
 [libraries]
 # Kotlin Gradle plugin as a library for buildSrc

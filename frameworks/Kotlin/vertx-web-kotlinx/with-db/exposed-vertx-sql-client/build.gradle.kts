@@ -3,7 +3,7 @@ plugins {
 }
 
 repositories {
-    //mavenLocal() // for snapshot dependencies
+    mavenLocal() // for snapshot dependencies
 }
 
 dependencies {
