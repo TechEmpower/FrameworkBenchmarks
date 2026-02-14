@@ -1,4 +1,4 @@
-resolver: lts-24.11
+resolver: lts-24.29
 
 packages:
 - ./shared/tfb-types
@@ -12,5 +12,5 @@ extra-deps:
 - mysql-haskell-1.1.7
 
 # the following flags are meant for use with warp.dockerfile
-compiler: ghc-9.10.2 # this MUST match the resolver's GHC; minor hack to ensure GHC isn't downloaded into sandbox.
+compiler: ghc-9.10.3 # this MUST match the resolver's GHC; minor hack to ensure GHC isn't downloaded into sandbox.
 allow-different-user: true
