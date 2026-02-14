@@ -14,8 +14,8 @@ import io.vertx.kotlin.coroutines.CoroutineVerticle
 import io.vertx.kotlin.coroutines.coAwait
 import kotlinx.coroutines.Dispatchers
 import kotlinx.datetime.UtcOffset
-import kotlinx.datetime.format.DateTimeComponents
-import kotlinx.datetime.format.format
+import kotlinx.datetime.format.*
+import kotlinx.datetime.format.DateTimeComponents.Companion.Format
 import kotlinx.io.buffered
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
@@ -37,8 +37,41 @@ abstract class CommonVerticle : CoroutineVerticle(), CoroutineRouterSupport {
     lateinit var date: String
     val random = Random(0)
 
+    object DateTimeComponentsFormats {
+        // adapted from `DateTimeComponents.Formats.RFC_1123` with seconds made compulsory
+        val RFC_1123_WITH_COMPULSORY_SECONDS = Format {
+            alternativeParsing({
+                // the day of week may be missing
+            }) {
+                dayOfWeek(DayOfWeekNames.ENGLISH_ABBREVIATED)
+                chars(", ")
+            }
+            day(Padding.NONE)
+            char(' ')
+            monthName(MonthNames.ENGLISH_ABBREVIATED)
+            char(' ')
+            year()
+            char(' ')
+            hour()
+            char(':')
+            minute()
+            char(':')
+            second()
+            chars(" ")
+            alternativeParsing({
+                chars("UT")
+            }, {
+                chars("Z")
+            }) {
+                optional("GMT") {
+                    offset(UtcOffset.Formats.FOUR_DIGITS)
+                }
+            }
+        }
+    }
+
     fun setCurrentDate() {
-        date = DateTimeComponents.Formats.RFC_1123.format {
+        date = DateTimeComponentsFormats.RFC_1123_WITH_COMPULSORY_SECONDS.format {
             // We don't need a more complicated system `TimeZone` here (whose offset depends dynamically on the actual time due to DST) since UTC works.
             setDateTimeOffset(Clock.System.now(), UtcOffset.ZERO)
         }
