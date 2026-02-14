@@ -38,7 +38,7 @@ abstract class CommonVerticle : CoroutineVerticle(), CoroutineRouterSupport {
     val random = Random(0)
 
     object DateTimeComponentsFormats {
-        // adapted from `DateTimeComponents.Formats.RFC_1123` with seconds made compulsory
+        // adapted from `DateTimeComponents.Formats.RFC_1123` with seconds made mandatory
         val RFC_1123_WITH_MANDATORY_SECONDS = Format {
             alternativeParsing({
                 // the day of week may be missing
