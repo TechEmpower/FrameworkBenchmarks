@@ -32,7 +32,7 @@ return [
             'prefix' => env('DB_PREFIX', ''),
             'pool' => [
                 'min_connections' => 1,
-                'max_connections' => env('DB_MAX_CONNECTIONS', 10),
+                'max_connections' => env('DB_MAX_CONNECTIONS', 60),
                 'connect_timeout' => 10.0,
                 'wait_timeout' => 3.0,
                 'heartbeat' => -1,
