@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <TargetFramework>net9.0</TargetFramework>
+        <TargetFramework>net10.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <RootNamespace>SimpleW</RootNamespace>
@@ -14,7 +14,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="SimpleW" Version="16.1.0" />
+      <PackageReference Include="SimpleW" Version="26.0.0-beta.20260213-1430" />
     </ItemGroup>
 
 </Project>
