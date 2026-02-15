@@ -30,30 +30,20 @@ use {
 #[tokio::main]
 async fn main() {
     init_db().await;
-    let server_config: ServerConfig = init_server_config().await;
-    let request_config: RequestConfig = init_request_config().await;
-    Server::new()
-        .await
+    let server_config: ServerConfig = init_server_config();
+    let request_config: RequestConfig = init_request_config();
+    let mut server: Server = Server::default();
+    server
         .server_config(server_config)
-        .await
         .request_config(request_config)
-        .await
         .request_middleware::<RequestMiddleware>()
-        .await
         .route::<PlaintextRoute>("/plaintext")
-        .await
         .route::<JsonRoute>("/json")
-        .await
         .route::<CachedQueryRoute>("/cached-quer")
-        .await
         .route::<DbRoute>("/db")
-        .await
         .route::<QueryRoute>("/query")
-        .await
         .route::<FortunesRoute>("/fortunes")
-        .await
         .route::<UpdateRoute>("/upda")
-        .await
         .run()
         .await
         .unwrap()
