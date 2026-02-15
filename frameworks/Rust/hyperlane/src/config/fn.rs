@@ -1,12 +1,13 @@
 use super::*;
 
-pub(crate) async fn init_server_config() -> ServerConfig {
-    let server_config: ServerConfig = ServerConfig::new().await;
-    server_config.port(8080).await;
-    server_config.disable_nodelay().await;
+pub(crate) fn init_server_config() -> ServerConfig {
+    let mut server_config: ServerConfig = ServerConfig::default();
+    server_config
+        .set_address(Server::format_bind_address(DEFAULT_HOST, 8080))
+        .set_nodelay(Some(false));
     server_config
 }
 
-pub(crate) async fn init_request_config() -> RequestConfig {
-    RequestConfig::low_security().await
+pub(crate) fn init_request_config() -> RequestConfig {
+    RequestConfig::low_security()
 }
