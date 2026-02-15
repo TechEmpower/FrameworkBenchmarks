@@ -24,7 +24,7 @@ RUN apt-get update > /dev/null && \
 
 RUN pecl install protobuf > /dev/null && echo "extension=protobuf.so" > /usr/local/etc/php/conf.d/protobuf.ini
 
-COPY --from=composer/composer:latest-bin --link /composer /usr/local/bin/composer
+COPY --from=composer/composer:2-bin --link /composer /usr/local/bin/composer
 
 RUN composer require laravel/octane:^2 --update-no-dev --no-scripts --quiet
 RUN php artisan octane:install --server="roadrunner" > /dev/null

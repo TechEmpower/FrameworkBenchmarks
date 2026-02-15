@@ -13,7 +13,7 @@ RUN apt-get install -yqq nginx git unzip \
 RUN apt install libjemalloc2
 ENV LD_PRELOAD=libjemalloc.so.2
 
-COPY --from=composer/composer:latest-bin --link /composer /usr/local/bin/composer
+COPY --from=composer/composer:2-bin --link /composer /usr/local/bin/composer
 
 COPY --link deploy/conf/* /etc/php/8.5/fpm/
 WORKDIR /laravel
