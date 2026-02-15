@@ -23,7 +23,7 @@ RUN docker-php-ext-enable uv
 RUN apt install libjemalloc2
 ENV LD_PRELOAD=libjemalloc.so.2
 
-COPY --from=composer/composer:latest-bin --link /composer /usr/local/bin/composer
+COPY --from=composer/composer:2-bin --link /composer /usr/local/bin/composer
 
 #ENV APP_DEBUG 1
 ENV APP_ENV prod
