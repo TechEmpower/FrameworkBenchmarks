@@ -16,7 +16,7 @@ COPY . .
 
 RUN sed -i "s|Benchmark();|BenchmarkRaw();|g" /mixphp/routes/index.php
 
-COPY --from=composer/composer:latest-bin --link /composer /usr/local/bin/composer
+COPY --from=composer/composer:2-bin --link /composer /usr/local/bin/composer
 RUN composer install --no-dev --classmap-authoritative --quiet
 RUN composer dumpautoload -o
 

@@ -13,7 +13,7 @@ RUN if [ $(nproc) = 2 ]; then sed -i "s|pm.max_children = 1024|pm.max_children =
 WORKDIR /mixphp
 COPY . .
 
-COPY --from=composer/composer:latest-bin --link /composer /usr/local/bin/composer
+COPY --from=composer/composer:2-bin --link /composer /usr/local/bin/composer
 RUN composer install --no-dev --classmap-authoritative --quiet
 RUN composer dumpautoload -o
 
