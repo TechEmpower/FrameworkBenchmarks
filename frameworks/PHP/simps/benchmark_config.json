@@ -1,5 +1,6 @@
 {
   "framework": "simps",
+  "maintainers": ["sy-records"],
   "tests": [
     {
       "default": {

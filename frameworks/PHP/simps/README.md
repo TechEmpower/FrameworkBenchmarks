@@ -1,5 +1,5 @@
 <p align="center">
-    <a href="https://simps.io" target="_blank">
+    <a href="https://doc.simps.io/#/en/" target="_blank">
         <img src="https://cdn.jsdelivr.net/gh/sy-records/staticfile@master/images/simps.png" alt="Simps" />
     </a>
 </p>
@@ -17,15 +17,16 @@
 
 🚀 A simple, lightweight and high-performance PHP coroutine framework.
 
+[Documentation](https://doc.simps.io/#/en/)
 [Source Code](https://github.com/simple-swoole/simps)
 
 ## Important Libraries
 
 The tests were run with:
 
-* [PHP7](https://www.php.net)
-* [Swoole4](https://www.swoole.com)
-* [Simps](https://simps.io)
+* [PHP](https://www.php.net)
+* [Swoole](https://www.swoole.com)
+* [Simps](https://doc.simps.io/#/en/)
 
 ## Test URLs
 
