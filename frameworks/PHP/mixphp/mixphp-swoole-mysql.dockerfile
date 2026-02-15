@@ -1,7 +1,5 @@
 FROM phpswoole/swoole:php8.5
 
-RUN docker-php-ext-install pcntl bcmath > /dev/null
-
 WORKDIR /mixphp
 COPY --link . .
 COPY --link php.ini /usr/local/etc/php/
