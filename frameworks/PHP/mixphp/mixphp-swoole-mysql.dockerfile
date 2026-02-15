@@ -1,6 +1,6 @@
-FROM phpswoole/swoole:6.0.2-php8.4
+FROM phpswoole/swoole:php8.5
 
-RUN docker-php-ext-install pcntl opcache bcmath > /dev/null
+RUN docker-php-ext-install pcntl bcmath > /dev/null
 
 WORKDIR /mixphp
 COPY --link . .
@@ -13,7 +13,7 @@ RUN echo "opcache.jit_buffer_size=256M" >> /usr/local/etc/php/php.ini
 
 RUN php -v && php -i | grep opcache
 
-RUN composer install --no-dev --classmap-authoritative --quiet > /dev/null
+RUN composer install --no-dev --classmap-authoritative --quiet
 RUN composer dumpautoload -o
 
 RUN mkdir -p /mixphp/runtime/logs
