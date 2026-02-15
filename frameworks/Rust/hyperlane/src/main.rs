@@ -30,12 +30,9 @@ use {
 #[tokio::main]
 async fn main() {
     init_db().await;
-    let server_config: ServerConfig = init_server_config();
-    let request_config: RequestConfig = init_request_config();
-    let mut server: Server = Server::default();
-    server
-        .server_config(server_config)
-        .request_config(request_config)
+    Server::default()
+        .server_config(init_server_config())
+        .request_config(init_request_config())
         .request_middleware::<RequestMiddleware>()
         .route::<PlaintextRoute>("/plaintext")
         .route::<JsonRoute>("/json")
