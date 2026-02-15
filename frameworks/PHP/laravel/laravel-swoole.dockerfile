@@ -1,7 +1,7 @@
-FROM phpswoole/swoole:php8.4
+FROM phpswoole/swoole:php8.5
 
-RUN apt-get update -yqq && apt-get install libicu-dev -y > /dev/null
-RUN docker-php-ext-install intl pcntl opcache > /dev/null
+RUN apt-get update -yqq && apt-get install libicu-dev -y > /dev/null && \
+    docker-php-ext-install intl pcntl > /dev/null
 RUN echo "opcache.enable_cli=1" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
 RUN echo "opcache.jit=1205" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
 RUN echo "opcache.jit_buffer_size=128M" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
@@ -15,7 +15,7 @@ RUN mkdir -p bootstrap/cache \
             storage/framework/views \
             storage/framework/cache
 
-RUN composer require laravel/octane:2.11 --update-no-dev --no-scripts --quiet
+RUN composer require laravel/octane:^2 --update-no-dev --no-scripts --quiet
 RUN php artisan octane:install --server="swoole"
 RUN php artisan optimize
 

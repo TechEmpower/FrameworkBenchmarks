@@ -1,11 +1,9 @@
-FROM phpswoole/swoole:php8.4
+FROM phpswoole/swoole:php8.5
 
 RUN apt-get -y update > /dev/null \
     && apt-get install -y libicu-dev > /dev/null \
     && docker-php-ext-configure intl > /dev/null \
-    && docker-php-ext-install intl > /dev/null
-
-RUN docker-php-ext-install pcntl opcache curl > /dev/null
+    && docker-php-ext-install intl pcntl > /dev/null
 
 RUN echo "opcache.enable_cli=1" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
 RUN echo "opcache.jit=1205" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
