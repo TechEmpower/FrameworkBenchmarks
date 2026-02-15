@@ -1,6 +1,6 @@
 FROM phpswoole/swoole:php8.5
 
-RUN docker-php-ext-install pcntl curl > /dev/null
+RUN docker-php-ext-install pcntl > /dev/null
 
 WORKDIR /simps
 
