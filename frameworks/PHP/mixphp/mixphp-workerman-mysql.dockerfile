@@ -14,7 +14,7 @@ COPY php-jit.ini /etc/php/8.5/cli/php.ini
 WORKDIR /mixphp
 COPY . .
 
-COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+COPY --from=composer/composer:latest-bin --link /composer /usr/local/bin/composer
 RUN composer install --no-dev --classmap-authoritative --quiet
 RUN composer dumpautoload -o
 
