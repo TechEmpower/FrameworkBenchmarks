@@ -1,5 +1,6 @@
 {
   "framework": "simplew",
+  "maintainers": ["stratdev3"],
   "tests": [{
     "default": {
       "plaintext_url": "/api/plaintext",
