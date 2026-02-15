@@ -11,17 +11,17 @@ RUN docker-php-ext-install -j$(nproc) opcache mysqli pcntl sockets pdo_pgsql
 
 RUN pecl update-channels
 
-RUN pecl install event && \
+RUN pecl install event-3.1.4 && \
     echo "extension=event.so" > /usr/local/etc/php/conf.d/event.ini
 
-COPY . /imi
+WORKDIR /imi
+COPY . .
+
 COPY php.ini /usr/local/etc/php/
 
 RUN chmod -R ug+rwx /imi/.runtime
 
-WORKDIR /imi
-
-COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+COPY --from=composer/composer:2-bin --link /composer /usr/local/bin/composer
 RUN composer install --no-dev --classmap-authoritative --quiet
 RUN composer require imiphp/imi-workerman:~2.1.0 -W
 RUN composer dumpautoload -o
