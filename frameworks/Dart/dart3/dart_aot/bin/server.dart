@@ -85,7 +85,7 @@ void _startServer(List<String> args) async {
   server
     ..defaultResponseHeaders.clear()
     /// Sets [HttpServer]'s [serverHeader].
-    ..serverHeader = 'dart'
+    ..serverHeader = 'dart_aot'
     /// Handles [HttpRequest]'s from [HttpServer].
     ..listen(_handleRequest);
 }
