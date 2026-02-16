@@ -1,4 +1,4 @@
-See subprojects
+See subprojects 
 
 * [Ktor](ktor/) Ktor using traditional JDBC using various servers
 * [Ktor-jasync](ktor-asyncdb/) Ktor with Netty-based PostgreSQL clients
