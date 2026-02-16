@@ -26,15 +26,9 @@
         "versus": "netty"
       },
       "r2dbc": {
-        "plaintext_url": "/plaintext",
-        "json_url": "/json",
         "db_url": "/db",
-        "query_url": "/queries?queries=",
-        "update_url": "/updates?queries=",
-        "fortune_url": "/fortunes",
-
         "port": 9090,
-        "approach": "Realistic",
+        "approach": "Stripped",
         "classification": "Micro",
         "database": "Postgres",
         "framework": "ktor",
@@ -46,7 +40,8 @@
         "database_os": "Linux",
         "display_name": "ktor-netty-r2dbc",
         "notes": "http://ktor.io/",
-        "versus": "netty"
+        "versus": "netty",
+        "tags": [],
       },
       "jetty": {
         "plaintext_url": "/plaintext",
