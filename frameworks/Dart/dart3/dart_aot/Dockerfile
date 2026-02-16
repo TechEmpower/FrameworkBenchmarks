@@ -1,8 +1,7 @@
 
-FROM dart:3.10.8 AS build
+FROM dart:3.11.0 AS build
 WORKDIR /app
 
-# Define the build-time argument (Default to 8)
 ARG MAX_ISOLATES=8
 
 COPY pubspec.yaml .
@@ -20,5 +19,4 @@ COPY --from=build /app/server.aot /app/server.aot
 
 EXPOSE 8080
 
-# Distroless requires absolute paths
 ENTRYPOINT ["/usr/lib/dart/bin/dartaotruntime", "/app/server.aot"]

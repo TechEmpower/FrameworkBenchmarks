@@ -3,6 +3,7 @@
   "tests": [{
     "default": { 
       "display_name": "dart3_native",
+      "dockerfile": "dart_native/Dockerfile",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 8080,
@@ -15,6 +16,7 @@
     },
     "aot": {
       "display_name": "dart3_aot",
+      "dockerfile": "dart_aot/Dockerfile",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 8080,
@@ -27,6 +29,7 @@
     },
     "hybrid": {
       "display_name": "dart3_hybrid",
+      "docker_compose": "dart_hybrid/docker-compose.yml",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 8080,
