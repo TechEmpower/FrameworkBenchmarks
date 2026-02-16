@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:isolate';
 import 'dart:math' show min;
-import 'package:args/args.dart' show ArgParser;
 
 /// Environment declarations are evaluated at compile-time. Use 'const' to
 /// ensure values are baked into AOT/Native binaries for the benchmark.
@@ -13,6 +12,14 @@ import 'package:args/args.dart' show ArgParser;
 /// which have access to compiler options at run-time,
 /// but most ahead-of-time compiled platforms will not have this information."
 const _maxIsolatesfromEnvironment = int.fromEnvironment('MAX_ISOLATES');
+
+/// The fixed TCP port used by the server.
+/// Defined here for visibility and ease of configuration.
+const _defaultPort = 8080;
+
+/// A reusable instance of the UTF-8 JSON encoder to efficiently
+/// transform Dart objects into byte arrays for HTTP responses.
+final _jsonEncoder = JsonUtf8Encoder();
 
 void main(List<String> args) {
   /// Defines local isolate quota, using MAX_ISOLATES if provided.
@@ -74,7 +81,7 @@ void _startServer(List<String> args) async {
   /// Binds the [HttpServer] on `0.0.0.0:8080`.
   final server = await HttpServer.bind(
     InternetAddress.anyIPv4,
-    _portParser(args, defaultPort: 8080),
+    _defaultPort,
     shared: true,
   );
 
@@ -142,18 +149,3 @@ void _plaintextTest(HttpRequest request) => _sendText(
   request,
   'Hello, World!',
 );
-
-final _jsonEncoder = JsonUtf8Encoder();
-
-int _portParser(
-  List<String> args, {
-  required int defaultPort,
-  portTag = 'port',
-}) {
-  final parser = ArgParser()
-    ..addOption(
-      portTag,
-      defaultsTo: '$defaultPort',
-    );
-  return int.tryParse(parser.parse(args)[portTag]) ?? defaultPort;
-}
