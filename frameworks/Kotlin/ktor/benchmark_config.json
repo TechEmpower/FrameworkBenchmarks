@@ -41,7 +41,7 @@
         "display_name": "ktor-netty-r2dbc",
         "notes": "http://ktor.io/",
         "versus": "netty",
-        "tags": [],
+        "tags": []
       },
       "jetty": {
         "plaintext_url": "/plaintext",
