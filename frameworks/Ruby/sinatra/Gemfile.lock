@@ -39,7 +39,7 @@ GEM
     pg (1.6.2-x86_64-linux)
     puma (7.1.0)
       nio4r (~> 2.0)
-    rack (3.2.3)
+    rack (3.2.5)
     rack-protection (4.2.0)
       base64 (>= 0.1.0)
       logger (>= 1.6.0)
