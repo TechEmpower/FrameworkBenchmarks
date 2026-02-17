@@ -11,7 +11,7 @@ GEM
     pg (1.6.3-x86_64-linux)
     puma (7.1.0)
       nio4r (~> 2.0)
-    rack (3.2.0)
+    rack (3.2.5)
     sequel (5.100.0)
       bigdecimal
     sequel_pg (1.18.2)
@@ -31,7 +31,7 @@ DEPENDENCIES
   json
   pg (~> 1.5)
   puma (~> 7.0)
-  rack (~> 3.1)
+  rack (~> 3.2)
   sequel (~> 5.0)
   sequel_pg (~> 1.17)
   trilogy (~> 2.10)
