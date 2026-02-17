@@ -6,22 +6,22 @@ This is the PHP portion of a [benchmarking test suite](../) comparing a variety 
 When editing this framework, be sure to force add the files changed. Most files were added to .gitignore, as the framework touches some of them during testing.
 
 ## Infrastructure Software Versions
-The tests were run with [PHP Version 7.3.*](https://www.php.net/) + OPcache
+The tests were run with [PHP Version 8.*](https://www.php.net/) + OPcache
 
 ### Platforms
 
-* [php-fpm 7.4.*](https://www.php.net/manual/en/install.fpm.php)
-* [nginx unit 1.18.0](https://unit.nginx.org/) (PHP 7.4)
+* [php-fpm](https://www.php.net/manual/en/install.fpm.php)
+
 
 ### Webservers
 
-* [nginx 1.17.10](https://nginx.org/)
-* [h2o 2.2.6](https://h2o.examp1e.net/)
+* [nginx](https://nginx.org/)
+* [h2o](https://h2o.examp1e.net/)
 
 ### Databases
 
-* [MySQL 8](https://dev.mysql.com/)
-* [PostgreSQL 12](https://www.postgresql.org/)
+* [MySQL 9](https://dev.mysql.com/)
+* [PostgreSQL 18](https://www.postgresql.org/)
 
 ## ActiveRecord
 
