@@ -30,22 +30,20 @@ use {
 #[tokio::main]
 async fn main() {
     init_db().await;
-
-    let server_config: ServerConfig = init_server_config().await;
-    let request_config: RequestConfig = init_request_config().await;
-
-    let server: Server = Server::new().await;
-    server.server_config(server_config).await;
-    server.request_config(request_config).await;
-    server.request_middleware::<RequestMiddleware>().await;
-    server.route::<PlaintextRoute>("/plaintext").await;
-    server.route::<JsonRoute>("/json").await;
-    server.route::<CachedQueryRoute>("/cached-quer").await;
-    server.route::<DbRoute>("/db").await;
-    server.route::<QueryRoute>("/query").await;
-    server.route::<FortunesRoute>("/fortunes").await;
-    server.route::<UpdateRoute>("/upda").await;
-
-    let server_hook: ServerControlHook = server.run().await.unwrap();
-    server_hook.wait().await;
+    Server::default()
+        .server_config(init_server_config())
+        .request_config(init_request_config())
+        .request_middleware::<RequestMiddleware>()
+        .route::<PlaintextRoute>("/plaintext")
+        .route::<JsonRoute>("/json")
+        .route::<CachedQueryRoute>("/cached-quer")
+        .route::<DbRoute>("/db")
+        .route::<QueryRoute>("/query")
+        .route::<FortunesRoute>("/fortunes")
+        .route::<UpdateRoute>("/upda")
+        .run()
+        .await
+        .unwrap()
+        .wait()
+        .await;
 }
