@@ -1,5 +1,6 @@
 {
   "framework": "imi",
+  "maintainers": ["Yurunsoft"],
   "tests": [
     {
       "default": {
