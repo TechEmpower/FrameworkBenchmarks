@@ -1,5 +1,6 @@
 {
   "framework": "ktor",
+  "maintainers": ["ShreckYe"],
   "tests": [
     {
       "default": {
