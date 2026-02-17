@@ -13,7 +13,7 @@ RUN apt-get install -yqq unzip \
 RUN apt install libjemalloc2
 ENV LD_PRELOAD=libjemalloc.so.2
 
-COPY --from=composer/composer:latest-bin --link /composer /usr/local/bin/composer
+COPY --from=composer/composer:2-bin --link /composer /usr/local/bin/composer
 
 RUN apt-get install -y php-pear php8.5-dev libevent-dev > /dev/null && \
     pecl install event-3.1.4 > /dev/null && echo "extension=event.so" > /etc/php/8.5/cli/conf.d/event.ini
