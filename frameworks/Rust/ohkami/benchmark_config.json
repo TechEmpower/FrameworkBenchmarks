@@ -73,8 +73,7 @@
                 "database_os":    "Linux",
                 "port":           8000,
                 "json_url":       "/json",
-                "plaintext_url":  "/plaintext",
-                "tags": ["broken"]
+                "plaintext_url":  "/plaintext"
             }
         }
     ]
