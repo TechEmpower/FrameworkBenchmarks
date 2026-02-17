@@ -84,10 +84,7 @@ public class App extends VerticleBase implements Handler<HttpServerRequest> {
   private static final CharSequence HEADER_SERVER = HttpHeaders.SERVER;
   private static final CharSequence HEADER_DATE = HttpHeaders.DATE;
   private static final CharSequence HEADER_CONTENT_TYPE = HttpHeaders.CONTENT_TYPE;
-  private static final CharSequence HEADER_CONTENT_LENGTH = HttpHeaders.CONTENT_LENGTH;
 
-  private static final CharSequence HELLO_WORLD_LENGTH = HttpHeaders.createOptimized("" + HELLO_WORLD.length());
-  private static final CharSequence JSON_LENGTH = HttpHeaders.createOptimized("" + new Message("Hello, World!").toJson().length());
   private static final CharSequence SERVER = HttpHeaders.createOptimized("vert.x");
 
   private static final String SELECT_WORLD = "SELECT id, randomnumber FROM world WHERE id = $1";
@@ -132,7 +129,6 @@ public class App extends VerticleBase implements Handler<HttpServerRequest> {
             .add(HEADER_CONTENT_TYPE, RESPONSE_TYPE_PLAIN)
             .add(HEADER_SERVER, SERVER)
             .add(HEADER_DATE, dateString)
-            .add(HEADER_CONTENT_LENGTH, HELLO_WORLD_LENGTH)
             .copy(false);
   }
 
@@ -142,7 +138,6 @@ public class App extends VerticleBase implements Handler<HttpServerRequest> {
             .add(HEADER_CONTENT_TYPE, RESPONSE_TYPE_JSON)
             .add(HEADER_SERVER, SERVER)
             .add(HEADER_DATE, dateString)
-            .add(HEADER_CONTENT_LENGTH, JSON_LENGTH)
             .copy(false);
   }
 
