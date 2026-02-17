@@ -84,7 +84,7 @@ async fn main() -> io::Result<()> {
         .bind("tfb", "0.0.0.0:8080", async |_| {
             fn_service(|io| App {
                 io,
-                codec: h1::Codec::new(0, true, utils::config().get::<IoConfig>().into_static()),
+                codec: h1::Codec::new(0, true, utils::config().get::<IoConfig>()),
             })
         })?
         .config("tfb", utils::config())
