@@ -7,8 +7,6 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends libjemalloc2
 ENV LD_PRELOAD=libjemalloc.so.2
 
-RUN apt-get update -yqq && apt-get install -yqq nginx
-
 ADD ./ /grape
 
 WORKDIR /grape
