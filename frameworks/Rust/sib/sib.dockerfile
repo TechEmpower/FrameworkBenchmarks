@@ -1,7 +1,7 @@
-FROM rust:latest
+FROM rust:1.93
 
-ADD ./ /sib
 WORKDIR /sib
+COPY . .
 
 RUN apt-get update && apt-get install -y cmake clang lld llvm libclang-dev
 RUN cargo clean
