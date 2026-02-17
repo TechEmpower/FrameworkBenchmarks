@@ -1,5 +1,6 @@
 {
   "framework": "ntex",
+  "maintainers": ["fafhrd91"],
   "tests": [{
     "default": {
         "json_url": "/json",
