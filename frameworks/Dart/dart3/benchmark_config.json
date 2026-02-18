@@ -1,5 +1,6 @@
 {
   "framework": "dart3",
+  "maintainers": ["iapicca"], 
   "tests": [{
     "default": { 
       "display_name": "dart3_native",
@@ -15,18 +16,6 @@
     },
     "aot": {
       "display_name": "dart3_aot",
-      "json_url": "/json",
-      "plaintext_url": "/plaintext",
-      "port": 8080,
-      "approach": "Stripped",
-      "classification": "Platform",
-      "database": "None",
-      "language": "Dart",
-      "os": "Linux",
-      "database_os": "Linux"
-    },
-    "hybrid": {
-      "display_name": "dart3_hybrid",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 8080,

@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:isolate';
 import 'dart:math' show min;
-import 'package:args/args.dart' show ArgParser;
 
 /// Environment declarations are evaluated at compile-time. Use 'const' to
 /// ensure values are baked into AOT/Native binaries for the benchmark.
@@ -14,6 +13,18 @@ import 'package:args/args.dart' show ArgParser;
 /// but most ahead-of-time compiled platforms will not have this information."
 const _maxIsolatesfromEnvironment = int.fromEnvironment('MAX_ISOLATES');
 
+/// The fixed TCP port used by the server.
+/// Defined here for visibility and ease of configuration.
+const _defaultPort = 8080;
+
+/// A reusable instance of the UTF-8 JSON encoder to efficiently
+/// transform Dart objects into byte arrays for HTTP responses.
+final _jsonEncoder = JsonUtf8Encoder();
+
+/// Internal token used to notify newly spawned processes that they
+/// belong to a secondary "worker group".
+const workerGroupTag = '--workerGroup';
+
 void main(List<String> args) {
   /// Defines local isolate quota, using MAX_ISOLATES if provided.
   /// Falls back to total available cores while respecting hardware limits.
@@ -21,42 +32,35 @@ void main(List<String> args) {
       ? min(_maxIsolatesfromEnvironment, Platform.numberOfProcessors)
       : Platform.numberOfProcessors;
 
-  /// Triggers process-level horizontal scaling when running in AOT.
-  if (Platform.script.toFilePath().endsWith('.aot')) {
-    /// Internal token used to notify newly spawned processes that they
-    /// belong to a secondary "worker group".
-    const workerGroupTag = '--workerGroup';
+  /// Determine if this process instance was initialized as a worker group.
+  final isWorkerGroup = args.contains(workerGroupTag);
 
-    /// Determine if this process instance was initialized as a worker group.
-    final isWorkerGroup = args.contains(workerGroupTag);
+  if (isWorkerGroup) {
+    /// Sanitize the argument list to ensure the internal token does not
+    /// interfere with application-level argument parsing.
+    args.removeAt(args.indexOf(workerGroupTag));
+  }
+  /// Prevents recursive spawning
+  /// by ensuring only the primary process can spawn worker groups
+  else {
+    /// Calculate the number of secondary worker groups required
+    /// to fully utilize the available hardware capacity.
+    ///
+    /// Each group serves as a container for multiple isolates,
+    /// helping to bypass internal VM scaling bottlenecks.
+    final workerGroups = Platform.numberOfProcessors ~/ maxIsolates - 1;
 
-    if (isWorkerGroup) {
-      /// Sanitize the argument list to ensure the internal token does not
-      /// interfere with application-level argument parsing.
-      args.removeAt(args.indexOf(workerGroupTag));
+    /// Bootstraps independent worker processes via AOT snapshots.
+    /// Each process initializes its own Isolate Group.
+    for (var i = 0; i < workerGroups; i++) {
+      /// [Platform.script] identifies the AOT snapshot or executable.
+      /// [Isolate.spawnUri] spawns a new process group via [main()].
+      Isolate.spawnUri(Platform.script, [...args, workerGroupTag], null);
     }
-    /// Prevents recursive spawning
-    /// by ensuring only the primary process can spawn worker groups
-    else {
-      /// Calculate the number of secondary worker groups required
-      /// to fully utilize the available hardware capacity.
-      ///
-      /// Each group serves as a container for multiple isolates,
-      /// helping to bypass internal VM scaling bottlenecks.
-      final workerGroups = Platform.numberOfProcessors ~/ maxIsolates - 1;
 
-      /// Bootstraps independent worker processes via AOT snapshots.
-      /// Each process initializes its own Isolate Group.
-      for (var i = 0; i < workerGroups; i++) {
-        /// [Platform.script] identifies the AOT snapshot or executable.
-        /// [Isolate.spawnUri] spawns a new process group via [main()].
-        Isolate.spawnUri(Platform.script, [...args, workerGroupTag], null);
-      }
-
-      /// Updates local isolate limits, assigning the primary group
-      /// the remaining cores after worker group allocation.
-      maxIsolates = Platform.numberOfProcessors - workerGroups * maxIsolates;
-    }
+    /// Updates local isolate limits, assigning the primary group
+    /// the remaining cores after worker group allocation.
+    maxIsolates = Platform.numberOfProcessors - workerGroups * maxIsolates;
   }
 
   /// Create an [Isolate] containing an [HttpServer]
@@ -74,14 +78,14 @@ void _startServer(List<String> args) async {
   /// Binds the [HttpServer] on `0.0.0.0:8080`.
   final server = await HttpServer.bind(
     InternetAddress.anyIPv4,
-    _portParser(args, defaultPort: 8080),
+    _defaultPort,
     shared: true,
   );
 
   server
     ..defaultResponseHeaders.clear()
     /// Sets [HttpServer]'s [serverHeader].
-    ..serverHeader = 'dart'
+    ..serverHeader = 'dart_aot'
     /// Handles [HttpRequest]'s from [HttpServer].
     ..listen(_handleRequest);
 }
@@ -142,18 +146,3 @@ void _plaintextTest(HttpRequest request) => _sendText(
   request,
   'Hello, World!',
 );
-
-final _jsonEncoder = JsonUtf8Encoder();
-
-int _portParser(
-  List<String> args, {
-  required int defaultPort,
-  portTag = 'port',
-}) {
-  final parser = ArgParser()
-    ..addOption(
-      portTag,
-      defaultsTo: '$defaultPort',
-    );
-  return int.tryParse(parser.parse(args)[portTag]) ?? defaultPort;
-}
