@@ -18,7 +18,8 @@
       "webserver": "None",
       "os": "Linux",
       "display_name": "scalene",
-      "notes": ""
+      "notes": "",
+      "tags": ["broken"]
     }
   }]
 }
