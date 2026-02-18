@@ -3,7 +3,6 @@
   "tests": [{
     "default": { 
       "display_name": "dart3_native",
-      "dockerfile": "dart_native/dart_native.dockerfile",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 8080,
@@ -16,7 +15,6 @@
     },
     "aot": {
       "display_name": "dart3_aot",
-      "dockerfile": "dart_aot/dart_aot.dockerfile",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 8080,
