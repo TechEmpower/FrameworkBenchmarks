@@ -12,4 +12,4 @@ COPY --from=build /app/build/libs/ktor-asyncdb.jar ktor-asyncdb.jar
 
 EXPOSE 9090
 
-CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AlwaysPreTouch", "-jar", "ktor-asyncdb.jar", "jasync-sql"]
+CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AlwaysPreTouch", "-Djava.lang.Integer.IntegerCache.high=10000", "-jar", "ktor-asyncdb.jar", "jasync-sql"]

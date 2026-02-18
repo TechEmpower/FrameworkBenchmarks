@@ -7,4 +7,4 @@ RUN gradle --no-daemon shadowJar
 
 EXPOSE 9090
 
-CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AlwaysPreTouch", "-jar", "app/build/libs/app-all.jar", "R2dbc", "Dsl"]
+CMD ["java", "-server", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AlwaysPreTouch", "-Djava.lang.Integer.IntegerCache.high=10000", "-jar", "app/build/libs/app-all.jar", "R2dbc", "Dsl"]
