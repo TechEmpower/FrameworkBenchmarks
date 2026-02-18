@@ -29,14 +29,3 @@ Test URLs:
 
 - JSON: `http://localhost:8080/json`
 - PLAINTEXT: `http://localhost:8080/plaintext`
-
-### Hybrid
-
-Uses Dart Native, but leverages a load balancer to bypass horizontal scaling limits.
-Designed for better hardware utilization despite increased complexity and overhead.
-([source code](https://github.com/TechEmpower/FrameworkBenchmarks/tree/master/frameworks/Dart/dart3/dart_hybrid))
-
-Test URLs:
-
-- JSON: `http://localhost:8080/json`
-- PLAINTEXT: `http://localhost:8080/plaintext`
