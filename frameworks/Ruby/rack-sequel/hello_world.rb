@@ -105,19 +105,19 @@ class HelloWorld
     case env['PATH_INFO']
     when '/json'
       # Test type 1: JSON serialization
-      respond JSON_TYPE, { message: 'Hello, World!' }.to_json
+      respond JSON_TYPE, JSON.generate({ message: 'Hello, World!' })
     when '/db'
       # Test type 2: Single database query
-      respond JSON_TYPE, db.to_json
+      respond JSON_TYPE, JSON.generate(db)
     when '/queries'
       # Test type 3: Multiple database queries
-      respond JSON_TYPE, queries(env).to_json
+      respond JSON_TYPE, JSON.generate(queries(env))
     when '/fortunes'
       # Test type 4: Fortunes
       respond HTML_TYPE, fortunes
     when '/updates'
       # Test type 5: Database updates
-      respond JSON_TYPE, updates(env).to_json
+      respond JSON_TYPE, JSON.generate(updates(env))
     when '/plaintext'
       # Test type 6: Plaintext
       respond PLAINTEXT_TYPE, 'Hello, World!'
