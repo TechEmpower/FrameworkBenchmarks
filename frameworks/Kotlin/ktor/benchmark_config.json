@@ -1,6 +1,6 @@
 {
   "framework": "ktor",
-  "maintainers": ["ShreckYe"],
+  "maintainers": ["ShreckYe", "inemtsev"],
   "tests": [
     {
       "default": {

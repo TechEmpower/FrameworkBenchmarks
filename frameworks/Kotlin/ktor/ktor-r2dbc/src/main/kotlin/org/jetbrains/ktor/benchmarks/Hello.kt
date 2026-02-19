@@ -107,8 +107,8 @@ fun Application.main() {
                     .then(Mono.from(connection.commitTransaction()))
             },
                 Connection::close,
-                { connection, _ -> connection.rollbackTransaction() },
-                { connection -> connection.rollbackTransaction() }
+                { connection, _ -> Mono.from(connection.rollbackTransaction()).then(Mono.from(connection.close())) },
+                { connection -> Mono.from(connection.rollbackTransaction()).then(Mono.from(connection.close())) }
             ).awaitFirstOrNull()
 
             call.respondJson(updatedWorlds)
@@ -126,11 +126,14 @@ private suspend fun ConnectionFactory.fetchWorlds(
 ): List<World> {
     if (count <= 0) return emptyList()
     val concurrency = min(count, 32)
-    return Mono.usingWhen(create(), { connection ->
-        Flux.range(0, count)
-            .flatMap({ selectWorldPublisher(connection) }, concurrency)
-            .collectList()
-    }, Connection::close).awaitSingle()
+    return Flux.range(0, count)
+        .flatMap({
+            Mono.usingWhen(create(), { connection ->
+                selectWorldPublisher(connection)
+            }, Connection::close)
+        }, concurrency)
+        .collectList()
+        .awaitSingle()
 }
 
 private fun selectWorld(connection: Connection): Mono<World> =
@@ -186,7 +189,6 @@ private fun configurePostgresR2DBC(config: ApplicationConfig): ConnectionFactory
         .maxSize(config.property("db.maxPoolSize").getString().toInt())
         .maxIdleTime(Duration.ofSeconds(30))
         .maxAcquireTime(Duration.ofSeconds(5))
-        .validationQuery("SELECT 1")
         .build()
 
     return ConnectionPool(cp)
