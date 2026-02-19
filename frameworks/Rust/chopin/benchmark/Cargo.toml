@@ -1,0 +1,15 @@
+[package]
+name = "chopin-benchmark"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "TechEmpower Framework Benchmarks — Chopin"
+
+[[bin]]
+name = "chopin-benchmark"
+path = "src/main.rs"
+
+[dependencies]
+axum = { version = "0.8", default-features = false, features = ["http1", "tokio"] }
+chopin-core = { version = "0.3.3", features = ["perf"] }
+tokio = { version = "1", features = ["rt", "net", "macros"] }
