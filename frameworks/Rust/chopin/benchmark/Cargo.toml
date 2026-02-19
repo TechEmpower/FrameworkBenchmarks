@@ -11,7 +11,7 @@ path = "src/main.rs"
 
 [dependencies]
 axum = { version = "0.8", default-features = false, features = ["http1", "json", "tokio"] }
-chopin-core = { version = "0.3.4", features = ["perf"] }
+chopin-core = { version = "0.3.5", features = ["perf"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 tokio = { version = "1", features = ["rt", "net", "macros"] }
