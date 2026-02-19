@@ -1,10 +1,12 @@
 use std::sync::Arc;
 
-use axum::response::IntoResponse;
-use axum::routing::get;
-use axum::{http::HeaderValue, Json, Router};
-use axum::http::header;
+use chopin_core::extract::Json;
+use chopin_core::http::header;
+use chopin_core::http::HeaderValue;
+use chopin_core::response::IntoResponse;
+use chopin_core::routing::get;
 use chopin_core::FastRoute;
+use chopin_core::Router;
 use serde::Serialize;
 use tracing::info;
 
@@ -15,8 +17,8 @@ struct Message {
 
 // ── Handlers ────────────────────────────────────────────────────────────────
 
-/// Plaintext: TFB requires headers to be computed per-request, not cached.
-/// Using Axum handler ensures Content-Length and Date are fresh for each request.
+/// Plaintext: static body is allowed by TFB.
+/// Headers (Content-Length, Date, Server) are computed per-request by chopin-core 0.3.5+.
 async fn plaintext_handler() -> impl IntoResponse {
     (
         [(header::SERVER, HeaderValue::from_static("chopin"))],
@@ -24,19 +26,18 @@ async fn plaintext_handler() -> impl IntoResponse {
     )
 }
 
-/// JSON: TFB requires both serialization and headers to be computed per-request.
-/// Using Axum's Json<T> with per-request struct creation.
+/// JSON: per-request serialization required by TFB.
+/// chopin-core 0.3.5+ computes all headers (Content-Length, Date, Server) per-request.
 async fn json_handler() -> impl IntoResponse {
-    let msg = Message {
-        message: "Hello, World!",
-    };
     (
         [(header::SERVER, HeaderValue::from_static("chopin"))],
-        Json(msg),
+        Json(Message {
+            message: "Hello, World!",
+        }),
     )
 }
 
-// ── Main ────────────────────────────────────────────────────────────────
+// ── Main ────────────────────────────────────────────────────────────────────
 
 #[tokio::main(flavor = "current_thread")]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -45,9 +46,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let config = chopin_core::Config::from_env()?;
     chopin_core::perf::init_date_cache();
 
-    // TFB compliance: All headers (Content-Length, Date, Server) must be
-    // computed per-request, not cached. FastRoute caches headers, violating
-    // the spec. Use Axum Router instead to ensure fresh headers each time.
+    // TFB compliance: chopin-core 0.3.5+ computes headers per-request, not cached.
     let router = Router::new()
         .route("/plaintext", get(plaintext_handler))
         .route("/json", get(json_handler));
@@ -55,7 +54,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let addr: std::net::SocketAddr = config.server_addr().parse()?;
     info!("Starting Chopin server on {}", addr);
 
-    // Empty FastRoute list (no high-performance cached routes)
+    // Empty FastRoute list (only use Router for TFB compliance)
     let fast_routes: Arc<[FastRoute]> = Arc::new([]);
 
     chopin_core::server::run_reuseport(addr, fast_routes, router, std::future::pending())
