@@ -189,7 +189,6 @@ private fun configurePostgresR2DBC(config: ApplicationConfig): ConnectionFactory
         .maxSize(config.property("db.maxPoolSize").getString().toInt())
         .maxIdleTime(Duration.ofSeconds(30))
         .maxAcquireTime(Duration.ofSeconds(5))
-        .validationQuery("SELECT 1")
         .build()
 
     return ConnectionPool(cp)
