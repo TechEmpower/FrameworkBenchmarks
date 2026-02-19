@@ -1,9 +1,9 @@
 use std::sync::Arc;
 
+use axum::http::HeaderValue;
 use axum::response::IntoResponse;
 use axum::routing::get;
-use axum::Json;
-use axum::Router;
+use axum::{http::header, Json, Router};
 use chopin_core::FastRoute;
 use serde::Serialize;
 
@@ -11,7 +11,7 @@ use serde::Serialize;
 
 #[derive(Serialize)]
 struct Message {
-    message: String,
+    message: &'static str,
 }
 
 // ── Handlers ────────────────────────────────────────────────────────────────
@@ -19,9 +19,12 @@ struct Message {
 /// JSON Serialization test (TFB requirement: per-request serialization)
 async fn json_handler() -> impl IntoResponse {
     let msg = Message {
-        message: "Hello, World!".to_string(),
+        message: "Hello, World!",
     };
-    Json(msg)
+    (
+        [(header::SERVER, HeaderValue::from_static("chopin"))],
+        Json(msg),
+    )
 }
 
 // ── Main ────────────────────────────────────────────────────────────────────
