@@ -16,8 +16,9 @@ tadx:
 
   data:
     db-storage:
-      driver-type: jdbc # reactive
-      db-type: postgresql
-      url: jdbc:postgresql://tfb-database:5432/hello_world
+      type: postgresql
+      host: tfb-database
+      port: 5432
+      database: hello_world
       username: benchmarkdbuser
       password: benchmarkdbpass
