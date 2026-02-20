@@ -1,5 +1,6 @@
 {
   "framework": "suave",
+  "maintainers": ["ademar"], 
   "tests": [
     {
       "default": {
