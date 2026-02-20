@@ -9,7 +9,7 @@ tadx:
 
   web:
     server:
-      port: 8000
+      port: 8080
     static-resource-list:
       - prefix:  /static
         folder: /home/tadpole/dev/tadx.io/tadx-docs/docs/_static

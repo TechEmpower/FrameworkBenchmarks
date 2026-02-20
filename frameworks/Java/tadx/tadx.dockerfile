@@ -11,7 +11,7 @@ WORKDIR /tadx
 #COPY --from=build /home/gradle/tadx-benchmark/build/libs/tadx-benchmark-0.0.1-SNAPSHOT.jar tadx.jar
 COPY ./build/libs/tadx-benchmark-0.0.1-SNAPSHOT.jar tadx.jar
 
-EXPOSE 8000
+EXPOSE 8080
 
 CMD java $JAVA_OPTIONS                  \
       -server -Xms2G -Xmx2G             \

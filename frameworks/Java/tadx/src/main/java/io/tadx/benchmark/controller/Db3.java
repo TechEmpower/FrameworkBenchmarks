@@ -1,15 +1,11 @@
 package io.tadx.benchmark.controller;
 
+import io.tadx.benchmark.db.PgConnPool;
 import io.tadx.benchmark.entity.World;
-import io.tadx.core.TadxApplication;
 import io.tadx.core.utils.AsyncUtils;
 import io.tadx.web.HttpMethod;
 import io.tadx.web.annotation.RestController;
 import io.tadx.web.annotation.RestFunction;
-import io.vertx.core.Future;
-import io.vertx.core.Promise;
-import io.vertx.pgclient.PgBuilder;
-import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.sqlclient.*;
 
 import java.util.SplittableRandom;
@@ -18,23 +14,15 @@ import java.util.SplittableRandom;
  * EN: The entry point of the application.
  */
 
-@RestController(mapping = "/db")
+@RestController(mapping = "/db3")
 public class Db3 {
     private static final SplittableRandom RANDOM = new SplittableRandom();
     private static final String SELECT_WORLD = "SELECT id, randomnumber from WORLD where id=$1";
     private final PreparedQuery<RowSet<Row>> SELECT_WORLD_QUERY;
 
     public Db3() {
-        PgConnectOptions connectOptions = new PgConnectOptions().
-                setPort(5432).setHost("tfb-database").
-                setDatabase("hello_world").
-                setUser("benchmarkdbuser").
-                setPassword("benchmarkdbpass").
-                setCachePreparedStatements(true).
-                setPreparedStatementCacheMaxSize(1024).
-                setPipeliningLimit(100000);
-        PoolOptions poolOptions = new PoolOptions().setMaxSize(2000);
-        SqlClient client = PgBuilder.client().with(poolOptions).connectingTo(connectOptions).using(TadxApplication.vertx()).build();
+
+        SqlClient client = PgConnPool.client();
         SELECT_WORLD_QUERY = client.preparedQuery(SELECT_WORLD);
     }
 
