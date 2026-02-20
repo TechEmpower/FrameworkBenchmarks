@@ -175,7 +175,7 @@ impl PgConnection {
         for _ in 0..num {
             let id = (self.rang.clone().generate::<u32>() % 10_000 ) as i32;
             let row = self.cl.query_one(&self.world, &[&id]).await.unwrap();
-           worlds.push(World {
+            worlds.push(World {
                 id: row.get(0),
                 randomnumber: row.get(1),
             });
@@ -217,7 +217,7 @@ impl PgConnection {
                 id:ids[index],
                 randomnumber:s_id
             });
-           numbers.push(s_id);
+            numbers.push(s_id);
         }
         buffers.body.clear();
         for index in 0..num {
@@ -262,24 +262,22 @@ impl PgConnection {
 
 
     pub fn get_cached_queries(&self,num:usize)->&[u8]{
-        let buf = self.buffers();
-        let buf = &mut buf.body;
-        buf.clear();
-        buf.extend_from_slice(br#"["#);
-        let mut writer = BytesMuteWriter(buf);
+        let buffers = self.buffers();
+        let mut worlds = Vec::<World>::with_capacity(num);
         for _ in 0..num {
             let rd = (self.rang.clone().generate::<u32>() % 10_000 ) as i32;
             let v = match self.get_world_id_for_cache(rd){
                 None => {continue}
                 Some(e)=>{e}
             };
-            writer.extend_from_slice(br"{");
-            _ = write!(writer, r#""id":{},"randomnumber":{}"#, rd, v);
-            writer.extend_from_slice(br"},");
+            worlds.push(World{
+                id:rd,
+                randomnumber:*v
+            })
         }
-        if buf.len() >1  {buf.truncate(buf.len() - 1);}
-        buf.extend_from_slice(b"]");
-        return &buf[..]
+        buffers.body.clear();
+        sonic_rs::to_writer(BytesMuteWriter(&mut buffers.body), &worlds).unwrap();
+        return &buffers.body[..]
     }
 
     fn get_world_id_for_cache(&self, id: i32) -> Option<&i32> {
