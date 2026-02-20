@@ -1,5 +1,6 @@
 {
   "framework": "hyperlane",
+  "maintainers": ["eastspire"],
   "tests": [
     {
       "default": {

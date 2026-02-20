@@ -8,14 +8,14 @@ HelloWorld::App.controllers  do
   end
 
   get '/json', :provides => [:json] do
-    {message: "Hello, World!"}.to_json
+    JSON.generate({message: "Hello, World!"})
   end
 
   get '/db', :provides => [:json] do
     world = ActiveRecord::Base.with_connection do
       World.find(rand1).attributes
     end
-    world.to_json
+    JSON.generate(world)
   end
 
   get '/queries', :provides => [:json] do
@@ -24,7 +24,7 @@ HelloWorld::App.controllers  do
         World.find(id).attributes
       end
     end
-    worlds.to_json
+    JSON.generate(worlds)
   end
 
   get '/fortunes' do
@@ -51,7 +51,7 @@ HelloWorld::App.controllers  do
       World.upsert_all(worlds)
     end
 
-    worlds.to_json
+    JSON.generate(worlds)
   end
 
   get '/plaintext' do

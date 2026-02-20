@@ -35,22 +35,23 @@ class App < Rack::App
 
   get '/json' do
     set_headers(JSON_TYPE)
-    { message: 'Hello, World!' }.to_json
+    JSON.generate({ message: 'Hello, World!' })
   end
 
   get '/db' do
     set_headers(JSON_TYPE)
-    World.with_pk(rand1).values.to_json
+    JSON.generate(World.with_pk(rand1).values)
   end
 
   get '/queries' do
     set_headers(JSON_TYPE)
     ids = ALL_IDS.sample(bounded_queries)
-    DB.synchronize do
+    worlds = DB.synchronize do
       ids.map do |id|
         World.with_pk(id).values
       end
-    end.to_json
+    end
+    JSON.generate(worlds)
   end
 
   get '/fortunes' do

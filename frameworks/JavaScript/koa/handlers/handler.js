@@ -21,7 +21,7 @@ module.exports = (databaseLayer) => ({
 
   Fortunes: async (ctx) => {
     const fortunes = await databaseLayer.allFortunes();
-    fortunes.push(h.additionalFortune);
+    fortunes.push(h.additionalFortune());
     fortunes.sort((a, b) => a.message.localeCompare(b.message));
 
     return ctx.render('fortunes', {fortunes});

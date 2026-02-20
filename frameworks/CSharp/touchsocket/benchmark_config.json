@@ -1,5 +1,6 @@
 {
   "framework": "touchsocket",
+  "maintainers": ["rrqm"], 
   "tests": [
     {
       "default": {

@@ -1,5 +1,6 @@
 {
   "framework": "ktor",
+  "maintainers": ["ShreckYe", "inemtsev"],
   "tests": [
     {
       "default": {
@@ -200,6 +201,29 @@
         "display_name": "ktor-netty-exposed-r2dbc-dsl",
         "notes": "",
         "versus": "ktor"
+      },
+      "jstach": {
+        "plaintext_url": "/plaintext",
+        "json_url": "/json",
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
+        "update_url": "/updates?queries=",
+        "fortune_url": "/fortunes",
+
+        "port": 9090,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "Postgres",
+        "framework": "ktor",
+        "language": "Kotlin",
+        "orm": "Raw",
+        "platform": "Netty",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "ktor-netty-jstach",
+        "notes": "http://ktor.io/",
+        "versus": "netty"
       }
     }
   ]

@@ -29,42 +29,46 @@ class HelloWorld
   DATE = 'Date'
   SERVER = 'Server'
   SERVER_STRING = 'Rack'
-  TEMPLATE_PREFIX = '<!DOCTYPE html>
-<html>
-<head>
-  <title>Fortunes</title>
-</head>
-<body>
-  <table>
-    <tr>
-      <th>id</th>
-      <th>message</th>
-    </tr>'
-  TEMPLATE_POSTFIX = '</table>
+  TEMPLATE_PREFIX = <<~HTML
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Fortunes</title>
+    </head>
+    <body>
+      <table>
+        <tr>
+          <th>id</th>
+          <th>message</th>
+        </tr>
+  HTML
+  TEMPLATE_POSTFIX = <<~HTML
+      </table>
     </body>
-  </html>'
+    </html>
+  HTML
 
   def call(env)
     case env['PATH_INFO']
     when '/json'
       # Test type 1: JSON serialization
       respond JSON_TYPE,
-              { message: 'Hello, World!' }.to_json
+        JSON.generate({ message: 'Hello, World!' })
     when '/db'
       # Test type 2: Single database query
       id = random_id
-      respond JSON_TYPE, $db.with{ _1.select_world(id) }.to_json
+      respond JSON_TYPE, JSON.generate($db.with{ _1.select_world(id) })
     when '/queries'
       # Test type 3: Multiple database queries
       queries = bounded_queries(env)
-      respond JSON_TYPE, select_worlds(queries).to_json
+      respond JSON_TYPE, JSON.generate(select_worlds(queries))
     when '/fortunes'
       # Test type 4: Fortunes
       respond HTML_TYPE, fortunes
     when '/updates'
       # Test type 5: Database updates
       queries = bounded_queries(env)
-      respond JSON_TYPE, update_worlds(queries).to_json
+      respond JSON_TYPE, JSON.generate(update_worlds(queries))
     when '/plaintext'
       # Test type 6: Plaintext
       respond PLAINTEXT_TYPE, 'Hello, World!'
@@ -102,9 +106,9 @@ class HelloWorld
     fortunes = $db.with(&:select_fortunes).map(&:to_h)
     fortunes << { 'id' => 0, 'message' => 'Additional fortune added at request time.' }
     fortunes.sort_by! { |item| item['message'] }
+
     buffer = String.new
     buffer << TEMPLATE_PREFIX
-
     fortunes.each do |item|
       buffer << "<tr><td>#{item['id']}</td><td>#{ERB::Escape.html_escape(item['message'])}</td></tr>"
     end

@@ -9,7 +9,7 @@ module HelloWorld
          'Content-Type' => 'application/json',
          'Date' => Time.now.httpdate,
        },
-       [{ 'message' => 'Hello, World!' }.to_json]]
+       [JSON.generate({ 'message' => 'Hello, World!' })]]
     end
     get "/db", to: "db.index"
     get "/queries", to: "queries.index"

@@ -19,7 +19,8 @@
         "database_os": "Linux",
         "display_name": "Tachyon-Concept",
         "notes": "",
-        "versus": "None"
+        "versus": "None",
+        "tags": [ "broken" ]
       },
       "ub": {
         "json_url": "/json",
@@ -38,7 +39,8 @@
         "database_os": "Linux",
         "display_name": "Tachyon-Concept-UB",
         "notes": "",
-        "versus": "None"
+        "versus": "None",
+        "tags": [ "broken" ]
       }
     }
   ]

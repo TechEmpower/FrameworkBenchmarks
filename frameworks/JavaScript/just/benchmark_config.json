@@ -25,7 +25,8 @@
         "database_os": "Linux",
         "display_name": "just-js",
         "notes": "",
-        "versus": ""
+        "versus": "",
+        "tags": [ "broken" ]
       }
     }
   ]

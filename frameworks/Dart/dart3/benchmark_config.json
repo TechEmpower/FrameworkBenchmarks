@@ -1,5 +1,6 @@
 {
   "framework": "dart3",
+  "maintainers": ["iapicca"], 
   "tests": [{
     "default": { 
       "display_name": "dart3_native",
@@ -25,5 +26,5 @@
       "os": "Linux",
       "database_os": "Linux"
     }
-}]
+  }]
 }

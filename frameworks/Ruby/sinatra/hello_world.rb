@@ -33,6 +33,9 @@ class HelloWorld < Sinatra::Base
 
     # Disable logging middleware
     set :logging, nil
+
+    # Set root once instead executing the proc on every request
+    set :root, File.expand_path(__dir__)
   end
 
   # Test type 1: JSON serialization
@@ -106,7 +109,7 @@ class HelloWorld < Sinatra::Base
   def render_json(data)
     add_headers
     content_type :json
-    data.to_json
+    JSON.generate(data)
   end
 
   def render_html(template)

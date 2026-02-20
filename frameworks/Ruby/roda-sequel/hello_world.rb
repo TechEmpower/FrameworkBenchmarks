@@ -41,13 +41,13 @@ class HelloWorld < Roda
     # Test type 1: JSON serialization
     r.is "json" do
       response[CONTENT_TYPE] = JSON_TYPE
-      { message: "Hello, World!" }.to_json
+      JSON.generate({ message: "Hello, World!" })
     end
 
     # Test type 2: Single database query
     r.is "db" do
       response[CONTENT_TYPE] = JSON_TYPE
-      World.with_pk(rand1).values.to_json
+      JSON.generate(World.with_pk(rand1).values)
     end
 
     # Test type 3: Multiple database queries
@@ -60,7 +60,7 @@ class HelloWorld < Roda
             World.with_pk(id).values
           end
         end
-      worlds.to_json
+      JSON.generate(worlds)
     end
 
     # Test type 4: Fortunes
@@ -93,7 +93,7 @@ class HelloWorld < Roda
           end
         World.batch_update(worlds)
       end
-      worlds.map!(&:values).to_json
+      JSON.generate(worlds.map!(&:values))
     end
 
     # Test type 6: Plaintext

@@ -41,7 +41,8 @@
         "database_os": "Linux",
         "display_name": "Mesh",
         "notes": "",
-        "versus": "nodejs"
+        "versus": "nodejs",
+        "tags": [ "broken" ]
       },
       "postgres": {
         "dockerfile": "mesh-postgres.dockerfile",
@@ -85,7 +86,8 @@
         "database_os": "Linux",
         "display_name": "Mesh",
         "notes": "",
-        "versus": "nodejs"
+        "versus": "nodejs",
+        "tags": ["broken"]
       }
     }
   ]
