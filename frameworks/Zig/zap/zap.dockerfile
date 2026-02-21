@@ -1,4 +1,4 @@
-FROM fedora:40 AS build
+FROM fedora:42 AS build
 
 WORKDIR /zap
 
@@ -20,7 +20,11 @@ RUN chmod +x build-nginx-conf.sh
 
 RUN ./build-nginx-conf.sh
 
-RUN dnf install -y zig nginx
+RUN dnf install -y nginx tar xz && \
+    curl -L https://ziglang.org/download/0.15.1/zig-linux-x86_64-0.15.1.tar.xz -o /tmp/zig.tar.xz && \
+    tar xf /tmp/zig.tar.xz -C /usr/local && \
+    ln -s /usr/local/zig-linux-x86_64-0.15.1/zig /usr/local/bin/zig && \
+    rm /tmp/zig.tar.xz
 RUN zig version
 RUN zig build -Doptimize=ReleaseFast 
 RUN cp /zap/zig-out/bin/zap /usr/local/bin
