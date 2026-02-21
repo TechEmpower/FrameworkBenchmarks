@@ -1,27 +1,11 @@
 {
   "framework": "tadx",
+  "maintainers": ["yn-tadpole"],
   "tests": [
     {
       "default": {
         "json_url": "/json",
         "plaintext_url": "/plaintext",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Fullstack",
-        "database": "None",
-        "framework": "Tad.x",
-        "language": "Java",
-        "flavor": "None",
-        "orm": "Micro",
-        "platform": "Tad.x",
-        "webserver": "None",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "tadx",
-        "notes": "",
-        "versus": ""
-      },
-      "postgres": {
         "db_url": "/db",
         "query_url": "/queries?queries=",
         "fortune_url": "/fortunes",
@@ -39,7 +23,7 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "tadx-postgres",
+        "display_name": "tadx",
         "notes": "",
         "versus": ""
       }
