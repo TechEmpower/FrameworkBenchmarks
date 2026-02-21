@@ -1,15 +1,12 @@
 package io.tadx.benchmark.route_mapper;
 
+import io.tadx.benchmark.db.PgConnPool;
 import io.tadx.benchmark.entity.World;
-import io.tadx.core.TadxApplication;
 import io.tadx.core.data.Json;
 import io.tadx.web.TadxWebApplication;
 import io.tadx.web.WebContext;
 import io.tadx.web.annotation.RouteMapping;
 import io.tadx.web.route.RouteMapper;
-import io.vertx.pgclient.PgBuilder;
-import io.vertx.pgclient.PgConnectOptions;
-import io.vertx.sqlclient.PoolOptions;
 import io.vertx.sqlclient.Row;
 import io.vertx.sqlclient.RowSet;
 import io.vertx.sqlclient.Tuple;
@@ -23,29 +20,18 @@ import java.util.SplittableRandom;
 /**
  * RouteMapper+Postgresql Client 模式的/queries测试
  */
-@RouteMapping(path = "/queries2")
+@RouteMapping(path = "/queries")
 public class QueriesRouteMapper2_Postgresql implements RouteMapper {
 
     private static final SplittableRandom RANDOM = new SplittableRandom();
-    PgConnectOptions connectOptions;
-    PoolOptions poolOptions;
     SqlClientInternal client;
     private static final String SELECT_WORLD = "SELECT id, randomnumber from WORLD where id=$1";
     //private final PreparedQuery<RowSet<Row>> SELECT_WORLD_QUERY;
 
     public QueriesRouteMapper2_Postgresql() {
-        connectOptions = new PgConnectOptions().
-                setPort(5432).setHost("tfb-database").
-                setDatabase("hello_world").
-                setUser("benchmarkdbuser").
-                setPassword("benchmarkdbpass").
-                setCachePreparedStatements(true).
-                setPreparedStatementCacheMaxSize(1024).
-                setPipeliningLimit(100000);
-        // Pool options
-        poolOptions = new PoolOptions().setMaxSize(2000);
+
         // Create the client pool
-        client = (SqlClientInternal) PgBuilder.client().with(poolOptions).connectingTo(connectOptions).using(TadxApplication.vertx()).build();
+        client = PgConnPool.client();;
         //SELECT_WORLD_QUERY = client.preparedQuery(SELECT_WORLD);
     }
 

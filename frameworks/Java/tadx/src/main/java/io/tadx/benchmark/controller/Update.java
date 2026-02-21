@@ -4,6 +4,7 @@ import io.tadx.benchmark.entity.World;
 import io.tadx.data.DbStorage;
 import io.tadx.web.HttpMethod;
 import io.tadx.web.annotation.*;
+import io.vertx.sqlclient.Tuple;
 
 import java.util.SplittableRandom;
 
@@ -32,9 +33,9 @@ public class Update {
         World[] worlds = new World[queries];
         //ArrayList<DataMap> updates = new ArrayList<>();
         for (int i = 0; i < queries; i++) {
-            worlds[i] = dbStorage.findEntity(World.class, randomWorld());
+            worlds[i] = dbStorage.findEntity(World.class, Tuple.of(randomWorld()));
             //updates.add(DataMap.createNew().put("id", worlds[i].id).put("randomnumber", randomWorld()));
-            dbStorage.execute("update world set randomnumber=? where id=?", randomWorld(), worlds[i].id);
+            dbStorage.execute("update world set randomnumber=? where id=?", Tuple.of(randomWorld(), worlds[i].id));
         }
         //dbStorage.executeBatch("update world set randomnumber={randomnumber} where id={id}", updates);
 

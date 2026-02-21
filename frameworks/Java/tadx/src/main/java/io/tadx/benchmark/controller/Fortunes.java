@@ -8,6 +8,7 @@ import io.tadx.web.template.FreemarkerEngine;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.SplittableRandom;
 
 /**
@@ -27,7 +28,7 @@ public class Fortunes {
 
     @RestFunction(mapping = "/fortunes_2", method = HttpMethod.GET)
     public WebResult<?> execute() {
-        ArrayList<Fortune> fortunes = dbStorage.queryEntityList(Fortune.class);
+        List<Fortune> fortunes = dbStorage.queryEntityList(Fortune.class);
         fortunes.addFirst(new Fortune(0, "Additional fortune added at request time."));
         Collections.sort(fortunes);
         return WebResult.pageResult(FreemarkerEngine.class, "/templates/Fortunes_freemarker.htm");

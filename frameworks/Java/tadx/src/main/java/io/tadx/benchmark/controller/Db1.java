@@ -7,6 +7,7 @@ import io.tadx.web.*;
 import io.tadx.web.annotation.*;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
+import io.vertx.sqlclient.Tuple;
 
 import java.util.SplittableRandom;
 
@@ -28,14 +29,14 @@ public class Db1 {
     //@RestFunction(method = HttpMethod.GET)
     public Future<World> execute() {
         Promise<World> promise = Promise.promise();
-        World world = dbStorage.findEntity(World.class, randomWorld());
+        World world = dbStorage.findEntity(World.class, Tuple.of(randomWorld()));
         promise.complete(world);
         return promise.future();
     }
 
     @RestFunction(method = HttpMethod.GET)
     public DataMap executeSQL() {
-        return dbStorage.queryRow("SELECT id, randomnumber FROM world WHERE id = ?", randomWorld());
+        return dbStorage.queryRow("SELECT id, randomnumber FROM world WHERE id = ?", Tuple.of(randomWorld()));
     }
 
 
