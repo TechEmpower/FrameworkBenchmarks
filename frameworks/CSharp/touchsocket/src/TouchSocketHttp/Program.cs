@@ -25,18 +25,18 @@ public class Program
                 pool: MemoryPool<byte>.Shared,
                 readerScheduler: PipeScheduler.Inline,
                 writerScheduler: PipeScheduler.Inline,
-                pauseWriterThreshold: 1024 * 1024,
-                resumeWriterThreshold: 1024 * 512,
-                minimumSegmentSize: 4096,
+                pauseWriterThreshold: 2 * 1024 * 1024,
+                resumeWriterThreshold: 1024 * 1024,
+                minimumSegmentSize: 8192,
                 useSynchronizationContext: false);
 
                   options.SendPipeOptions = new PipeOptions(
                 pool: MemoryPool<byte>.Shared,
                 readerScheduler: PipeScheduler.Inline,
                 writerScheduler: PipeScheduler.Inline,
-                pauseWriterThreshold: 64 * 1024,
-                resumeWriterThreshold: 32 * 1024,
-                minimumSegmentSize: 4096,
+                pauseWriterThreshold: 128 * 1024,
+                resumeWriterThreshold: 64 * 1024,
+                minimumSegmentSize: 8192,
                 useSynchronizationContext: false);
               })
              .ConfigureContainer(a =>
