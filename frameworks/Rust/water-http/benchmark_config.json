@@ -13,7 +13,7 @@
         "update_url": "/updates?q=",
         "cached_query_url": "/cached-queries?q=",
         "port": 8080,
-        "approach": "Realistic",
+        "approach": "Stripped",
         "classification": "Fullstack",
         "database": "Postgres",
         "framework": "water_http",
@@ -23,7 +23,8 @@
         "webserver": "water_http",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "water_http"
+        "display_name": "water_http",
+        "tags": []
       }
     }
     ]
