@@ -9,8 +9,8 @@ This is the solon portion of a [benchmarking test suite](../) comparing a variet
 
 ## Versions
 
-* [Java OpenJDK 21](http://openjdk.java.net/)
-* [solon 3.0.2](https://github.com/noear/solon)
+* [Java OpenJDK 25](http://openjdk.java.net/)
+* [solon 3.9.1](https://github.com/opensolon/solon)
 
 ## Test URLs
 

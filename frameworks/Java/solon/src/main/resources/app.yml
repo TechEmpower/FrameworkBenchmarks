@@ -12,6 +12,14 @@ solon.threads:
   virtual:
     enabled: true
 
+solon.logging:
+  logger:
+    root:
+      level: INFO
+  appender:
+    console:
+      enable: false
+
 solon.dataSources:
   test!:
     class: "com.zaxxer.hikari.HikariDataSource"
