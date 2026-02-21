@@ -16,7 +16,7 @@ module HelloWorld
             world_repo.find(id)
           end
           response.format = :json
-          response.body = worlds.map(&:to_h).to_json
+          response.body = JSON.generate(worlds.map(&:to_h))
         end
 
         private

@@ -5,7 +5,7 @@
 
 # Requirements
 
-* Perl 5.40)
+* Perl 5.42)
 * [JSON::XS](https://metacpan.org/dist/JSON-XS)
 * [DBI](https://metacpan.org/dist/DBI)
 * [Text::Xslate](https://metacpan.org/dist/Text-Xslate)

@@ -35,7 +35,6 @@ async def pg_setup():
 
 SQL_SELECT = 'SELECT "randomnumber", "id" FROM "world" WHERE id = $1'
 SQL_UPDATE = 'UPDATE "world" SET "randomnumber"=$1 WHERE id=$2'
-ROW_ADD = [0, 'Additional fortune added at request time.']
 
 JSON_HEADERS = [('content-type', 'application/json')]
 HTML_HEADERS = [('content-type', 'text/html; charset=utf-8')]
@@ -102,7 +101,7 @@ async def route_fortunes(scope, proto):
     async with pool.acquire() as connection:
         fortunes = await connection.fetch('SELECT * FROM Fortune')
 
-    fortunes.append(ROW_ADD)
+    fortunes.append([0, 'Additional fortune added at request time.'])
     fortunes.sort(key=key)
     content = template.render(fortunes=fortunes)
     proto.response_str(

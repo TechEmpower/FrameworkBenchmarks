@@ -1,6 +1,7 @@
 FROM ruby:4.0
 
 ENV RUBY_YJIT_ENABLE=1
+ENV RUBY_MN_THREADS=1
 
 # Use Jemalloc
 RUN apt-get update && \
@@ -21,4 +22,5 @@ ENV MAX_THREADS=5
 
 EXPOSE 8080
 
-CMD bundle exec puma -b tcp://0.0.0.0:8080
+CMD export WEB_CONCURRENCY=$(($(nproc)*5/4)) && \
+    bundle exec puma -b tcp://0.0.0.0:8080

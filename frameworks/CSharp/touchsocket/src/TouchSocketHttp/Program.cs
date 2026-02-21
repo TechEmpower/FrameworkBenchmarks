@@ -27,7 +27,7 @@ public class Program
                 writerScheduler: PipeScheduler.Inline,
                 pauseWriterThreshold: 1024 * 1024,
                 resumeWriterThreshold: 1024 * 512,
-                minimumSegmentSize: -1,
+                minimumSegmentSize: 4096,
                 useSynchronizationContext: false);
 
                   options.SendPipeOptions = new PipeOptions(
@@ -36,7 +36,7 @@ public class Program
                 writerScheduler: PipeScheduler.Inline,
                 pauseWriterThreshold: 64 * 1024,
                 resumeWriterThreshold: 32 * 1024,
-                minimumSegmentSize: -1,
+                minimumSegmentSize: 4096,
                 useSynchronizationContext: false);
               })
              .ConfigureContainer(a =>

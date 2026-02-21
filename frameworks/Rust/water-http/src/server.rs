@@ -1,13 +1,18 @@
-
+use std::collections::HashMap;
 use std::pin::Pin;
+use std::ptr;
 use std::rc::Rc;
+use tokio::task::LocalSet;
 use water_http::{InitControllersRoot, RunServer, WaterController};
-use water_http::server::ServerConfigurations;
-use crate::db::{DbConnectionPool};
+use water_http::http::{HttpSender, ResponseData};
+use water_http::server::{HttpContext, ServerConfigurations};
+use crate::db::{CACHED_VALUES, DbConnectionPool};
 InitControllersRoot! {
     name:ROOT,
     holder_type:MainType,
     shared_type:SharedType,
+    headers_length:6,
+    queries_length:3
 }
 
 pub struct ThreadSharedStruct{
@@ -22,6 +27,43 @@ pub type SharedType = Rc<ThreadSharedStruct>;
 
 pub    fn run_server(){
 
+
+    _= std::thread::spawn(
+        ||{
+            let rt = tokio::runtime::Builder::new_current_thread().enable_all().build().unwrap();
+            rt.block_on(async move {
+                const URL:&'static str = "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
+                // const URL:&'static str = "postgres://postgres:root@localhost:5432/techmpower";
+
+                let  mut pool = DbConnectionPool{
+                    connections:Vec::with_capacity( 1
+                    ),
+                    next:0.into(),
+                    // rt:tokio::runtime::Builder::new_multi_thread().enable_all().worker_threads(cpu_nums).build().unwrap()
+                };
+
+                let local_set = LocalSet::new();
+
+                _= local_set.run_until(async move {
+                    tokio::task::spawn_local(async move {
+                        pool.fill_pool(URL, 1).await;
+                        let connection = pool.get_connection();
+                        let statement = connection.cl.prepare("SELECT id,randomnumber FROM World").await.unwrap();
+                        let res = connection.cl.query(&statement,&[]).await.unwrap();
+                        let mut map = HashMap::new();
+                        for row in res {
+                            map.insert(row.get(0),row.get(1));
+                        }
+                        unsafe {
+                            let ptr = ptr::addr_of_mut!(CACHED_VALUES);
+                            ptr.write(Some(map));
+                        }
+                    }).await
+                }).await;
+
+            });
+        }
+    ).join();
     let cpu_nums = num_cpus::get();
 
 
@@ -70,6 +112,9 @@ fn shared_factory()->Pin<Box<dyn futures_util::Future<Output=SharedType>>>{
 const JSON_RESPONSE:&'static [u8] = br#"{"message":"Hello, World!"}"#;
 #[cfg(any(feature = "json_plaintext",feature = "all"))]
 const P:&'static [u8] = br#"Hello, World!"#;
+
+
+
 
 #[cfg(feature = "all")]
 WaterController! {
@@ -148,6 +193,27 @@ WaterController! {
             _= sender.send_data_as_final_response(
                 http::ResponseData::Slice(data)
             ).await;
+        }
+
+
+        GET -> "cached-queries" -> cached(context)async {
+              let q = context
+        .get_from_path_query("q")
+        .and_then(|v| v.parse::<usize>().ok()) // safely parse
+        .unwrap_or(1)                          // default to 1 if missing or invalid
+        .clamp(1, 500);
+
+    let   connection:Shared = context.thread_shared_struct.clone().unwrap().clone();
+    let connection = connection.pg_connection.get_connection();
+    let data = connection.get_cached_queries(q);
+    let mut sender= context.sender();
+    sender.set_header_ef("Content-Type","application/json");
+    sender.set_header_ef("Server","water");
+    let date = httpdate::fmt_http_date(std::time::SystemTime::now());
+    sender.set_header_ef("Date",date);
+    _= sender.send_data_as_final_response(
+        http::ResponseData::Slice(data)
+    ).await;
         }
 
 

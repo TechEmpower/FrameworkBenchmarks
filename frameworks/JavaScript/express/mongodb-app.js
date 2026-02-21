@@ -52,12 +52,6 @@ if (cluster.isPrimary) {
     return world;
   };
 
-  // Set headers for all routes
-  app.use((req, res, next) => {
-    res.setHeader("Server", "Express");
-    return next();
-  });
-
   app.set('view engine', 'pug');
   app.set('views', __dirname + '/views');
 
@@ -74,12 +68,13 @@ if (cluster.isPrimary) {
       promises.push(getRandomWorld());
     }
 
+    res.setHeader("Server", "Express");
     res.send(await Promise.all(promises));
   });
 
   app.get('/mongoose', async (req, res) => {
     const result = await MWorld.findOne({_id: randomTfbNumber()}).lean().exec();
-
+    res.setHeader("Server", "Express");
     res.send(toClientWorld(result));
   });
 
@@ -88,7 +83,7 @@ if (cluster.isPrimary) {
     const newFortune = {id: 0, message: "Additional fortune added at request time."};
     fortunes.push(newFortune);
     fortunes.sort((a, b) => (a.message < b.message) ? -1 : 1);
-
+    res.setHeader("Server", "Express");
     res.render('fortunes/index', {fortunes});
   });
 
@@ -108,12 +103,13 @@ if (cluster.isPrimary) {
 
   app.get('/mongoose-update', async (req, res) => {
     const queryCount = Math.min(parseInt(req.query.queries, 10) || 1, 500);
-    const promises = [];
+    const promises = new Array(queryCount);
 
     for (let i = 1; i <= queryCount; i++) {
-      promises.push(getUpdateRandomWorld());
+      promises[i - 1] = getUpdateRandomWorld();
     }
 
+    res.setHeader("Server", "Express");
     res.send(await Promise.all(promises));
   });
 

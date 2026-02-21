@@ -1,11 +1,2 @@
 [build]
-rustflags = [
-    "-C",
-    "target-cpu=native",
-    "-C",
-    "target-feature=+avx2,+fma",
-    "-C",
-    "inline-threshold=1000",
-    "-C",
-    "link-arg=-Wl,--as-needed",
-]
+rustflags = ["-C", "link-arg=-Wl,--as-needed", "-C", "link-arg=-fuse-ld=lld"]

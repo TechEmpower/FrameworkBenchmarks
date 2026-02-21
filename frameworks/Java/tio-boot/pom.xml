@@ -8,12 +8,10 @@
   <name>${project.artifactId}</name>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <java.version>1.8</java.version>
+    <java.version>21</java.version>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
-    <tio-boot.version>2.0.5</tio-boot.version>
-
-
+    <tio-boot.version>2.0.6</tio-boot.version>
     <main.class>com.litongjava.tio.http.server.MainApp</main.class>
   </properties>
   <dependencies>
@@ -26,13 +24,14 @@
     <dependency>
       <groupId>com.litongjava</groupId>
       <artifactId>java-db</artifactId>
-      <version>1.5.5</version>
+      <version>1.5.6</version>
     </dependency>
+
 
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
-      <version>1.2.13</version>
+      <version>1.3.12</version>
     </dependency>
 
     <dependency>

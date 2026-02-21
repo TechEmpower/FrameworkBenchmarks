@@ -4,7 +4,7 @@ RUN apt-get update -yqq && \
     apt-get install -yqq libpq-dev libicu-dev git > /dev/null && \
     docker-php-ext-install pdo_pgsql intl pcntl > /dev/null
 
-COPY --link deploy/swoole/php.ini /usr/local/etc/php/
+COPY --link deploy/react/php.ini /usr/local/etc/php/
 WORKDIR /symfony
 COPY --link . .
 
@@ -19,14 +19,20 @@ RUN docker-php-ext-enable uv
 #    && pecl install event-3.1.4 > /dev/null
 # RUN docker-php-ext-enable event
 
+# Use Jemalloc for optimize
+RUN apt install libjemalloc2
+ENV LD_PRELOAD=libjemalloc.so.2
 
-COPY --from=composer/composer:latest-bin --link /composer /usr/local/bin/composer
+COPY --from=composer/composer:2-bin --link /composer /usr/local/bin/composer
 
 #ENV APP_DEBUG 1
 ENV APP_ENV prod
 
 #ENV APP_RUNTIME "Runtime\React\Runtime"
 #RUN composer require runtime/react --update-no-dev --no-scripts --quiet
+
+#fix to run Symfony 7 with React Zolex bundle
+RUN sed -i "s|\\^8|\\^7|g" /symfony/composer.json
 
 ENV APP_RUNTIME "Zolex\ReactPhpBundle\Runtime\ReactPhpRuntime"
 ENV REACT_HOST "0.0.0.0"

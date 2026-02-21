@@ -1,11 +1,28 @@
-FROM gradle:9.2.1-jdk25
+FROM gradle:9.3.1-jdk25
 
 WORKDIR /vertx-web-kotlinx
-COPY build.gradle.kts build.gradle.kts
+
+
+COPY gradle/libs.versions.toml gradle/libs.versions.toml
+COPY buildSrc buildSrc
 COPY settings.gradle.kts settings.gradle.kts
+COPY build.gradle.kts build.gradle.kts
 COPY gradle.properties gradle.properties
-COPY src src
-RUN gradle --no-daemon installDist
+
+# make empty directories for subprojects that do not need to be copied for Gradle
+RUN mkdir -p common without-db/default with-db/common with-db/default with-db/r2dbc-common with-db/r2dbc with-db/exposed-common with-db/exposed-r2dbc with-db/exposed-vertx-sql-client
+
+COPY common/build.gradle.kts common/build.gradle.kts
+COPY common/src common/src
+
+COPY with-db/common/build.gradle.kts with-db/common/build.gradle.kts
+COPY with-db/common/src with-db/common/src
+
+COPY with-db/default/build.gradle.kts with-db/default/build.gradle.kts
+COPY with-db/default/src with-db/default/src
+
+
+RUN gradle --no-daemon with-db:default:installDist
 
 EXPOSE 8080
 
@@ -30,4 +47,4 @@ CMD export JAVA_OPTS=" \
     -Dio.netty.buffer.checkAccessible=false \
     -Dio.netty.iouring.ringSize=16384 \
     " && \
-    build/install/vertx-web-kotlinx-benchmark/bin/vertx-web-kotlinx-benchmark true
+    with-db/default/build/install/default/bin/default

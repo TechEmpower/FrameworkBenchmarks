@@ -30,39 +30,17 @@ class HelloWorld < Sinatra::Base
 
     # Only add the charset parameter to specific content types per the requirements
     set :add_charset, [mime_type(:html)]
-  end
 
-  helpers do
-    def bounded_queries
-      queries = params[:queries].to_i
-      queries.clamp(QUERIES_MIN, QUERIES_MAX)
-    end
+    # Disable logging middleware
+    set :logging, nil
 
-    def json(data)
-      content_type :json
-      data.to_json
-    end
-
-    # Return a random number between 1 and MAX_PK
-    def rand1
-      rand(MAX_PK).succ
-    end
-  end
-
-  if defined?(Puma)
-    after do
-      response[SERVER_HEADER] = SERVER_STRING
-      response[DATE_HEADER] = Time.now.httpdate
-    end
-  else
-    after do
-      response[SERVER_HEADER] = SERVER_STRING
-    end
+    # Set root once instead executing the proc on every request
+    set :root, File.expand_path(__dir__)
   end
 
   # Test type 1: JSON serialization
   get '/json' do
-     json message: 'Hello, World!'
+    render_json message: 'Hello, World!'
   end
 
   # Test type 2: Single database query
@@ -72,7 +50,7 @@ class HelloWorld < Sinatra::Base
         World.find(rand1).attributes
       end
 
-    json world
+    render_json world
   end
 
   # Test type 3: Multiple database queries
@@ -85,7 +63,7 @@ class HelloWorld < Sinatra::Base
         end
       end
 
-    json worlds
+    render_json worlds
   end
 
   # Test type 4: Fortunes
@@ -93,13 +71,13 @@ class HelloWorld < Sinatra::Base
     @fortunes = ActiveRecord::Base.with_connection do
       Fortune.all
     end.to_a
-    @fortunes << Fortune.new(
-      id: 0,
-      message: 'Additional fortune added at request time.'
-    )
+    fortune = Fortune.new
+    fortune.id = 0
+    fortune.message = "Additional fortune added at request time."
+    @fortunes << fortune
     @fortunes.sort_by!(&:message)
 
-    erb :fortunes, layout: true
+    render_html :fortunes
   end
 
   # Test type 5: Database updates
@@ -118,12 +96,51 @@ class HelloWorld < Sinatra::Base
     ActiveRecord::Base.with_connection do
       World.upsert_all(worlds)
     end
-    json worlds
+    render_json worlds
   end
 
   # Test type 6: Plaintext
   get '/plaintext' do
+    render_text 'Hello, World!'
+  end
+
+  private
+
+  def render_json(data)
+    add_headers
+    content_type :json
+    JSON.generate(data)
+  end
+
+  def render_html(template)
+    add_headers
+    render :erb, template, layout: true
+  end
+
+  def render_text(content)
+    add_headers
     content_type :text
-    'Hello, World!'
+    content
+  end
+
+  def bounded_queries
+    queries = params[:queries].to_i
+    queries.clamp(QUERIES_MIN, QUERIES_MAX)
+  end
+
+  # Return a random number between 1 and MAX_PK
+  def rand1
+    rand(MAX_PK).succ
+  end
+
+  if defined?(Puma)
+    def add_headers
+      response[SERVER_HEADER] = SERVER_STRING
+      response[DATE_HEADER] = Time.now.httpdate
+    end
+  else
+    def add_headers
+      response[SERVER_HEADER] = SERVER_STRING
+    end
   end
 end

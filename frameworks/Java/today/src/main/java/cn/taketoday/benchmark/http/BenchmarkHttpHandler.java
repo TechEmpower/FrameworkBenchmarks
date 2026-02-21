@@ -1,6 +1,7 @@
 package cn.taketoday.benchmark.http;
 
-import java.util.Comparator;
+import org.jspecify.annotations.Nullable;
+
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
@@ -10,7 +11,6 @@ import cn.taketoday.benchmark.model.Message;
 import cn.taketoday.benchmark.model.World;
 import infra.http.MediaType;
 import infra.http.ResponseEntity;
-import infra.lang.Nullable;
 import infra.persistence.EntityManager;
 import infra.ui.Model;
 import infra.util.concurrent.Future;
@@ -50,9 +50,8 @@ final class BenchmarkHttpHandler {
     return "Hello, World!";
   }
 
-  @Nullable
   @GET("/db")
-  public World db() {
+  public @Nullable World db() {
     return entityManager.findById(World.class, nextInt());
   }
 
@@ -70,31 +69,36 @@ final class BenchmarkHttpHandler {
   @GET("/updates")
   public Future<List<World>> updates(@Nullable String queries) {
     return Future.combine(randomNumbers()
-            .limit(parseQueryCount(queries))
-            .mapToObj(this::findWorldByIdFuture)
-            .map(worldFuture -> worldFuture.map(world -> {
-              world.setRandomNumber(nextInt());
-              entityManager.updateById(world);
-              return world;
-            }))).asList();
+                    .limit(parseQueryCount(queries))
+                    .mapToObj(this::findWorldByIdFuture)
+                    .map(worldFuture -> worldFuture.map(world -> {
+                      if (world != null) {
+                        world.setRandomNumber(nextInt());
+                        entityManager.updateById(world);
+                        return world;
+                      }
+                      return null;
+                    }))
+            )
+            .acceptFailure()
+            .asList();
   }
 
   @GET("/fortunes")
   public ViewRef fortunes(Model model) {
     List<Fortune> fortunes = entityManager.find(Fortune.class);
     fortunes.add(new Fortune(0, "Additional fortune added at request time."));
-    fortunes.sort(Comparator.comparing(Fortune::getMessage));
+    fortunes.sort(null);
 
     model.addAttribute("fortunes", fortunes);
     return ViewRef.forViewName("fortunes");
   }
 
-  private Future<World> findWorldByIdFuture(int id) {
+  private Future<@Nullable World> findWorldByIdFuture(int id) {
     return Future.run(() -> findWorldById(id));
   }
 
-  @Nullable
-  private World findWorldById(int id) {
+  private @Nullable World findWorldById(int id) {
     return entityManager.findById(World.class, id);
   }
 

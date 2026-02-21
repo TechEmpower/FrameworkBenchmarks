@@ -1,21 +1,10 @@
 import Foundation
-import NIO
+import NIOCore
 import NIOHTTP1
+import NIOPosix
 
 struct JSONTestResponse: Encodable {
     let message = "Hello, World!"
-}
-
-enum Constants {
-    static let httpVersion = HTTPVersion(major: 1, minor: 1)
-    static let serverName = "SwiftNIO"
-
-    static let plainTextResponse: StaticString = "Hello, World!"
-    static let plainTextResponseLength = plainTextResponse.utf8CodeUnitCount
-    static let plainTextResponseLengthString = String(plainTextResponseLength)
-
-    static let jsonResponseLength = try! JSONEncoder().encode(JSONTestResponse()).count
-    static let jsonResponseLengthString = String(jsonResponseLength)
 }
 
 private final class HTTPHandler: ChannelInboundHandler {
@@ -25,16 +14,12 @@ private final class HTTPHandler: ChannelInboundHandler {
     let jsonEncoder: JSONEncoder
     let dateCache: RFC1123DateCache
 
-    var plaintextBuffer: ByteBuffer
-    var jsonBuffer: ByteBuffer
+    var outputBuffer: ByteBuffer
 
     init(channel: Channel) {
-        let allocator = ByteBufferAllocator()
-        self.plaintextBuffer = allocator.buffer(capacity: Constants.plainTextResponseLength)
-        self.plaintextBuffer.writeStaticString(Constants.plainTextResponse)
-        self.jsonBuffer = allocator.buffer(capacity: Constants.jsonResponseLength)
-        self.jsonEncoder = .init()
+        self.outputBuffer = .init()
         self.dateCache = .on(channel.eventLoop)
+        self.jsonEncoder = JSONEncoder()
     }
 
     func channelRead(context: ChannelHandlerContext, data: NIOAny) {
@@ -42,50 +27,47 @@ private final class HTTPHandler: ChannelInboundHandler {
         case .head(let request):
             switch request.uri {
             case "/plaintext":
-                self.processPlaintext(context: context)
+                self.outputBuffer.clear()
+                self.outputBuffer.writeStaticString("Hello, World!")
+                let responseHead = self.responseHead(
+                    contentType: "text/plain",
+                    contentLength: "\(self.outputBuffer.readableBytes)"
+                )
+                self.writeResponse(responseHead, body: self.outputBuffer, context: context)
             case "/json":
-                do {
-                    try self.processJSON(context: context)
-                } catch {
-                    context.close(promise: nil)
-                }
+                let jsonResponse = try! self.jsonEncoder.encode(JSONTestResponse())
+                self.outputBuffer.clear()
+                self.outputBuffer.writeBytes(jsonResponse)
+                let responseHead = self.responseHead(
+                    contentType: "application/json",
+                    contentLength: "\(self.outputBuffer.readableBytes)"
+                )
+                self.writeResponse(responseHead, body: self.outputBuffer, context: context)
             default:
                 context.close(promise: nil)
             }
-        case .body:
+        case .body, .end:
             break
-        case .end:
-            context.write(self.wrapOutboundOut(.end(nil)), promise: nil)
         }
     }
 
-    func channelReadComplete(context: ChannelHandlerContext) {
-        context.flush()
-        context.fireChannelReadComplete()
-    }
-
-    private func processPlaintext(context: ChannelHandlerContext) {
-        let responseHead = self.responseHead(contentType: "text/plain", contentLength: Constants.plainTextResponseLengthString)
-        context.write(self.wrapOutboundOut(.head(responseHead)), promise: nil)
-        context.write(self.wrapOutboundOut(.body(.byteBuffer(self.plaintextBuffer))), promise: nil)
-    }
-
-    private func processJSON(context: ChannelHandlerContext) throws {
-        let responseHead = self.responseHead(contentType: "application/json", contentLength: Constants.jsonResponseLengthString)
-        context.write(self.wrapOutboundOut(.head(responseHead)), promise: nil)
-        self.jsonBuffer.clear()
-        try self.jsonBuffer.writeBytes(self.jsonEncoder.encode(JSONTestResponse()))
-        context.write(self.wrapOutboundOut(.body(.byteBuffer(self.jsonBuffer))), promise: nil)
+    private func writeResponse(
+        _ head: HTTPResponseHead, body: ByteBuffer, context: ChannelHandlerContext
+    ) {
+        context.write(self.wrapOutboundOut(.head(head)), promise: nil)
+        context.write(self.wrapOutboundOut(.body(.byteBuffer(body))), promise: nil)
+        context.writeAndFlush(self.wrapOutboundOut(.end(nil)), promise: nil)
     }
 
     private func responseHead(contentType: String, contentLength: String) -> HTTPResponseHead {
         var headers = HTTPHeaders()
+        headers.reserveCapacity(4)
         headers.add(name: "content-type", value: contentType)
         headers.add(name: "content-length", value: contentLength)
-        headers.add(name: "server", value: Constants.serverName)
+        headers.add(name: "server", value: "SwiftNIO")
         headers.add(name: "date", value: self.dateCache.currentTimestamp())
         return HTTPResponseHead(
-            version: Constants.httpVersion,
+            version: HTTPVersion(major: 1, minor: 1),
             status: .ok,
             headers: headers
         )
@@ -95,13 +77,17 @@ private final class HTTPHandler: ChannelInboundHandler {
 let group = MultiThreadedEventLoopGroup(numberOfThreads: System.coreCount)
 let bootstrap = ServerBootstrap(group: group)
     .serverChannelOption(ChannelOptions.backlog, value: 8192)
-    .serverChannelOption(ChannelOptions.socket(SocketOptionLevel(SOL_SOCKET), SO_REUSEADDR), value: 1)
+    .serverChannelOption(
+        ChannelOptions.socket(SocketOptionLevel(SOL_SOCKET), SO_REUSEADDR), value: 1
+    )
     .childChannelInitializer { channel in
         channel.pipeline.configureHTTPServerPipeline(withPipeliningAssistance: false).flatMap {
             channel.pipeline.addHandler(HTTPHandler(channel: channel))
         }
     }
-    .childChannelOption(ChannelOptions.socket(SocketOptionLevel(SOL_SOCKET), SO_REUSEADDR), value: 1)
+    .childChannelOption(
+        ChannelOptions.socket(SocketOptionLevel(SOL_SOCKET), SO_REUSEADDR), value: 1
+    )
     .childChannelOption(ChannelOptions.maxMessagesPerRead, value: 16)
 
 defer {
@@ -111,7 +97,9 @@ defer {
 let channel = try bootstrap.bind(host: "0.0.0.0", port: 8080).wait()
 
 guard let localAddress = channel.localAddress else {
-    fatalError("Address was unable to bind. Please check that the socket was not closed or that the address family was understood.")
+    fatalError(
+        "Address was unable to bind. Please check that the socket was not closed or that the address family was understood."
+    )
 }
 
 try channel.closeFuture.wait()

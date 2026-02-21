@@ -1,4 +1,4 @@
-FROM rust:1.89
+FROM rust:1.93
 
 RUN apt-get update -yqq && apt-get install -yqq cmake g++ binutils lld
 
@@ -8,7 +8,7 @@ ADD ./ /hyperlane_techempower
 WORKDIR /hyperlane_techempower
 
 RUN cargo clean
-RUN RUSTFLAGS="-C target-cpu=native -C link-arg=-fuse-ld=lld" cargo build --release
+RUN cargo build --release
 
 EXPOSE 8080
 

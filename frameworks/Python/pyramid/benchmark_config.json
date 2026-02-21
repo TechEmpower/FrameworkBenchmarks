@@ -1,5 +1,6 @@
 {
   "framework": "pyramid",
+  "maintainers": ["slav0nic"],
   "tests": [{
     "default": {
       "json_url": "/json",
@@ -8,6 +9,7 @@
       "fortune_url": "/fortunes",
       "update_url": "/updates?queries=",
       "plaintext_url": "/plaintext",
+      "cached_query_url": "/cached-queries?count=",
       "port": 8080,
       "approach": "Realistic",
       "classification": "Fullstack",
@@ -17,7 +19,7 @@
       "flavor": "Python3",
       "orm": "Full",
       "platform": "None",
-      "webserver": "Meinheld",
+      "webserver": "Gunicorn",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "Pyramid",

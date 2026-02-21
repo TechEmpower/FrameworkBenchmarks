@@ -1,13 +1,10 @@
-Bundler.require('trilogy')
+Bundler.require('pg')
 opts = {
-  adapter:  'trilogy',
+  adapter:  'postgresql',
   username: 'benchmarkdbuser',
   password: 'benchmarkdbpass',
   host:     'tfb-database',
   database: 'hello_world',
-  ssl:      true,
-  ssl_mode: 4, # Trilogy::SSL_PREFERRED_NOVERIFY
-  tls_min_version: 3 # Trilogy::TLS_VERSION_12
 }
 
 # Determine threading/thread pool size and timeout
@@ -16,7 +13,7 @@ opts[:pool] = 512
 opts[:checkout_timeout] = 5
 
 # Setup our logger
-ActiveRecord::Base.logger = logger
+ActiveRecord::Base.logger = nil
 
 # Use ISO 8601 format for JSON serialized times and dates.
 ActiveSupport.use_standard_json_time_format = true

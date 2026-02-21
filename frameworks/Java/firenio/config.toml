@@ -12,7 +12,7 @@ os = "Linux"
 orm = "None"
 platform = "firenio"
 webserver = "None"
-versus = "firenio"
+versus = ""
 
 [http-lite]
 urls.plaintext = "/plaintext"

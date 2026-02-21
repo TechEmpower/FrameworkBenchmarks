@@ -1,26 +1,15 @@
 
-FROM dart:3.10.7 AS builder
+FROM dart:3.11.0 AS build
 WORKDIR /app
 
-# Define the build-time argument (Default to 8)
-ARG MAX_ISOLATES=8
-COPY . .
-RUN mkdir build
-RUN dart compile exe bin/server.dart \
-    --define=MAX_ISOLATES=${MAX_ISOLATES} \
-    -o build/server
+COPY pubspec.yaml .
+COPY dart_native/bin/ bin/
 
-FROM busybox:glibc
+RUN dart compile exe bin/server.dart -o server
 
-# Re-declare ARG in the second stage to use it in ENV
-# Define the build-time argument (Default to 8)
-ARG MAX_ISOLATES=8
-ENV MAX_ISOLATES_PER_PROCESS=${MAX_ISOLATES}
-
-COPY --from=builder /runtime/ /
-COPY --from=builder /app/build/server /bin/server
-COPY run.sh /bin/run.sh
-RUN chmod +x /bin/run.sh
+FROM scratch
+COPY --from=build /runtime/ /
+COPY --from=build /app/server /bin/server
 
 EXPOSE 8080
-CMD ["/bin/run.sh"]
+ENTRYPOINT ["server"]

@@ -27,12 +27,10 @@
         "versus": "None"
       },
       "raw": {
-        "json_url": "/json",
         "db_url": "/db",
         "query_url": "/queries?queries=",
         "fortune_url": "/fortunes",
         "update_url": "/updates?queries=",
-        "plaintext_url": "/plaintext",
 	      "cached_query_url": "/cached-queries?count=",
         "port": 8080,
         "approach": "Realistic",

@@ -33,10 +33,10 @@ async function getRandomWorld() {
 
 function arrayOfRandomWorlds(totalWorldsToReturn) {
   const totalIterations = helper.sanititizeTotal(totalWorldsToReturn);
-  const promises = [];
+  const promises = new Array(totalIterations);
 
   for (let i = 1; i <= totalIterations; i++) {
-    promises.push(getRandomWorld());
+    promises[i - 1] = getRandomWorld();
   }
 
   return Promise.all(promises);
@@ -58,10 +58,10 @@ async function getAndUpdateRandomWorld() {
 
 function updateRandomWorlds(totalToUpdate) {
   const totalIterations = helper.sanititizeTotal(totalToUpdate);
-  const promises = [];
+  const promises = new Array(totalIterations);
 
   for (let i = 1; i <= totalIterations; i++) {
-    promises.push(getAndUpdateRandomWorld());
+    promises[i - 1] = getAndUpdateRandomWorld();
   }
 
   return Promise.all(promises);

@@ -17,7 +17,7 @@
     ]
   },
   "require": {
-    "workerman/workerman": "^4.0",
+    "workerman/workerman": "^5.0",
     "mix/vega": "~3.0",
     "mix/database": "~3.0",
     "monolog/monolog": "^2.3"

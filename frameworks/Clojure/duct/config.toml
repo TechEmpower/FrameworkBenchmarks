@@ -45,7 +45,7 @@ os = "Linux"
 orm = "Raw"
 platform = "Ring"
 webserver = "None"
-versus = "None"
+versus = "duct"
 
 [aleph]
 urls.plaintext = "/plaintext"
@@ -61,7 +61,7 @@ os = "Linux"
 orm = "Raw"
 platform = "Netty"
 webserver = "None"
-versus = "None"
+versus = "duct"
 
 [immutant]
 urls.plaintext = "/plaintext"

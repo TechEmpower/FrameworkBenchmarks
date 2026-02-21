@@ -57,20 +57,6 @@ platform = "httpserver"
 webserver = "None"
 versus = "httpserver-robaho-graalvm"
 
-[robaho-zgc]
-urls.plaintext = "/plaintext"
-urls.json = "/json"
-urls.fortune = "/fortunes"
-approach = "Realistic"
-classification = "Platform"
-database = "postgres"
-database_os = "Linux"
-os = "Linux"
-orm = "Raw"
-platform = "httpserver"
-webserver = "None"
-versus = "ring-http-exchange-robaho"
-
 [robaho-is]
 urls.plaintext = "/plaintext"
 urls.json = "/json"
