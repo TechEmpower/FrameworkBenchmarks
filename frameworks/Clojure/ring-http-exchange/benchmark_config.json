@@ -60,9 +60,7 @@
         "notes": "",
         "versus": "ring-http-exchange-robaho"
       },
-      "graalvm": {
-        "json_url": "/json",
-        "plaintext_url": "/plaintext",
+      "robaho-async": {
         "fortune_url": "/fortunes",
         "port": 8080,
         "approach": "Realistic",
@@ -76,27 +74,7 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "ring-http-exchange-graalvm",
-        "notes": "",
-        "versus": "ring-http-exchange"
-      },
-      "robaho-graalvm": {
-        "json_url": "/json",
-        "plaintext_url": "/plaintext",
-        "fortune_url": "/fortunes",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Platform",
-        "database": "postgres",
-        "framework": "None",
-        "language": "Clojure",
-        "flavor": "None",
-        "orm": "Raw",
-        "platform": "Ring",
-        "webserver": "None",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "ring-http-exchange-robaho-graalvm",
+        "display_name": "ring-http-exchange-robaho-async",
         "notes": "",
         "versus": "ring-http-exchange-robaho"
       },
