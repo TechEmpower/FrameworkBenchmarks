@@ -1,5 +1,6 @@
 package io.quarkus.benchmark.repository;
 
+import io.quarkus.logging.Log;
 import io.vertx.core.Vertx;
 import io.vertx.pgclient.PgConnectOptions;
 import jakarta.annotation.PreDestroy;
@@ -36,7 +37,7 @@ public class PgClientFactory {
         try {
             pgConnectionPool = new PgConnectionPool(vertx, pgConnectOptions());
         } catch (final Exception e) {
-            // TODO LOG ME: usually means inability to connect to the database
+            Log.error("Failed to create pgConnectionPool", e);
         } finally {
             this.pgConnectionPool = pgConnectionPool;
             return pgConnectionPool;
