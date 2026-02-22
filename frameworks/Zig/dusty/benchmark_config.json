@@ -1,5 +1,6 @@
 {
   "framework": "dusty",
+  "maintainers": ["dragosv"],
   "tests": [{
     "default": {
       "json_url": "/json",
