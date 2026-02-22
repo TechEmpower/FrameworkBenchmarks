@@ -1,0 +1,26 @@
+{
+  "framework": "dusty",
+  "tests": [{
+    "default": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "db_url": "/db",
+      "fortune_url": "/fortunes",
+      "port": 3000,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "Postgres",
+      "framework": "dusty",
+      "language": "Zig",
+      "flavor": "None",
+      "orm": "raw",
+      "platform": "None",
+      "webserver": "None",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "Dusty (Zig)",
+      "notes": "",
+      "versus": ""
+    }
+  }]
+}
