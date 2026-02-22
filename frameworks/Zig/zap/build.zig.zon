@@ -1,12 +1,20 @@
-.{ .name = "Zap testing", .version = "0.1.1", .paths = .{
-    "build.zig",
-    "build.zig.zon",
-    "src",
-}, .dependencies = .{
-    .zap = .{
-        .url = "https://github.com/zigzap/zap/archive/refs/tags/v0.8.0.tar.gz",
-        .hash = "12209936c3333b53b53edcf453b1670babb9ae8c2197b1ca627c01e72670e20c1a21",
+.{
+    .name = .zap_testing,
+    .version = "0.2.1",
+    .fingerprint = 0x40157312a106e70e,
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "src",
     },
-    .pg = .{ .url = "https://github.com/karlseguin/pg.zig/archive/239a4468163a49d8c0d03285632eabe96003e9e2.tar.gz", 
-        .hash = "1220a1d7e51e2fa45e547c76a9e099c09d06e14b0b9bfc6baa89367f56f1ded399a0" },
-} }
+    .dependencies = .{
+        .zap = .{
+            .url = "git+https://github.com/zigzap/zap?ref=v0.11.0#66c5dc42c781bbb8a9100afda3c7e69ee96eddf3",
+            .hash = "zap-0.10.6-GoeB8xCEJABLgoiZjWZMMT5TsoZ5OO2EZe6j24RTUYEH",
+        },
+        .pg = .{
+            .url = "git+https://github.com/karlseguin/pg.zig?ref=master#e58b318b7867ef065b3135983f829219c5eef891",
+            .hash = "pg-0.0.0-Wp_7gXFoBgD0fQ72WICKa-bxLga03AXXQ3BbIsjjohQ3",
+        },
+    },
+}
