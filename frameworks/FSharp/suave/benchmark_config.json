@@ -1,5 +1,6 @@
 {
   "framework": "suave",
+  "maintainers": ["ademar"], 
   "tests": [
     {
       "default": {
@@ -14,7 +15,7 @@
         "flavor": "None",
         "orm": "None",
         "platform": ".NET",
-        "webserver": "None",
+        "webserver": "Suave",
         "os": "Linux",
         "database_os": "Linux",
         "display_name": "Suave",
