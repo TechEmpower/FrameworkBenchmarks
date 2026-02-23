@@ -11,6 +11,7 @@
                  [org.clojars.jj/majavat "1.19.0"]
                  [hikari-cp "3.3.0"]
                  [org.clojars.jj/boa-sql "1.0.3"]
+                 [org.clojars.jj/arminio "1.0.0"]
                  [org.postgresql/postgresql "42.7.8"]
                  [metosin/jsonista "0.3.13"]
                  ]
