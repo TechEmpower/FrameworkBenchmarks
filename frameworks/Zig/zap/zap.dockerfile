@@ -1,4 +1,4 @@
-FROM fedora:40 AS build
+FROM fedora:42
 
 WORKDIR /zap
 
@@ -11,18 +11,26 @@ ENV PG_PORT=5432
 COPY src src
 COPY build.zig.zon build.zig.zon
 COPY build.zig build.zig
+
+RUN dnf install -y tar xz git wget nginx
+
+ARG ZIG_VER=0.15.2
+
+RUN wget https://ziglang.org/download/${ZIG_VER}/zig-$(uname -m)-linux-${ZIG_VER}.tar.xz
+
+RUN tar -xvf zig-$(uname -m)-linux-${ZIG_VER}.tar.xz
+
+RUN mv zig-$(uname -m)-linux-${ZIG_VER} /usr/local/zig
+
+ENV PATH="/usr/local/zig:$PATH"
 COPY start-servers.sh start-servers.sh
 COPY build-nginx-conf.sh build-nginx-conf.sh
 COPY nginx.conf nginx.conf
 
-RUN chmod +x start-servers.sh
-RUN chmod +x build-nginx-conf.sh
+RUN chmod +x start-servers.sh build-nginx-conf.sh && ./build-nginx-conf.sh
 
-RUN ./build-nginx-conf.sh
-
-RUN dnf install -y zig nginx
 RUN zig version
-RUN zig build -Doptimize=ReleaseFast 
+RUN zig build -Doptimize=ReleaseFast
 RUN cp /zap/zig-out/bin/zap /usr/local/bin
 
 EXPOSE 8080
