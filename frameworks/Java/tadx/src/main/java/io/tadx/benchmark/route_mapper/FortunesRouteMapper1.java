@@ -1,18 +1,13 @@
 package io.tadx.benchmark.route_mapper;
 
+import io.tadx.benchmark.db.PgConnPool;
 import io.tadx.benchmark.entity.Fortune;
-import io.tadx.core.TadxApplication;
 import io.tadx.web.TadxWebApplication;
 import io.tadx.web.WebContext;
 import io.tadx.web.WebResult;
 import io.tadx.web.annotation.RouteMapping;
 import io.tadx.web.template.FreemarkerEngine;
-import io.tadx.web.template.TemplateEngine;
-import io.tadx.web.template.TemplateType;
 import io.tadx.web.route.RouteMapper;
-import io.vertx.pgclient.PgBuilder;
-import io.vertx.pgclient.PgConnectOptions;
-import io.vertx.sqlclient.PoolOptions;
 import io.vertx.sqlclient.Row;
 import io.vertx.sqlclient.Tuple;
 import io.vertx.sqlclient.impl.SqlClientInternal;
@@ -28,24 +23,12 @@ import java.util.List;
 @RouteMapping(path = "/fortunes")
 public class FortunesRouteMapper1 implements RouteMapper {
 
-    PgConnectOptions connectOptions;
-    PoolOptions poolOptions;
     SqlClientInternal client;
     private static final String SELECT_FORTUNES = "SELECT id, message FROM fortune";
 
     public FortunesRouteMapper1() {
-        connectOptions = new PgConnectOptions().
-                setPort(5432).setHost("tfb-database").
-                setDatabase("hello_world").
-                setUser("benchmarkdbuser").
-                setPassword("benchmarkdbpass").
-                setCachePreparedStatements(true).
-                setPreparedStatementCacheMaxSize(1024).
-                setPipeliningLimit(100000);
-        // Pool options
-        poolOptions = new PoolOptions().setMaxSize(2000);
         // Create the client pool
-        client = (SqlClientInternal) PgBuilder.client().with(poolOptions).connectingTo(connectOptions).using(TadxApplication.vertx()).build();
+        client = PgConnPool.client();
     }
 
     @Override

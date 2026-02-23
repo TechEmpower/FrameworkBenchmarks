@@ -4,6 +4,7 @@ import io.tadx.benchmark.entity.World;
 import io.tadx.data.DbStorage;
 import io.tadx.web.HttpMethod;
 import io.tadx.web.annotation.*;
+import io.vertx.sqlclient.Tuple;
 
 import java.util.SplittableRandom;
 import java.util.concurrent.ConcurrentHashMap;
@@ -36,7 +37,7 @@ public class CachedQueries {
         World[] worlds = new World[count];
         for (int i = 0; i < count; i++) {
             int id = randomWorld();
-            worlds[i] = cache.computeIfAbsent(id, k -> dbStorage.findEntity(World.class, id));
+            worlds[i] = cache.computeIfAbsent(id, k -> dbStorage.findEntity(World.class, Tuple.of(id)));
         }
         return worlds;
     }

@@ -2,16 +2,13 @@ package io.tadx.benchmark.route_mapper;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import io.tadx.benchmark.db.PgConnPool;
 import io.tadx.benchmark.entity.World;
-import io.tadx.core.TadxApplication;
 import io.tadx.core.data.Json;
 import io.tadx.web.TadxWebApplication;
 import io.tadx.web.WebContext;
 import io.tadx.web.annotation.RouteMapping;
 import io.tadx.web.route.RouteMapper;
-import io.vertx.pgclient.PgBuilder;
-import io.vertx.pgclient.PgConnectOptions;
-import io.vertx.sqlclient.PoolOptions;
 import io.vertx.sqlclient.Row;
 import io.vertx.sqlclient.RowSet;
 import io.vertx.sqlclient.impl.SqlClientInternal;
@@ -31,26 +28,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class CachedQueriesMapper3 implements RouteMapper {
 
     private static final SplittableRandom RANDOM = new SplittableRandom();
-    PgConnectOptions connectOptions;
-    PoolOptions poolOptions;
     SqlClientInternal client;
     private static final String SELECT_WORLD = "SELECT id, randomnumber from WORLD";
 
     private final static Cache<Integer, World> cache = Caffeine.newBuilder().maximumSize(10_000).build();
 
     public CachedQueriesMapper3() {
-        connectOptions = new PgConnectOptions().
-                setPort(5432).setHost("tfb-database").
-                setDatabase("hello_world").
-                setUser("benchmarkdbuser").
-                setPassword("benchmarkdbpass").
-                setCachePreparedStatements(true).
-                setPreparedStatementCacheMaxSize(1024).
-                setPipeliningLimit(100000);
-        // Pool options
-        poolOptions = new PoolOptions().setMaxSize(2000);
         // Create the client pool
-        client = (SqlClientInternal) PgBuilder.client().with(poolOptions).connectingTo(connectOptions).using(TadxApplication.vertx()).build();
+        client = PgConnPool.client();
         //SELECT_WORLD_QUERY = client.preparedQuery(SELECT_WORLD);
 
         AtomicInteger key = new AtomicInteger();
