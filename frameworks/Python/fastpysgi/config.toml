@@ -1,5 +1,5 @@
 [framework]
-name = "fastwsgi"
+name = "fastpysgi"
 
 [main]
 urls.plaintext = "/plaintext"
@@ -11,7 +11,7 @@ database_os = "Linux"
 os = "Linux"
 orm = "Raw"
 platform = "WSGI"
-webserver = "FastWSGI"
+webserver = "FastPySGI"
 versus = "wsgi"
 
 [asgi]
@@ -28,5 +28,5 @@ database_os = "Linux"
 os = "Linux"
 orm = "Raw"
 platform = "ASGI"
-webserver = "FastWSGI"
+webserver = "FastPySGI"
 versus = "uvicorn"
