@@ -18,7 +18,7 @@ internal static class Program
         var builder = UnhingedEngine
             .CreateBuilder()
             .SetPort(8080)
-            .SetNWorkersSolver(() => Environment.ProcessorCount - 4)  
+            .SetNWorkersSolver(() => 52)  
             .SetBacklog(16384) 
             .SetMaxEventsPerWake(512)         
             .SetMaxNumberConnectionsPerWorker(1024)
