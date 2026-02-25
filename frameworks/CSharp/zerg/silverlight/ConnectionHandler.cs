@@ -24,7 +24,7 @@ internal sealed class ConnectionHandler
     private static ReadOnlySpan<byte> s_plainTextBody => "Hello, World!"u8;
     
     private static ReadOnlySpan<byte> s_headersJson => "HTTP/1.1 200 OK\r\nContent-Length:   \r\nServer: S\r\nContent-Type: application/json\r\n"u8;
-    private static ReadOnlySpan<byte> s_headersPlainText => "HTTP/1.1 200 OK\r\nContent-Length:   \r\nServer: S\r\nContent-Type: text/plain\r\n"u8;
+    private static ReadOnlySpan<byte> s_headersPlainText => "HTTP/1.1 200 OK\r\nContent-Length: 13\r\nServer: S\r\nContent-Type: text/plain\r\n"u8;
 
     public unsafe ConnectionHandler(int length = 1024 * 16)
     {
@@ -211,24 +211,22 @@ internal sealed class ConnectionHandler
             JsonSerializer.Serialize(utf8JsonWriter, new JsonMessage { Message = _jsonBody }, SerializerContext.JsonMessage);
 
             contentLength = (int)utf8JsonWriter.BytesCommitted;
+            
+            unsafe
+            {
+                byte* dst = connection.WriteBuffer + tail + 33;
+                int tens = contentLength / 10;
+                int ones = contentLength - tens * 10;
+
+                dst[0] = (byte)('0' + tens);
+                dst[1] = (byte)('0' + ones);
+            }
         }
         else
         {
             connection.Write(s_headersPlainText);
             connection.Write(DateHelper.HeaderBytes);
             connection.Write(s_plainTextBody);
-
-            contentLength = s_plainTextBody.Length;
-        }
-
-        unsafe
-        {
-            byte* dst = connection.WriteBuffer + tail + 33;
-            int tens = contentLength / 10;
-            int ones = contentLength - tens * 10;
-
-            dst[0] = (byte)('0' + tens);
-            dst[1] = (byte)('0' + ones);
         }
     }
     

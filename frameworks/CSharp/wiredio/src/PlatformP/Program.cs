@@ -71,20 +71,11 @@ internal static class Program
     
     private static unsafe void CommitPlainTextResponse(Connection connection)
     {
-        var tail = connection.WriteBuffer.Tail;
-        var contentLength = s_plainTextBody.Length;
         connection.WriteBuffer.WriteUnmanaged("HTTP/1.1 200 OK\r\n"u8 +
-                                              "Content-Length:   \r\n"u8 +
+                                              "Content-Length: 13\r\n"u8 +
                                               "Server: U\r\n"u8 +
                                               "Content-Type: text/plain\r\n"u8);
         connection.WriteBuffer.WriteUnmanaged(DateHelper.HeaderBytes);
         connection.WriteBuffer.WriteUnmanaged(s_plainTextBody);
-        
-        byte* dst = connection.WriteBuffer.Ptr + tail + 33;
-        int tens = contentLength / 10;
-        int ones = contentLength - tens * 10;
-
-        dst[0] = (byte)('0' + tens);
-        dst[1] = (byte)('0' + ones);
     }
 }
