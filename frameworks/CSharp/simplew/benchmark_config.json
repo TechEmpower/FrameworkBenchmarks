@@ -1,5 +1,6 @@
 {
   "framework": "simplew",
+  "maintainers": ["stratdev3"],
   "tests": [{
     "default": {
       "plaintext_url": "/api/plaintext",
@@ -12,7 +13,7 @@
         "language": "C#",
         "orm": "None",
         "platform": ".NET",
-        "webserver": "Netcoreserver",
+        "webserver": "SimpleW",
         "os": "Linux",
         "database_os": "Linux",
         "display_name": "SimpleW",

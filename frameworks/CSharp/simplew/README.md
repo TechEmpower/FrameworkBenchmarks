@@ -1,6 +1,6 @@
 # SimpleW Tests on Linux
 
-See the [SimpleW website](https://stratdev3.github.io/SimpleW/) for more information.
+See the [SimpleW website](https://simplew.net) for more information.
 
 ## Infrastructure Software Versions
 
@@ -10,7 +10,7 @@ See the [SimpleW website](https://stratdev3.github.io/SimpleW/) for more informa
 
 **Platforms**
 
-* .NET 8/9
+* .NET 8/9/10
 
 ## Paths & Source for Tests
 
