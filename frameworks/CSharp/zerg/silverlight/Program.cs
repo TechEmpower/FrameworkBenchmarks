@@ -27,7 +27,7 @@ var engine = new Engine(new EngineOptions
 {
     Ip = "0.0.0.0",
     Port = 8080,
-    ReactorCount = Environment.ProcessorCount / 2,
+    ReactorCount = Environment.ProcessorCount,
     AcceptorConfig =  acceptorConfig,
     ReactorConfigs = reactorConfigs,
 });
