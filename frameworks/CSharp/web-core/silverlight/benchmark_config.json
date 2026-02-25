@@ -1,0 +1,42 @@
+{
+  "framework": "zerg",
+  "maintainers": ["MDA2AV"],
+  "tests": [
+    {
+      "default": {
+        "plaintext_url": "/plaintext",
+        "json_url": "/json",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "None",
+        "framework": "zerg",
+        "language": "C#",
+        "orm": "None",
+        "platform": ".NET",
+        "webserver": "zerg",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "zerg [io_uring]",
+        "notes": ""
+      },
+      "aot": {
+        "plaintext_url": "/plaintext",
+        "json_url": "/json",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "None",
+        "framework": "zerg",
+        "language": "C#",
+        "orm": "None",
+        "platform": ".NET",
+        "webserver": "zerg",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "zerg [aot] [io_uring]",
+        "notes": ""
+      }
+    }
+  ]
+}
