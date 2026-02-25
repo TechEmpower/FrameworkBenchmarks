@@ -1,0 +1,45 @@
+{
+  "framework": "pyvoy",
+  "tests": [{
+    "default": {
+      "json_url": "/json",
+      "fortune_url": "/fortunes",
+      "plaintext_url": "/plaintext",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "update_url": "/updates?queries=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "Postgres",
+      "framework": "pyvoy",
+      "language": "Python",
+      "orm": "Raw",
+      "platform": "None",
+      "webserver": "pyvoy",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "pyvoy [asgi]",
+      "notes": "",
+      "versus": "granian"
+    },
+    "wsgi": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "Postgres",
+      "framework": "pyvoy",
+      "language": "Python",
+      "orm": "Raw",
+      "platform": "None",
+      "webserver": "pyvoy",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "pyvoy [wsgi]",
+      "notes": "",
+      "versus": "granian"
+    }
+  }]
+}
