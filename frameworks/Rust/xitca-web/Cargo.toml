@@ -70,7 +70,7 @@ serde_core = { version = "1" }
 xitca-web = { version = "0.8", features = ["json"], optional = true }
 
 # raw-pg optional
-xitca-postgres = { version = "0.4", optional = true }
+xitca-postgres = { version = "0.4.1", optional = true }
 
 # diesel orm optional
 diesel = { version = "2", features = ["postgres"], optional = true }
@@ -97,7 +97,7 @@ compio = { version = "0.17", features = ["time"], optional = true }
 socket2 = { version = "0.6", optional = true }
 
 futures-core = { version = "0.3", default-features = false }
-rand = { version = "0.9", features = ["os_rng", "small_rng"], default-features = false }
+rand = { version = "0.10", features = ["sys_rng"], default-features = false }
 tokio = "1.48"
 
 [profile.release]
@@ -107,13 +107,13 @@ codegen-units = 1
 panic = "abort"
 
 [patch.crates-io]
-xitca-postgres-diesel = { git = "https://github.com/fakeshadow/xitca-postgres-diesel", rev = "9fab3a8" }
-xitca-postgres-toasty = { git = "https://github.com/fakeshadow/xitca-postgres-toasty", rev = "f410f04" }
+xitca-postgres-diesel = { git = "https://github.com/fakeshadow/xitca-postgres-diesel", rev = "b52805d" }
+xitca-postgres-toasty = { git = "https://github.com/fakeshadow/xitca-postgres-toasty", rev = "2b17c07" }
 
-toasty = { git = "https://github.com/fakeshadow/toasty", rev = "0edc941" }
-toasty-core = { git = "https://github.com/fakeshadow/toasty", rev = "0edc941" }
-toasty-sql = { git = "https://github.com/fakeshadow/toasty", rev = "0edc941" }
+toasty = { git = "https://github.com/fakeshadow/toasty", rev = "00dc842" }
+toasty-core = { git = "https://github.com/fakeshadow/toasty", rev = "00dc842" }
+toasty-sql = { git = "https://github.com/fakeshadow/toasty", rev = "00dc842" }
 
-xitca-postgres = { git = "http://github.com/HFQR/xitca-web", rev = "e1c8c7b" }
-xitca-router = { git = "http://github.com/HFQR/xitca-web", rev = "e1c8c7b" }
-xitca-web = { git = "http://github.com/HFQR/xitca-web", rev = "e1c8c7b" }
+xitca-postgres = { git = "http://github.com/HFQR/xitca-web", rev = "6e14cc9" }
+xitca-router = { git = "http://github.com/HFQR/xitca-web", rev = "6e14cc9" }
+xitca-web = { git = "http://github.com/HFQR/xitca-web", rev = "6e14cc9" }
