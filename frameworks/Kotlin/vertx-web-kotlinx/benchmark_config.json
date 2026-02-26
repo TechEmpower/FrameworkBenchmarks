@@ -124,7 +124,6 @@
         "os": "Linux",
         "database_os": "Linux",
         "display_name": "vertx-web-kotlinx-exposed-r2dbc-postgresql",
-        "notes": "Alias for shared-pool-size-512-optimized configuration",
         "versus": "vertx-web-kotlinx-r2dbc-postgresql"
       },
       "exposed-vertx-sql-client-postgresql": {
