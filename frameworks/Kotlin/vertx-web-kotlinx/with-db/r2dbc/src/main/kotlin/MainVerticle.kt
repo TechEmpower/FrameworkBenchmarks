@@ -56,9 +56,9 @@ class MainVerticle(private val connectionFactory: ConnectionFactory) : CommonWit
 }
 
 // Factory function for creating MainVerticle with separate connection pools
-fun MainVerticleWithSeparatePool(poolSize: Int, useOptimizedConfig: Boolean): MainVerticle {
-    val connectionPool = if (useOptimizedConfig) {
-        connectionPoolOptimized(poolSize)
+fun MainVerticleWithSeparatePool(poolSize: Int, useKtorR2dbcConfig: Boolean): MainVerticle {
+    val connectionPool = if (useKtorR2dbcConfig) {
+        connectionPoolKtorR2dbc(poolSize)
     } else {
         connectionPoolOriginal(poolSize)
     }

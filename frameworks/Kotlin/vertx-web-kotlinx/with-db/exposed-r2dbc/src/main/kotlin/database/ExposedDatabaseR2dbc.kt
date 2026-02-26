@@ -10,8 +10,8 @@ fun r2dbcDatabaseConnectPoolOriginal(connectionPoolSize: Int) =
         explicitDialect = PostgreSQLDialect()
     })
 
-fun r2dbcDatabaseConnectPoolOptimized(connectionPoolSize: Int) =
-    R2dbcDatabase.connect(connectionPoolOptimized(connectionPoolSize), R2dbcDatabaseConfig {
+fun r2dbcDatabaseConnectPoolKtorR2dbc(connectionPoolSize: Int) =
+    R2dbcDatabase.connect(connectionPoolKtorR2dbc(connectionPoolSize), R2dbcDatabaseConfig {
         explicitDialect = PostgreSQLDialect()
     })
 
@@ -19,8 +19,8 @@ fun r2dbcDatabaseConnectPoolOptimized(connectionPoolSize: Int) =
  * Creates a shared R2dbcDatabase instance with a connection pool.
  * Used for shared-pool benchmark configurations.
  */
-fun r2dbcConnectPool(poolSize: Int, useOptimizedConfig: Boolean): R2dbcDatabase =
-    if (useOptimizedConfig)
-        r2dbcDatabaseConnectPoolOptimized(poolSize)
+fun r2dbcConnectPool(poolSize: Int, useKtorR2dbcConfig: Boolean): R2dbcDatabase =
+    if (useKtorR2dbcConfig)
+        r2dbcDatabaseConnectPoolKtorR2dbc(poolSize)
     else
         r2dbcDatabaseConnectPoolOriginal(poolSize)
