@@ -1,0 +1,22 @@
+.{
+    .fingerprint = 0x3db79e0e37f36cee,
+    .name = .oxelot_http,
+    .version = "0.1.0",
+    .minimum_zig_version = "0.16.0",
+
+    .dependencies = .{
+        .tls = .{
+            // Vendored locally with Zig 0.16 compatibility fix
+            // (bytes_length -> encoded_length in ml_kem API)
+            .path = "lib/tls",
+        },
+    },
+
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "src",
+        "lib",
+        "examples",
+    },
+}
