@@ -1,0 +1,2 @@
+ $ vagrant ssh
+ $ tfb --mode verify --test gemini
