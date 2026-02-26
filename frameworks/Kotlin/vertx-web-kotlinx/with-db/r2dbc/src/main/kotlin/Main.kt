@@ -1,13 +1,13 @@
 import database.connectionPoolOptimized
 import database.connectionPoolOriginal
 import io.r2dbc.spi.ConnectionFactory
-import kotlinx.coroutines.reactive.awaitSingle
 
 suspend fun main(args: Array<String>) {
     // Parse CLI arguments
-    val isSharedPool = args.getOrNull(0)?.toBooleanStrictOrNull() ?: true
-    val poolSize = args.getOrNull(1)?.toIntOrNull() ?: 512
-    val useOptimizedConfig = args.getOrNull(2)?.toBooleanStrictOrNull() ?: true
+    val isSharedPool = args.getOrNull(0)?.toBooleanStrictOrNull() ?: false
+    val poolSize = args.getOrNull(1)?.toIntOrNull()
+        ?: 8 // TODO `1` might produce equivalent results because there is no transaction in this portion compared to `exposed-r2dbc`.
+    val useOptimizedConfig = args.getOrNull(2)?.toBooleanStrictOrNull() ?: false
 
     val benchmarkName = buildString {
         append("Vert.x-Web Kotlinx with R2DBC (and PostgreSQL)")
