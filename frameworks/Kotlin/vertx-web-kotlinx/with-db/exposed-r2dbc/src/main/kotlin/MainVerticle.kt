@@ -15,13 +15,10 @@ import org.jetbrains.exposed.v1.r2dbc.transactions.suspendTransaction
 https://github.com/pgjdbc/r2dbc-postgresql/issues/360#issuecomment-869422327 offers a workaround, but it doesn't seem like the officially recommended approach.
 The PostgreSQL R2DBC driver doesn't seem to have full support for pipelining and multiplexing as discussed in https://github.com/pgjdbc/r2dbc-postgresql/pull/28.
  */
-class MainVerticle : CommonWithDbVerticle<R2dbcDatabase, R2dbcTransaction>(),
+class MainVerticle(private val r2dbcDatabase: R2dbcDatabase) : CommonWithDbVerticle<R2dbcDatabase, R2dbcTransaction>(),
     CommonWithDbVerticleI.SequentialSelectWorlds<R2dbcDatabase, R2dbcTransaction> {
     override suspend fun initDbClient(): R2dbcDatabase =
-    // This seems to cause too many connections to be created, resulting in `io.r2dbc.postgresql.PostgresqlConnectionFactory$PostgresConnectionException: [08003] Cannot connect to tfb-database/<unresolved>:5432`.
-    //r2DbcDatabaseConnect()
-        // since a pool is created for every `Verticle`, the size 1 is optimal as tested.
-        r2dbcDatabaseConnectPool(1)
+        r2dbcDatabase
 
     override val httpServerStrictThreadMode get() = false
     //override val coHandlerCoroutineContext: CoroutineContext get() = EmptyCoroutineContext
@@ -48,3 +45,12 @@ class MainVerticle : CommonWithDbVerticle<R2dbcDatabase, R2dbcTransaction>(),
             .map { it.toFortune() }.toList(fortunes)
     }
 }
+
+// Factory functions for creating R2dbcDatabase instances with different configurations
+
+/**
+ * Creates a MainVerticle that will create its own connection pool per verticle instance.
+ * Used for separate-pool benchmark configurations.
+ */
+fun MainVerticleWithSeparatePool(poolSize: Int, useOptimizedConfig: Boolean): MainVerticle =
+    MainVerticle(r2dbcConnectPool(poolSize, useOptimizedConfig))

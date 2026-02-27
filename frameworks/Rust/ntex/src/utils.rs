@@ -33,7 +33,7 @@ pub fn config() -> SharedCfg {
                 .set_payload_read_rate(Seconds::ZERO, Seconds::ZERO, 0),
         ).into();
     }
-    CFG.with(|cfg| *cfg)
+    CFG.with(Clone::clone)
 }
 
 pub fn db_config() -> SharedCfg {
@@ -45,7 +45,7 @@ pub fn db_config() -> SharedCfg {
                 .set_write_buf(65535, 2048, 128),
         ).into()
     }
-    CFG.with(|cfg| *cfg)
+    CFG.with(Clone::clone)
 }
 
 pub fn get_query_param(query: Option<&str>) -> usize {

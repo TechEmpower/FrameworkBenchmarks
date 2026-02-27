@@ -1,8 +1,5 @@
 package com.example.starter.helpers
 
-import com.example.starter.handlers.DefaultHandler
-import com.example.starter.handlers.MessageHandler
-import com.example.starter.utils.serialize
 import io.vertx.core.MultiMap
 import io.vertx.core.Vertx
 import io.vertx.core.http.HttpHeaders
@@ -14,8 +11,6 @@ private val FORMATTER = DateTimeFormatter.RFC_1123_DATE_TIME.withZone(ZoneOffset
 private val SERVER: CharSequence = HttpHeaders.createOptimized(Properties.SERVER_NAME)
 private val CONTENT_TYPE_TEXT_PLAIN: CharSequence = HttpHeaders.createOptimized("text/plain")
 private val CONTENT_TYPE_APPLICATION_JSON: CharSequence = HttpHeaders.createOptimized("application/json")
-private val PLAINTEXT_CONTENT_LENGTH: CharSequence= HttpHeaders.createOptimized(DefaultHandler.MESSAGE.length.toString())
-private val JSON_CONTENT_LENGTH: CharSequence = HttpHeaders.createOptimized(MessageHandler.DEFAULT_MESSAGE.serialize().length().toString())
 
 @Suppress("NOTHING_TO_INLINE")
 object PeriodicResolver {
@@ -48,7 +43,6 @@ object PeriodicResolver {
         .add(HttpHeaders.SERVER, SERVER)
         .add(HttpHeaders.DATE, current)
         .add(HttpHeaders.CONTENT_TYPE, CONTENT_TYPE_TEXT_PLAIN)
-        .add(HttpHeaders.CONTENT_LENGTH, PLAINTEXT_CONTENT_LENGTH)
         .copy(false)
 
     private fun nextJson(): MultiMap = HttpHeaders
@@ -56,6 +50,5 @@ object PeriodicResolver {
         .add(HttpHeaders.SERVER, SERVER)
         .add(HttpHeaders.DATE, current)
         .add(HttpHeaders.CONTENT_TYPE, CONTENT_TYPE_APPLICATION_JSON)
-        .add(HttpHeaders.CONTENT_LENGTH, JSON_CONTENT_LENGTH)
         .copy(false)
 }

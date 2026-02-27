@@ -68,7 +68,7 @@ public class PgConnectionPool implements AutoCloseable {
             final AsyncResult<PgClientConnection> ar = completedConnections.get(i);
             if (ar == null || ar.failed()) {
                 forceCloseEstablishedConnections(completedConnections);
-                throw new IllegalStateException("cannot establish all connections");
+                throw new IllegalStateException("cannot establish all connections", ar != null ? ar.cause() : null);
             } else {
                 pgConnections.set(i, ar.result());
             }

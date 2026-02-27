@@ -27,7 +27,7 @@ module.exports = (databaseLayer) => ({
   fortunes: async (req, reply) => {
     const fortunes = await databaseLayer.allFortunes();
 
-    fortunes.push(h.additionalFortune);
+    fortunes.push(h.additionalFortune());
     fortunes.sort(compare);
 
     return reply.view("/views/fortunes.hbs", { fortunes });

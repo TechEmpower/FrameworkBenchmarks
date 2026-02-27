@@ -1,5 +1,6 @@
 {
   "framework": "swoole",
+  "maintainers": ["NathanFreeman"],
   "tests": [{
     "default": {
       "dockerfile": "swoole-sync-mysql.dockerfile",

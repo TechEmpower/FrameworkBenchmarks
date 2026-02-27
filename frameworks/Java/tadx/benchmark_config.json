@@ -1,5 +1,6 @@
 {
   "framework": "tadx",
+  "maintainers": ["yn-tadpole"],
   "tests": [
     {
       "default": {
@@ -10,21 +11,21 @@
         "fortune_url": "/fortunes",
         "update_url": "/update?queries=",
         "cached_query_url" : "/cached_queries?count=",
-        "port": 8000,
+        "port": 8080,
         "approach": "Realistic",
         "classification": "Fullstack",
         "database": "Postgres",
-        "framework": "tadx",
+        "framework": "Tad.x",
         "language": "Java",
         "flavor": "None",
         "orm": "Micro",
-        "platform": "None",
+        "platform": "Tad.x",
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
         "display_name": "tadx",
         "notes": "",
-        "versus": "None"
+        "versus": ""
       }
     }
   ]

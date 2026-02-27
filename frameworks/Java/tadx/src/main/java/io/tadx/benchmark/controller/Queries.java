@@ -4,6 +4,7 @@ import io.tadx.benchmark.entity.World;
 import io.tadx.data.DbStorage;
 import io.tadx.web.HttpMethod;
 import io.tadx.web.annotation.*;
+import io.vertx.sqlclient.Tuple;
 
 import java.util.SplittableRandom;
 
@@ -31,7 +32,7 @@ public class Queries {
         }
         World[] worlds = new World[queries];
         for (int i = 0; i < queries; i++) {
-            worlds[i] = dbStorage.findEntity(World.class, randomWorld());
+            worlds[i] = dbStorage.findEntity(World.class, Tuple.of(randomWorld()));
         }
         return worlds;
     }

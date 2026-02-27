@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gem 'json'
 gem 'sequel', '~> 5.0'
-gem 'rack', '~> 3.1'
+gem 'rack', '~> 3.2'
 gem "concurrent-ruby"
 
 group :mysql, optional: true do

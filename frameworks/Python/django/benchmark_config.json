@@ -66,6 +66,30 @@
         "notes": "",
         "versus": "wsgi",
         "tags": []
+      },
+      "granian": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "db_url": "/db",
+        "query_url": "/dbs?queries=",
+        "fortune_url": "/fortunes",
+        "update_url": "/update?queries=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "Postgres",
+        "framework": "django",
+        "language": "Python",
+        "flavor": "Python3",
+        "orm": "Full",
+        "platform": "WSGI",
+        "webserver": "Granian",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Django [Granian]",
+        "notes": "",
+        "versus": "wsgi",
+        "tags": []
       }
     }
   ]

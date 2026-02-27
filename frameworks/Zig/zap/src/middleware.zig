@@ -7,8 +7,6 @@ pub const SharedAllocator = struct {
     // static
     var allocator: std.mem.Allocator = undefined;
 
-    const Self = @This();
-
     // just a convenience function
     pub fn init(a: std.mem.Allocator) void {
         allocator = a;
@@ -45,12 +43,12 @@ pub const HeaderMiddleWare = struct {
     }
 
     // note that the first parameter is of type *Handler, not *Self !!!
-    pub fn onRequest(handler: *Handler, req: zap.Request, context: *Context) bool {
+    pub fn onRequest(handler: *Handler, req: zap.Request, context: *Context) !bool {
         // this is how we would get our self pointer
         const self: *Self = @fieldParentPtr("handler", handler);
         _ = self;
 
-        req.setHeader("Server", "Zap") catch return false;
+        try req.setHeader("Server", "Zap");
 
         // continue in the chain
         return handler.handleOther(req, context);
@@ -59,15 +57,15 @@ pub const HeaderMiddleWare = struct {
 
 pub const RandomMiddleWare = struct {
     handler: Handler,
-    rnd: *std.rand.DefaultPrng,
+    rnd: *std.Random.DefaultPrng,
 
     const Self = @This();
 
-    const Prng = struct {
-        rnd: *std.rand.DefaultPrng = undefined,
+    pub const Prng = struct {
+        rnd: *std.Random.DefaultPrng = undefined,
     };
 
-    pub fn init(other: ?*Handler, rnd: *std.rand.DefaultPrng) Self {
+    pub fn init(other: ?*Handler, rnd: *std.Random.DefaultPrng) Self {
         return .{
             .handler = Handler.init(onRequest, other),
             .rnd = rnd,
@@ -80,8 +78,7 @@ pub const RandomMiddleWare = struct {
     }
 
     // note that the first parameter is of type *Handler, not *Self !!!
-    pub fn onRequest(handler: *Handler, req: zap.Request, context: *Context) bool {
-
+    pub fn onRequest(handler: *Handler, req: zap.Request, context: *Context) !bool {
         // this is how we would get our self pointer
         const self: *RandomMiddleWare = @fieldParentPtr("handler", handler);
 
@@ -98,7 +95,7 @@ pub const PgMiddleWare = struct {
 
     const Self = @This();
 
-    const Pg = struct {
+    pub const Pg = struct {
         pool: *pg.Pool = undefined,
     };
 
@@ -115,8 +112,7 @@ pub const PgMiddleWare = struct {
     }
 
     // note that the first parameter is of type *Handler, not *Self !!!
-    pub fn onRequest(handler: *Handler, req: zap.Request, context: *Context) bool {
-
+    pub fn onRequest(handler: *Handler, req: zap.Request, context: *Context) !bool {
         // this is how we would get our self pointer
         const self: *Self = @fieldParentPtr("handler", handler);
 

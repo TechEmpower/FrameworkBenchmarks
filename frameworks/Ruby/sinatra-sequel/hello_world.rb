@@ -104,7 +104,7 @@ class HelloWorld < Sinatra::Base
   def render_json(data)
     add_headers
     content_type :json
-    data.to_json
+    JSON.generate(data)
   end
 
   def render_html(template)
