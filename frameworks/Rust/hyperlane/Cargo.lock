@@ -598,9 +598,9 @@ dependencies = [
 
 [[package]]
 name = "hyperlane"
-version = "17.3.7"
+version = "18.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e8d86a82c6090b2c759397db4fa31349afdc6e4394c5521deabc6923ab6481a2"
+checksum = "edecf037d380f28ab6f26491a148bfa0ffb4ab004a7d3e6d6a4b7beadc8f833a"
 dependencies = [
  "http-type",
  "inventory",
@@ -617,7 +617,7 @@ checksum = "9b6f580fff377190b818d8c2ef52f68d1296490916da4923fe90287b7c80028c"
 
 [[package]]
 name = "hyperlane_techempower"
-version = "0.1.13"
+version = "0.1.14"
 dependencies = [
  "futures",
  "hyperlane",
