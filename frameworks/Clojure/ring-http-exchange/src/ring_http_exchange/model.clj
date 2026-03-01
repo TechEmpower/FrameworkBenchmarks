@@ -1,10 +1,14 @@
 (ns ring-http-exchange.model
   (:require [jj.sql.boa :as boa]
             [jj.sql.boa.query.next-jdbc :as next-jdbc-adapter]
-            [jsonista.core :as json]))
+            [jsonista.core :as json])
+  (:import (java.util.concurrent Executors)))
+
+(def executor (Executors/newFixedThreadPool (* 4 (.availableProcessors (Runtime/getRuntime)))))
 
 (def ^:const hello-world "Hello, World!")
 (def query-fortunes (boa/build-query (next-jdbc-adapter/->NextJdbcAdapter) "fortune.sql"))
+(def async-query-fortunes (boa/build-async-query executor (next-jdbc-adapter/->NextJdbcAdapter) "fortune.sql"))
 
 (defn json-body []
   (json/write-value-as-string {:message hello-world}))
@@ -14,4 +18,3 @@
                    (conj fortunes {:id      0
                                    :message "Additional fortune added at request time."})
                    (sort-by :message fortunes))})
-

@@ -71,7 +71,7 @@
         "display_name": "Quarkus, Vert.x",
         "notes": "",
         "versus": "Vert.x",
-        "tags": ["broken"]
+        "tags": []
       },
       "reactive-routes-pgclient": {
         "json_url": "/json",
