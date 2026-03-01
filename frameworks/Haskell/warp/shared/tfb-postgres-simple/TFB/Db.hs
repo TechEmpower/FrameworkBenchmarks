@@ -1,6 +1,7 @@
 {-# OPTIONS -Wno-orphans #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE QuasiQuotes #-}
 
 module TFB.Db
   ( Pool,
@@ -20,10 +21,13 @@ import Data.Bifunctor qualified as Bi
 import Data.ByteString (ByteString)
 import Data.ByteString.Char8 qualified as BSC
 import Data.Either qualified as Either
+import Data.List (sortBy)
+import Data.Ord (comparing)
 import Data.Pool qualified as Pool
 import Database.PostgreSQL.Simple (SomePostgreSqlException)
 import Database.PostgreSQL.Simple qualified as PG
 import Database.PostgreSQL.Simple.FromRow (FromRow (fromRow), field)
+import Database.PostgreSQL.Simple.SqlQQ (sql)
 import System.IO.Error qualified as Error
 import TFB.Types qualified as Types
 
@@ -132,12 +136,15 @@ queryWorldByIds dbPool wIds = Pool.withResource dbPool $ \conn -> do
 
 updateWorlds :: Pool -> [(Types.World, Int)] -> IO (Either Error [Types.World])
 updateWorlds dbPool wsUpdates = Pool.withResource dbPool $ \conn -> do
-  let worlds = Bi.first Types.wId <$> wsUpdates
+  let worlds = sortBy (comparing fst) $ Bi.first Types.wId <$> wsUpdates
   res <-
     try @SomePostgreSqlException $
       PG.executeMany
         conn
-        "UPDATE World SET randomNumber = upd.rnd FROM (VALUES (?,?)) as upd(wid,rnd) WHERE World.id = upd.wid"
+        [sql| UPDATE World 
+              SET randomNumber = upd.rnd 
+              FROM (VALUES (?,?)) as upd(wid,rnd) 
+              WHERE World.id = upd.wid |]
         worlds
   _ <- case res of
     Left e -> print e

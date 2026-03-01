@@ -11,8 +11,8 @@
 
 (def db-spec {:idle-timeout      15000
               :max-lifetime      60000
-              :minimum-idle      0
-              :maximum-pool-size 1024
+              :minimum-idle      (* 3 (.availableProcessors (Runtime/getRuntime)))
+              :maximum-pool-size (* 3 (.availableProcessors (Runtime/getRuntime)))
               :jdbcUrl           "jdbc:postgresql://tfb-database/hello_world?user=benchmarkdbuser&password=benchmarkdbpass&tlsnowait=true"})
 
 (defn -main
@@ -29,6 +29,7 @@
       (if use-inputstream?
         (input-stream-handler/get-handler datasource)
         (string-handler/get-handler datasource))
-      {:port     8080
-       :host     "0.0.0.0"
-       :executor (Executors/newCachedThreadPool)})))
+      {:port               8080
+       :host               "0.0.0.0"
+       :lazy-request-map?  true
+       :executor           (Executors/newFixedThreadPool (* 3 (.availableProcessors (Runtime/getRuntime))))})))

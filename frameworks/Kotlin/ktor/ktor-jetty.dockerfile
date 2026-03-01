@@ -9,4 +9,4 @@ COPY --from=build /ktor/build/libs/tech-empower-framework-benchmark-1.0-SNAPSHOT
 
 EXPOSE 9090
 
-CMD ["java", "-server","-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AlwaysPreTouch", "-jar", "app.jar"]
+CMD ["java", "-server","-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AlwaysPreTouch", "-Djava.lang.Integer.IntegerCache.high=10000", "-jar", "app.jar"]

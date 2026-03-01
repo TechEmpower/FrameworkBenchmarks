@@ -28,6 +28,7 @@ The tests were run with:
 * [kotlinx.serialization](https://github.com/Kotlin/kotlinx.serialization)
 * [kotlinx-io](https://github.com/Kotlin/kotlinx-io)
 * [kotlinx.html](https://github.com/Kotlin/kotlinx.html)
+* [kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime)
 
 ## Test URLs
 

@@ -1,5 +1,6 @@
 {
   "framework": "juptune",
+  "maintainers": ["BradleyChatha"],
   "tests": [
     {
       "default": {
@@ -19,7 +20,8 @@
         "database_os": "Linux",
         "display_name": "Juptune",
         "notes": "",
-        "versus": "None"
+        "versus": "None",
+        "tags": []
       }
     }
   ]

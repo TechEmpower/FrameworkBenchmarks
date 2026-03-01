@@ -20,6 +20,7 @@ return [
         'settings' => [
             'worker_num' => swoole_cpu_num(),
             'only_simple_http' => true,
+            'http_compression' => false,
         ],
     ],
 ];

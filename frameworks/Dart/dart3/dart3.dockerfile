@@ -1,9 +1,9 @@
 
-FROM dart:3.10.8 AS build
+FROM dart:3.11.0 AS build
 WORKDIR /app
 
 COPY pubspec.yaml .
-COPY bin bin
+COPY dart_native/bin/ bin/
 
 RUN dart compile exe bin/server.dart -o server
 

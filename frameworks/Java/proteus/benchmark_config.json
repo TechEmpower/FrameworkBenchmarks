@@ -20,7 +20,8 @@
       "database_os": "Linux",
       "display_name": "proteus",
       "notes": "",
-      "versus": ""
+      "versus": "",
+      "tags": ["broken"]
     },
     "mysql" : {
       "db_url": "/db/mysql",
@@ -39,7 +40,8 @@
       "database_os": "Linux",
       "display_name": "proteus-mysql",
       "notes": "",
-      "versus": ""
+      "versus": "",
+      "tags": ["broken"]
     }
   }]
 }

@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 gem "erubi", "~> 1.12"
-gem "json", "~> 2.8"
+gem "json"
 gem "sequel", "~> 5.67"
 gem "roda", "~> 3.66"
 gem "tilt", "~> 2.1", require: "tilt/erb"
@@ -9,7 +9,7 @@ gem "cgi" # Make sure the h plugin uses the faster CGI.escape_html
 gem "concurrent-ruby"
 
 group :mysql, optional: true do
-  gem "trilogy", "~> 2.9"
+  gem "trilogy", "~> 2.10"
 end
 
 group :postgresql, optional: true do

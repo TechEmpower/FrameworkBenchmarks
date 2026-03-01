@@ -5,7 +5,7 @@ import com.zaxxer.hikari.HikariConfig
 // copied from the `ktor` portion
 
 fun HikariConfig.configurePostgres(poolSize: Int) {
-    jdbcUrl = "jdbc:postgresql://tfb-database/hello_world?useSSL=false"
+    jdbcUrl = "jdbc:postgresql://tfb-database:5432/hello_world?loggerLevel=OFF&disableColumnSanitiser=true&assumeMinServerVersion=16&sslmode=disable"
     driverClassName = org.postgresql.Driver::class.java.name
     configureCommon(poolSize)
 }

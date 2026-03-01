@@ -19,7 +19,27 @@ class HelloWorld
   PLAINTEXT_TYPE = 'text/plain'
   DATE = 'Date'
   SERVER = 'Server'
-  SERVER_STRING = "Rack"
+  SERVER_STRING = 'Rack'
+
+  TEMPLATE_PREFIX = <<~HTML
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Fortunes</title>
+    </head>
+    <body>
+      <table>
+        <tr>
+          <th>id</th>
+          <th>message</th>
+        </tr>
+  HTML
+
+  TEMPLATE_POSTFIX = <<~HTML
+      </table>
+    </body>
+    </html>
+  HTML
 
   def bounded_queries(env)
     params = Rack::Utils.parse_query(env['QUERY_STRING'])
@@ -56,37 +76,12 @@ class HelloWorld
 
     fortunes.sort_by!(&:message)
 
-    html = String.new(<<~'HTML')
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <title>Fortunes</title>
-      </head>
-
-      <body>
-
-      <table>
-      <tr>
-        <th>id</th>
-        <th>message</th>
-      </tr>
-    HTML
-
-    fortunes.each do |fortune|
-      html << <<~"HTML"
-      <tr>
-        <td>#{fortune.id}</td>
-        <td>#{ERB::Escape.html_escape(fortune.message)}</td>
-      </tr>
-      HTML
+    buffer = String.new
+    buffer << TEMPLATE_PREFIX
+    fortunes.each do |item|
+      buffer << "<tr><td>#{item.id}</td><td>#{ERB::Escape.html_escape(item.message)}</td></tr>"
     end
-
-    html << <<~'HTML'
-      </table>
-
-      </body>
-      </html>
-    HTML
+    buffer << TEMPLATE_POSTFIX
   end
 
   def updates(env)
@@ -110,19 +105,19 @@ class HelloWorld
     case env['PATH_INFO']
     when '/json'
       # Test type 1: JSON serialization
-      respond JSON_TYPE, { message: 'Hello, World!' }.to_json
+      respond JSON_TYPE, JSON.generate({ message: 'Hello, World!' })
     when '/db'
       # Test type 2: Single database query
-      respond JSON_TYPE, db.to_json
+      respond JSON_TYPE, JSON.generate(db)
     when '/queries'
       # Test type 3: Multiple database queries
-      respond JSON_TYPE, queries(env).to_json
+      respond JSON_TYPE, JSON.generate(queries(env))
     when '/fortunes'
       # Test type 4: Fortunes
       respond HTML_TYPE, fortunes
     when '/updates'
       # Test type 5: Database updates
-      respond JSON_TYPE, updates(env).to_json
+      respond JSON_TYPE, JSON.generate(updates(env))
     when '/plaintext'
       # Test type 6: Plaintext
       respond PLAINTEXT_TYPE, 'Hello, World!'

@@ -22,7 +22,8 @@
         "database_os": "Linux",
         "display_name": "Jewelia",
         "notes": "",
-        "versus": "None"
+        "versus": "None",
+        "tags": [ "broken" ]
       }
     }]
 }
