@@ -1,5 +1,6 @@
 {
     "framework": "fastpysgi",
+    "maintainers": [ "remittor" ],
     "tests": [{
         "default": {
             "json_url": "/json",
