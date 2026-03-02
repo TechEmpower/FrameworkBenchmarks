@@ -356,9 +356,8 @@ fn formatHttpDate(buf: []u8, timestamp: i64) void {
 // ============================================================================
 
 fn handleJson(ctx: *http.Context) !void {
-    const body =
-        \\{"message":"Hello, World!"}
-    ;
+    var buf: [64]u8 = undefined;
+    const body = http.stringify(&buf, .{ .message = "Hello, World!" }) catch unreachable;
     ctx.response.setRaw(writeRawResponse("application/json", body, getDate()));
 }
 
