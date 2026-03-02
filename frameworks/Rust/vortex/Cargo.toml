@@ -7,16 +7,8 @@ edition = "2021"
 name = "vortex-bench"
 path = "src/main.rs"
 
-[[bin]]
-name = "vortex-profgen"
-path = "src/profgen.rs"
-
 [dependencies]
 vortex-server = { git = "https://github.com/yp3y5akh0v/vortex" }
-vortex-http = { git = "https://github.com/yp3y5akh0v/vortex" }
-vortex-json = { git = "https://github.com/yp3y5akh0v/vortex" }
-vortex-db = { git = "https://github.com/yp3y5akh0v/vortex" }
-vortex-template = { git = "https://github.com/yp3y5akh0v/vortex" }
 mimalloc = { version = "0.1", default-features = false }
 
 [profile.release]

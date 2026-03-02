@@ -10,49 +10,33 @@ RUN apt-get update && apt-get install -y \
     && ln -s /usr/lib/llvm-16/lib/libbolt_rt_hugify.a /usr/lib/libbolt_rt_hugify.a \
     && rm -rf /var/lib/apt/lists/*
 
-# llvm-tools for PGO profile merging
 RUN rustup component add llvm-tools-preview
 
 WORKDIR /vortex
+RUN git clone https://github.com/yp3y5akh0v/vortex .
 
-# Copy manifests first for dependency caching
-COPY Cargo.toml Cargo.lock* ./
-COPY .cargo .cargo
-
-# Create dummy source files for dependency compilation
-RUN mkdir -p src && echo "fn main() {}" > src/main.rs && \
-    echo "fn main() {}" > src/profgen.rs
-
-# Pre-compile dependencies with PGO instrumentation flags (cached layer)
-RUN RUSTFLAGS="-Ctarget-cpu=native -Clink-arg=-fuse-ld=lld -Cprofile-generate=/tmp/pgo-data" \
-    cargo build --release 2>/dev/null || true
-
-# Copy actual source code
-COPY src src
-RUN find src -name "*.rs" -exec touch {} +
-
-# === PGO Phase 1: Build instrumented profiling binary ===
+# PGO Phase 1: Build instrumented profiling binary
 RUN RUSTFLAGS="-Ctarget-cpu=native -Clink-arg=-fuse-ld=lld -Cprofile-generate=/tmp/pgo-data" \
     cargo build --release --bin vortex-profgen
 
-# === PGO Phase 2: Run profiling harness to generate profile data ===
+# PGO Phase 2: Run profiling harness
 RUN /vortex/target/release/vortex-profgen
 
-# === PGO Phase 3: Merge profile data ===
+# PGO Phase 3: Merge profile data
 RUN LLVM_PROFDATA="$(rustc --print sysroot)/lib/rustlib/x86_64-unknown-linux-gnu/bin/llvm-profdata" && \
     $LLVM_PROFDATA merge -o /tmp/pgo-merged.profdata /tmp/pgo-data/
 
-# === PGO Phase 4: Rebuild with PGO + emit-relocs (BOLT needs relocations) ===
+# PGO Phase 4: Rebuild with PGO + emit-relocs for BOLT
 RUN RUSTFLAGS="-Ctarget-cpu=native -Clink-arg=-fuse-ld=lld -Clink-arg=-Wl,--emit-relocs -Cprofile-use=/tmp/pgo-merged.profdata" \
     cargo build --release --bin vortex-bench --bin vortex-profgen
 
-# === BOLT Phase 5: Instrument profgen binary ===
+# BOLT Phase 5: Instrument profgen
 RUN llvm-bolt-16 /vortex/target/release/vortex-profgen \
     -instrument \
     -instrumentation-file=/tmp/bolt-prof \
     -o /tmp/vortex-profgen-bolt
 
-# === BOLT Phase 6: Run instrumented profgen + optimize server binary ===
+# BOLT Phase 6: Optimize server binary
 RUN /tmp/vortex-profgen-bolt && \
     llvm-bolt-16 /vortex/target/release/vortex-bench \
     -data=/tmp/bolt-prof \
