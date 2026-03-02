@@ -1,0 +1,9 @@
+[target.x86_64-unknown-linux-gnu]
+rustflags = [
+    "-C", "target-cpu=native",
+    "-C", "link-arg=-fuse-ld=lld",
+]
+
+[build]
+# Default target when building inside Linux container
+# target = "x86_64-unknown-linux-gnu"

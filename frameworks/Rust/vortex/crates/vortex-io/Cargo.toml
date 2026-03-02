@@ -1,0 +1,16 @@
+[package]
+name = "vortex-io"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+description = "io_uring reactor layer for Vortex — the world's fastest network framework"
+
+[features]
+default = ["io-uring"]
+io-uring = ["dep:io-uring"]
+epoll-fallback = []
+
+[dependencies]
+io-uring = { workspace = true, optional = true }
+libc = { workspace = true }

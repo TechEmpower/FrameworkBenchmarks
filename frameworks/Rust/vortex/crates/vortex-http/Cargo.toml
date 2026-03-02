@@ -1,0 +1,13 @@
+[package]
+name = "vortex-http"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+description = "High-performance HTTP/1.1 protocol layer for Vortex"
+
+[dependencies]
+httparse = { workspace = true }
+itoa = { workspace = true }
+smallvec = { workspace = true }
+libc = { workspace = true }

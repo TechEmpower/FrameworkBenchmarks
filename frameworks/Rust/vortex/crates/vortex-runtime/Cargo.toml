@@ -1,0 +1,11 @@
+[package]
+name = "vortex-runtime"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+description = "Thread-per-core async runtime for Vortex"
+
+[dependencies]
+vortex-io = { workspace = true }
+libc = { workspace = true }

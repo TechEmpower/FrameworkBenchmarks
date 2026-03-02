@@ -1,0 +1,10 @@
+[package]
+name = "vortex-json"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+description = "Hand-optimized JSON serialization for Vortex"
+
+[dependencies]
+itoa = { workspace = true }
