@@ -52,5 +52,5 @@ class MainVerticle(private val r2dbcDatabase: R2dbcDatabase) : CommonWithDbVerti
  * Creates a MainVerticle that will create its own connection pool per verticle instance.
  * Used for separate-pool benchmark configurations.
  */
-fun MainVerticleWithSeparatePool(poolSize: Int, useOptimizedConfig: Boolean): MainVerticle =
-    MainVerticle(r2dbcConnectPool(poolSize, useOptimizedConfig))
+fun MainVerticleWithSeparatePool(poolSize: Int, useKtorR2dbcConfig: Boolean): MainVerticle =
+    MainVerticle(r2dbcConnectPool(poolSize, useKtorR2dbcConfig))
