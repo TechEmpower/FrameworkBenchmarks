@@ -10,19 +10,19 @@ const _defaultPort = 8080;
 /// transform Dart objects into byte arrays for HTTP responses.
 final _jsonEncoder = JsonUtf8Encoder();
 
-void main(List<String> args) {
+void main(List<String> args) async {
   /// Create an [Isolate] containing an [HttpServer]
   /// for each processor after the first
   for (var i = 1; i < Platform.numberOfProcessors; i++) {
-    Isolate.spawn(_startServer, args);
+    await Isolate.spawn(_startServer, args);
   }
 
   /// Create a [HttpServer] for the first processor
-  _startServer(args);
+  await _startServer(args);
 }
 
 /// Creates and setup a [HttpServer]
-void _startServer(List<String> args) async {
+Future<void> _startServer(List<String> args) async {
   /// Binds the [HttpServer] on `0.0.0.0:8080`.
   final server = await HttpServer.bind(
     InternetAddress.anyIPv4,

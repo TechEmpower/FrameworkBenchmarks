@@ -25,7 +25,7 @@ final _jsonEncoder = JsonUtf8Encoder();
 /// belong to a secondary "worker group".
 const workerGroupTag = '--workerGroup';
 
-void main(List<String> args) {
+void main(List<String> args) async {
   /// Defines local isolate quota, using MAX_ISOLATES if provided.
   /// Falls back to total available cores while respecting hardware limits.
   var maxIsolates = _maxIsolatesfromEnvironment > 0
@@ -55,7 +55,7 @@ void main(List<String> args) {
     for (var i = 0; i < workerGroups; i++) {
       /// [Platform.script] identifies the AOT snapshot or executable.
       /// [Isolate.spawnUri] spawns a new process group via [main()].
-      Isolate.spawnUri(Platform.script, [...args, workerGroupTag], null);
+      await Isolate.spawnUri(Platform.script, [...args, workerGroupTag], null);
     }
 
     /// Updates local isolate limits, assigning the primary group
@@ -66,15 +66,15 @@ void main(List<String> args) {
   /// Create an [Isolate] containing an [HttpServer]
   /// for each processor after the first
   for (var i = 1; i < maxIsolates; i++) {
-    Isolate.spawn(_startServer, args);
+    await Isolate.spawn(_startServer, args);
   }
 
   /// Create a [HttpServer] for the first processor
-  _startServer(args);
+  await _startServer(args);
 }
 
 /// Creates and setup a [HttpServer]
-void _startServer(List<String> args) async {
+Future<void> _startServer(List<String> args) async {
   /// Binds the [HttpServer] on `0.0.0.0:8080`.
   final server = await HttpServer.bind(
     InternetAddress.anyIPv4,
