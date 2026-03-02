@@ -10,6 +10,11 @@ const _defaultPort = 8080;
 /// transform Dart objects into byte arrays for HTTP responses.
 final _jsonEncoder = JsonUtf8Encoder();
 
+/// The maximum duration allowed for a single HTTP request to be processed.
+/// This prevents slow clients or stalled logic from blocking the isolate's
+/// event loop indefinitely.
+const _requestTimeout = Duration(seconds: 8);
+
 void main(List<String> args) async {
   /// Create an [Isolate] containing an [HttpServer]
   /// for each processor after the first
@@ -33,9 +38,17 @@ Future<void> _startServer(List<String> args) async {
   server
     ..defaultResponseHeaders.clear()
     /// Sets [HttpServer]'s [serverHeader].
-    ..serverHeader = 'dart_native'
-    /// Handles [HttpRequest]'s from [HttpServer].
-    ..listen(_handleRequest);
+    ..serverHeader = 'dart_native';
+
+  /// Handles [HttpRequest]'s from [HttpServer].
+  await for (final request in server) {
+    /// Asynchronously processes each request with an 8-second safety deadline
+    /// to prevent stalled connections from blocking the isolate event loop.
+    await _handleRequest(request).timeout(
+      _requestTimeout,
+      onTimeout: () => _sendResponse(request, HttpStatus.internalServerError),
+    );
+  }
 }
 
 /// Dispatches requests to specific test handlers. Wrapped in a try-catch

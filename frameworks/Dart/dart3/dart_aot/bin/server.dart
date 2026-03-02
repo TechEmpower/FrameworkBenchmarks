@@ -25,6 +25,11 @@ final _jsonEncoder = JsonUtf8Encoder();
 /// belong to a secondary "worker group".
 const workerGroupTag = '--workerGroup';
 
+/// The maximum duration allowed for a single HTTP request to be processed.
+/// This prevents slow clients or stalled logic from blocking the isolate's
+/// event loop indefinitely.
+const _requestTimeout = Duration(seconds: 8);
+
 void main(List<String> args) async {
   /// Defines local isolate quota, using MAX_ISOLATES if provided.
   /// Falls back to total available cores while respecting hardware limits.
@@ -85,9 +90,17 @@ Future<void> _startServer(List<String> args) async {
   server
     ..defaultResponseHeaders.clear()
     /// Sets [HttpServer]'s [serverHeader].
-    ..serverHeader = 'dart_aot'
-    /// Handles [HttpRequest]'s from [HttpServer].
-    ..listen(_handleRequest);
+    ..serverHeader = 'dart_aot';
+
+  /// Handles [HttpRequest]'s from [HttpServer].
+  await for (final request in server) {
+    /// Asynchronously processes each request with an 8-second safety deadline
+    /// to prevent stalled connections from blocking the isolate event loop.
+    await _handleRequest(request).timeout(
+      _requestTimeout,
+      onTimeout: () => _sendResponse(request, HttpStatus.internalServerError),
+    );
+  }
 }
 
 /// Dispatches requests to specific test handlers. Wrapped in a try-catch
