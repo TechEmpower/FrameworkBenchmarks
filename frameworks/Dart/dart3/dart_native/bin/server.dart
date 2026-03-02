@@ -38,17 +38,22 @@ Future<void> _startServer(List<String> args) async {
     ..listen(_handleRequest);
 }
 
-/// Dispatches requests to specific handlers.
-void _handleRequest(HttpRequest request) {
-  switch (request.uri.path) {
-    case '/json':
-      _jsonTest(request);
-      break;
-    case '/plaintext':
-      _plaintextTest(request);
-      break;
-    default:
-      _sendResponse(request, HttpStatus.notFound);
+/// Dispatches requests to specific test handlers. Wrapped in a try-catch
+/// to ensure stable execution and guaranteed response delivery.
+Future<void> _handleRequest(HttpRequest request) async {
+  try {
+    switch (request.uri.path) {
+      case '/json':
+        _jsonTest(request);
+        break;
+      case '/plaintext':
+        _plaintextTest(request);
+        break;
+      default:
+        _sendResponse(request, HttpStatus.notFound);
+    }
+  } catch (e) {
+    _sendResponse(request, HttpStatus.internalServerError);
   }
 }
 
