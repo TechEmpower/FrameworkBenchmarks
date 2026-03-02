@@ -5,6 +5,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
     curl \
     xz-utils \
+    git \
     libpq-dev \
     pkg-config \
     && rm -rf /var/lib/apt/lists/*
@@ -22,11 +23,9 @@ WORKDIR /build
 # Copy source files
 COPY build.zig build.zig.zon ./
 COPY src/ src/
-COPY lib/ lib/
-COPY examples/ examples/
 
-# Build only the techempower binary
-RUN zig build build-techempower
+# Build (fetches oxelot-http dependency from GitHub)
+RUN zig build -Doptimize=ReleaseFast
 
 # --- Runtime stage ---
 FROM debian:bookworm-slim

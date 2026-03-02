@@ -1,14 +1,13 @@
 .{
-    .fingerprint = 0x3db79e0e37f36cee,
-    .name = .oxelot_http,
+    .fingerprint = 0x41aa17ef09162160,
+    .name = .oxelot_techempower,
     .version = "0.1.0",
     .minimum_zig_version = "0.16.0",
 
     .dependencies = .{
-        .tls = .{
-            // Vendored locally with Zig 0.16 compatibility fix
-            // (bytes_length -> encoded_length in ml_kem API)
-            .path = "lib/tls",
+        .oxelot_http = .{
+            .url = "git+https://github.com/samcschneider/oxelot-http.git#d745cad1acd0a6a5d46558577d52e0e61ccb97df",
+            .hash = "oxelot_http-0.1.0-7mzzN6bKDwA7EICPqRQcwwkqwa7oD0hPB_d8qNfXA_VC",
         },
     },
 
@@ -16,7 +15,5 @@
         "build.zig",
         "build.zig.zon",
         "src",
-        "lib",
-        "examples",
     },
 }
