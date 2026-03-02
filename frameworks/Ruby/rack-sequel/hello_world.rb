@@ -71,7 +71,7 @@ class HelloWorld
 
     fortune = Fortune.new
     fortune.id = 0
-    fortune.message = "Additional fortune added at request time."
+    fortune.message = -"Additional fortune added at request time."
     fortunes << fortune
 
     fortunes.sort_by!(&:message)
@@ -105,7 +105,7 @@ class HelloWorld
     case env['PATH_INFO']
     when '/json'
       # Test type 1: JSON serialization
-      respond JSON_TYPE, JSON.generate({ message: 'Hello, World!' })
+      respond JSON_TYPE, JSON.generate({ message: -'Hello, World!' })
     when '/db'
       # Test type 2: Single database query
       respond JSON_TYPE, JSON.generate(db)
@@ -120,7 +120,7 @@ class HelloWorld
       respond JSON_TYPE, JSON.generate(updates(env))
     when '/plaintext'
       # Test type 6: Plaintext
-      respond PLAINTEXT_TYPE, 'Hello, World!'
+      respond PLAINTEXT_TYPE, -'Hello, World!'
     end
   end
 
