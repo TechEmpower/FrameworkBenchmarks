@@ -740,12 +740,10 @@ fn updatesReadCallback(conn_ptr: usize, result: *pg.DbResult, phase: pg.async_po
         .active = false,
     };
 
-    // Submit to the pool
+    // Submit to the pool — must not silently skip the UPDATE
     if (!pool.submit(ring, update_req)) {
-        // Fallback: return the worlds without updating
-        const worlds = worldsFromResult(result);
-        const body = writeWorldsJsonRaw(worlds);
-        return writeRawResponseAlloc("application/json", body, getCachedDate());
+        std.log.err("Updates: failed to submit UPDATE to pool", .{});
+        return writeRawResponseAlloc("application/json", "{\"error\":\"pool full\"}", getCachedDate());
     }
 
     // Don't return a response yet — wait for the UPDATE to complete
