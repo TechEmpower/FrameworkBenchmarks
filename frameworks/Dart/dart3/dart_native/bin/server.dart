@@ -46,7 +46,7 @@ Future<void> _startServer(List<String> args) async {
     /// to prevent stalled connections from blocking the isolate event loop.
     await _handleRequest(request).timeout(
       _requestTimeout,
-      onTimeout: () => _sendResponse(request, HttpStatus.internalServerError),
+      onTimeout: () => _sendResponse(request, HttpStatus.requestTimeout),
     );
   }
 }
