@@ -19,27 +19,7 @@ class HelloWorld
   PLAINTEXT_TYPE = 'text/plain'
   DATE = 'Date'
   SERVER = 'Server'
-  SERVER_STRING = 'Rack'
-
-  TEMPLATE_PREFIX = <<~HTML
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <title>Fortunes</title>
-    </head>
-    <body>
-      <table>
-        <tr>
-          <th>id</th>
-          <th>message</th>
-        </tr>
-  HTML
-
-  TEMPLATE_POSTFIX = <<~HTML
-      </table>
-    </body>
-    </html>
-  HTML
+  SERVER_STRING = "Rack"
 
   def bounded_queries(env)
     params = Rack::Utils.parse_query(env['QUERY_STRING'])
@@ -76,12 +56,34 @@ class HelloWorld
 
     fortunes.sort_by!(&:message)
 
-    buffer = String.new
-    buffer << TEMPLATE_PREFIX
-    fortunes.each do |item|
-      buffer << "<tr><td>#{item.id}</td><td>#{ERB::Escape.html_escape(item.message)}</td></tr>"
+    html = String.new(<<~'HTML')
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>Fortunes</title>
+        </head>
+      <body>
+        <table>
+          <tr>
+            <th>id</th>
+            <th>message</th>
+          </tr>
+    HTML
+
+    fortunes.each do |fortune|
+      html << <<~"HTML"
+      <tr>
+        <td>#{fortune.id}</td>
+        <td>#{ERB::Escape.html_escape(fortune.message)}</td>
+      </tr>
+      HTML
     end
-    buffer << TEMPLATE_POSTFIX
+
+    html << <<~'HTML'
+      </table>
+      </body>
+      </html>
+    HTML
   end
 
   def updates(env)
