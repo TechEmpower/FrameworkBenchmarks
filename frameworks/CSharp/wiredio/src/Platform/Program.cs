@@ -8,20 +8,6 @@ using Unhinged;
 
 #pragma warning disable CA2014
 
-/* (MDA2AV)Dev notes:
- * 
- * Wired.IO Platform benchmark using [Unhinged - https://github.com/MDA2AV/Unhinged] epoll engine.
- *
- * This test was created purely for benchmark/comparison between .NET solutions.
- * It should not be considered EVER as a go-to framework to build any kind of webserver!
- * For such purpose please use the main Wired.IO framework [Wired.IO - https://github.com/MDA2AV/Wired.IO].
- *
- * This benchmarks follows the JsonSerialization and PlainText rules imposed by the TechEmpower team.
- *
- * The Http parsing by the Unhinged engine is still naive(work in progress), yet it's development will not have any impact
- * on these benchmarks results as the extra request parsing overhead is much smaller than the read/send syscalls'.
- */
-
 namespace Platform;
 
 [SkipLocalsInit]
@@ -32,25 +18,10 @@ internal static class Program
         var builder = UnhingedEngine
             .CreateBuilder()
             .SetPort(8080)
-            
-            
-            // Number of working threads
-            // Reasoning behind  Environment.ProcessorCount / 2
-            // It's the number of real cpu cores not cpu threads
-            // This can improve the cache hits on L1/L2 since only one thread
-            // is running per cpu core.
-            .SetNWorkersSolver(() => Environment.ProcessorCount - 2)  
-            
-            // Accept up to 16384 connections
+            .SetNWorkersSolver(() => 52)  
             .SetBacklog(16384) 
-            
-            // Max 512 epoll events per wake (quite overkill)
             .SetMaxEventsPerWake(512)         
-            
-            // Max 1024 connection per thread
             .SetMaxNumberConnectionsPerWorker(1024)
-            
-            // 32KB in and 16KB out slabs to handle 16 pipeline depth
             .SetSlabSizes(32 * 1024, 16 * 1024)
             .InjectRequestHandler(RequestHandler);
         
@@ -58,29 +29,23 @@ internal static class Program
         engine.Run();
     }
 
-    private const string Json = "/json";
-    private const string PlainText = "/plaintext";
-
     private static ValueTask RequestHandler(Connection connection)
     {
-        // FNV-1a Hashed routes to avoid string allocations
-        if(connection.H1HeaderData.Route == Json)          // /json
-            CommitJsonResponse(connection);
-       
-        else if (connection.H1HeaderData.Route == PlainText)   // /plaintext
-            CommitPlainTextResponse(connection);
-        
+        var route = connection.BinaryH1HeaderData.Route.AsSpan();
+        if (route[1] == (byte)'j') CommitJsonResponse(connection);
+        else CommitPlainTextResponse(connection);
         return  ValueTask.CompletedTask;
     }
     
     [ThreadStatic] private static Utf8JsonWriter? t_utf8JsonWriter;
     private static readonly JsonContext SerializerContext = JsonContext.Default;
-    private static void CommitJsonResponse(Connection connection)
+    private static unsafe void CommitJsonResponse(Connection connection)
     {
+        var tail = connection.WriteBuffer.Tail;
         connection.WriteBuffer.WriteUnmanaged("HTTP/1.1 200 OK\r\n"u8 +
-                                              "Server: W\r\n"u8 +
-                                              "Content-Type: application/json; charset=UTF-8\r\n"u8 +
-                                              "Content-Length: 27\r\n"u8);
+                                              "Content-Length:   \r\n"u8 +
+                                              "Server: U\r\n"u8 +
+                                              "Content-Type: application/json\r\n"u8);
         connection.WriteBuffer.WriteUnmanaged(DateHelper.HeaderBytes);
         
         t_utf8JsonWriter ??= new Utf8JsonWriter(connection.WriteBuffer, new JsonWriterOptions { SkipValidation = true });
@@ -90,15 +55,27 @@ internal static class Program
         var message = new JsonMessage { Message = "Hello, World!" };
         // Serializing it every request
         JsonSerializer.Serialize(t_utf8JsonWriter, message, SerializerContext.JsonMessage);
+        
+        var contentLength = (int)t_utf8JsonWriter.BytesCommitted;
+        
+        byte* dst = connection.WriteBuffer.Ptr + tail + 33;
+        int tens = contentLength / 10;
+        int ones = contentLength - tens * 10;
+
+        dst[0] = (byte)('0' + tens);
+        dst[1] = (byte)('0' + ones);
+        
     }
 
-    private static void CommitPlainTextResponse(Connection connection)
+    private static ReadOnlySpan<byte> s_plainTextBody => "Hello, World!"u8;
+    
+    private static unsafe void CommitPlainTextResponse(Connection connection)
     {
         connection.WriteBuffer.WriteUnmanaged("HTTP/1.1 200 OK\r\n"u8 +
-                                              "Server: W\r\n"u8 +
-                                              "Content-Type: text/plain\r\n"u8 +
-                                              "Content-Length: 13\r\n"u8);
+                                              "Content-Length: 13\r\n"u8 +
+                                              "Server: U\r\n"u8 +
+                                              "Content-Type: text/plain\r\n"u8);
         connection.WriteBuffer.WriteUnmanaged(DateHelper.HeaderBytes);
-        connection.WriteBuffer.WriteUnmanaged("Hello, World!"u8);
+        connection.WriteBuffer.WriteUnmanaged(s_plainTextBody);
     }
 }

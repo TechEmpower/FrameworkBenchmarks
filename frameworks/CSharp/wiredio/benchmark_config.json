@@ -24,8 +24,8 @@
         "plaintext_url": "/plaintext",
         "json_url": "/json",
         "port": 8080,
-        "approach": "Stripped",
-        "classification": "Micro",
+        "approach": "Realistic",
+        "classification": "Platform",
         "database": "None",
         "framework": "Unhinged",
         "language": "C#",
@@ -34,15 +34,15 @@
         "webserver": "Unhinged",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "Unhinged",
+        "display_name": "unhinged [52] [aot] [epoll]",
         "notes": "epoll"
       },
       "mcr-p": {
         "plaintext_url": "/plaintext",
         "json_url": "/json",
         "port": 8080,
-        "approach": "Stripped",
-        "classification": "Micro",
+        "approach": "Realistic",
+        "classification": "Platform",
         "database": "None",
         "framework": "Unhinged",
         "language": "C#",
@@ -51,7 +51,7 @@
         "webserver": "Unhinged",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "Unhinged [p]",
+        "display_name": "unhinged [56] [aot] [epoll]",
         "notes": "epoll"
       }
     }
