@@ -2,7 +2,7 @@ FROM rust:1.82-slim-bookworm AS builder
 
 # Install build deps + LLVM 16 for BOLT
 RUN apt-get update && apt-get install -y \
-    build-essential pkg-config liburing-dev lld wget gnupg \
+    build-essential pkg-config liburing-dev lld wget gnupg git \
     && wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key | gpg --dearmor -o /etc/apt/trusted.gpg.d/llvm-snapshot.gpg \
     && echo "deb http://apt.llvm.org/bookworm/ llvm-toolchain-bookworm-16 main" > /etc/apt/sources.list.d/llvm-16.list \
     && apt-get update && apt-get install -y bolt-16 libbolt-16-dev \
@@ -18,33 +18,18 @@ WORKDIR /vortex
 # Copy manifests first for dependency caching
 COPY Cargo.toml Cargo.lock* ./
 COPY .cargo .cargo
-COPY crates/vortex-io/Cargo.toml crates/vortex-io/
-COPY crates/vortex-runtime/Cargo.toml crates/vortex-runtime/
-COPY crates/vortex-http/Cargo.toml crates/vortex-http/
-COPY crates/vortex-server/Cargo.toml crates/vortex-server/
-COPY crates/vortex-json/Cargo.toml crates/vortex-json/
-COPY crates/vortex-db/Cargo.toml crates/vortex-db/
-COPY crates/vortex-template/Cargo.toml crates/vortex-template/
-COPY techempower/Cargo.toml techempower/
 
 # Create dummy source files for dependency compilation
-RUN mkdir -p crates/vortex-io/src && echo "" > crates/vortex-io/src/lib.rs && \
-    mkdir -p crates/vortex-runtime/src && echo "" > crates/vortex-runtime/src/lib.rs && \
-    mkdir -p crates/vortex-http/src && echo "" > crates/vortex-http/src/lib.rs && \
-    mkdir -p crates/vortex-server/src && echo "" > crates/vortex-server/src/lib.rs && \
-    mkdir -p crates/vortex-json/src && echo "" > crates/vortex-json/src/lib.rs && \
-    mkdir -p crates/vortex-db/src && echo "" > crates/vortex-db/src/lib.rs && \
-    mkdir -p crates/vortex-template/src && echo "" > crates/vortex-template/src/lib.rs && \
-    mkdir -p techempower/src && echo "fn main() {}" > techempower/src/main.rs && \
-    echo "fn main() {}" > techempower/src/profgen.rs
+RUN mkdir -p src && echo "fn main() {}" > src/main.rs && \
+    echo "fn main() {}" > src/profgen.rs
 
 # Pre-compile dependencies with PGO instrumentation flags (cached layer)
 RUN RUSTFLAGS="-Ctarget-cpu=native -Clink-arg=-fuse-ld=lld -Cprofile-generate=/tmp/pgo-data" \
     cargo build --release 2>/dev/null || true
 
 # Copy actual source code
-COPY . .
-RUN find crates techempower -name "*.rs" -exec touch {} +
+COPY src src
+RUN find src -name "*.rs" -exec touch {} +
 
 # === PGO Phase 1: Build instrumented profiling binary ===
 RUN RUSTFLAGS="-Ctarget-cpu=native -Clink-arg=-fuse-ld=lld -Cprofile-generate=/tmp/pgo-data" \
