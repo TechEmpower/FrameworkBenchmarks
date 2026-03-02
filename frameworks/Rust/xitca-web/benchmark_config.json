@@ -1,5 +1,6 @@
 {
   "framework": "xitca-web",
+  "maintainers": ["fakeshadow"],
   "tests": [
     {
       "default": {
