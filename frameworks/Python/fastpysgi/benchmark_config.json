@@ -1,5 +1,5 @@
 {
-    "framework": "fastwsgi",
+    "framework": "fastpysgi",
     "tests": [{
         "default": {
             "json_url": "/json",
@@ -13,10 +13,10 @@
             "flavor": "Python3",
             "orm": "Raw",
             "platform": "WSGI",
-            "webserver": "FastWSGI",
+            "webserver": "FastPySGI",
             "os": "Linux",
             "database_os": "Linux",
-            "display_name": "FastWSGI",
+            "display_name": "FastPySGI [WSGI]",
             "notes": "",
             "versus": "wsgi"
         },
@@ -36,10 +36,10 @@
             "flavor": "Python3",
             "orm": "Raw",
             "platform": "ASGI",
-            "webserver": "FastWSGI",
+            "webserver": "FastPySGI",
             "os": "Linux",
             "database_os": "Linux",
-            "display_name": "FastWSGI [ASGI]",
+            "display_name": "FastPySGI [ASGI]",
             "notes": "",
             "versus": "uvicorn"
         }
