@@ -114,6 +114,6 @@ toasty = { git = "https://github.com/fakeshadow/toasty", rev = "00dc842" }
 toasty-core = { git = "https://github.com/fakeshadow/toasty", rev = "00dc842" }
 toasty-sql = { git = "https://github.com/fakeshadow/toasty", rev = "00dc842" }
 
-xitca-postgres = { git = "http://github.com/HFQR/xitca-web", rev = "466dda6" }
-xitca-router = { git = "http://github.com/HFQR/xitca-web", rev = "466dda6" }
-xitca-web = { git = "http://github.com/HFQR/xitca-web", rev = "466dda6" }
+xitca-postgres = { git = "http://github.com/HFQR/xitca-web", rev = "bd86c7c" }
+xitca-router = { git = "http://github.com/HFQR/xitca-web", rev = "bd86c7c" }
+xitca-web = { git = "http://github.com/HFQR/xitca-web", rev = "bd86c7c" }
