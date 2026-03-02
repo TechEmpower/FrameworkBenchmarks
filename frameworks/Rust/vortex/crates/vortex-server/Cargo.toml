@@ -1,0 +1,17 @@
+[package]
+name = "vortex-server"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+description = "HTTP server combining all Vortex layers"
+
+[dependencies]
+vortex-io = { workspace = true }
+vortex-runtime = { workspace = true }
+vortex-http = { workspace = true }
+vortex-json = { workspace = true }
+vortex-db = { workspace = true }
+vortex-template = { workspace = true }
+nanorand = { workspace = true }
+libc = { workspace = true }

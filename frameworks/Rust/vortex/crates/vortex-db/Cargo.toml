@@ -1,0 +1,12 @@
+[package]
+name = "vortex-db"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+description = "Custom PostgreSQL wire protocol client for Vortex"
+
+[dependencies]
+vortex-io = { workspace = true }
+smallvec = { workspace = true }
+nanorand = { workspace = true }

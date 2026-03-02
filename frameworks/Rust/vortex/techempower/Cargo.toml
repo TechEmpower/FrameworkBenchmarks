@@ -1,0 +1,23 @@
+[package]
+name = "vortex-techempower"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+description = "TechEmpower benchmark submission for Vortex"
+
+[[bin]]
+name = "vortex-bench"
+path = "src/main.rs"
+
+[[bin]]
+name = "vortex-profgen"
+path = "src/profgen.rs"
+
+[dependencies]
+vortex-server = { workspace = true }
+vortex-http = { workspace = true }
+vortex-json = { workspace = true }
+vortex-db = { workspace = true }
+vortex-template = { workspace = true }
+mimalloc = { workspace = true }

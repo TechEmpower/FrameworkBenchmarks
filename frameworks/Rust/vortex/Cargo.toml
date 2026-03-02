@@ -1,0 +1,50 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/vortex-io",
+    "crates/vortex-runtime",
+    "crates/vortex-http",
+    "crates/vortex-server",
+    "crates/vortex-json",
+    "crates/vortex-db",
+    "crates/vortex-template",
+    "techempower",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+rust-version = "1.75"
+
+[workspace.dependencies]
+# Internal crates
+vortex-io = { path = "crates/vortex-io" }
+vortex-runtime = { path = "crates/vortex-runtime" }
+vortex-http = { path = "crates/vortex-http" }
+vortex-server = { path = "crates/vortex-server" }
+vortex-json = { path = "crates/vortex-json" }
+vortex-db = { path = "crates/vortex-db" }
+vortex-template = { path = "crates/vortex-template" }
+
+# External dependencies
+io-uring = "0.7"
+libc = "0.2"
+httparse = "1.8"
+itoa = "1.0"
+smallvec = "1.13"
+nanorand = "0.7"
+mimalloc = { version = "0.1", default-features = false }
+
+[profile.release]
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+panic = "abort"
+overflow-checks = false
+debug = false
+incremental = false
+
+[profile.release-benchmark]
+inherits = "release"
+lto = "fat"

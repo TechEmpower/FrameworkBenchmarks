@@ -1,0 +1,31 @@
+{
+  "framework": "vortex",
+  "maintainers": ["yp3y5akh0v"],
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "db_url": "/db",
+        "query_url": "/queries?q=",
+        "fortune_url": "/fortunes",
+        "update_url": "/updates?q=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "Postgres",
+        "framework": "vortex",
+        "language": "Rust",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "Rust",
+        "webserver": "vortex",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "vortex",
+        "notes": "io_uring + thread-per-core + custom PostgreSQL wire protocol",
+        "versus": "None"
+      }
+    }
+  ]
+}
