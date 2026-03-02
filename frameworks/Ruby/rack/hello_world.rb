@@ -29,24 +29,6 @@ class HelloWorld
   DATE = 'Date'
   SERVER = 'Server'
   SERVER_STRING = 'Rack'
-  TEMPLATE_PREFIX = <<~HTML
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <title>Fortunes</title>
-    </head>
-    <body>
-      <table>
-        <tr>
-          <th>id</th>
-          <th>message</th>
-        </tr>
-  HTML
-  TEMPLATE_POSTFIX = <<~HTML
-      </table>
-    </body>
-    </html>
-  HTML
 
   def call(env)
     case env['PATH_INFO']
@@ -107,12 +89,31 @@ class HelloWorld
     fortunes << { 'id' => 0, 'message' => 'Additional fortune added at request time.' }
     fortunes.sort_by! { |item| item['message'] }
 
-    buffer = String.new
-    buffer << TEMPLATE_PREFIX
+    html = String.new(<<~'HTML')
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Fortunes</title>
+      </head>
+
+      <body>
+
+      <table>
+      <tr>
+        <th>id</th>
+        <th>message</th>
+      </tr>
+    HTML
+
     fortunes.each do |item|
-      buffer << "<tr><td>#{item['id']}</td><td>#{ERB::Escape.html_escape(item['message'])}</td></tr>"
+      html << "<tr><td>#{item['id']}</td><td>#{ERB::Escape.html_escape(item['message'])}</td></tr>"
     end
-    buffer << TEMPLATE_POSTFIX
+
+    html << <<~'HTML'
+      </table>
+      </body>
+      </html>
+    HTML
   end
 
   def update_worlds(count)
