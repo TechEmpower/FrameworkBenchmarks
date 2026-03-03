@@ -1,3 +1,5 @@
+// TechEmpower benchmark tests for Sib with the `net-h1-server` feature enabled
+
 use sib::network::http::{
     server::{H1Config, HFactory},
     session::{HService, Session},
@@ -24,10 +26,10 @@ struct Server;
 impl HService for Server {
     fn call<S: Session>(&mut self, session: &mut S) -> std::io::Result<()> {
         use core::fmt::Write;
-        use sib::network::http::h1_session;
-        if session.req_path() == "/json" {
+        let time = sib::network::http::date::current_date_str();
+        let mut res: heapless::String<256> = heapless::String::new();
+        if session.req_path_bytes() == b"/json" {
             // Respond with JSON
-            let mut res: heapless::String<192> = heapless::String::new();
             let json = serde_json::to_vec(&JsonMessage::default())?;
             write!(
                 res,
@@ -38,14 +40,13 @@ impl HService for Server {
                 Content-Length: {}\r\n\
                 \r\n\
                     {}",
-                h1_session::CURRENT_DATE.load(),
+                time,
                 &json.len().to_string(),
                 String::from_utf8_lossy(&json)
             )
             .unwrap();
             session.write_all_eom(res.as_bytes())
         } else {
-            let mut res: heapless::String<160> = heapless::String::new();
             write!(
                 res,
                 "HTTP/1.1 200 OK\r\n\
@@ -55,7 +56,7 @@ impl HService for Server {
              Content-Length: 13\r\n\
              \r\n\
              Hello, World!",
-                h1_session::CURRENT_DATE.load()
+                time
             )
             .unwrap();
             session.write_all_eom(res.as_bytes())
@@ -72,7 +73,7 @@ impl HFactory for Server {
 }
 
 fn main() {
-    let stack_size = 4 * 1024; // 4 KB stack
+    let stack_size = 2 * 1024; // 2 KB stack
     let cpus = num_cpus::get();
 
     sib::init_global_poller(cpus, stack_size);
@@ -84,13 +85,14 @@ fn main() {
     for _ in 0..cpus {
         let handle = std::thread::spawn(move || {
             let id = std::thread::current().id();
-            println!("Listening {addr} on thread: {id:?}");
+            tracing::info!("Listening {addr} on thread: {id:?}");
             Server
                 .start_h1(
                     addr,
                     H1Config {
                         io_timeout: std::time::Duration::from_secs(15),
                         stack_size,
+                        ..Default::default()
                     },
                 )
                 .unwrap_or_else(|_| panic!("H1 server failed to start for thread {id:?}"))
