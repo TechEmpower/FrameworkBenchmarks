@@ -8,21 +8,25 @@
         "docker_cmd": "/app/chopin-benchmark",
         "json_url": "/json",
         "plaintext_url": "/plaintext",
+        "db_url": "/db",
+        "query_url": "/queries?q=",
+        "update_url": "/updates?q=",
+        "fortune_url": "/fortunes",
         "port": 8000,
         "approach": "Realistic",
-        "classification": "Platform",
-        "database": "None",
+        "classification": "Fullstack",
+        "database": "Postgres",
         "framework": "Chopin",
         "language": "Rust",
         "flavor": "None",
-        "orm": "None",
+        "orm": "Raw",
         "platform": "Rust",
-        "webserver": "Tokio",
+        "webserver": "Chopin",
         "os": "Linux",
         "database_os": "Linux",
         "display_name": "Chopin",
         "notes": "",
-        "versus": "None"
+        "versus": "axum"
       }
     }
   ]
