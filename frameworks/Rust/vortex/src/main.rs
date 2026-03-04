@@ -3,10 +3,12 @@
 #[global_allocator]
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
+mod app;
+
 fn main() {
     eprintln!("=== Vortex TechEmpower Benchmark Server ===");
 
-    if let Err(e) = vortex_server::Server::builder()
+    if let Err(e) = vortex_server::Server::<app::TfbApp>::builder()
         .addr("0.0.0.0")
         .port(8080)
         .workers(0) // auto-detect (override with VORTEX_WORKERS env)
