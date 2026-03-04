@@ -168,12 +168,12 @@ if __name__ == "__main__":
             response_add_date = True
             bjoern.run(app, host=opt.host, port=opt.port, reuse_port=True)
 
-        if opt.server == 'fastwsgi':
-            import fastwsgi
-            response_server = "FastWSGI"
+        if opt.server == 'fastpysgi':
+            import fastpysgi
+            response_server = "FastPySGI"
             response_add_date = False
-            fastwsgi.server.backlog = 4096
-            fastwsgi.run(app, host=opt.host, port=opt.port, loglevel=opt.verbose)
+            fastpysgi.server.backlog = 4096
+            fastpysgi.run(app, host=opt.host, port=opt.port, loglevel=opt.verbose)
 
         if opt.server == 'socketify':
             import socketify

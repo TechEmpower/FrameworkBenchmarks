@@ -194,7 +194,7 @@
       "notes": "",
       "versus": "uvicorn"
     },
-    "fastwsgi": {
+    "fastpysgi": {
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries/",
@@ -210,10 +210,10 @@
       "flavor": "Python3",
       "orm": "Full",
       "platform": "WSGI",
-      "webserver": "FastWSGI",
+      "webserver": "FastPySGI",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "Falcon [FastWSGI]",
+      "display_name": "Falcon [FastPySGI]",
       "notes": "",
       "versus": "wsgi"
     }
