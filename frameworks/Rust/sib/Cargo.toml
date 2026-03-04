@@ -1,6 +1,6 @@
 [package]
 name = "sib-techempower"
-version = "0.0.1"
+version = "0.0.2"
 authors = ["mail@pooya.ai"]
 description = "A high-performance, secure, and cross-platform modules optimized for efficiency, scalability, and reliability."
 documentation = "https://docs.rs/sib"
@@ -12,18 +12,26 @@ categories = ["development-tools"]
 readme = "README.md"
 
 [dependencies]
-sib = { version = "0.0.15", default-features = false, features = [
+sib = { version = "0.0.17", default-features = false, features = [
     "net-h1-server",
 ] }
-bytes = { version = "1.10.1", default-features = false }
+bytes = { version = "1.11.1", default-features = false }
 heapless = { version = "0.9.1", default-features = false }
-http = { version = "1.3.1", default-features = false }
 mimalloc = { version = "0.1.48", default-features = false, features = [
     "secure",
 ] }
 num_cpus = { version = "1.17.0", default-features = false }
-serde = { version = "1.0.221", default-features = false, features = ["derive"] }
-serde_json = { version = "1.0.144", default-features = false, features = [
+serde = { version = "1.0.228", default-features = false, features = ["derive"] }
+serde_json = { version = "1.0.149", default-features = false, features = [
+    "std",
+] }
+tracing = { version = "0.1.44", default-features = false, features = [
+    "attributes",
+    "std",
+] }
+tracing-subscriber = { version = "0.3.22", features = [
+    "fmt",
+    "env-filter",
     "std",
 ] }
 
