@@ -10,7 +10,7 @@ GEM
     ostruct (0.6.3)
     pg (1.6.3)
     pg (1.6.3-x86_64-linux)
-    rack (3.2.0)
+    rack (3.2.5)
 
 PLATFORMS
   ruby
