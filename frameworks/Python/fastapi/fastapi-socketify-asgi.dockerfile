@@ -16,4 +16,4 @@ EXPOSE 8080
 
 ENV USE_ORJSON=1
 
-CMD python ./app-socketify-asgi.py
+CMD python app_server.py -s socketify

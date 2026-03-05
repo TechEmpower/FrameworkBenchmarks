@@ -1,7 +1,12 @@
 import multiprocessing
 from contextlib import asynccontextmanager
 
-import asyncpg
+try:
+    import asyncpg
+    _DB_ALLOWED = True
+except ImportError:
+    _DB_ALLOWED = False
+
 import os
 from fastapi import FastAPI, Request
 from fastapi.responses import PlainTextResponse
@@ -34,8 +39,6 @@ def get_num_queries(queries):
     return query_count
 
 
-connection_pool = None
-
 templates = Jinja2Templates(directory="templates")
 
 
@@ -60,7 +63,7 @@ async def lifespan(app: FastAPI):
     await app.state.connection_pool.close()
 
 
-app = FastAPI(lifespan=lifespan)
+app = FastAPI(lifespan=lifespan) if _DB_ALLOWED else FastAPI()
 
 
 @app.get("/json")
