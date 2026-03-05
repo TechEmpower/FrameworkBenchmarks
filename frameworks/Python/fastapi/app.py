@@ -6,10 +6,10 @@ import os
 from fastapi import FastAPI, Request
 from fastapi.responses import PlainTextResponse
 
-try:
+if os.getenv('USE_ORJSON', "0") == "1":
     import orjson
     from fastapi.responses import ORJSONResponse as JSONResponse
-except ImportError:
+else:
     from fastapi.responses import UJSONResponse as JSONResponse
 
 from fastapi.templating import Jinja2Templates

@@ -6,10 +6,10 @@ from fastapi.responses import PlainTextResponse
 from socketify import ASGI
 
 
-try:
+if os.getenv('USE_ORJSON', "0") == "1":
     import orjson
     from fastapi.responses import ORJSONResponse as JSONResponse
-except ImportError:
+else:
     from fastapi.responses import JSONResponse as JSONResponse
 
 app = FastAPI()

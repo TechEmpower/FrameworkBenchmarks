@@ -7,12 +7,12 @@ ENV PATH="/opt/venv/bin:$PATH"
 
 RUN pip3 install cython==3.2.3
 
-COPY requirements.txt requirements-orjson.txt requirements-uvicorn.txt ./
-
-RUN pip3 install -r requirements.txt -r requirements-orjson.txt -r requirements-uvicorn.txt
-
 COPY . ./
 
+RUN pip3 install -r requirements-uvicorn.txt
+
 EXPOSE 8080
+
+ENV USE_ORJSON=1
 
 CMD uvicorn app:app --host 0.0.0.0 --port 8080 --workers $(nproc) --log-level error --no-access-log --no-proxy-headers

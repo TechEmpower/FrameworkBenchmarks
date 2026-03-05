@@ -1,1 +1,2 @@
+-r requirements-uvicorn.txt
 gunicorn==23.0.0
