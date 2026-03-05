@@ -107,27 +107,6 @@
         "notes": "",
         "versus": "None"
       },
-      "hypercorn-orjson": {
-        "json_url": "/json",
-        "db_url": "/db",
-        "query_url": "/queries?queries=",
-        "update_url": "/updates?queries=",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Micro",
-        "database": "Postgres",
-        "framework": "FastAPI",
-        "language": "Python",
-        "flavor": "Python3",
-        "orm": "Raw",
-        "platform": "asyncio",
-        "webserver": "Hypercorn",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "FastAPI-hypercorn-orjson",
-        "notes": "",
-        "versus": "None"
-      },
       "nginx": {
         "json_url": "/json",
         "fortune_url": "/fortunes",
