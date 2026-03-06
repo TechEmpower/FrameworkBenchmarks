@@ -12,39 +12,48 @@ RUN apt-get update && apt-get install -y \
 
 RUN rustup component add llvm-tools-preview
 
-WORKDIR /vortex
+# --- PGO: build and run profgen from vortex framework repo ---
+WORKDIR /profgen-build
 RUN git clone https://github.com/yp3y5akh0v/vortex .
 
-# PGO Phase 1: Build instrumented profiling binary
 RUN RUSTFLAGS="-Ctarget-cpu=native -Clink-arg=-fuse-ld=lld -Cprofile-generate=/tmp/pgo-data" \
     cargo build --release --bin vortex-profgen
 
-# PGO Phase 2: Run profiling harness
-RUN /vortex/target/release/vortex-profgen
+RUN /profgen-build/target/release/vortex-profgen
 
-# PGO Phase 3: Merge profile data
 RUN LLVM_PROFDATA="$(rustc --print sysroot)/lib/rustlib/x86_64-unknown-linux-gnu/bin/llvm-profdata" && \
     $LLVM_PROFDATA merge -o /tmp/pgo-merged.profdata /tmp/pgo-data/
 
-# PGO Phase 4: Rebuild with PGO + emit-relocs for BOLT
-RUN RUSTFLAGS="-Ctarget-cpu=native -Clink-arg=-fuse-ld=lld -Clink-arg=-Wl,--emit-relocs -Cprofile-use=/tmp/pgo-merged.profdata" \
-    cargo build --release --bin vortex-bench --bin vortex-profgen
+# --- Benchmark app: build from local source with PGO + emit-relocs for BOLT ---
+WORKDIR /app
+COPY Cargo.toml Cargo.lock ./
+COPY src ./src
 
-# BOLT Phase 5: Instrument profgen
-RUN llvm-bolt-16 /vortex/target/release/vortex-profgen \
+RUN RUSTFLAGS="-Ctarget-cpu=native -Clink-arg=-fuse-ld=lld -Clink-arg=-Wl,--emit-relocs -Cprofile-use=/tmp/pgo-merged.profdata" \
+    cargo build --release --bin vortex-bench
+
+# --- BOLT: rebuild profgen with PGO for instrumentation ---
+WORKDIR /profgen-build
+RUN RUSTFLAGS="-Ctarget-cpu=native -Clink-arg=-fuse-ld=lld -Clink-arg=-Wl,--emit-relocs -Cprofile-use=/tmp/pgo-merged.profdata" \
+    cargo build --release --bin vortex-profgen
+
+RUN llvm-bolt-16 /profgen-build/target/release/vortex-profgen \
     -instrument \
     -instrumentation-file=/tmp/bolt-prof \
     -o /tmp/vortex-profgen-bolt
 
-# BOLT Phase 6: Optimize server binary
 RUN /tmp/vortex-profgen-bolt && \
-    llvm-bolt-16 /vortex/target/release/vortex-bench \
+    llvm-bolt-16 /app/target/release/vortex-bench \
     -data=/tmp/bolt-prof \
+    --profile-ignore-hash \
     -reorder-blocks=ext-tsp \
     -reorder-functions=hfsort+ \
     -split-functions \
     -split-all-cold \
-    -o /vortex/target/release/vortex-bench-bolted
+    -icf=1 \
+    -frame-opt=all \
+    -plt=hot \
+    -o /app/target/release/vortex-bench-bolted
 
 # Runtime image
 FROM debian:bookworm-slim
@@ -54,7 +63,7 @@ RUN apt-get update && apt-get install -y \
     procps \
     && rm -rf /var/lib/apt/lists/*
 
-COPY --from=builder /vortex/target/release/vortex-bench-bolted /usr/local/bin/vortex
+COPY --from=builder /app/target/release/vortex-bench-bolted /usr/local/bin/vortex
 COPY run.sh /usr/local/bin/run.sh
 RUN chmod +x /usr/local/bin/run.sh
 

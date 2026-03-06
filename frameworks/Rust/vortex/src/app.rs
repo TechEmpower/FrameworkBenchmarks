@@ -3,7 +3,12 @@
 use vortex_server::{App, RouteAction};
 use vortex_server::http::date::DateCache;
 use vortex_server::http::parser;
-use vortex_server::http::response::{PlaintextResponse, JsonResponse, DynJsonResponse, DynHtmlResponse};
+use vortex_server::http::response::{StaticResponse, DynJsonResponse, DynHtmlResponse};
+
+const PLAINTEXT_CT: &[u8] = b"text/plain";
+const PLAINTEXT_BODY: &[u8] = b"Hello, World!";
+const JSON_CT: &[u8] = b"application/json";
+const JSON_BODY: &[u8] = b"{\"message\":\"Hello, World!\"}";
 use vortex_server::db;
 use vortex_server::db::wire;
 
@@ -75,12 +80,12 @@ impl App for TfbApp {
         if count == 0 { return (0, 0); }
 
         let resp_len = match id {
-            ROUTE_PLAINTEXT => PlaintextResponse::write(send, date),
-            ROUTE_JSON => JsonResponse::write(send, date),
+            ROUTE_PLAINTEXT => StaticResponse::write(send, date, PLAINTEXT_CT, PLAINTEXT_BODY),
+            ROUTE_JSON => StaticResponse::write(send, date, JSON_CT, JSON_BODY),
             _ => return (0, 0),
         };
 
-        // Duplicate response for pipelined requests (TFB sends 16x plaintext)
+        // Duplicate response for pipelined requests
         let mut offset = resp_len;
         for _ in 1..count {
             send.copy_within(0..resp_len, offset);
@@ -126,7 +131,7 @@ impl App for TfbApp {
                 for _ in 0..queries { state.ids.push(db::random_world_id()); }
                 state.ids.sort_unstable();
                 for _ in 0..queries { state.random_numbers.push(db::random_world_id()); }
-                // SELECT each world + batch UPDATE in single pipeline
+                // SELECT each world + batch UPDATE
                 for &id in &state.ids {
                     wire::buf_bind_i32(wbuf, "w", &[id]);
                     wire::buf_execute(wbuf);
