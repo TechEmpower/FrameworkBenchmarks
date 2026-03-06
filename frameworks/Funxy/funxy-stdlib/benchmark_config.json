@@ -1,5 +1,6 @@
 {
   "framework": "funxy",
+  "maintainers": ["oakulikov", "funvibe"],
   "tests": [
     {
       "default": {
