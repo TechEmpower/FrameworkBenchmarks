@@ -1,22 +1,35 @@
-# Vortex
+# [Vortex](https://github.com/yp3y5akh0v/vortex) web framework
 
-High-performance HTTP server built for TechEmpower benchmarks.
+## Description
 
-## Architecture
+Vortex is a high-performance HTTP framework for Linux, built on io_uring with thread-per-core architecture.
 
-- **I/O**: io_uring with multishot accept, DEFER_TASKRUN, cascading kernel fallbacks
-- **Threading**: Thread-per-core with CPU pinning (no work-stealing)
-- **HTTP**: Tiered parser — single-byte route classification for benchmark paths
-- **JSON**: Hand-optimized direct-to-buffer serialization (no serde)
-- **Database**: Custom PostgreSQL binary wire protocol with prepared statements and pipelined queries
-- **Memory**: mimalloc global allocator, pre-allocated per-worker buffers, BufReader on DB connections
-- **Compilation**: fat LTO, codegen-units=1, target-cpu=native, panic=abort
+## Database
+
+PostgreSQL (custom binary wire protocol).
 
 ## Test URLs
 
-- `/plaintext` - Plaintext response
-- `/json` - JSON serialization
-- `/db` - Single database query
-- `/queries?q=` - Multiple database queries
-- `/fortunes` - Fortunes HTML template
-- `/updates?q=` - Database updates
+### Test 1: JSON Encoding
+
+    http://localhost:8080/json
+
+### Test 2: Single Row Query
+
+    http://localhost:8080/db
+
+### Test 3: Multi Row Query
+
+    http://localhost:8080/queries?q=20
+
+### Test 4: Fortunes (Template rendering)
+
+    http://localhost:8080/fortunes
+
+### Test 5: Update Query
+
+    http://localhost:8080/updates?q=20
+
+### Test 6: Plaintext
+
+    http://localhost:8080/plaintext
