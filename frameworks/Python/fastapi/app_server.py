@@ -35,7 +35,15 @@ if __name__ == "__main__":
             siapp.listen(opt.port, lambda config: logging.info(f"Listening on port http://localhost:{opt.port} now\n"))
             siapp.run()
             return
-        
+
+        if opt.server in [ 'fp', 'fastpysgi' ]:
+            import fastpysgi
+            fastpysgi.server.loop_timeout = 1
+            fastpysgi.server.hook_sigint = 1
+            fastpysgi.server.backlog = 4096
+            fastpysgi.run(app, host=opt.host, port=opt.port, loglevel=opt.verbose)
+            return
+
         raise Exception(f'Unknown server name = "{opt.server}"')
 
     def create_fork():
