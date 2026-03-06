@@ -1,0 +1,26 @@
+import "lib/http" (httpServe)
+import "lib/json" (jsonEncode)
+
+// Pre-allocate response structures to avoid allocation overhead during the hot path
+headers_plain = [("Server", "Funxy"), ("Content-Type", "text/plain")]
+headers_json  = [("Server", "Funxy"), ("Content-Type", "application/json")]
+msg_plain = "Hello, World!"
+
+// TechEmpower requires the Date header, but lib/http automatically adds and caches
+// an accurate Date header for us, so we don't need to generate it manually.
+httpServe(8080, fun(req) {
+    match req.path {
+        "/plaintext" -> {
+            status: 200,
+            headers: headers_plain,
+            body: msg_plain
+        }
+        "/json" -> {
+            status: 200,
+            headers: headers_json,
+            // Construct the map dynamically for each request as per TFB rules
+            body: jsonEncode({ message: "Hello, World!" })
+        }
+        _ -> { status: 404, body: "" }
+    }
+})

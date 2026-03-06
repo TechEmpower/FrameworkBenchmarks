@@ -1,0 +1,21 @@
+{
+  "framework": "funxy",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "framework": "funxy",
+        "language": "Funxy",
+        "webserver": "None",
+        "os": "Linux",
+        "display_name": "funxy",
+        "notes": "",
+        "versus": "None"
+      }
+    }
+  ]
+}
