@@ -27,7 +27,7 @@
 
 
 
-    "unstable": {
+    "tokio": {
         "json_url": "/json",
         "plaintext_url": "/plaintext",
         "fortune_url": "/fortunes",
@@ -45,7 +45,7 @@
         "webserver": "water_http",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "water_http [uns]"
+        "display_name": "water_http [uns-tokio]"
       },
 
     "uring": {
