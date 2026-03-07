@@ -83,7 +83,7 @@ WaterController! {
             let mut sender = cx.sender();
             sender.set_header_ef("Content-Type","application/json");
             sender.set_header_ef("Server","water");
-            let js = crate::models::JsonHolder::HELLO_WORLD;
+            let js = crate::models::JsonHolder{message:"Hello, World!"};
             let mut buffer = crate::buf::PooledBuffer::new().take_inner();
             _=sonic_rs::to_writer(&mut buffer,&js);
             sender.set_header_ef("Date",crate::date::get_date_fast());

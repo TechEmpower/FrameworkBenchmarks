@@ -19,12 +19,12 @@ pub struct FortuneTemplate<'a>{
 }
 #[derive(Serialize,Debug)]
 pub struct JsonHolder {
-    message:&'static str
+   pub message:&'static str
 }
 
-impl JsonHolder {
-    pub const HELLO_WORLD:JsonHolder = JsonHolder{message:"Hello, World!"};
-}
+// impl JsonHolder {
+//     pub const HELLO_WORLD:JsonHolder = JsonHolder{message:"Hello, World!"};
+// }
 
 // pub async fn to(model:FortuneTemplate<'_>){
 //     model.r
