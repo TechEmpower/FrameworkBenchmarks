@@ -7,8 +7,7 @@ use vortex_server::http::response::{StaticResponse, DynJsonResponse, DynHtmlResp
 
 const PLAINTEXT_CT: &[u8] = b"text/plain";
 const PLAINTEXT_BODY: &[u8] = b"Hello, World!";
-const JSON_CT: &[u8] = b"application/json";
-const JSON_BODY: &[u8] = b"{\"message\":\"Hello, World!\"}";
+const JSON_MESSAGE: &str = "Hello, World!";
 use vortex_server::db;
 use vortex_server::db::wire;
 
@@ -81,7 +80,11 @@ impl App for TfbApp {
 
         let resp_len = match id {
             ROUTE_PLAINTEXT => StaticResponse::write(send, date, PLAINTEXT_CT, PLAINTEXT_BODY),
-            ROUTE_JSON => StaticResponse::write(send, date, JSON_CT, JSON_BODY),
+            ROUTE_JSON => {
+                let mut body = [0u8; 64];
+                let blen = vortex_server::json::write_message(&mut body, JSON_MESSAGE);
+                DynJsonResponse::write(send, date, &body[..blen])
+            }
             _ => return (0, 0),
         };
 
