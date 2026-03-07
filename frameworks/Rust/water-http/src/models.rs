@@ -17,8 +17,14 @@ pub struct Fortune {
 pub struct FortuneTemplate<'a>{
     pub items:&'a Vec<Fortune>
 }
+#[derive(Serialize,Debug)]
+pub struct JsonHolder {
+    message:&'static str
+}
 
-
+impl JsonHolder {
+    pub const HELLO_WORLD:JsonHolder = JsonHolder{message:"Hello, World!"};
+}
 
 // pub async fn to(model:FortuneTemplate<'_>){
 //     model.r

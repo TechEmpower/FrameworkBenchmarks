@@ -1,4 +1,6 @@
 #![allow(static_mut_refs)]
+
+
 use std::io;
 use std::fmt::Arguments;
 use std::io::Write;
