@@ -22,9 +22,7 @@ pub struct JsonHolder {
    pub message:&'static str
 }
 
-// impl JsonHolder {
-//     pub const HELLO_WORLD:JsonHolder = JsonHolder{message:"Hello, World!"};
-// }
+
 
 // pub async fn to(model:FortuneTemplate<'_>){
 //     model.r
