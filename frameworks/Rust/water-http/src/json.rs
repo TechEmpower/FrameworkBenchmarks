@@ -32,7 +32,6 @@ pub    fn run_server(){
     );
 }
 
-const JSON_RESPONSE:&'static [u8] = br#"{"message":"Hello, World!"}"#;
 
 
 WaterController! {
@@ -45,9 +44,12 @@ WaterController! {
             let mut sender = cx.sender();
             sender.set_header_ef("Content-Type","application/json");
             sender.set_header_ef("Server","water");
-            let date = httpdate::fmt_http_date(std::time::SystemTime::now());
-            sender.set_header_ef("Date",date);
-            _=sender.send_data_as_final_response(http::ResponseData::Slice(super::JSON_RESPONSE)).await;
+            let js = crate::models::JsonHolder::HELLO_WORLD;
+            let mut buffer = crate::buf::PooledBuffer::new().take_inner();
+            _=sonic_rs::to_writer(&mut buffer,&js);
+            sender.set_header_ef("Date",crate::date::get_date_fast());
+            _=sender.send_data_as_final_response(http::ResponseData::Slice(&buffer)).await;
+            crate::buf::PooledBuffer::recycle(buffer);
         }
 
     }
