@@ -20,9 +20,7 @@
         "display_name": "shelf",
         "notes": "",
         "versus": "None"
-      }
-    },
-      {
+      },
       "aot": {
         "json_url": "/json",
         "plaintext_url": "/plaintext",
