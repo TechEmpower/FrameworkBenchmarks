@@ -25,7 +25,12 @@ final _jsonEncoder = JsonUtf8Encoder();
 /// belong to a secondary "worker group".
 const workerGroupTag = '--workerGroup';
 
-void main(List<String> args) {
+/// The maximum duration allowed for a single HTTP request to be processed.
+/// This prevents slow clients or stalled logic from blocking the isolate's
+/// event loop indefinitely.
+const _requestTimeout = Duration(seconds: 8);
+
+void main(List<String> args) async {
   /// Defines local isolate quota, using MAX_ISOLATES if provided.
   /// Falls back to total available cores while respecting hardware limits.
   var maxIsolates = _maxIsolatesfromEnvironment > 0
@@ -55,7 +60,7 @@ void main(List<String> args) {
     for (var i = 0; i < workerGroups; i++) {
       /// [Platform.script] identifies the AOT snapshot or executable.
       /// [Isolate.spawnUri] spawns a new process group via [main()].
-      Isolate.spawnUri(Platform.script, [...args, workerGroupTag], null);
+      await Isolate.spawnUri(Platform.script, [...args, workerGroupTag], null);
     }
 
     /// Updates local isolate limits, assigning the primary group
@@ -66,15 +71,15 @@ void main(List<String> args) {
   /// Create an [Isolate] containing an [HttpServer]
   /// for each processor after the first
   for (var i = 1; i < maxIsolates; i++) {
-    Isolate.spawn(_startServer, args);
+    await Isolate.spawn(_startServer, args);
   }
 
   /// Create a [HttpServer] for the first processor
-  _startServer(args);
+  await _startServer(args);
 }
 
 /// Creates and setup a [HttpServer]
-void _startServer(List<String> args) async {
+Future<void> _startServer(List<String> args) async {
   /// Binds the [HttpServer] on `0.0.0.0:8080`.
   final server = await HttpServer.bind(
     InternetAddress.anyIPv4,
@@ -85,22 +90,35 @@ void _startServer(List<String> args) async {
   server
     ..defaultResponseHeaders.clear()
     /// Sets [HttpServer]'s [serverHeader].
-    ..serverHeader = 'dart_aot'
-    /// Handles [HttpRequest]'s from [HttpServer].
-    ..listen(_handleRequest);
+    ..serverHeader = 'dart_aot';
+
+  /// Handles [HttpRequest]'s from [HttpServer].
+  await for (final request in server) {
+    /// Asynchronously processes each request with an 8-second safety deadline
+    /// to prevent stalled connections from blocking the isolate event loop.
+    await _handleRequest(request).timeout(
+      _requestTimeout,
+      onTimeout: () => _sendResponse(request, HttpStatus.requestTimeout),
+    );
+  }
 }
 
-/// Dispatches requests to specific handlers.
-void _handleRequest(HttpRequest request) {
-  switch (request.uri.path) {
-    case '/json':
-      _jsonTest(request);
-      break;
-    case '/plaintext':
-      _plaintextTest(request);
-      break;
-    default:
-      _sendResponse(request, HttpStatus.notFound);
+/// Dispatches requests to specific test handlers. Wrapped in a try-catch
+/// to ensure stable execution and guaranteed response delivery.
+Future<void> _handleRequest(HttpRequest request) async {
+  try {
+    switch (request.uri.path) {
+      case '/json':
+        _jsonTest(request);
+        break;
+      case '/plaintext':
+        _plaintextTest(request);
+        break;
+      default:
+        _sendResponse(request, HttpStatus.notFound);
+    }
+  } catch (e) {
+    _sendResponse(request, HttpStatus.internalServerError);
   }
 }
 

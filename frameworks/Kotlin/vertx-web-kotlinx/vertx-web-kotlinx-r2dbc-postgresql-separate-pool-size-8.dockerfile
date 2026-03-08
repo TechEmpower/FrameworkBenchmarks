@@ -1,4 +1,4 @@
-FROM gradle:9.2.1-jdk25
+FROM gradle:9.3.1-jdk25
 
 WORKDIR /vertx-web-kotlinx
 
@@ -21,14 +21,11 @@ COPY with-db/common/src with-db/common/src
 COPY with-db/r2dbc-common/build.gradle.kts with-db/r2dbc-common/build.gradle.kts
 COPY with-db/r2dbc-common/src with-db/r2dbc-common/src
 
-COPY with-db/exposed-common/build.gradle.kts with-db/exposed-common/build.gradle.kts
-COPY with-db/exposed-common/src with-db/exposed-common/src
-
-COPY with-db/exposed-r2dbc/build.gradle.kts with-db/exposed-r2dbc/build.gradle.kts
-COPY with-db/exposed-r2dbc/src with-db/exposed-r2dbc/src
+COPY with-db/r2dbc/build.gradle.kts with-db/r2dbc/build.gradle.kts
+COPY with-db/r2dbc/src with-db/r2dbc/src
 
 
-RUN gradle --no-daemon with-db:exposed-r2dbc:installDist
+RUN gradle --no-daemon with-db:r2dbc:installDist
 
 EXPOSE 8080
 
@@ -53,4 +50,4 @@ CMD export JAVA_OPTS=" \
     -Dio.netty.buffer.checkAccessible=false \
     -Dio.netty.iouring.ringSize=16384 \
     " && \
-    with-db/exposed-r2dbc/build/install/exposed-r2dbc/bin/exposed-r2dbc false 8 true
+    with-db/r2dbc/build/install/r2dbc/bin/r2dbc false 8 false

@@ -250,7 +250,7 @@ async def app(scope, receive, send):
 
 if __name__ == "__main__":
     import multiprocessing
-    import fastwsgi
+    import fastpysgi
 
     _is_travis = os.environ.get('TRAVIS') == 'true'
 
@@ -264,8 +264,8 @@ if __name__ == "__main__":
     def run_app():
         loop = asyncio.get_event_loop()
         loop.run_until_complete(db_setup())
-        fastwsgi.server.backlog = 4096
-        fastwsgi.run(app, host, port, loglevel=2)
+        fastpysgi.server.backlog = 4096
+        fastpysgi.run(app, host, port, loglevel=2)
 
     def create_fork():
         n = os.fork()
