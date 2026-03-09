@@ -21,7 +21,7 @@ GEM
     psych (5.2.6)
       date
       stringio
-    rack (3.2.4)
+    rack (3.2.5)
     rack-app (11.0.2)
       rack (>= 3.0.0)
       rackup
