@@ -1,8 +1,16 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:isolate';
+import 'dart:math' show min;
 import 'dart:typed_data';
 
 import 'package:relic/relic.dart';
+
+/// Fetches the 'MAX_ISOLATES' compile-time configuration.
+const _maxIsolatesfromEnvironment = int.fromEnvironment('MAX_ISOLATES');
+
+/// Internal token used to notify newly spawned processes.
+const _workerGroupTag = '--WORKER-GROUP';
 
 /// The fixed TCP port used by the server.
 const _defaultPort = 8080;
@@ -10,12 +18,32 @@ const _defaultPort = 8080;
 /// Reusable UTF-8 JSON encoder for efficient byte array transformations.
 final _jsonEncoder = JsonUtf8Encoder();
 
-/// Entry point: starts the server utilizing all available CPU cores.
-void main() async {
+void main(List<String> args) async {
+  /// Defines local isolate quota, using MAX_ISOLATES if provided.
+  var maxIsolates = _maxIsolatesfromEnvironment > 0
+      ? min(_maxIsolatesfromEnvironment, Platform.numberOfProcessors)
+      : Platform.numberOfProcessors;
+
+  /// Determine if this process instance was initialized as a worker group.
+  if (!args.contains(_workerGroupTag)) {
+    /// Calculate the number of secondary worker groups required
+    final workerGroups = Platform.numberOfProcessors ~/ maxIsolates - 1;
+
+    /// Bootstraps independent worker processes via AOT snapshots.
+    for (var i = 0; i < workerGroups; i++) {
+      await Isolate.spawnUri(Platform.script, [...args, _workerGroupTag], null);
+    }
+
+    /// Updates local isolate limits, assigning the primary group
+    /// the remaining cores after worker group allocation.
+    maxIsolates = Platform.numberOfProcessors - workerGroups * maxIsolates;
+  }
+
+  /// Entry point: starts the server utilizing available CPU cores.
   await _app.serve(
     address: InternetAddress.anyIPv4,
     port: _defaultPort,
-    noOfIsolates: Platform.numberOfProcessors,
+    noOfIsolates: maxIsolates,
     shared: true, // Allows isolates to share the same port.
   );
 }
