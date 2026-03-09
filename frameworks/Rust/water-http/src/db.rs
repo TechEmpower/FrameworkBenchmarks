@@ -1,4 +1,4 @@
-#![cfg(any(feature = "db",feature = "all",feature = "uring"))]
+#![cfg(any(feature = "db",feature = "all",feature = "uring",feature = "mini"))]
 use std::{borrow::Cow, io};
 use std::fmt::Arguments;
 use std::io::Write;
@@ -7,13 +7,14 @@ use std::rc::Rc;
 use std::cell::UnsafeCell;
 use bytes::{Buf, BufMut};
 use nanorand::{Rng, WyRand};
+use smallvec::SmallVec;
 use tokio_postgres::{connect, Client, Statement, NoTls};
 use tokio_postgres::types::private::BytesMut;
 use crate::models::{Fortune, FortuneTemplate, World};
 use sonic_rs::prelude::WriteExt;
 use water_buffer::WaterBuffer;
 use yarte::TemplateBytesTrait;
-use crate::buf::{FortunesPool, PooledBuffer};
+use crate::buf::{FortunesPool, IDsPool, PooledBuffer, WorldsPool};
 
 
 use tokio::pin;
@@ -23,6 +24,9 @@ pub struct DbConnectionPool {
     pub connections: Vec<Rc<PgConnection>>,
     pub next: UnsafeCell<usize>,
 }
+
+unsafe impl Sync for DbConnectionPool {}
+unsafe impl Send for DbConnectionPool {}
 
 impl DbConnectionPool {
     /// Get a connection from the pool (round-robin, relaxed ordering)
@@ -93,7 +97,6 @@ pub struct PgConnection {
     pub updates: Vec<Statement>,
     rang:WyRand,
     buffers: UnsafeCell<BufferPool>,
-    _connection_task: tokio::task::JoinHandle<()>,
 }
 
 // Safety: Only used within LocalSet, no cross-thread access
@@ -109,7 +112,7 @@ impl PgConnection {
             .map_err(|_| ())?
             .map_err(|_| ())?;
 
-        let connection_task = tokio::task::spawn_local(async move {
+         _= tokio::task::spawn(async move {
             let _ = conn.await;
         });
 
@@ -129,7 +132,6 @@ impl PgConnection {
             world,
             updates,
             buffers: UnsafeCell::new(BufferPool::new()),
-            _connection_task: connection_task,
             rang: WyRand::new()
         })
     }
@@ -159,40 +161,40 @@ impl PgConnection {
 
     /// Get a single random world - optimized with buffer reuse
     #[inline]
-    pub async fn get_world(&self) -> &[u8] {
+    pub async fn get_world(&self) -> Vec<u8> {
         let rd = (self.rang.clone().generate::<u32>() % 10_000 + 1) as i32;
         let row = self.cl.query_one(&self.world, &[&rd]).await.unwrap();
 
-        let buffers = self.buffers();
-        buffers.body.clear();
+        let mut buffer = PooledBuffer::new().take_inner();
 
         sonic_rs::to_writer(
-            BytesMuteWriter(&mut buffers.body),
+            &mut buffer,
             &World {
                 id: row.get(0),
                 randomnumber: row.get(1),
             },
         ).unwrap();
 
-        buffers.body.chunk()
+       buffer
     }
 
     /// Get multiple random worlds - optimized with buffer reuse
-    pub async fn get_worlds(&self, num: usize) -> &[u8] {
-        let buffers = self.buffers();
-        buffers.worlds.clear();
+    pub async fn get_worlds(&self, num: usize) -> Vec<u8> {
+        let mut worlds = WorldsPool::new().take_inner();
+        worlds.clear();
         let mut rn = self.rang.clone();
         for _ in 0..num {
             let id: i32 = (rn.generate::<u32>() & 0x3FFF) as i32 % 10_000 + 1;
             let row = self.cl.query_one(&self.world, &[&id]).await.unwrap();
-            buffers.worlds.push(World {
+            worlds.push(World {
                 id: row.get(0),
                 randomnumber: row.get(1),
             });
         }
-        buffers.body.clear();
-        sonic_rs::to_writer(BytesMuteWriter(&mut buffers.body), &buffers.worlds).unwrap();
-        buffers.body.chunk()
+        let mut buffer = PooledBuffer::new().take_inner();
+        sonic_rs::to_writer(&mut buffer, &worlds).unwrap();
+        WorldsPool::save_heap_allocation(worlds);
+        buffer
     }
     /// Update worlds in batch - optimized with buffer reuse
     /// Update worlds in batch - optimized with buffer reuse
@@ -204,66 +206,112 @@ impl PgConnection {
     /// Update worlds in batch - optimized with RETURNING clause to minimize reads
     /// Update worlds - fetch and update each row to handle duplicates correctly
     /// Update worlds in batch using CASE statement
-    pub async fn update(&self, num: usize) -> &[u8] {
-        let buffers = self.buffers();
-        let mut ids: Vec<i32> = Vec::with_capacity(num);
-        let mut rng = self.rang.clone();
+
+     pub async fn update(&self,num:usize)->Vec<u8>{
+
+        let mut output = PooledBuffer::new().take_inner();
+        let (mut ids,mut numbers) = IDsPool::new().take_inner();
+        let mut worlds = WorldsPool::new().take_inner();
+        let mut rn = self.rang.clone();
+        let mut futures = Vec::with_capacity(num);
         let mut params: Vec<&(dyn tokio_postgres::types::ToSql + Sync)> =
-            Vec::with_capacity(num * 2);
-        let mut futures = vec![];
-        for _ in 0..num {
-            let w_id = (rng.generate::<u32>() % 10_000 + 1) as i32;
-            ids.push(w_id);
+                    Vec::with_capacity(num * 2);
+
+        if worlds.len() == num {
+            for w in &worlds {
+                ids.push(w.id);
+                params.push(&w.id);
+                numbers.push(w.randomnumber);
+                params.push(&w.randomnumber);
+            }
+        } else {
+            worlds.clear();
+            (0..num).for_each(|n|{
+                let id = (rn.generate::<u32>() % 10_000 + 1) as i32;
+                let number = (rn.generate::<u32>() % 10_000 + 1) as i32;
+                ids.push(id);
+                numbers.push(number);
+            });
+
+            ids.sort();
+            for ind in 0..num {
+                worlds.push(
+                    World{
+                        id:ids[ind],
+                        randomnumber:numbers[ind]
+                    }
+                );
+                params.push(&ids[ind]);
+                params.push(&numbers[ind]);
+            }
         }
         futures.extend(ids.iter().map(|x| async move { self.cl.query_one(&self.world, &[&x]).await }));
         futures_util::future::join_all(futures).await;
-        ids.sort_unstable();
-        buffers.worlds.clear();
-        for index in 0..num {
-            let s_id = (rng.generate::<u32>() % 10_000 + 1) as i32;
-            buffers.worlds.push(World {
-                id: ids[index],
-                randomnumber: s_id
-            });
-            buffers.numbers.push(s_id);
-        }
-        buffers.body.clear();
-        for index in 0..num {
-            params.push(&ids[index]);
-            params.push(&buffers.numbers[index]);
-        }
-
-        _ = self.cl.execute(&self.updates[num - 1], &params).await.unwrap();
-        sonic_rs::to_writer(BytesMuteWriter(&mut buffers.body), &buffers.worlds).unwrap();
-        buffers.body.chunk()
+        _ = self.cl.execute(&self.updates[num - 1], &params).await;
+        _= sonic_rs::to_writer(&mut output,&worlds);
+        WorldsPool::save_heap_allocation(worlds);
+        IDsPool::save_heap_allocation((ids,numbers));
+        output
     }
+
+    // pub async fn update(&self, num: usize) -> &[u8] {
+    //     let buffers = self.buffers();
+    //     let mut ids: Vec<i32> = Vec::with_capacity(num);
+    //     let mut rng = self.rang.clone();
+    //     let mut params: Vec<&(dyn tokio_postgres::types::ToSql + Sync)> =
+    //         Vec::with_capacity(num * 2);
+    //     let mut futures = vec![];
+    //     for _ in 0..num {
+    //         let w_id = (rng.generate::<u32>() % 10_000 + 1) as i32;
+    //         ids.push(w_id);
+    //     }
+    //     futures.extend(ids.iter().map(|x| async move { self.cl.query_one(&self.world, &[&x]).await }));
+    //     futures_util::future::join_all(futures).await;
+    //     ids.sort_unstable();
+    //     buffers.worlds.clear();
+    //     for index in 0..num {
+    //         let s_id = (rng.generate::<u32>() % 10_000 + 1) as i32;
+    //         buffers.worlds.push(World {
+    //             id: ids[index],
+    //             randomnumber: s_id
+    //         });
+    //         buffers.numbers.push(s_id);
+    //     }
+    //     buffers.body.clear();
+    //     for index in 0..num {
+    //         params.push(&ids[index]);
+    //         params.push(&buffers.numbers[index]);
+    //     }
+    //
+    //     _ = self.cl.execute(&self.updates[num - 1], &params).await.unwrap();
+    //     sonic_rs::to_writer(BytesMuteWriter(&mut buffers.body), &buffers.worlds).unwrap();
+    //     buffers.body.chunk()
+    // }
 
 
     pub async fn tell_fortune(&self) -> Result<Vec<u8>, ()> {
         // 1. Explicitly type the empty params to satisfy the compiler's inference
         let mut res = self.cl.query(&self.fortune, &[]).await.unwrap();
         let mut fortunes = FortunesPool::new().take_inner();
-
-        fortunes.push(
-            Fortune{
-                id:0,
-                message:Cow::Borrowed("Additional fortune added at request time.")
+        if fortunes.is_empty() {
+            fortunes.push(Fortune{
+                    id:0,
+                    message:Cow::Borrowed("Additional fortune added at request time.")
+                });
+            for r in res {
+                let id :&'static str = unsafe {
+                    let a :&str = r.get(1);
+                    &*(a as *const str)
+                };
+                fortunes.push(
+                    Fortune {
+                        id:r.get(0),
+                        message:Cow::Borrowed(id)
+                    }
+                );
             }
-        );
-        for r in res {
-            let id :&'static str = unsafe {
-                let a :&str = r.get(1);
-                &*(a as *const str)
-            };
-            fortunes.push(
-                Fortune {
-                    id:r.get(0),
-                    message:Cow::Borrowed(id)
-                }
-            );
+            fortunes.sort_by(|a, b| a.message.cmp(&b.message));
         }
-        fortunes.sort_by(|a, b| a.message.cmp(&b.message));
-
         let mut output = PooledBuffer::new().take_inner();
         let template = FortuneTemplate {
             items: &fortunes,
@@ -272,6 +320,9 @@ impl PgConnection {
         Ok(output)
     }
 }
+
+unsafe impl Sync for PgConnection {}
+unsafe impl Send for PgConnection {}
 /// Zero-copy writer for BytesMut
 pub struct BytesMuteWriter<'a>(pub &'a mut BytesMut);
 

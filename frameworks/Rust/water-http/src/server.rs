@@ -36,10 +36,7 @@ pub    fn run_server(){
         conf.worker_threads_count = cpu_nums * 1 ;
     }
 
-   // let addresses =  (0..cpu_nums).map(|_| {
-   //      ("0.0.0.0".to_string(),8080)
-   //  }).collect::<Vec<(String,u16)>>();
-   //  conf.addresses = addresses;
+   conf.max_cached_buffers_count = 2500;
     RunServer!(
         conf,
         ROOT,
@@ -108,11 +105,11 @@ WaterController! {
             let mut sender = context.sender();
             sender.set_header_ef("Content-Type","application/json");
             sender.set_header_ef("Server","water");
-            let date = httpdate::fmt_http_date(std::time::SystemTime::now());
-            sender.set_header_ef("Date",date);
+            sender.set_header_ef("Date",crate::date::get_date_fast());
             _= sender.send_data_as_final_response(
-                http::ResponseData::Slice(data)
+                http::ResponseData::Slice(&data)
             ).await;
+            crate::buf::PooledBuffer::recycle(data);
         }
           GET -> queries -> query (context){
          let q = context
@@ -127,11 +124,11 @@ WaterController! {
             let mut sender = context.sender();
             sender.set_header_ef("Content-Type","application/json");
             sender.set_header_ef("Server","water");
-            let date = httpdate::fmt_http_date(std::time::SystemTime::now());
-            sender.set_header_ef("Date",date);
+            sender.set_header_ef("Date",crate::date::get_date_fast());
             _= sender.send_data_as_final_response(
-                http::ResponseData::Slice(data)
+                http::ResponseData::Slice(&data)
             ).await;
+            crate::buf::PooledBuffer::recycle(data);
         }
 
            GET -> updates -> update (context){
@@ -146,11 +143,11 @@ WaterController! {
             let mut sender = context.sender();
             sender.set_header_ef("Content-Type","application/json");
             sender.set_header_ef("Server","water");
-            let date = httpdate::fmt_http_date(std::time::SystemTime::now());
-            sender.set_header_ef("Date",date);
+            sender.set_header_ef("Date",crate::date::get_date_fast());
             _= sender.send_data_as_final_response(
-                http::ResponseData::Slice(data)
+                http::ResponseData::Slice(&data)
             ).await;
+            crate::buf::PooledBuffer::recycle(data);
         }
 
 
@@ -173,6 +170,7 @@ WaterController! {
             _= sender.send_data_as_final_response(
                 http::ResponseData::Slice(&data)
             ).await;
+            crate::buf::PooledBuffer::recycle(data);
         }
 
     }

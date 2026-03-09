@@ -26,7 +26,27 @@
         "tags": []
       },
 
-
+   "mini": {
+           "json_url": "/json",
+           "plaintext_url": "/plaintext",
+           "fortune_url": "/fortunes",
+            "db_url": "/db",
+            "query_url": "/queries?q=",
+            "update_url": "/updates?q=",
+            "port": 8080,
+            "approach": "Stripped",
+            "classification": "Fullstack",
+            "database": "Postgres",
+            "framework": "water_http",
+            "language": "Rust",
+            "orm": "raw",
+            "platform": "Rust",
+            "webserver": "water_http",
+            "os": "Linux",
+            "database_os": "Linux",
+            "display_name": "water_http [mini]",
+            "tags": []
+        },
 
     "tokio": {
         "json_url": "/json",
@@ -46,7 +66,7 @@
         "webserver": "water_http",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "water_http [uns-tokio]"
+        "display_name": "water_http [uns]"
       },
 
     "uring": {

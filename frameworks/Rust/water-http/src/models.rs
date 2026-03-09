@@ -19,7 +19,7 @@ pub struct FortuneTemplate<'a>{
 }
 #[derive(Serialize,Debug)]
 pub struct JsonHolder {
-   pub message:&'static str
+    pub message:&'static str
 }
 
 

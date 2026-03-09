@@ -3,7 +3,6 @@ pub mod models;
 pub mod db;
 pub mod date;
 pub mod buf;
-// pub mod chop;
 
 use mimalloc::MiMalloc;
 
@@ -11,6 +10,12 @@ use mimalloc::MiMalloc;
 static GLOBAL: MiMalloc = MiMalloc;
 
  fn main() {
-    server::run_server();
+
+     #[cfg(feature = "mini")]
+     {
+         mini::run();
+     }
+     #[cfg(not(feature = "mini"))]
+     server::run_server();
 }
 
