@@ -42,7 +42,7 @@ impl DbConnectionPool {
     pub async fn fill_pool(&mut self, url: &'static str, size: usize) {
         let mut tasks = Vec::with_capacity(size);
         for _ in 0..size {
-            tasks.push(tokio::task::spawn_local(async move {
+            tasks.push(tokio::task::spawn(async move {
                 for attempt in 0..5 {
                     match PgConnection::connect(url).await {
                         Ok(conn) => {

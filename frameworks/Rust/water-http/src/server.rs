@@ -37,6 +37,8 @@ pub    fn run_server(){
     }
 
    conf.max_cached_buffers_count = 2500;
+   conf.default_write_buffer_size = conf.default_read_buffer_size * 2;
+   conf.max_buffer_size_for_cache = conf.default_write_buffer_size;
     RunServer!(
         conf,
         ROOT,

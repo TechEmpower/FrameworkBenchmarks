@@ -26,6 +26,8 @@ fn main() {
     };
     let mut conf = ServerConfigurations::bind("0.0.0.0", 8080);
     conf.max_cached_buffers_count = 2500;
+    conf.default_write_buffer_size = conf.default_read_buffer_size * 2;
+    conf.max_buffer_size_for_cache = conf.default_write_buffer_size;
     serve::<16, 10, _,_,_>(conf, HandlerFn(|ctx: CtxPtr<16, 10>| handler(ctx)),Some(thread_init));
 }
 
