@@ -91,7 +91,7 @@ GEM
     pg (1.6.3)
     pg (1.6.3-x86_64-darwin)
     pg (1.6.3-x86_64-linux)
-    rack (3.2.4)
+    rack (3.2.5)
     rack-protection (4.2.1)
       base64 (>= 0.1.0)
       logger (>= 1.6.0)
