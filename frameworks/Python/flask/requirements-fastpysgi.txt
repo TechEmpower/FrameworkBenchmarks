@@ -1,2 +1,2 @@
 -r requirements.txt
-fastwsgi==0.0.9
+fastpysgi==0.2

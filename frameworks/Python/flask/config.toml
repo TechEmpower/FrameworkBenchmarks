@@ -112,7 +112,7 @@ platform = "WSGI"
 webserver = "Meinheld"
 versus = "wsgi"
 
-[fastwsgi]
+[fastpysgi]
 urls.plaintext = "/plaintext"
 urls.json = "/json-raw"
 approach = "Realistic"
@@ -122,5 +122,5 @@ database_os = "Linux"
 os = "Linux"
 orm = "Raw"
 platform = "WSGI"
-webserver = "FastWSGI"
+webserver = "FastPySGI"
 versus = "wsgi"
