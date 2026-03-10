@@ -7,7 +7,7 @@ This includes tests for plaintext, json, db, queries, updates and fortune.
 
 **Language**
 
-* C# 7.0
+* C# 14
 
 **Platforms**
 
