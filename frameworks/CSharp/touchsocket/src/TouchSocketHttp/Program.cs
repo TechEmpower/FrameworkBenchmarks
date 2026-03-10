@@ -23,8 +23,8 @@ public class Program
 
                   options.ReceivePipeOptions = new PipeOptions(
                 pool: MemoryPool<byte>.Shared,
-                readerScheduler: PipeScheduler.Inline,
-                writerScheduler: PipeScheduler.Inline,
+                readerScheduler: PipeScheduler.ThreadPool,
+                writerScheduler: PipeScheduler.ThreadPool,
                 pauseWriterThreshold: 2 * 1024 * 1024,
                 resumeWriterThreshold: 1024 * 1024,
                 minimumSegmentSize: 8192,
@@ -32,8 +32,8 @@ public class Program
 
                   options.SendPipeOptions = new PipeOptions(
                 pool: MemoryPool<byte>.Shared,
-                readerScheduler: PipeScheduler.Inline,
-                writerScheduler: PipeScheduler.Inline,
+                readerScheduler: PipeScheduler.ThreadPool,
+                writerScheduler: PipeScheduler.ThreadPool,
                 pauseWriterThreshold: 128 * 1024,
                 resumeWriterThreshold: 64 * 1024,
                 minimumSegmentSize: 8192,
