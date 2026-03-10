@@ -1,0 +1,31 @@
+{
+  "framework": "kruda",
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "db_url": "/db",
+        "query_url": "/queries?n=",
+        "update_url": "/updates?n=",
+        "fortune_url": "/fortunes",
+        "cached_query_url": "/cached-queries?n=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "Postgres",
+        "database_os": "Linux",
+        "display_name": "Kruda",
+        "framework": "kruda",
+        "language": "Go",
+        "flavor": "None",
+        "orm": "Raw",
+        "os": "Linux",
+        "platform": "None",
+        "webserver": "None",
+        "versus": "go",
+        "notes": ""
+      }
+    }
+  ]
+}
