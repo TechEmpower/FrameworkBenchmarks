@@ -12,12 +12,18 @@
     (java.util.concurrent Executors)
     (jj.arminio.concurrent ProxyExecutorService)))
 
-(def db-spec {:idle-timeout      15000
-              :max-lifetime      60000
-              :minimum-idle      520
-              :maximum-pool-size 1024
-              :jdbcUrl           "jdbc:postgresql://tfb-database/hello_world?user=benchmarkdbuser&password=benchmarkdbpass&tlsnowait=true"})
+(def db-spec
+  {:idle-timeout      150000
+   :max-lifetime      300000
+   :minimum-idle      10
+   :maximum-pool-size 1024
+   :dbtype            "postgresql"
+   :host              "tfb-database"
+   :dbname            "hello_world"
+   :username          "benchmarkdbuser"
+   :password          "benchmarkdbpass"})
 
+(def cached-thread-executor (Executors/newCachedThreadPool))
 
 
 (defn create-vertx-pool []
@@ -40,7 +46,7 @@
 (defn -main
   [& args]
   (println "Starting server on port 8080")
-  (let [default-executor-service (ProxyExecutorService. (Executors/newCachedThreadPool))
+  (let [default-executor-service (ProxyExecutorService. cached-thread-executor)
         default-server-config {:port              8080
                                :host              "0.0.0.0"
                                :lazy-request-map? true
@@ -59,7 +65,7 @@
 
     (let [handler (cond
                     vertx? (string-handler/get-vertx-handler (create-vertx-pool))
-                    async? (string-handler/get-async-handler datasource)
+                    async? (string-handler/get-async-handler datasource cached-thread-executor)
                     use-inputstream? (input-stream-handler/get-handler datasource)
                     :else (string-handler/get-handler datasource))
           config (cond-> default-server-config
