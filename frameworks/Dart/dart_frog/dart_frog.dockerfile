@@ -1,4 +1,4 @@
-FROM dart:3.8 AS builder
+FROM dart:3.11 AS builder
 
 COPY . /app
 WORKDIR /app
@@ -10,7 +10,7 @@ RUN dart compile exe build/bin/server.dart -o build/bin/server
 
 FROM scratch
 COPY --from=builder /runtime/ /
-COPY --from=builder /app/build/bin/server /app/build/bin/
+COPY --from=builder /app/build/bin/server /bin/server
 
 EXPOSE 8080
-CMD ["/app/build/bin/server"]
+ENTRYPOINT ["server"]
