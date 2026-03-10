@@ -6,10 +6,11 @@ use crate::models::{Fortune, World};
 // Mocking the type for compilation demo
 type WaterBuffer = Vec<u8>;
 
-const INITIAL_VEC_CAPACITY: usize = 128;
+
+const INITIAL_VEC_CAPACITY: usize = 2000;
 const DEFAULT_SIZE: usize = 4048;
-const MAX_BUFFER_SIZE: usize = 8192; // Allow some growth before discarding
-const MAX_CACHED_BUFFERS: usize = 117; // Set to your test requirement
+const MAX_BUFFER_SIZE: usize = 4048; // Allow some growth before discarding
+const MAX_CACHED_BUFFERS: usize = 512; // Set to your test requirement
 
 
 thread_local! {
