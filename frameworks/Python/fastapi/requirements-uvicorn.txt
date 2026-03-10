@@ -1,3 +1,4 @@
+-r requirements.txt
 uvicorn==0.40.0
 uvloop==0.22.1
 httptools==0.7.1
