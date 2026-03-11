@@ -3,10 +3,14 @@ name = "water-http"
 version = "0.1.0"
 edition = "2024"
 
+default-run = "water-http"
+
 [dependencies]
 askama = "0.14.0"
-tokio = { version = "1.47.1", features = ["full"] }
-water_http = { features = ["use_io_uring","use_only_http1"],optional = true , version = "3.4.2-beta.4" }
+tokio = { version = "1.48.0", features = ["full"] }
+
+water_http = {  rev = "c275d8e", features = ["use_only_http1"],optional = true , version = "4.0.1-beta.96",git = "https://github.com/HassanSharara/water_http"}
+#water_http_unrealistic = {package = "water_http" ,features = ["use_io_uring","use_only_http1"],optional = true , version = "3.4.2-beta.4" }
 smallvec = "1.15.1"
 nanorand = "0.8.0"
 tokio-postgres = "0.7.15"
@@ -18,28 +22,39 @@ num_cpus = "1.17.0"
 httpdate = "1.0.3"
 parking_lot = "0.12.5"
 yarte = { version = "0.15.7" ,features = ["bytes-buf", "json"] }
-itoa = {version = "1.0.15" ,optional = true}
+#itoa = {version = "1.0.15" ,optional = true}
+smallbox = "0.8.8"
+mimalloc = "0.1.48"
+#chopin-pg = "0.5.18"
+water_buffer = {version = "1.2.10",features = ["bytes","unsafe_clone"]}
+integer_to_bytes = "0.2.2"
+
+
 
 
 [[bin]]
-name = "plaintext"
-path = "src/plaintext.rs"
-required-features = ["json_plaintext"]
-
-[[bin]]
-name = "json"
-path = "src/json.rs"
-required-features = ["json_plaintext"]
+name = "mini"
+path = "src/mini.rs"
+required-features = ["mini"]
 
 
-[[bin]]
-name = "cache"
-path = "src/cached.rs"
-required-features = ["cache"]
+
+
+
 
 
 [features]
 json_plaintext = ["water_http"]
 db = ["water_http/thread_shared_struct"]
-cache = ["water_http/thread_shared_struct","itoa"]
-all = ["water_http/thread_shared_struct"]
+all = ["water_http","water_http/thread_shared_struct","water_http/cpu_affinity"]
+uring = ["water_http","water_http/thread_shared_struct", "water_http/use_io_uring"]
+mini = ["water_http","water_http/cpu_affinity"]
+
+[profile.release]
+opt-level = 3
+codegen-units = 1
+panic = 'abort'
+lto = "fat"
+debug = false
+incremental = false
+overflow-checks = false

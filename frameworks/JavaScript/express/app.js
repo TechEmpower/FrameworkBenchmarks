@@ -47,4 +47,7 @@ if (cluster.isPrimary) {
 
   const server = app.listen(8080);
   server.keepAliveTimeout = 0;
+  server.headersTimeout = 0;
+  server.requestTimeout = 0;
+  server.maxConnections = Infinity;
 }

@@ -5,59 +5,54 @@ import {
   FastifyAdapter,
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
-import { MongoModule } from './mongo/mongo.module';
 import { join } from 'path';
+import cluster from 'node:cluster';
+import os from 'node:os';
+import handlebars from 'handlebars';
+import fastifyView from '@fastify/view';
+import { MongoModule } from './mongo/mongo.module';
 import { SqlModule } from './sql/sql.module';
-import cluster from 'cluster'
-import os = require('os');
 
-const port = process.env.PORT || 8080;
+const port = Number(process.env.PORT ?? 8080);
 
 async function bootstrapExpress() {
-  let app;
-  if (process.env.DATABASE_CONFIGURATION_PROFILE === 'mongodb') {
-    app = await NestFactory.create<NestExpressApplication>(MongoModule, {
-      logger: false,
-    });
-  } else {
-    app = await NestFactory.create<NestExpressApplication>(SqlModule, {
-      logger: false,
-    });
-    app.getHttpServer().keepAliveTimeout = 0;
-  }
+  const appModule =
+    process.env.DATABASE_CONFIGURATION_PROFILE === 'mongodb'
+      ? MongoModule
+      : SqlModule;
+  const app = await NestFactory.create<NestExpressApplication>(appModule, {
+    logger: false,
+  });
+  app.getHttpServer().keepAliveTimeout = 0;
 
   app.setBaseViewsDir(join(__dirname, '..', 'views'));
   app.setViewEngine('hbs');
 
   Logger.log(`Listening on port ${port}`, 'Nest Express Server');
-  return app.listen(port);
+  await app.listen(port);
 }
 
 async function bootstrapFastify() {
-  let app;
-  if (process.env.DATABASE_CONFIGURATION_PROFILE === 'mongodb') {
-    app = await NestFactory.create<NestFastifyApplication>(
-      MongoModule,
-      new FastifyAdapter(),
-      { logger: false },
-    );
-    app.getHttpServer().keepAliveTimeout = 0;
-  } else {
-    app = await NestFactory.create<NestFastifyApplication>(
-      SqlModule,
-      new FastifyAdapter(),
-      { logger: false },
-    );
-    app.getHttpServer().keepAliveTimeout = 0;
-  }
+  const appModule =
+    process.env.DATABASE_CONFIGURATION_PROFILE === 'mongodb'
+      ? MongoModule
+      : SqlModule;
+  const app = await NestFactory.create<NestFastifyApplication>(
+    appModule,
+    new FastifyAdapter({ logger: false }),
+    { logger: false },
+  );
+  app.getHttpServer().keepAliveTimeout = 0;
 
-  app.setViewEngine({
+  await app.register(fastifyView as never, {
     engine: {
-      handlebars: require('handlebars'),
+      handlebars,
     },
-    templates: join(__dirname, '..', 'views'),
+    root: join(__dirname, '..', 'views'),
   });
-  await app.listen(8080, '0.0.0.0');
+
+  await app.listen({ port, host: '0.0.0.0' });
+  Logger.log(`Listening on port ${port}`, 'Nest Fastify Server');
 }
 
 if (cluster.isPrimary) {
@@ -73,12 +68,12 @@ if (cluster.isPrimary) {
 } else {
   switch (process.env.FRAMEWORK) {
     case 'fastify':
-      bootstrapFastify();
+      void bootstrapFastify();
       Logger.log(`Worker fastify ${process.pid} started`);
       break;
 
     default:
-      bootstrapExpress();
+      void bootstrapExpress();
       Logger.log(`Worker express ${process.pid} started`);
       break;
   }

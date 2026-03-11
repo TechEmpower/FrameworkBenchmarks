@@ -62,25 +62,6 @@
       "notes": "",
       "versus": "wsgi"
     },
-    "socketify-asgi-pypy3": {
-      "json_url": "/json",
-      "plaintext_url": "/plaintext",
-      "port": 8080,
-      "approach": "Realistic",
-      "classification": "Micro",
-      "database": "Postgres",
-      "framework": "Falcon",
-      "language": "Python",
-      "flavor": "PyPy3",
-      "orm": "Full",
-      "platform": "ASGI",
-      "webserver": "Socketify.py",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "Falcon [socketify.py ASGI PyPy3]",
-      "notes": "",
-      "versus": "asgi"
-    },
     "socketify-asgi": {
       "json_url": "/json",
       "plaintext_url": "/plaintext",
@@ -213,7 +194,7 @@
       "notes": "",
       "versus": "uvicorn"
     },
-    "fastwsgi": {
+    "fastpysgi": {
       "json_url": "/json",
       "db_url": "/db",
       "query_url": "/queries/",
@@ -229,10 +210,10 @@
       "flavor": "Python3",
       "orm": "Full",
       "platform": "WSGI",
-      "webserver": "FastWSGI",
+      "webserver": "FastPySGI",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "Falcon [FastWSGI]",
+      "display_name": "Falcon [FastPySGI]",
       "notes": "",
       "versus": "wsgi"
     }

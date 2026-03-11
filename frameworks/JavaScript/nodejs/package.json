@@ -14,7 +14,7 @@
     "pg-hstore": "2.3.2",
     "postgres": "^3.4.3",
     "slow-json-stringify": "^2.0.1",
-    "sequelize": "6.29.0",
+    "sequelize": "6.37.8",
     "node-cache": "4.1.1"
   },
   "main": "app.js"

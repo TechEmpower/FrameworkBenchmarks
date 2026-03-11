@@ -305,12 +305,12 @@ if __name__ == "__main__":
             response_add_date = False
             werkzeug.serving.run_simple(opt.host, opt.port, app, use_reloader=use_reloader) 
 
-        if opt.server == 'fastwsgi':
-            import fastwsgi
-            response_server = "FastWSGI"
+        if opt.server == 'fastpysgi':
+            import fastpysgi
+            response_server = "FastPySGI"
             response_add_date = False
-            fastwsgi.server.backlog = 4096
-            fastwsgi.run(app, host=opt.host, port=opt.port, loglevel=opt.verbose)
+            fastpysgi.server.backlog = 4096
+            fastpysgi.run(app, host=opt.host, port=opt.port, loglevel=opt.verbose)
 
         if opt.server == 'socketify':
             import socketify

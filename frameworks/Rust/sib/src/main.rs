@@ -1,5 +1,6 @@
 // TechEmpower benchmark tests for Sib with the `net-h1-server` feature enabled
-
+use bytes::Bytes;
+use http::StatusCode;
 use sib::network::http::{
     server::{H1Config, HFactory},
     session::{HService, Session},
@@ -8,6 +9,8 @@ use sib::network::http::{
 #[global_allocator]
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
+const PLAINTEXT_BODY: &[u8] = b"Hello, World!";
+const PLAINTEXT_CONTENT_LENGTH: &str = "13";
 #[derive(serde::Serialize)]
 struct JsonMessage<'a> {
     message: &'a str,
@@ -25,41 +28,24 @@ struct Server;
 
 impl HService for Server {
     fn call<S: Session>(&mut self, session: &mut S) -> std::io::Result<()> {
-        use core::fmt::Write;
-        let time = sib::network::http::date::current_date_str();
-        let mut res: heapless::String<256> = heapless::String::new();
-        if session.req_path_bytes() == b"/json" {
-            // Respond with JSON
-            let json = serde_json::to_vec(&JsonMessage::default())?;
-            write!(
-                res,
-                "HTTP/1.1 200 OK\r\n\
-                Server: sib\r\n\
-                Date: {}\r\n\
-                Content-Type: application/json\r\n\
-                Content-Length: {}\r\n\
-                \r\n\
-                    {}",
-                time,
-                &json.len().to_string(),
-                String::from_utf8_lossy(&json)
-            )
-            .unwrap();
-            session.write_all_eom(res.as_bytes())
-        } else {
-            write!(
-                res,
-                "HTTP/1.1 200 OK\r\n\
-             Server: sib\r\n\
-             Date: {}\r\n\
-             Content-Type: text/plain\r\n\
-             Content-Length: 13\r\n\
-             \r\n\
-             Hello, World!",
-                time
-            )
-            .unwrap();
-            session.write_all_eom(res.as_bytes())
+        match session.req_path_bytes() {
+            b"/json" => {
+                let json = serde_json::to_vec(&JsonMessage::default())?;
+                let json_len = json.len().to_string();
+
+                session
+                    .status_code(StatusCode::OK)
+                    .header_str("Content-Type", "application/json")?
+                    .header_str("Content-Length", json_len.as_str())?
+                    .body(json.into())
+                    .eom()
+            }
+            _ => session
+                .status_code(StatusCode::OK)
+                .header_str("Content-Type", "text/plain")?
+                .header_str("Content-Length", PLAINTEXT_CONTENT_LENGTH)?
+                .body(Bytes::from_static(PLAINTEXT_BODY))
+                .eom(),
         }
     }
 }
