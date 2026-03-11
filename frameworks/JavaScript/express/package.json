@@ -12,6 +12,6 @@
     "pg-promise": "12.6.1",
     "postgres": "^3.4.8",
     "pug": "3.0.3",
-    "sequelize": "6.37.7"
+    "sequelize": "6.37.8"
   }
 }
