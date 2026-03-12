@@ -2,4 +2,4 @@ fastapi==0.126
 asyncpg==0.31.0; implementation_name=='cpython'
 Jinja2==3.1.6
 ujson==5.10.0
-orjson==3.11.5; implementation_name=='cpython'
+orjson==3.11.6; implementation_name=='cpython'
