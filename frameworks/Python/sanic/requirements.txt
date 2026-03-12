@@ -2,4 +2,4 @@ asyncpg==0.31.0
 Jinja2==3.1.6
 sanic==25.3.0
 uvloop==0.22.1
-orjson==3.11.5
+orjson==3.11.6
