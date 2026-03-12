@@ -5,7 +5,7 @@ import io.tadx.web.TadxWebApplication;
 import io.tadx.web.WebContext;
 import io.tadx.web.WebResult;
 import io.tadx.web.annotation.RouteMapping;
-import io.tadx.web.route.RouteMapper;
+import io.tadx.web.route_mapper.RouteMapper;
 import io.vertx.jdbcclient.JDBCConnectOptions;
 import io.vertx.jdbcclient.JDBCPool;
 import io.vertx.sqlclient.*;
@@ -43,11 +43,8 @@ public class DbRouteMapper_Jdbc implements RouteMapper {
         pool.preparedQuery(SELECT_WORLD).execute(Tuple.of(randomWorld())).onComplete(ar -> {
             if (ar.succeeded()) {
                 RowSet<Row> rows = ar.result();
-                webContext.routingContext().response()
-                        .putHeader("Content-Type", "application/json;charset=UTF-8")
-                        .putHeader("Server", "Tad.x")
-                        .putHeader("Date", TadxWebApplication.currentDateString)
-                        .end(rows.iterator().next().toJson().toString());
+                webContext.routingContext().response().headers().addAll(JsonRouteMapper.jsonHeaders);
+                webContext.routingContext().response().end(rows.iterator().next().toJson().toString());
             } else {
                 webContext.exception(WebResult.errorResult(ar.cause().getMessage()));
             }

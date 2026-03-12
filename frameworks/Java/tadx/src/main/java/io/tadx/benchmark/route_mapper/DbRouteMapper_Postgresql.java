@@ -5,7 +5,7 @@ import io.tadx.web.TadxWebApplication;
 import io.tadx.web.WebContext;
 import io.tadx.web.WebResult;
 import io.tadx.web.annotation.RouteMapping;
-import io.tadx.web.route.RouteMapper;
+import io.tadx.web.route_mapper.RouteMapper;
 import io.vertx.sqlclient.*;
 
 import java.util.SplittableRandom;
@@ -33,11 +33,8 @@ public class DbRouteMapper_Postgresql implements RouteMapper {
         //client.preparedQuery(SELECT_WORLD)的性能高于SELECT_WORLD_QUERY.execute，但整体差异不大
         client.preparedQuery(SELECT_WORLD).execute(Tuple.of(randomWorld())).onComplete(ar -> {
             if (ar.succeeded()) {
-                webContext.routingContext().response()
-                        .putHeader("Content-Type", "application/json;charset=UTF-8")
-                        .putHeader("Server", "Tad.x")
-                        .putHeader("Date", TadxWebApplication.currentDateString)
-                        .end(ar.result().iterator().next().toJson().toString());
+                webContext.routingContext().response().headers().addAll(JsonRouteMapper.jsonHeaders);
+                webContext.routingContext().response().end(ar.result().iterator().next().toJson().toString());
             } else {
                 webContext.exception(WebResult.errorResult(ar.cause().getMessage()));
             }

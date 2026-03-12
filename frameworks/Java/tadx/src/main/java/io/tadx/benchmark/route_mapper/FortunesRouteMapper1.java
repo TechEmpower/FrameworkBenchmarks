@@ -7,7 +7,7 @@ import io.tadx.web.WebContext;
 import io.tadx.web.WebResult;
 import io.tadx.web.annotation.RouteMapping;
 import io.tadx.web.template.FreemarkerEngine;
-import io.tadx.web.route.RouteMapper;
+import io.tadx.web.route_mapper.RouteMapper;
 import io.vertx.sqlclient.Row;
 import io.vertx.sqlclient.Tuple;
 import io.vertx.sqlclient.impl.SqlClientInternal;
@@ -47,10 +47,7 @@ public class FortunesRouteMapper1 implements RouteMapper {
                 fortunes.addFirst(new Fortune(0, "Additional fortune added at request time."));
                 Collections.sort(fortunes);
 
-                webContext.routingContext().response()
-                        .putHeader("Content-Type", "application/json;charset=UTF-8")
-                        .putHeader("Server", "Tad.x")
-                        .putHeader("Date", TadxWebApplication.currentDateString);
+                webContext.routingContext().response().headers().addAll(JsonRouteMapper.jsonHeaders);
                 webContext.complete(WebResult.pageResult(FreemarkerEngine.class).put("fortunes", fortunes).templateContent("""
                         <!DOCTYPE html>
                                <html lang="en-US">

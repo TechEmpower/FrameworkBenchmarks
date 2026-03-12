@@ -6,7 +6,7 @@ import io.tadx.core.utils.Utils;
 import io.tadx.web.TadxWebApplication;
 import io.tadx.web.WebContext;
 import io.tadx.web.annotation.RouteMapping;
-import io.tadx.web.route.RouteMapper;
+import io.tadx.web.route_mapper.RouteMapper;
 import io.vertx.sqlclient.Row;
 import io.vertx.sqlclient.Tuple;
 import io.vertx.sqlclient.impl.SqlClientInternal;
@@ -51,10 +51,8 @@ public class FortunesRouteMapper2 implements RouteMapper {
                 }
                 sb.append("</table></body></html>");
 
-                webContext.routingContext().response()
-                        .putHeader("Content-Type", "text/html;charset=UTF-8")
-                        .putHeader("Server", "Tad.x")
-                        .putHeader("Date", TadxWebApplication.currentDateString).end(sb.toString());
+                webContext.routingContext().response().headers().addAll(JsonRouteMapper.jsonHeaders);
+                webContext.routingContext().response().end(sb.toString());
             }
         });
     }

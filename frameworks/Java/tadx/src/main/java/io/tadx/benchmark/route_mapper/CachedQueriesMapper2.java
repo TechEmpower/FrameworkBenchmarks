@@ -6,7 +6,7 @@ import io.tadx.core.data.Json;
 import io.tadx.web.TadxWebApplication;
 import io.tadx.web.WebContext;
 import io.tadx.web.annotation.RouteMapping;
-import io.tadx.web.route.RouteMapper;
+import io.tadx.web.route_mapper.RouteMapper;
 import io.vertx.sqlclient.Row;
 import io.vertx.sqlclient.RowSet;
 import io.vertx.sqlclient.impl.SqlClientInternal;
@@ -66,11 +66,8 @@ public class CachedQueriesMapper2 implements RouteMapper {
             int id = randomWorld();
             worlds.add(cache.get(id));
         }
-        webContext.routingContext().response()
-                .putHeader("Content-Type", "application/json;charset=UTF-8")
-                .putHeader("Server", "Tad.x")
-                .putHeader("Date", TadxWebApplication.currentDateString)
-                .end(Json.stringify(worlds));
+        webContext.routingContext().response().headers().addAll(JsonRouteMapper.jsonHeaders);
+        webContext.routingContext().response().end(Json.stringify(worlds));
     }
 
     static int randomWorld() {
