@@ -2,7 +2,7 @@ const std = @import("std");
 const zap = @import("zap");
 const pg = @import("pg");
 
-const Mustache = @import("zap").Mustache;
+const Mustache = zap.Mustache;
 const Thread = std.Thread;
 const Mutex = Thread.Mutex;
 
@@ -23,7 +23,7 @@ const Fortune = struct {
 };
 
 pub const FortunesEndpoint = struct {
-    ep: zap.Endpoint = undefined,
+    path: []const u8 = "/fortunes",
     mustache: Mustache,
     mutex: Mutex,
 
@@ -34,10 +34,6 @@ pub const FortunesEndpoint = struct {
         const mustache = Mustache.fromData(template) catch unreachable;
 
         return .{
-            .ep = zap.Endpoint.init(.{
-                .path = "/fortunes",
-                .get = get,
-            }),
             .mustache = mustache,
             .mutex = Mutex{},
         };
@@ -47,37 +43,30 @@ pub const FortunesEndpoint = struct {
         self.mustache.deinit();
     }
 
-    pub fn endpoint(self: *Self) *zap.Endpoint {
-        return &self.ep;
-    }
-
-    fn compareStrings(_: void, lhs: []const u8, rhs: []const u8) bool {
-        return std.mem.order(u8, lhs, rhs).compare(std.math.CompareOperator.lt);
-    }
-
     fn cmpFortuneByMessage(_: void, a: Fortune, b: Fortune) bool {
         return std.mem.order(u8, a.message, b.message).compare(std.math.CompareOperator.lt);
     }
 
     fn getFortunes(pool: *pg.Pool) ![]const Fortune {
+        const alloc = middleware.SharedAllocator.getAllocator();
         var conn = try pool.acquire();
         defer conn.release();
 
         var rows = try conn.query("SELECT id, message FROM Fortune", .{});
         defer rows.deinit();
 
-        var fortunes = std.ArrayList(Fortune).init(middleware.SharedAllocator.getAllocator());
-        defer fortunes.deinit();
+        var fortunes: std.ArrayListUnmanaged(Fortune) = .empty;
+        defer fortunes.deinit(alloc);
 
         while (try rows.next()) |row| {
-            const fortune = Fortune{ .id = row.get(i32, 0), .message = row.get([]const u8, 1) };
-            try fortunes.append(fortune);
+            const fortune = Fortune{ .id = try row.get(i32, 0), .message = try row.get([]const u8, 1) };
+            try fortunes.append(alloc, fortune);
         }
 
         const fortune = Fortune{ .id = 0, .message = "Additional fortune added at request time." };
-        try fortunes.append(fortune);
+        try fortunes.append(alloc, fortune);
 
-        const fortunes_slice = try fortunes.toOwnedSlice();
+        const fortunes_slice = try fortunes.toOwnedSlice(alloc);
         std.mem.sort(Fortune, fortunes_slice, {}, cmpFortuneByMessage);
 
         return fortunes_slice;
@@ -92,22 +81,13 @@ pub const FortunesEndpoint = struct {
         self.mutex.unlock();
 
         const raw = ret.str().?;
-
-        // std.debug.print("mustache output {s}\n", .{raw});
-
         const html = try deescapeHtml(raw);
-
-        // std.debug.print("html output {s}\n", .{html});
 
         return html;
     }
 
-    pub fn get(ep: *zap.Endpoint, req: zap.Request) void {
-        const self: *FortunesEndpoint = @fieldParentPtr("ep", ep);
-
-        if (!checkPath(ep, req)) return;
-
-        req.setHeader("content-type", "text/html; charset=utf-8") catch return;
+    pub fn get(self: *Self, req: zap.Request) !void {
+        try req.setHeader("content-type", "text/html; charset=utf-8");
 
         var pool: *pg.Pool = undefined;
 
@@ -118,39 +98,26 @@ pub const FortunesEndpoint = struct {
             }
         }
 
-        const fortunes_html = getFortunesHtml(self, pool) catch return;
+        const fortunes_html = try self.getFortunesHtml(pool);
 
-        req.sendBody(fortunes_html) catch return;
-
-        return;
+        try req.sendBody(fortunes_html);
     }
 };
 
 pub const DbEndpoint = struct {
-    ep: zap.Endpoint = undefined,
+    path: []const u8 = "/db",
     mutex: Mutex,
+
     const Self = @This();
 
     pub fn init() Self {
         return .{
-            .ep = zap.Endpoint.init(.{
-                .path = "/db",
-                .get = get,
-            }),
             .mutex = Mutex{},
         };
     }
 
-    pub fn endpoint(self: *Self) *zap.Endpoint {
-        return &self.ep;
-    }
-
-    pub fn get(ep: *zap.Endpoint, req: zap.Request) void {
-        const self: *DbEndpoint = @fieldParentPtr("ep", ep);
-
-        if (!checkPath(ep, req)) return;
-
-        req.setContentType(.JSON) catch return;
+    pub fn get(self: *Self, req: zap.Request) !void {
+        try req.setContentType(.JSON);
 
         var random_number: u32 = 0;
         var pool: *pg.Pool = undefined;
@@ -172,17 +139,12 @@ pub const DbEndpoint = struct {
             return;
         }
 
-        const json_to_send = getJson(pool, random_number) catch |err| {
-            std.debug.print("Error querying database: {}\n", .{err});
-            return;
-        };
+        const json_to_send = try getJson(pool, random_number);
 
-        req.sendBody(json_to_send) catch return;
-
-        return;
+        try req.sendBody(json_to_send);
     }
 
-    fn getJson(pool: *pg.Pool, random_number: u32) ![]const u8{
+    fn getJson(pool: *pg.Pool, random_number: u32) ![]const u8 {
         var conn = try pool.acquire();
         defer conn.release();
 
@@ -191,149 +153,97 @@ pub const DbEndpoint = struct {
         var row = row_result.?;
         defer row.deinit() catch {};
 
-        const world = World{ .id = row.get(i32, 0), .randomNumber = row.get(i32, 1) };
+        const world = World{ .id = try row.get(i32, 0), .randomNumber = try row.get(i32, 1) };
 
         var buf: [100]u8 = undefined;
-        var json_to_send: []const u8 = undefined;
-        if (zap.stringifyBuf(&buf, world, .{})) |json_message| {
-            json_to_send = json_message;
-        } else {
-            json_to_send = "null";
-        }
-
+        const json_to_send = zap.util.stringifyBuf(&buf, world, .{}) catch return "null";
         return json_to_send;
     }
 };
 
 pub const PlaintextEndpoint = struct {
-    ep: zap.Endpoint = undefined,
+    path: []const u8 = "/plaintext",
+
     const Self = @This();
 
     pub fn init() Self {
-        return .{
-            .ep = zap.Endpoint.init(.{
-                .path = "/plaintext",
-                .get = get,
-            }),
-        };
+        return .{};
     }
 
-    pub fn endpoint(self: *Self) *zap.Endpoint {
-        return &self.ep;
-    }
-
-    pub fn get(ep: *zap.Endpoint, req: zap.Request) void {
-        const self: *PlaintextEndpoint = @fieldParentPtr("ep", ep);
-        _ = self;
-
-        if (!checkPath(ep, req)) return;
-
-        req.setContentType(.TEXT) catch return;
-
-        req.sendBody("Hello, World!") catch return;
-        return;
+    pub fn get(_: *Self, req: zap.Request) !void {
+        try req.setContentType(.TEXT);
+        try req.sendBody("Hello, World!");
     }
 };
 
 pub const JsonEndpoint = struct {
-    ep: zap.Endpoint = undefined,
+    path: []const u8 = "/json",
+
     const Self = @This();
 
     pub fn init() Self {
-        return .{
-            .ep = zap.Endpoint.init(.{
-                .path = "/json",
-                .get = get,
-            }),
-        };
+        return .{};
     }
 
-    pub fn endpoint(self: *Self) *zap.Endpoint {
-        return &self.ep;
-    }
-
-    pub fn get(ep: *zap.Endpoint, req: zap.Request) void {
-        const self: *JsonEndpoint  = @fieldParentPtr("ep", ep);
-        _ = self;
-
-        if (!checkPath(ep, req)) return;
-
-        req.setContentType(.JSON) catch return;
+    pub fn get(_: *Self, req: zap.Request) !void {
+        try req.setContentType(.JSON);
 
         const message = Message{ .message = "Hello, World!" };
 
         var buf: [100]u8 = undefined;
-        var json_to_send: []const u8 = undefined;
-        if (zap.stringifyBuf(&buf, message, .{})) |json_message| {
-            json_to_send = json_message;
-        } else {
-            json_to_send = "null";
-        }
-
-        req.sendBody(json_to_send) catch return;
-        return;
+        const json_to_send = zap.util.stringifyBuf(&buf, message, .{}) catch "null";
+        try req.sendBody(json_to_send);
     }
 };
 
-fn checkPath(ep: *zap.Endpoint, req: zap.Request) bool {
-    if (!std.mem.eql(u8, ep.settings.path, req.path.?)) {
-        // std.debug.print("Path mismatch: {s} != {s}\n", .{ ep.settings.path, req.path.? });
-
-        return false;
-    }
-
-    // std.debug.print("Path match: {s} == {s}\n", .{ ep.settings.path, req.path.? });
-
-    return true;
-}
-
 fn deescapeHtml(input: []const u8) ![]const u8 {
-    var output = std.ArrayList(u8).init(middleware.SharedAllocator.getAllocator());
-    defer output.deinit();
+    const alloc = middleware.SharedAllocator.getAllocator();
+    var output: std.ArrayListUnmanaged(u8) = .empty;
+    defer output.deinit(alloc);
 
     var i: usize = 0;
     while (i < input.len) {
         if (std.mem.startsWith(u8, input[i..], "&#32;")) {
-            try output.append(' ');
+            try output.append(alloc, ' ');
             i += 5;
         } else if (std.mem.startsWith(u8, input[i..], "&#34;")) {
-            try output.append('"');
+            try output.append(alloc, '"');
             i += 5;
         } else if (std.mem.startsWith(u8, input[i..], "&#38;")) {
-            try output.append('&');
+            try output.append(alloc, '&');
             i += 5;
         } else if (std.mem.startsWith(u8, input[i..], "&#39;")) {
-            try output.append('\'');
+            try output.append(alloc, '\'');
             i += 5;
         } else if (std.mem.startsWith(u8, input[i..], "&#40;")) {
-            try output.append('(');
+            try output.append(alloc, '(');
             i += 5;
         } else if (std.mem.startsWith(u8, input[i..], "&#41;")) {
-            try output.append(')');
+            try output.append(alloc, ')');
             i += 5;
         } else if (std.mem.startsWith(u8, input[i..], "&#43;")) {
-            try output.append('+');
+            try output.append(alloc, '+');
             i += 5;
         } else if (std.mem.startsWith(u8, input[i..], "&#44;")) {
-            try output.append(',');
+            try output.append(alloc, ',');
             i += 5;
         } else if (std.mem.startsWith(u8, input[i..], "&#46;")) {
-            try output.append('.');
+            try output.append(alloc, '.');
             i += 5;
         } else if (std.mem.startsWith(u8, input[i..], "&#47;")) {
-            try output.append('/');
+            try output.append(alloc, '/');
             i += 5;
         } else if (std.mem.startsWith(u8, input[i..], "&#58;")) {
-            try output.append(':');
+            try output.append(alloc, ':');
             i += 5;
         } else if (std.mem.startsWith(u8, input[i..], "&#59;")) {
-            try output.append(';');
+            try output.append(alloc, ';');
             i += 5;
         } else {
-            try output.append(input[i]);
+            try output.append(alloc, input[i]);
             i += 1;
         }
     }
 
-    return output.toOwnedSlice();
+    return output.toOwnedSlice(alloc);
 }

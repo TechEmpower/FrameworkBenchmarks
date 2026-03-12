@@ -1,6 +1,6 @@
 use xitca_postgres::{
     Execute,
-    dev::Query,
+    dev::ClientBorrow,
     iter::AsyncLendingIterator,
     statement::{Statement, StatementNamed},
     types::Type,
@@ -33,10 +33,10 @@ impl Exec {
 
     pub(crate) async fn db<C>(&self, conn: C, stmt: &Statement) -> HandleResult<World>
     where
-        C: Query,
+        C: ClientBorrow,
     {
         let id = self.rng.borrow_mut().gen_id();
-        let mut res = stmt.bind([id]).query(&conn).await?;
+        let mut res = stmt.bind([id]).query(conn.borrow_cli_ref()).await?;
         drop(conn);
         let row = res.try_next().await?.ok_or_else(not_found)?;
         Ok(World::new(row.get(0), row.get(1)))
@@ -44,14 +44,14 @@ impl Exec {
 
     pub(crate) async fn queries<C>(&self, conn: C, stmt: &Statement, num: u16) -> HandleResult<Vec<World>>
     where
-        C: Query,
+        C: ClientBorrow,
     {
         let get = self
             .rng
             .borrow_mut()
             .gen_multi()
             .take(num as _)
-            .map(|id| stmt.bind([id]).query(&conn))
+            .map(|id| stmt.bind([id]).query(conn.borrow_cli_ref()))
             .collect::<Vec<_>>();
 
         drop(conn);
@@ -75,7 +75,7 @@ impl Exec {
         num: u16,
     ) -> HandleResult<Vec<World>>
     where
-        C: Query,
+        C: ClientBorrow,
     {
         let (worlds, get, update) = {
             let mut rng = self.rng.borrow_mut();
@@ -87,12 +87,12 @@ impl Exec {
                 .cloned()
                 .zip(rng.gen_multi())
                 .map(|(id, rand)| {
-                    let get = world_stmt.bind([id]).query(&conn);
+                    let get = world_stmt.bind([id]).query(conn.borrow_cli_ref());
                     (get, rand, World::new(id, rand))
                 })
                 .collect::<(Vec<_>, Vec<_>, Vec<_>)>();
 
-            let update = update_stmt.bind([&ids, &rngs]).execute(&conn);
+            let update = update_stmt.bind([&ids, &rngs]).execute(conn.borrow_cli_ref());
 
             drop(conn);
 
@@ -110,9 +110,9 @@ impl Exec {
 
     pub(crate) async fn fortunes<C>(conn: C, stmt: &Statement) -> HandleResult<Fortunes>
     where
-        C: Query,
+        C: ClientBorrow,
     {
-        let mut res = stmt.query(&conn).await?;
+        let mut res = stmt.query(conn.borrow_cli_ref()).await?;
 
         drop(conn);
 

@@ -1,0 +1,29 @@
+{
+  "framework": "chopin",
+  "maintainers": ["kowito"], 
+  "tests": [
+    {
+      "default": {
+        "dockerfile": "chopin.dockerfile",
+        "docker_cmd": "/app/chopin-benchmark",
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8000,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "None",
+        "framework": "Chopin",
+        "language": "Rust",
+        "flavor": "None",
+        "orm": "None",
+        "platform": "Rust",
+        "webserver": "Tokio",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Chopin",
+        "notes": "",
+        "versus": "None"
+      }
+    }
+  ]
+}

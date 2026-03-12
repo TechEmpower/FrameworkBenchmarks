@@ -1,4 +1,8 @@
-use rand::{Rng, SeedableRng, distr::Uniform, rngs::SmallRng};
+use rand::{
+    RngExt, SeedableRng,
+    distr::Uniform,
+    rngs::{SmallRng, SysRng},
+};
 
 #[cfg(feature = "pg")]
 pub use parse::QueryParse;
@@ -34,7 +38,7 @@ pub struct Rand(SmallRng);
 
 impl Default for Rand {
     fn default() -> Self {
-        Self(SmallRng::from_os_rng())
+        Self(SmallRng::try_from_rng(&mut SysRng).unwrap())
     }
 }
 

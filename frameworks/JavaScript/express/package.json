@@ -4,14 +4,14 @@
   "private": true,
   "dependencies": {
     "express": "5.2.1",
-    "fast-json-stringify": "^6.2.0",
-    "lru-cache": "^11.2.4",
-    "mongoose": "9.1.4",
-    "mysql2": "3.16.1",
-    "pg": "8.17.1",
-    "pg-promise": "12.3.0",
+    "fast-json-stringify": "^6.3.0",
+    "lru-cache": "^11.2.6",
+    "mongoose": "9.2.4",
+    "mysql2": "3.18.2",
+    "pg": "8.19.0",
+    "pg-promise": "12.6.1",
     "postgres": "^3.4.8",
     "pug": "3.0.3",
-    "sequelize": "6.37.7"
+    "sequelize": "6.37.8"
   }
 }

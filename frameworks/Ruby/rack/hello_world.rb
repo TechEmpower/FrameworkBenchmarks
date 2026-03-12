@@ -29,31 +29,13 @@ class HelloWorld
   DATE = 'Date'
   SERVER = 'Server'
   SERVER_STRING = 'Rack'
-  TEMPLATE_PREFIX = <<~HTML
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <title>Fortunes</title>
-    </head>
-    <body>
-      <table>
-        <tr>
-          <th>id</th>
-          <th>message</th>
-        </tr>
-  HTML
-  TEMPLATE_POSTFIX = <<~HTML
-      </table>
-    </body>
-    </html>
-  HTML
 
   def call(env)
     case env['PATH_INFO']
     when '/json'
       # Test type 1: JSON serialization
       respond JSON_TYPE,
-        JSON.generate({ message: 'Hello, World!' })
+        JSON.generate({ message: -'Hello, World!' })
     when '/db'
       # Test type 2: Single database query
       id = random_id
@@ -71,7 +53,7 @@ class HelloWorld
       respond JSON_TYPE, JSON.generate(update_worlds(queries))
     when '/plaintext'
       # Test type 6: Plaintext
-      respond PLAINTEXT_TYPE, 'Hello, World!'
+      respond PLAINTEXT_TYPE, -'Hello, World!'
     end
   end
 
@@ -104,15 +86,34 @@ class HelloWorld
 
   def fortunes
     fortunes = $db.with(&:select_fortunes).map(&:to_h)
-    fortunes << { 'id' => 0, 'message' => 'Additional fortune added at request time.' }
+    fortunes << { 'id' => 0, 'message' => -'Additional fortune added at request time.' }
     fortunes.sort_by! { |item| item['message'] }
 
-    buffer = String.new
-    buffer << TEMPLATE_PREFIX
+    html = String.new(<<~'HTML')
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Fortunes</title>
+      </head>
+
+      <body>
+
+      <table>
+      <tr>
+        <th>id</th>
+        <th>message</th>
+      </tr>
+    HTML
+
     fortunes.each do |item|
-      buffer << "<tr><td>#{item['id']}</td><td>#{ERB::Escape.html_escape(item['message'])}</td></tr>"
+      html << "<tr><td>#{item['id']}</td><td>#{ERB::Escape.html_escape(item['message'])}</td></tr>"
     end
-    buffer << TEMPLATE_POSTFIX
+
+    html << <<~'HTML'
+      </table>
+      </body>
+      </html>
+    HTML
   end
 
   def update_worlds(count)

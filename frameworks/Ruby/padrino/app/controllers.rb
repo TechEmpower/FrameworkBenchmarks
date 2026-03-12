@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 QUERY_RANGE = (1..10_000).freeze
 ALL_IDS = QUERY_RANGE.to_a
 

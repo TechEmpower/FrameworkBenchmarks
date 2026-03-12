@@ -1,17 +1,60 @@
 
 {
   "framework": "water-http",
-  "maintainers" : ["HassanSharara"],
+  "maintainers": ["HassanSharara"],
   "tests": [
     {
-        "default": {
+    "default": {
         "json_url": "/json",
         "plaintext_url": "/plaintext",
         "fortune_url": "/fortunes",
         "db_url": "/db",
         "query_url": "/queries?q=",
         "update_url": "/updates?q=",
-        "cached_query_url": "/cached-queries?q=",
+        "port": 8080,
+        "approach": "Stripped",
+        "classification": "Fullstack",
+        "database": "Postgres",
+        "framework": "water_http",
+        "language": "Rust",
+        "orm": "raw",
+        "platform": "Rust",
+        "webserver": "water_http",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "water_http",
+        "tags": []
+      },
+
+   "mini": {
+           "json_url": "/json",
+           "plaintext_url": "/plaintext",
+           "fortune_url": "/fortunes",
+            "db_url": "/db",
+            "query_url": "/queries?q=",
+            "update_url": "/updates?q=",
+            "port": 8080,
+            "approach": "Stripped",
+            "classification": "Fullstack",
+            "database": "Postgres",
+            "framework": "water_http",
+            "language": "Rust",
+            "orm": "raw",
+            "platform": "Rust",
+            "webserver": "water_http",
+            "os": "Linux",
+            "database_os": "Linux",
+            "display_name": "water_http [mini]",
+            "tags": []
+        },
+
+    "tokio": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "fortune_url": "/fortunes",
+        "db_url": "/db",
+        "query_url": "/queries?q=",
+        "update_url": "/updates?q=",
         "port": 8080,
         "approach": "Realistic",
         "classification": "Fullstack",
@@ -23,7 +66,28 @@
         "webserver": "water_http",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "water_http"
+        "display_name": "water_http [uns]"
+      },
+
+    "uring": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "fortune_url": "/fortunes",
+        "db_url": "/db",
+        "query_url": "/queries?q=",
+        "update_url": "/updates?q=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "Postgres",
+        "framework": "water_http",
+        "language": "Rust",
+        "orm": "raw",
+        "platform": "Rust",
+        "webserver": "water_http",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "water_http [io-uring]"
       }
     }
     ]

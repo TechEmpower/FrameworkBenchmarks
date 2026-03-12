@@ -29,6 +29,8 @@ const app = express();
 
 app.set('x-powered-by', false);
 app.set('etag', false);
+app.set('case sensitive routing', true);
+app.set('strict routing', true);
 
 app.get("/plaintext", (req, res) => {
   res.writeHead(200, {

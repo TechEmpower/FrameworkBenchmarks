@@ -78,25 +78,6 @@ platform = "None"
 webserver = "Hypercorn"
 versus = "None"
 
-
-[hypercorn-orjson]
-urls.plaintext = "/plaintext"
-urls.json = "/json"
-urls.db = "/db"
-urls.query = "/queries?queries="
-urls.update = "/updates?queries="
-urls.fortune = "/fortunes"
-approach = "Realistic"
-classification = "Micro"
-database = "Postgres"
-database_os = "Linux"
-os = "Linux"
-orm = "Raw"
-platform = "None"
-webserver = "Hypercorn"
-versus = "None"
-
-
 [nginx]
 urls.plaintext = "/plaintext"
 urls.json = "/json"
@@ -113,7 +94,6 @@ orm = "Raw"
 platform = "None"
 webserver = "nginx"
 versus = "None"
-
 
 [uvicorn]
 urls.plaintext = "/plaintext"
@@ -132,7 +112,7 @@ platform = "None"
 webserver = "uvicorn"
 versus = "None"
 
-[uvicorn-orjson]
+[fastpysgi]
 urls.plaintext = "/plaintext"
 urls.json = "/json"
 urls.db = "/db"
@@ -146,5 +126,5 @@ database_os = "Linux"
 os = "Linux"
 orm = "Raw"
 platform = "None"
-webserver = "uvicorn"
-versus = "None"
+webserver = "nginx"
+versus = "fastapi"

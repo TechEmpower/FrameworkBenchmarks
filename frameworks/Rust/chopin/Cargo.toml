@@ -1,0 +1,17 @@
+[workspace]
+members = ["benchmark"]
+resolver = "2"
+
+[workspace.package]
+version = "0.2.1"
+edition = "2021"
+license = "MIT"
+
+[profile.release]
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+strip = true
+panic = "abort"
+overflow-checks = false
+incremental = false
