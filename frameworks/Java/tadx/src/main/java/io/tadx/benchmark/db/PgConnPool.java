@@ -28,8 +28,8 @@ public class PgConnPool {
                 setPassword("benchmarkdbpass").
                 setCachePreparedStatements(true).
                 setPreparedStatementCacheMaxSize(1024).
-                setPipeliningLimit(100000);
-        PoolOptions poolOptions = new PoolOptions().setMaxSize(1900);
+                setPipeliningLimit(256);
+        PoolOptions poolOptions = new PoolOptions().setMaxSize(190);
         // Create the client pool
         client = (SqlClientInternal) PgBuilder.client().with(poolOptions).connectingTo(connectOptions).using(TadxApplication.vertx()).build();
     }
