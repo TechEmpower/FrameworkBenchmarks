@@ -1,6 +1,5 @@
-pyramid==2.0.2
+pyramid==2.1
 gunicorn==25.1.0
 pyramid-chameleon==0.3
 sqlalchemy[postgresql-psycopgbinary]==2.0.47
 orjson==3.11.7
-setuptools<82  # Workaround until pyramid 2.1, see: https://github.com/Pylons/pyramid/issues/3731
