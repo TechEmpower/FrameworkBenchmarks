@@ -1,11 +1,33 @@
 [workspace]
-members = ["benchmark"]
+members = [
+    "benchmark",
+]
 resolver = "2"
 
 [workspace.package]
-version = "0.2.1"
-edition = "2021"
+version = "0.5.18"
+edition = "2024"
 license = "MIT"
+authors = ["kowito"]
+repository = "https://github.com/kowito/chopin"
+homepage = "https://github.com/kowito/chopin"
+
+[workspace.dependencies]
+kowito-json = "0.2.10"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+chopin-macros = "=0.5.18"
+chopin-core = "=0.5.18"
+chopin-pg = "=0.5.18"
+chopin-orm = "=0.5.18"
+chopin-orm-macro = "=0.5.18"
+mimalloc = { version = "0.1.48", default-features = false }
+thiserror = "2.0"
+lazy_static = "1.4.0"
+http-body-util = "0.1.2"
+hyper-util = "0.1.7"
+hyper = { version = "1.4.1", features = ["full"] }
+tokio = { version = "1.40.0", features = ["full"] }
 
 [profile.release]
 opt-level = 3
