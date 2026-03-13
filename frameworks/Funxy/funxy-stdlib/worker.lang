@@ -1,5 +1,5 @@
 import "lib/http" (httpServe)
-import "lib/json" (jsonEncode)
+import "lib/json" (jsonEncodeBytes)
 
 // Pre-allocate response structures to avoid allocation overhead during the hot path
 headers_plain = [("Server", "Funxy"), ("Content-Type", "text/plain")]
@@ -17,8 +17,7 @@ httpServe(8080, fun(req) {
         "/json" -> {
             status: 200,
             headers: [("Server", "Funxy"), ("Content-Type", "application/json")],
-            // Construct the map dynamically for each request as per TFB rules
-            body: jsonEncode({ message: "Hello, World!" })
+            body: jsonEncodeBytes({ message: "Hello, World!" })
         }
         _ -> { status: 404, body: "" }
     }
