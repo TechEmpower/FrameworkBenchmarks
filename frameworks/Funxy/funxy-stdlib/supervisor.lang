@@ -1,0 +1,32 @@
+import "lib/vmm" (spawnVMGroup)
+import "lib/time" (sleepMs)
+import "lib/sys" (sysScriptDir, sysCPUCount)
+import "lib/path" (pathJoin)
+import "lib/flag" (flagSet, flagParse, flagGet)
+
+// Override with --workers N.
+// If omitted or <= 0, use runtime CPU parallelism from sysCPUCount().
+flagSet("workers", 0, "number of worker VMs (<=0 means auto-detect)")
+flagParse()
+workersFlag = flagGet("workers")
+logicalCPU = sysCPUCount()
+cores = if workersFlag > 0 { workersFlag } else { logicalCPU }
+if cores <= 0 {
+    panic("invalid worker count: " ++ show(cores))
+}
+
+worker_path = pathJoin([sysScriptDir(), "worker.lang"])
+print("Starting TFB cluster with workers=" ++ show(cores) ++ " (runtime_cpu=" ++ show(logicalCPU) ++ ")")
+
+match spawnVMGroup(worker_path, {
+    group: "tfb_web",
+    capabilities: ["lib/http", "lib/json"]
+}, cores) {
+    Ok(ids) -> print("Started Funxy TFB cluster. Workers: " ++ show(ids))
+    Fail(e) -> panic("Failed to start cluster: " ++ e)
+}
+
+// Block the supervisor from exiting so the VMM stays alive
+while true {
+    sleepMs(1000)
+}
