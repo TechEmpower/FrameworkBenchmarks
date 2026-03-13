@@ -1,0 +1,26 @@
+[framework]
+name = "zerg"
+
+[main]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+approach = "Realistic"
+classification = "Platform"
+os = "Linux"
+database_os = "Linux"
+orm = "None"
+platform = ".NET"
+webserver = "zerg"
+versus = "None"
+
+[aot]
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+approach = "Realistic"
+classification = "Platform"
+os = "Linux"
+database_os = "Linux"
+orm = "None"
+platform = ".NET"
+webserver = "zerg"
+versus = "None"
