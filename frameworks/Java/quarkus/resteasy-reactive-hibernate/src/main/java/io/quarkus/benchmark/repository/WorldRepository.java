@@ -1,17 +1,13 @@
 package io.quarkus.benchmark.repository;
 
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
-import jakarta.transaction.Transactional;
-
-import org.hibernate.FlushMode;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.StatelessSession;
-
 import io.quarkus.benchmark.model.World;
 import io.quarkus.benchmark.utils.LocalRandom;
 import io.quarkus.benchmark.utils.Randomizer;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+import jakarta.transaction.Transactional;
+import org.hibernate.SessionFactory;
+import org.hibernate.StatelessSession;
 
 @Singleton
 public class WorldRepository {
@@ -59,9 +55,8 @@ public class WorldRepository {
         //We're again forced to use the "individual load" pattern by the rules:
         final World[] list = loadNWorlds(count);
         final LocalRandom random = Randomizer.current();
-        try (Session s = sf.openSession()) {
+        try (StatelessSession s = sf.openStatelessSession()) {
             s.setJdbcBatchSize(count);
-            s.setHibernateFlushMode(FlushMode.MANUAL);
             for (World w : list) {
                 //Read the one field, as required by the following rule:
                 // # vi. At least the randomNumber field must be read from the database result set.
@@ -71,7 +66,6 @@ public class WorldRepository {
                 w.setRandomNumber(random.getNextRandomExcluding(previousRead));
                 s.update(w);
             }
-            s.flush();
         }
         return list;
     }
