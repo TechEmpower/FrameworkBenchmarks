@@ -20,24 +20,24 @@
         <dependency>
             <groupId>tech.smartboot.feat</groupId>
             <artifactId>feat-cloud-starter</artifactId>
-            <version>1.4.0</version>
+            <version>1.5.2</version>
         </dependency>
 <!--        <dependency>-->
 <!--            <groupId>io.github.smartboot.socket</groupId>-->
 <!--            <artifactId>aio-pro</artifactId>-->
 <!--            <version>1.5.62-SNAPSHOT</version>-->
 <!--        </dependency>-->
-        <dependency>
-            <groupId>tech.smartboot.servlet</groupId>
-            <artifactId>servlet-core</artifactId>
-            <version>${smartservlet.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>tech.smartboot.feat</groupId>
-                    <artifactId>feat-core</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>tech.smartboot.servlet</groupId>-->
+<!--            <artifactId>servlet-core</artifactId>-->
+<!--            <version>${smartservlet.version}</version>-->
+<!--            <exclusions>-->
+<!--                <exclusion>-->
+<!--                    <groupId>tech.smartboot.feat</groupId>-->
+<!--                    <artifactId>feat-core</artifactId>-->
+<!--                </exclusion>-->
+<!--            </exclusions>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
@@ -145,7 +145,7 @@
                                 <!-- 采用追加的方式 -->
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-                                    <resource>META-INF/services/tech.smartboot.feat.core.apt.AptLoader</resource>
+                                    <resource>META-INF/services/tech.smartboot.feat.cloud.CloudService</resource>
                                 </transformer>
                             </transformers>
                         </configuration>
