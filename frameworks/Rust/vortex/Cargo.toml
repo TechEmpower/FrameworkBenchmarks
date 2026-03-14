@@ -1,0 +1,21 @@
+[package]
+name = "vortex-techempower"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "vortex-bench"
+path = "src/main.rs"
+
+[dependencies]
+vortex-server = { git = "https://github.com/yp3y5akh0v/vortex" }
+mimalloc = { version = "0.1", default-features = false }
+
+[profile.release]
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+panic = "abort"
+overflow-checks = false
+debug = false
+incremental = false

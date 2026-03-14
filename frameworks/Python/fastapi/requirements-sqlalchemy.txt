@@ -1,1 +1,2 @@
+-r requirements-gunicorn.txt
 SQLAlchemy==2.0.45

@@ -77,7 +77,7 @@
 
   <ItemGroup>
     <!-- ODBC -->
-    <PackageReference Include="System.Data.Odbc" Version="10.0.1" 
+    <PackageReference Include="System.Data.Odbc" Version="10.0.3" 
                       Condition="'$(Driver)' == 'odbc'" />
     <!-- ADO + PostgreSQL -->
     <PackageReference Include="Npgsql" Version="10.0.1"

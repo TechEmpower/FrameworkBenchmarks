@@ -5,9 +5,9 @@ WORKDIR /falcon
 COPY ./ /falcon
 RUN pip3 install -U pip
 RUN pip3 install -r /falcon/requirements.txt
-RUN pip3 install -r /falcon/requirements-fastwsgi.txt
+RUN pip3 install -r /falcon/requirements-fastpysgi.txt
 RUN pip3 install -r /falcon/requirements-db-pony.txt
 
 EXPOSE 8080
 
-CMD ["python3", "app.py", "-s", "fastwsgi"]
+CMD ["python3", "app.py", "-s", "fastpysgi"]

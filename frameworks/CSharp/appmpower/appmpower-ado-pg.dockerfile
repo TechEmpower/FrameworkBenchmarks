@@ -9,7 +9,7 @@ RUN dotnet publish -c Release -o out /p:AOTEXE=true /p:Database=postgresql /p:Dr
 
 
 # Construct the actual image that will run
-FROM mcr.microsoft.com/dotnet/aspnet:10.0.1 AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:10.0.3 AS runtime
 
 RUN apt-get update
 RUN apt-get install -y unixodbc-dev unixodbc wget curl

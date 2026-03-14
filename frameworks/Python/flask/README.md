@@ -23,7 +23,7 @@ PostgresQL (psycopg2 on CPython, psycopg2cffi on PyPy)
 
 * gunicorn+meinheld on CPython
 * gunicorn on PyPy
-* fastwsgi on CPython
+* fastpysgi on CPython
 * socketify on CPython
 
 ## Test URLs
