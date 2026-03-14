@@ -1,4 +1,4 @@
-FROM ruby:3.5-rc
+FROM ruby:4.0
 
 ENV RUBY_YJIT_ENABLE=1
 
@@ -18,4 +18,4 @@ COPY . .
 
 EXPOSE 8080
 
-CMD bundle exec iodine -p 8080 -w $(ruby config/auto_tune.rb | grep -Eo '[0-9]+' | head -n 1)
+CMD bundle exec iodine -p 8080 -w $(($(nproc)*5/4))

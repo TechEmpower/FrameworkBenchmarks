@@ -1,15 +1,20 @@
 import multiprocessing
 from contextlib import asynccontextmanager
 
-import asyncpg
+try:
+    import asyncpg
+    _DB_ALLOWED = True
+except ImportError:
+    _DB_ALLOWED = False
+
 import os
 from fastapi import FastAPI, Request
 from fastapi.responses import PlainTextResponse
 
-try:
+if os.getenv('USE_ORJSON', "0") == "1":
     import orjson
     from fastapi.responses import ORJSONResponse as JSONResponse
-except ImportError:
+else:
     from fastapi.responses import UJSONResponse as JSONResponse
 
 from fastapi.templating import Jinja2Templates
@@ -17,7 +22,6 @@ from random import randint, sample
 
 READ_ROW_SQL = 'SELECT "id", "randomnumber" FROM "world" WHERE id = $1'
 WRITE_ROW_SQL = 'UPDATE "world" SET "randomnumber"=$1 WHERE id=$2'
-ADDITIONAL_ROW = [0, "Additional fortune added at request time."]
 MAX_POOL_SIZE = 1000//multiprocessing.cpu_count()
 MIN_POOL_SIZE = max(int(MAX_POOL_SIZE / 2), 1)
 
@@ -34,8 +38,6 @@ def get_num_queries(queries):
         return 500
     return query_count
 
-
-connection_pool = None
 
 templates = Jinja2Templates(directory="templates")
 
@@ -61,7 +63,7 @@ async def lifespan(app: FastAPI):
     await app.state.connection_pool.close()
 
 
-app = FastAPI(lifespan=lifespan)
+app = FastAPI(lifespan=lifespan) if _DB_ALLOWED else FastAPI()
 
 
 @app.get("/json")
@@ -98,7 +100,7 @@ async def fortunes(request: Request):
     async with app.state.connection_pool.acquire() as connection:
         fortunes = await connection.fetch("SELECT * FROM Fortune")
 
-    fortunes.append(ADDITIONAL_ROW)
+    fortunes.append([0, "Additional fortune added at request time."])
     fortunes.sort(key=lambda row: row[1])
     return templates.TemplateResponse("fortune.html", {"fortunes": fortunes, "request": request})
 

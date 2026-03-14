@@ -11,7 +11,7 @@ module HelloWorld
         def handle(*, response)
           world = world_repo.find(random_id)
           response.format = :json
-          response.body = world.to_h.to_json
+          response.body = JSON.generate(world.to_h)
         end
 
         def random_id

@@ -3,14 +3,18 @@ FROM ubuntu:24.04
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update -yqq && apt-get install -yqq software-properties-common > /dev/null
-RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php > /dev/null && \
-    apt-get update -yqq > /dev/null && apt-get upgrade -yqq > /dev/null
+RUN LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php > /dev/null && \
+    apt-get upgrade -yqq > /dev/null
 
 RUN apt-get install -yqq nginx git unzip curl \
     php8.5-cli php8.5-fpm php8.5-mysql  \
     php8.5-mbstring php8.5-xml php8.5-curl > /dev/null
 
-COPY --from=composer/composer:latest-bin --link /composer /usr/local/bin/composer
+# Use Jemalloc for optimize
+RUN apt install libjemalloc2
+ENV LD_PRELOAD=libjemalloc.so.2
+
+COPY --from=composer/composer:2-bin --link /composer /usr/local/bin/composer
 
 COPY --link deploy/conf/* /etc/php/8.5/fpm/
 WORKDIR /symfony

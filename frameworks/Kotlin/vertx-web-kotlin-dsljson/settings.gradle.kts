@@ -1,3 +1,5 @@
+rootProject.name = "vertx-web-kotlin-dsljson-benchmark"
+
 pluginManagement {
     repositories {
         gradlePluginPortal()
@@ -6,10 +8,7 @@ pluginManagement {
 }
 
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         mavenCentral()
     }
 }
-
-rootProject.name = "vertx-web-kotlin-dsljson-benchmark"

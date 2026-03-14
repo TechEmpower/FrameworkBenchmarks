@@ -6,7 +6,6 @@ class MyBenchmarkReceptor : akaWebReceptorBenchmark
 {
     readonly JsonModel JsonModel;
 
-
     public MyBenchmarkReceptor()
     {
         JsonModel = new()
@@ -16,13 +15,10 @@ class MyBenchmarkReceptor : akaWebReceptorBenchmark
     }
 
 
-    public override ValueTask SendPlaintext(IHttpContext http)
-    {
-        return base.SendPlaintext(http);
-    }
     public override async ValueTask SendJson(IHttpContext http)
     {
         await http.Slient.Send(DataJson_OnlyHeader);
+
         akaJson.Text2Json(JsonModel, out ReadOnlyMemory<byte> json);
         await http.Slient.Send(json);
     }

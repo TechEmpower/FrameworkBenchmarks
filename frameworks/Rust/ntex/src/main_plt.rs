@@ -3,7 +3,8 @@ static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
 use std::{future::Future, io, pin::Pin, task::ready, task::Context, task::Poll};
 
-use ntex::{fn_service, http::h1, io::Io, io::RecvError};
+use ntex::io::{Io, IoConfig, RecvError};
+use ntex::{fn_service, http::h1, http::DateService};
 use sonic_rs::Serialize;
 
 mod utils;
@@ -35,32 +36,30 @@ impl Future for App {
             match ready!(this.io.poll_recv(&this.codec, cx)) {
                 Ok((req, _)) => {
                     let _ = this.io.with_write_buf(|buf| {
-                        buf.with_bytes_mut(|buf| {
-                            utils::reserve(buf, 2 * 1024);
-                            match req.path() {
-                                "/json" => {
-                                    buf.extend_from_slice(JSON);
-                                    this.codec.set_date_header(buf);
+                        this.io.cfg().write_buf().resize(buf);
+                        match req.path() {
+                            "/json" => {
+                                buf.extend_from_slice(JSON);
+                                DateService.bset_date_header(buf);
 
-                                    sonic_rs::to_writer(
-                                        utils::BytesWriter(buf),
-                                        &Message {
-                                            message: "Hello, World!",
-                                        },
-                                    )
-                                    .unwrap();
-                                }
-                                "/plaintext" => {
-                                    buf.extend_from_slice(PLAIN);
-                                    this.codec.set_date_header(buf);
-                                    buf.extend_from_slice(BODY);
-                                }
-                                _ => {
-                                    buf.extend_from_slice(HTTPNFOUND);
-                                    buf.extend_from_slice(HDR_SERVER);
-                                }
+                                sonic_rs::to_writer(
+                                    utils::BVecWriter(buf),
+                                    &Message {
+                                        message: "Hello, World!",
+                                    },
+                                )
+                                .unwrap();
                             }
-                        })
+                            "/plaintext" => {
+                                buf.extend_from_slice(PLAIN);
+                                DateService.bset_date_header(buf);
+                                buf.extend_from_slice(BODY);
+                            }
+                            _ => {
+                                buf.extend_from_slice(HTTPNFOUND);
+                                buf.extend_from_slice(HDR_SERVER);
+                            }
+                        }
                     });
                 }
                 Err(RecvError::WriteBackpressure) => {
@@ -85,7 +84,7 @@ async fn main() -> io::Result<()> {
         .bind("tfb", "0.0.0.0:8080", async |_| {
             fn_service(|io| App {
                 io,
-                codec: h1::Codec::default(),
+                codec: h1::Codec::new(0, true, utils::config().get::<IoConfig>()),
             })
         })?
         .config("tfb", utils::config())

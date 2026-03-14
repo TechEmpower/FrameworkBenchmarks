@@ -1,5 +1,6 @@
 {
   "framework": "ktor",
+  "maintainers": ["ShreckYe", "inemtsev"],
   "tests": [
     {
       "default": {
@@ -140,7 +141,7 @@
         "notes": "http://ktor.io/",
         "versus": "netty"
       },
-      "exposed-dsl": {
+      "exposed-jdbc-dsl": {
         "db_url": "/db",
         "query_url": "/queries?queries=",
         "update_url": "/updates?queries=",
@@ -157,11 +158,11 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "ktor-netty-exposed-dsl",
+        "display_name": "ktor-netty-exposed-jdbc-dsl",
         "notes": "",
         "versus": "ktor"
       },
-      "exposed-dao": {
+      "exposed-jdbc-dao": {
         "db_url": "/db",
         "fortune_url": "/fortunes",
         "port": 9090,
@@ -176,9 +177,53 @@
         "webserver": "None",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "ktor-netty-exposed-dao",
+        "display_name": "ktor-netty-exposed-jdbc-dao",
         "notes": "",
         "versus": "ktor"
+      },
+      "exposed-r2dbc-dsl": {
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
+        "update_url": "/updates?queries=",
+        "fortune_url": "/fortunes",
+        "port": 9090,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "postgres",
+        "framework": "ktor",
+        "language": "Kotlin",
+        "flavor": "None",
+        "orm": "Full",
+        "platform": "Netty",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "ktor-netty-exposed-r2dbc-dsl",
+        "notes": "",
+        "versus": "ktor"
+      },
+      "jstach": {
+        "plaintext_url": "/plaintext",
+        "json_url": "/json",
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
+        "update_url": "/updates?queries=",
+        "fortune_url": "/fortunes",
+
+        "port": 9090,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "Postgres",
+        "framework": "ktor",
+        "language": "Kotlin",
+        "orm": "Raw",
+        "platform": "Netty",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "ktor-netty-jstach",
+        "notes": "http://ktor.io/",
+        "versus": "netty"
       }
     }
   ]

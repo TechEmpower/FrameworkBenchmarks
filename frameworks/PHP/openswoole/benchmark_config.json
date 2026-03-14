@@ -14,7 +14,7 @@
       "database": "MySQL",
       "framework": "openswoole",
       "language": "PHP",
-      "flavor": "PHP8.2",
+      "flavor": "PHP8.4",
       "orm": "Raw",
       "platform": "openswoole",
       "webserver": "none",
@@ -35,7 +35,7 @@
       "database": "Postgres",
       "framework": "openswoole",
       "language": "PHP",
-      "flavor": "PHP8.2",
+      "flavor": "PHP8.4",
       "orm": "Raw",
       "platform": "openswoole",
       "webserver": "none",
@@ -43,7 +43,8 @@
       "database_os": "Linux",
       "display_name": "openswoole Postgres",
       "notes": "",
-      "versus": "php"
+      "versus": "php",
+      "tags": [ "broken" ]
     },
     "no-async": {
       "db_url": "/db",
@@ -56,7 +57,7 @@
       "database": "MySQL",
       "framework": "openswoole",
       "language": "PHP",
-      "flavor": "PHP8.2",
+      "flavor": "PHP8.4",
       "orm": "Raw",
       "platform": "openswoole",
       "webserver": "none",

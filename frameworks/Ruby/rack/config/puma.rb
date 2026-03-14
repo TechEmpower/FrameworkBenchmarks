@@ -1,7 +1,4 @@
-if ENV.fetch('WEB_CONCURRENCY') == 'auto'
-  before_fork do
-    Sequel::DATABASES.each(&:disconnect)
-  end
+if ENV.fetch('WEB_CONCURRENCY').to_i > 1
 else
   workers ENV.fetch('WEB_CONCURRENCY')
   require 'concurrent/utility/processor_counter'

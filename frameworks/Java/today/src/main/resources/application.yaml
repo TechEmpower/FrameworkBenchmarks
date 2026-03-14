@@ -3,6 +3,11 @@ app:
 
 server:
   port: 8080
+  http2:
+    enabled: false
+  use-virtual-thread-service-executor: true
+  netty:
+    auto-read: ${server.http2.enabled}
 
 infra:
   output:
@@ -31,7 +36,6 @@ datasource:
   driver-class-name: com.mysql.cj.jdbc.Driver
   hikari:
     maximum-pool-size: 256
-    connection-test-query: 'select 1'
 
 logging:
   level:

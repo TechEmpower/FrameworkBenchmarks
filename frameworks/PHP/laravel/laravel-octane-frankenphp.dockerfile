@@ -10,7 +10,7 @@ RUN install-php-extensions \
 	zip > /dev/null
 
 COPY --link . /app/
-COPY --from=composer --link /usr/bin/composer /usr/local/bin/composer
+COPY --from=composer/composer:2-bin --link /composer /usr/local/bin/composer
 
 RUN mkdir -p bootstrap/cache \
             storage/logs \
@@ -20,7 +20,7 @@ RUN mkdir -p bootstrap/cache \
 
 COPY --link deploy/franken/php.ini  /usr/local/etc/php
 
-RUN composer require laravel/octane guzzlehttp/guzzle --update-no-dev --no-scripts --quiet
+RUN composer require laravel/octane:^2 guzzlehttp/guzzle --update-no-dev --no-scripts --quiet
 RUN php artisan optimize
 
 RUN frankenphp -v

@@ -48,67 +48,62 @@ const Fortune = sequelize.define('fortune', {
       freezeTableName: true
 });
 
-async function arrayOfRandomWorlds(totalWorldToReturn) {
+function arrayOfRandomWorlds(totalWorldToReturn) {
 
-    var totalIterations = helper.sanititizeTotal(totalWorldToReturn);
-    var arr = [];
+    const totalIterations = helper.sanititizeTotal(totalWorldToReturn);
+    const arr = new Array();
 
-    return new Promise(async (resolve, reject) => {
-        for(var i = 0; i < totalIterations; i++) {
-            let world = await World.findByPk(helper.randomizeNum());
-            arr.push(world);
-        }
-        if(arr.length == totalIterations) {
-            resolve(arr);
-        }
-    });
+    for(let i = 0; i < totalIterations; i++) {
+        arr[i] = World.findByPk(helper.randomizeNum());
+    }
+
+    return Promise.all(arr);
 };
 
 async function updateRandomWorlds(totalToUpdate) {
 
     const total = helper.sanititizeTotal(totalToUpdate);
-    var arr = [];
+    const arr = new Array(total);
 
-    return new Promise(async (resolve, reject) => {
-        for(var i = 0; i < total; i++) {
+    for(let i = 0; i < total; i++) {
+        arr[i] = World.findByPk(helper.randomizeNum());
+    }
 
-            const world = await World.findByPk(helper.randomizeNum());
-            world.updateAttributes({
-                randomNumber: helper.randomizeNum()
-            })
-            arr.push(world);
-        }
-        if(arr.length == total) {
-            resolve(arr);
-        }
-    });
-};
+    const results = await Promise.all(arr);
+
+    const updates = new Array(total);
+    for (let index = 0; index < results.length; index++) {
+        const element = results[index];
+        updates[index] = element.updateAttributes({
+            randomNumber: helper.randomizeNum()
+        });
+    }
+
+    await Promise.all(updates);
+
+    return results;
+}
 
 const sayHello = () => {
-
-    var helloWorld = new Object;
-    helloWorld.message = "Hello, World!";
-
-    return JSON.stringify(helloWorld);
+    return JSON.stringify({ message:"Hello, World!" });
 };
 
 module.exports = {
     Query: {
         helloWorld: () => sayHello(),
-        getAllWorlds: async() => await World.findAll(),
-        singleDatabaseQuery: async() => await World.findByPk(helper.randomizeNum()),
-        multipleDatabaseQueries: async(parent, args) => await arrayOfRandomWorlds(args.total),
-        getWorldById: async(parent, args) => await World.findByPk(args.id),
-        getAllFortunes: async() => await Fortune.findAll(),
-        getRandomAndUpdate: async(parent, args) => await updateRandomWorlds(args.total)
+        getAllWorlds: () => World.findAll(),
+        singleDatabaseQuery: () => World.findByPk(helper.randomizeNum()),
+        multipleDatabaseQueries: (parent, args) => arrayOfRandomWorlds(args.total),
+        getWorldById: (parent, args) => World.findByPk(args.id),
+        getAllFortunes: () => Fortune.findAll(),
+        getRandomAndUpdate: (parent, args) => updateRandomWorlds(args.total)
     },
     Mutation: {
-        createWorld: async(parent, args) => {
-            let randInt = Math.floor(Math.random() * 1000) + 1;
-            return await World.create({ id: null, randomNumber: randInt });
+        createWorld: (parent, args) => {
+            return World.create({ id: null, randomNumber: Math.floor(Math.random() * 1000) + 1 });
         },
-        updateWorld: async(parent, args) => {
-            return await World.update({id: args.id, randomNumber: args.randomNumber});
+        updateWorld: (parent, args) => {
+            return World.update({id: args.id, randomNumber: args.randomNumber});
         }
     }
 }

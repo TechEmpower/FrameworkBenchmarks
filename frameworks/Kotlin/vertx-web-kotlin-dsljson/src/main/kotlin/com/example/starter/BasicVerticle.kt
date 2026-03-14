@@ -39,7 +39,7 @@ class BasicVerticle : CoroutineVerticle() {
         logger.info("HTTP server started on port ${server.actualPort()}")
     }
 
-    companion object : Logging {
+    private companion object : Logging {
         private const val PLAINTEXT_PATH = "/plaintext"
         private const val JSON_PATH = "/json"
     }

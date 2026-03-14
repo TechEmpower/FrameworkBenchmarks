@@ -1,0 +1,24 @@
+.{
+    .name = .dusty_testing,
+    .fingerprint = 0x402c0022f1133ce0,
+    .version = "0.1.1",
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "src",
+    },
+    .dependencies = .{
+        .pg = .{
+            .url = "git+https://github.com/karlseguin/pg.zig.git#f8d4892387fbad2abdf775783e101e50a7114335",
+            .hash = "pg-0.0.0-Wp_7gag6BgD_QAZrPhNNEGpnUZR_LEkKT40Ura3p-4yX",
+        },
+        .dusty = .{
+            .url = "git+https://github.com/lalinsky/dusty.git#8aaedf71a069758bd88437d117ccd89069dc9bf8",
+            .hash = "dusty-0.0.0-Qdw7Rqh_CQDJNptlxOVIRgT4DxHnAKT9KohxfNhSH9bC",
+        },
+        .datetimez = .{
+            .url = "git+https://github.com/frmdstryr/zig-datetime.git#3a39a21e6e34dcb0ade0ff828d0914d40ba535f3",
+            .hash = "datetime-0.8.0-cJNXzP_YAQBxQ5hkNNP6ScnG5XsqciJmeP5RVV4xwCBA",
+        },
+    },
+}

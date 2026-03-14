@@ -37,7 +37,6 @@ let text' (msg:string): HttpContext -> Task =
         ctx.Response.Body.WriteAsync(bytes, 0, bytes.Length)
 
 // Pulled from Giraffe example
-let extra = { id = 0; message = "Additional fortune added at request time." }
 let fortunes' : HttpHandler = 
     fun _ ctx ->
         task {
@@ -46,7 +45,7 @@ let fortunes' : HttpHandler =
 
             let view =
                 let xs = data.AsList()
-                xs.Add extra
+                xs.Add { id = 0; message = "Additional fortune added at request time." }
                 xs.Sort FortuneComparer
                 HtmlViews.fortunes xs
 

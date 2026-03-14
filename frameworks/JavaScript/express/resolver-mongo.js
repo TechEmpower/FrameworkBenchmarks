@@ -31,15 +31,15 @@ async function getRandomWorld() {
 
 // Methods
 
-async function arrayOfRandomWorlds(totalWorldsToReturn) {
+function arrayOfRandomWorlds(totalWorldsToReturn) {
   const totalIterations = helper.sanititizeTotal(totalWorldsToReturn);
-  const promises = [];
+  const promises = new Array(totalIterations);
 
   for (let i = 1; i <= totalIterations; i++) {
-    promises.push(getRandomWorld());
+    promises[i - 1] = getRandomWorld();
   }
 
-  return await Promise.all(promises);
+  return Promise.all(promises);
 }
 
 async function getAndUpdateRandomWorld() {
@@ -56,15 +56,15 @@ async function getAndUpdateRandomWorld() {
   return toClientWorld(world);
 }
 
-async function updateRandomWorlds(totalToUpdate) {
+function updateRandomWorlds(totalToUpdate) {
   const totalIterations = helper.sanititizeTotal(totalToUpdate);
-  const promises = [];
+  const promises = new Array(totalIterations);
 
   for (let i = 1; i <= totalIterations; i++) {
-    promises.push(getAndUpdateRandomWorld());
+    promises[i - 1] = getAndUpdateRandomWorld();
   }
 
-  return await Promise.all(promises);
+  return Promise.all(promises);
 }
 
 const sayHello = () => {
@@ -81,14 +81,13 @@ module.exports = {
     multipleDatabaseQueries: async (parent, args) => await arrayOfRandomWorlds(args.total),
     getWorldById: async (parent, args) => toClientWorld(await World.findById(args.id).lean().exec()),
     getAllFortunes: async () => toClientWorld(await Fortune.find({}).lean().exec()),
-    getRandomAndUpdate: async (parent, args) => await updateRandomWorlds(args.total)
+    getRandomAndUpdate: (parent, args) => updateRandomWorlds(args.total)
   },
   Mutation: {
-    createWorld: async (parent, args) => {
-      const randInt = helper.randomizeNum();
-      return await World.create({_id: null, randomNumber: randInt});
+    createWorld: (parent, args) => {
+      return World.create({_id: null, randomNumber: helper.randomizeNum()});
     },
-    updateWorld: async (parent, args) => {
+    updateWorld: (parent, args) => {
       return World.updateOne({_id: args.id}, {
         randomNumber: args.randomNumber
       }).exec();

@@ -1,0 +1,33 @@
+{
+  "framework": "hotaru",
+  "tests": [
+    {
+      "default": {
+        "dockerfile": "hotaru.dockerfile",
+        "docker_cmd": "/app/server",
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
+        "update_url": "/updates?queries=",
+        "fortune_url": "/fortunes",
+        "cached_query_url": "/cached-worlds?count=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "postgres",
+        "framework": "Hotaru",
+        "language": "Rust",
+        "flavor": "None",
+        "orm": "Raw",
+        "platform": "Rust",
+        "webserver": "Hotaru",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "Hotaru",
+        "notes": "",
+        "versus": "actix"
+      }
+    }
+  ]
+}

@@ -20,6 +20,25 @@
         "display_name": "relic",
         "notes": "",
         "versus": "None"
+      },
+      "aot": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "None",
+        "framework": "relic",
+        "language": "Dart",
+        "flavor": "None",
+        "orm": "None",
+        "platform": "relic",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "relic_aot",
+        "notes": "",
+        "versus": "None"
       }
     }
   ]

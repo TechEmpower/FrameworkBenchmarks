@@ -1,13 +1,17 @@
-using System.Runtime.InteropServices;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Text; 
-using System.Text.Json; 
-using appMpower.Orm.Data; 
+using System.Text.Json;
+using System.Threading.Tasks;
+using appMpower.Orm.Data;
 using appMpower.Orm.Objects; 
 using appMpower.Orm.Serializers; 
 
 namespace appMpower.Orm;
 
-//These methods are for test purposes only; not used in actual execution
+#if !AOTDLL
+
 public static class DotnetMethods
 {
     private static JsonWriterOptions _jsonWriterOptions = new JsonWriterOptions
@@ -19,9 +23,23 @@ public static class DotnetMethods
     private readonly static WorldSerializer _worldSerializer = new WorldSerializer();
     private readonly static WorldsSerializer _worldsSerializer = new WorldsSerializer();
 
-    public static byte[] Db()
+    public static void Dbms(int dbms)
     {
-        var world = RawDb.LoadSingleQueryRow().GetAwaiter().GetResult();
+        Constants.Dbms = (Dbms)dbms;
+        DbFactory.SetConnectionString();
+        DbFactory.SetInstance();
+    }
+
+    public static void DbProvider(int dbProvider)
+    {
+        Constants.DbProvider = (DbProvider)dbProvider;
+        DbFactory.SetConnectionString();
+        DbFactory.SetInstance();
+    }
+
+    public static async Task<byte[]> Db()
+    {
+        var world = await RawDb.LoadSingleQueryRowAsync();
 
         var memoryStream = new MemoryStream();
         using var utf8JsonWriter = new Utf8JsonWriter(memoryStream, _jsonWriterOptions);
@@ -31,9 +49,21 @@ public static class DotnetMethods
         return memoryStream.ToArray();
     }
 
-    public static byte[] Query(int queries)
+    public static async Task<byte[]> DbById(int id)
     {
-        World[] worlds = RawDb.ReadMultipleRows(queries).GetAwaiter().GetResult();
+        var world = await RawDb.LoadSingleQueryRowByIdAsync(id);
+
+        var memoryStream = new MemoryStream();
+        using var utf8JsonWriter = new Utf8JsonWriter(memoryStream, _jsonWriterOptions);
+
+        _worldSerializer.Serialize(utf8JsonWriter, world);
+
+        return memoryStream.ToArray();
+    }
+
+    public static async Task<byte[]> Query(int queries)
+    {
+        World[] worlds = await RawDb.LoadMultipleQueriesRowsAsync(queries);
 
         var memoryStream = new MemoryStream();
         using var utf8JsonWriter = new Utf8JsonWriter(memoryStream, _jsonWriterOptions);
@@ -43,9 +73,9 @@ public static class DotnetMethods
         return memoryStream.ToArray();
     }
 
-    public static byte[] Updates(int count)
+    public static async Task<byte[]> Updates(int count)
     {
-        World[] worlds = RawDb.LoadMultipleUpdatesRows(count).GetAwaiter().GetResult();
+        World[] worlds = await RawDb.LoadMultipleUpdatesRowsAsync(count);
 
         var memoryStream = new MemoryStream();
         using var utf8JsonWriter = new Utf8JsonWriter(memoryStream, _jsonWriterOptions);
@@ -55,12 +85,14 @@ public static class DotnetMethods
         return memoryStream.ToArray();
     }
 
-    public static byte[] Fortunes()
+    public static async Task<byte[]> Fortunes()
     {
-        List<Fortune> fortunes = RawDb.LoadFortunesRows().GetAwaiter().GetResult(); 
+        List<Fortune> fortunes = await RawDb.LoadFortunesRowsAsync();
         string fortunesView = FortunesView.Render(fortunes);
         byte[] byteArray = Encoding.UTF8.GetBytes(fortunesView);
 
         return byteArray.ToArray();
     }
 }
+
+#endif

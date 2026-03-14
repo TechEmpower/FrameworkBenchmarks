@@ -177,7 +177,8 @@
         "database_os": "Linux",
         "display_name": "ubiquity-workerman-mongo",
         "notes": "",
-        "versus": "php"
+        "versus": "php",
+        "tags": ["broken"]
       },
       "workerman-raw": {
         "json_url": "/Json_",

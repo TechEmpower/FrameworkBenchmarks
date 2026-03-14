@@ -115,7 +115,6 @@ if _raw:
         'SELECT world."randomnumber", world."id" FROM "world" WHERE id = $1'
     )
     write_row_sql = 'UPDATE "world" SET "randomnumber"=$1 WHERE id=$2'
-    ADDITIONAL_ROW = (0, "Additional fortune added at request time.")
     db = POOL.getconn()
     cursor = db.cursor()
     cursor.execute("PREPARE read_stmt (int) AS " + prepared_read_row_sql)
@@ -226,7 +225,7 @@ def get_fortunes_raw():
     cursor = db.cursor()
     cursor.execute("EXECUTE fortune")
     fortunes = list(cursor.fetchall())
-    fortunes.append(ADDITIONAL_ROW)
+    fortunes.append((0, "Additional fortune added at request time."))
     fortunes.sort(key=itemgetter(1))
     POOL.putconn(db)
     return flask.Response(FORTUNE_TEMPLATE.render(fortunes=fortunes))
@@ -306,12 +305,12 @@ if __name__ == "__main__":
             response_add_date = False
             werkzeug.serving.run_simple(opt.host, opt.port, app, use_reloader=use_reloader) 
 
-        if opt.server == 'fastwsgi':
-            import fastwsgi
-            response_server = "FastWSGI"
+        if opt.server == 'fastpysgi':
+            import fastpysgi
+            response_server = "FastPySGI"
             response_add_date = False
-            fastwsgi.server.backlog = 4096
-            fastwsgi.run(app, host=opt.host, port=opt.port, loglevel=opt.verbose)
+            fastpysgi.server.backlog = 4096
+            fastpysgi.run(app, host=opt.host, port=opt.port, loglevel=opt.verbose)
 
         if opt.server == 'socketify':
             import socketify

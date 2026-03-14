@@ -141,7 +141,7 @@ $updates_mysql = function (int $queries, $pool): string {
 /**
  * On every request to the (web)server, execute the following code
  */
-$server->on('request', static function (Request $req, Response $res) use ($db_mysql, $db_query, $fortunes_mysql, $updates_mysql, &$pool) {
+$server->on('request', static function (Request $req, Response $res) use ($db_mysql, $fortunes_mysql, $updates_mysql, &$pool) {
     try {
         switch ($req->server['request_uri']) {
             case '/json':

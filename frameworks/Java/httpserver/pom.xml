@@ -71,8 +71,8 @@
                 <version>3.14.1</version>
                 <configuration>
                     <debug>false</debug>
-                    <source>21</source>
-                    <target>21</target>
+                    <source>25</source>
+                    <target>25</target>
                 </configuration>
             </plugin>
             <plugin>

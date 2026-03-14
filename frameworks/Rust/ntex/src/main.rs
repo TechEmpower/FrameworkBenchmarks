@@ -2,7 +2,7 @@
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
 use ntex::http::header::{CONTENT_TYPE, SERVER};
-use ntex::{http, util::BytesMut, web};
+use ntex::{http, web};
 use sonic_rs::Serialize;
 
 mod utils;
@@ -14,14 +14,17 @@ pub struct Message {
 
 #[web::get("/json")]
 async fn json() -> web::HttpResponse {
-    let mut body = BytesMut::with_capacity(utils::SIZE);
-    sonic_rs::to_writer(
-        utils::BytesWriter(&mut body),
-        &Message {
-            message: "Hello, World!",
-        },
-    )
-    .unwrap();
+    let body = utils::buffer(256, |buf| {
+        sonic_rs::to_writer(
+            utils::BVecWriter(buf),
+            &Message {
+                message: "Hello, World!",
+            },
+        )
+        .unwrap();
+
+        buf.take()
+    });
 
     let mut response = web::HttpResponse::with_body(http::StatusCode::OK, body.into());
     response.headers_mut().insert(SERVER, utils::HDR_SERVER);

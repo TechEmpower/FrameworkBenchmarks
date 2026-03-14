@@ -10,12 +10,6 @@ module HttpHandlers =
     open SpanJson
     open Oxpecker.ViewEngine
 
-    let private extra =
-        {
-            id = 0
-            message = "Additional fortune added at request time."
-        }
-
     let private fortunesHeadAndTail =
         (fun (content: HtmlElement) ->
             html() {
@@ -35,7 +29,7 @@ module HttpHandlers =
         ) |> RenderHelpers.prerender
 
     let rec private renderFortunes (ctx: HttpContext) (data: ResizeArray<Fortune>) =
-        data.Add extra
+        data.Add { id = 0; message = "Additional fortune added at request time." }
         data.Sort FortuneComparer
         RenderHelpers.CombinedElement(fortunesHeadAndTail, data)
         |> ctx.WriteHtmlViewChunked

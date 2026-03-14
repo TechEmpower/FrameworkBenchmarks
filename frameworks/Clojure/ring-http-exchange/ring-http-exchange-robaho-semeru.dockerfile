@@ -11,4 +11,4 @@ COPY --from=lein /ring-http-exchange/target/ring-http-server-1.0.0-standalone.ja
 
 EXPOSE 8080
 
-CMD ["java", "-Xtune:throughput", "-Xgcpolicy:optthruput", "-XX:MaxRAMPercentage=70", "-XX:+UseContainerSupport", "-Dclojure.compiler.direct-linking=true", "-jar", "app.jar"]
+CMD ["java", "-Xtune:throughput", "-Xgcpolicy:optthruput", "-XX:MaxRAMPercentage=70", "-XX:+UseContainerSupport", "-Dclojure.compiler.direct-linking=true", "-Drobaho.net.httpserver.nodelay=true", "-jar", "app.jar"]

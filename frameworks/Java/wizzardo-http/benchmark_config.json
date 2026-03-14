@@ -23,7 +23,8 @@
         "database_os": "Linux",
         "display_name": "wizzardo-http",
         "notes": "",
-        "versus": ""
+        "versus": "",
+        "tags": ["broken"]
       }
     }
   ]

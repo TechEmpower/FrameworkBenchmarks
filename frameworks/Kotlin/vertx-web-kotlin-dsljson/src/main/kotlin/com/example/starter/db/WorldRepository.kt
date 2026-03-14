@@ -12,7 +12,6 @@ import io.vertx.sqlclient.Tuple
 import io.vertx.sqlclient.impl.SqlClientInternal
 import io.vertx.sqlclient.internal.ArrayTuple
 import java.util.concurrent.ThreadLocalRandom
-import java.util.concurrent.atomic.AtomicInteger
 
 @Suppress("NOTHING_TO_INLINE", "UNCHECKED_CAST")
 class WorldRepository private constructor(
@@ -20,6 +19,7 @@ class WorldRepository private constructor(
     private val selectWorldQuery: PreparedQuery<RowSet<Row>>,
     private val updateWorldQueries: Array<PreparedQuery<RowSet<Row>>>,
 ) : AbstractRepository<World>(conn) {
+
     fun selectRandomWorld(): Future<World> = selectWorldQuery
         .execute(Tuple.of(randomWorld()))
         .map { map(it.first()) }
@@ -27,7 +27,7 @@ class WorldRepository private constructor(
     fun selectRandomWorlds(numWorlds: Int): Future<Array<World>> {
         val promise = Promise.promise<Array<World>>()
         val arr = arrayOfNulls<World>(numWorlds)
-        val count = AtomicInteger(0)
+        var count = 0
         (this.conn as SqlClientInternal).group { c ->
             val query = c.preparedQuery(SELECT_WORLD_SQL)
             repeat(numWorlds) { _ ->
@@ -36,13 +36,13 @@ class WorldRepository private constructor(
                         when {
                             ar.succeeded() -> {
                                 val result = ar.result()
-                                val index = count.getAndIncrement()
+                                val index = count++
                                 arr[index] = map(result.iterator().next())
                                 if (index == numWorlds - 1) {
                                     promise.complete(arr as Array<World>)
                                 }
                             }
-                            else -> promise.fail(ar.cause())
+                            else -> promise.tryFail(ar.cause())
                         }
                     }
             }
@@ -68,6 +68,7 @@ class WorldRepository private constructor(
         private const val SELECT_WORLD_SQL = "SELECT id, randomnumber FROM world WHERE id = $1"
 
         private inline fun randomWorld(): Int = 1 + ThreadLocalRandom.current().nextInt(10_000)
+
         private inline fun map(row: Row): World = World(
             row.getInteger(0),
             row.getInteger(1),

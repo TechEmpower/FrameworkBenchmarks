@@ -13,8 +13,8 @@ from sqlalchemy.orm.attributes import flag_modified
 from frameworkbenchmarks.models import Fortune, World
 
 
-def parse_query(request):
-    queries = request.GET.get("queries", 1)
+def parse_query(request, param="queries"):
+    queries = request.GET.get(param, 1)
     try:
         queries = int(queries)
     except ValueError:
@@ -90,6 +90,9 @@ def test_5(request):
     return resultset
 
 
+_world_cache = {}
+
+
 @view_config(route_name="test_6")
 def test_6(request):
     """
@@ -99,3 +102,19 @@ def test_6(request):
         body=b"Hello, World!", content_type="text/plain", charset="utf-8"
     )
     return response
+
+
+@view_config(route_name="test_7", renderer="json")
+def test_7(request):
+    """
+    Test type 7: Cached queries
+    """
+    count = parse_query(request, "count")
+    result = []
+    for num in sample(range(1, 10001), count):
+        obj = _world_cache.get(num)
+        if obj is None:
+            obj = request.dbsession.get(World, num).__json__()
+            _world_cache[num] = obj
+        result.append(obj)
+    return result

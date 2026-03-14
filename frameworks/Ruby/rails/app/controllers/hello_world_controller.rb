@@ -14,7 +14,7 @@ class HelloWorldController < ActionController::API
 
   def query
     results = ALL_IDS.sample(query_count).map do |id|
-      World.find(id)
+      World.find(id).attributes
     end
 
     render json: results

@@ -1,5 +1,6 @@
 mod fangs;
 mod models;
+#[cfg(feature = "rt_tokio")] mod errors;
 #[cfg(feature = "rt_tokio")] mod postgres;
 #[cfg(feature = "rt_tokio")] mod templates;
 
@@ -9,6 +10,7 @@ use {
     ohkami::prelude::*,
 };
 #[cfg(feature = "rt_tokio")] use {
+    errors::AppError,
     models::{Fortune, World, WorldsMeta},
     postgres::Postgres,
     templates::FortunesTemplate,
@@ -19,7 +21,6 @@ pub async fn ohkami() -> Ohkami {
         SetServer,
         #[cfg(feature = "rt_tokio")]
         Context::new(Postgres::new().await),
-        
         "/plaintext".GET(plaintext),
         "/json".GET(json_serialization),
         #[cfg(feature = "rt_tokio")]
@@ -46,40 +47,40 @@ async fn json_serialization() -> Json<Message> {
 #[cfg(feature = "rt_tokio")]
 async fn single_database_query(
     Context(db): Context<'_, Postgres>,
-) -> Json<World> {
-    let world = db.select_random_world().await;
-    Json(world)
+) -> Result<Json<World>, AppError> {
+    let world = db.select_random_world().await?;
+    Ok(Json(world))
 }
 
 #[cfg(feature = "rt_tokio")]
 async fn multiple_database_query(
     Query(q): Query<WorldsMeta<'_>>,
     Context(db): Context<'_, Postgres>,
-) -> Json<Vec<World>> {
+) -> Result<Json<Vec<World>>, AppError> {
     let n = q.parse();
-    let worlds = db.select_n_random_worlds(n).await;
-    Json(worlds)
+    let worlds = db.select_n_random_worlds(n).await?;
+    Ok(Json(worlds))
 }
 
 #[cfg(feature = "rt_tokio")]
 async fn fortunes(
     Context(db): Context<'_, Postgres>,
-) -> FortunesTemplate {
-    let mut fortunes = db.select_all_fortunes().await;
+) -> Result<FortunesTemplate, AppError> {
+    let mut fortunes = db.select_all_fortunes().await?;
     fortunes.push(Fortune {
         id:      0,
         message: String::from("Additional fortune added at request time."),
     });
     fortunes.sort_unstable_by(|a, b| str::cmp(&a.message, &b.message));
-    FortunesTemplate { fortunes }
+    Ok(FortunesTemplate { fortunes })
 }
 
 #[cfg(feature = "rt_tokio")]
 async fn database_updates(
     Query(q): Query<WorldsMeta<'_>>,
     Context(db): Context<'_, Postgres>,
-) -> Json<Vec<World>> {
+) -> Result<Json<Vec<World>>, AppError> {
     let n = q.parse();
-    let worlds = db.update_randomnumbers_of_n_worlds(n).await;
-    Json(worlds)
+    let worlds = db.update_randomnumbers_of_n_worlds(n).await?;
+    Ok(Json(worlds))
 }

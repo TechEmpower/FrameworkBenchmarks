@@ -1,20 +1,10 @@
 module.exports = {
 
     sanititizeTotal : (total) => {
-        let totalIterations;
-        if (!total || typeof(total) != 'number') {
-            totalIterations = 1;
-        } else if(total < 501 && total > 0) {
-            totalIterations = total;
-        } else if (total > 500) {
-            totalIterations = 500;
-        } else {
-            totalIterations = 1;
-        }
-        return totalIterations;
+        return total > 500 ? 500 : (i | 0) || 1;
     },
 
     randomizeNum : () => {
-        return Math.floor(Math.random() * 10000) + 1
+        return ((Math.random() * 10000) | 0) + 1;
     }
 }

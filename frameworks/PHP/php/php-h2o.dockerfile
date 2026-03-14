@@ -4,7 +4,7 @@ ARG H2O_PREFIX=/opt/h2o
 
 FROM "buildpack-deps:${UBUNTU_VERSION}" AS compile
 
-ARG H2O_VERSION=3b9b6a53cac8bcc6a25fb28df81ad295fc5f9402
+ARG H2O_VERSION=ccea64b17ade832753db933658047ede9f31a380
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG H2O_PREFIX
@@ -20,10 +20,8 @@ RUN apt-get install \
       libssl-dev \
       liburing-dev \
       libuv1-dev \
-      libwslay-dev \
       libz-dev \
       make \
-      ninja-build \
       pkg-config \
       ruby \
       systemtap-sdt-dev > /dev/null && \
@@ -31,10 +29,10 @@ RUN apt-get install \
       tar --strip-components=1 -xz > /dev/null && \
     cmake \
       -B build \
+      -DCMAKE_BUILD_TYPE=Release \
       -DCMAKE_C_FLAGS="-flto=auto -march=native -mtune=native" \
       -DCMAKE_INSTALL_PREFIX="${H2O_PREFIX}" \
       -DWITH_MRUBY=on \
-      -G Ninja \
       -S . > /dev/null && \
     cmake --build build -j > /dev/null && \
     cmake --install build > /dev/null

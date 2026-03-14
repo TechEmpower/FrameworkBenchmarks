@@ -1,5 +1,6 @@
 {
   "framework": "warp",
+  "maintainers": ["cptwunderlich"],
   "tests": [{
     "default": {
       "json_url": "/json",
@@ -48,30 +49,6 @@
       "notes": "Uses libpq system dependency.",
       "dockerfile": "warp-shared.dockerfile",
       "tags": []
-    },
-    "mysql-haskell": {
-      "json_url": "/json",
-      "db_url": "/db",
-      "query_url": "/queries?queries=",
-      "fortune_url": "/fortunes",
-      "update_url": "/updates?queries=",
-      "plaintext_url": "/plaintext",
-      "port": 7041,
-      "approach": "Realistic",
-      "classification": "Micro",
-      "database": "MySQL",
-      "framework": "Warp",
-      "language": "Haskell",
-      "flavor": "GHC910",
-      "orm": "Raw",
-      "platform": "Wai",
-      "webserver": "Wai",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "Warp+mysql-haskell",
-      "notes": "Pure Haskell.",
-      "dockerfile": "warp-shared.dockerfile",
-      "tags": ["broken"]
     }
   }]
 }

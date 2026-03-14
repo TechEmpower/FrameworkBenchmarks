@@ -184,7 +184,7 @@ class Metadata:
         # Loop over them and parse each into a FrameworkTest
         for test in config['tests']:
 
-            tests_to_run = [name for (name, keys) in test.items()]
+            tests_to_run = test.keys()
 
             if "default" not in tests_to_run:
                 log("Framework %s does not define a default test in benchmark_config.json"
@@ -193,8 +193,8 @@ class Metadata:
 
             # Check that each framework does not have more than the maximum number of tests
             maximum_tests = 10
-            non_broken_tests_filter = lambda test: (not hasattr(test, "tags")) or ("broken" not in test.tags)
-            non_broken_tests_to_run = list(filter(non_broken_tests_filter, tests_to_run))
+            non_broken_tests_filter = lambda test: (not ("tags" in test.keys() and ("broken" in test["tags"])))
+            non_broken_tests_to_run = list(filter(non_broken_tests_filter, test.values()))
             if len(non_broken_tests_to_run) > maximum_tests:
                 message = [
                     "Framework %s defines %s tests in benchmark_config.json (max is %s)."

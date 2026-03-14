@@ -1,0 +1,2 @@
+-r requirements.txt
+git+https://github.com/remittor/fastpysgi.git@508f0c8a3afd4a70be2761f1616738b5035a9094

@@ -1,8 +1,54 @@
+
 {
   "framework": "water-http",
+  "maintainers": ["HassanSharara"],
   "tests": [
     {
-      "default": {
+    "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "fortune_url": "/fortunes",
+        "db_url": "/db",
+        "query_url": "/queries?q=",
+        "update_url": "/updates?q=",
+        "port": 8080,
+        "approach": "Stripped",
+        "classification": "Fullstack",
+        "database": "Postgres",
+        "framework": "water_http",
+        "language": "Rust",
+        "orm": "raw",
+        "platform": "Rust",
+        "webserver": "water_http",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "water_http",
+        "tags": []
+      },
+
+   "mini": {
+           "json_url": "/json",
+           "plaintext_url": "/plaintext",
+           "fortune_url": "/fortunes",
+            "db_url": "/db",
+            "query_url": "/queries?q=",
+            "update_url": "/updates?q=",
+            "port": 8080,
+            "approach": "Stripped",
+            "classification": "Fullstack",
+            "database": "Postgres",
+            "framework": "water_http",
+            "language": "Rust",
+            "orm": "raw",
+            "platform": "Rust",
+            "webserver": "water_http",
+            "os": "Linux",
+            "database_os": "Linux",
+            "display_name": "water_http [mini]",
+            "tags": []
+        },
+
+    "tokio": {
         "json_url": "/json",
         "plaintext_url": "/plaintext",
         "fortune_url": "/fortunes",
@@ -11,7 +57,7 @@
         "update_url": "/updates?q=",
         "port": 8080,
         "approach": "Realistic",
-        "classification": "Micro",
+        "classification": "Fullstack",
         "database": "Postgres",
         "framework": "water_http",
         "language": "Rust",
@@ -20,17 +66,19 @@
         "webserver": "water_http",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "water_http"
+        "display_name": "water_http [uns]"
       },
 
-      "db": {
+    "uring": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
         "fortune_url": "/fortunes",
         "db_url": "/db",
         "query_url": "/queries?q=",
         "update_url": "/updates?q=",
         "port": 8080,
         "approach": "Realistic",
-        "classification": "Micro",
+        "classification": "Fullstack",
         "database": "Postgres",
         "framework": "water_http",
         "language": "Rust",
@@ -39,52 +87,8 @@
         "webserver": "water_http",
         "os": "Linux",
         "database_os": "Linux",
-        "display_name": "water_http"
-      },
-
-      "cached": {
-        "cached_query_url": "/cached-queries?q=",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Micro",
-        "database": "Postgres",
-        "framework": "water_http",
-        "language": "Rust",
-        "orm": "raw",
-        "platform": "Rust",
-        "webserver": "water_http",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "water_http"
-      },
-      "json": {
-        "json_url": "/json",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Micro",
-        "framework": "water_http",
-        "language": "Rust",
-        "orm": "raw",
-        "platform": "Rust",
-        "webserver": "water_http",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "water_http"
-      },
-      "plaintext": {
-        "plaintext_url": "/plaintext",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Micro",
-        "framework": "water_http",
-        "language": "Rust",
-        "orm": "raw",
-        "platform": "Rust",
-        "webserver": "water_http",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "water_http"
+        "display_name": "water_http [io-uring]"
       }
     }
-  ]
+    ]
 }

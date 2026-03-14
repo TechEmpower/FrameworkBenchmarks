@@ -24,7 +24,7 @@
         "plaintext_url": "/plaintext",
         "json_url": "/json",
         "port": 8080,
-        "approach": "Realistic",
+        "approach": "Stripped",
         "classification": "Micro",
         "database": "None",
         "framework": "Unhinged",
@@ -41,7 +41,7 @@
         "plaintext_url": "/plaintext",
         "json_url": "/json",
         "port": 8080,
-        "approach": "Realistic",
+        "approach": "Stripped",
         "classification": "Micro",
         "database": "None",
         "framework": "Unhinged",
@@ -53,23 +53,6 @@
         "database_os": "Linux",
         "display_name": "Unhinged [p]",
         "notes": "epoll"
-      },
-      "gen": {
-        "plaintext_url": "/plaintext",
-        "json_url": "/json",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Fullstack",
-        "database": "None",
-        "framework": "GenHttp",
-        "language": "C#",
-        "orm": "None",
-        "platform": ".NET",
-        "webserver": "Unhinged",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "genhttp [Unhinged]",
-        "notes": "Adapter"
       }
     }
   ]

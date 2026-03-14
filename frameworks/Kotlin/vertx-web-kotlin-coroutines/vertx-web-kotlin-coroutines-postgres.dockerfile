@@ -1,4 +1,4 @@
-FROM gradle:8.10.2-jdk17 as gradle
+FROM gradle:9.2.1-jdk25 as gradle
 WORKDIR /vertx-web-kotlin-coroutines
 COPY src src
 COPY build.gradle.kts build.gradle.kts
@@ -24,7 +24,7 @@ CMD java \
     -Dio.netty.buffer.checkBounds=false               \
     -Dio.netty.buffer.checkAccessible=false           \
     -jar                                              \
-    build/libs/vertx-web-kotlin-coroutines-benchmark-4.3.8-fat.jar \
+    build/libs/vertx-web-kotlin-coroutines-benchmark-5.0.5-fat.jar \
     --instances                                       \
     `grep --count ^processor /proc/cpuinfo`           \
     --conf                                            \

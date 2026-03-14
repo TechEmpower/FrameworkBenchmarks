@@ -1,19 +1,19 @@
 source 'https://rubygems.org'
 
 gem 'activerecord', '~> 8.1.0', require: 'active_record'
-gem 'json', '~> 2.8'
+gem 'json'
 gem 'sinatra', '~> 4.2', require: 'sinatra/base'
 
 group :mysql, optional: true do
-  gem 'trilogy', '~> 2.9.0', platforms: [:ruby, :windows]
+  gem 'trilogy', '~> 2.10'
 end
 
 group :postgresql, optional: true do
-  gem 'pg', '~> 1.5', platforms: [:ruby, :windows]
+  gem 'pg', '~> 1.5'
 end
 
 group :iodine, optional: true do
-  gem 'iodine', '~> 0.7', platforms: [:ruby, :windows], require: false
+  gem 'iodine', '~> 0.7', require: false
 end
 
 group :puma, optional: true do

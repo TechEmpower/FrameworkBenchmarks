@@ -1,2 +1,2 @@
-psycopg2==2.9.10
-SQLAlchemy==2.0.40
+-r requirements-gunicorn.txt
+SQLAlchemy==2.0.45

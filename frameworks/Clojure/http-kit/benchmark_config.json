@@ -22,28 +22,7 @@
       "database_os": "Linux",
       "display_name": "http-kit",
       "notes": "",
-      "versus": "http-kit"
-    },
-    "raw": {
-      "db_url": "/raw/db",
-      "query_url": "/raw/queries/",
-      "update_url": "/raw/updates/",
-      "fortune_url": "/raw/fortunes",
-      "port": 8080,
-      "approach": "Realistic",
-      "classification": "Platform",
-      "database": "MySQL",
-      "framework": "None",
-      "language": "Clojure",
-      "flavor": "None",
-      "orm": "Raw",
-      "platform": "Ring",
-      "webserver": "None",
-      "os": "Linux",
-      "database_os": "Linux",
-      "display_name": "http-kit",
-      "notes": "",
-      "versus": "http-kit"
+      "versus": ""
     }
   }]
 }

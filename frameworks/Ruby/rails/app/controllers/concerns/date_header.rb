@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 module DateHeader
   extend ActiveSupport::Concern
 
   included do
-    if defined?(Agoo) || defined?(Falcon) || defined?(Puma)
+    if defined?(Falcon) || defined?(Puma)
       before_action :add_header
     end
   end

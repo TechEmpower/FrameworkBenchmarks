@@ -2,7 +2,7 @@
 name    = "framework_benchmarks-smol"
 version = "0.0.0"
 edition = "2024"
-authors = ["kanarus <kanarus786@gmail.com>"]
+authors = ["kanarus <mail@kanarus.dev>"]
 
 [profile.release]
 lto           = true

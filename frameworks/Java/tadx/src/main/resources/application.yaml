@@ -1,0 +1,24 @@
+
+tadx:
+  app-id: tadx-benchmark
+  app-title: Tad.x Framework Benchmark project
+
+  logging:
+    level: warn
+    store-type: console
+
+  web:
+    server:
+      port: 8080
+    static-resource-list:
+      - prefix:  /static
+        folder: /home/tadpole/dev/tadx.io/tadx-docs/docs/_static
+
+  data:
+    db-storage:
+      type: postgresql
+      host: tfb-database
+      port: 5432
+      database: hello_world
+      username: benchmarkdbuser
+      password: benchmarkdbpass

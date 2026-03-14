@@ -11,7 +11,7 @@ RUN sbt assembly -batch && \
     rm -Rf ~/.ivy2 && \
     rm -Rf /var/cache
 
-FROM openjdk:21
+FROM eclipse-temurin:21-jre-jammy
 WORKDIR /http4s
 COPY --from=builder /http4s/http4s-assembly-1.0.jar /http4s/http4s-assembly-1.0.jar
 

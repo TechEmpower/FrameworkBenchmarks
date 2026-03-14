@@ -1,5 +1,6 @@
 {
   "framework": "mixphp",
+  "maintainers": ["onanying"],
   "tests": [
     {
       "default": {

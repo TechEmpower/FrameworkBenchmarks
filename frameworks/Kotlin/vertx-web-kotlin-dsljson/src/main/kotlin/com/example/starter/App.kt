@@ -7,8 +7,6 @@ import io.vertx.core.Vertx
 import io.vertx.kotlin.core.deploymentOptionsOf
 import io.vertx.kotlin.core.vertxOptionsOf
 import io.vertx.kotlin.coroutines.coAwait
-import io.vertx.kotlin.micrometer.micrometerMetricsOptionsOf
-import io.vertx.kotlin.micrometer.vertxPrometheusOptionsOf
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.runBlocking
 import org.apache.logging.log4j.kotlin.logger
@@ -22,16 +20,6 @@ fun main(): Unit = runBlocking {
             preferNativeTransport = true,
             disableTCCL = true,
             blockedThreadCheckInterval = 60_000,
-            metricsOptions = if (Properties.METRICS_ENABLED) {
-                micrometerMetricsOptionsOf(
-                    enabled = true,
-                    jvmMetricsEnabled = true,
-                    nettyMetricsEnabled = true,
-                    prometheusOptions = vertxPrometheusOptionsOf(
-                        enabled = true,
-                    ),
-                )
-            } else null
         )
     )
 
@@ -57,6 +45,8 @@ fun main(): Unit = runBlocking {
     val options = deploymentOptionsOf(
         instances = Properties.EVENT_LOOP_POOL_SIZE,
     )
+
+    LOGGER.info("Initializing Verticle: ${Properties.TYPE}")
 
     val deployment = when (Properties.TYPE) {
         "basic" -> vertx.deployVerticle(

@@ -1,10 +1,9 @@
-FROM gradle:8.13.0-jdk21 as build
+FROM gradle:9.3.1-jdk25 as build
 COPY --chown=gradle:gradle . /infra-src
 WORKDIR /infra-src
 RUN gradle installDist --no-daemon
 
-#FROM openjdk:21
-FROM bellsoft/liberica-openjre-debian:21.0.5
+FROM bellsoft/liberica-openjre-debian:25.0.2
 RUN apt install findutils
 WORKDIR /today
 COPY --from=build /infra-src/build/install/today/ ./

@@ -8,17 +8,12 @@ import com.example.starter.handlers.MessageHandler
 import com.example.starter.handlers.WorldHandler
 import com.example.starter.helpers.Properties
 import com.example.starter.utils.isConnectionReset
-import io.micrometer.prometheusmetrics.PrometheusMeterRegistry
-import io.vertx.core.Handler
-import io.vertx.core.http.HttpHeaders.CONTENT_TYPE
-import io.vertx.core.http.HttpServerRequest
 import io.vertx.kotlin.coroutines.CoroutineVerticle
 import io.vertx.kotlin.coroutines.coAwait
-import io.vertx.micrometer.backends.BackendRegistries
 import io.vertx.pgclient.PgConnection
 import org.apache.logging.log4j.kotlin.Logging
 
-class ServerVerticle() : CoroutineVerticle() {
+class ServerVerticle : CoroutineVerticle() {
     override suspend fun start() {
         val conn = PgConnection.connect(vertx, Properties.PG_CONNECT).coAwait()
 
@@ -30,15 +25,6 @@ class ServerVerticle() : CoroutineVerticle() {
 
         val defaultHandler = DefaultHandler()
         val messageHandler = MessageHandler()
-
-        val metricsHandler = if (Properties.METRICS_ENABLED) {
-            val registry = BackendRegistries.getDefaultNow() as PrometheusMeterRegistry
-            Handler<HttpServerRequest> {
-                it.response()
-                    .putHeader(CONTENT_TYPE, "text/plain; version=0.0.4; charset=utf-8")
-                    .end(registry.scrape())
-            }
-        } else null
 
         val server = vertx
             .createHttpServer(Properties.HTTP)
@@ -52,7 +38,6 @@ class ServerVerticle() : CoroutineVerticle() {
                     8  -> when (path) {
                         QUERIES_PATH -> 5
                         UPDATES_PATH -> 6
-                        METRICS_PATH -> 7
                         else         -> 0
                     }
                     else -> 0
@@ -64,7 +49,6 @@ class ServerVerticle() : CoroutineVerticle() {
                     4 -> worldHandler.readRandomWorld(it)
                     5 -> worldHandler.readRandomWorlds(it)
                     6 -> worldHandler.updateRandomWorlds(it)
-                    7 -> metricsHandler?.handle(it) ?: it.response().setStatusCode(404).end()
                     else -> it.response().setStatusCode(404).end()
                 }
             }
@@ -79,8 +63,7 @@ class ServerVerticle() : CoroutineVerticle() {
         logger.info("HTTP server started on port ${server.actualPort()}")
     }
 
-    companion object : Logging {
-        private const val METRICS_PATH = "/metrics"
+    private companion object : Logging {
         private const val PLAINTEXT_PATH = "/plaintext"
         private const val JSON_PATH = "/json"
         private const val FORTUNES_PATH = "/fortunes"

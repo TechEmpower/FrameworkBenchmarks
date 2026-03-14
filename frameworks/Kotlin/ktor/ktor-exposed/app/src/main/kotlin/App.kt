@@ -1,6 +1,8 @@
-import ExposedMode.*
+import ExposedMode.Dao
+import ExposedMode.Dsl
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
+import database.*
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
@@ -9,215 +11,246 @@ import io.ktor.server.netty.*
 import io.ktor.server.plugins.defaultheaders.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.single
+import kotlinx.coroutines.flow.toList
 import kotlinx.html.*
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
-import org.jetbrains.exposed.dao.IntEntity
-import org.jetbrains.exposed.dao.IntEntityClass
-import org.jetbrains.exposed.dao.id.EntityID
-import org.jetbrains.exposed.dao.id.IdTable
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.Transaction
-import org.jetbrains.exposed.sql.statements.BatchUpdateStatement
-import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
-import org.jetbrains.exposed.sql.transactions.TransactionManager
+import org.jetbrains.exposed.v1.core.dao.id.EntityID
+import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.core.statements.BatchUpdateStatement
+import org.jetbrains.exposed.v1.core.vendors.PostgreSQLDialect
+import org.jetbrains.exposed.v1.jdbc.Database
+import org.jetbrains.exposed.v1.jdbc.JdbcTransaction
+import org.jetbrains.exposed.v1.jdbc.transactions.suspendTransaction
+import org.jetbrains.exposed.v1.r2dbc.R2dbcDatabase
+import org.jetbrains.exposed.v1.r2dbc.R2dbcDatabaseConfig
+import org.jetbrains.exposed.v1.r2dbc.R2dbcTransaction
+import org.jetbrains.exposed.v1.r2dbc.transactions.suspendTransaction
 import java.util.concurrent.ThreadLocalRandom
+import org.jetbrains.exposed.v1.jdbc.select as jdbcSelect
+import org.jetbrains.exposed.v1.jdbc.statements.toExecutable as toJdbcExecutable
+import org.jetbrains.exposed.v1.r2dbc.select as r2dbcSelect
+import org.jetbrains.exposed.v1.r2dbc.statements.toExecutable as toR2dbcExecutable
 
-@Serializable
-data class World(val id: Int, var randomNumber: Int)
-
-@Serializable
-data class Fortune(val id: Int, var message: String)
-
-
-// see "toolset/databases/postgres/create-postgres.sql"
-
-object WorldTable : IdTable<Int>("World") {
-    override val id = integer("id").entityId()
-    val randomNumber = integer("randomnumber").default(0) // The name is "randomNumber" in "create-postgres.sql".
+enum class ConnectionMode {
+    Jdbc, R2dbc
 }
-
-object FortuneTable : IdTable<Int>("Fortune") {
-    override val id = integer("id").entityId()
-    val message = varchar("message", 2048)
-}
-
-
-class WorldDao(id: EntityID<Int>) : IntEntity(id) {
-    companion object : IntEntityClass<WorldDao>(WorldTable)
-
-    var randomNumber by WorldTable.randomNumber
-    fun toWorld() =
-        World(id.value, randomNumber)
-}
-
-class FortuneDao(id: EntityID<Int>) : IntEntity(id) {
-    companion object : IntEntityClass<FortuneDao>(FortuneTable)
-
-    var message by FortuneTable.message
-    fun toFortune() =
-        Fortune(id.value, message)
-}
-
 
 enum class ExposedMode {
     Dsl, Dao
 }
 
 fun main(args: Array<String>) {
-    val exposedMode = valueOf(args.first())
-    embeddedServer(Netty, port = 9090) { module(exposedMode) }.start(wait = true)
+    val connectionMode = ConnectionMode.valueOf(args[0])
+    val exposedMode = ExposedMode.valueOf(args[1])
+    embeddedServer(Netty, port = 9090) { module(connectionMode, exposedMode) }.start(wait = true)
 }
 
-fun Application.module(exposedMode: ExposedMode) {
-    val poolSize = Runtime.getRuntime().availableProcessors() * 2
-    val pool = HikariDataSource(HikariConfig().apply { configurePostgres(poolSize) })
-    val database = Database.connect(pool)
-    val databaseDispatcher = Dispatchers.IO.limitedParallelism(poolSize)
-    suspend fun <T> withDatabaseTransaction(statement: suspend Transaction.() -> T) =
-        newSuspendedTransaction(context = databaseDispatcher, db = database, statement = statement)
 
-    install(DefaultHeaders)
-
-    routing {
-        fun selectWorldsWithIdQuery(id: Int) =
-            WorldTable.select(WorldTable.id, WorldTable.randomNumber).where(WorldTable.id eq id)
-
-        fun ResultRow.toWorld() =
-            World(this[WorldTable.id].value, this[WorldTable.randomNumber])
-
-        fun ResultRow.toFortune() =
-            Fortune(this[FortuneTable.id].value, this[FortuneTable.message])
-
-        fun ThreadLocalRandom.nextIntWithinRows() =
-            nextInt(DB_ROWS) + 1
-
-        fun selectSingleWorld(random: ThreadLocalRandom): World =
-            selectWorldsWithIdQuery(random.nextIntWithinRows()).single().toWorld()
-
-        fun selectWorlds(queries: Int, random: ThreadLocalRandom): List<World> =
-            List(queries) { selectSingleWorld(random) }
-
-        get("/db") {
-            val random = ThreadLocalRandom.current()
-            val result = withDatabaseTransaction {
-                when (exposedMode) {
-                    Dsl -> selectSingleWorld(random)
-                    Dao -> WorldDao[random.nextIntWithinRows()].toWorld()
-                }
-            }
-            call.respondText(Json.encodeToString(result), ContentType.Application.Json)
-        }
-
-
-        get("/queries") {
-            val queries = call.queries()
-            val random = ThreadLocalRandom.current()
-
-            val result = withDatabaseTransaction {
-                when (exposedMode) {
-                    Dsl -> selectWorlds(queries, random)
-                    Dao -> //List(queries) { WorldDao[random.nextIntWithinRows()].toWorld() }
-                        throw IllegalArgumentException("DAO not supported because it appears to cache results")
-                }
+fun Application.module(connectionMode: ConnectionMode, exposedMode: ExposedMode) =
+    parameterizedModule(
+        when (connectionMode) {
+            ConnectionMode.Jdbc -> when (exposedMode) {
+                Dsl -> ExposedOps.Jdbc.Dsl
+                Dao -> ExposedOps.Jdbc.Dao
             }
 
-            call.respondText(Json.encodeToString(result), ContentType.Application.Json)
-        }
-
-        get("/fortunes") {
-            val result = withDatabaseTransaction {
-                when (exposedMode) {
-                    Dsl -> FortuneTable.select(FortuneTable.id, FortuneTable.message)
-                        .asSequence().map { it.toFortune() }
-
-                    Dao -> FortuneDao.all().asSequence().map { it.toFortune() }
-                }.toMutableList()
-            }
-
-            result.add(Fortune(0, "Additional fortune added at request time."))
-            result.sortBy { it.message }
-            call.respondHtml {
-                head { title { +"Fortunes" } }
-                body {
-                    table {
-                        tr {
-                            th { +"id" }
-                            th { +"message" }
-                        }
-                        for (fortune in result) {
-                            tr {
-                                td { +fortune.id.toString() }
-                                td { +fortune.message }
-                            }
-                        }
-                    }
-                }
+            ConnectionMode.R2dbc -> when (exposedMode) {
+                Dsl -> ExposedOps.R2dbc.Dsl
+                Dao -> throw IllegalArgumentException("DAO with R2DBC is not supported")
             }
         }
-
-        get("/updates") {
-            val queries = call.queries()
-            val random = ThreadLocalRandom.current()
-            lateinit var result: List<World>
-
-            withDatabaseTransaction {
-                when (exposedMode) {
-                    Dsl -> {
-                        result = selectWorlds(queries, random)
-                        result.forEach { it.randomNumber = random.nextIntWithinRows() }
-                        val batch = BatchUpdateStatement(WorldTable)
-                        result.sortedBy { it.id }.forEach { world ->
-                            batch.addBatch(EntityID(world.id, WorldTable))
-                            batch[WorldTable.randomNumber] = world.randomNumber
-                        }
-                        batch.execute(TransactionManager.current())
-                    }
-
-                    Dao -> /*{
-                        val worldDaosAndNewRandomNumbers =
-                            List(queries) { WorldDao[random.nextIntWithinRows()] to random.nextIntWithinRows() }
-                        worldDaosAndNewRandomNumbers
-                            .sortedBy { (worldDao, _) -> worldDao.id.value }
-                            .forEach { (worldDao, newRandomNumber) ->
-                                worldDao.randomNumber = newRandomNumber
-                            }
-                        result = worldDaosAndNewRandomNumbers.map { (worldDao, _) -> worldDao.toWorld() }
-                    }*/
-                        throw IllegalArgumentException("DAO not supported because it appears to cache results")
-                }
-            }
-
-            call.respondText(Json.encodeToString(result), ContentType.Application.Json)
-        }
-    }
-}
-
-private const val DB_ROWS = 10_000
-
-fun HikariConfig.configurePostgres(poolSize: Int) {
-    jdbcUrl = "jdbc:postgresql://tfb-database/hello_world?useSSL=false"
-    driverClassName = org.postgresql.Driver::class.java.name
-
-    configureCommon(poolSize)
-}
-
-fun HikariConfig.configureCommon(poolSize: Int) {
-    username = "benchmarkdbuser"
-    password = "benchmarkdbpass"
-    addDataSourceProperty("cacheServerConfiguration", true)
-    addDataSourceProperty("cachePrepStmts", "true")
-    addDataSourceProperty("useUnbufferedInput", "false")
-    addDataSourceProperty("prepStmtCacheSize", "4096")
-    addDataSourceProperty("prepStmtCacheSqlLimit", "2048")
-    connectionTimeout = 10000
-    maximumPoolSize = poolSize
-    minimumIdle = poolSize
-}
+    )
 
 fun ApplicationCall.queries() =
     request.queryParameters["queries"]?.toIntOrNull()?.coerceIn(1, 500) ?: 1
 
+private const val DB_ROWS = 10_000
+fun ThreadLocalRandom.nextIntWithinRows() =
+    nextInt(DB_ROWS) + 1
+
+interface ExposedOps<TDatabase, TTransaction> {
+    fun createDatabase(): TDatabase
+    suspend fun <T> transaction(db: TDatabase, statement: suspend TTransaction.() -> T): T
+
+    // Repository pattern functions. These can also be extracted into a separate interface.
+    suspend fun TTransaction.getWorldWithId(id: Int): World
+    suspend fun TTransaction.getRandomWorlds(queries: Int, random: ThreadLocalRandom): List<World>
+    suspend fun TTransaction.getAllFortunesAndAddTo(result: MutableList<Fortune>)
+    suspend fun TTransaction.getRandomWorldsAndUpdate(queries: Int, random: ThreadLocalRandom): List<World>
+
+    interface Jdbc : ExposedOps<Database, JdbcTransaction> {
+        override fun createDatabase(): Database {
+            val poolSize = Runtime.getRuntime().availableProcessors() * 2
+            val pool = HikariDataSource(HikariConfig().apply { configurePostgres(poolSize) })
+            return Database.connect(pool)
+        }
+
+        override suspend fun <T> transaction(db: Database, statement: suspend JdbcTransaction.() -> T): T =
+            suspendTransaction(db) { statement() }
+
+        object Dsl : Jdbc {
+            override suspend fun JdbcTransaction.getWorldWithId(id: Int): World =
+                WorldTable.jdbcSelect(WorldTable.id, WorldTable.randomNumber).where(WorldTable.id eq id)
+                    .single().toWorld()
+
+            override suspend fun JdbcTransaction.getRandomWorlds(queries: Int, random: ThreadLocalRandom): List<World> =
+                // Coroutine concurrent `select`s lead to connection pool exhaustion.
+                List(queries) { getWorldWithId(random.nextIntWithinRows()) }
+
+            override suspend fun JdbcTransaction.getAllFortunesAndAddTo(result: MutableList<Fortune>) {
+                FortuneTable.jdbcSelect(FortuneTable.id, FortuneTable.message)
+                    .mapTo(result) { it.toFortune() }
+            }
+
+            override suspend fun JdbcTransaction.getRandomWorldsAndUpdate(
+                queries: Int, random: ThreadLocalRandom
+            ): List<World> {
+                val result = getRandomWorlds(queries, random)
+                result.forEach { it.randomNumber = random.nextIntWithinRows() }
+                val batch = BatchUpdateStatement(WorldTable)
+                result.sortedBy { it.id }.forEach { world ->
+                    batch.addBatch(EntityID(world.id, WorldTable))
+                    batch[WorldTable.randomNumber] = world.randomNumber
+                }
+                // also consider passing the transaction explicitly
+                batch.toJdbcExecutable().execute(this)
+                return result
+            }
+        }
+
+        object Dao : Jdbc {
+            override suspend fun JdbcTransaction.getWorldWithId(id: Int): World =
+                WorldDao[id].toWorld()
+
+            override suspend fun JdbcTransaction.getRandomWorlds(queries: Int, random: ThreadLocalRandom): List<World> =
+                //List(queries) { WorldDao[random.nextIntWithinRows()].toWorld() }
+                throw IllegalArgumentException("DAO not supported because it appears to cache results")
+
+            override suspend fun JdbcTransaction.getAllFortunesAndAddTo(result: MutableList<Fortune>) {
+                FortuneDao.all().mapTo(result) { it.toFortune() }
+            }
+
+            override suspend fun JdbcTransaction.getRandomWorldsAndUpdate(
+                queries: Int, random: ThreadLocalRandom
+            ): List<World> {
+                /*
+                val worldDaosAndNewRandomNumbers =
+                    List(queries) { WorldDao[random.nextIntWithinRows()] to random.nextIntWithinRows() }
+                worldDaosAndNewRandomNumbers
+                    .sortedBy { (worldDao, _) -> worldDao.id.value }
+                    .forEach { (worldDao, newRandomNumber) ->
+                        worldDao.randomNumber = newRandomNumber
+                    }
+                val result = worldDaosAndNewRandomNumbers.map { (worldDao, _) -> worldDao.toWorld() }
+                */
+                throw IllegalArgumentException("DAO not supported because it appears to cache results")
+            }
+        }
+    }
+
+    // TODO consider moving to separate files to avoid import conflicts/aliases
+    interface R2dbc : ExposedOps<R2dbcDatabase, R2dbcTransaction> {
+        override fun createDatabase(): R2dbcDatabase =
+            R2dbcDatabase.connect(configurePostgresR2DBC(), R2dbcDatabaseConfig {
+                // This can't be omitted.
+                explicitDialect = PostgreSQLDialect()
+            })
+
+        override suspend fun <T> transaction(db: R2dbcDatabase, statement: suspend R2dbcTransaction.() -> T): T =
+            suspendTransaction(db) { statement() }
+
+        object Dsl : R2dbc {
+            override suspend fun R2dbcTransaction.getWorldWithId(id: Int): World =
+                WorldTable.r2dbcSelect(WorldTable.id, WorldTable.randomNumber).where(WorldTable.id eq id)
+                    .single().toWorld()
+
+            override suspend fun R2dbcTransaction.getRandomWorlds(
+                queries: Int,
+                random: ThreadLocalRandom
+            ): List<World> =
+                // Coroutine concurrent `select`s lead to connection pool exhaustion.
+                List(queries) { getWorldWithId(random.nextIntWithinRows()) }
+
+            override suspend fun R2dbcTransaction.getAllFortunesAndAddTo(result: MutableList<Fortune>) {
+                FortuneTable.r2dbcSelect(FortuneTable.id, FortuneTable.message)
+                    .map { it.toFortune() }.toList(result)
+            }
+
+            override suspend fun R2dbcTransaction.getRandomWorldsAndUpdate(
+                queries: Int,
+                random: ThreadLocalRandom
+            ): List<World> {
+                val result = getRandomWorlds(queries, random)
+                result.forEach { it.randomNumber = random.nextIntWithinRows() }
+                val batch = BatchUpdateStatement(WorldTable)
+                result.sortedBy { it.id }.forEach { world ->
+                    batch.addBatch(EntityID(world.id, WorldTable))
+                    batch[WorldTable.randomNumber] = world.randomNumber
+                }
+                batch.toR2dbcExecutable().execute(this)
+                return result
+            }
+        }
+    }
+}
+
+fun <TDatabase, TTransaction> Application.parameterizedModule(exposedOps: ExposedOps<TDatabase, TTransaction>) {
+    install(DefaultHeaders)
+
+    routing {
+        with(exposedOps) {
+            val database = createDatabase()
+
+            suspend fun <T> transaction(statement: suspend TTransaction.() -> T): T =
+                transaction(database, statement)
+
+            get("/db") {
+                val random = ThreadLocalRandom.current()
+                val result = transaction { getWorldWithId(random.nextIntWithinRows()) }
+                call.respondText(json.encodeToString(result), ContentType.Application.Json)
+            }
+
+            get("/queries") {
+                val queries = call.queries()
+                val random = ThreadLocalRandom.current()
+                val result = transaction { getRandomWorlds(queries, random) }
+                call.respondText(json.encodeToString(result), ContentType.Application.Json)
+            }
+
+            get("/fortunes") {
+                val result = mutableListOf<Fortune>()
+
+                transaction { getAllFortunesAndAddTo(result) }
+
+                result.add(Fortune(0, "Additional fortune added at request time."))
+                result.sortBy { it.message }
+
+                call.respondHtml {
+                    head { title { +"Fortunes" } }
+                    body {
+                        table {
+                            tr {
+                                th { +"id" }
+                                th { +"message" }
+                            }
+                            for (fortune in result) {
+                                tr {
+                                    td { +fortune.id.toString() }
+                                    td { +fortune.message }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            get("/updates") {
+                val queries = call.queries()
+                val random = ThreadLocalRandom.current()
+                val result = transaction { getRandomWorldsAndUpdate(queries, random) }
+                call.respondText(json.encodeToString(result), ContentType.Application.Json)
+            }
+        }
+    }
+}

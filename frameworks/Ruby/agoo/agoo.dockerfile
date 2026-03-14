@@ -1,4 +1,4 @@
-FROM ruby:4.0-rc
+FROM ruby:4.0
 
 RUN apt-get update -q \
     && apt-get install --no-install-recommends -q -y \
@@ -20,6 +20,5 @@ COPY Gemfile* app.rb ./
 RUN bundle install --jobs=4
 
 EXPOSE 8080
-
 
 CMD AGOO_WORKER_COUNT=$(nproc) ruby app.rb

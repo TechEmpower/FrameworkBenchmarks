@@ -16,8 +16,6 @@ import views.fortunes;
 
 public class FortuneService implements Service, Handler {
 
-    private static final Fortune ADDITIONAL_FORTUNE = new Fortune(0, "Additional fortune added at request time.");
-
     private final DbRepository repository;
 
     public FortuneService(DbRepository repository) {
@@ -34,7 +32,7 @@ public class FortuneService implements Service, Handler {
         res.headers().contentType(MediaType.TEXT_HTML.withCharset(StandardCharsets.UTF_8.name()));
         repository.getFortunes()
                 .forSingle(fortuneList -> {
-                    fortuneList.add(ADDITIONAL_FORTUNE);
+                    fortuneList.add(new Fortune(0, "Additional fortune added at request time."));
                     fortuneList.sort(Comparator.comparing(Fortune::getMessage));
                     res.headers().contentType(MediaType.TEXT_HTML.withCharset(StandardCharsets.UTF_8.name()));
                     res.send(fortunes.template(fortuneList)

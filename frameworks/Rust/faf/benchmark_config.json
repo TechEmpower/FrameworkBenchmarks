@@ -5,7 +5,7 @@
          "default": {
             "plaintext_url": "/plaintext",
             "port": 8080,
-            "approach": "Realistic",
+            "approach": "Stripped",
             "classification": "Platform",
             "database": "None",
             "framework": "faf",

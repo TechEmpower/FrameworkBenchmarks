@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 
-  JsonApp = if defined?(Falcon) || defined?(Puma) || defined?(Agoo)
+  JsonApp = if defined?(Falcon) || defined?(Puma)
     ->(env) do
       [200,
        {
@@ -9,7 +11,7 @@ Rails.application.routes.draw do
          'Content-Type' => 'application/json',
          'Date' => Time.now.httpdate,
        },
-       [{ 'message' => 'Hello, World!' }.to_json]]
+       [JSON.generate({ 'message' => 'Hello, World!' })]]
     end
   else
     ->(env) do
@@ -18,11 +20,11 @@ Rails.application.routes.draw do
          'Server' => 'Rails',
          'Content-Type' => 'application/json'
        },
-       [{ 'message' => 'Hello, World!' }.to_json]]
+       [JSON.generate({ 'message' => 'Hello, World!' })]]
     end
   end
 
-  PlaintextApp = if defined?(Falcon) || defined?(Puma) || defined?(Agoo)
+  PlaintextApp = if defined?(Falcon) || defined?(Puma)
     ->(env) do
       [200,
        {

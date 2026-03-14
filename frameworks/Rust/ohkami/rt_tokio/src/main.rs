@@ -22,7 +22,7 @@ async fn serve<ServeFuture: Future>(
 }
 
 fn main() {
-    for _ in 0..(num_cpus::get() - 1/*for main thread*/) {
+    for _ in 0..(std::thread::available_parallelism().unwrap().get() - 1/*for main thread*/) {
         std::thread::spawn(|| {
             runtime().block_on(async {
                 serve(|listener| async {

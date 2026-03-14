@@ -5,23 +5,22 @@
 #[global_allocator]
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
-#[path = "db_unrealistic.rs"]
 mod db;
+mod db_unrealistic;
 mod ser;
 mod util;
 
 use std::io;
 
 use xitca_http::{
-    bytes::BufMut,
     h1::dispatcher_unreal::{Dispatcher, Request, Response},
     http::StatusCode,
 };
 use xitca_service::Service;
 
 use self::{
-    ser::Message,
-    util::{QueryParse, State},
+    ser::{HELLO, Message},
+    util::QueryParse,
 };
 
 fn main() -> io::Result<()> {
@@ -51,10 +50,10 @@ fn main() -> io::Result<()> {
                 socket.bind(addr)?;
                 let listener = socket.listen(1024)?;
 
-                let client = db::create().await.unwrap();
+                let client = db_unrealistic::Client::create().await.unwrap();
 
                 // unrealistic http dispatcher. no spec check. no security feature.
-                let service = Dispatcher::new(handler, State::new(client));
+                let service = Dispatcher::new(handler, client);
 
                 loop {
                     match listener.accept().await {
@@ -81,74 +80,60 @@ fn main() -> io::Result<()> {
     // need clean async shutdown will be leaked.
     worker(ids.pop())?;
     for handle in handle {
-        handle.join().unwrap()?;
+        let _ = handle.join().unwrap();
     }
 
     Ok(())
 }
 
-async fn handler<'h>(req: Request<'h, State<db::Client>>, res: Response<'h>) -> Response<'h, 3> {
+async fn handler<'h>(req: Request<'h, db_unrealistic::Client>, res: Response<'h>) -> Response<'h, 3> {
     // unrealistic due to no http method check
     match req.path {
         // unrealistic due to no dynamic path matching
         "/plaintext" => {
             // unrealistic due to no body streaming and no post processing. violating middleware feature of xitca-web
             res.status(StatusCode::OK)
+                // unrealistic due to no charset k/v pair
                 .header("content-type", "text/plain")
                 .header("server", "X")
-                // unrealistic content length header.
-                .header("content-length", "13")
-                .body_writer(|buf| buf.extend_from_slice(b"Hello, World!"))
+                .body(HELLO.as_bytes())
         }
-        "/json" => res
-            .status(StatusCode::OK)
-            .header("content-type", "application/json")
-            .header("server", "X")
-            // unrealistic content length header.
-            .header("content-length", "27")
-            // snoic-rs crate is realistic approach to json serializer.
-            // That said xitca-web by default utilize serde-json as serializer making it an unrealistic representation of framework performance
-            .body_writer(|buf| sonic_rs::to_writer(buf.writer(), &Message::new()).unwrap()),
+        "/json" => json_response(res, Message::HELLO),
 
         // all database related categories are unrealistic. please reference db_unrealistic module for detail.
         "/fortunes" => {
-            let fortunes = req.ctx.client.tell_fortune().await.unwrap().render_once().unwrap();
+            // unrealistic due to no error handling. any db/serialization error will cause process crash.
+            // the same goes for all following unwraps on database related functions.
+            let fortunes = req.ctx.fortunes().await.unwrap().render_once().unwrap();
             res.status(StatusCode::OK)
                 .header("content-type", "text/html; charset=utf-8")
                 .header("server", "X")
                 .body(fortunes.as_bytes())
         }
         "/db" => {
-            // unrealistic due to no error handling. any db/serialization error will cause process crash.
-            // the same goes for all following unwraps on database related functions.
-            let world = req.ctx.client.get_world().await.unwrap();
-            json_response(res, req.ctx, &world)
+            let world = req.ctx.db().await.unwrap();
+            json_response(res, &world)
         }
         p if p.starts_with("/q") => {
             let num = p["/queries?q=".len()..].parse_query();
-            let worlds = req.ctx.client.get_worlds(num).await.unwrap();
-            json_response(res, req.ctx, &worlds)
+            let worlds = req.ctx.queries(num).await.unwrap();
+            json_response(res, &worlds)
         }
         p if p.starts_with("/u") => {
             let num = p["/updates?q=".len()..].parse_query();
-            let worlds = req.ctx.client.update(num).await.unwrap();
-            json_response(res, req.ctx, &worlds)
+            let worlds = req.ctx.updates(num).await.unwrap();
+            json_response(res, &worlds)
         }
         _ => res.status(StatusCode::NOT_FOUND).header("server", "X").body(&[]),
     }
 }
 
-fn json_response<'r, DB, T>(res: Response<'r>, state: &State<DB>, val: &T) -> Response<'r, 3>
-where
-    T: serde_core::Serialize,
-{
-    let buf = &mut *state.write_buf.borrow_mut();
-    sonic_rs::to_writer(buf.writer(), val).unwrap();
-    let res = res
-        .status(StatusCode::OK)
+fn json_response<'r>(res: Response<'r>, val: &impl serde_core::Serialize) -> Response<'r, 3> {
+    // snoic-rs crate is realistic approach to json serializer.
+    // That said xitca-web by default utilize serde-json as serializer making it an unrealistic representation of framework performance
+    let buf = ser::json_serialize(val).unwrap();
+    res.status(StatusCode::OK)
         .header("content-type", "application/json")
         .header("server", "X")
-        .body(buf.as_ref());
-    buf.clear();
-    res
+        .body(buf.as_ref())
 }

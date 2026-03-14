@@ -1,16 +1,16 @@
 [package]
 name    = "framework_benchmarks"
-version = "0.24.0"
+version = "0.24.5"
 edition = "2024"
-authors = ["kanarus <kanarus786@gmail.com>"]
+authors = ["kanarus <mail@kanarus.dev>"]
 
 [dependencies]
 ohkami         = { version = "0.24" }
-tokio          = { optional = true, version = "1.47", features = ["rt"] }
+tokio          = { optional = true, version = "1.49", features = ["rt"] }
 tokio-postgres = { optional = true, version = "0.7" }
 yarte          = { optional = true, version = "0.15" }
 futures-util   = { optional = true, version = "0.3"  }
-rand           = { optional = true, version = "0.8", features = ["small_rng"] }
+rand           = { optional = true, version = "0.10" }
 
 [features]
 rt_tokio   = ["ohkami/rt_tokio", "tokio", "tokio-postgres", "yarte", "futures-util", "rand"]

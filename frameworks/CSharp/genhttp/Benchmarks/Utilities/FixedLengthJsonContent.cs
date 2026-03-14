@@ -8,13 +8,13 @@ namespace Benchmarks.Utilities;
 
 public sealed class FixedLengthJsonContent : IResponseContent
 {
-    private readonly MemoryStream _buffer = new();
+    private readonly MemoryStream _buffer = new(27);
 
     public ulong? Length => (ulong)_buffer.Length;
 
     public FixedLengthJsonContent(JsonResult result)
     {
-        JsonSerializer.SerializeAsync(_buffer, result);
+        JsonSerializer.Serialize(_buffer, result);
     }
     
     public ValueTask<ulong?> CalculateChecksumAsync() => throw new NotImplementedException();

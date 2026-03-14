@@ -16,7 +16,6 @@ except Exception:
 
 READ_ROW_SQL = 'SELECT "id", "randomnumber" FROM "world" WHERE id = $1'
 WRITE_ROW_SQL = 'UPDATE "world" SET "randomnumber"=$1 WHERE id=$2'
-ADDITIONAL_ROW = [0, "Additional fortune added at request time."]
 MAX_CONNECTIONS = 1900
 CORE_COUNT = multiprocessing.cpu_count()
 MAX_POOL_SIZE = max(1,int(os.getenv('MAX_POOL_SIZE', MAX_CONNECTIONS // CORE_COUNT)))
@@ -123,7 +122,7 @@ async def fortunes_test(request):
     async with db_pool.acquire() as db_conn:
         fortunes = await db_conn.fetch("SELECT * FROM Fortune")
 
-    fortunes.append(ADDITIONAL_ROW)
+    fortunes.append([0, "Additional fortune added at request time."])
     fortunes.sort(key=lambda row: row[1])
     data = fortune_template.render(fortunes=fortunes)
     return bs.html(data)

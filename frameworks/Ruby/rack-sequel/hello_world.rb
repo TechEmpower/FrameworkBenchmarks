@@ -1,4 +1,8 @@
 # frozen_string_literal: true
+require 'bundler/setup'
+Bundler.require(:default) # Load core modules
+
+require_relative 'db'
 require 'time'
 
 # Our Rack application to be executed by rackup
@@ -8,8 +12,8 @@ class HelloWorld
   ALL_IDS = ID_RANGE.to_a
   QUERIES_MIN = 1
   QUERIES_MAX = 500
+
   CONTENT_TYPE = 'Content-Type'
-  CONTENT_LENGTH = 'Content-Length'
   JSON_TYPE = 'application/json'
   HTML_TYPE = 'text/html; charset=utf-8'
   PLAINTEXT_TYPE = 'text/plain'
@@ -44,26 +48,26 @@ class HelloWorld
 
   def fortunes
     fortunes = Fortune.all
-    fortunes << Fortune.new(
-      id: 0,
-      message: 'Additional fortune added at request time.'
-    )
+
+    fortune = Fortune.new
+    fortune.id = 0
+    fortune.message = -"Additional fortune added at request time."
+    fortunes << fortune
+
     fortunes.sort_by!(&:message)
 
     html = String.new(<<~'HTML')
       <!DOCTYPE html>
       <html>
-      <head>
-        <title>Fortunes</title>
-      </head>
-
+        <head>
+          <title>Fortunes</title>
+        </head>
       <body>
-
-      <table>
-      <tr>
-        <th>id</th>
-        <th>message</th>
-      </tr>
+        <table>
+          <tr>
+            <th>id</th>
+            <th>message</th>
+          </tr>
     HTML
 
     fortunes.each do |fortune|
@@ -77,7 +81,6 @@ class HelloWorld
 
     html << <<~'HTML'
       </table>
-
       </body>
       </html>
     HTML
@@ -104,22 +107,22 @@ class HelloWorld
     case env['PATH_INFO']
     when '/json'
       # Test type 1: JSON serialization
-      respond JSON_TYPE, { message: 'Hello, World!' }.to_json
+      respond JSON_TYPE, JSON.generate({ message: -'Hello, World!' })
     when '/db'
       # Test type 2: Single database query
-      respond JSON_TYPE, db.to_json
+      respond JSON_TYPE, JSON.generate(db)
     when '/queries'
       # Test type 3: Multiple database queries
-      respond JSON_TYPE, queries(env).to_json
+      respond JSON_TYPE, JSON.generate(queries(env))
     when '/fortunes'
       # Test type 4: Fortunes
       respond HTML_TYPE, fortunes
     when '/updates'
       # Test type 5: Database updates
-      respond JSON_TYPE, updates(env).to_json
+      respond JSON_TYPE, JSON.generate(updates(env))
     when '/plaintext'
       # Test type 6: Plaintext
-      respond PLAINTEXT_TYPE, 'Hello, World!'
+      respond PLAINTEXT_TYPE, -'Hello, World!'
     end
   end
 
@@ -128,21 +131,21 @@ class HelloWorld
   def respond(content_type, body)
     [
       200,
-      headers(content_type, body),
+      headers(content_type),
       [body]
     ]
   end
 
   if defined?(Puma)
-    def headers(content_type, _)
+    def headers(content_type)
       {
         CONTENT_TYPE => content_type,
         SERVER => SERVER_STRING,
-        DATE => Time.now.utc.httpdate
+        DATE => Time.now.httpdate
       }
     end
   else
-    def headers(content_type, _)
+    def headers(content_type)
       {
         CONTENT_TYPE => content_type,
         SERVER => SERVER_STRING

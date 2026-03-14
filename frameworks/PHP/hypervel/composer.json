@@ -15,34 +15,13 @@
     "require": {
         "php": ">=8.2",
         "friendsofhyperf/tinker": "~3.1.0",
-        "hypervel/framework": "^0.2"
-    },
-    "require-dev": {
-        "fakerphp/faker": "^1.24.1",
-        "filp/whoops": "^2.15",
-        "friendsofphp/php-cs-fixer": "^3.57.2",
-        "hyperf/testing": "~3.1.0",
-        "hyperf/watcher": "~3.1.0",
-        "hypervel/devtool": "^0.2",
-        "mockery/mockery": "1.6.x-dev",
-        "nunomaduro/collision": "^8.5",
-        "phpstan/phpstan": "^1.11.5",
-        "phpunit/phpunit": "10.5.45",
-        "swoole/ide-helper": "~5.1.0"
+        "hypervel/framework": "^0.3"
     },
     "autoload": {
         "psr-4": {
             "App\\": "app/"
         },
         "files": []
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Tests\\": "tests/"
-        },
-        "files": [
-            "tests/helpers.php"
-        ]
     },
     "minimum-stability": "dev",
     "prefer-stable": true,

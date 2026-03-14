@@ -2,97 +2,58 @@
 
 # Our Rack application to be executed by rackup
 
-require_relative 'pg_db'
+if RUBY_PLATFORM == 'java'
+  require_relative 'db_jruby'
+else
+  require_relative 'db'
+end
 require_relative 'config/auto_tune'
 require 'rack'
 require 'json'
+require 'time'
 require 'erb'
 
-if RUBY_PLATFORM == 'java'
-  DEFAULT_DATABASE_URL = 'jdbc:postgresql://tfb-database/hello_world?user=benchmarkdbuser&password=benchmarkdbpass'
-else
-  DEFAULT_DATABASE_URL = 'postgresql://tfb-database/hello_world?user=benchmarkdbuser&password=benchmarkdbpass'
-end
+DATABASE_URL = 'postgresql://tfb-database/hello_world?user=benchmarkdbuser&password=benchmarkdbpass'
+$db = connect(DATABASE_URL)
 
 class HelloWorld
   QUERY_RANGE = (1..10_000).freeze # range of IDs in the Fortune DB
   ALL_IDS = QUERY_RANGE.to_a # enumeration of all the IDs in fortune DB
   MIN_QUERIES = 1 # min number of records that can be retrieved
   MAX_QUERIES = 500 # max number of records that can be retrieved
+
   CONTENT_TYPE = 'Content-Type'
-  CONTENT_LENGTH = 'Content-Length'
   JSON_TYPE = 'application/json'
   HTML_TYPE = 'text/html; charset=utf-8'
   PLAINTEXT_TYPE = 'text/plain'
   DATE = 'Date'
   SERVER = 'Server'
   SERVER_STRING = 'Rack'
-  TEMPLATE_PREFIX = '<!DOCTYPE html>
-<html>
-<head>
-  <title>Fortunes</title>
-</head>
-<body>
-  <table>
-    <tr>
-      <th>id</th>
-      <th>message</th>
-    </tr>'
-  TEMPLATE_POSTFIX = '</table>
-    </body>
-  </html>'
-
-  def initialize
-    if defined?(Puma)
-      max_connections = ENV.fetch('MAX_THREADS')
-    elsif defined?(Itsi)
-      require_relative 'config/auto_tune'
-      _num_workers, num_threads = auto_tune
-      max_connections = num_threads
-    else
-      max_connections = 512
-    end
-    @db = PgDb.new(DEFAULT_DATABASE_URL, max_connections)
-  end
-
-  def fortunes
-    fortunes = @db.select_fortunes
-    fortunes << { id: 0, message: 'Additional fortune added at request time.' }
-    fortunes.sort_by! { |item| item[:message] }
-    buffer = String.new
-    buffer << TEMPLATE_PREFIX
-
-    fortunes.each do |item|
-      buffer << "<tr><td>#{item[:id]}</td><td>#{ERB::Escape.html_escape(item[:message])}</td></tr>"
-    end
-    buffer << TEMPLATE_POSTFIX
-  end
 
   def call(env)
     case env['PATH_INFO']
     when '/json'
       # Test type 1: JSON serialization
       respond JSON_TYPE,
-              { message: 'Hello, World!' }.to_json
+        JSON.generate({ message: -'Hello, World!' })
     when '/db'
       # Test type 2: Single database query
-      respond JSON_TYPE, @db.select_random_world.to_json
+      id = random_id
+      respond JSON_TYPE, JSON.generate($db.with{ _1.select_world(id) })
     when '/queries'
       # Test type 3: Multiple database queries
-      params = Rack::Utils.parse_query(env['QUERY_STRING'])
-      queries = params['queries']
-      respond JSON_TYPE, @db.select_worlds(queries).to_json
+      queries = bounded_queries(env)
+      respond JSON_TYPE, JSON.generate(select_worlds(queries))
     when '/fortunes'
       # Test type 4: Fortunes
       respond HTML_TYPE, fortunes
     when '/updates'
       # Test type 5: Database updates
-      params = Rack::Utils.parse_query(env['QUERY_STRING'])
-      queries = params['queries']
-      respond JSON_TYPE, @db.update_worlds(queries).to_json
+      queries = bounded_queries(env)
+      respond JSON_TYPE, JSON.generate(update_worlds(queries))
     when '/plaintext'
       # Test type 6: Plaintext
-      respond PLAINTEXT_TYPE, 'Hello, World!'
+      respond PLAINTEXT_TYPE, -'Hello, World!'
     end
   end
 
@@ -101,25 +62,91 @@ class HelloWorld
   def respond(content_type, body)
     [
       200,
-      headers(content_type, body),
+      headers(content_type),
       [body]
     ]
   end
 
-  if defined?(Falcon) || defined?(Puma)
-    def headers(content_type, _)
+  if defined?(Puma) || defined?(Falcon)
+    def headers(content_type)
       {
         CONTENT_TYPE => content_type,
         SERVER => SERVER_STRING,
-        DATE => Time.now.utc.httpdate
+        DATE => Time.now.httpdate
       }
     end
   else
-    def headers(content_type, _)
+    def headers(content_type)
       {
         CONTENT_TYPE => content_type,
         SERVER => SERVER_STRING
       }
     end
+  end
+
+  def fortunes
+    fortunes = $db.with(&:select_fortunes).map(&:to_h)
+    fortunes << { 'id' => 0, 'message' => -'Additional fortune added at request time.' }
+    fortunes.sort_by! { |item| item['message'] }
+
+    html = String.new(<<~'HTML')
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Fortunes</title>
+      </head>
+
+      <body>
+
+      <table>
+      <tr>
+        <th>id</th>
+        <th>message</th>
+      </tr>
+    HTML
+
+    fortunes.each do |item|
+      html << "<tr><td>#{item['id']}</td><td>#{ERB::Escape.html_escape(item['message'])}</td></tr>"
+    end
+
+    html << <<~'HTML'
+      </table>
+      </body>
+      </html>
+    HTML
+  end
+
+  def update_worlds(count)
+    results = select_worlds(count)
+    ids = []
+    sql = String.new("UPDATE world SET randomnumber = CASE id ")
+    results.each do |r|
+      r['randomnumber'] = random_id
+      ids << r['id']
+      sql << "when #{r['id']} then #{r['randomnumber']} "
+    end
+    sql << "ELSE randomnumber END WHERE id IN ( #{ids.join(',')})"
+    $db.with{ _1.exec(sql) }
+    results
+  end
+
+  def select_worlds(count)
+    ids = ALL_IDS.sample(count)
+    $db.with do |conn|
+      ids.map do |id|
+        conn.select_world(id)
+      end
+    end
+  end
+
+  def random_id
+    Random.rand(QUERY_RANGE)
+  end
+
+  def bounded_queries(env)
+    params = Rack::Utils.parse_query(env['QUERY_STRING'])
+
+    queries = params['queries'].to_i
+    queries.clamp(MIN_QUERIES, MAX_QUERIES)
   end
 end

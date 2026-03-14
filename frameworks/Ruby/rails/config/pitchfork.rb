@@ -1,9 +1,6 @@
 # frozen_string_literal: true
+require 'etc'
 
-require_relative 'auto_tune'
-
-num_workers, = auto_tune
-
-worker_processes num_workers
+worker_processes (Etc.nprocessors * 1.5).to_i
 
 listen "/tmp/.sock", :backlog => 4096

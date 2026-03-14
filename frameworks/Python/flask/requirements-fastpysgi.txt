@@ -1,0 +1,2 @@
+-r requirements.txt
+fastpysgi==0.2

@@ -73,7 +73,6 @@ module View =
             ]
         ] |> compileDoc
 
-    let extra = { id = 0; message = "Additional fortune added at request time." }
     let FortuneComparer = { new IComparer<Fortune> with
         member self.Compare(a,b) = String.CompareOrdinal(a.message, b.message)
 }
@@ -98,7 +97,7 @@ let main args =
 
                 let fortunes =
                     let xs = data.AsList()
-                    xs.Add View.extra
+                    xs.Add { id = 0; message = "Additional fortune added at request time." }
                     xs.Sort View.FortuneComparer
                     xs
 

@@ -19,7 +19,8 @@
         "database_os": "Linux",
         "display_name": "isocket-nio",
         "notes": "",
-        "versus": "isocket-nio"
+        "versus": "isocket-nio",
+        "tags": [ "broken" ]
       }
     }
   ]

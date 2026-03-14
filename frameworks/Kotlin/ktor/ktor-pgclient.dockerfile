@@ -12,4 +12,4 @@ COPY --from=build /app/build/libs/ktor-pgclient.jar ktor-pgclient.jar
 
 EXPOSE 9090
 
-CMD ["java", "-server","-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AlwaysPreTouch", "-jar", "ktor-pgclient.jar"]
+CMD ["java", "-server","-XX:+UseNUMA", "-XX:+UseParallelGC", "-XX:+AlwaysPreTouch", "-Djava.lang.Integer.IntegerCache.high=10000", "-jar", "ktor-pgclient.jar"]

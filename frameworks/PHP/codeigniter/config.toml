@@ -1,12 +1,30 @@
 [framework]
-name = "codeigniter"
+name = "CodeIgniter"
+authors = ["CodeIgniter Foundation <admin@codeigniter.com>"]
+github = "https://github.com/codeigniter4/CodeIgniter4"
 
 [main]
-urls.plaintext = "/index.php/bench/plaintext"
-urls.json = "/index.php/bench/json"
-urls.db = "/index.php/bench/db"
-urls.query = "/index.php/bench/dbquery/"
-urls.fortune = "/index.php/bench/fortunes"
+urls.plaintext = "/plaintext"
+urls.json = "/json"
+urls.db = "/db"
+urls.query = "/queries/"
+urls.update = "/update/"
+urls.fortune = "/fortunes"
+approach = "Realistic"
+classification = "Fullstack"
+database = "MySQL"
+database_os = "Linux"
+os = "Linux"
+orm = "Full"
+platform = "FPM/FastCGI"
+webserver = "nginx"
+versus = "php"
+
+[raw]
+urls.db = "/raw/db"
+urls.query = "/raw/queries/"
+urls.update = "/raw/update/"
+urls.fortune = "/raw/fortunes"
 approach = "Realistic"
 classification = "Fullstack"
 database = "MySQL"

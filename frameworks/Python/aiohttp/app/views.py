@@ -21,8 +21,6 @@ else:
             content_type="application/json",
         )
 
-ADDITIONAL_FORTUNE_ORM = Fortune(id=0, message='Additional fortune added at request time.')
-ADDITIONAL_FORTUNE_ROW = {'id': 0, 'message': 'Additional fortune added at request time.'}
 READ_ROW_SQL = 'SELECT "randomnumber", "id" FROM "world" WHERE id = $1'
 READ_SELECT_ORM = select(World.randomnumber).where(World.id == bindparam("id"))
 READ_FORTUNES_ORM = select(Fortune.id, Fortune.message)
@@ -112,7 +110,7 @@ async def fortunes(request):
     async with request.app['db_session']() as sess:
         ret = await sess.execute(READ_FORTUNES_ORM)
         fortunes = ret.all()
-    fortunes.append(ADDITIONAL_FORTUNE_ORM)
+    fortunes.append(Fortune(id=0, message='Additional fortune added at request time.'))
     fortunes.sort(key=sort_fortunes_orm)
     content = template.render(fortunes=fortunes)
     return Response(text=content, content_type='text/html')
@@ -124,7 +122,7 @@ async def fortunes_raw(request):
     """
     async with request.app['pg'].acquire() as conn:
         fortunes = await conn.fetch('SELECT * FROM Fortune')
-    fortunes.append(ADDITIONAL_FORTUNE_ROW)
+    fortunes.append({'id': 0, 'message': 'Additional fortune added at request time.'})
     fortunes.sort(key=sort_fortunes_raw)
     content = template.render(fortunes=fortunes)
     return Response(text=content, content_type='text/html')

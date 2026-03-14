@@ -1,4 +1,4 @@
-SPRAPP https://github.com/cloudxaas/sprapp/
+SPRAPP https://github.com/cloudxaas/gosprapp
 
 ### PLAINTEXT
 

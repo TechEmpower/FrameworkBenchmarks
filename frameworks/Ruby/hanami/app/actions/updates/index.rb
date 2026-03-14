@@ -16,7 +16,7 @@ module HelloWorld
             world_repo.update_random_number(id)
           end
           response.format = :json
-          response.body = worlds.to_json
+          response.body = JSON.generate(worlds)
         end
 
         private

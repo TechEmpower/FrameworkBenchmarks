@@ -1,5 +1,5 @@
+import { CacheInterceptor } from '@nestjs/cache-manager';
 import {
-  CacheInterceptor,
   Controller,
   Get,
   Header,
@@ -28,7 +28,7 @@ export class SqlController {
 
   @Get('queries')
   @Header('Server', 'NestJS')
-  getMultiQueries(@Query('queries') queries) {
+  getMultiQueries(@Query('queries') queries?: string) {
     return this.sqlService.multiQueries(queries);
   }
 
@@ -41,7 +41,7 @@ export class SqlController {
 
   @Get('updates')
   @Header('Server', 'NestJS')
-  getUpdates(@Query('queries') queries) {
+  getUpdates(@Query('queries') queries?: string) {
     return this.sqlService.updates(queries);
   }
 
@@ -55,7 +55,7 @@ export class SqlController {
   @Get('/cached-worlds')
   @Header('Server', 'NestJS')
   @UseInterceptors(CacheInterceptor)
-  getCachedWorlds(@Query('count') count) {
+  getCachedWorlds(@Query('count') count?: string) {
     return this.sqlService.cachedWorlds(count);
   }
 }

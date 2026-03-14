@@ -1,4 +1,4 @@
-FROM maven:3.9.0-eclipse-temurin-17 as maven
+FROM maven:3.9.11-eclipse-temurin-25 as maven
 WORKDIR /vertx-web
 COPY scripts scripts
 COPY src src
@@ -23,7 +23,7 @@ CMD java \
     -Dio.netty.buffer.checkBounds=false               \
     -Dio.netty.buffer.checkAccessible=false           \
     -jar                                              \
-    target/vertx-web-benchmark-4.3.8-fat.jar          \
+    target/vertx-web-benchmark-5.0.5-fat.jar          \
     --instances                                       \
     `grep --count ^processor /proc/cpuinfo`           \
     --conf                                            \

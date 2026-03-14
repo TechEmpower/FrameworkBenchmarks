@@ -1,10 +1,7 @@
 # frozen_string_literal: true
 
-require 'agoo'
-require 'connection_pool'
-require 'oj'
-require 'pg'
-require 'rack'
+require 'bundler/setup'
+Bundler.require(:default) # Load core modules
 
 $pool = ConnectionPool.new(size: 1, timeout: 5) do
   conn = PG::Connection.new({
@@ -14,7 +11,7 @@ $pool = ConnectionPool.new(size: 1, timeout: 5) do
     password: 'benchmarkdbpass'
   })
   conn.set_error_verbosity(PG::PQERRORS_VERBOSE)
-  conn.prepare('select_world', 'SELECT * FROM world WHERE id = $1')
+  conn.prepare('select_world', 'SELECT id, randomNumber FROM world WHERE id = $1')
   conn.prepare('select_fortune', 'SELECT id, message FROM fortune')
   conn
 end
@@ -114,18 +111,15 @@ class DbHandler < BaseHandler
   end
 end
 
-
 class FortunesHandler < BaseHandler
   def self.call(_req)
-    f_1 = $pool.with do |conn|
+    fortunes = $pool.with do |conn|
       conn.exec_prepared('select_fortune', [])
-    end
+    end.map(&:to_h)
+    fortunes << { 'id' => 0, 'message' => 'Additional fortune added at request time.' }
+    fortunes.sort_by! { |fortune| fortune['message'] }
 
-    f_2 = f_1.map(&:to_h).
-            append({ 'id' => '0', 'message' => 'Additional fortune added at request time.' }).
-              sort_by { |item| item['message'] }.
-                map { |f| "<tr><td>#{ f['id'] }</td><td>#{ ERB::Escape.html_escape(f['message']) }</td></tr>" }.
-                  join
+    rows = fortunes.map { |fortune| "<tr><td>#{fortune['id']}</td><td>#{ERB::Escape.html_escape(fortune['message'])}</td></tr>" }.join
 
     html_response(<<-HTML)
       <!DOCTYPE html>
@@ -139,7 +133,7 @@ class FortunesHandler < BaseHandler
               <th>id</th>
               <th>message</th>
             </tr>
-            #{ f_2 }
+            #{rows}
           </table>
         </body>
       </html>

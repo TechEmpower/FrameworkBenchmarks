@@ -1,0 +1,26 @@
+{
+  "framework": "aeronet",
+  "maintainers": [ "sjanel" ],
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "None",
+        "framework": "aeronet",
+        "language": "C++",
+        "orm": "Micro",
+        "platform": "Linux",
+        "webserver": "aeronet",
+        "os": "Linux",
+        "database_os": "Linux",
+        "dockerfile": "aeronet.dockerfile",
+        "notes": "Modern C++23 HTTP server with minimal overhead; JSON via glaze",
+        "versus": ""
+      }
+    }
+  ]
+}

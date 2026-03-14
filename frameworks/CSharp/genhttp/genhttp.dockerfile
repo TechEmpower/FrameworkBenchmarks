@@ -1,8 +1,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS build
 WORKDIR /source
 
-ENV GENHTTP_ENGINE_NAME=INTERNAL
-ENV GENHTTP_ENGINE_PACKAGE=GenHTTP.Core
+ENV GENHTTP_ENGINE_NAME=Internal
 
 # copy csproj and restore as distinct layers
 COPY Benchmarks/*.csproj .
@@ -17,13 +16,12 @@ FROM mcr.microsoft.com/dotnet/runtime-deps:10.0-alpine
 
 ENV DOTNET_GCDynamicAdaptationMode=0 \
     DOTNET_EnableDiagnostics=0 \
-    COMPlus_EnableDiagnostics=0 \
-    COMPlus_DbgEnableMiniDump=0 \
-    COMPlus_DbgEnableMiniDumpCollection=0 \
-    COMPlus_DbgMiniDumpType=0 \
-    DOTNET_TieredPGO=0 \
-    DOTNET_TC_QuickJitForLoops=1 \
-    DOTNET_TC_QuickJit=1    
+    DOTNET_TieredPGO=1 \
+    DOTNET_TC_QuickJitForLoops=0 \
+    DOTNET_ReadyToRun=0 \
+    DOTNET_TieredCompilation=0 \
+    DOTNET_gcServer=1 \
+    DB_CONNECTION="Server=tfb-database;Database=hello_world;User Id=benchmarkdbuser;Password=benchmarkdbpass;SSL Mode=Disable;Maximum Pool Size=18;Enlist=false;Max Auto Prepare=4;Multiplexing=true;Write Coalescing Buffer Threshold Bytes=1000;"    
 
 WORKDIR /app
 COPY --from=build /app .

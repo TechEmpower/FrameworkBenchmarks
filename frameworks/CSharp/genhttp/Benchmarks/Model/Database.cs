@@ -1,15 +1,17 @@
-﻿namespace Benchmarks.Model;
+namespace Benchmarks.Model;
+
+using Npgsql;
 
 public static class Database
 {
-    public static readonly DatabaseContextPool<DatabaseContext> NoTrackingPool;
+    
+    public static readonly NpgsqlDataSource DataSource = BuildDataSource();
 
-    public static readonly DatabaseContextPool<DatabaseContext> TrackingPool;
-
-    static Database()
+    private static NpgsqlDataSource BuildDataSource()
     {
-        NoTrackingPool = new DatabaseContextPool<DatabaseContext>(factory: DatabaseContext.CreateNoTracking, maxSize: 512);
-        TrackingPool = new DatabaseContextPool<DatabaseContext>(factory: DatabaseContext.CreateTracking, maxSize: 512);
+        var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION");
+        
+        return new NpgsqlSlimDataSourceBuilder(connectionString).EnableArrays().Build();
     }
-
+    
 }

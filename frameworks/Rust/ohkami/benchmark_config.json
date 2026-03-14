@@ -1,5 +1,6 @@
 {
     "framework": "ohkami",
+    "maintainers": ["kanarus"],
     "tests": [
         {
             "default": {

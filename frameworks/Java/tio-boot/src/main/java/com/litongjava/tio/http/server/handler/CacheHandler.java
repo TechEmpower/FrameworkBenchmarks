@@ -14,11 +14,12 @@ import com.litongjava.tio.http.common.HttpRequest;
 import com.litongjava.tio.http.common.HttpResponse;
 import com.litongjava.tio.http.server.utils.RandomUtils;
 
-public class CacheHandler {
+public class CacheHandler implements HttpRequestHandler {
   // private Logger log = LoggerFactory.getLogger(this.getClass());
   String sql = "SELECT id, randomNumber FROM world WHERE id = ?";
 
-  public HttpResponse cachedQuery(HttpRequest request) {
+  @Override
+  public HttpResponse handle(HttpRequest request) throws Exception {
     String queries = request.getParam("queries");
 
     int queryCount = RandomUtils.parseQueryCount(queries);

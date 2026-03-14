@@ -1,4 +1,4 @@
-ARG UBUNTU_VERSION=25.10
+ARG UBUNTU_VERSION=26.04
 
 ARG H2O_APP_PREFIX=/opt/h2o-app
 
@@ -35,13 +35,14 @@ RUN apt-get install \
       systemtap-sdt-dev
 
 RUN echo "[timing] Building H2O: $(date)"
-ARG H2O_VERSION=3b9b6a53cac8bcc6a25fb28df81ad295fc5f9402
+ARG H2O_VERSION=ccea64b17ade832753db933658047ede9f31a380
 
 WORKDIR /tmp/h2o-build
 RUN curl -LSs "https://github.com/h2o/h2o/archive/${H2O_VERSION}.tar.gz" | \
       tar --strip-components=1 -xz && \
     cmake \
       -B build \
+      -DCMAKE_BUILD_TYPE=Release \
       -DCMAKE_C_FLAGS="-flto=auto -march=native -mtune=native" \
       -DWITH_MRUBY=on \
       -S . && \

@@ -9,6 +9,6 @@ micronaut {
 }
 
 dependencies {
-    implementation("io.vertx:vertx-pg-client:5.0.2")
-    implementation('com.ongres.scram:client')
+    implementation("io.vertx:vertx-pg-client:5.0.7")
+    implementation('com.ongres.scram:scram-client:3.2')
 }

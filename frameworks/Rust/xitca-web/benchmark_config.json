@@ -1,5 +1,6 @@
 {
   "framework": "xitca-web",
+  "maintainers": ["fakeshadow"],
   "tests": [
     {
       "default": {
@@ -43,6 +44,28 @@
         "os": "Linux",
         "database_os": "Linux",
         "display_name": "xitca-web [barebone]",
+        "notes": "",
+        "versus": ""
+      },
+      "compio": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "db_url": "/db",
+        "fortune_url": "/fortunes",
+        "query_url": "/queries?q=",
+        "update_url": "/updates?q=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Platform",
+        "database": "Postgres",
+        "framework": "xitca-web",
+        "language": "Rust",
+        "orm": "Raw",
+        "platform": "None",
+        "webserver": "xitca-server",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "xitca-web [compio]",
         "notes": "",
         "versus": ""
       },

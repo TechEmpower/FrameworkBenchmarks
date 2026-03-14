@@ -1,5 +1,6 @@
 {
   "framework": "$NAME",
+  "maintainers": [],
   "tests": [
     {
       "default": {
@@ -19,7 +20,8 @@
         "database_os": "Linux",
         "display_name": "$DISPLAY_NAME",
         "notes": "",
-        "versus": "$VERSUS"
+        "versus": "$VERSUS",
+        "tags": []
       }
     }
   ]

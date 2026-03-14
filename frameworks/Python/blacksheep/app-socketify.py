@@ -12,7 +12,6 @@ import psqlpy
 from psqlpy import ConnectionPoolBuilder
 READ_ROW_SQL = 'SELECT "randomnumber" FROM "world" WHERE id = $1'
 WRITE_ROW_SQL = 'UPDATE "world" SET "randomnumber"=$1 WHERE id=$2'
-ADDITIONAL_ROW = [0, "Additional fortune added at request time."]
 CORE_COUNT = multiprocessing.cpu_count()
 MAX_DB_CONNECTIONS = 2000
 
@@ -97,7 +96,7 @@ async def fortunes_test(request):
         fortunes_fetch = await connection.fetch("SELECT * FROM Fortune")
         # fortunes = fortunes_fetch.result()
         fortunes = [list(item.values()) for item in fortunes_fetch.result()]
-    fortunes.append(ADDITIONAL_ROW)
+    fortunes.append([0, "Additional fortune added at request time."])
     fortunes.sort(key=lambda row: row[1])
     data = fortune_template.render(fortunes=fortunes)
     return bs.html(data)

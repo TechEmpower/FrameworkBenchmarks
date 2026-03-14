@@ -1,4 +1,4 @@
-FROM perl:latest
+FROM perl:5.42
 
 RUN apt-get update -yqq && apt-get install -yqq nginx
 RUN cpanm --notest --no-man-page Plack JSON::XS Unix::Processors DBI DBD::MariaDB

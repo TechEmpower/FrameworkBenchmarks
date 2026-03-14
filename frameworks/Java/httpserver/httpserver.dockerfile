@@ -1,4 +1,4 @@
-FROM maven:3-eclipse-temurin-24-alpine as maven
+FROM maven:3-eclipse-temurin-25-alpine as maven
 WORKDIR /httpserver
 COPY pom.xml pom.xml
 COPY src src
@@ -10,4 +10,4 @@ COPY --from=maven /httpserver/target/httpserver-1.0-jar-with-dependencies.jar ap
 
 EXPOSE 8080
 
-CMD ["java", "-server", "-XX:MaxRAMPercentage=70", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-jar", "app.jar"]
+CMD ["java", "-server", "-XX:MaxRAMPercentage=70", "-XX:+UseNUMA", "-XX:+UseParallelGC", "-Dsun.net.httpserver.nodelay=true", "-jar", "app.jar"]

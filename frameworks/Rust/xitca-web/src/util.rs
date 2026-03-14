@@ -1,28 +1,32 @@
-#![allow(dead_code)]
+use rand::{
+    RngExt, SeedableRng,
+    distr::Uniform,
+    rngs::{SmallRng, SysRng},
+};
 
-use rand::{Rng, SeedableRng, distr::Uniform, rngs::SmallRng};
-use xitca_http::{bytes::BytesMut, http::header::HeaderValue};
+#[cfg(feature = "pg")]
+pub use parse::QueryParse;
 
-pub trait QueryParse {
-    fn parse_query(self) -> u16;
-}
+#[cfg(feature = "pg")]
+mod parse {
+    pub trait QueryParse {
+        fn parse_query(self) -> u16;
+    }
 
-impl QueryParse for Option<&str> {
-    fn parse_query(self) -> u16 {
-        self.and_then(|q| q.find('q').map(|pos| q.split_at(pos + 2).1.parse_query()))
-            .unwrap_or(1)
+    impl QueryParse for Option<&str> {
+        fn parse_query(self) -> u16 {
+            self.and_then(|q| q.find('q').map(|pos| q.split_at(pos + 2).1.parse_query()))
+                .unwrap_or(1)
+        }
+    }
+
+    impl QueryParse for &str {
+        fn parse_query(self) -> u16 {
+            use atoi::FromRadix10;
+            u16::from_radix_10(self.as_bytes()).0.clamp(1, 500)
+        }
     }
 }
-
-impl QueryParse for &str {
-    fn parse_query(self) -> u16 {
-        use atoi::FromRadix10;
-        u16::from_radix_10(self.as_bytes()).0.clamp(1, 500)
-    }
-}
-
-#[allow(clippy::declare_interior_mutable_const)]
-pub const SERVER_HEADER_VALUE: HeaderValue = HeaderValue::from_static("X");
 
 pub type Error = Box<dyn std::error::Error + Send + Sync + 'static>;
 
@@ -30,25 +34,11 @@ pub type HandleResult<T> = Result<T, Error>;
 
 pub const DB_URL: &str = "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world";
 
-pub struct State<DB> {
-    pub client: DB,
-    pub write_buf: core::cell::RefCell<BytesMut>,
-}
-
-impl<DB> State<DB> {
-    pub fn new(client: DB) -> Self {
-        Self {
-            client,
-            write_buf: Default::default(),
-        }
-    }
-}
-
 pub struct Rand(SmallRng);
 
 impl Default for Rand {
     fn default() -> Self {
-        Self(SmallRng::from_os_rng())
+        Self(SmallRng::try_from_rng(&mut SysRng).unwrap())
     }
 }
 

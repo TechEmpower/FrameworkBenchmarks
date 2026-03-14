@@ -20,7 +20,7 @@ namespace TouchSocketHttpPlatform;
 internal static class DateHeader
 {
     private const int dateTimeRLength = 29;
-    private const int prefixLength = 6; // "Date: ".Length is 6 in bytes for ASCII
+    private const int prefixLength = 8; // "\r\nDate: ".Length is 8 in bytes for ASCII
     private const int suffixIndex = dateTimeRLength + prefixLength;
 
     // Wed, 14 Mar 2018 14:20:00 GMT
@@ -35,7 +35,7 @@ internal static class DateHeader
 
     static DateHeader()
     {
-        var utf8 = "Date: "u8;
+        var utf8 = "\r\nDate: "u8;
 
         utf8.CopyTo(s_headerBytesMaster);
         utf8.CopyTo(s_headerBytesScratch);

@@ -19,7 +19,8 @@
         "database_os": "Linux",
         "display_name": "solon",
         "notes": "",
-        "versus": "None"
+        "versus": "None",
+        "tags": ["broken"]
       }
     }
   ]

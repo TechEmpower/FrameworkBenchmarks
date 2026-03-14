@@ -47,7 +47,7 @@
 			"display_name": "ffead-cpp [v]",
 			"notes": "",
 			"versus": "",
-			"tags": []
+			"tags": ["broken"]
 		},
 		"v-picov-raw-profiled": {
 			"json_url": "/t3/j",
@@ -71,7 +71,7 @@
 			"display_name": "ffead-cpp [v-prof]",
 			"notes": "",
 			"versus": "",
-			"tags": []
+			"tags": ["broken"]
 		},
 		"v-picov-raw-clibpqb-profiled": {
 			"json_url": "/t3/j",
@@ -116,7 +116,7 @@
 			"display_name": "ffead-cpp [pg-raw-prof]",
 			"notes": "memory profiled",
 			"versus": "",
-			"tags": []
+			"tags": ["broken"]
 		},
 		"postgresql-raw-clibpqb-profiled": {
 			"db_url": "/t3/d",
@@ -158,7 +158,7 @@
 			"display_name": "ffead-cpp [pg-raw-async-prof]",
 			"notes": "async memory profiled",
 			"versus": "",
-			"tags": []
+			"tags": ["broken"]
 		},
 		"postgresql-raw-async-pool-profiled": {
 			"db_url": "/t4/d",
@@ -179,7 +179,7 @@
 			"display_name": "ffead-cpp [pg-raw-async-prof-pool]",
 			"notes": "async memory profiled",
 			"versus": "",
-			"tags": []
+			"tags": ["broken"]
 		},
 		"postgresql-raw-async-pool-profiled-m": {
 			"query_url": "/t4/quem?queries=",
@@ -261,7 +261,7 @@
 			"display_name": "ffead-cpp [pg-raw-async-qw-prof]",
 			"notes": "async memory profiled",
 			"versus": "",
-			"tags": []
+			"tags": ["broken"]
 		},
 		"postgresql-raw-async-qw-clibpqb-profiled": {
 			"db_url": "/t5/d",

@@ -1,0 +1,53 @@
+using System;
+using System.Data.Common;
+
+namespace appMpower.Orm.Data
+{
+   public static class DbFactory
+   {
+      public static string ConnectionString;
+      public static DbProviderFactory Instance;
+
+      public static System.Data.Common.DbConnection GetConnection(string connectionString = null)
+      {
+          System.Data.Common.DbConnection dbConnection = Instance.CreateConnection();
+          dbConnection.ConnectionString = connectionString ?? ConnectionString;
+
+          return dbConnection; 
+      }
+
+      public static void SetConnectionString()
+      {
+#if ODBC
+   #if MYSQL
+         ConnectionString = "Driver={MariaDB};Server=tfb-database;Database=hello_world;Uid=benchmarkdbuser;Pwd=benchmarkdbpass;Pooling=false;OPTIONS=67108864;FLAG_FORWARD_CURSOR=1;sslmode=DISABLED;CharSet=utf8;"; 
+         Console.WriteLine("hey odbc mysql");
+   #else
+         ConnectionString = "Driver={PostgreSQL};Server=tfb-database;Database=hello_world;Uid=benchmarkdbuser;Pwd=benchmarkdbpass;UseServerSidePrepare=1;Pooling=false;sslmode=disable";
+         Console.WriteLine("hey odbc postgresql");
+   #endif
+#else
+   #if MYSQL
+         ConnectionString = "Server=tfb-database;Database=hello_world;User Id=benchmarkdbuser;Password=benchmarkdbpass;Maximum Pool Size=1024;SslMode=None;ConnectionReset=false;ConnectionIdlePingTime=900;ConnectionIdleTimeout=0;AutoEnlist=false;DefaultCommandTimeout=0;ConnectionTimeout=0;IgnorePrepare=false;";
+         Console.WriteLine("hey ado mysql");
+   #else
+         ConnectionString = "Server=tfb-database;Database=hello_world;User Id=benchmarkdbuser;Password=benchmarkdbpass;Maximum Pool Size=1024;NoResetOnClose=true;Enlist=false;Max Auto Prepare=3;";
+         Console.WriteLine("hey ado postgresql");
+   #endif
+#endif
+      }
+
+      public static void SetInstance()
+      {
+#if ODBC
+            Instance = System.Data.Odbc.OdbcFactory.Instance;
+#else
+   #if MYSQL
+               Instance = MySqlConnector.MySqlConnectorFactory.Instance;
+   #elif POSTGRESQL
+               Instance = Npgsql.NpgsqlFactory.Instance; 
+   #endif
+#endif
+      }
+   }
+}

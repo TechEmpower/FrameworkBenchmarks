@@ -1,5 +1,5 @@
 production:
-  adapter: mysql2
+  adapter: postgresql
   encoding: utf8
   host: tfb-database
   database: hello_world
@@ -7,3 +7,4 @@ production:
   password: benchmarkdbpass
   pool: <%= ENV.fetch('MAX_THREADS') %>
   timeout: 5000
+  encoding: unicode

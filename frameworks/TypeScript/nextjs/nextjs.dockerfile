@@ -1,4 +1,4 @@
-FROM node:22-slim
+FROM node:24-slim
 
 ENV NEXT_TELEMETRY_DISABLED="1"
 ENV DATABASE_URL="postgres://benchmarkdbuser:benchmarkdbpass@tfb-database/hello_world"

@@ -58,11 +58,8 @@ java \
   -Xms2G \
   -Xmx2G \
   -XX:+AlwaysPreTouch \
-  -XX:+UseZGC \
-  -XX:+ZUncommit \
+  -XX:+UseParallelGC  \
   -XX:+DisableExplicitGC \
-  -XX:+UseLargePages \
-  -XX:+UseStringDeduplication \
   -XX:+EnableDynamicAgentLoading \
   -XX:InitialCodeCacheSize=512m \
   -XX:ReservedCodeCacheSize=512m \
@@ -83,7 +80,7 @@ java \
   -Dio.netty.buffer.checkAccessible=false \
   -Dio.netty.recycler.maxCapacity.default=0 \
   -Dio.netty.maxDirectMemory=0 \
-  "-Dtfb.hasDB=$HAS_DB" \
+  "-Dtfb.type=basic" \
   "-Dtfb.pgHostOverride=0.0.0.0" \
   -jar "$JAR_PATH" &
 

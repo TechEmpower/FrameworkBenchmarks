@@ -20,7 +20,7 @@ packages:
     hackage: mysql-haskell-1.1.7
 snapshots:
 - completed:
-    sha256: 468e1afa06cd069e57554f10e84fdf1ac5e8893e3eefc503ef837e2449f7e60c
-    size: 726310
-    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/24/11.yaml
-  original: lts-24.11
+    sha256: b7dc388c75a62a8a2f1ac753f3bfc3f43a3a2cb58d8a920272cc9a049ff76c62
+    size: 726792
+    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/24/29.yaml
+  original: lts-24.29

@@ -6,7 +6,7 @@ import infra.persistence.Id;
 import infra.persistence.Table;
 
 @Table("fortune")
-public class Fortune {
+public class Fortune implements Comparable<Fortune> {
 
   @Id
   private Integer id;
@@ -50,6 +50,11 @@ public class Fortune {
   @Override
   public int hashCode() {
     return Objects.hash(id, message);
+  }
+
+  @Override
+  public int compareTo(final Fortune other) {
+    return message.compareTo(other.message);
   }
 
 }

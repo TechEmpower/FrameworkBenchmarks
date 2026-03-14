@@ -1,4 +1,4 @@
-// swift-tools-version:5.1
+// swift-tools-version:5.10
 import PackageDescription
 
 let package = Package(
@@ -6,16 +6,14 @@ let package = Package(
     platforms: [
         .macOS(.v10_15)
     ],
-    products: [
-        .executable(name: "app", targets: ["App"])
-    ],
     dependencies: [
-        .package(url: "https://github.com/apple/swift-nio.git", from: "2.0.0"),
+        .package(url: "https://github.com/apple/swift-nio.git", from: "2.90.0"),
     ],
     targets: [
-        .target(name: "App", dependencies: [
-            "NIO",
-            "NIOHTTP1",
+        .executableTarget(name: "App", dependencies: [
+            .product(name: "NIOCore", package: "swift-nio"),
+            .product(name: "NIOHTTP1", package: "swift-nio"),
+            .product(name: "NIOPosix", package: "swift-nio")
         ], path: "Sources")
     ]
 )

@@ -6,6 +6,7 @@ import io.vertx.core.buffer.Buffer
 import io.vertx.core.http.HttpServerRequest
 
 class DefaultHandler : AbstractHandler() {
+
     fun plaintext(req: HttpServerRequest): Future<Void> = req
         .response().apply {
             headers().setAll(PeriodicResolver.plaintext)

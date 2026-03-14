@@ -85,7 +85,7 @@ class Cookie extends BaseConfig
      * (empty string) means default SameSite attribute set by browsers (`Lax`)
      * will be set on cookies. If set to `None`, `$secure` must also be set.
      *
-     * @phpstan-var 'None'|'Lax'|'Strict'|''
+     * @var ''|'Lax'|'None'|'Strict'
      */
     public string $samesite = 'Lax';
 

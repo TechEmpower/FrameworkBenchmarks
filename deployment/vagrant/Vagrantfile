@@ -13,6 +13,8 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.network "private_network", ip: "172.16.0.16"
+  config.vm.network "forwarded_port", guest: 5432, host: 5432
+  config.vm.network "forwarded_port", guest: 3306, host: 3306
 
   TCP_PORTS = [2001, 3000, 8000, 8080, 8081, 8082, 8085, 9000]
 

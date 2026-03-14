@@ -8,24 +8,24 @@ This sets up testing using [Ktor](https://ktor.io/), with a couple of async Post
 ## Test URLs
 ### JSON
 
-http://localhost:8080/json
+http://localhost:9090/json
 
 ### PLAINTEXT
 
-http://localhost:8080/plaintext
+http://localhost:9090/plaintext
 
 ### DB
 
-http://localhost:8080/db
+http://localhost:9090/db
 
 ### QUERY
 
-http://localhost:8080/query?queries=
+http://localhost:9090/query?queries=
 
 ### UPDATE
 
-http://localhost:8080/update?queries=
+http://localhost:9090/update?queries=
 
 ### FORTUNES
 
-http://localhost:8080/fortunes
+http://localhost:9090/fortunes
