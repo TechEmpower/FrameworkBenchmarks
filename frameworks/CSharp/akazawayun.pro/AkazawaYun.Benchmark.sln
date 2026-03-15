@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AkazawaYun.Benchmark.Platfo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AkazawaYun.Benchmark.Core", "src\AkazawaYun.Benchmark.Core\AkazawaYun.Benchmark.Core.csproj", "{2956CEE4-699F-7365-D58D-B017FB03C347}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AkazawaYun.Benchmark.Aot", "src\AkazawaYun.Benchmark.Aot\AkazawaYun.Benchmark.Aot.csproj", "{EC353110-B325-A04F-2EF6-0FC6F6415F84}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{2956CEE4-699F-7365-D58D-B017FB03C347}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2956CEE4-699F-7365-D58D-B017FB03C347}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2956CEE4-699F-7365-D58D-B017FB03C347}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC353110-B325-A04F-2EF6-0FC6F6415F84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC353110-B325-A04F-2EF6-0FC6F6415F84}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC353110-B325-A04F-2EF6-0FC6F6415F84}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC353110-B325-A04F-2EF6-0FC6F6415F84}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

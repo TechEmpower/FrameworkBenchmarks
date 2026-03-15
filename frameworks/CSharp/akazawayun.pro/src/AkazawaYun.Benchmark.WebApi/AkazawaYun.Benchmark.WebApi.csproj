@@ -5,8 +5,8 @@
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <EnableSourceGenerator>true</EnableSourceGenerator>
     <PublishAot>false</PublishAot>
+    <EnableSourceGenerator>true</EnableSourceGenerator>
   </PropertyGroup>
 
   <PropertyGroup>
