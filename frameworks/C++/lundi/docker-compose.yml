@@ -1,0 +1,17 @@
+version: "3"
+services:
+  lundi:
+    build:
+      context: .
+      dockerfile: lundi.dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - DBHOST=${DBHOST}
+      - THREADS=${MAX_THREADS}
+    networks:
+      - net
+
+networks:
+  net:
+    driver: bridge
