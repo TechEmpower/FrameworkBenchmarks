@@ -1,0 +1,25 @@
+[package]
+name = "gnosis-uring"
+version = "0.1.0"
+edition = "2021"
+description = "Topology-driven HTTP server: four primitives (fork/race/fold/vent) mapped to io_uring"
+license = "MPL-2.0"
+
+[[bin]]
+name = "gnosis-uring"
+path = "src/main.rs"
+
+[dependencies]
+libc = "0.2"
+flate2 = "1"
+brotli = "7"
+
+[target.'cfg(target_os = "linux")'.dependencies]
+io-uring = "0.7"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+strip = true
+panic = "abort"

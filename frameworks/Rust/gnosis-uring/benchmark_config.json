@@ -1,0 +1,21 @@
+{
+  "framework": "gnosis-uring",
+  "tests": [{
+    "default": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "language": "Rust",
+      "platform": "gnosis-uring",
+      "webserver": "gnosis-uring",
+      "os": "Linux",
+      "database_os": "Linux",
+      "database": "None",
+      "display_name": "gnosis-uring",
+      "notes": "Topology-driven server: four primitives (fork/race/fold/vent) mapped to io_uring. Per-chunk Laminar codec racing.",
+      "versus": "may-minihttp"
+    }
+  }]
+}
