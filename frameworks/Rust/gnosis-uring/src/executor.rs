@@ -15,10 +15,67 @@
 //! no dynamic routing, no hash lookups.
 
 use std::os::raw::c_int;
+use std::sync::atomic::{AtomicU64, Ordering};
 
 use crate::http;
 use crate::laminar;
 use crate::cache::FileCache;
+
+/// Cached HTTP Date header — updated every second.
+static DATE_EPOCH: AtomicU64 = AtomicU64::new(0);
+static mut DATE_BUF: [u8; 64] = [0u8; 64];
+static mut DATE_LEN: usize = 0;
+
+/// Get current HTTP Date string, cached per-second.
+pub fn http_date() -> &'static str {
+    use std::time::{SystemTime, UNIX_EPOCH};
+    let now = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs();
+    let cached = DATE_EPOCH.load(Ordering::Relaxed);
+    if now != cached {
+        DATE_EPOCH.store(now, Ordering::Relaxed);
+        // Format: "Mon, 17 Mar 2026 14:30:00 GMT"
+        let secs = now;
+        let days = secs / 86400;
+        let time_of_day = secs % 86400;
+        let hours = time_of_day / 3600;
+        let minutes = (time_of_day % 3600) / 60;
+        let seconds = time_of_day % 60;
+
+        // Day of week (Jan 1 1970 was Thursday = 4)
+        let dow = ((days + 4) % 7) as usize;
+        let dow_names = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+        // Date from days since epoch
+        let (year, month, day) = days_to_ymd(days as i64);
+        let month_names = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+
+        let s = format!("{}, {:02} {} {:04} {:02}:{:02}:{:02} GMT",
+            dow_names[dow], day, month_names[(month - 1) as usize], year, hours, minutes, seconds);
+
+        unsafe {
+            let len = s.len().min(64);
+            DATE_BUF[..len].copy_from_slice(&s.as_bytes()[..len]);
+            DATE_LEN = len;
+        }
+    }
+    unsafe { std::str::from_utf8_unchecked(&DATE_BUF[..DATE_LEN]) }
+}
+
+/// Convert days since Unix epoch to (year, month, day).
+fn days_to_ymd(days: i64) -> (i64, i64, i64) {
+    // Algorithm from Howard Hinnant
+    let z = days + 719468;
+    let era = if z >= 0 { z } else { z - 146096 } / 146097;
+    let doe = (z - era * 146097) as u64;
+    let yoe = (doe - doe/1461 + doe/36524 - doe/146096) / 365;
+    let y = yoe as i64 + era * 400;
+    let doy = doe - (365*yoe + yoe/4 - yoe/100);
+    let mp = (5*doy + 2) / 153;
+    let d = doy - (153*mp + 2)/5 + 1;
+    let m = if mp < 10 { mp + 3 } else { mp - 9 };
+    let y = if m <= 2 { y + 1 } else { y };
+    (y, m as i64, d as i64)
+}
 
 /// Per-connection execution context.
 ///
@@ -34,7 +91,7 @@ impl ConnContext {
     pub fn new(socket_fd: c_int) -> Self {
         Self {
             socket_fd,
-            read_buf: vec![0u8; 8192],
+            read_buf: vec![0u8; 65536],
             read_len: 0,
         }
     }
@@ -56,44 +113,56 @@ impl Executor {
         }
     }
 
-    /// Handle a complete HTTP request on a connection.
+    /// Handle all pipelined HTTP requests from a single read.
     ///
-    /// This is the topology walk:
-    ///   ParseHTTP → FORK(cache, mmap, disk) → RACE → LaminarSend
+    /// LAMINAR HTTP pipelining:
+    ///   FORK: parse N requests from buffer
+    ///   PROCESS: build response for each
+    ///   FOLD: concatenate responses, send as one write
     ///
     /// Returns true to keep the connection alive, false to close.
     pub fn handle_request(&self, ctx: &mut ConnContext) -> bool {
-        // ── Node: ParseHTTP ──────────────────────────────────────
-        // Copy path and keep_alive out before dropping the borrow on ctx
-        let (path_owned, keep_alive) = {
-            let (request, _consumed) = match http::parse_request(&ctx.read_buf[..ctx.read_len]) {
-                Some(r) => r,
-                None => {
-                    Self::send_response(ctx.socket_fd, http::NOT_FOUND_RESPONSE);
-                    return false;
-                }
-            };
+        let buf = &ctx.read_buf[..ctx.read_len];
 
-            // Only handle GET
-            if request.method != b"GET" {
-                Self::send_response(ctx.socket_fd, http::NOT_FOUND_RESPONSE);
-                return request.keep_alive;
-            }
+        // FORK: parse all pipelined requests
+        let (requests, _consumed) = http::parse_pipelined(buf);
 
-            let path = std::str::from_utf8(request.path).unwrap_or("/").to_string();
-            (path, request.keep_alive)
-        };
+        if requests.is_empty() {
+            Self::send_response(ctx.socket_fd, http::NOT_FOUND_RESPONSE);
+            return false;
+        }
 
-        let path = path_owned.as_str();
+        let keep_alive = requests.last().map(|(_, ka)| *ka).unwrap_or(false);
 
+        if requests.len() == 1 {
+            // Single request — fast path
+            let path = std::str::from_utf8(&requests[0].0).unwrap_or("/");
+            return self.handle_single_request(ctx, path, keep_alive);
+        }
+
+        // Multiple pipelined requests — FOLD all responses into one write
+        let mut batch = Vec::with_capacity(requests.len() * 128);
+        for (path_bytes, _) in &requests {
+            let path = std::str::from_utf8(path_bytes).unwrap_or("/");
+            let resp = self.build_single_response(path);
+            batch.extend_from_slice(&resp);
+        }
+        Self::send_response(ctx.socket_fd, &batch);
+        keep_alive
+    }
+
+    /// Handle a single request (fast path, no batch alloc).
+    fn handle_single_request(&self, ctx: &mut ConnContext, path: &str, keep_alive: bool) -> bool {
         // ── TechEmpower routes (no file I/O) ─────────────────────
         match path {
             "/plaintext" => {
-                Self::send_response(ctx.socket_fd, http::PLAINTEXT_RESPONSE);
+                let resp = http::build_plaintext_response(http_date());
+                Self::send_response(ctx.socket_fd, &resp);
                 return keep_alive;
             }
             "/json" => {
-                Self::send_response(ctx.socket_fd, http::JSON_RESPONSE);
+                let resp = http::build_json_response(http_date());
+                Self::send_response(ctx.socket_fd, &resp);
                 return keep_alive;
             }
             _ => {}
@@ -108,7 +177,7 @@ impl Executor {
             return self.serve_cached(ctx, &entry, file_path, keep_alive);
         }
 
-        // Arm 2/3: Disk read (mmap and read race — on macOS both go through VFS)
+        // Arm 2/3: Disk read
         match std::fs::read(&full_path) {
             Ok(data) => {
                 let content_type = mime_type(file_path);
@@ -123,6 +192,42 @@ impl Executor {
                 Self::send_response(ctx.socket_fd, http::NOT_FOUND_RESPONSE);
                 keep_alive
             }
+        }
+    }
+
+    /// Build a single response as bytes (for pipelined batching).
+    fn build_single_response(&self, path: &str) -> Vec<u8> {
+        match path {
+            "/plaintext" => http::build_plaintext_response(http_date()),
+            "/json" => http::build_json_response(http_date()),
+            _ => {
+                let file_path = if path == "/" { "/index.html" } else { path };
+                let full_path = format!("{}{}", self.root, file_path);
+
+                if let Some(entry) = self.cache.get(file_path) {
+                    return self.build_laminar_response(&entry.data, &entry.content_type);
+                }
+
+                match std::fs::read(&full_path) {
+                    Ok(data) => {
+                        let ct = mime_type(file_path);
+                        self.cache.put(file_path.to_string(), data.clone(), ct.to_string());
+                        self.build_laminar_response(&data, ct)
+                    }
+                    Err(_) => http::NOT_FOUND_RESPONSE.to_vec(),
+                }
+            }
+        }
+    }
+
+    /// Build a Laminar-compressed response as bytes.
+    fn build_laminar_response(&self, data: &[u8], content_type: &str) -> Vec<u8> {
+        let result = laminar::race_chunk(data);
+        match result.codec {
+            laminar::CodecId::Identity => http::build_response(&result.data, content_type),
+            laminar::CodecId::Gzip => http::build_compressed_response(&result.data, content_type, "gzip"),
+            laminar::CodecId::Brotli => http::build_compressed_response(&result.data, content_type, "br"),
+            laminar::CodecId::Deflate => http::build_compressed_response(&result.data, content_type, "deflate"),
         }
     }
 

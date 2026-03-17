@@ -30,7 +30,8 @@ pub mod linux {
     const RING_SIZE: u32 = 4096;
 
     /// Read buffer per connection.
-    const READ_BUF_SIZE: usize = 8192;
+    /// 64KB read buffer — fits ~256 pipelined HTTP requests.
+    const READ_BUF_SIZE: usize = 65536;
 
     // ── CQE user_data encoding ───────────────────────────────────
     //
@@ -327,9 +328,19 @@ pub mod linux {
             self.push_read(id)
         }
 
-        /// Read completed — parse HTTP, execute topology, submit write.
+        /// Read completed — parse ALL pipelined HTTP requests, batch responses.
+        ///
+        /// LAMINAR HTTP pipelining:
+        ///   1. FORK: parse N requests from one read buffer
+        ///   2. PROCESS: build response for each request
+        ///   3. FOLD: concatenate all responses into one write buffer
+        ///   4. Submit one io_uring Send for the entire batch
+        ///
+        /// TechEmpower's wrk sends 16-256 pipelined requests per connection.
+        /// Without pipelining: 1 req/read → 1 write → 1 CQE cycle per request.
+        /// With pipelining: N reqs/read → 1 write → 1 CQE cycle for N requests.
+        /// Throughput multiplied by pipeline depth.
         fn on_read(&mut self, id: u32, nbytes: usize) -> std::io::Result<()> {
-            // Build response outside the borrow on self.conns
             let (response, keep_alive) = {
                 let conn = match self.conns.get(&id) {
                     Some(c) => c,
@@ -337,18 +348,35 @@ pub mod linux {
                 };
 
                 let buf = &conn.read_buf[..nbytes];
-                match http::parse_request(buf) {
-                    Some((req, _)) => {
-                        let ka = req.keep_alive;
-                        let path = std::str::from_utf8(req.path).unwrap_or("/");
-                        let resp = self.build_response(path);
-                        (resp, ka)
+
+                // Parse ALL pipelined requests (FORK)
+                let (requests, _consumed) = http::parse_pipelined(buf);
+
+                if requests.is_empty() {
+                    // No complete request found
+                    (http::NOT_FOUND_RESPONSE.to_vec(), false)
+                } else {
+                    // Track keep-alive from last request in pipeline
+                    let ka = requests.last().map(|(_, ka)| *ka).unwrap_or(false);
+
+                    if requests.len() == 1 {
+                        // Single request — fast path (no concat needed)
+                        let path = std::str::from_utf8(&requests[0].0).unwrap_or("/");
+                        (self.build_response(path), ka)
+                    } else {
+                        // Multiple pipelined requests — FOLD responses into one buffer
+                        let mut batch = Vec::with_capacity(requests.len() * 128);
+                        for (path_bytes, _) in &requests {
+                            let path = std::str::from_utf8(path_bytes).unwrap_or("/");
+                            let resp = self.build_response(path);
+                            batch.extend_from_slice(&resp);
+                        }
+                        (batch, ka)
                     }
-                    None => (http::NOT_FOUND_RESPONSE.to_vec(), false),
                 }
             };
 
-            // Store response in conn and submit write
+            // Store batched response and submit single write
             if let Some(conn) = self.conns.get_mut(&id) {
                 conn.keep_alive = keep_alive;
                 conn.write_buf = Some(Pin::new(response.into_boxed_slice()));
@@ -409,8 +437,8 @@ pub mod linux {
         fn build_response(&self, path: &str) -> Vec<u8> {
             match path {
                 // TechEmpower hot paths — pre-built responses, zero alloc
-                "/plaintext" => http::PLAINTEXT_RESPONSE.to_vec(),
-                "/json" => http::JSON_RESPONSE.to_vec(),
+                "/plaintext" => http::build_plaintext_response(crate::executor::http_date()),
+                "/json" => http::build_json_response(crate::executor::http_date()),
 
                 _ => {
                     let file_path = if path == "/" { "/index.html" } else { path };
