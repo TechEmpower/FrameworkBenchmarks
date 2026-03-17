@@ -1,0 +1,21 @@
+{
+  "framework": "x-gnosis",
+  "tests": [{
+    "default": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "language": "TypeScript",
+      "flavor": "bun",
+      "platform": "bun",
+      "webserver": "x-gnosis",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "x-gnosis",
+      "notes": "nginx-compatible Aeon Flow server with fork/race/fold topology scheduling",
+      "versus": "bun"
+    }
+  }]
+}
