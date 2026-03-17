@@ -81,9 +81,10 @@ pub const NOT_FOUND_RESPONSE: &[u8] = b"HTTP/1.1 404 Not Found\r\nContent-Length
 pub fn build_plaintext_response(date: &str) -> Vec<u8> {
     let body = b"Hello, World!";
     let content_length = body.len(); // 13, computed not hardcoded
+    let mut itoa_buf = itoa::Buffer::new();
     let mut resp = Vec::with_capacity(160);
     resp.extend_from_slice(b"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: ");
-    resp.extend_from_slice(content_length.to_string().as_bytes());
+    resp.extend_from_slice(itoa_buf.format(content_length).as_bytes());
     resp.extend_from_slice(b"\r\nServer: gnosis-uring\r\nDate: ");
     resp.extend_from_slice(date.as_bytes());
     resp.extend_from_slice(b"\r\n\r\n");
@@ -102,9 +103,10 @@ pub fn build_json_response(date: &str) -> Vec<u8> {
     let message = "Hello, World!";
     let json_body = format!("{{\"message\":\"{}\"}}", message);
     let content_length = json_body.len(); // 27, computed from serialized object
+    let mut itoa_buf = itoa::Buffer::new();
     let mut resp = Vec::with_capacity(192);
     resp.extend_from_slice(b"HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: ");
-    resp.extend_from_slice(content_length.to_string().as_bytes());
+    resp.extend_from_slice(itoa_buf.format(content_length).as_bytes());
     resp.extend_from_slice(b"\r\nServer: gnosis-uring\r\nDate: ");
     resp.extend_from_slice(date.as_bytes());
     resp.extend_from_slice(b"\r\n\r\n");
@@ -114,11 +116,12 @@ pub fn build_json_response(date: &str) -> Vec<u8> {
 
 /// Build a 200 OK response with the given body and content type.
 pub fn build_response(body: &[u8], content_type: &str) -> Vec<u8> {
+    let mut itoa_buf = itoa::Buffer::new();
     let mut resp = Vec::with_capacity(256 + body.len());
     resp.extend_from_slice(b"HTTP/1.1 200 OK\r\nContent-Type: ");
     resp.extend_from_slice(content_type.as_bytes());
     resp.extend_from_slice(b"\r\nContent-Length: ");
-    resp.extend_from_slice(body.len().to_string().as_bytes());
+    resp.extend_from_slice(itoa_buf.format(body.len()).as_bytes());
     resp.extend_from_slice(b"\r\nServer: gnosis-uring\r\n\r\n");
     resp.extend_from_slice(body);
     resp
@@ -126,13 +129,14 @@ pub fn build_response(body: &[u8], content_type: &str) -> Vec<u8> {
 
 /// Build a 200 OK response with pre-compressed body and encoding header.
 pub fn build_compressed_response(body: &[u8], content_type: &str, encoding: &str) -> Vec<u8> {
+    let mut itoa_buf = itoa::Buffer::new();
     let mut resp = Vec::with_capacity(256 + body.len());
     resp.extend_from_slice(b"HTTP/1.1 200 OK\r\nContent-Type: ");
     resp.extend_from_slice(content_type.as_bytes());
     resp.extend_from_slice(b"\r\nContent-Encoding: ");
     resp.extend_from_slice(encoding.as_bytes());
     resp.extend_from_slice(b"\r\nContent-Length: ");
-    resp.extend_from_slice(body.len().to_string().as_bytes());
+    resp.extend_from_slice(itoa_buf.format(body.len()).as_bytes());
     resp.extend_from_slice(b"\r\nServer: gnosis-uring\r\n\r\n");
     resp.extend_from_slice(body);
     resp

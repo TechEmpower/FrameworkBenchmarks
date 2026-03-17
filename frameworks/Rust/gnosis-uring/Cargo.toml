@@ -10,6 +10,7 @@ name = "gnosis-uring"
 path = "src/main.rs"
 
 [dependencies]
+itoa = "1"
 libc = "0.2"
 flate2 = "1"
 brotli = "7"
