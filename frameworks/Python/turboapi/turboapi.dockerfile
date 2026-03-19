@@ -16,7 +16,8 @@ ENV PATH="/venv/bin:$PATH" VIRTUAL_ENV="/venv"
 
 WORKDIR /turboapi
 
-# Clone repos
+# Bust Docker cache for git clone
+ARG CACHEBUST=1
 RUN git clone --depth 1 --branch main https://github.com/justrach/turboAPI.git . && \
     git clone --depth 1 https://github.com/justrach/dhi.git /dhi
 
