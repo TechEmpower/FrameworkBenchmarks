@@ -1,9 +1,11 @@
 FROM ubuntu:24.04 AS builder
 
-ENV WEB_FRAMEWORK_SDK=/opt/WebFrameworkLibrary
+ENV DEBIAN_FRONTEND=noninteractive
+ENV PIP_BREAK_SYSTEM_PACKAGES=1
 
 RUN apt update
-RUN apt install -y gcc g++ cmake git unzip zip wget ninja-build uuid-dev python3-dev
+RUN apt install -y gcc g++ cmake git unzip zip wget ninja-build uuid-dev python3-dev python3-pip python3-venv
+RUN python3 -m pip install build
 
 WORKDIR /opt
 
@@ -22,17 +24,19 @@ RUN cmake --install .
 
 FROM ubuntu:24.04 AS deploy
 
+ENV DEBIAN_FRONTEND=noninteractive
 ENV PIP_BREAK_SYSTEM_PACKAGES=1
+ENV LD_LIBRARY_PATH=/opt/WebFrameworkLibrary
 
 RUN apt update
 RUN apt install -y python3-dev python3-pip
 
-COPY --from=builder /opt/WebFrameworkLibrary ./
-COPY benchmark/ ./benchmark
+COPY --from=builder /opt/WebFrameworkLibrary/ /opt/WebFrameworkLibrary
+COPY benchmark/ /opt/benchmark
 
-RUN python3 -m pip install ./WebFrameworkLibrary/api/python_api/dist/*.whl
+RUN python3 -m pip install /opt/WebFrameworkLibrary/api/python_api/dist/*.whl
 
-WORKDIR benchmark
+WORKDIR /opt/benchmark
 
 EXPOSE 8080
 ENTRYPOINT ["python3", "main.py"]
