@@ -7,7 +7,7 @@
   "WebFramework": {
     "assetsPath": "assets",
     "templatesPath": "templates",
-    "webServerType": "threadPool",
+    "webServerType": "multiThreaded",
     "settingsPaths": [
        "web.json" 
     ],

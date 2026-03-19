@@ -31,6 +31,8 @@ RUN cmake --install .
 
 FROM ubuntu:24.04 AS deploy
 
+ENV WEB_FRAMEWORK_SDK=/opt/WebFrameworkLibrary
+
 COPY --from=builder /opt/app ./
 
 EXPOSE 8080

@@ -31,7 +31,7 @@ target_include_directories(
 	include
 )
 
-list(APPEND CMAKE_MODULE_PATH /opt/WebFrameworkLibrary)
+list(APPEND CMAKE_MODULE_PATH $ENV{WEB_FRAMEWORK_SDK})
 
 find_package(WebFramework REQUIRED)
 
