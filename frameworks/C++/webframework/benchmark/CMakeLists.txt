@@ -17,7 +17,12 @@ add_executable(
 	src/CachedQueries.cpp
 )
 
-if (WIN32)
+if (UNIX)
+	target_link_options(
+		${PROJECT_NAME} PRIVATE
+		-rdynamic
+	)
+elseif (WIN32)
 	add_definitions(-DNOMINMAX)
 endif()
 
