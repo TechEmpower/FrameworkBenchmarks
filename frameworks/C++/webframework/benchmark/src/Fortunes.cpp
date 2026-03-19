@@ -66,4 +66,6 @@ namespace executor
 
 		response.setBody(std::format(htmlData, result));
 	}
+
+	DEFINE_EXECUTOR(Fortunes)
 }

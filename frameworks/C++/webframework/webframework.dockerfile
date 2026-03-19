@@ -34,4 +34,4 @@ FROM ubuntu:24.04 AS deploy
 COPY --from=builder /opt/app ./
 
 EXPOSE 8080
-CMD ./benchmark
+CMD LD_LIBRARY_PATH=$(pwd) ./benchmark
