@@ -1,11 +1,13 @@
 FROM ubuntu:24.04 AS builder
 
+ENV WEB_FRAMEWORK_SDK=/opt/WebFrameworkLibrary
+
 RUN apt update
 RUN apt install -y gcc g++ cmake git unzip zip wget ninja-build uuid-dev
 
 WORKDIR /opt
 
-RUN git clone https://github.com/LazyPanda07/WebFramework -b v3.3.0 --recursive
+RUN git clone https://github.com/LazyPanda07/WebFramework -b v3.3.1 --recursive
 COPY benchmark/ ./benchmark
 
 WORKDIR /opt/WebFramework
@@ -30,8 +32,6 @@ RUN cmake --build . -j
 RUN cmake --install .
 
 FROM ubuntu:24.04 AS deploy
-
-ENV WEB_FRAMEWORK_SDK=/opt/WebFrameworkLibrary
 
 COPY --from=builder /opt/app ./
 

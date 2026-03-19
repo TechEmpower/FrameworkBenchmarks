@@ -1,0 +1,28 @@
+{
+  "framework": "webframework_cxx",
+  "maintainers": [],
+  "tests": [
+    {
+      "default": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Fullstack",
+        "database": "None",
+        "framework": "WebFramework_CXX",
+        "language": "C++",
+        "flavor": "None",
+        "orm": "None",
+        "platform": "None",
+        "webserver": "None",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "WebFramework_CXX",
+        "notes": "",
+        "versus": "None",
+        "tags": []
+      }
+    }
+  ]
+}
