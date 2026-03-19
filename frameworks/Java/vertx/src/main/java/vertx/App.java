@@ -111,7 +111,7 @@ public class App extends VerticleBase implements Handler<HttpServerRequest> {
         return boxedRnd;
     }
 
-    static Integer primitiveRandomWorldNumber() {
+    static int primitiveRandomWorldNumber() {
         final int rndValue = ThreadLocalRandom.current().nextInt(1, 10001);
         return rndValue;
     }
