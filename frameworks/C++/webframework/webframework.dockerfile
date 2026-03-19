@@ -31,9 +31,6 @@ RUN cmake --install .
 
 FROM ubuntu:24.04 AS deploy
 
-RUN apt update
-RUN apt install -y redis-server
-
 COPY --from=builder /opt/app ./
 
 EXPOSE 8080

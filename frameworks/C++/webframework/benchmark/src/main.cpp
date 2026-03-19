@@ -4,10 +4,6 @@
 
 int main(int argc, char** argv) try
 {
-#ifndef _WIN32
-	std::system("redis-server --port 10010 --requirepass password");
-#endif
-
 	framework::utility::initializeWebFramework();
 
 	framework::WebFramework server("config.json");

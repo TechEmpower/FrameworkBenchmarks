@@ -14,19 +14,10 @@
     "loadSources": [
       "current"
     ],
-    "databases": [
-      "sqlite",
-      "redis"
-    ],
-    "defaultAssetsPath": "WebFrameworkAssets",
-    "HTTPS": {
-      "useHTTPS": false,
-      "pathToCertificate": "certificates/cert.pem",
-      "pathToKey": "certificates/key.pem"
-    }
+    "defaultAssetsPath": "WebFrameworkAssets"
   },
   "Logging": {
-    "usingLogging": true,
+    "usingLogging": false,
     "dateFormat": "DMY",
     "logFileSize": 134217728
   },
