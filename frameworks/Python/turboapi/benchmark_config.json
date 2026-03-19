@@ -1,0 +1,24 @@
+{
+  "framework": "turboapi",
+  "tests": [{
+    "default": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Micro",
+      "database": "None",
+      "framework": "turboapi",
+      "language": "Python",
+      "flavor": "Python3",
+      "orm": "None",
+      "platform": "None",
+      "webserver": "Zig",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "TurboAPI [zig]",
+      "notes": "Python 3.14t free-threaded + Zig HTTP core.",
+      "versus": "fastapi"
+    }
+  }]
+}
