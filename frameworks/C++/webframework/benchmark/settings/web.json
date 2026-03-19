@@ -1,0 +1,38 @@
+{
+  "$schema": "https://raw.githubusercontent.com/LazyPanda07/WebFramework/refs/heads/main/schemas/executors_schema.json",
+  "PlainText": {
+    "route": "plaintext",
+    "loadType": "initialization",
+    "api": "cxx"
+  },
+  "Json": {
+    "route": "json",
+    "loadType": "initialization",
+    "api": "cxx"
+  },
+  "Database": {
+    "route": "db",
+    "loadType": "initialization",
+    "api": "cxx"
+  },
+  "Queries": {
+    "route": "queries",
+    "loadType": "initialization",
+    "api": "cxx"
+  },
+  "Updates": {
+    "route": "updates",
+    "loadType": "initialization",
+    "api": "cxx"
+  },
+  "Fortunes": {
+    "route": "fortunes",
+    "loadType": "initialization",
+    "api": "cxx"
+  },
+  "CachedQueries": {
+    "route": "cached-queries",
+    "loadType": "initialization",
+    "api": "cxx"
+  }
+}
