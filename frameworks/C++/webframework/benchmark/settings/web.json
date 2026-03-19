@@ -9,10 +9,5 @@
     "route": "json",
     "loadType": "initialization",
     "api": "cxx"
-  },
-  "Fortunes": {
-    "route": "fortunes",
-    "loadType": "initialization",
-    "api": "cxx"
   }
 }
