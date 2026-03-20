@@ -70,6 +70,29 @@
         "notes": "avaje-jex using Jetty",
         "display_name": "avaje-jex-jetty",
         "versus": "jetty"
+      },
+      "grizzly": {
+        "json_url": "/json",
+        "plaintext_url": "/plaintext",
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
+        "fortune_url": "/fortunes",
+        "update_url": "/updates?queries=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "framework": "avaje-jex",
+        "language": "Java",
+        "flavor": "None",
+        "platform": "Grizzly",
+        "database": "Postgres",
+        "database_os": "Linux",
+        "orm": "Raw",
+        "webserver": "None",
+        "os": "Linux",
+        "notes": "avaje-jex using Grizzly",
+        "display_name": "avaje-jex-grizzly",
+        "versus": "grizzly"
       }
     }
   ]
