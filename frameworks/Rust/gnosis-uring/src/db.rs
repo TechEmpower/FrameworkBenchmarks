@@ -24,7 +24,7 @@ pub struct Fortune {
 
 /// Database connection with cannon-style pipelined queries.
 pub struct DbConn {
-    pg: PgWire,
+    pub pg: PgWire,
     pub rng: WyRand,
 }
 

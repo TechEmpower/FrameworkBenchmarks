@@ -105,6 +105,7 @@ pub struct Executor {
     pub port: u16,
     db: Option<db::DbConn>,
     db_cache: Option<db::WorldCache>,
+    json_buf: Vec<u8>, // reusable JSON serialization buffer
 }
 
 impl Executor {
@@ -115,6 +116,7 @@ impl Executor {
             port,
             db: None,
             db_cache: None,
+            json_buf: Vec::with_capacity(256),
         }
     }
 
@@ -162,13 +164,65 @@ impl Executor {
             return self.handle_single_request(ctx, path, keep_alive);
         }
 
-        // Multiple pipelined requests — FOLD all responses into one write
-        let mut batch = Vec::with_capacity(requests.len() * 128);
-        for (path_bytes, _) in &requests {
-            let path = std::str::from_utf8(path_bytes).unwrap_or("/");
-            let resp = self.build_single_response(path);
-            batch.extend_from_slice(&resp);
+        // Multiple pipelined requests — TOPOLOGY ROTATION
+        //
+        // Instead of N sequential PG round-trips, we:
+        //   1. FORK: classify all requests, collect /db IDs
+        //   2. CANNON: pipeline all /db queries to PG in one write
+        //   3. FOLD: build HTTP responses in original order, inserting PG results
+        //
+        // This rotates the blockage point: instead of blocking N times on PG,
+        // we block ONCE for all N queries.
+
+        let date = http_date();
+        let paths: Vec<&str> = requests.iter()
+            .map(|(p, _)| std::str::from_utf8(p).unwrap_or("/"))
+            .collect();
+
+        // Collect all /db request indices and generate their IDs
+        let mut db_indices = Vec::new();
+        let mut db_ids = Vec::new();
+        for (i, &path) in paths.iter().enumerate() {
+            if path == "/db" {
+                db_indices.push(i);
+            }
         }
+
+        // CANNON: pipeline all /db queries in one PG round-trip
+        let db_results = if !db_indices.is_empty() {
+            let conn = self.ensure_db();
+            for _ in 0..db_indices.len() {
+                db_ids.push(conn.rand_id());
+            }
+            conn.pg.query_worlds_pipelined(&db_ids)
+        } else {
+            Vec::new()
+        };
+
+        // FOLD: build all HTTP responses in order
+        let mut batch = Vec::with_capacity(requests.len() * 192);
+        let mut db_result_idx = 0;
+
+        for (i, &path) in paths.iter().enumerate() {
+            match path {
+                "/plaintext" => batch.extend_from_slice(&http::build_plaintext_response(date)),
+                "/json" => batch.extend_from_slice(&http::build_json_response(date)),
+                "/db" => {
+                    let (id, rn) = db_results[db_result_idx];
+                    db_result_idx += 1;
+                    let w = db::WorldRow { id, random_number: rn };
+                    let mut body = Vec::with_capacity(40);
+                    db::world_to_json(&w, &mut body);
+                    batch.extend_from_slice(&http::build_db_response(date, &body));
+                }
+                _ => {
+                    // Fallback for other routes (queries, fortunes, etc.)
+                    let resp = self.build_single_response(path);
+                    batch.extend_from_slice(&resp);
+                }
+            }
+        }
+
         Self::send_response(ctx.socket_fd, &batch);
         keep_alive
     }
@@ -193,9 +247,9 @@ impl Executor {
                 let conn = self.ensure_db();
                 let id = conn.rand_id();
                 let world = conn.get_world(id);
-                let mut body = Vec::with_capacity(40);
-                db::world_to_json(&world, &mut body);
-                let resp = http::build_db_response(date, &body);
+                self.json_buf.clear();
+                db::world_to_json(&world, &mut self.json_buf);
+                let resp = http::build_db_response(date, &self.json_buf);
                 Self::send_response(ctx.socket_fd, &resp);
                 return keep_alive;
             }
