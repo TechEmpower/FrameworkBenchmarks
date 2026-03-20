@@ -27,6 +27,7 @@ mod cache;
 mod server;
 mod uring;
 mod laminar_mux;
+mod db;
 
 fn main() {
     let args: Vec<String> = std::env::args().collect();
@@ -126,7 +127,7 @@ fn main() {
     if threads > 1 {
         server::run_threaded(root, port, threads);
     } else {
-        let executor = executor::Executor::new(root, port);
-        server::run(&executor);
+        let mut executor = executor::Executor::new(root, port);
+        server::run(&mut executor);
     }
 }

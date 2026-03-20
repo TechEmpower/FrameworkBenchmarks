@@ -16,6 +16,28 @@
       "display_name": "gnosis-uring",
       "notes": "Topology-driven server: four primitives (fork/race/fold/vent) mapped to io_uring. Per-chunk Laminar codec racing.",
       "versus": "may-minihttp"
+    },
+    "postgresql": {
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "db_url": "/db",
+      "query_url": "/queries?queries=",
+      "update_url": "/updates?queries=",
+      "fortune_url": "/fortunes",
+      "cached_query_url": "/cached-queries?count=",
+      "port": 8080,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "Postgres",
+      "language": "Rust",
+      "platform": "gnosis-uring",
+      "webserver": "gnosis-uring",
+      "os": "Linux",
+      "database_os": "Linux",
+      "orm": "Raw",
+      "display_name": "gnosis-uring [PostgreSQL]",
+      "notes": "Topology-driven server with PostgreSQL: fork/race/fold/vent mapped to io_uring.",
+      "versus": "may-minihttp"
     }
   }]
 }

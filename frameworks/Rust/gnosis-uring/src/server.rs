@@ -20,7 +20,7 @@ use std::net::TcpListener;
 use crate::executor::{Executor, ConnContext};
 
 /// Run the server on the given port (single thread).
-pub fn run(executor: &Executor) {
+pub fn run(executor: &mut Executor) {
     let addr = format!("0.0.0.0:{}", executor.port);
     let listener = TcpListener::bind(&addr).expect("Failed to bind");
 
@@ -40,10 +40,16 @@ pub fn run(executor: &Executor) {
         );
     }
 
+    eprintln!("Using built-in TechEmpower route table (12 routes)");
     eprintln!("gnosis-uring listening on {}", addr);
-    eprintln!("  GET /plaintext  -- TechEmpower plaintext");
-    eprintln!("  GET /json       -- TechEmpower JSON");
-    eprintln!("  GET /*          -- static files from {}", executor.root);
+    eprintln!("  GET /plaintext       -- TechEmpower plaintext");
+    eprintln!("  GET /json            -- TechEmpower JSON");
+    eprintln!("  GET /db              -- TechEmpower single query");
+    eprintln!("  GET /queries         -- TechEmpower multiple queries");
+    eprintln!("  GET /updates         -- TechEmpower updates");
+    eprintln!("  GET /fortunes        -- TechEmpower fortunes");
+    eprintln!("  GET /cached-queries  -- TechEmpower cached queries");
+    eprintln!("  GET /*               -- static files from {}", executor.root);
 
     // ── FORK: accept connections ─────────────────────────────────
     for stream in listener.incoming() {
@@ -84,7 +90,7 @@ pub fn run(executor: &Executor) {
 ///     read → ParseHTTP → FORK(cache, mmap, disk) → RACE → respond
 ///     if !keep_alive → break
 ///   }
-fn handle_connection(executor: &Executor, socket_fd: c_int) {
+fn handle_connection(executor: &mut Executor, socket_fd: c_int) {
     let mut ctx = ConnContext::new(socket_fd);
 
     loop {
@@ -131,10 +137,10 @@ pub fn run_threaded(root: String, port: u16, threads: usize) {
     for i in 0..threads {
         let root = root.clone();
         let handle = std::thread::spawn(move || {
-            let executor = Executor::new(root, port);
+            let mut executor = Executor::new(root, port);
             if i == 0 {
                 // Only first thread prints banner
-                run(&executor);
+                run(&mut executor);
             } else {
                 // Silent workers
                 let addr = format!("0.0.0.0:{}", port);
@@ -169,7 +175,7 @@ pub fn run_threaded(root: String, port: u16, threads: usize) {
                                 std::mem::size_of::<c_int>() as u32,
                             );
                         }
-                        handle_connection(&executor, socket_fd);
+                        handle_connection(&mut executor, socket_fd);
                         std::mem::forget(stream);
                     }
                 }

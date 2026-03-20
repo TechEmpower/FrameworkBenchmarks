@@ -114,6 +114,34 @@ pub fn build_json_response(date: &str) -> Vec<u8> {
     resp
 }
 
+/// Build a JSON response for DB endpoints (Content-Type: application/json).
+#[inline]
+pub fn build_db_response(date: &str, body: &[u8]) -> Vec<u8> {
+    let mut itoa_buf = itoa::Buffer::new();
+    let mut resp = Vec::with_capacity(192 + body.len());
+    resp.extend_from_slice(b"HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: ");
+    resp.extend_from_slice(itoa_buf.format(body.len()).as_bytes());
+    resp.extend_from_slice(b"\r\nServer: gnosis-uring\r\nDate: ");
+    resp.extend_from_slice(date.as_bytes());
+    resp.extend_from_slice(b"\r\n\r\n");
+    resp.extend_from_slice(body);
+    resp
+}
+
+/// Build an HTML response for fortunes (Content-Type: text/html; charset=utf-8).
+#[inline]
+pub fn build_html_response(date: &str, body: &[u8]) -> Vec<u8> {
+    let mut itoa_buf = itoa::Buffer::new();
+    let mut resp = Vec::with_capacity(256 + body.len());
+    resp.extend_from_slice(b"HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\nContent-Length: ");
+    resp.extend_from_slice(itoa_buf.format(body.len()).as_bytes());
+    resp.extend_from_slice(b"\r\nServer: gnosis-uring\r\nDate: ");
+    resp.extend_from_slice(date.as_bytes());
+    resp.extend_from_slice(b"\r\n\r\n");
+    resp.extend_from_slice(body);
+    resp
+}
+
 /// Build a 200 OK response with the given body and content type.
 pub fn build_response(body: &[u8], content_type: &str) -> Vec<u8> {
     let mut itoa_buf = itoa::Buffer::new();

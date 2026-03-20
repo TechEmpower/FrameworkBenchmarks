@@ -20,6 +20,7 @@ use std::sync::atomic::{AtomicU64, Ordering};
 use crate::http;
 use crate::laminar;
 use crate::cache::FileCache;
+use crate::db;
 
 /// Cached HTTP Date header — updated every second.
 static DATE_EPOCH: AtomicU64 = AtomicU64::new(0);
@@ -102,6 +103,8 @@ pub struct Executor {
     pub root: String,
     pub cache: FileCache,
     pub port: u16,
+    db: Option<db::DbConn>,
+    db_cache: Option<db::WorldCache>,
 }
 
 impl Executor {
@@ -110,7 +113,26 @@ impl Executor {
             root,
             cache: FileCache::new(64 * 1024 * 1024), // 64MB cache
             port,
+            db: None,
+            db_cache: None,
         }
+    }
+
+    /// Lazily initialize the DB connection.
+    fn ensure_db(&mut self) -> &mut db::DbConn {
+        if self.db.is_none() {
+            self.db = Some(db::DbConn::new());
+        }
+        self.db.as_mut().unwrap()
+    }
+
+    /// Lazily initialize the world cache.
+    fn ensure_cache(&mut self) -> &db::WorldCache {
+        if self.db_cache.is_none() {
+            let conn = self.ensure_db();
+            self.db_cache = Some(db::WorldCache::new(conn));
+        }
+        self.db_cache.as_ref().unwrap()
     }
 
     /// Handle all pipelined HTTP requests from a single read.
@@ -121,7 +143,7 @@ impl Executor {
     ///   FOLD: concatenate responses, send as one write
     ///
     /// Returns true to keep the connection alive, false to close.
-    pub fn handle_request(&self, ctx: &mut ConnContext) -> bool {
+    pub fn handle_request(&mut self, ctx: &mut ConnContext) -> bool {
         let buf = &ctx.read_buf[..ctx.read_len];
 
         // FORK: parse all pipelined requests
@@ -152,20 +174,80 @@ impl Executor {
     }
 
     /// Handle a single request (fast path, no batch alloc).
-    fn handle_single_request(&self, ctx: &mut ConnContext, path: &str, keep_alive: bool) -> bool {
-        // ── TechEmpower routes (no file I/O) ─────────────────────
+    fn handle_single_request(&mut self, ctx: &mut ConnContext, path: &str, keep_alive: bool) -> bool {
+        let date = http_date();
+
+        // ── TechEmpower routes ───────────────────────────────────
         match path {
             "/plaintext" => {
-                let resp = http::build_plaintext_response(http_date());
+                let resp = http::build_plaintext_response(date);
                 Self::send_response(ctx.socket_fd, &resp);
                 return keep_alive;
             }
             "/json" => {
-                let resp = http::build_json_response(http_date());
+                let resp = http::build_json_response(date);
+                Self::send_response(ctx.socket_fd, &resp);
+                return keep_alive;
+            }
+            "/db" => {
+                let conn = self.ensure_db();
+                let id = conn.rand_id();
+                let world = conn.get_world(id);
+                let mut body = Vec::with_capacity(40);
+                db::world_to_json(&world, &mut body);
+                let resp = http::build_db_response(date, &body);
+                Self::send_response(ctx.socket_fd, &resp);
+                return keep_alive;
+            }
+            "/fortunes" => {
+                let conn = self.ensure_db();
+                let fortunes = conn.get_fortunes();
+                let body = db::fortunes_to_html(&fortunes);
+                let resp = http::build_html_response(date, &body);
                 Self::send_response(ctx.socket_fd, &resp);
                 return keep_alive;
             }
             _ => {}
+        }
+
+        // Routes with query params
+        if path.starts_with("/queries") {
+            let count = db::parse_count_param(path, "queries");
+            let conn = self.ensure_db();
+            let worlds = conn.get_worlds(count);
+            let body = db::worlds_to_json(&worlds);
+            let resp = http::build_db_response(date, &body);
+            Self::send_response(ctx.socket_fd, &resp);
+            return keep_alive;
+        }
+
+        if path.starts_with("/updates") {
+            let count = db::parse_count_param(path, "queries");
+            let conn = self.ensure_db();
+            let worlds = conn.update_worlds(count);
+            let body = db::worlds_to_json(&worlds);
+            let resp = http::build_db_response(date, &body);
+            Self::send_response(ctx.socket_fd, &resp);
+            return keep_alive;
+        }
+
+        if path.starts_with("/cached-queries") {
+            let count = db::parse_count_param(path, "count");
+            self.ensure_cache();
+            let cache = self.db_cache.as_ref().unwrap();
+            let db = self.db.as_mut().unwrap();
+            let mut worlds_json = Vec::with_capacity(count * 40);
+            worlds_json.push(b'[');
+            for i in 0..count {
+                if i > 0 { worlds_json.push(b','); }
+                let id = db.rand_id();
+                let w = cache.get(id);
+                db::world_to_json(w, &mut worlds_json);
+            }
+            worlds_json.push(b']');
+            let resp = http::build_db_response(date, &worlds_json);
+            Self::send_response(ctx.socket_fd, &resp);
+            return keep_alive;
         }
 
         // ── FORK: race(cache, mmap, disk) ────────────────────────
@@ -196,10 +278,55 @@ impl Executor {
     }
 
     /// Build a single response as bytes (for pipelined batching).
-    fn build_single_response(&self, path: &str) -> Vec<u8> {
+    fn build_single_response(&mut self, path: &str) -> Vec<u8> {
+        let date = http_date();
         match path {
-            "/plaintext" => http::build_plaintext_response(http_date()),
-            "/json" => http::build_json_response(http_date()),
+            "/plaintext" => http::build_plaintext_response(date),
+            "/json" => http::build_json_response(date),
+            "/db" => {
+                let conn = self.ensure_db();
+                let id = conn.rand_id();
+                let world = conn.get_world(id);
+                let mut body = Vec::with_capacity(40);
+                db::world_to_json(&world, &mut body);
+                http::build_db_response(date, &body)
+            }
+            "/fortunes" => {
+                let conn = self.ensure_db();
+                let fortunes = conn.get_fortunes();
+                let body = db::fortunes_to_html(&fortunes);
+                http::build_html_response(date, &body)
+            }
+            p if p.starts_with("/queries") => {
+                let count = db::parse_count_param(p, "queries");
+                let conn = self.ensure_db();
+                let worlds = conn.get_worlds(count);
+                let body = db::worlds_to_json(&worlds);
+                http::build_db_response(date, &body)
+            }
+            p if p.starts_with("/updates") => {
+                let count = db::parse_count_param(p, "queries");
+                let conn = self.ensure_db();
+                let worlds = conn.update_worlds(count);
+                let body = db::worlds_to_json(&worlds);
+                http::build_db_response(date, &body)
+            }
+            p if p.starts_with("/cached-queries") => {
+                let count = db::parse_count_param(p, "count");
+                self.ensure_cache();
+                let cache = self.db_cache.as_ref().unwrap();
+                let db = self.db.as_mut().unwrap();
+                let mut body = Vec::with_capacity(count * 40);
+                body.push(b'[');
+                for i in 0..count {
+                    if i > 0 { body.push(b','); }
+                    let id = db.rand_id();
+                    let w = cache.get(id);
+                    db::world_to_json(w, &mut body);
+                }
+                body.push(b']');
+                http::build_db_response(date, &body)
+            }
             _ => {
                 let file_path = if path == "/" { "/index.html" } else { path };
                 let full_path = format!("{}{}", self.root, file_path);
