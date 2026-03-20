@@ -247,6 +247,25 @@ impl PgWire {
         results
     }
 
+    /// Get the raw fd for poll()-based multiplexing.
+    #[cfg(unix)]
+    pub fn raw_fd(&self) -> i32 {
+        use std::os::fd::AsRawFd;
+        match self.reader.get_ref() {
+            PgStream::Tcp(s) => s.as_raw_fd(),
+            PgStream::Unix(s) => s.as_raw_fd(),
+        }
+    }
+
+    /// Set the underlying socket to non-blocking mode.
+    pub fn set_nonblocking(&self, nonblocking: bool) {
+        match self.reader.get_ref() {
+            PgStream::Tcp(s) => s.set_nonblocking(nonblocking).ok(),
+            #[cfg(unix)]
+            PgStream::Unix(s) => s.set_nonblocking(nonblocking).ok(),
+        };
+    }
+
     /// OSCILLATING UPDATE: SELECTs + UPDATE in one write, one read.
     ///
     /// Since we know the ids and new randomNumbers before querying,
