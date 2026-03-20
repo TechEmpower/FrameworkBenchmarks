@@ -1,5 +1,6 @@
 import os
 os.environ["TURBO_DISABLE_RATE_LIMITING"] = "1"
+os.environ["TURBO_DISABLE_CACHE"] = "1"
 
 from turboapi import TurboAPI
 from turboapi.responses import PlainTextResponse

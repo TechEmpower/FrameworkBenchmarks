@@ -16,10 +16,8 @@ ENV PATH="/venv/bin:$PATH" VIRTUAL_ENV="/venv"
 
 WORKDIR /turboapi
 
-# Bust Docker cache for git clone
-ARG CACHEBUST=1
-RUN git clone --depth 1 --branch main https://github.com/justrach/turboAPI.git . && \
-    git clone --depth 1 https://github.com/justrach/dhi.git /dhi
+RUN git clone --depth 1 --branch v1.0.17 https://github.com/justrach/turboAPI.git . && \
+    git clone --depth 1 --branch v1.2.1 https://github.com/justrach/dhi.git /dhi
 
 # Install Python deps
 RUN uv pip install dhi && uv pip install -e ./python
