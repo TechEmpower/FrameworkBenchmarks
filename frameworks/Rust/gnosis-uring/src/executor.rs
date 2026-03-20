@@ -105,7 +105,8 @@ pub struct Executor {
     pub port: u16,
     db: Option<db::DbConn>,
     db_cache: Option<db::WorldCache>,
-    json_buf: Vec<u8>, // reusable JSON serialization buffer
+    json_buf: Vec<u8>,  // reusable JSON serialization buffer
+    resp_buf: Vec<u8>,  // reusable HTTP response buffer
 }
 
 impl Executor {
@@ -117,6 +118,7 @@ impl Executor {
             db: None,
             db_cache: None,
             json_buf: Vec::with_capacity(256),
+            resp_buf: Vec::with_capacity(512),
         }
     }
 
@@ -234,13 +236,15 @@ impl Executor {
         // ── TechEmpower routes ───────────────────────────────────
         match path {
             "/plaintext" => {
-                let resp = http::build_plaintext_response(date);
-                Self::send_response(ctx.socket_fd, &resp);
+                self.resp_buf.clear();
+                http::build_plaintext_response_into(date, &mut self.resp_buf);
+                Self::send_response(ctx.socket_fd, &self.resp_buf);
                 return keep_alive;
             }
             "/json" => {
-                let resp = http::build_json_response(date);
-                Self::send_response(ctx.socket_fd, &resp);
+                self.resp_buf.clear();
+                http::build_json_response_into(date, &mut self.resp_buf);
+                Self::send_response(ctx.socket_fd, &self.resp_buf);
                 return keep_alive;
             }
             "/db" => {
@@ -249,16 +253,19 @@ impl Executor {
                 let world = conn.get_world(id);
                 self.json_buf.clear();
                 db::world_to_json(&world, &mut self.json_buf);
-                let resp = http::build_db_response(date, &self.json_buf);
-                Self::send_response(ctx.socket_fd, &resp);
+                self.resp_buf.clear();
+                http::build_db_response_into(date, &self.json_buf, &mut self.resp_buf);
+                Self::send_response(ctx.socket_fd, &self.resp_buf);
                 return keep_alive;
             }
             "/fortunes" => {
                 let conn = self.ensure_db();
                 let fortunes = conn.get_fortunes();
-                let body = db::fortunes_to_html(&fortunes);
-                let resp = http::build_html_response(date, &body);
-                Self::send_response(ctx.socket_fd, &resp);
+                self.json_buf.clear(); // reuse as HTML buffer
+                db::fortunes_to_html_into(&fortunes, &mut self.json_buf);
+                self.resp_buf.clear();
+                http::build_html_response_into(date, &self.json_buf, &mut self.resp_buf);
+                Self::send_response(ctx.socket_fd, &self.resp_buf);
                 return keep_alive;
             }
             _ => {}

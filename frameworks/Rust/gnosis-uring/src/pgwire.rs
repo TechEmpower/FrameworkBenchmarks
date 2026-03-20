@@ -8,24 +8,108 @@
 
 use std::io::{BufReader, BufWriter, Read, Write};
 use std::net::TcpStream;
+#[cfg(unix)]
+use std::os::unix::net::UnixStream;
 
 const READ_BUF_SIZE: usize = 65536;
 
+/// Stream enum — zero-cost dispatch, no Box<dyn>.
+enum PgStream {
+    Tcp(TcpStream),
+    #[cfg(unix)]
+    Unix(UnixStream),
+}
+
+impl Read for PgStream {
+    #[inline(always)]
+    fn read(&mut self, buf: &mut [u8]) -> std::io::Result<usize> {
+        match self {
+            PgStream::Tcp(s) => s.read(buf),
+            #[cfg(unix)]
+            PgStream::Unix(s) => s.read(buf),
+        }
+    }
+}
+
+impl Write for PgStream {
+    #[inline(always)]
+    fn write(&mut self, buf: &[u8]) -> std::io::Result<usize> {
+        match self {
+            PgStream::Tcp(s) => s.write(buf),
+            #[cfg(unix)]
+            PgStream::Unix(s) => s.write(buf),
+        }
+    }
+    #[inline(always)]
+    fn flush(&mut self) -> std::io::Result<()> {
+        match self {
+            PgStream::Tcp(s) => s.flush(),
+            #[cfg(unix)]
+            PgStream::Unix(s) => s.flush(),
+        }
+    }
+}
+
+impl PgStream {
+    fn try_clone(&self) -> std::io::Result<Self> {
+        match self {
+            PgStream::Tcp(s) => Ok(PgStream::Tcp(s.try_clone()?)),
+            #[cfg(unix)]
+            PgStream::Unix(s) => Ok(PgStream::Unix(s.try_clone()?)),
+        }
+    }
+}
+
 /// A raw PG wire protocol connection.
 pub struct PgWire {
-    reader: BufReader<TcpStream>,
-    writer: BufWriter<TcpStream>,
-    wbuf: Vec<u8>,                  // reusable write buffer
-    rbuf: Vec<u8>,                  // reusable read buffer for message payloads
+    reader: BufReader<PgStream>,
+    writer: BufWriter<PgStream>,
+    wbuf: Vec<u8>,
+    rbuf: Vec<u8>,
 }
 
 impl PgWire {
     pub fn connect(host: &str, port: u16, user: &str, password: &str, dbname: &str) -> Self {
+        // Try Unix domain socket first (faster — no TCP overhead)
+        #[cfg(unix)]
+        {
+            let socket_path = format!("/var/run/postgresql/.s.PGSQL.{}", port);
+            let socket_path_tmp = format!("/tmp/.s.PGSQL.{}", port);
+            let uds_path = if std::path::Path::new(&socket_path).exists() {
+                Some(socket_path)
+            } else if std::path::Path::new(&socket_path_tmp).exists() {
+                Some(socket_path_tmp)
+            } else {
+                None
+            };
+
+            if let Some(path) = uds_path {
+                if let Ok(stream) = UnixStream::connect(&path) {
+                    eprintln!("  PG: connected via Unix socket {}", path);
+                    let s = PgStream::Unix(stream);
+                    let reader = BufReader::with_capacity(READ_BUF_SIZE, s.try_clone().unwrap());
+                    let writer = BufWriter::with_capacity(READ_BUF_SIZE, s);
+                    return Self::init(reader, writer, user, password, dbname);
+                }
+            }
+        }
+
+        // TCP fallback
         let stream = TcpStream::connect((host, port)).expect("PG connect failed");
         stream.set_nodelay(true).ok();
+        let s = PgStream::Tcp(stream);
+        let reader = BufReader::with_capacity(READ_BUF_SIZE, s.try_clone().unwrap());
+        let writer = BufWriter::with_capacity(READ_BUF_SIZE, s);
+        Self::init(reader, writer, user, password, dbname)
+    }
 
-        let reader = BufReader::with_capacity(READ_BUF_SIZE, stream.try_clone().unwrap());
-        let mut writer = BufWriter::with_capacity(READ_BUF_SIZE, stream);
+    fn init(
+        reader: BufReader<PgStream>,
+        mut writer: BufWriter<PgStream>,
+        user: &str,
+        password: &str,
+        dbname: &str,
+    ) -> Self {
 
         // Startup message
         let mut startup = Vec::with_capacity(128);

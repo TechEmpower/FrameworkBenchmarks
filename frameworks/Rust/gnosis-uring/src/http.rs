@@ -142,6 +142,56 @@ pub fn build_html_response(date: &str, body: &[u8]) -> Vec<u8> {
     resp
 }
 
+/// Zero-alloc plaintext response into reusable buffer.
+#[inline]
+pub fn build_plaintext_response_into(date: &str, buf: &mut Vec<u8>) {
+    let body = b"Hello, World!";
+    let mut itoa_buf = itoa::Buffer::new();
+    buf.extend_from_slice(b"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: ");
+    buf.extend_from_slice(itoa_buf.format(body.len()).as_bytes());
+    buf.extend_from_slice(b"\r\nServer: gnosis-uring\r\nDate: ");
+    buf.extend_from_slice(date.as_bytes());
+    buf.extend_from_slice(b"\r\n\r\n");
+    buf.extend_from_slice(body);
+}
+
+/// Zero-alloc JSON response into reusable buffer.
+#[inline]
+pub fn build_json_response_into(date: &str, buf: &mut Vec<u8>) {
+    let json_body = b"{\"message\":\"Hello, World!\"}";
+    let mut itoa_buf = itoa::Buffer::new();
+    buf.extend_from_slice(b"HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: ");
+    buf.extend_from_slice(itoa_buf.format(json_body.len()).as_bytes());
+    buf.extend_from_slice(b"\r\nServer: gnosis-uring\r\nDate: ");
+    buf.extend_from_slice(date.as_bytes());
+    buf.extend_from_slice(b"\r\n\r\n");
+    buf.extend_from_slice(json_body);
+}
+
+/// Zero-alloc DB response into reusable buffer.
+#[inline]
+pub fn build_db_response_into(date: &str, body: &[u8], buf: &mut Vec<u8>) {
+    let mut itoa_buf = itoa::Buffer::new();
+    buf.extend_from_slice(b"HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: ");
+    buf.extend_from_slice(itoa_buf.format(body.len()).as_bytes());
+    buf.extend_from_slice(b"\r\nServer: gnosis-uring\r\nDate: ");
+    buf.extend_from_slice(date.as_bytes());
+    buf.extend_from_slice(b"\r\n\r\n");
+    buf.extend_from_slice(body);
+}
+
+/// Zero-alloc HTML response into reusable buffer.
+#[inline]
+pub fn build_html_response_into(date: &str, body: &[u8], buf: &mut Vec<u8>) {
+    let mut itoa_buf = itoa::Buffer::new();
+    buf.extend_from_slice(b"HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\nContent-Length: ");
+    buf.extend_from_slice(itoa_buf.format(body.len()).as_bytes());
+    buf.extend_from_slice(b"\r\nServer: gnosis-uring\r\nDate: ");
+    buf.extend_from_slice(date.as_bytes());
+    buf.extend_from_slice(b"\r\n\r\n");
+    buf.extend_from_slice(body);
+}
+
 /// Build a 200 OK response with the given body and content type.
 pub fn build_response(body: &[u8], content_type: &str) -> Vec<u8> {
     let mut itoa_buf = itoa::Buffer::new();

@@ -180,6 +180,22 @@ pub fn fortunes_to_html(fortunes: &[Fortune]) -> Vec<u8> {
     html
 }
 
+/// Zero-alloc fortune HTML into reusable buffer.
+pub fn fortunes_to_html_into(fortunes: &[Fortune], buf: &mut Vec<u8>) {
+    buf.extend_from_slice(
+        b"<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>"
+    );
+    let mut itoa_buf = itoa::Buffer::new();
+    for f in fortunes {
+        buf.extend_from_slice(b"<tr><td>");
+        buf.extend_from_slice(itoa_buf.format(f.id).as_bytes());
+        buf.extend_from_slice(b"</td><td>");
+        html_escape(&f.message, buf);
+        buf.extend_from_slice(b"</td></tr>");
+    }
+    buf.extend_from_slice(b"</table></body></html>");
+}
+
 fn html_escape(s: &str, buf: &mut Vec<u8>) {
     for b in s.bytes() {
         match b {
