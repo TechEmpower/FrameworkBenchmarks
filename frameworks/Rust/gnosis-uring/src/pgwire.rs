@@ -585,6 +585,18 @@ fn parse_string_row(buf: &[u8]) -> Vec<String> {
     fields
 }
 
+// ── Public message builders for io_uring integration ──────────
+
+/// Public wrapper for building Bind+Execute with binary i32 param.
+pub fn append_bind_execute_binary_pub(buf: &mut Vec<u8>, stmt: &str, param: i32) {
+    append_bind_execute_binary(buf, stmt, param);
+}
+
+/// Public wrapper for building Bind+Execute with no params.
+pub fn append_bind_execute_no_params_pub(buf: &mut Vec<u8>, stmt: &str) {
+    append_bind_execute_no_params(buf, stmt);
+}
+
 #[inline(always)]
 fn parse_int(bytes: &[u8]) -> i32 {
     let mut n: i32 = 0;
