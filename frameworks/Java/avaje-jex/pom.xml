@@ -181,18 +181,5 @@
         </dependency>
       </dependencies>
     </profile>
-    <profile>
-      <id>grizzly</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-      </activation>
-      <dependencies>
-        <dependency>
-          <groupId>io.avaje</groupId>
-          <artifactId>avaje-jex-grizzly-spi</artifactId>
-          <version>1.0</version>
-        </dependency>
-      </dependencies>
-    </profile>
   </profiles>
 </project>
