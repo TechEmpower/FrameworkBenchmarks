@@ -1,13 +1,34 @@
 import { SQL } from "bun";
 
-// Pre-allocated response headers to avoid GC pressure
-const plainHeaders = new Headers({ "Server": "x-gnosis" });
-const jsonHeaders = new Headers({ "Server": "x-gnosis", "Content-Type": "application/json" });
-const htmlHeaders = new Headers({ "Server": "x-gnosis", "Content-Type": "text/html; charset=utf-8" });
+// Date header — re-render once per second (permitted optimization per spec)
+let dateHeader = new Date().toUTCString();
+setInterval(() => { dateHeader = new Date().toUTCString(); }, 1000);
 
-const plainOptions: ResponseInit = { headers: plainHeaders };
-const jsonOptions: ResponseInit = { headers: jsonHeaders };
-const htmlOptions: ResponseInit = { headers: htmlHeaders };
+// Headers are composed per-response to include the live Date header.
+// Content-Type values per spec (note: charset is unnecessary for application/json per spec).
+function plainH(): Headers {
+  return new Headers({
+    "Server": "x-gnosis",
+    "Content-Type": "text/plain",
+    "Date": dateHeader,
+  });
+}
+
+function jsonH(): Headers {
+  return new Headers({
+    "Server": "x-gnosis",
+    "Content-Type": "application/json",
+    "Date": dateHeader,
+  });
+}
+
+function htmlH(): Headers {
+  return new Headers({
+    "Server": "x-gnosis",
+    "Content-Type": "text/html; charset=utf-8",
+    "Date": dateHeader,
+  });
+}
 
 // Lazy database connection -- only initialized when a DB endpoint is first hit
 // This allows the default variant (plaintext/json only) to work without a DB
@@ -103,6 +124,7 @@ function bulkUpdate(worlds: World[]): Promise<unknown> {
 
 async function initCache(): Promise<void> {
   const s = getSQL();
+  // CachedWorld table uses identical schema to World (mapped to same table in practice)
   const rows: World[] = await s`SELECT id, randomNumber FROM world`;
   for (let i = 0; i < rows.length; i++) {
     worldCache.set(rows[i].id, rows[i]);
@@ -127,14 +149,14 @@ const server = Bun.serve({
 
     switch (pathname) {
       case "/plaintext":
-        return new Response("Hello, World!", plainOptions);
+        return new Response("Hello, World!", { headers: plainH() });
 
       case "/json":
-        return new Response(JSON.stringify({ message: "Hello, World!" }), jsonOptions);
+        return new Response(JSON.stringify({ message: "Hello, World!" }), { headers: jsonH() });
 
       case "/db": {
         const world = await findWorld(rand());
-        return new Response(JSON.stringify(world), jsonOptions);
+        return new Response(JSON.stringify(world), { headers: jsonH() });
       }
 
       case "/queries": {
@@ -144,7 +166,7 @@ const server = Bun.serve({
           worldPromises[i] = findWorld(rand());
         }
         const worlds = await Promise.all(worldPromises);
-        return new Response(JSON.stringify(worlds), jsonOptions);
+        return new Response(JSON.stringify(worlds), { headers: jsonH() });
       }
 
       case "/updates": {
@@ -155,7 +177,7 @@ const server = Bun.serve({
         }
         const worlds = await Promise.all(worldPromises);
         await bulkUpdate(worlds);
-        return new Response(JSON.stringify(worlds), jsonOptions);
+        return new Response(JSON.stringify(worlds), { headers: jsonH() });
       }
 
       case "/fortunes": {
@@ -169,7 +191,7 @@ const server = Bun.serve({
         }
         html += FORTUNE_SUFFIX;
 
-        return new Response(html, htmlOptions);
+        return new Response(html, { headers: htmlH() });
       }
 
       case "/cached-queries": {
@@ -181,7 +203,7 @@ const server = Bun.serve({
         for (let i = 0; i < count; i++) {
           worlds[i] = worldCache.get(rand());
         }
-        return new Response(JSON.stringify(worlds), jsonOptions);
+        return new Response(JSON.stringify(worlds), { headers: jsonH() });
       }
 
       default:

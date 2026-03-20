@@ -8,8 +8,8 @@ COPY ./src .
 
 ENV NODE_ENV=production
 
-RUN bun build --compile --minify --outfile server index.ts
-
+# PostgreSQL variant: spawn.ts spawns multiple bun processes with reusePort.
+# No --compile step: bun:sql requires the full Bun runtime for DB connectivity.
 USER bun
 
 CMD ["bun", "spawn.ts"]
