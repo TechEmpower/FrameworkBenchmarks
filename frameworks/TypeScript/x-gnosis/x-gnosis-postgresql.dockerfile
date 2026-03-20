@@ -1,15 +1,14 @@
-FROM oven/bun:1.3
+FROM node:22-slim
 
 EXPOSE 8080
 
 WORKDIR /app
 
-COPY ./src .
+COPY package.json .
+RUN npm install --production=false
+
+COPY src/ src/
 
 ENV NODE_ENV=production
 
-# PostgreSQL variant: spawn.ts spawns multiple bun processes with reusePort.
-# No --compile step: bun:sql requires the full Bun runtime for DB connectivity.
-USER bun
-
-CMD ["bun", "spawn.ts"]
+CMD ["node", "--import", "tsx", "src/spawn.ts"]

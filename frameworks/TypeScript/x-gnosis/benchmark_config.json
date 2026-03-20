@@ -11,13 +11,13 @@
       "language": "TypeScript",
       "flavor": "None",
       "orm": "None",
-      "platform": "bun",
+      "platform": "Node.js",
       "webserver": "x-gnosis",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "x-gnosis",
-      "notes": "Aeon Flow server with fork/race/fold topology scheduling",
-      "versus": "bun"
+      "notes": "Aeon Flow server with fork/race/fold topology scheduling on Node.js",
+      "versus": "nodejs"
     },
     "postgresql": {
       "json_url": "/json",
@@ -34,13 +34,13 @@
       "language": "TypeScript",
       "flavor": "None",
       "orm": "Raw",
-      "platform": "bun",
+      "platform": "Node.js",
       "webserver": "x-gnosis",
       "os": "Linux",
       "database_os": "Linux",
       "display_name": "x-gnosis [PostgreSQL]",
-      "notes": "Aeon Flow server with fork/race/fold topology scheduling",
-      "versus": "bun"
+      "notes": "Aeon Flow server with fork/race/fold topology scheduling on Node.js",
+      "versus": "nodejs"
     }
   }]
 }

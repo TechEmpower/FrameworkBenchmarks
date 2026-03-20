@@ -1,47 +1,25 @@
-import { SQL } from "bun";
+import { createServer } from "node:http";
+import { Client } from "pg";
 
 // Date header — re-render once per second (permitted optimization per spec)
 let dateHeader = new Date().toUTCString();
 setInterval(() => { dateHeader = new Date().toUTCString(); }, 1000);
 
-// Headers are composed per-response to include the live Date header.
-// Content-Type values per spec (note: charset is unnecessary for application/json per spec).
-function plainH(): Headers {
-  return new Headers({
-    "Server": "x-gnosis",
-    "Content-Type": "text/plain",
-    "Date": dateHeader,
-  });
-}
-
-function jsonH(): Headers {
-  return new Headers({
-    "Server": "x-gnosis",
-    "Content-Type": "application/json",
-    "Date": dateHeader,
-  });
-}
-
-function htmlH(): Headers {
-  return new Headers({
-    "Server": "x-gnosis",
-    "Content-Type": "text/html; charset=utf-8",
-    "Date": dateHeader,
-  });
-}
-
 // Lazy database connection -- only initialized when a DB endpoint is first hit
-// This allows the default variant (plaintext/json only) to work without a DB
-let sql: InstanceType<typeof SQL> | null = null;
+let db: Client | null = null;
 
-function getSQL(): InstanceType<typeof SQL> {
-  if (!sql) {
-    sql = new SQL({
-      url: "postgres://benchmarkdbuser:benchmarkdbpass@tfb-database:5432/hello_world",
-      max: 1,
+async function getDB(): Promise<Client> {
+  if (!db) {
+    db = new Client({
+      host: process.env.DBHOST ?? "tfb-database",
+      port: 5432,
+      user: "benchmarkdbuser",
+      password: "benchmarkdbpass",
+      database: "hello_world",
     });
+    await db.connect();
   }
-  return sql;
+  return db;
 }
 
 // In-memory cache for cached-queries test
@@ -64,9 +42,8 @@ function rand(): number {
   return 1 + ((Math.random() * 10000) | 0);
 }
 
-function clampQueries(q: string | null): number {
-  const n = +q!;
-  // NaN is falsy, fallback to 1
+function clampQueries(q: string | null | undefined): number {
+  const n = +(q ?? "");
   return Math.min(Math.max(n || 1, 1), 500);
 }
 
@@ -84,132 +61,204 @@ function getQueryParam(url: string, key: string): string | null {
   return null;
 }
 
+// --- HTML escaping (replaces Bun.escapeHTML) ---
+
+function escapeHTML(s: string): string {
+  let out = "";
+  for (let i = 0; i < s.length; i++) {
+    const ch = s[i];
+    switch (ch) {
+      case "&": out += "&amp;"; break;
+      case "<": out += "&lt;"; break;
+      case ">": out += "&gt;"; break;
+      case '"': out += "&quot;"; break;
+      case "'": out += "&#x27;"; break;
+      default: out += ch;
+    }
+  }
+  return out;
+}
+
 // --- DB operations ---
 
-function findWorld(id: number): Promise<World> {
-  const s = getSQL();
-  return s`SELECT id, randomNumber FROM world WHERE id = ${id}`.then(
-    (arr: World[]) => arr[0],
-  );
+async function findWorld(id: number): Promise<World> {
+  const client = await getDB();
+  const res = await client.query("SELECT id, randomnumber AS \"randomNumber\" FROM world WHERE id = $1", [id]);
+  return res.rows[0];
 }
 
-function findWorldThenRand(id: number): Promise<World> {
-  const s = getSQL();
-  return s`SELECT id, randomNumber FROM world WHERE id = ${id}`.then(
-    (arr: World[]) => {
-      arr[0].randomNumber = rand();
-      return arr[0];
-    },
-  );
+async function findWorldThenRand(id: number): Promise<World> {
+  const w = await findWorld(id);
+  w.randomNumber = rand();
+  return w;
 }
 
-function fetchFortunes(): Promise<Fortune[]> {
-  const s = getSQL();
-  return s`SELECT id, message FROM fortune` as Promise<Fortune[]>;
+async function fetchFortunes(): Promise<Fortune[]> {
+  const client = await getDB();
+  const res = await client.query("SELECT id, message FROM fortune");
+  return res.rows;
 }
 
-function bulkUpdate(worlds: World[]): Promise<unknown> {
-  const s = getSQL();
+async function bulkUpdate(worlds: World[]): Promise<void> {
+  const client = await getDB();
   worlds = worlds.toSorted((a, b) => a.id - b.id);
-  const values = new Array(worlds.length);
+  const values: string[] = [];
   for (let i = 0; i < worlds.length; i++) {
-    values[i] = [worlds[i].id, worlds[i].randomNumber];
+    values.push(`(${worlds[i].id}, ${worlds[i].randomNumber})`);
   }
-  return s`UPDATE world SET randomNumber = (update_data.randomNumber)::int
-    FROM (VALUES ${s(values)}) AS update_data (id, randomNumber)
-    WHERE world.id = (update_data.id)::int`;
+  await client.query(
+    `UPDATE world SET randomnumber = (update_data.randomnumber)::int
+     FROM (VALUES ${values.join(",")}) AS update_data (id, randomnumber)
+     WHERE world.id = (update_data.id)::int`
+  );
 }
 
 // --- Cache initialization ---
 
 async function initCache(): Promise<void> {
-  const s = getSQL();
-  // CachedWorld table uses identical schema to World (mapped to same table in practice)
-  const rows: World[] = await s`SELECT id, randomNumber FROM world`;
-  for (let i = 0; i < rows.length; i++) {
-    worldCache.set(rows[i].id, rows[i]);
+  const client = await getDB();
+  const res = await client.query('SELECT id, randomnumber AS "randomNumber" FROM world');
+  for (const row of res.rows) {
+    worldCache.set(row.id, row);
   }
   cacheReady = true;
 }
 
-// Fortune HTML template prefix and suffix
+// Fortune HTML template
 const FORTUNE_PREFIX = "<!DOCTYPE html><html><head><title>Fortunes</title></head><body><table><tr><th>id</th><th>message</th></tr>";
 const FORTUNE_SUFFIX = "</table></body></html>";
 
 // --- Server ---
 
-const server = Bun.serve({
-  port: 8080,
-  reusePort: true,
-  async fetch(req: Request): Promise<Response> {
-    const url = req.url;
-    const slashIdx = url.indexOf("/", 8);
-    const qIdx = url.indexOf("?", slashIdx);
-    const pathname = qIdx === -1 ? url.substring(slashIdx) : url.substring(slashIdx, qIdx);
+const server = createServer(async (req, res) => {
+  const url = req.url ?? "/";
+  const qIdx = url.indexOf("?");
+  const pathname = qIdx === -1 ? url : url.substring(0, qIdx);
 
-    switch (pathname) {
-      case "/plaintext":
-        return new Response("Hello, World!", { headers: plainH() });
-
-      case "/json":
-        return new Response(JSON.stringify({ message: "Hello, World!" }), { headers: jsonH() });
-
-      case "/db": {
-        const world = await findWorld(rand());
-        return new Response(JSON.stringify(world), { headers: jsonH() });
-      }
-
-      case "/queries": {
-        const num = clampQueries(getQueryParam(url, "queries"));
-        const worldPromises = new Array(num);
-        for (let i = 0; i < num; i++) {
-          worldPromises[i] = findWorld(rand());
-        }
-        const worlds = await Promise.all(worldPromises);
-        return new Response(JSON.stringify(worlds), { headers: jsonH() });
-      }
-
-      case "/updates": {
-        const num = clampQueries(getQueryParam(url, "queries"));
-        const worldPromises = new Array(num);
-        for (let i = 0; i < num; i++) {
-          worldPromises[i] = findWorldThenRand(rand());
-        }
-        const worlds = await Promise.all(worldPromises);
-        await bulkUpdate(worlds);
-        return new Response(JSON.stringify(worlds), { headers: jsonH() });
-      }
-
-      case "/fortunes": {
-        const fortunes = await fetchFortunes();
-        fortunes.push({ id: 0, message: "Additional fortune added at request time." });
-        fortunes.sort((a, b) => (a.message < b.message ? -1 : 1));
-
-        let html = FORTUNE_PREFIX;
-        for (let i = 0; i < fortunes.length; i++) {
-          html += `<tr><td>${fortunes[i].id}</td><td>${Bun.escapeHTML(fortunes[i].message)}</td></tr>`;
-        }
-        html += FORTUNE_SUFFIX;
-
-        return new Response(html, { headers: htmlH() });
-      }
-
-      case "/cached-queries": {
-        if (!cacheReady) {
-          await initCache();
-        }
-        const count = clampQueries(getQueryParam(url, "count"));
-        const worlds = new Array(count);
-        for (let i = 0; i < count; i++) {
-          worlds[i] = worldCache.get(rand());
-        }
-        return new Response(JSON.stringify(worlds), { headers: jsonH() });
-      }
-
-      default:
-        return new Response("", { status: 404 });
+  switch (pathname) {
+    case "/plaintext": {
+      const body = "Hello, World!";
+      res.writeHead(200, {
+        "Content-Type": "text/plain",
+        "Content-Length": Buffer.byteLength(body),
+        "Server": "x-gnosis",
+        "Date": dateHeader,
+      });
+      res.end(body);
+      return;
     }
-  },
+
+    case "/json": {
+      const body = JSON.stringify({ message: "Hello, World!" });
+      res.writeHead(200, {
+        "Content-Type": "application/json",
+        "Content-Length": Buffer.byteLength(body),
+        "Server": "x-gnosis",
+        "Date": dateHeader,
+      });
+      res.end(body);
+      return;
+    }
+
+    case "/db": {
+      const world = await findWorld(rand());
+      const body = JSON.stringify(world);
+      res.writeHead(200, {
+        "Content-Type": "application/json",
+        "Content-Length": Buffer.byteLength(body),
+        "Server": "x-gnosis",
+        "Date": dateHeader,
+      });
+      res.end(body);
+      return;
+    }
+
+    case "/queries": {
+      const num = clampQueries(getQueryParam(url, "queries"));
+      const worldPromises = new Array(num);
+      for (let i = 0; i < num; i++) {
+        worldPromises[i] = findWorld(rand());
+      }
+      const worlds = await Promise.all(worldPromises);
+      const body = JSON.stringify(worlds);
+      res.writeHead(200, {
+        "Content-Type": "application/json",
+        "Content-Length": Buffer.byteLength(body),
+        "Server": "x-gnosis",
+        "Date": dateHeader,
+      });
+      res.end(body);
+      return;
+    }
+
+    case "/updates": {
+      const num = clampQueries(getQueryParam(url, "queries"));
+      const worldPromises = new Array(num);
+      for (let i = 0; i < num; i++) {
+        worldPromises[i] = findWorldThenRand(rand());
+      }
+      const worlds = await Promise.all(worldPromises);
+      await bulkUpdate(worlds);
+      const body = JSON.stringify(worlds);
+      res.writeHead(200, {
+        "Content-Type": "application/json",
+        "Content-Length": Buffer.byteLength(body),
+        "Server": "x-gnosis",
+        "Date": dateHeader,
+      });
+      res.end(body);
+      return;
+    }
+
+    case "/fortunes": {
+      const fortunes = await fetchFortunes();
+      fortunes.push({ id: 0, message: "Additional fortune added at request time." });
+      fortunes.sort((a, b) => (a.message < b.message ? -1 : 1));
+
+      let html = FORTUNE_PREFIX;
+      for (let i = 0; i < fortunes.length; i++) {
+        html += `<tr><td>${fortunes[i].id}</td><td>${escapeHTML(fortunes[i].message)}</td></tr>`;
+      }
+      html += FORTUNE_SUFFIX;
+
+      const body = Buffer.from(html);
+      res.writeHead(200, {
+        "Content-Type": "text/html; charset=utf-8",
+        "Content-Length": body.length,
+        "Server": "x-gnosis",
+        "Date": dateHeader,
+      });
+      res.end(body);
+      return;
+    }
+
+    case "/cached-queries": {
+      if (!cacheReady) {
+        await initCache();
+      }
+      const count = clampQueries(getQueryParam(url, "count"));
+      const worlds = new Array(count);
+      for (let i = 0; i < count; i++) {
+        worlds[i] = worldCache.get(rand());
+      }
+      const body = JSON.stringify(worlds);
+      res.writeHead(200, {
+        "Content-Type": "application/json",
+        "Content-Length": Buffer.byteLength(body),
+        "Server": "x-gnosis",
+        "Date": dateHeader,
+      });
+      res.end(body);
+      return;
+    }
+
+    default: {
+      res.writeHead(404);
+      res.end();
+    }
+  }
 });
 
-console.log(`x-gnosis listening on ${server.url}`);
+server.listen(8080, () => {
+  console.log("x-gnosis listening on http://localhost:8080/");
+});

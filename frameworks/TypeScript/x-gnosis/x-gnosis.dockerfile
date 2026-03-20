@@ -1,15 +1,14 @@
-FROM oven/bun:1.3
+FROM node:22-slim
 
 EXPOSE 8080
 
 WORKDIR /app
 
-COPY ./src .
+COPY package.json .
+RUN npm install --production=false
+
+COPY src/ src/
 
 ENV NODE_ENV=production
 
-RUN bun build --compile --minify --outfile server index.ts
-
-USER bun
-
-CMD ["bun", "spawn.ts"]
+CMD ["node", "--import", "tsx", "src/spawn.ts"]

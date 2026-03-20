@@ -1,0 +1,13 @@
+{
+  "name": "x-gnosis-techempower",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "pg": "^8.13.0"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.11.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  }
+}

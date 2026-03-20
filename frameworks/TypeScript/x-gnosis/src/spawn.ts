@@ -1,23 +1,18 @@
-import { existsSync } from "node:fs";
+import cluster from "node:cluster";
+import { availableParallelism } from "node:os";
 
-const cpus = navigator.hardwareConcurrency;
-const buns = new Array(cpus);
+if (cluster.isPrimary) {
+  const cpus = availableParallelism();
+  console.log(`x-gnosis: spawning ${cpus} workers`);
 
-// Use compiled binary if available (default variant), else run index.ts directly (postgresql variant)
-const cmd = existsSync("./server") ? ["./server"] : ["bun", "index.ts"];
-
-for (let i = 0; i < cpus; i++) {
-  buns[i] = Bun.spawn(cmd, {
-    stdio: ["inherit", "inherit", "inherit"],
-    env: { ...process.env },
-  });
-}
-
-function kill() {
-  for (const bun of buns) {
-    bun.kill();
+  for (let i = 0; i < cpus; i++) {
+    cluster.fork();
   }
-}
 
-process.on("SIGINT", kill);
-process.on("exit", kill);
+  cluster.on("exit", (worker, code) => {
+    console.error(`worker ${worker.process.pid} exited (${code}), restarting`);
+    cluster.fork();
+  });
+} else {
+  await import("./index.js");
+}
