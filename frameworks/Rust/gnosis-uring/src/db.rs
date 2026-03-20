@@ -2,6 +2,7 @@
 //!
 //! Lazy connection — only initialized when a DB endpoint is first hit.
 //! Each thread gets its own connection (no shared state, no pooling).
+//! Uses sync postgres crate — lower overhead than async for blocking I/O model.
 
 use postgres::{Client, NoTls, Statement};
 use nanorand::{Rng, WyRand};
