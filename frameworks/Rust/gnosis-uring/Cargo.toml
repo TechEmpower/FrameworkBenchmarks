@@ -14,7 +14,6 @@ itoa = "1"
 libc = "0.2"
 flate2 = "1"
 brotli = "7"
-postgres = { version = "0.19", default-features = false }
 nanorand = { version = "0.7", default-features = false, features = ["std", "wyrand"] }
 
 [target.'cfg(target_os = "linux")'.dependencies]

@@ -1,11 +1,14 @@
 //! PostgreSQL database operations for TechEmpower benchmarks.
 //!
-//! Lazy connection — only initialized when a DB endpoint is first hit.
-//! Each thread gets its own connection (no shared state, no pooling).
-//! Uses sync postgres crate — lower overhead than async for blocking I/O model.
+//! Uses raw PG wire protocol (pgwire.rs) for cannon-style pipelining:
+//! - Preload all IDs (kinetic energy)
+//! - Write all queries in one syscall (launch velocity)
+//! - Read all results in one syscall (gather)
+//!
+//! No async runtime. No external PG crate. Zero overhead.
 
-use postgres::{Client, NoTls, Statement};
 use nanorand::{Rng, WyRand};
+use crate::pgwire::PgWire;
 
 /// World table row.
 pub struct WorldRow {
@@ -19,36 +22,21 @@ pub struct Fortune {
     pub message: String,
 }
 
-/// Database connection with prepared statements.
+/// Database connection with cannon-style pipelined queries.
 pub struct DbConn {
-    client: Client,
-    world_stmt: Statement,
-    fortune_stmt: Statement,
+    pg: PgWire,
     pub rng: WyRand,
 }
 
 impl DbConn {
-    /// Connect to the TechEmpower database.
     pub fn new() -> Self {
         let host = std::env::var("DBHOST").unwrap_or_else(|_| "tfb-database".to_string());
-        let port = std::env::var("PGPORT").unwrap_or_else(|_| "5432".to_string());
-        let url = format!(
-            "host={} port={} user=benchmarkdbuser password=benchmarkdbpass dbname=hello_world",
-            host, port
-        );
-        let mut client = Client::connect(&url, NoTls).expect("DB connection failed");
+        let port: u16 = std::env::var("PGPORT").unwrap_or_else(|_| "5432".to_string()).parse().unwrap();
 
-        let world_stmt = client
-            .prepare("SELECT id, randomnumber FROM world WHERE id=$1")
-            .expect("prepare world");
-        let fortune_stmt = client
-            .prepare("SELECT id, message FROM fortune")
-            .expect("prepare fortune");
+        let pg = PgWire::connect(&host, port, "benchmarkdbuser", "benchmarkdbpass", "hello_world");
 
         Self {
-            client,
-            world_stmt,
-            fortune_stmt,
+            pg,
             rng: WyRand::new(),
         }
     }
@@ -60,74 +48,73 @@ impl DbConn {
 
     /// Single database query — /db
     pub fn get_world(&mut self, id: i32) -> WorldRow {
-        let row = self.client.query_one(&self.world_stmt, &[&id]).unwrap();
-        WorldRow {
-            id: row.get(0),
-            random_number: row.get(1),
-        }
+        let (rid, rn) = self.pg.query_world(id);
+        WorldRow { id: rid, random_number: rn }
     }
 
-    /// Multiple queries — /queries
+    /// Multiple queries — /queries (CANNON PIPELINED)
+    ///
+    /// Preloads all IDs, writes all queries in one syscall,
+    /// reads all results in one syscall.
     pub fn get_worlds(&mut self, count: usize) -> Vec<WorldRow> {
-        let mut worlds = Vec::with_capacity(count);
-        for _ in 0..count {
-            let id = self.rand_id();
-            worlds.push(self.get_world(id));
-        }
-        worlds
+        // Kinetic energy: preload all IDs
+        let ids: Vec<i32> = (0..count).map(|_| self.rand_id()).collect();
+
+        // Launch + gather
+        let results = self.pg.query_worlds_pipelined(&ids);
+
+        results.into_iter().map(|(id, rn)| {
+            WorldRow { id, random_number: rn }
+        }).collect()
     }
 
-    /// Fetch + randomize + bulk update — /updates
+    /// Fetch + randomize + bulk update — /updates (CANNON PIPELINED)
     pub fn update_worlds(&mut self, count: usize) -> Vec<WorldRow> {
-        let mut worlds = Vec::with_capacity(count);
-        for _ in 0..count {
-            let id = self.rand_id();
-            let mut w = self.get_world(id);
-            w.random_number = self.rand_id();
-            worlds.push(w);
-        }
+        // Kinetic energy
+        let ids: Vec<i32> = (0..count).map(|_| self.rand_id()).collect();
+        let new_randoms: Vec<i32> = (0..count).map(|_| self.rand_id()).collect();
 
-        // Sort by id for consistent UPDATE ordering (TechEmpower requirement)
+        // Launch: pipeline all SELECTs
+        let results = self.pg.query_worlds_pipelined(&ids);
+
+        let mut worlds: Vec<WorldRow> = results.into_iter().enumerate().map(|(i, (id, _))| {
+            WorldRow { id, random_number: new_randoms[i] }
+        }).collect();
+
+        // Sort by id for consistent UPDATE ordering
         worlds.sort_by_key(|w| w.id);
 
-        // Bulk UPDATE using VALUES list
-        if !worlds.is_empty() {
-            let mut sql = String::from(
-                "UPDATE world SET randomnumber = v.r FROM (VALUES "
-            );
-            for (i, w) in worlds.iter().enumerate() {
-                if i > 0 { sql.push(','); }
-                sql.push('(');
-                sql.push_str(&w.id.to_string());
-                sql.push(',');
-                sql.push_str(&w.random_number.to_string());
-                sql.push(')');
-            }
-            sql.push_str(") AS v(i, r) WHERE world.id = v.i");
-            self.client.execute(sql.as_str(), &[]).unwrap();
+        // Bulk UPDATE
+        let mut sql = String::from("UPDATE world SET randomnumber = v.r FROM (VALUES ");
+        for (i, w) in worlds.iter().enumerate() {
+            if i > 0 { sql.push(','); }
+            sql.push('(');
+            sql.push_str(&w.id.to_string());
+            sql.push(',');
+            sql.push_str(&w.random_number.to_string());
+            sql.push(')');
         }
+        sql.push_str(") AS v(i, r) WHERE world.id = v.i");
+        self.pg.execute_command(&sql);
 
         worlds
     }
 
     /// Fetch all fortunes — /fortunes
     pub fn get_fortunes(&mut self) -> Vec<Fortune> {
-        let rows = self.client.query(&self.fortune_stmt, &[]).unwrap();
-        let mut fortunes: Vec<Fortune> = rows
-            .iter()
-            .map(|row| Fortune {
-                id: row.get(0),
-                message: row.get(1),
-            })
-            .collect();
+        let rows = self.pg.simple_query("SELECT id, message FROM fortune");
+        let mut fortunes: Vec<Fortune> = rows.into_iter().map(|row| {
+            Fortune {
+                id: row[0].parse().unwrap(),
+                message: row[1].clone(),
+            }
+        }).collect();
 
-        // Add the extra fortune
         fortunes.push(Fortune {
             id: 0,
             message: "Additional fortune added at request time.".to_string(),
         });
 
-        // Sort by message (not by id)
         fortunes.sort_by(|a, b| a.message.cmp(&b.message));
         fortunes
     }
@@ -140,16 +127,13 @@ pub struct WorldCache {
 
 impl WorldCache {
     pub fn new(conn: &mut DbConn) -> Self {
-        let rows = conn.client
-            .query("SELECT id, randomnumber FROM world ORDER BY id", &[])
-            .unwrap();
-        let worlds: Vec<WorldRow> = rows
-            .iter()
-            .map(|row| WorldRow {
-                id: row.get(0),
-                random_number: row.get(1),
-            })
-            .collect();
+        let rows = conn.pg.simple_query("SELECT id, randomnumber FROM world ORDER BY id");
+        let worlds: Vec<WorldRow> = rows.into_iter().map(|row| {
+            WorldRow {
+                id: row[0].parse().unwrap(),
+                random_number: row[1].parse().unwrap(),
+            }
+        }).collect();
         Self { worlds }
     }
 
@@ -199,7 +183,6 @@ pub fn fortunes_to_html(fortunes: &[Fortune]) -> Vec<u8> {
     html
 }
 
-/// HTML-escape a string (handles &, <, >, ", ').
 fn html_escape(s: &str, buf: &mut Vec<u8>) {
     for b in s.bytes() {
         match b {

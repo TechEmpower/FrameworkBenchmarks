@@ -27,6 +27,7 @@ mod cache;
 mod server;
 mod uring;
 mod laminar_mux;
+mod pgwire;
 mod db;
 
 fn main() {
