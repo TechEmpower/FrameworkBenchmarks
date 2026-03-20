@@ -152,13 +152,10 @@ pub mod linux {
         next_id: u32,
         cache: crate::cache::FileCache,
         udp_buf: UdpRecvBuf,
-        /// Shared PG connection for building query messages.
-        /// The actual I/O goes through the ring, but we need pgwire
-        /// for message construction (Bind+Execute+Sync format).
-        pg_fd: Option<RawFd>,
-        pg_world_stmt_prepared: bool,
-        pg_fortune_stmt_prepared: bool,
-        rng: nanorand::WyRand,
+        /// Blocking DB connection for DB routes.
+        /// io_uring handles HTTP concurrency; DB queries block per-request.
+        db: Option<crate::db::DbConn>,
+        db_cache: Option<crate::db::WorldCache>,
     }
 
     impl UringExecutor {
@@ -177,10 +174,8 @@ pub mod linux {
                 next_id: 1,
                 cache: crate::cache::FileCache::new(64 * 1024 * 1024),
                 udp_buf: UdpRecvBuf::new(),
-                pg_fd: None,
-                pg_world_stmt_prepared: false,
-                pg_fortune_stmt_prepared: false,
-                rng: nanorand::WyRand::new(),
+                db: None,
+                db_cache: None,
             })
         }
 
@@ -422,22 +417,7 @@ pub mod linux {
             if requests.len() == 1 {
                 let path = std::str::from_utf8(&requests[0].0).unwrap_or("/");
 
-                // DB routes → async through the ring
-                match path {
-                    "/db" => return self.start_db_request(id, DbRequestType::SingleDb, 1),
-                    "/fortunes" => return self.start_db_request(id, DbRequestType::Fortune, 1),
-                    p if p.starts_with("/queries") => {
-                        let count = crate::db::parse_count_param(p, "queries");
-                        return self.start_db_request(id, DbRequestType::MultiQuery, count);
-                    }
-                    p if p.starts_with("/updates") => {
-                        let count = crate::db::parse_count_param(p, "queries");
-                        return self.start_db_request(id, DbRequestType::Update, count);
-                    }
-                    _ => {}
-                }
-
-                // Non-DB routes — sync response
+                // All routes — build response (DB uses blocking PgWire for now)
                 let response = self.build_response(path);
                 if let Some(conn) = self.conns.get_mut(&id) {
                     conn.write_buf = Some(Pin::new(response.into_boxed_slice()));
@@ -498,22 +478,17 @@ pub mod linux {
         // PG async — Lord of the Uring DB integration
         // ═════════════════════════════════════════════════════════
 
-        /// Initialize the shared PG connection (blocking, done once at startup).
-        fn ensure_pg(&mut self) {
-            if self.pg_fd.is_some() { return; }
+        fn ensure_db(&mut self) {
+            if self.db.is_none() {
+                self.db = Some(crate::db::DbConn::new());
+            }
+        }
 
-            let host = std::env::var("DBHOST").unwrap_or_else(|_| "tfb-database".to_string());
-            let port: u16 = std::env::var("PGPORT").unwrap_or_else(|_| "5432".to_string()).parse().unwrap();
-
-            // Use pgwire for connection setup (blocking — only happens once)
-            let pg = crate::pgwire::PgWire::connect(&host, port, "benchmarkdbuser", "benchmarkdbpass", "hello_world");
-            self.pg_fd = Some(pg.raw_fd());
-            self.pg_world_stmt_prepared = true;
-            self.pg_fortune_stmt_prepared = true;
-
-            // IMPORTANT: keep the PgWire alive so the fd stays open
-            // We leak it intentionally — it lives for the process lifetime
-            std::mem::forget(pg);
+        fn ensure_db_cache(&mut self) {
+            if self.db_cache.is_none() {
+                let conn = self.db.as_mut().unwrap();
+                self.db_cache = Some(crate::db::WorldCache::new(conn));
+            }
         }
 
         /// Start an async DB request for a connection.
@@ -716,11 +691,65 @@ pub mod linux {
         /// Build HTTP response for a path.
         ///
         /// Topology: ParseHTTP → FORK(cache, disk) → RACE → Laminar → response
-        fn build_response(&self, path: &str) -> Vec<u8> {
+        fn build_response(&mut self, path: &str) -> Vec<u8> {
+            let date = crate::executor::http_date();
             match path {
-                // TechEmpower hot paths — pre-built responses, zero alloc
-                "/plaintext" => http::build_plaintext_response(crate::executor::http_date()),
-                "/json" => http::build_json_response(crate::executor::http_date()),
+                "/plaintext" => http::build_plaintext_response(date),
+                "/json" => http::build_json_response(date),
+
+                "/db" => {
+                    self.ensure_db();
+                    let db = self.db.as_mut().unwrap();
+                    let id = db.rand_id();
+                    let world = db.get_world(id);
+                    let mut body = Vec::with_capacity(40);
+                    crate::db::world_to_json(&world, &mut body);
+                    http::build_db_response(date, &body)
+                }
+
+                "/fortunes" => {
+                    self.ensure_db();
+                    let db = self.db.as_mut().unwrap();
+                    let fortunes = db.get_fortunes();
+                    let body = crate::db::fortunes_to_html(&fortunes);
+                    http::build_html_response(date, &body)
+                }
+
+                p if p.starts_with("/queries") => {
+                    let count = crate::db::parse_count_param(p, "queries");
+                    self.ensure_db();
+                    let db = self.db.as_mut().unwrap();
+                    let worlds = db.get_worlds(count);
+                    let body = crate::db::worlds_to_json(&worlds);
+                    http::build_db_response(date, &body)
+                }
+
+                p if p.starts_with("/updates") => {
+                    let count = crate::db::parse_count_param(p, "queries");
+                    self.ensure_db();
+                    let db = self.db.as_mut().unwrap();
+                    let worlds = db.update_worlds(count);
+                    let body = crate::db::worlds_to_json(&worlds);
+                    http::build_db_response(date, &body)
+                }
+
+                p if p.starts_with("/cached-queries") => {
+                    let count = crate::db::parse_count_param(p, "count");
+                    self.ensure_db();
+                    self.ensure_db_cache();
+                    let cache = self.db_cache.as_ref().unwrap();
+                    let db = self.db.as_mut().unwrap();
+                    let mut body = Vec::with_capacity(count * 40);
+                    body.push(b'[');
+                    for i in 0..count {
+                        if i > 0 { body.push(b','); }
+                        let id = db.rand_id();
+                        let w = cache.get(id);
+                        crate::db::world_to_json(w, &mut body);
+                    }
+                    body.push(b']');
+                    http::build_db_response(date, &body)
+                }
 
                 _ => {
                     let file_path = if path == "/" { "/index.html" } else { path };
