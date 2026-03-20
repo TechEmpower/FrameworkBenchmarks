@@ -39,7 +39,7 @@ fn bind_reuseport(port: u16) -> TcpListener {
         );
 
         let mut addr: libc::sockaddr_in = std::mem::zeroed();
-        addr.sin_family = libc::AF_INET as u8;
+        addr.sin_family = libc::AF_INET as libc::sa_family_t;
         addr.sin_port = port.to_be();
         addr.sin_addr.s_addr = libc::INADDR_ANY;
 

@@ -2,18 +2,20 @@ steps:
   # Step 1: Build gnosis-uring
   - name: 'rust:1.83-bookworm'
     id: build
+    dir: '.'
     entrypoint: bash
     args:
       - -c
       - |
-        cd frameworks/Rust/gnosis-uring
-        cargo build --release
+        cargo build --release 2>&1
         ls -lh target/release/gnosis-uring
         echo "Binary size: $(du -h target/release/gnosis-uring | cut -f1)"
+        file target/release/gnosis-uring
 
-  # Step 2: Benchmark with PostgreSQL + io_uring
+  # Step 2: Benchmark with PostgreSQL
   - name: 'debian:bookworm'
     id: benchmark
+    dir: '.'
     entrypoint: bash
     args:
       - -c
@@ -22,18 +24,23 @@ steps:
         apt-get update && apt-get install -y --no-install-recommends \
           postgresql postgresql-client liburing2 wrk curl procps
 
+        mkdir -p /tmp/www
+        echo '<html><body>Hello</body></html>' > /tmp/www/index.html
+
         # Start PostgreSQL
-        su - postgres -c "pg_ctlcluster 15 main start" || true
+        pg_ctlcluster 15 main start || true
         sleep 3
 
         # Create TechEmpower database
-        su - postgres -c "psql -c \"CREATE USER benchmarkdbuser WITH PASSWORD 'benchmarkdbpass';\""
-        su - postgres -c "psql -c \"CREATE DATABASE hello_world OWNER benchmarkdbuser;\""
-        su - postgres -c "psql -d hello_world -c \"
-          CREATE TABLE world (id integer PRIMARY KEY, randomnumber integer NOT NULL DEFAULT 0);
-          CREATE TABLE fortune (id integer PRIMARY KEY, message varchar(2048) NOT NULL);
-          INSERT INTO world (id, randomnumber) SELECT s, floor(random() * 10000 + 1)::int FROM generate_series(1, 10000) AS s;
-          INSERT INTO fortune (id, message) VALUES
+        su - postgres -c "createuser benchmarkdbuser" || true
+        su - postgres -c "psql -c \"ALTER USER benchmarkdbuser WITH PASSWORD 'benchmarkdbpass';\""
+        su - postgres -c "createdb -O benchmarkdbuser hello_world" || true
+
+        cat > /tmp/seed.sql << 'SEEDEOF'
+        CREATE TABLE IF NOT EXISTS world (id integer PRIMARY KEY, randomnumber integer NOT NULL DEFAULT 0);
+        CREATE TABLE IF NOT EXISTS fortune (id integer PRIMARY KEY, message varchar(2048) NOT NULL);
+        INSERT INTO world (id, randomnumber) SELECT s, floor(random() * 10000 + 1)::int FROM generate_series(1, 10000) AS s ON CONFLICT DO NOTHING;
+        INSERT INTO fortune (id, message) VALUES
           (1, 'fortune: No such file or directory'),
           (2, 'A computer scientist is someone who fixes things that aren''t broken.'),
           (3, 'After enough decimal places, nobody gives a damn.'),
@@ -44,83 +51,62 @@ steps:
           (8, 'A list is only as strong as its weakest link. — Donald Knuth'),
           (9, 'Feature: A bug with seniority.'),
           (10, 'Computers make very fast, very accurate mistakes.'),
-          (11, '<script>alert(\"This should not be displayed in a browser alert box.\");</script>'),
-          (12, 'フレームワークのベンチマーク');
-          GRANT ALL ON TABLE world TO benchmarkdbuser;
-          GRANT ALL ON TABLE fortune TO benchmarkdbuser;
-        \""
+          (11, E'<script>alert("This should not be displayed in a browser alert box.");</script>'),
+          (12, 'フレームワークのベンチマーク')
+        ON CONFLICT DO NOTHING;
+        GRANT ALL ON TABLE world TO benchmarkdbuser;
+        GRANT ALL ON TABLE fortune TO benchmarkdbuser;
+        SEEDEOF
+
+        su - postgres -c "psql -d hello_world -f /tmp/seed.sql"
 
         echo ""
         echo "══════════════════════════════════════════════════════════════"
-        echo "gnosis-uring Benchmark — GCP Cloud Build (bare metal Linux)"
+        echo "Lord of the Uring — GCP Cloud Build (bare metal Linux)"
         echo "══════════════════════════════════════════════════════════════"
         echo "CPU:    $(lscpu | grep 'Model name' | sed 's/.*: *//')"
         echo "Cores:  $(nproc)"
         echo "Kernel: $(uname -r)"
-        echo "io_uring: checking..."
-        echo ""
 
-        # Start gnosis-uring with io_uring + all cores
-        DBHOST=localhost ./frameworks/Rust/gnosis-uring/target/release/gnosis-uring \
+        # Start gnosis-uring (try io_uring first, falls back to blocking)
+        DBHOST=localhost ./target/release/gnosis-uring \
           --uring --port 8080 --root /tmp/www --threads 0 &
         sleep 3
 
-        # Verify all endpoints
+        # Verify
         echo "=== Verify ==="
         curl -s http://localhost:8080/plaintext && echo ""
         curl -s http://localhost:8080/json && echo ""
         curl -s http://localhost:8080/db && echo ""
         curl -s "http://localhost:8080/queries?queries=3" && echo ""
         curl -s http://localhost:8080/fortunes | head -c 200 && echo ""
-        curl -s "http://localhost:8080/updates?queries=2" && echo ""
         curl -s "http://localhost:8080/cached-queries?count=2" && echo ""
-        echo ""
 
         # Warmup
-        echo "=== Warmup (5s) ==="
+        echo ""; echo "=== Warmup ==="
         wrk -t4 -c64 -d5s http://localhost:8080/plaintext > /dev/null 2>&1
         wrk -t4 -c64 -d5s http://localhost:8080/db > /dev/null 2>&1
-        echo "Done."
-        echo ""
+        echo "Done."; echo ""
 
-        # Benchmark all 7 tests
-        echo "=== PLAINTEXT — 4 threads, 64 connections, 15s ==="
-        wrk -t4 -c64 -d15s --latency http://localhost:8080/plaintext
-        echo ""
+        # All 7 tests
+        for test in plaintext json db "queries?queries=20" fortunes "updates?queries=20" "cached-queries?count=20"; do
+          name=$(echo "$test" | cut -d'?' -f1 | tr '[:lower:]' '[:upper:]')
+          echo "=== $name — 4t, 64c, 15s ==="
+          wrk -t4 -c64 -d15s --latency "http://localhost:8080/$test"
+          echo ""
+        done
 
-        echo "=== JSON — 4 threads, 64 connections, 15s ==="
-        wrk -t4 -c64 -d15s --latency http://localhost:8080/json
-        echo ""
+        # High concurrency
+        echo "=== HIGH CONCURRENCY (256c) ==="
+        for test in plaintext json db "queries?queries=20" fortunes "updates?queries=20" "cached-queries?count=20"; do
+          name=$(echo "$test" | cut -d'?' -f1 | tr '[:lower:]' '[:upper:]')
+          echo "=== $name (256c) ==="
+          wrk -t8 -c256 -d15s "http://localhost:8080/$test" | grep "Requests/sec"
+        done
 
-        echo "=== DB — 4 threads, 64 connections, 15s ==="
-        wrk -t4 -c64 -d15s --latency http://localhost:8080/db
         echo ""
-
-        echo "=== QUERIES (20) — 4 threads, 64 connections, 15s ==="
-        wrk -t4 -c64 -d15s --latency "http://localhost:8080/queries?queries=20"
-        echo ""
-
-        echo "=== FORTUNES — 4 threads, 64 connections, 15s ==="
-        wrk -t4 -c64 -d15s --latency http://localhost:8080/fortunes
-        echo ""
-
-        echo "=== UPDATES (20) — 4 threads, 64 connections, 15s ==="
-        wrk -t4 -c64 -d15s --latency "http://localhost:8080/updates?queries=20"
-        echo ""
-
-        echo "=== CACHED (20) — 4 threads, 64 connections, 15s ==="
-        wrk -t4 -c64 -d15s --latency "http://localhost:8080/cached-queries?count=20"
-        echo ""
-
-        echo "=== HIGH CONCURRENCY — 8 threads, 256 connections ==="
-        echo "=== PLAINTEXT (256c) ===" && wrk -t8 -c256 -d15s http://localhost:8080/plaintext | grep "Requests/sec"
-        echo "=== DB (256c) ===" && wrk -t8 -c256 -d15s http://localhost:8080/db | grep "Requests/sec"
-        echo "=== QUERIES 20 (256c) ===" && wrk -t8 -c256 -d15s "http://localhost:8080/queries?queries=20" | grep "Requests/sec"
-        echo "=== FORTUNES (256c) ===" && wrk -t8 -c256 -d15s http://localhost:8080/fortunes | grep "Requests/sec"
-        echo ""
-
         echo "══════════════════════════════════════════════════════════════"
-        echo "Benchmark complete — Lord of the Uring"
+        echo "Lord of the Uring — benchmark complete"
         echo "══════════════════════════════════════════════════════════════"
 
 timeout: '1800s'
