@@ -2,4 +2,4 @@ Django==6.0.3
 mysqlclient==2.2.7
 psycopg2-binary==2.9.11
 pytz==2025.2
-orjson==3.11.3
+orjson==3.11.6
