@@ -100,14 +100,11 @@ impl DbConn {
         worlds
     }
 
-    /// Fetch all fortunes — /fortunes
+    /// Fetch all fortunes — /fortunes (prepared statement)
     pub fn get_fortunes(&mut self) -> Vec<Fortune> {
-        let rows = self.pg.simple_query("SELECT id, message FROM fortune");
-        let mut fortunes: Vec<Fortune> = rows.into_iter().map(|row| {
-            Fortune {
-                id: row[0].parse().unwrap(),
-                message: row[1].clone(),
-            }
+        let rows = self.pg.query_fortunes();
+        let mut fortunes: Vec<Fortune> = rows.into_iter().map(|(id, message)| {
+            Fortune { id, message }
         }).collect();
 
         fortunes.push(Fortune {
