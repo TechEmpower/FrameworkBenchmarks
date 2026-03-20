@@ -19,29 +19,50 @@ use std::net::TcpListener;
 
 use crate::executor::{Executor, ConnContext};
 
-/// Run the server on the given port (single thread).
-pub fn run(executor: &mut Executor) {
-    let addr = format!("0.0.0.0:{}", executor.port);
-    let listener = TcpListener::bind(&addr).expect("Failed to bind");
-
-    // SO_REUSEPORT for multi-thread load balancing
-    let fd = {
-        use std::os::fd::AsRawFd;
-        listener.as_raw_fd()
-    };
+/// Create a TcpListener with SO_REUSEPORT set BEFORE bind.
+/// This is required on macOS where SO_REUSEPORT must be set pre-bind.
+fn bind_reuseport(port: u16) -> TcpListener {
     unsafe {
+        let fd = libc::socket(libc::AF_INET, libc::SOCK_STREAM, 0);
+        assert!(fd >= 0, "socket() failed");
+
         let one: c_int = 1;
         libc::setsockopt(
-            fd,
-            libc::SOL_SOCKET,
-            libc::SO_REUSEPORT,
+            fd, libc::SOL_SOCKET, libc::SO_REUSEPORT,
             &one as *const _ as *const libc::c_void,
             std::mem::size_of::<c_int>() as u32,
         );
+        libc::setsockopt(
+            fd, libc::SOL_SOCKET, libc::SO_REUSEADDR,
+            &one as *const _ as *const libc::c_void,
+            std::mem::size_of::<c_int>() as u32,
+        );
+
+        let mut addr: libc::sockaddr_in = std::mem::zeroed();
+        addr.sin_family = libc::AF_INET as u8;
+        addr.sin_port = port.to_be();
+        addr.sin_addr.s_addr = libc::INADDR_ANY;
+
+        let ret = libc::bind(
+            fd,
+            &addr as *const _ as *const libc::sockaddr,
+            std::mem::size_of::<libc::sockaddr_in>() as u32,
+        );
+        assert!(ret == 0, "bind() failed: {}", std::io::Error::last_os_error());
+
+        libc::listen(fd, 1024);
+
+        use std::os::fd::FromRawFd;
+        TcpListener::from_raw_fd(fd)
     }
+}
+
+/// Run the server on the given port (single thread).
+pub fn run(executor: &mut Executor) {
+    let listener = bind_reuseport(executor.port);
 
     eprintln!("Using built-in TechEmpower route table (12 routes)");
-    eprintln!("gnosis-uring listening on {}", addr);
+    eprintln!("gnosis-uring listening on 0.0.0.0:{}", executor.port);
     eprintln!("  GET /plaintext       -- TechEmpower plaintext");
     eprintln!("  GET /json            -- TechEmpower JSON");
     eprintln!("  GET /db              -- TechEmpower single query");
@@ -138,46 +159,30 @@ pub fn run_threaded(root: String, port: u16, threads: usize) {
         let root = root.clone();
         let handle = std::thread::spawn(move || {
             let mut executor = Executor::new(root, port);
+            let listener = bind_reuseport(port);
+
             if i == 0 {
-                // Only first thread prints banner
-                run(&mut executor);
-            } else {
-                // Silent workers
-                let addr = format!("0.0.0.0:{}", port);
-                let listener = TcpListener::bind(&addr).expect("Failed to bind");
-                let fd = {
-                    use std::os::fd::AsRawFd;
-                    listener.as_raw_fd()
-                };
-                unsafe {
-                    let one: c_int = 1;
-                    libc::setsockopt(
-                        fd,
-                        libc::SOL_SOCKET,
-                        libc::SO_REUSEPORT,
-                        &one as *const _ as *const libc::c_void,
-                        std::mem::size_of::<c_int>() as u32,
-                    );
-                }
-                for stream in listener.incoming() {
-                    if let Ok(stream) = stream {
-                        let socket_fd = {
-                            use std::os::fd::AsRawFd;
-                            stream.as_raw_fd()
-                        };
-                        unsafe {
-                            let one: c_int = 1;
-                            libc::setsockopt(
-                                socket_fd,
-                                libc::IPPROTO_TCP,
-                                libc::TCP_NODELAY,
-                                &one as *const _ as *const libc::c_void,
-                                std::mem::size_of::<c_int>() as u32,
-                            );
-                        }
-                        handle_connection(&mut executor, socket_fd);
-                        std::mem::forget(stream);
+                eprintln!("gnosis-uring listening on 0.0.0.0:{}", port);
+            }
+
+            for stream in listener.incoming() {
+                if let Ok(stream) = stream {
+                    let socket_fd = {
+                        use std::os::fd::AsRawFd;
+                        stream.as_raw_fd()
+                    };
+                    unsafe {
+                        let one: c_int = 1;
+                        libc::setsockopt(
+                            socket_fd,
+                            libc::IPPROTO_TCP,
+                            libc::TCP_NODELAY,
+                            &one as *const _ as *const libc::c_void,
+                            std::mem::size_of::<c_int>() as u32,
+                        );
                     }
+                    handle_connection(&mut executor, socket_fd);
+                    std::mem::forget(stream);
                 }
             }
         });
