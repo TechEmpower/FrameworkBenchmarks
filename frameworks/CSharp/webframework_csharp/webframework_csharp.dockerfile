@@ -25,9 +25,12 @@ WORKDIR /opt/Benchmark
 
 RUN cp /opt/WebFrameworkLibrary/api/csharp/WebFrameworkCSharpAPI.dll .
 RUN dotnet publish -o /opt/app
-RUN cp -r /opt/WebFrameworkLibrary/lib /opt/app
+RUN cp -r /opt/WebFrameworkLibrary/lib/*.so /opt/app
 
 FROM ubuntu:24.04 AS deploy
+
+RUN apt update
+RUN apt install -y dotnet-runtime-10.0
 
 COPY --from=builder /opt/app ./
 
