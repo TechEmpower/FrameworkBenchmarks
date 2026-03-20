@@ -12,7 +12,7 @@ async function getDB(): Promise<Client> {
   if (!db) {
     db = new Client({
       host: process.env.DBHOST ?? "tfb-database",
-      port: 5432,
+      port: parseInt(process.env.PGPORT ?? "5432", 10),
       user: "benchmarkdbuser",
       password: "benchmarkdbpass",
       database: "hello_world",

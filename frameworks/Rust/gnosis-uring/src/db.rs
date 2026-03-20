@@ -30,9 +30,10 @@ impl DbConn {
     /// Connect to the TechEmpower database.
     pub fn new() -> Self {
         let host = std::env::var("DBHOST").unwrap_or_else(|_| "tfb-database".to_string());
+        let port = std::env::var("PGPORT").unwrap_or_else(|_| "5432".to_string());
         let url = format!(
-            "host={} port=5432 user=benchmarkdbuser password=benchmarkdbpass dbname=hello_world",
-            host
+            "host={} port={} user=benchmarkdbuser password=benchmarkdbpass dbname=hello_world",
+            host, port
         );
         let mut client = Client::connect(&url, NoTls).expect("DB connection failed");
 
