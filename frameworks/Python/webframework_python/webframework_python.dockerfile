@@ -26,7 +26,7 @@ FROM ubuntu:24.04 AS deploy
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV PIP_BREAK_SYSTEM_PACKAGES=1
-ENV LD_LIBRARY_PATH=/opt/WebFrameworkLibrary
+ENV LD_LIBRARY_PATH=/opt/WebFrameworkLibrary/lib
 
 RUN apt update
 RUN apt install -y python3-dev python3-pip

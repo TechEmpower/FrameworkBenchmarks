@@ -1,0 +1,14 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+  </Configurations>
+  <Folder Name="/Configs/">
+    <File Path="config.json" />
+  </Folder>
+  <Folder Name="/Configs/settings/">
+    <File Path="settings/web.json" />
+  </Folder>
+  <Project Path="Benchmark/Benchmark.csproj" />
+  <Project Path="Executors/Executors.csproj" />
+</Solution>

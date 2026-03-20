@@ -1,0 +1,13 @@
+{
+  "$schema": "https://raw.githubusercontent.com/LazyPanda07/WebFramework/refs/heads/main/schemas/executors_schema.json",
+  "PlainText": {
+    "route": "plaintext",
+    "loadType": "initialization",
+    "api": "csharp"
+  },
+  "Json": {
+    "route": "json",
+    "loadType": "initialization",
+    "api": "csharp"
+  }
+}
