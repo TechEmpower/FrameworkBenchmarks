@@ -237,6 +237,105 @@ impl PgWire {
         results
     }
 
+    /// OSCILLATING UPDATE: SELECTs + UPDATE in one write, one read.
+    ///
+    /// Since we know the ids and new randomNumbers before querying,
+    /// we can send all 20 Bind+Execute (SELECTs) + the UPDATE query
+    /// in a single write. PG processes them in order, and we read
+    /// all results in one pass. Two round-trips become one.
+    pub fn query_and_update_pipelined(
+        &mut self,
+        ids: &[i32],
+        new_randoms: &[i32],
+    ) -> Vec<(i32, i32)> {
+        self.wbuf.clear();
+
+        // Phase 1: All SELECT Bind+Executes
+        for &id in ids {
+            append_bind_execute_binary(&mut self.wbuf, "w", id);
+        }
+
+        // Phase 2: Build and append UPDATE as Simple Query
+        // (Simple Query has its own implicit sync, so we don't need an explicit Sync between phases)
+        let mut sql = String::with_capacity(64 + ids.len() * 16);
+        sql.push_str("UPDATE world SET randomnumber = v.r FROM (VALUES ");
+
+        // Build sorted (id, new_random) pairs for the UPDATE
+        let mut pairs: Vec<(i32, i32)> = ids.iter().zip(new_randoms.iter())
+            .map(|(&id, &rn)| (id, rn))
+            .collect();
+        pairs.sort_by_key(|&(id, _)| id);
+
+        for (i, &(id, rn)) in pairs.iter().enumerate() {
+            if i > 0 { sql.push(','); }
+            sql.push('(');
+            sql.push_str(itoa::Buffer::new().format(id));
+            sql.push(',');
+            sql.push_str(itoa::Buffer::new().format(rn));
+            sql.push(')');
+        }
+        sql.push_str(") AS v(i, r) WHERE world.id = v.i");
+
+        // Append as Simple Query (Q message) — has its own implicit transaction
+        self.wbuf.push(b'Q');
+        let qlen = (4 + sql.len() + 1) as i32;
+        self.wbuf.extend_from_slice(&qlen.to_be_bytes());
+        self.wbuf.extend_from_slice(sql.as_bytes());
+        self.wbuf.push(0);
+
+        // Single Sync for the extended query (SELECT) portion
+        // Note: Simple Query (UPDATE) doesn't need Sync, it self-syncs
+        // But we need Sync BEFORE the Simple Query to flush extended query results
+        // Actually, let's restructure: SELECTs with Sync, then UPDATE as Simple Query
+        // Rewrite: clear and redo properly
+
+        self.wbuf.clear();
+
+        // SELECTs via extended query
+        for &id in ids {
+            append_bind_execute_binary(&mut self.wbuf, "w", id);
+        }
+        // Sync to end the extended query batch
+        self.wbuf.push(b'S');
+        self.wbuf.extend_from_slice(&4i32.to_be_bytes());
+
+        // UPDATE via Simple Query (will execute after SELECTs complete)
+        self.wbuf.push(b'Q');
+        let qlen = (4 + sql.len() + 1) as i32;
+        self.wbuf.extend_from_slice(&qlen.to_be_bytes());
+        self.wbuf.extend_from_slice(sql.as_bytes());
+        self.wbuf.push(0);
+
+        // ONE write for everything
+        self.writer.write_all(&self.wbuf).unwrap();
+        self.writer.flush().unwrap();
+
+        // Read SELECT results
+        let mut results = Vec::with_capacity(ids.len());
+        loop {
+            let (ty, plen) = self.read_msg_header();
+            match ty {
+                b'D' => {
+                    self.read_payload(plen);
+                    results.push(parse_world_row_binary(&self.rbuf));
+                }
+                b'Z' => { self.skip_payload(plen); break; } // End of extended query batch
+                _ => { self.skip_payload(plen); }
+            }
+        }
+
+        // Read UPDATE result (Simple Query: CommandComplete + ReadyForQuery)
+        loop {
+            let (ty, plen) = self.read_msg_header();
+            match ty {
+                b'Z' => { self.skip_payload(plen); break; }
+                _ => { self.skip_payload(plen); }
+            }
+        }
+
+        results
+    }
+
     /// Fetch fortunes using prepared statement (text results for strings).
     pub fn query_fortunes(&mut self) -> Vec<(i32, String)> {
         self.wbuf.clear();

@@ -70,28 +70,27 @@ impl DbConn {
 
     /// Fetch + randomize + bulk update — /updates (CANNON PIPELINED)
     pub fn update_worlds(&mut self, count: usize) -> Vec<WorldRow> {
-        // Kinetic energy
         let ids: Vec<i32> = (0..count).map(|_| self.rand_id()).collect();
         let new_randoms: Vec<i32> = (0..count).map(|_| self.rand_id()).collect();
 
-        // Launch: pipeline all SELECTs
+        // Pipeline all SELECTs
         let results = self.pg.query_worlds_pipelined(&ids);
 
         let mut worlds: Vec<WorldRow> = results.into_iter().enumerate().map(|(i, (id, _))| {
             WorldRow { id, random_number: new_randoms[i] }
         }).collect();
 
-        // Sort by id for consistent UPDATE ordering
         worlds.sort_by_key(|w| w.id);
 
         // Bulk UPDATE
-        let mut sql = String::from("UPDATE world SET randomnumber = v.r FROM (VALUES ");
+        let mut sql = String::with_capacity(64 + count * 16);
+        sql.push_str("UPDATE world SET randomnumber = v.r FROM (VALUES ");
         for (i, w) in worlds.iter().enumerate() {
             if i > 0 { sql.push(','); }
             sql.push('(');
-            sql.push_str(&w.id.to_string());
+            sql.push_str(itoa::Buffer::new().format(w.id));
             sql.push(',');
-            sql.push_str(&w.random_number.to_string());
+            sql.push_str(itoa::Buffer::new().format(w.random_number));
             sql.push(')');
         }
         sql.push_str(") AS v(i, r) WHERE world.id = v.i");
