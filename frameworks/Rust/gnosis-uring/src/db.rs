@@ -22,9 +22,14 @@ pub struct Fortune {
     pub message: String,
 }
 
-/// Database connection with cannon-style pipelined queries.
+/// Number of PG connections per thread for query fan-out.
+const PG_POOL_SIZE: usize = 4;
+
+/// Database connection pool with cannon-style pipelined queries.
+/// Multiple connections enable PG-side parallelism for multi-query endpoints.
 pub struct DbConn {
-    pub pg: PgWire,
+    pub pg: PgWire,          // primary connection (single queries, fortunes, cache init)
+    pool: Vec<PgWire>,       // fan-out pool for multi-query endpoints
     pub rng: WyRand,
 }
 
@@ -35,8 +40,14 @@ impl DbConn {
 
         let pg = PgWire::connect(&host, port, "benchmarkdbuser", "benchmarkdbpass", "hello_world");
 
+        // Fan-out pool for multi-query endpoints
+        let pool: Vec<PgWire> = (0..PG_POOL_SIZE)
+            .map(|_| PgWire::connect(&host, port, "benchmarkdbuser", "benchmarkdbpass", "hello_world"))
+            .collect();
+
         Self {
             pg,
+            pool,
             rng: WyRand::new(),
         }
     }
@@ -52,29 +63,80 @@ impl DbConn {
         WorldRow { id: rid, random_number: rn }
     }
 
-    /// Multiple queries — /queries (CANNON PIPELINED)
+    /// Multiple queries — /queries (FAN-OUT CANNON)
     ///
-    /// Preloads all IDs, writes all queries in one syscall,
-    /// reads all results in one syscall.
+    /// Distributes queries across PG_POOL_SIZE connections.
+    /// Write to all connections, then read from all connections.
+    /// PG processes all connections concurrently (one process each).
     pub fn get_worlds(&mut self, count: usize) -> Vec<WorldRow> {
-        // Kinetic energy: preload all IDs
-        let ids: Vec<i32> = (0..count).map(|_| self.rand_id()).collect();
+        if count <= 1 {
+            let id = self.rand_id();
+            let w = self.get_world(id);
+            return vec![w];
+        }
 
-        // Launch + gather
-        let results = self.pg.query_worlds_pipelined(&ids);
+        let ids: Vec<i32> = (0..count).map(|_| self.rand_id()).collect();
+        let n = self.pool.len();
+
+        // Distribute IDs across connections
+        let mut chunks: Vec<Vec<i32>> = (0..n).map(|_| Vec::new()).collect();
+        for (i, &id) in ids.iter().enumerate() {
+            chunks[i % n].push(id);
+        }
+
+        // LAUNCH: write all queries to all connections (non-blocking via BufWriter)
+        for (conn_idx, chunk) in chunks.iter().enumerate() {
+            if !chunk.is_empty() {
+                self.pool[conn_idx].write_pipelined_queries(chunk);
+            }
+        }
+
+        // GATHER: read results from all connections in round-robin
+        let mut results = vec![(0i32, 0i32); count];
+        for (conn_idx, chunk) in chunks.iter().enumerate() {
+            if !chunk.is_empty() {
+                let conn_results = self.pool[conn_idx].read_pipelined_results(chunk.len());
+                for (j, result) in conn_results.into_iter().enumerate() {
+                    results[conn_idx + j * n] = result;
+                }
+            }
+        }
 
         results.into_iter().map(|(id, rn)| {
             WorldRow { id, random_number: rn }
         }).collect()
     }
 
-    /// Fetch + randomize + bulk update — /updates (CANNON PIPELINED)
+    /// Fetch + randomize + bulk update — /updates (FAN-OUT CANNON)
     pub fn update_worlds(&mut self, count: usize) -> Vec<WorldRow> {
         let ids: Vec<i32> = (0..count).map(|_| self.rand_id()).collect();
         let new_randoms: Vec<i32> = (0..count).map(|_| self.rand_id()).collect();
 
-        // Pipeline all SELECTs
-        let results = self.pg.query_worlds_pipelined(&ids);
+        let n = self.pool.len();
+
+        // Distribute IDs across connections
+        let mut chunks: Vec<Vec<i32>> = (0..n).map(|_| Vec::new()).collect();
+        for (i, &id) in ids.iter().enumerate() {
+            chunks[i % n].push(id);
+        }
+
+        // LAUNCH: write all queries
+        for (conn_idx, chunk) in chunks.iter().enumerate() {
+            if !chunk.is_empty() {
+                self.pool[conn_idx].write_pipelined_queries(chunk);
+            }
+        }
+
+        // GATHER: read results
+        let mut results = vec![(0i32, 0i32); count];
+        for (conn_idx, chunk) in chunks.iter().enumerate() {
+            if !chunk.is_empty() {
+                let conn_results = self.pool[conn_idx].read_pipelined_results(chunk.len());
+                for (j, result) in conn_results.into_iter().enumerate() {
+                    results[conn_idx + j * n] = result;
+                }
+            }
+        }
 
         let mut worlds: Vec<WorldRow> = results.into_iter().enumerate().map(|(i, (id, _))| {
             WorldRow { id, random_number: new_randoms[i] }
@@ -82,7 +144,7 @@ impl DbConn {
 
         worlds.sort_by_key(|w| w.id);
 
-        // Bulk UPDATE
+        // Bulk UPDATE via primary connection
         let mut sql = String::with_capacity(64 + count * 16);
         sql.push_str("UPDATE world SET randomnumber = v.r FROM (VALUES ");
         for (i, w) in worlds.iter().enumerate() {

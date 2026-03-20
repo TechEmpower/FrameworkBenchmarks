@@ -213,6 +213,13 @@ impl PgWire {
 
     /// CANNON: Pipeline N world queries with binary results.
     pub fn query_worlds_pipelined(&mut self, ids: &[i32]) -> Vec<(i32, i32)> {
+        self.write_pipelined_queries(ids);
+        self.read_pipelined_results(ids.len())
+    }
+
+    /// Write phase: send all Bind+Execute+Sync without reading.
+    /// Used by fan-out to write to multiple connections before reading any.
+    pub fn write_pipelined_queries(&mut self, ids: &[i32]) {
         self.wbuf.clear();
         for &id in ids {
             append_bind_execute_binary(&mut self.wbuf, "w", id);
@@ -221,8 +228,11 @@ impl PgWire {
         self.wbuf.extend_from_slice(&4i32.to_be_bytes());
         self.writer.write_all(&self.wbuf).unwrap();
         self.writer.flush().unwrap();
+    }
 
-        let mut results = Vec::with_capacity(ids.len());
+    /// Read phase: gather N DataRow results from a previously written pipeline.
+    pub fn read_pipelined_results(&mut self, count: usize) -> Vec<(i32, i32)> {
+        let mut results = Vec::with_capacity(count);
         loop {
             let (ty, plen) = self.read_msg_header();
             match ty {
