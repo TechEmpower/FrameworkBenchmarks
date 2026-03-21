@@ -215,24 +215,8 @@ pub mod linux {
                             // sent, nothing to do
                         }
 
-                        EVT_PG_WRITE => {
-                            // PG query pipeline sent — now submit read for results
-                            if result >= 0 {
-                                self.on_pg_write_done(id)?;
-                            } else {
-                                // PG write failed — send 500 and close
-                                eprintln!("PG write error for conn {}: {}", id, result);
-                                self.close_conn(id)?;
-                            }
-                        }
-
-                        EVT_PG_READ => {
-                            if result > 0 {
-                                self.on_pg_read(id, result as usize)?;
-                            } else {
-                                eprintln!("PG read error for conn {}: {}", id, result);
-                                self.close_conn(id)?;
-                            }
+                        EVT_PG_WRITE | EVT_PG_READ => {
+                            // Reserved for future async PG integration
                         }
 
                         _ => {}
