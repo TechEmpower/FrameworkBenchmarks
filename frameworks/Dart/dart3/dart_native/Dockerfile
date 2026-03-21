@@ -2,7 +2,7 @@
 FROM dart:3.11.0 AS build
 WORKDIR /app
 
-COPY . .
+COPY dart_native/ .
 
 RUN dart compile exe bin/server.dart -o server
 
