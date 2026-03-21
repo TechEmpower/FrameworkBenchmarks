@@ -85,7 +85,6 @@ pub mod linux {
                 read_buf: Pin::new(vec![0u8; READ_BUF_SIZE].into_boxed_slice()),
                 write_buf: None,
                 keep_alive: true,
-                pg_state: None,
             }
         }
 
