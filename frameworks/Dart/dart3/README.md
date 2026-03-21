@@ -10,8 +10,6 @@ The tests were run with:
 
 ### JIT
 
-### JIT
-
 Simplest possible implementation utilizing the standard Dart VM.
 Results in the highest footprint both in terms of image size and memory consumption.
 ([source code](https://github.com/TechEmpower/FrameworkBenchmarks/tree/master/frameworks/Dart/dart3/dart_jit))
