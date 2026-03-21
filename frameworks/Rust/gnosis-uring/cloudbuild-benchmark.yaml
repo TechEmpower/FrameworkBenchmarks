@@ -91,25 +91,42 @@ steps:
 
         # Warmup
         echo ""; echo "=== Warmup ==="
-        wrk -t4 -c64 -d5s http://localhost:8080/plaintext > /dev/null 2>&1
-        wrk -t4 -c64 -d5s http://localhost:8080/db > /dev/null 2>&1
+        wrk -t16 -c512 -d5s http://localhost:8080/plaintext > /dev/null 2>&1
+        wrk -t16 -c512 -d5s http://localhost:8080/db > /dev/null 2>&1
         echo "Done."; echo ""
 
         # All 7 tests
         for test in plaintext json db "queries?queries=20" fortunes "updates?queries=20" "cached-queries?count=20"; do
           name=$(echo "$test" | cut -d'?' -f1 | tr '[:lower:]' '[:upper:]')
-          echo "=== $name — 4t, 64c, 15s ==="
-          wrk -t4 -c64 -d15s --latency "http://localhost:8080/$test"
+          echo "=== $name — 16t, 512c, 15s ==="
+          wrk -t16 -c512 -d15s --latency "http://localhost:8080/$test"
           echo ""
         done
 
         # High concurrency
-        echo "=== HIGH CONCURRENCY (256c) ==="
+        echo "=== HIGH CONCURRENCY (1024c) ==="
         for test in plaintext json db "queries?queries=20" fortunes "updates?queries=20" "cached-queries?count=20"; do
           name=$(echo "$test" | cut -d'?' -f1 | tr '[:lower:]' '[:upper:]')
-          echo "=== $name (256c) ==="
-          wrk -t8 -c256 -d15s "http://localhost:8080/$test" | grep "Requests/sec"
+          echo "=== $name (1024c) ==="
+          wrk -t16 -c1024 -d15s "http://localhost:8080/$test" | grep "Requests/sec"
         done
+
+        echo ""
+        echo "=== HTTP PIPELINING (pipeline depth 16) ==="
+        cat > /tmp/pipeline.lua << 'LUAEOF'
+        init = function(args)
+          local r = {}
+          for i = 1, 16 do
+            r[i] = wrk.format(nil, "/plaintext")
+          end
+          req = table.concat(r)
+        end
+
+        request = function()
+          return req
+        end
+        LUAEOF
+        echo "=== PLAINTEXT PIPELINED ===" && wrk -t16 -c512 -d15s -s /tmp/pipeline.lua http://localhost:8080/plaintext | grep "Requests/sec"
 
         echo ""
         echo "══════════════════════════════════════════════════════════════"

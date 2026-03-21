@@ -608,6 +608,246 @@ fn parse_int(bytes: &[u8]) -> i32 {
     if neg { -n } else { n }
 }
 
+// ── Raw fd helpers for io_uring integration ───────────────────
+
+fn raw_read_exact(fd: i32, buf: &mut [u8]) {
+    let mut total = 0;
+    while total < buf.len() {
+        let n = unsafe {
+            libc::read(
+                fd,
+                buf[total..].as_mut_ptr() as *mut libc::c_void,
+                buf.len() - total,
+            )
+        };
+        if n <= 0 {
+            panic!("PG raw read failed");
+        }
+        total += n as usize;
+    }
+}
+
+fn raw_write_all(fd: i32, buf: &[u8]) {
+    let mut total = 0;
+    while total < buf.len() {
+        let n = unsafe {
+            libc::write(
+                fd,
+                buf[total..].as_ptr() as *const libc::c_void,
+                buf.len() - total,
+            )
+        };
+        if n <= 0 {
+            panic!("PG raw write failed");
+        }
+        total += n as usize;
+    }
+}
+
+/// Connect to PostgreSQL and return a raw fd ready for io_uring.
+///
+/// Performs the full startup/auth handshake and prepares statements
+/// using raw libc read/write — no BufReader/BufWriter anywhere,
+/// so the fd has no hidden buffered state when handed to the ring.
+pub fn connect_raw_fd(host: &str, port: u16, user: &str, password: &str, dbname: &str) -> i32 {
+    let fd;
+
+    // Try Unix domain socket first
+    let socket_path = format!("/var/run/postgresql/.s.PGSQL.{}", port);
+    let socket_path_tmp = format!("/tmp/.s.PGSQL.{}", port);
+    let uds_path = if std::path::Path::new(&socket_path).exists() {
+        Some(socket_path)
+    } else if std::path::Path::new(&socket_path_tmp).exists() {
+        Some(socket_path_tmp)
+    } else {
+        None
+    };
+
+    if let Some(ref path) = uds_path {
+        unsafe {
+            fd = libc::socket(libc::AF_UNIX, libc::SOCK_STREAM, 0);
+            assert!(fd >= 0, "socket(AF_UNIX) failed");
+
+            let mut addr: libc::sockaddr_un = std::mem::zeroed();
+            addr.sun_family = libc::AF_UNIX as libc::sa_family_t;
+            let path_bytes = path.as_bytes();
+            assert!(
+                path_bytes.len() < addr.sun_path.len(),
+                "Unix socket path too long"
+            );
+            std::ptr::copy_nonoverlapping(
+                path_bytes.as_ptr(),
+                addr.sun_path.as_mut_ptr() as *mut u8,
+                path_bytes.len(),
+            );
+
+            let ret = libc::connect(
+                fd,
+                &addr as *const libc::sockaddr_un as *const libc::sockaddr,
+                std::mem::size_of::<libc::sockaddr_un>() as libc::socklen_t,
+            );
+            assert!(ret == 0, "connect(Unix) failed: errno={}", std::io::Error::last_os_error());
+            eprintln!("  PG raw fd: connected via Unix socket {}", path);
+        }
+    } else {
+        // TCP fallback
+        unsafe {
+            fd = libc::socket(libc::AF_INET, libc::SOCK_STREAM, 0);
+            assert!(fd >= 0, "socket(AF_INET) failed");
+
+            // Resolve host — for simplicity, parse as IPv4 or use 127.0.0.1
+            let ip: u32 = if host == "localhost" || host == "127.0.0.1" {
+                0x7f000001u32
+            } else {
+                // Parse dotted-quad
+                let parts: Vec<u8> = host
+                    .split('.')
+                    .map(|s| s.parse::<u8>().expect("invalid IP"))
+                    .collect();
+                assert!(parts.len() == 4, "invalid IP address");
+                ((parts[0] as u32) << 24)
+                    | ((parts[1] as u32) << 16)
+                    | ((parts[2] as u32) << 8)
+                    | (parts[3] as u32)
+            };
+
+            let mut addr: libc::sockaddr_in = std::mem::zeroed();
+            addr.sin_family = libc::AF_INET as libc::sa_family_t;
+            addr.sin_port = port.to_be();
+            addr.sin_addr.s_addr = ip.to_be();
+
+            let ret = libc::connect(
+                fd,
+                &addr as *const libc::sockaddr_in as *const libc::sockaddr,
+                std::mem::size_of::<libc::sockaddr_in>() as libc::socklen_t,
+            );
+            assert!(ret == 0, "connect(TCP) failed");
+
+            // TCP_NODELAY
+            let one: libc::c_int = 1;
+            libc::setsockopt(
+                fd,
+                libc::IPPROTO_TCP,
+                libc::TCP_NODELAY,
+                &one as *const libc::c_int as *const libc::c_void,
+                std::mem::size_of::<libc::c_int>() as libc::socklen_t,
+            );
+            eprintln!("  PG raw fd: connected via TCP {}:{}", host, port);
+        }
+    }
+
+    // ── Startup message ──
+    let mut startup = Vec::with_capacity(128);
+    startup.extend_from_slice(&[0u8; 4]); // placeholder for length
+    startup.extend_from_slice(&196608i32.to_be_bytes()); // protocol v3.0
+    write_cstr(&mut startup, b"user");
+    write_cstr(&mut startup, user.as_bytes());
+    write_cstr(&mut startup, b"database");
+    write_cstr(&mut startup, dbname.as_bytes());
+    startup.push(0); // terminator
+    let len = startup.len() as i32;
+    startup[0..4].copy_from_slice(&len.to_be_bytes());
+    raw_write_all(fd, &startup);
+
+    // ── Auth flow ──
+    let mut hdr = [0u8; 5];
+    let mut rbuf = vec![0u8; 4096];
+
+    loop {
+        raw_read_exact(fd, &mut hdr);
+        let ty = hdr[0];
+        let plen = i32::from_be_bytes([hdr[1], hdr[2], hdr[3], hdr[4]]) as usize - 4;
+
+        match ty {
+            b'R' => {
+                if rbuf.len() < plen {
+                    rbuf.resize(plen, 0);
+                }
+                raw_read_exact(fd, &mut rbuf[..plen]);
+                let auth = i32::from_be_bytes([rbuf[0], rbuf[1], rbuf[2], rbuf[3]]);
+                match auth {
+                    0 => {} // AuthOk
+                    3 => {
+                        // Cleartext password
+                        let mut pw = Vec::with_capacity(64);
+                        pw.push(b'p');
+                        let pwlen = (4 + password.len() + 1) as i32;
+                        pw.extend_from_slice(&pwlen.to_be_bytes());
+                        pw.extend_from_slice(password.as_bytes());
+                        pw.push(0);
+                        raw_write_all(fd, &pw);
+                    }
+                    5 => {
+                        // MD5 password
+                        let salt = [rbuf[4], rbuf[5], rbuf[6], rbuf[7]];
+                        let md5 = md5_password(user, password, &salt);
+                        let mut pw = Vec::with_capacity(64);
+                        pw.push(b'p');
+                        let pwlen = (4 + md5.len() + 1) as i32;
+                        pw.extend_from_slice(&pwlen.to_be_bytes());
+                        pw.extend_from_slice(md5.as_bytes());
+                        pw.push(0);
+                        raw_write_all(fd, &pw);
+                    }
+                    _ => panic!("Unsupported auth type: {}", auth),
+                }
+            }
+            b'Z' => {
+                // ReadyForQuery — skip payload (1 byte: transaction status)
+                if plen > 0 {
+                    raw_read_exact(fd, &mut rbuf[..plen]);
+                }
+                break;
+            }
+            _ => {
+                // Skip unknown messages (ParameterStatus, BackendKeyData, etc.)
+                if plen > 0 {
+                    if rbuf.len() < plen {
+                        rbuf.resize(plen, 0);
+                    }
+                    raw_read_exact(fd, &mut rbuf[..plen]);
+                }
+            }
+        }
+    }
+
+    // ── Prepare statements ──
+    let mut wbuf = Vec::with_capacity(512);
+    // Parse "w" with param type hint (INT4 = OID 23)
+    append_parse_typed(&mut wbuf, "w", "SELECT id, randomnumber FROM world WHERE id=$1", 23);
+    // Parse "f" (no params)
+    append_parse(&mut wbuf, "f", "SELECT id, message FROM fortune");
+    // Sync
+    wbuf.push(b'S');
+    wbuf.extend_from_slice(&4i32.to_be_bytes());
+    raw_write_all(fd, &wbuf);
+
+    // Read until ReadyForQuery
+    loop {
+        raw_read_exact(fd, &mut hdr);
+        let ty = hdr[0];
+        let plen = i32::from_be_bytes([hdr[1], hdr[2], hdr[3], hdr[4]]) as usize - 4;
+        match ty {
+            b'Z' => {
+                if plen > 0 {
+                    raw_read_exact(fd, &mut rbuf[..plen]);
+                }
+                break;
+            }
+            _ => {
+                if plen > 0 {
+                    if rbuf.len() < plen {
+                        rbuf.resize(plen, 0);
+                    }
+                    raw_read_exact(fd, &mut rbuf[..plen]);
+                }
+            }
+        }
+    }
+
+    fd
+}
+
 fn write_cstr(buf: &mut Vec<u8>, s: &[u8]) {
     buf.extend_from_slice(s);
     buf.push(0);

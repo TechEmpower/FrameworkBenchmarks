@@ -2,6 +2,7 @@
   "framework": "gnosis-uring",
   "tests": [{
     "default": {
+      "dockerfile": "gnosis-uring-uring.dockerfile",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
       "port": 8080,
@@ -14,7 +15,7 @@
       "database_os": "Linux",
       "database": "None",
       "display_name": "gnosis-uring",
-      "notes": "Topology-driven server: four primitives (fork/race/fold/vent) mapped to io_uring. Per-chunk Laminar codec racing.",
+      "notes": "Topology-driven server: four primitives (fork/race/fold/vent) mapped to io_uring. Pure io_uring mode for plaintext/JSON (no DB).",
       "versus": "may-minihttp"
     },
     "postgresql": {
