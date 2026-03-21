@@ -27,6 +27,11 @@ steps:
         mkdir -p /tmp/www
         echo '<html><body>Hello</body></html>' > /tmp/www/index.html
 
+        # Configure PostgreSQL for trust auth (benchmark environment)
+        echo "local all all trust" > /etc/postgresql/15/main/pg_hba.conf
+        echo "host all all 127.0.0.1/32 trust" >> /etc/postgresql/15/main/pg_hba.conf
+        echo "host all all ::1/128 trust" >> /etc/postgresql/15/main/pg_hba.conf
+
         # Start PostgreSQL
         pg_ctlcluster 15 main start || true
         sleep 3
