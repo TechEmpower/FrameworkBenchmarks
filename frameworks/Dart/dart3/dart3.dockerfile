@@ -3,7 +3,7 @@ FROM dart:3.11.0 AS build
 WORKDIR /app
 
 COPY pubspec.yaml .
-COPY dart_native/bin/ bin/
+COPY dart_native/ .
 
 RUN dart compile exe bin/server.dart -o server
 

@@ -8,6 +8,19 @@ The tests were run with:
 
 ## Benchmark Variants
 
+### JIT
+
+### JIT
+
+Simplest possible implementation utilizing the standard Dart VM.
+Results in the highest footprint both in terms of image size and memory consumption.
+([source code](https://github.com/TechEmpower/FrameworkBenchmarks/tree/master/frameworks/Dart/dart3/dart_jit))
+
+Test URLs:
+
+- JSON: `http://localhost:8080/json`
+- PLAINTEXT: `http://localhost:8080/plaintext`
+
 ### Native
 
 Minimal implementation with the smallest resource footprint.

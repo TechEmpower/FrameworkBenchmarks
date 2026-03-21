@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:isolate';
 
 /// The fixed TCP port used by the server.
 /// Defined here for visibility and ease of configuration.
@@ -11,29 +10,16 @@ const _defaultPort = 8080;
 final _jsonEncoder = JsonUtf8Encoder();
 
 void main(List<String> args) async {
-  /// Create an [Isolate] containing an [HttpServer]
-  /// for each processor after the first
-  for (var i = 1; i < Platform.numberOfProcessors; i++) {
-    await Isolate.spawn(_startServer, args);
-  }
-
-  /// Create a [HttpServer] for the first processor
-  await _startServer(args);
-}
-
-/// Creates and setup a [HttpServer]
-Future<void> _startServer(List<String> args) async {
   /// Binds the [HttpServer] on `0.0.0.0:8080`.
   final server = await HttpServer.bind(
     InternetAddress.anyIPv4,
     _defaultPort,
-    shared: true,
   );
 
   server
     ..defaultResponseHeaders.clear()
     /// Sets [HttpServer]'s [serverHeader].
-    ..serverHeader = 'dart_native'
+    ..serverHeader = 'dart_jit'
     /// Handles [HttpRequest]'s from [HttpServer].
     ..listen(_handleRequest);
 }
