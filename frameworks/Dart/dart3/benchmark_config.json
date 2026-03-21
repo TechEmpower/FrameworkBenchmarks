@@ -3,6 +3,7 @@
   "maintainers": ["iapicca"], 
   "tests": [{
     "default": { 
+      "dockerfile": "dart_native/Dockerfile",
       "display_name": "dart3_native",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
@@ -15,6 +16,7 @@
       "database_os": "Linux"
     },
     "aot": {
+      "dockerfile": "dart_aot/Dockerfile",
       "display_name": "dart3_aot",
       "json_url": "/json",
       "plaintext_url": "/plaintext",
@@ -27,6 +29,7 @@
       "database_os": "Linux"
     },
      "jit": {
+      "dockerfile": "dart_jit/Dockerfile",
       "display_name": "dart3_jit",
       "json_url": "/json",
       "plaintext_url": "/plaintext",

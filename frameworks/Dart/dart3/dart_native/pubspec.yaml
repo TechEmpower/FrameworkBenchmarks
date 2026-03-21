@@ -1,0 +1,8 @@
+name: dart_native_benchmark
+description: A benchmark of Dart
+environment:
+  sdk: ^3.11.0
+
+dev_dependencies:
+  lints: ^6.1.0
+

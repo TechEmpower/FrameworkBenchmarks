@@ -1,5 +1,5 @@
-name: dartbenchmark
-description: A benchmark of dart
+name: dart_aot_benchmark
+description: A benchmark of Dart
 environment:
   sdk: ^3.11.0
 
