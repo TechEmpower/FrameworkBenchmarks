@@ -27,10 +27,12 @@ steps:
         mkdir -p /tmp/www
         echo '<html><body>Hello</body></html>' > /tmp/www/index.html
 
-        # Configure PostgreSQL for trust auth (benchmark environment)
+        # Configure PostgreSQL for benchmark
         echo "local all all trust" > /etc/postgresql/15/main/pg_hba.conf
         echo "host all all 127.0.0.1/32 trust" >> /etc/postgresql/15/main/pg_hba.conf
         echo "host all all ::1/128 trust" >> /etc/postgresql/15/main/pg_hba.conf
+        # Bump max_connections for 32 threads × 3 conns/thread = 96
+        sed -i 's/max_connections = 100/max_connections = 200/' /etc/postgresql/15/main/postgresql.conf
 
         # Start PostgreSQL
         pg_ctlcluster 15 main start || true

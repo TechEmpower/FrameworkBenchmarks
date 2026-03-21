@@ -23,7 +23,9 @@ pub struct Fortune {
 }
 
 /// Number of PG connections per thread for query fan-out.
-const PG_POOL_SIZE: usize = 4;
+/// Keep low to avoid exceeding PG max_connections (default 100).
+/// With 32 threads: 32 × (1 primary + 2 pool) = 96 connections.
+const PG_POOL_SIZE: usize = 2;
 
 /// Database connection pool with cannon-style pipelined queries.
 /// Multiple connections enable PG-side parallelism for multi-query endpoints.
