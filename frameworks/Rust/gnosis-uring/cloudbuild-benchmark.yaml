@@ -68,9 +68,9 @@ steps:
         echo "Cores:  $(nproc)"
         echo "Kernel: $(uname -r)"
 
-        # Start gnosis-uring (try io_uring first, falls back to blocking)
+        # Start gnosis-uring with multi-threaded whip-snaps (best for DB)
         DBHOST=localhost ./target/release/gnosis-uring \
-          --uring --port 8080 --root /tmp/www --threads 0 &
+          --port 8080 --root /tmp/www --threads 0 &
         sleep 3
 
         # Verify

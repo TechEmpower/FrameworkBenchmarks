@@ -18,4 +18,4 @@ COPY --from=builder /build/target/release/gnosis-uring /usr/local/bin/gnosis-uri
 
 EXPOSE 8080
 
-CMD ["gnosis-uring", "--uring", "--port", "8080", "--root", "/var/www", "--threads", "0"]
+CMD ["gnosis-uring", "--port", "8080", "--root", "/var/www", "--threads", "0"]
