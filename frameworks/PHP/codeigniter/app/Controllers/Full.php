@@ -40,7 +40,7 @@ class Full extends Controller
         $modelWorld = model('World');
 
         while ($queries--) {
-            $row = model('World')->find(mt_rand(1, 10000));
+            $row = $modelWorld->find(mt_rand(1, 10000));
             $row['randomNumber'] = mt_rand(1, 10000);
             $world[] = $row;
             $modelWorld->save($row);
