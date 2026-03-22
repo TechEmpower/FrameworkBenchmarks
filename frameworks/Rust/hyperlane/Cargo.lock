@@ -574,15 +574,15 @@ dependencies = [
 
 [[package]]
 name = "http-constant"
-version = "5.2.1"
+version = "5.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7ec2708886ccbffc115c6b8510f47de38490a746309e0342255e0abe1eef665d"
+checksum = "b855d6e52928522a84e7ed7739d6932b42a5365ab53a65098a2889fbc8006256"
 
 [[package]]
 name = "http-type"
-version = "17.3.1"
+version = "17.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "88e85acaf47d5d64c88f2002d9fb3c399f1eea55361ae323d5fef4af26dc1f78"
+checksum = "495a1cedb02f3ad72e234b035ae9e12c217e144d789890973d646e000301c78d"
 dependencies = [
  "hex",
  "http-compress",
@@ -598,9 +598,9 @@ dependencies = [
 
 [[package]]
 name = "hyperlane"
-version = "18.2.1"
+version = "18.2.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0e2ba2170a04306ba9b323cceae605200cec633c2c6494c538455dbcbe405c24"
+checksum = "b439b103229311c7e42c7402528bb9d0c6ac9aa219089122c6b0c28115e85683"
 dependencies = [
  "http-type",
  "inventory",
@@ -940,9 +940,9 @@ dependencies = [
 
 [[package]]
 name = "once_cell"
-version = "1.21.3"
+version = "1.21.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "42f5e15c9953c5e4ccceeb2e7382a716482c34515315f7b03532b8b4e8393d2d"
+checksum = "9f7c3e4beb33f85d45ae3e3a1792185706c8e16d043238c593331cc7cd313b50"
 
 [[package]]
 name = "parking"
