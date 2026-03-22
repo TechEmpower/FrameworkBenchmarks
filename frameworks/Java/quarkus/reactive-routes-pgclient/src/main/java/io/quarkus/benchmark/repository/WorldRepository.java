@@ -28,18 +28,18 @@ public class WorldRepository {
     PgClients clients;
 
 
-    public Uni<JsonWorld> findAsJsonWorld(final Integer id) {
+    public Uni<JsonWorld> findAsJsonWorld(final Tuple id) {
         return clients.getClient().preparedQuery("SELECT id, randomNumber FROM World WHERE id = $1")
-                .execute(Tuple.of(id))
+                .execute(id)
                 .map(rowset -> {
                     final Row row = rowset.iterator().next();
                     return new JsonWorld(row.getInteger(0), row.getInteger(1));
                 });
     }
 
-    public Uni<World> find(final Integer id) {
+    public Uni<World> find(final Tuple id) {
         return clients.getClient().preparedQuery("SELECT id, randomNumber FROM World WHERE id = $1")
-                .execute(Tuple.of(id))
+                .execute(id)
                 .map(rowset -> {
                     final Row row = rowset.iterator().next();
                     return new World(row.getInteger(0), row.getInteger(1));

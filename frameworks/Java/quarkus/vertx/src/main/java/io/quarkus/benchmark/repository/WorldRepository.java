@@ -28,6 +28,14 @@ public class WorldRepository {
     private PgConnectionPool connectionPool;
 
     private static final Integer[] BOXED_RND = IntStream.range(1, 10001).boxed().toArray(Integer[]::new);
+    private static final Tuple[] tupleCache = new Tuple[10000];
+
+    static {
+        for (int i = 0; i < 10000; i++) {
+            tupleCache[i] = Tuple.of(i + 1);
+        }
+    }
+
 
     private static Integer boxedRandomWorldNumber() {
         final int rndValue = ThreadLocalRandom.current().nextInt(1, 10001);
@@ -36,8 +44,20 @@ public class WorldRepository {
         return boxedRnd;
     }
 
+    private static int primitiveRandomWorldNumber() {
+        final int rndValue = ThreadLocalRandom.current().nextInt(1, 10001);
+        return rndValue;
+    }
+
+    private static Tuple getRandomTuple() {
+        final int rndValue = primitiveRandomWorldNumber();
+        final Tuple tuple = tupleCache[rndValue - 1];
+        return tuple;
+    }
+
+
     public void loadRandomJsonWorld(final Handler<AsyncResult<JsonWorld>> worldHandler) {
-        connectionPool.pgConnection().selectWorldQuery().execute(Tuple.of(boxedRandomWorldNumber()), randomWorldRow -> {
+        connectionPool.pgConnection().selectWorldQuery().execute(getRandomTuple(), randomWorldRow -> {
             if (randomWorldRow.succeeded()) {
                 final RowIterator<Row> resultSet = randomWorldRow.result().iterator();
                 if (!resultSet.hasNext()) {
@@ -101,16 +121,15 @@ public class WorldRepository {
             connection.rawConnection().group(c -> {
                 final PreparedQuery<RowSet<Row>> preparedQuery = c.preparedQuery(PgConnectionPool.SELECT_WORLD);
                 for (int i = 0; i < worldsToUpdate.length; i++) {
-                    final Integer id = boxedRandomWorldNumber();
                     final int index = i;
-                    preparedQuery.execute(Tuple.of(id), worldId -> {
+                    preparedQuery.execute(getRandomTuple(), worldId -> {
                         if (!failed) {
                             if (worldId.failed()) {
                                 failed = true;
                                 resultHandler.handle(Future.failedFuture(worldId.cause()));
                                 return;
                             }
-                            worldsToUpdate[index] = new World(worldId.result().iterator().next().getInteger(0), boxedRandomWorldNumber());
+                            worldsToUpdate[index] = new World(worldId.result().iterator().next().getInteger(0), primitiveRandomWorldNumber());
                             if (++selectWorldCompletedCount == worldsToUpdate.length) {
                                 randomWorldsQueryCompleted();
                             }
@@ -159,7 +178,7 @@ public class WorldRepository {
         private void run() {
             connection.rawConnection().group(c -> {
                 for (int i = 0; i < count; i++) {
-                    c.preparedQuery(PgConnectionPool.SELECT_WORLD).execute(Tuple.of(boxedRandomWorldNumber()), this);
+                    c.preparedQuery(PgConnectionPool.SELECT_WORLD).execute(getRandomTuple(), this);
                 }
             });
         }
