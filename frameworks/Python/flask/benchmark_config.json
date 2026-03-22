@@ -156,7 +156,7 @@
       "versus": "wsgi",
       "tags": [ ]
     },
-    "fastwsgi": {
+    "fastpysgi": {
       "json_url": "/json-raw",
       "plaintext_url": "/plaintext",
       "port": 8080,
@@ -168,10 +168,10 @@
       "flavor": "Python3",
       "orm": "Raw",
       "platform": "WSGI",
-      "webserver": "FastWSGI",
+      "webserver": "FastPySGI",
       "os": "Linux",
       "database_os": "Linux",
-      "display_name": "Flask [FastWSGI]",
+      "display_name": "Flask [FastPySGI]",
       "notes": "",
       "versus": "wsgi"
     }

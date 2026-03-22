@@ -54,7 +54,7 @@ Response _sendResponse(
     statusCode,
     headers: {
       HttpHeaders.contentLengthHeader: '${bytes.length}',
-      HttpHeaders.dateHeader: '${HttpDate.format(DateTime.now())}',
+      HttpHeaders.dateHeader: HttpDate.format(DateTime.now()),
       if (type != null) HttpHeaders.contentTypeHeader: type.mimeType,
     },
     body: bytes,

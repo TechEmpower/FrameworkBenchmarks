@@ -6,11 +6,11 @@ RUN apt-get install libpq-dev python3-dev -y
 
 WORKDIR /flask
 COPY ./ /flask
-RUN pip3 install -U pip; pip3 install -r /flask/requirements-fastwsgi.txt 
+RUN pip3 install -U pip; pip3 install -r /flask/requirements-fastpysgi.txt 
 
 EXPOSE 8080
 
 ENV USE_UJSON=1
 ENV USE_RAW=1
 
-CMD python ./app.py -s fastwsgi
+CMD python ./app.py -s fastpysgi

@@ -7,11 +7,9 @@ ENV PATH="/opt/venv/bin:$PATH"
 
 RUN pip3 install cython==3.2.3
 
-COPY requirements.txt requirements-hypercorn.txt ./
-
-RUN pip3 install -r requirements.txt -r requirements-hypercorn.txt
-
 COPY . ./
+
+RUN pip3 install -r requirements-hypercorn.txt
 
 EXPOSE 8080
 

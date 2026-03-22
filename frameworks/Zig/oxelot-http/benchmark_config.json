@@ -1,0 +1,52 @@
+{
+  "framework": "oxelot-http",
+  "tests": [{
+    "default": {
+      "dockerfile": "oxelot-http.dockerfile",
+      "docker_cmd": "/app/techempower",
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "port": 8000,
+      "approach": "Realistic",
+      "classification": "Platform",
+      "database": "none",
+      "framework": "oxelot-http",
+      "language": "Zig",
+      "flavor": "None",
+      "orm": "Raw",
+      "platform": "Zig",
+      "webserver": "Custom",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "oxelot-http",
+      "notes": "",
+      "versus": "None"
+    },
+    "postgres": {
+      "dockerfile": "oxelot-http.dockerfile",
+      "docker_cmd": "/app/techempower",
+      "json_url": "/json",
+      "plaintext_url": "/plaintext",
+      "db_url": "/db",
+      "query_url": "/queries?q=",
+      "update_url": "/updates?q=",
+      "fortune_url": "/fortunes",
+      "cached_query_url": "/cached-queries?q=",
+      "port": 8000,
+      "approach": "Realistic",
+      "classification": "Fullstack",
+      "database": "postgres",
+      "framework": "oxelot-http",
+      "language": "Zig",
+      "flavor": "None",
+      "orm": "Raw",
+      "platform": "Zig",
+      "webserver": "Custom",
+      "os": "Linux",
+      "database_os": "Linux",
+      "display_name": "oxelot-http [PostgreSQL]",
+      "notes": "",
+      "versus": "None"
+    }
+  }]
+}

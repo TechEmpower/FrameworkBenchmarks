@@ -107,27 +107,6 @@
         "notes": "",
         "versus": "None"
       },
-      "hypercorn-orjson": {
-        "json_url": "/json",
-        "db_url": "/db",
-        "query_url": "/queries?queries=",
-        "update_url": "/updates?queries=",
-        "port": 8080,
-        "approach": "Realistic",
-        "classification": "Micro",
-        "database": "Postgres",
-        "framework": "FastAPI",
-        "language": "Python",
-        "flavor": "Python3",
-        "orm": "Raw",
-        "platform": "asyncio",
-        "webserver": "Hypercorn",
-        "os": "Linux",
-        "database_os": "Linux",
-        "display_name": "FastAPI-hypercorn-orjson",
-        "notes": "",
-        "versus": "None"
-      },
       "nginx": {
         "json_url": "/json",
         "fortune_url": "/fortunes",
@@ -173,6 +152,29 @@
         "display_name": "FastAPI-uvicorn",
         "notes": "",
         "versus": "None"
+      },
+      "fastpysgi": {
+        "json_url": "/json",
+        "fortune_url": "/fortunes",
+        "plaintext_url": "/plaintext",
+        "db_url": "/db",
+        "query_url": "/queries?queries=",
+        "update_url": "/updates?queries=",
+        "port": 8080,
+        "approach": "Realistic",
+        "classification": "Micro",
+        "database": "Postgres",
+        "framework": "FastAPI",
+        "language": "Python",
+        "flavor": "Python3",
+        "orm": "Raw",
+        "platform": "asyncio",
+        "webserver": "FastPySGI",
+        "os": "Linux",
+        "database_os": "Linux",
+        "display_name": "FastAPI [FastPySGI]",
+        "notes": "",
+        "versus": "fastapi"
       }
     }
   ]

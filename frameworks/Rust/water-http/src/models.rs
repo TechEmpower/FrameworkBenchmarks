@@ -17,6 +17,10 @@ pub struct Fortune {
 pub struct FortuneTemplate<'a>{
     pub items:&'a Vec<Fortune>
 }
+#[derive(Serialize,Debug)]
+pub struct JsonHolder {
+    pub message:&'static str
+}
 
 
 

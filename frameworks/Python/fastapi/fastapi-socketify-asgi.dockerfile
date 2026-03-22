@@ -8,12 +8,12 @@ ENV PATH="/opt/venv/bin:$PATH"
 RUN apt-get update; apt-get install libuv1 -y
 RUN pip3 install cython==3.2.3
 
-COPY requirements-socketify.txt ./
+COPY . ./
 
 RUN pip3 install -r requirements-socketify.txt
 
-COPY . ./
-
 EXPOSE 8080
 
-CMD python ./app-socketify-asgi.py
+ENV USE_ORJSON=1
+
+CMD python app_server.py -s socketify

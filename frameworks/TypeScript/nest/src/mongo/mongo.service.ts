@@ -15,19 +15,12 @@ export class MongoService {
 
   singleQuery() {
     const rand = Math.floor(Math.random() * 10000) + 1;
-    return this.worldRepository.findOne({ id: rand });
+    return this.worldRepository.findOneBy({ id: rand });
   }
 
-  async multiQueries(queries: string) {
-    const number = Math.min(Math.max(parseInt(queries) || 1, 1), 500);
-    const promisesArray = [];
-
-    for (let i = 0; i < number; i++) {
-      promisesArray.push(this.singleQuery());
-    }
-
-    const worlds = await Promise.all(promisesArray);
-    return worlds;
+  async multiQueries(queries?: string) {
+    const number = this.parseQueryCount(queries);
+    return Promise.all(Array.from({ length: number }, () => this.singleQuery()));
   }
 
   async fortunes() {
@@ -41,15 +34,15 @@ export class MongoService {
     return { fortunes: allFortunes };
   }
 
-  async updates(queries) {
-    const number = Math.min(Math.max(parseInt(queries) || 1, 1), 500);
-    const worlds = [];
+  async updates(queries?: string) {
+    const number = this.parseQueryCount(queries);
     const bulk = this.worldRepository.initializeUnorderedBulkOp();
+    const worlds = await Promise.all(
+      Array.from({ length: number }, () => this.singleQuery()),
+    );
 
-    for (let i = 0; i < number; i++) {
-      const worldToUpdate = await this.singleQuery();
+    for (const worldToUpdate of worlds) {
       worldToUpdate.randomNumber = Math.floor(Math.random() * 10000) + 1;
-      worlds.push(worldToUpdate);
       bulk
         .find({ id: worldToUpdate.id })
         .update({ $set: { randomNumber: worldToUpdate.randomNumber } });
@@ -59,14 +52,12 @@ export class MongoService {
     return worlds;
   }
 
-  async cachedWorlds(count) {
-    const number = Math.min(Math.max(parseInt(count) || 1, 1), 500);
-    const promisesArray = [];
-    for (let i = 0; i < number; i++) {
-      promisesArray.push(this.singleQuery());
-    }
+  async cachedWorlds(count?: string) {
+    const number = this.parseQueryCount(count);
+    return Promise.all(Array.from({ length: number }, () => this.singleQuery()));
+  }
 
-    const worlds = await Promise.all(promisesArray);
-    return worlds;
+  private parseQueryCount(value?: string) {
+    return Math.min(Math.max(Number.parseInt(value ?? '', 10) || 1, 1), 500);
   }
 }
