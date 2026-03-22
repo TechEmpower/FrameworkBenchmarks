@@ -21,8 +21,11 @@ class Full extends Controller
         $queries = is_numeric($queries) ? min(max($queries, 1), 500) : 1;
         $world = [];
 
+        // Load model once
+        $modelWorld = model('World');
+
         while ($queries--) {
-            $world[] = model('World')->find(mt_rand(1, 10000));
+            $world[] = $modelWorld->find(mt_rand(1, 10000));
         }
         
         return $this->response->setJSON($world);
@@ -33,11 +36,14 @@ class Full extends Controller
         $queries = is_numeric($queries) ? min(max($queries, 1), 500) : 1;
         $world = [];
 
+        // Load model once
+        $modelWorld = model('World');
+
         while ($queries--) {
             $row = model('World')->find(mt_rand(1, 10000));
             $row['randomNumber'] = mt_rand(1, 10000);
             $world[] = $row;
-            model('World')->save($row);
+            $modelWorld->save($row);
         }
 
         return $this->response->setJSON($world);
