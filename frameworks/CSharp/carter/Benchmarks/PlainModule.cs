@@ -1,15 +1,19 @@
-﻿namespace Benchmarks
-{
-    using Carter;
-    using System.Text;
+﻿using System.Text;
+using Carter;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 
-    public class PlainModule : CarterModule
+namespace Benchmarks
+{
+    public class PlainModule : ICarterModule
     {
         private static readonly byte[] _helloWorldPayload = Encoding.UTF8.GetBytes("Hello, World!");
 
-        public PlainModule() : base("plaintext")
+
+        public void AddRoutes(IEndpointRouteBuilder app)
         {
-            Get("/", (req, res) =>
+            app.MapGet("/plaintext", (HttpResponse res) =>
             {
                 var payloadLength = _helloWorldPayload.Length;
                 res.StatusCode = 200;

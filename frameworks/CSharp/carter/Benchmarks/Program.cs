@@ -1,27 +1,13 @@
-namespace Benchmarks
-{
-    using System.IO;
-    using System.Threading.Tasks;
-    using Microsoft.AspNetCore.Hosting;
-    using Microsoft.Extensions.Configuration;
+using Carter;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Logging;
 
-    public class Program
-    {
-        public static async Task Main(string[] args)
-        {
-            var config = new ConfigurationBuilder()
-                .AddEnvironmentVariables(prefix: "ASPNETCORE_")
-                .AddCommandLine(args)
-                .Build();
+var builder = WebApplication.CreateBuilder(args);
 
-            var webHost = new WebHostBuilder()
-                .UseContentRoot(Directory.GetCurrentDirectory())
-                .UseConfiguration(config)
-                .UseStartup<Startup>()
-                .UseKestrel()
-                .Build();
+// Disable logging as this is not required for the benchmark
+builder.Logging.ClearProviders();
+builder.Services.AddCarter();
+var app = builder.Build();
 
-            await webHost.RunAsync();
-        }
-    }
-}
+app.MapCarter();
+app.Run();
